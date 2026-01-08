@@ -18,63 +18,66 @@ related_resources:
     url: '/mesh/gateway-delegated/'
 ---
 
-There are 2 ways to configure the control plane:
-- Environment variables
-- YAML configuration file
+There are two ways to customize the {{site.mesh_product_name}} control plane configuration:
+- With environment variables
+- With a YAML configuration file
 
-Environment variables take precedence over YAML configuration.
+If both are specified, environment variables take precedence over YAML configuration.
 
-All possible configuration and their default values are in the [`kuma-cp` reference doc](/docs/{{ page.release }}/reference/kuma-cp).
+All possible parameters and their default values are in the [`kuma-cp` reference doc](/mesh/reference/kuma-cp/).
 
 {:.info}
-> Environment variables usually match the yaml path by replacing `.` with `_`, capitalizing names and prefixing with `KUMA_`.
-> For example the yaml path: `store.postgres.port` is the environment variable: `KUMA_STORE_POSTGRES_PORT`.
+> Environment variables usually match the YAML path by replacing `.` with `_`, capitalizing names and prefixing with `KUMA_`.
+> For the YAML path `store.postgres.port` for example, the corresponding environment variable is `KUMA_STORE_POSTGRES_PORT`.
 
-{% navtabs "Deployment" %}
-{% navtab "Kubernetes" %}
-On Kubernetes, you can override the configuration with the `envVars` field. For example, to configure the refresh interval for configuration with the data plane proxy, specify:
+## Configuration examples
+
+Let's say that we want to configure the refresh interval for configuration with the data plane proxy, the examples below show you how to do that with environment variables or a YAML file, on Kubernetes or Universal.
+
+### Kubernetes
+
+{% navtabs "Kubernetes" %}
+{% navtab "Environment variables" %}
+To configure the {{site.mesh_product_name}} control plane on Kubernetes with environment variables, use the `envVars` field. 
+
 {% cpinstall envars %}
 controlPlane.envVars.KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL=5s
 controlPlane.envVars.KUMA_XDS_SERVER_DATAPLANE_STATUS_FLUSH_INTERVAL=5s
 {% endcpinstall %}
+{% endnavtab %}
+{% navtab "YAML configuration file" %}
 
-Or you can create a `values.yaml` file with:
+To configure a {{site.mesh_product_name}} control plane on Kubernetes with a YAML file, create a `values.yaml` file with the following content:
 ```yaml
 controlPlane:
   envVars:
     KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL: 5s
     KUMA_XDS_SERVER_DATAPLANE_STATUS_FLUSH_INTERVAL: 5s
 ```
-and then specify it in the helm install command:
+Use this configuration file in the Helm install command:
 
 ```sh
 helm install -f values.yaml {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
 ```
 
-If you have a lot of configuration you can just write them all in a YAML file and use:
+If you have a lot of configuration to customize, you can write it all in a YAML file and use:
 
 ```sh
 helm install {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }} --set-file {{site.set_flag_values_prefix}}controlPlane.config=cp-conf.yaml
 ```
-The value of the configmap `{{site.mesh_cp_name}}-config` is now the content of `cp-conf.yaml`.
+
+The value of the ConfigMap `{{site.mesh_cp_name}}-config` is now the content of `cp-conf.yaml`.
 
 {% endnavtab %}
-{% navtab "Universal" %}
-First, specify your configuration in the appropriate config file, then run `kuma-cp`:
+{% endnavtabs %}
 
-For example create a `kuma-cp.conf.overrides.yml` file with:
-```yaml
-xdsServer:
-  dataplaneConfigurationRefreshInterval: 5s
-  dataplaneStatusFlushInterval: 5s
-```
 
-Use this configuration file in the arguments:
-```sh
-kuma-cp run -c kuma-cp.conf.overrides.yml
-```
+### Universal
 
-Or you can specify environment variables:
+{% navtabs "Universal" %}
+{% navtab "Environment variables" %}
+
+To configure the {{site.mesh_product_name}} control plane on Universal with environment variables, use the following command:
 
 ```sh
 KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL=5s \
@@ -82,56 +85,68 @@ KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL=5s \
   kuma-cp run
 ```
 {% endnavtab %}
-{% endnavtabs %}
+{% navtab "YAML configuration file" %}
 
-{:.info}
+To configure the {{site.mesh_product_name}} control plane on Universal with a YAML file, create a `kuma-cp.conf.overrides.yml` file with the following content:
+
+```yaml
+xdsServer:
+  dataplaneConfigurationRefreshInterval: 5s
+  dataplaneStatusFlushInterval: 5s
+```
+
+Use this configuration file in the `kuma-cp run` command:
+```sh
+kuma-cp run -c kuma-cp.conf.overrides.yml
+```
+
+{:.warning}
 > If you configure `kuma-cp` with a YAML file, make sure to provide only values that you want to override.
 > Otherwise, upgrading {{site.mesh_product_name}} might be harder, because you need to keep track of your changes when replacing this file on every upgrade.
+
+{% endnavtab %}
+{% endnavtabs %}
+
 
 ## Inspecting the configuration
 
 There are many ways to see your control plane configuration:
 
 - In the `kuma-cp` logs, the configuration is logged on startup.
-- The control plane API server has an endpoint: `http://<CP_ADDRESS>:5681/config`
-- The GUI exposes the configuration on the Diagnostic navtab, accessible in the lower left corner.
-- In a multi-zone deployment, the zone control plane sends its configuration to the global control plane. This lets you inspect all configurations with `kumactl inspect zones -oyaml` or in the GUI.
+- With the control plane API server `/config` endpoint (for example, `http://<CP_ADDRESS>:5681/config`).
+- In the UI's **Diagnostic** tab.
+- With the `kumactl inspect zones -o yaml` command on a global control plane in a multi-zone deployment.
 
 ## Store
 
-When {{site.mesh_product_name}} (`kuma-cp`) is up and running it needs to store its state on Universal it's Postgres, for Kubernetes it's leveraging Kubernetes custom resource definitions.
-Thus state includes the policies configured, the data plane proxy status, and so on.
+When the {{site.mesh_product_name}} control plane is up and running, it needs to store its state.
 
 {{site.mesh_product_name}} supports a few different types of store.
-You can configure the backend storage by setting the `KUMA_STORE_TYPE` environment variable when running the control plane.
-
-The following backends are available:
-
-- `memory`
+You can configure the backend storage by setting the `KUMA_STORE_TYPE` environment variable or `store.type` in the YAML configuration file when running the control plane. The following values are supported:
 - `kubernetes`
+- `memory`
 - `postgres`
-
-The configuration to set the store is the yaml path `store.type` or the environment variable `KUMA_STORE_TYPE`.
 
 ### Kubernetes
 
 {{site.mesh_product_name}} stores all the state in the underlying Kubernetes cluster.
 
-This is only usable if the control plane is running in Kubernetes mode. You can't manage Universal CPPs from a control plane with a Kubernetes store.
+This is only usable if the control plane is running in Kubernetes mode. You can't manage Universal control planes from a control plane with a Kubernetes store.
 
 ### Memory
 
-{{site.mesh_product_name}} stores all the state in-memory. Restarting {{site.mesh_product_name}} will delete all the data, and you cannot have more than one control plane instance running.
+{{site.mesh_product_name}} stores all the state in-memory. Restarting {{site.mesh_product_name}} will delete all the data, and you can't have more than one control plane instance running.
 
 Memory is the **default** memory store when running in Universal mode and is only available in Universal mode.
 
-
 {:.danger}
-> Don't use this store in production because the state isn't persisted.
+> Don't use this store in production, the state isn't persisted.
 
 ### PostgreSQL
 
 {{site.mesh_product_name}} stores all the state in a PostgreSQL database. This can only be used when running in Universal mode.
+
+To configure it, run the following command with your database details:
 
 ```sh
 KUMA_STORE_TYPE=postgres \
@@ -148,20 +163,18 @@ KUMA_STORE_TYPE=postgres \
 
 #### TLS
 
-Connection between Postgres and {{site.mesh_product_name}} CP should be secured with TLS.
+Connection between PostgreSQL and {{site.mesh_product_name}} control planes should be secured with TLS.
 
-The following modes are available to secure the connection to Postgres:
+The following modes are available to secure the connection to PostgreSQL:
+* `disable`: The connection is not secured with TLS (secrets will be transmitted over network in plain text).
+* `verifyNone`: The connection is secured but neither hostname, nor by which CA the certificate is signed is checked.
+* `verifyCa`: The connection is secured and the certificate presented by the server is verified using the provided CA.
+* `verifyFull`: The connection is secured, the certificate presented by the server is verified using the provided CA and the server hostname must match the one in the certificate.
 
-* `disable`: the connection is not secured with TLS (secrets will be transmitted over network in plain text).
-* `verifyNone`: the connection is secured but neither hostname, nor by which CA the certificate is signed is checked.
-* `verifyCa`: the connection is secured and the certificate presented by the server is verified using the provided CA.
-* `verifyFull`: the connection is secured, certificate presented by the server is verified using the provided CA and server hostname must match the one in the certificate.
-
-
-The mode is configured with the `KUMA_STORE_POSTGRES_TLS_MODE` environment variable.
+The TLS mode is configured with the `KUMA_STORE_POSTGRES_TLS_MODE` environment variable.
 The CA used to verify the server's certificate is configured with the `KUMA_STORE_POSTGRES_TLS_CA_PATH` environment variable.
 
-After configuring the above security settings in {{site.mesh_product_name}}, we also have to configure Postgres' [`pg_hba.conf`](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html) file to restrict unsecured connections.
+After configuring the security settings above in {{site.mesh_product_name}}, you also have to configure PostgreSQL's [`pg_hba.conf`](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html) file to restrict unsecured connections.
 
 Here is an example configuration that allows only TLS connections and requires a username and password:
 
@@ -171,13 +184,13 @@ hostssl all             all             0.0.0.0/0               password
 ```
 
 You can also provide a client key and certificate for mTLS using the `KUMA_STORE_POSTGRES_TLS_CERT_PATH` and `KUMA_STORE_POSTGRES_TLS_KEY_PATH` variables.
-This pair can be used in conjunction with the `cert` auth-method described [in the Postgres documentation](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html).
+This pair can be used in conjunction with the `cert` authentication method. For more information, see the [PostgreSQL documentation](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html).
 
 #### Migrations
 
-To provide easy upgrades between {{site.mesh_product_name}} versions there is a migration system for the Postgres DB schema.
+To provide easy upgrades between {{site.mesh_product_name}} versions there is a migration system for the PostgreSQL database schema.
 
-When upgrading to a new version of {{site.mesh_product_name}}, run `kuma-cp migrate up` so the new schema is applied.
+When upgrading to a new version of {{site.mesh_product_name}}, run `kuma-cp migrate up` so the new schema is applied:
 ```sh
 KUMA_STORE_TYPE=postgres \
   KUMA_STORE_POSTGRES_HOST=localhost \
@@ -188,5 +201,6 @@ KUMA_STORE_TYPE=postgres \
   kuma-cp migrate up
 ```
 
-{{site.mesh_product_name}} CP at the start checks if the current DB schema is compatible with the version of {{site.mesh_product_name}} you are trying to run.
+When it starts, the {{site.mesh_product_name}} control plane checks if the current database schema is compatible with the version of {{site.mesh_product_name}} you are trying to run.
+
 Information about the latest migration is stored in `schema_migration` table.
