@@ -219,7 +219,7 @@ To leave the mesh in a graceful way, you can use service probes.
 
 `Envoy` has a powerful [Admin API](https://www.envoyproxy.io/docs/envoy/latest/operations/admin) for monitoring and troubleshooting.
 
-By default, `kuma-dp` starts thz Envoy Admin API on the loopback interface. The port is configured in the `Dataplane` entity:
+By default, `kuma-dp` starts the Envoy Admin API on the loopback interface. The port is configured in the `Dataplane` entity:
 
 ```yaml
 type: Dataplane
