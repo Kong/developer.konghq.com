@@ -44,7 +44,7 @@ tools:
 
 prereqs:
   inline:
-    - title: AWS credentials
+    - title: AWS credentials and Bedrock model access
       content: |
         Before you begin, you must have AWS credentials with Bedrock permissions:
 
@@ -52,13 +52,23 @@ prereqs:
         - **AWS Secret Access Key**: Your AWS secret key
         - **Region**: AWS region where Bedrock is available (for example, `us-west-2`)
 
-        Export these values as environment variables:
-        ```sh
-        export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
-        export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-        export DECK_AWS_REGION="us-west-2"
-        ```
-        Ensure the rerank model is enabled in your AWS Bedrock console under "Model Access".
+        1. Enable the rerank model in the [AWS Bedrock console](https://console.aws.amazon.com/bedrock/) under **Model Access**. Navigate to **Bedrock** > **Model access** and request access to `cohere.rerank-v3-5:0`.
+
+        2. After model access is granted, construct the model ARN for your region:
+           ```
+           arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0
+           ```
+           Replace `<region>` with your AWS region (for example, `us-west-2`).
+
+        3. Export the required values as environment variables:
+           ```sh
+           export AWS_ACCESS_KEY_ID="<your-access-key-id>"
+           export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+           export AWS_REGION="<region>"
+           export AWS_MODEL="arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0"
+           ```
+
+           Replace `<region>` in both `AWS_REGION` and the `AWS_MODEL` ARN with your AWS Bedrock deployment region. See [FAQs](./#what-rerank-models-are-available) below for more details.
       icon_url: /assets/icons/aws.svg
     - title: Python and requests library
       content: |
@@ -115,7 +125,7 @@ entities:
           aws_secret_access_key: ${aws_secret_access_key}
         model:
           provider: bedrock
-          name: cohere.rerank-v3-5:0
+          name: ${aws_model}
           options:
             bedrock:
               aws_region: ${aws_region}
@@ -126,6 +136,8 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
   aws_region:
     value: $AWS_REGION
+  aws_model:
+    value: $AWS_MODEL
 {% endentity_examples %}
 
 {:.info}
@@ -239,10 +251,6 @@ print("\n" + "=" * 60)
 print("Demo complete")
 EOF
 ```
-
-This script sends a query with 5 candidate documents to AWS Bedrock's rerank endpoint. Three documents discuss exercise and health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
-
-The script shows the original document order, then the reranked order with relevance scores. The `numberOfResults: 3` parameter limits the response to the top 3 documents. This demonstrates how reranking filters and reorders documents by semantic relevance before LLM generation.
 
 {:.info}
 > Verify that the response structure includes `results` with `index` and `relevanceScore` fields. Check [AWS Bedrock's API documentation](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html) or test the script to confirm this behavior.
