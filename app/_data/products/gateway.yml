@@ -40,7 +40,7 @@ releases:
             graviton: true
           docker: true
           docker_support:
-          eol: June 2026
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -48,15 +48,8 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - debian10:
-          package: true
-          package_support:
-            arm: false
-            fips: false
-            graviton: false
-          eol: June 2024
       - debian11:
           package: true
           package_support:
@@ -64,7 +57,7 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: June 2026
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -72,15 +65,8 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - rhel7:
-          package: true
-          package_support:
-            arm: false
-            fips: false
-            graviton: false
-          eol: June 2024
       - rhel8:
           package: true
           package_support:
@@ -88,7 +74,7 @@ releases:
             graviton: false
             fips: true
           docker: false
-          eol: August 2026
+          eol: 2026-08-31
       - rhel9:
           package: true
           package_support:
@@ -98,16 +84,8 @@ releases:
           docker: true
           docker_support:
             fips: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -117,7 +95,7 @@ releases:
           docker: true
           docker_support:
             fips: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
     third_party_support:
       s3_api:
@@ -749,7 +727,7 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: June 2026
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -765,6 +743,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -790,14 +769,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -933,6 +904,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -973,14 +945,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -1119,6 +1083,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -1134,6 +1099,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -1159,14 +1125,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -1305,6 +1263,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -1320,6 +1279,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -1345,14 +1305,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
