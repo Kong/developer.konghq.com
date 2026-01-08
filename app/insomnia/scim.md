@@ -19,6 +19,10 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Enterprise account management
     url: /insomnia/enterprise-account-management/
+  - text: Configure SCIM for Insomnia with Okta
+    url: /how-to/configure-scim-for-insomnia-with-okta/
+  - text: Configure SCIM for Insomnia with Azure
+    url: /how-to/configure-scim-for-insomnia-with-azure/    
 
 faqs:
   - q: What happens if Insomnia cannot refresh the SCIM token automatically?
