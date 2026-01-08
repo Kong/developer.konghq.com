@@ -53,7 +53,7 @@ helm install -f values.yaml {{ site.mesh_helm_install_name }} {{ site.mesh_helm_
 
 If you have a lot of configuration you can just write them all in a YAML file and use:
 
-```shell
+```sh
 helm install {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }} --set-file {{site.set_flag_values_prefix}}controlPlane.config=cp-conf.yaml
 ```
 The value of the configmap `{{site.mesh_cp_name}}-config` is now the content of `cp-conf.yaml`.
@@ -107,9 +107,9 @@ You can configure the backend storage by setting the `KUMA_STORE_TYPE` environme
 
 The following backends are available:
 
-- memory
-- kubernetes
-- postgres
+- `memory`
+- `kubernetes`
+- `postgres`
 
 The configuration to set the store is the yaml path `store.type` or the environment variable `KUMA_STORE_TYPE`.
 
@@ -129,7 +129,7 @@ Memory is the **default** memory store when running in Universal mode and is onl
 {:.danger}
 > Don't use this store in production because the state isn't persisted.
 
-### Postgres
+### PostgreSQL
 
 {{site.mesh_product_name}} stores all the state in a PostgreSQL database. This can only be used when running in Universal mode.
 
@@ -164,7 +164,8 @@ The CA used to verify the server's certificate is configured with the `KUMA_STOR
 After configuring the above security settings in {{site.mesh_product_name}}, we also have to configure Postgres' [`pg_hba.conf`](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html) file to restrict unsecured connections.
 
 Here is an example configuration that allows only TLS connections and requires a username and password:
-```
+
+```sh
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 hostssl all             all             0.0.0.0/0               password
 ```
