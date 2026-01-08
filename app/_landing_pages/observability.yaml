@@ -51,8 +51,8 @@ rows:
                 Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes.
               icon: /assets/icons/debug.svg
               cta:
-                text: See the API Explorer
-                url: /observability/explorer/
+                text: Troubleshoot with Debugger
+                url: /gateway/debugger/
       - blocks:
           - type: card
             config:
