@@ -602,6 +602,13 @@ pages:
         url: '/mesh/universal/'
       - text: 'Data plane on Kubernetes'
         url: '/mesh/data-plane-kubernetes/'
+    path: app/_src/production/dp-config/dpp-on-kubernetes.md
+    title: 'Data plane on Kubernetes'
+    description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
+    url: '/mesh/data-plane-kubernetes/'
+    related_resources:
+      - text: Deploy Kong Mesh on Kubernetes
+        url: /mesh/kubernetes/
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Zone Ingress
