@@ -59,21 +59,21 @@ columns:
 rows:
   - conditions: |
       * Organizations with strict data privacy regulations.  
-      * Users working on sensitive projects that require enhanced security.  
+      * Projects that must remain fully local.  
       * Environments with limited or restricted internet access.
     solution: "[Local vault](#local-vault)"
   - conditions: |
-      * Individual contributors who don't want their projects saved to the cloud
-      * Work on projects offline
-      * A sandbox type environment where you can experiment without interfering with team projects
+      * Individual contributors who don't want their projects saved to the cloud.
+      * Work on projects offline.
+      * A sandbox type environment where you can experiment without interfering with team projects.
     solution: "[Scratch pad](#scratch-pad)"
   - conditions: |
-      * Teams requiring collaboration on API projects.  
+      * Teams that need built-in collaboration.  
       * Users who work from multiple locations or devices.  
       * Projects that benefit from centralized, cloud-based management.
     solution: "[Cloud sync](#cloud-sync)"
   - conditions: |
-      * Users comfortable with Git and its versioning system.  
+      * Users who want to manage version control with their own remote Git repository.
       * Projects that require detailed version tracking and rollback capabilities.  
       * Teams that already use Git for other aspects of their development workflow.
     solution: "[Git sync](#git-sync)"
