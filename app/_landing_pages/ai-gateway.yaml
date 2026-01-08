@@ -590,6 +590,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Meter, bill, and monetize the entire AI connectivity data path
+            description: Track LLM token usage across models and prompt types for accurate billing and cost control. Create pricing plans based on input, output, and system token consumption, then automate invoicing with Stripe or ERP integrations.
+            icon: /assets/icons/analytics.svg
+            cta:
+              url: /metering-and-billing/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Save LLM usage costs with semantic load balancing
             description: Use semantic load balancing to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
             icon: /assets/icons/money.svg

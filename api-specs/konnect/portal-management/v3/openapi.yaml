@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.30
+  version: 3.0.31
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@68ca27ae0417f8becbf33682beb720b7b1f42428
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/68ca27ae0417f8becbf33682beb720b7b1f42428'
+  x-oas-source: kong/platform-api@272b65b4e8f8824decfee08208b46d72954731f5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/272b65b4e8f8824decfee08208b46d72954731f5'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -398,7 +398,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestError'
               examples:
-                ReplacePortalImageAssetBadRequestExample1:
+                ReplacePortalCustomizationBadRequestExample1:
                   $ref: '#/components/examples/ReplacePortalCustomizationBadRequestExample1'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -426,7 +426,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestError'
               examples:
-                ReplacePortalImageAssetBadRequestExample1:
+                ReplacePortalCustomizationBadRequestExample1:
                   $ref: '#/components/examples/UpdatePortalCustomizationBadRequestExample1'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -2653,9 +2653,9 @@ components:
       title: MovePage
     PageSlug:
       description: |
-        The slug of a page in a portal, used to compute its full URL path within the portal hierarchy. 
-        When a page has a `parent_page_id`, its full path is built by joining the parent’s slug with its own. 
-        For example, if a parent page has the slug `slug1` and this page’s slug is `slug2`, the resulting path will be `/slug1/slug2`. 
+        The slug of a page in a portal, used to compute its full URL path within the portal hierarchy.
+        When a page has a `parent_page_id`, its full path is built by joining the parent’s slug with its own.
+        For example, if a parent page has the slug `slug1` and this page’s slug is `slug2`, the resulting path will be `/slug1/slug2`.
         This enables nested page structures like `/slug1/slug2/slug3`.
       type: string
       example: /my-page
