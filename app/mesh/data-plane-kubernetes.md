@@ -88,7 +88,7 @@ The following tags are added automatically and cannot be overridden using Pod la
 > 
 > If {{site.mesh_product_name}} detects Pods in multiple meshes within the same namespace, it skips workload generation and emits a warning event. For more details, see the [namespace constraint documentation](/mesh/mesh-multi-tenancy/#data-plane-proxies).
 
-### Example
+### Tag generation example
 
 Here's a sample tag generation configuration:
 
@@ -355,7 +355,7 @@ A `ContainerPatch` specification consists of the list of [JSON patch](https://da
 {:.warning}
 > When using `ContainerPath`, every `value` field must be a string containing valid JSON.
 
-### Example
+### ContainerPath example
 
 Here's a sample `ContainerPath` configuration:
 
@@ -393,64 +393,64 @@ The configuration above makes the following changes:
 columns:
   - title: Old configuration
     key: old
-  - title: New configuration:
+  - title: New configuration
     key: new
 rows:
   - old: |
-    ```yaml
-    securityContext:
-      runAsGroup: 5678
-      runAsUser: 5678
-    ```
+      ```yaml
+      securityContext:
+        runAsGroup: 5678
+        runAsUser: 5678
+      ```
     new: |
-    ```yaml
-    securityContext:
-      runAsGroup: 5678
-      runAsUser: 5678
-      privileged: true
-    ```
+      ```yaml
+      securityContext:
+        runAsGroup: 5678
+        runAsUser: 5678
+        privileged: true
+      ```
   - old: |
-    ```yaml
-    securityContext:
-      capabilities:
-        add:
-          - NET_ADMIN
-          - NET_RAW
-      runAsGroup: 0
-      runAsUser: 0
-    ```
+      ```yaml
+      securityContext:
+        capabilities:
+          add:
+            - NET_ADMIN
+            - NET_RAW
+        runAsGroup: 0
+        runAsUser: 0
+      ```
     new: |
-    ```yaml
-    securityContext:
-      capabilities:
-        add:
-          - NET_ADMIN
-          - NET_RAW
-      runAsGroup: 0
-      runAsNonRoot: true
-    ```
+      ```yaml
+      securityContext:
+        capabilities:
+          add:
+            - NET_ADMIN
+            - NET_RAW
+        runAsGroup: 0
+        runAsNonRoot: true
+      ```
   - old: |
-    ```yaml
-    requests:
-      cpu: 50m
-    ```
+      ```yaml
+      requests:
+        cpu: 50m
+      ```
     new: |
-    ```yaml
-    requests:
-      cpu: 100m
-    ```
+      ```yaml
+      requests:
+        cpu: 100m
+      ```
   - old: |
-    ```yaml
-    limits:
-      cpu: 1000m
-      memory: 512Mi
-    ```
+      ```yaml
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+      ```
     new: |
-    ```yaml
-    limits:
-      cpu: 500m
-      memory: 256Mi
-    ```
+      ```yaml
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      ```
 {% endtable %}
 
 ### Workload matching
