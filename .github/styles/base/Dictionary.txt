@@ -287,8 +287,9 @@ Gluu
 gojira
 Golang
 googleSearch
+goroutine
 Goroutine
-Goroutine
+goroutines
 GPUs
 gbps
 grafana
