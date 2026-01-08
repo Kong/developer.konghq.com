@@ -38,7 +38,7 @@ Let's say that we want to configure the refresh interval for configuration with 
 
 {% navtabs "Kubernetes" %}
 {% navtab "Environment variables" %}
-To configure the {{site.mesh_product_name}} control plane on Kubernetes with environment variables, use the `envVars` field. 
+To configure the {{site.mesh_product_name}} control plane on Kubernetes with environment variables, use the `envVars` field:
 
 {% cpinstall envars %}
 controlPlane.envVars.KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL=5s
