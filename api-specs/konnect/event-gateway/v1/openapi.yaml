@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@78264d1ee3e825ce2aea6c3f98014f716f9b5d2b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/78264d1ee3e825ce2aea6c3f98014f716f9b5d2b'
+  x-oas-source: kong/platform-api@69259a625e4d22b0ca16e2681b2c0d13bfdcfaef
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/69259a625e4d22b0ca16e2681b2c0d13bfdcfaef'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2590,7 +2590,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -2622,7 +2621,6 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields: []
@@ -2644,7 +2642,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -2697,7 +2694,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -2736,7 +2732,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -2856,7 +2851,6 @@ components:
           type: string
           example: context.topic.name.endsWith('my_suffix')
           maxLength: 1000
-          minLength: 1
           nullable: true
           x-expression:
             type: boolean
@@ -2927,7 +2921,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3140,7 +3133,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3161,7 +3153,6 @@ components:
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3207,7 +3198,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3228,7 +3218,6 @@ components:
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3278,7 +3267,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3309,7 +3297,6 @@ components:
           type: string
           example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3339,7 +3326,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3370,7 +3356,6 @@ components:
           type: string
           example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3404,7 +3389,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3425,7 +3409,6 @@ components:
           type: string
           example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3453,7 +3436,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3474,7 +3456,6 @@ components:
           type: string
           example: record.value.content.foo.bar == "a-value"
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3551,7 +3532,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3582,7 +3562,6 @@ components:
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3610,7 +3589,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3631,7 +3609,6 @@ components:
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
@@ -3703,7 +3680,6 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
@@ -3724,7 +3700,6 @@ components:
           type: string
           example: context.auth.principal.name == "this-user"
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:

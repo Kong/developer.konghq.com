@@ -25,9 +25,6 @@ works_on:
 min_version:
   operator: '1.6.1'
 
-
-entities: []
-
 tldr:
   q: How do I install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode?
   a: Update the Helm repository and use Helm to install {{ site.operator_product_name }} in {{ site.konnect_short_name }}.
