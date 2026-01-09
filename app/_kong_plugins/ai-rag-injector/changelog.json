@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added metadata filtering and ACL (Access Control List) capabilities to the RAG plugin. This feature enables fine-grained control over document retrieval based on metadata attributes and user permissions, supporting both pgvector and Redis vector database backends.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Blocked plugins to execute retry logic. Also improve testing functions\n",

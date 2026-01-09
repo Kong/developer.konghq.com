@@ -132,9 +132,10 @@ rows:
     dashboard_viewer: ❌
 {% endtable %}
 <!--vale on -->
-Dashboard permissions only control access to the dashboard object. Access to the underlying data sources (such as a control plane) is enforced separately.
+Dashboard permissions control access to the dashboard object only. They don't grant access to the underlying data. Data visibility is enforced separately and must be explicitly scoped by the dashboard creator, for example by using preset filters to limit which control planes or data sets a user can see.
+
 {:.info}
-> A user may be able to open a dashboard but see empty or partial results if they lack permissions for one or more of its data sources.
+> A user may be able to open a dashboard but see empty or partial results if the dashboard is not scoped to data that they have permission to view.
 
 ### Roles
 

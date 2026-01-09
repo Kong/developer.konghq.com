@@ -18,6 +18,7 @@ export async function testeableUrlsFromFiles(config, files) {
     const isTesteable =
       frontmatter.products &&
       (frontmatter.products.includes("gateway") ||
+        frontmatter.products.includes("ai-gateway") ||
         frontmatter.products.includes("event-gateway"));
 
     if (isTesteable) {
@@ -46,6 +47,7 @@ export async function testeableUrlsFromFiles(config, files) {
         const name = `[${frontmatter.title}](${config.productionUrl}${howToUrl})`;
         skipped.push({
           status: "skipped",
+          products: frontmatter.products,
           duration: 0,
           name,
           message,

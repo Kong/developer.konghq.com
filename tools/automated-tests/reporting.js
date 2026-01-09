@@ -116,8 +116,21 @@ function buildTestList(results) {
   }));
 }
 
-export async function logResults(results, start, stop) {
+export async function logResults(results, start, stop, products) {
+  const skippedInstructions = yaml.load(
+    await fs.readFile("./.automated-tests", "utf-8")
+  );
+
+  const filteredSkippedInstructions = skippedInstructions.filter(
+    (instruction) =>
+      instruction.products &&
+      instruction.products.some((product) => products.includes(product))
+  );
+
   const { passed, failed, skipped } = categorizeResults(results);
+
+  const allSkipped = [...skipped, ...filteredSkippedInstructions];
+
   const { expectedCount, failedCount } = summarizeFailures(failed);
 
   const resultObject = {
@@ -128,18 +141,22 @@ export async function logResults(results, start, stop) {
       summary: buildSummary(
         results,
         passed,
-        skipped,
+        allSkipped,
         failedCount,
         expectedCount,
         start,
         stop
       ),
-      tests: buildTestList(results.concat(skipped)),
+      tests: buildTestList(results),
     },
   };
 
   console.log(
-    `Summary: ${results.length} total. ${passed.length} passed, ${failedCount} failed, ${skipped.length} skipped, expected failures: ${expectedCount}.`
+    `Summary: ${results.length + allSkipped.length} total. ${
+      passed.length
+    } passed, ${failedCount} failed, ${
+      allSkipped.length
+    } skipped, expected failures: ${expectedCount}.`
   );
 
   console.log("Tests result logged to ./testReport.json");

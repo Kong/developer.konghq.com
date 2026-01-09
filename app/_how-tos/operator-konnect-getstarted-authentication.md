@@ -30,6 +30,7 @@ entities: []
 
 prereqs:
   skip_product: true
+  show_works_on: true
 
 ---
 

@@ -139,12 +139,6 @@
       "description": ""
     },
     {
-      "title": "WASM injected directives",
-      "start": 3094,
-      "end": 3177,
-      "description": "The Nginx Wasm module (i.e., ngx_wasm_module) has its own settings, which can\nbe tuned via `wasm_*` directives in the Nginx configuration file. Kong\nsupports configuration of these directives via its Nginx directive injection\nmechanism.\n\nThe following namespaces are supported:\n\n- `nginx_wasm_<directive>`: Injects `<directive>` into the `wasm {}` block.\n- `nginx_wasm_shm_kv`: Injects `shm_kv *` into the `wasm {}` block,\nallowing operators to define a general memory zone which is usable by\nthe `get_shared_data`/`set_shared_data` Proxy-Wasm SDK functions as\nan in-memory key-value store of data shareable across filters.\n- `nginx_wasm_shm_kv_<name>`: Injects `shm_kv <name>` into the `wasm {}` block,\nallowing operators to define custom shared memory zones which are usable by\nthe `get_shared_data`/`set_shared_data` Proxy-Wasm SDK functions as\nseparate namespaces in the `\"<name>/<key>\"` format.\nFor using these functions with non-namespaced keys, the Nginx template needs\na `shm_kv *` entry, which can be defined using `nginx_wasm_shm_kv`.\n- `nginx_wasm_wasmtime_<flag>`: Injects `flag <flag>` into the `wasmtime {}`\nblock, allowing various Wasmtime-specific flags to be set.\n- `nginx_<http|proxy>_<directive>`: Injects `<directive>` into the\n`http {}` or `server {}` blocks, as specified in the Nginx injected directives\nsection.\n\nThe documentation for all supported directives can be found in the Nginx Wasm\nmodule repository:\n\nhttps://github.com/Kong/ngx_wasm_module/blob/main/docs/DIRECTIVES.md\n\nThe Wasmtime flag documentation can be found here:\n\nhttps://docs.wasmtime.dev/c-api/config_8h.html\n\nThere are several noteworthy ngx_wasm_module behaviors which can be tuned via\n`http {}`/`server {}` level directive injection (identical behavior in either\nlevel), for example:\n\n- `nginx_http_proxy_wasm_socket_<connect|read|send>_timeout`: sets connection/read/send\ntimeouts for Wasm dispatches.\n- `nginx_http_proxy_wasm_socket_buffer_size`: sets a buffer size for\nreading Wasm dispatch responses.\n\nThe values for these settings are inherited from their `nginx_*_lua_*`\ncounterparts if they have not been explicitly set. For instance, if you set\n`nginx_http_lua_socket_connect_timeout`, the value\nof this setting will be propagated to `nginx_http_wasm_socket_connect_timeout`\nunless you _also_ set `nginx_http_wasm_socket_connect_timeout`.\n\nSome TLS-related settings receive special treatment as well:\n\n- `lua_ssl_trusted_certificate`: when set, the value is propagated to the\n`nginx_wasm_tls_trusted_certificate` directive.\n- `lua_ssl_verify_depth`: when set (to a value greater than zero), several\nTLS-related `nginx_wasm_*` settings are enabled:\n- `nginx_wasm_tls_verify_cert`\n- `nginx_wasm_tls_verify_host`\n- `nginx_wasm_tls_no_verify_warn`\n\nLike other `kong.conf` fields, all injected Nginx directives documented here\ncan be set via environment variable. For instance, setting:\n\n`KONG_NGINX_WASM_TLS_VERIFY_CERT=<value>`\n\nWill inject the following into the `wasm {}` block:\n\n`tls_verify_cert <value>;`\n\nThere are several Nginx directives supported by ngx_wasm_module which should\nnot be used because they are irrelevant to or unsupported by Kong, or they may\nconflict with Kong's own management of Proxy-Wasm. Use of these directives may\nresult in unintentional breakage:\n\n- `wasm_call`\n- `module`\n- `proxy_wasm`\n- `resolver_add`\n- `proxy_wasm_request_headers_in_access`\n- `shm_queue`\n\n"
-    },
-    {
       "title": "REQUEST DEBUGGING",
       "start": 3178,
       "end": 3240,
@@ -1754,11 +1748,6 @@
       ],
       "description": "Comma-separated list of Wasm filters to be made\navailable for use in filter chains.\n\nWhen the `off` keyword is specified as the\nonly value, no filters will be available for use.\n\nWhen the `bundled` keyword is specified, all filters\nbundled with Kong will be available.\n\nWhen the `user` keyword is specified, all filters\nwithin the `wasm_filters_path` will be available.\n\n**Examples:**\n\n- `wasm_filters = bundled,user` enables _all_ bundled\n  and user-supplied filters\n- `wasm_filters = user` enables _only_ user-supplied\n  filters\n- `wasm_filters = filter-a,filter-b` enables _only_\n  filters named `filter-a` or `filter-b` (whether\n  bundled _or_ user-supplied)\n\nIf a conflict occurs where a bundled filter and a\nuser-supplied filter share the same name, a warning\nwill be logged, and the user-supplied filter will\nbe used instead.\n",
       "sectionTitle": "WEBASSEMBLY (WASM)"
-    },
-    "test": {
-      "defaultValue": "on",
-      "description": "test\n",
-      "sectionTitle": "WASM injected directives"
     },
     "request_debug": {
       "defaultValue": "on",

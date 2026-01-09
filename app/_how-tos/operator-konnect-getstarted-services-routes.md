@@ -13,7 +13,7 @@ breadcrumbs:
 
 series:
   id: operator-konnectcrds-get-started
-  position: 4
+  position: 5
 
 tldr:
   q: How do I expose an upstream service using Konnect CRDs?
@@ -29,8 +29,6 @@ works_on:
 entities: []
 
 ---
-
-## How Kubernetes resources map to {{site.base_gateway}} entities
 
 A Kubernetes Service represents an application running on a group of Pods. In {{site.base_gateway}}, this maps to a `Service` and `Upstream`.
 

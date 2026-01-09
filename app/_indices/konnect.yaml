@@ -17,6 +17,7 @@ sections:
       - path: /catalog/
       - path: /advanced-analytics/
       - path: /ai-manager/
+      - path: /metering-and-billing/
       - path: /gateway/
       - path: /mesh/
 

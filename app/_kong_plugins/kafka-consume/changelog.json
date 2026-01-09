@@ -1,4 +1,21 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added new config option `ssl_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the\nplugin's `ssl_verify` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the SSE connection was not terminated when there was an error in Schema Registry.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin would fail to connect using mTLS.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added `typedefs.no_service` to the `kafka-consume` plugin to prevent binding to a service, as it does not proxy to one. Note that this is a breaking change. If you previously attached a kafka-consume plugin to a service, it will no longer take effect. In such cases, requests will instead be proxied to the upstream configured in the service.\n",

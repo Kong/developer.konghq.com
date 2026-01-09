@@ -110,6 +110,8 @@
     --color-operator-background: var(--color-semantic-blue-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);
     --color-api-products-background: var(--color-semantic-orange-secondary);
+    --color-metering-and-billing-brand: var(--color-semantic-orange-primary);
+    --color-metering-and-billing-background: var(--color-semantic-orange-secondary);
   }
 
   .dark {

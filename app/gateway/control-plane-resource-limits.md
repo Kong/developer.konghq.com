@@ -21,7 +21,7 @@ related_resources:
 
 In {{site.konnect_short_name}}, every API Gateway control plane has a default resource limit per [Gateway entity](/gateway/entities/).
 
-If you need any of the {{site.konnect_short_name}} entity resource limits increased, contact [Kong Support](https://support.konghq.com). 
+If you need any of the {{site.konnect_short_name}} entity resource limits increased, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com). 
 
 <!--vale off-->
 {% table %}

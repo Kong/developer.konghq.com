@@ -10,6 +10,8 @@ related_resources:
     url: /gateway/secrets-management/
   - text: Configure HashiCorp Vault as a vault backend with certificate authentication
     url: /how-to/configure-hashicorp-vault-with-cert-auth/
+  - text: Configure HashiCorp Vault as a vault backend with OAuth2
+    url: /how-to/configure-hashicorp-vault-with-oauth2/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
   - text: Configure Hashicorp Vault with {{ site.kic_product_name }}
@@ -90,16 +92,23 @@ next_steps:
     url: /gateway/entities/vault/
   - text: What can be stored as a secret?
     url: /gateway/entities/vault/#what-can-be-stored-as-a-secret  
-
-automated_tests: false
 ---
 
 ## Create a secret in HashiCorp Vault
 
 Write a secret to HashiCorp Vault:
-```
-vault kv put secret/customer/acme name="ACME Inc."
-```
+
+{% validation custom-command %}
+command: |
+  curl -X POST http://localhost:8200/v1/secret/data/customer/acme \
+       -H "X-Vault-Token: $VAULT_TOKEN" \
+       -H "Content-Type: application/json" \
+       -d '{"data":{"name":"ACME Inc."}}' \
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
 
 ## Create decK environment variables 
 
@@ -109,10 +118,10 @@ In this tutorial, we're using `host.docker.internal` as our host instead of the 
 
 Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value. 
 
-{% env_variables %}
-DECK_HCV_HOST: host.docker.internal
-DECK_HCV_TOKEN: root
-{% endenv_variables %}
+```sh
+export DECK_HCV_HOST=host.docker.internal
+export DECK_HCV_TOKEN=root
+```
 
 
 ## Create a Vault entity for HashiCorp Vault 

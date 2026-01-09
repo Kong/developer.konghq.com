@@ -1,6 +1,6 @@
 ---
 title: Install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode
-description: "Learn how to install {{ site.operator_product_name }} in Konnect hybrid mode using Helm"
+description: "Learn how to install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode using Helm"
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/install/
@@ -23,10 +23,7 @@ works_on:
   - konnect
 
 min_version:
-  kgo: '1.6.1'
-
-
-entities: []
+  operator: '1.6.1'
 
 tldr:
   q: How do I install {{ site.operator_product_name }} in {{ site.konnect_short_name }} hybrid mode?
@@ -41,19 +38,7 @@ tags:
   - helm
 ---
 
-{% assign gwapi_version = "1.3.0" %}
-
-## Deploying Data Planes
-
-{{ site.operator_product_name }} can deploy and manage Data Planes attached to a {{ site.konnect_short_name }} Control Plane. All the Services, Routes, and plugins are configured in {{ site.konnect_short_name }} and sent to the Data Planes automatically.
-
-## Install CRDs
-
-If you want to use Gateway API resources, run this command:
-
-```shell
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml
-```
+{{ site.operator_product_name }} can deploy and manage data planes attached to a {{ site.konnect_short_name }} control plane. All the Services, Routes, and plugins are configured in {{ site.konnect_short_name }} and sent to the data planes automatically.
 
 ## Install {{ site.operator_product_name }}
 
@@ -65,5 +50,4 @@ Wait for {{ site.operator_product_name }} to be ready
 
 {% include prereqs/products/operator-validate-deployment.md %}
 
-Once the `kong-operator-kong-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Gateway Control Plane.
-You can use [this guide](/operator/dataplanes/konnectextension/#konnect-control-plane-reference) to learn more about how to do this.
+Once the `kong-operator-kong-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Gateway control plane.

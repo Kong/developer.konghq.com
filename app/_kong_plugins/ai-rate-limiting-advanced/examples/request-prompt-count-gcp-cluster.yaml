@@ -1,0 +1,61 @@
+description: Rate limit requests based on a custom token with Google Cloud Memorystore cluster auth
+extended_description: |
+  Protect your LLM services with rate limiting and Google Cloud Memorystore cluster auth.
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response
+  to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses request prompt rate limiting, which lets you you rate limit requests based on a custom token. See the [how-to guide](/how-to/use-custom-function-for-ai-rate-limiting/) for a step-by-step walkthrough.
+
+title: 'Request prompt function with Google Cloud Memorystore cluster auth'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - A running Redis instance on an [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - |
+    Assign the principal to the corresponding role: 
+    * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
+    * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
+
+weight: 900
+
+config:
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: ${cluster_address}
+      port: 6379
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: ${service_account}
+  sync_rate: 0
+  llm_providers:
+  - name: cohere
+    limit:
+    - 100
+    - 1000
+    window_size:
+    - 60
+    - 3600
+  request_prompt_count_function: |
+    local header_count = tonumber(kong.request.get_header("x-prompt-count"))
+    if header_count then
+      return header_count
+    end
+    return 0
+
+variables:
+  cluster_address:
+    value: $CLUSTER_ADDRESS
+    description: The Memorystore cluster address.
+  service_account:
+    value: $GCP_SERVICE_ACCOUNT
+    description: The GCP service account JSON.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

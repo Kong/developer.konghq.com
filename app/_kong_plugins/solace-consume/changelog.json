@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "allowed basic auth credentials to be passed from downstream clients.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "**Solace Consume** Added the `solace-consume` plugin, which adds Solace consumption capabilities to Kong.",

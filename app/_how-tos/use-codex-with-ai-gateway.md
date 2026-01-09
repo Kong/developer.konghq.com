@@ -83,7 +83,10 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+automated_tests: false
 ---
+
 ## Configure the AI Proxy Advanced plugin
 
 First, let's configure the AI Proxy Advanced plugin. In this setup, we use the Responses route because the Codex CLI calls it by default. We don't hard-code a model in the plugin — Codex sends the model in each request. We also raise the body size limit to 128 KB to support larger prompts.
@@ -210,7 +213,7 @@ Let's test our Codex CLI set up now:
      /model - choose what model and reasoning effort to use
      /review - review any changes and find issues
    ```
-   {.no-copy-code}
+   {:.no-copy-code}
    
 1. Run a simple command to call Codex using the gpt-4o model:
 
@@ -231,7 +234,7 @@ Let's test our Codex CLI set up now:
      2. Yes, and don't ask again for this command
      3. No, and tell Codex what to do differently
    ```
-   {.no-copy-code}
+   {:.no-copy-code}
    
    Select **Yes, proceed** and press <kbd>Enter</kbd>.
 
@@ -249,7 +252,7 @@ Let's test our Codex CLI set up now:
 
    • codex exec --model gpt-4o "Hello" returned: “Hi there! How can I assist you today?”
    ```
-   {.no-copy-code}
+   {:.no-copy-code}
    
 1. Check that LLM traffic went through Kong AI Gateway:
 
@@ -280,3 +283,4 @@ Let's test our Codex CLI set up now:
      ...
    }
    ```
+   {:.no-copy-code}

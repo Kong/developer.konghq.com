@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added new config option `ssl_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the\nplugin's `ssl_verify` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.5.0": [
     {
       "message": "fix an issue of unnecessary handshakes when reusing TLS connection",

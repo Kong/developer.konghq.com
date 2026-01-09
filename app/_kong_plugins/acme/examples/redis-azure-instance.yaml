@@ -1,0 +1,67 @@
+title: ACME with Redis storage and Azure Managed Redis instance auth
+description: |
+  Configure the ACME plugin with Redis as a storage backend using Azure Managed Redis instance auth
+
+weight: 860
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
+- Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: redis
+  storage_config:
+    redis:
+      host: ${instance_address}
+      username: ${instance_username}
+      port: 6379
+      cloud_authentication:
+        auth_provider: azure
+        azure_client_id: ${azure_client_id}
+        azure_client_secret: ${azure_client_secret}
+        azure_tenant_id: ${azure_tenant_id}
+
+variables:
+  email:
+    value: $EMAIL
+    description: The account identifier.
+  key_id:
+    value: $KEY_ID
+    description: The kid of a [Key](/gateway/entities/key/).
+  key_set:
+    value: $KEY_SET
+    description: The name of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
+  domain:
+    value: $DOMAIN
+    description: An array of strings representing hosts.
+  instance_address:
+    value: $INSTANCE_ADDRESS
+    description: The Azure Managed Redis instance address.
+  instance_username:
+    value: $INSTANCE_USERNAME
+    description: The object (principal) ID of the Principal/Identity with essential access.
+  azure_client_id:
+    value: $AZURE_CLIENT_ID
+    description: The client ID of the Principal/Identity. 
+  azure_client_secret:
+    value: $AZURE_CLIENT_SECRET
+    description: (Optional) The client secret of the Principal/Identity.
+  azure_tenant_id:
+    value: $AZURE_TENANT_ID
+    description: (Optional) The tenant ID of the Principal/Identity.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

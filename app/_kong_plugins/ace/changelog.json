@@ -1,0 +1,39 @@
+{
+  "3.13.0.0": [
+    {
+      "message": "Enabled at-rest keyring encryption for sensitive fields in ACE plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added `operation_id` in analytics and set it to the header `X-ACE-Operation-ID`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "ace_credentials can now be linked to Consumers or Consumer Groups",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the anonymous consumer was not being set properly when authentication failed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where users could set the `anonymous` field in the OpenID Connect configuration of ACE auth strategies, which is not supported and could lead to unexpected authentication behavior.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where multiple key-auth strategies could not use the same apikey.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where observability headers could not be set correctly in some unhappy paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}
