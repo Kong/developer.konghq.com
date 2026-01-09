@@ -22,7 +22,7 @@ related_resources:
     url: /mesh/zone-ingress/
 ---
 
-On Kubernetes, the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity is automatically created for you, and because transparent proxying is used to communicate between the service and the [sidecar proxy](/mesh/concepts/#data-plane-proxy-sidecar), no code changes are required in your applications.
+On Kubernetes, the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity is automatically created for you, and because transparent proxying is used to communicate between the Service and the [sidecar proxy](/mesh/concepts/#data-plane-proxy-sidecar), no code changes are required in your applications.
 
 The {{ site.mesh_product_name }} control plane injects a `kuma-sidecar` container into your Pod's container to join your Kubernetes services to the mesh. If you're not using the CNI, it also injects a `kuma-init` into `initContainers` to setup [transparent proxying](/mesh/transparent-proxying/).
 
@@ -81,7 +81,7 @@ The following tags are added automatically and cannot be overridden using Pod la
 
   {:.info}
   > * If a Kubernetes Service exposes more than one port, multiple inbounds will be generated, all with different `kuma.io/service` values.
-  > * If a Pod is attached to more than one Kubernetes service, multiple inbounds will also be generated.
+  > * If a Pod is attached to more than one Kubernetes Service, multiple inbounds will also be generated.
 
 {:.warning}
 > {% new_in 2.13 %}**Namespace constraint**: All Pods in a Kubernetes namespace should belong to the same mesh to ensure proper workload resource generation. A single namespace can't contain Pods in multiple meshes because workload resources are mesh-scoped and use the `app.kubernetes.io/name` label, which can cause resource collisions.
@@ -230,7 +230,7 @@ spec:
 
 On Kubernetes, a `Dataplane` resource is automatically created by kuma-cp. For each Pod with the sidecar-injection label, a new `Dataplane` resource is created.
 
-To join the mesh in a graceful way, you need to make sure the application is ready to serve traffic before it can be considered a valid traffic destination.
+To allow the data plane to join the mesh in a graceful way, you need to make sure the application is ready to serve traffic before it can be considered a valid traffic destination.
 
 #### Init containers
 
@@ -260,7 +260,6 @@ spec:
         securityContext:
           runAsUser: 1234
 ```
-
 
 {:.warning}
 > With network calls inside the mesh with mTLS enabled, using the init container is impossible because `kuma-dp` is responsible for encrypting the traffic and only runs after all init containers have exited.
@@ -300,13 +299,13 @@ While draining, Envoy can still accept connections, however:
 
 Whenever a user or system deletes a Pod, Kubernetes does the following:
 
-1. It marks the Pod as terminated.
-1. For every container concurrently, it:
+1. Marks the Pod as terminated.
+1. Performs the following actions concurrently on every container:
     1. Executes any pre-stop hook, if defined.
     1. Sends a SIGTERM signal.
     1. Waits until the container is terminated for the maximum amount of graceful termination time (by default, this is 60 seconds).
     1. Sends a SIGKILL to the container.
-1. It removes the Pod object from the system.
+1. Removes the Pod object from the system.
 
 When a Pod is marked as terminated, the control plane marks the `Dataplane` object as unhealthy, which triggers a configuration update to all the clients to remove it as a destination.
 This can take a couple of seconds depending on the size of the mesh, resources available to the control plane, XDS configuration interval, etc.
@@ -514,7 +513,7 @@ On Kubernetes, by default:
 
 There are situations where you may want to bypass the client-side load balancing and directly access services by using their IP address (for example, in the case of Prometheus scraping metrics from services by their individual IP address).
 
-When an originating Service wants to directly consume other Services by their IP address, the originating service's `Deployment` resource must include the following annotation:
+When an originating Service wants to directly consume other Services by their IP address, the originating Service's `Deployment` resource must include the following annotation:
 
 ```yaml
 kuma.io/direct-access-services: Service1, Service2, ServiceN
@@ -551,7 +550,7 @@ kuma.io/direct-access-services: *
 
 {:.warning}
 > * Using `*` to directly access every Service is a resource-intensive operation.
-> * Accessing services by using `kuma.io/direct-access-services` annotation means any policies applied to the service will not take effect.
+> * Accessing services by using `kuma.io/direct-access-services` annotation means any policies applied to the Service will not take effect.
 
 
 ## ContainerPatches schema
