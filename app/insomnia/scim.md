@@ -25,9 +25,14 @@ related_resources:
     url: /how-to/configure-scim-for-insomnia-with-azure/    
 
 faqs:
+  - q: Do SCIM tokens expire?
+    a: |
+      Yes. SCIM tokens can expire. However, Insomnia automatically attempts to refresh the token every 90 days. If the automatic refresh fails, Insomnia warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. If it fails, on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view, manually refresh the token.
+
+      To fix an automatic token refresh failure, go to [SCIM](https://app.insomnia.rest/app/enterprise/scim), and click **Refresh Token**. Then, in the **Passphrase** field, enter your passphrase, and click **Refresh Token** again. This manually refreshes your SCIM connector token.
   - q: What happens if Insomnia cannot refresh the SCIM token automatically?
     a: |
-      If Insomnia cannot refresh the SCIM token automatically, SCIM provisioning enters a degraded or stopped state. SCIM remains enabled, but syncing pauses until the issue is resolved. A **Refresh Token** action is available in **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+      If Insomnia cannot refresh the SCIM token automatically, SCIM provisioning stops. SCIM remains enabled, but syncing pauses until the issue is resolved. A **Refresh Token** action is available in **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
   - q: How will I know that the SCIM token is expiring or has expired?
     a: |
       There's two ways for Insomnia to alert you to an expiring token:
@@ -71,6 +76,8 @@ SCIM provisioning in Insomnia follows predictable, non-destructive rules:
 - Existing Insomnia users are matched to IdP users by email address.
 - If a user exists in Insomnia but not in the IdP, Insomnia does not remove or disable that user automatically.
 
+SCIM provisioning lets you manage access to Insomnia through your IdP, in the same way that you manage access to other enterprise applications.
+
 {:.info}
 > Users who were added manually before SCIM was enabled you enabled SCIM remain separate from users that were provisioned through your IdP. Insomnia does not automatically change or reconcile manually added users when you enable SCIM. This behavior is expected and prevents unintended changes to existing accounts.
 
@@ -85,7 +92,11 @@ SCIM provisioning uses a connector URL and token generated in Insomnia. The toke
 
 ### Automatic token refresh
 
-Insomnia automatically refreshes SCIM connector tokens before they expire. This helps prevent provisioning interruptions that are caused by routine token expiration and reduces the need for manual maintenance.
+Insomnia automatically attempts to refresh the SCIM connector token every 90 days, before it expires. This helps prevent provisioning interruptions that are caused by routine token expiration and reduces the need for manual maintenance.
+
+If the automatic refresh succeeds, SCIM provisioning continues without interruption.
+
+If the automatic refresh fails, Insomnia warns the account owner and co-owners and requires manual action to prevent provisioning from stopping.
 
 ### View token status
 Administrators can view the current SCIM token status in Insomnia:
@@ -94,7 +105,7 @@ Administrators can view the current SCIM token status in Insomnia:
   - If SCIM is enabled.
   - If the token is valid, expiring soon, or expired.
 
-When a token is close to expiration, Insomnia displays a warning message indicating that the token expires soon.
+When a token is close to expiration and cannot be refreshed automatically, Insomnia displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
 ## Supported identity providers
 
@@ -106,7 +117,7 @@ Insomnia supports SCIM provisioning with the following identity providers:
 
 Before enabling SCIM, you must meet all of the following requirements in Insomnia:
 - Your organization is on the Enterprise plan.
-- You are an Owner in the Insomnia organization.
+- You are an Owner or Co-Owner in the Insomnia organization.
 - You have verified at least one [domain in Insomnia](https://app.insomnia.rest/app/enterprise/domains/list).
 - You configured [SSO](https://app.insomnia.rest/app/enterprise/sso/list) for your identity provider.
 
