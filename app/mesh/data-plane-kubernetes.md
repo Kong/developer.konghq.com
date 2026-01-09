@@ -24,7 +24,7 @@ related_resources:
 
 On Kubernetes, the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity is automatically created for you, and because transparent proxying is used to communicate between the service and the [sidecar proxy](/mesh/concepts/#data-plane-proxy-sidecar), no code changes are required in your applications.
 
-The {{ site.mesh_product_name }} control plane injects a `kuma-sidecar` container into your Pod's container. If you're not using the CNI, it also injects a `kuma-init` into `initContainers` to setup [transparent proxying](/mesh/transparent-proxying/).
+The {{ site.mesh_product_name }} control plane injects a `kuma-sidecar` container into your Pod's container to join your Kubernetes services to the mesh. If you're not using the CNI, it also injects a `kuma-init` into `initContainers` to setup [transparent proxying](/mesh/transparent-proxying/).
 
 You can control whether {{site.mesh_product_name}} automatically injects the [data plane proxy](/mesh/concepts/#data-plane-proxy-sidecar) by labeling either the namespace or the Pod with `kuma.io/sidecar-injection=enabled`:
 
@@ -72,16 +72,16 @@ When `Dataplane` entities are automatically created, all labels from the Pod are
 Labels with keys that contain `kuma.io/` are not converted because they are reserved for {{site.mesh_product_name}}.
 The following tags are added automatically and cannot be overridden using Pod labels:
 
-* `kuma.io/service`: Identifies the Service name based on a Service that selects a Pod. The format is `<name>_<namespace>_svc_<port>` where `<name>`, `<namespace>` and `<port>` are from the Kubernetes Service that is associated with this particular Pod. When a Pod is spawned without being associated with any Kubernetes Service resource, the data plane tag is `kuma.io/service: <name>_<namespace>_svc`, where `<name>` and`<namespace>` are extracted from the Pod resource metadata.
+* `kuma.io/service`: Identifies the Service name based on a Service that selects a Pod. The format is `<name>_<namespace>_svc_<port>` where `<name>`, `<namespace>` and `<port>` are from the Kubernetes Service that is associated with this particular Pod. When a Pod is spawned and isn't associated with any Kubernetes Service resource, the data plane tag is `kuma.io/service: <name>_<namespace>_svc`, where `<name>` and`<namespace>` are extracted from the Pod resource metadata.
 * `kuma.io/zone`: Identifies the zone name in a [multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
 * `kuma.io/protocol`: Identifies the protocol that was defined by the `appProtocol` field on the Service that selects the Pod.
 * `k8s.kuma.io/namespace`: Identifies the Pod's namespace.
 * `k8s.kuma.io/service-name`: Identifies the name of the Kubernetes Service that selects the Pod.
 * `k8s.kuma.io/service-port`: Identifies the port of the Kubernetes Service that selects the Pod.
 
-{:.info}
-> * If a Kubernetes Service exposes more than one port, multiple inbounds will be generated, all with different `kuma.io/service` values.
-> * If a Pod is attached to more than one Kubernetes service, multiple inbounds will also be generated.
+  {:.info}
+  > * If a Kubernetes Service exposes more than one port, multiple inbounds will be generated, all with different `kuma.io/service` values.
+  > * If a Pod is attached to more than one Kubernetes service, multiple inbounds will also be generated.
 
 {:.warning}
 > {% new_in 2.13 %}**Namespace constraint**: All Pods in a Kubernetes namespace should belong to the same mesh to ensure proper workload resource generation. A single namespace can't contain Pods in multiple meshes because workload resources are mesh-scoped and use the `app.kubernetes.io/name` label, which can cause resource collisions.
@@ -186,11 +186,11 @@ The sidecar doesn't need any [capabilities](https://kubernetes.io/docs/tasks/con
 
 ## Lifecycle
 
-The lifecycle management has been significantly improved with the `SidecarContainers` feature introduced in Kubernetes v1.29.
+If you're using Kubernetes 1.29 or later, you can use the `SidecarContainers` feature, which significantly improves lifecycle management. For more information about why you would want to use sidecar containers, see [Sidecar Containers](https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/) in the Kubernetes documentation.
 
 ### Kubernetes sidecar containers
 
-To enable the use of the Kubernetes sidecar containers feature with {{ site.mesh_product_name }}, enable the `experimental.sidecarContainers`/`KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS` option.
+To use Kubernetes sidecar containers with {{ site.mesh_product_name }}, enable the `experimental.sidecarContainers`/`KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS` option.
 
 This feature supports adding the injected Kuma container to `initContainers` with `restartPolicy: Always`, which marks it as a sidecar container. Refer to the [Kubernetes docs](https://kubernetes.io/docs/concepts/workloads/Pods/sidecar-containers/) to learn more about how they work.
 
@@ -236,8 +236,7 @@ To join the mesh in a graceful way, you need to make sure the application is rea
 
 Due to the way {{site.mesh_product_name}} implements transparent proxying and sidecars in Kubernetes, network calls from init containers while running a mesh can be a challenge.
 
-The common pitfall is the idea that it's possible to order init containers so that the mesh init container runs after other init containers.
-However, when injecting these init containers into a Pod via webhooks, such as the Vault init container, there is no guarantee of the order.
+When injecting init containers into a Pod via webhooks, such as the Vault init container, there is no guarantee of the order in which the init containers run.
 The ordering of init containers also doesn't provide a solution when the {{site.mesh_product_name}} CNI is used, as traffic redirection to the sidecar occurs even before any init container runs.
 
 To solve this issue, start the init container with a specific user ID and exclude specific ports from interception, and the port of DNS interception. 
@@ -262,7 +261,6 @@ spec:
           runAsUser: 1234
 ```
 
-##### Network calls inside the mesh with mTLS enabled
 
 {:.warning}
 > With network calls inside the mesh with mTLS enabled, using the init container is impossible because `kuma-dp` is responsible for encrypting the traffic and only runs after all init containers have exited.
@@ -304,18 +302,18 @@ Whenever a user or system deletes a Pod, Kubernetes does the following:
 
 1. It marks the Pod as terminated.
 1. For every container concurrently, it:
-    1. Executes any pre-stop hook if defined.
+    1. Executes any pre-stop hook, if defined.
     1. Sends a SIGTERM signal.
-    1. Waits until container is terminated for maximum of graceful termination time (by default 60 seconds).
+    1. Waits until the container is terminated for the maximum amount of graceful termination time (by default, this is 60 seconds).
     1. Sends a SIGKILL to the container.
 1. It removes the Pod object from the system.
 
-When a Pod is marked as terminated, {{site.mesh_product_name}}, the control plane marks the `Dataplane` object unhealthy, which triggers a configuration update to all the clients in order to remove it as a destination.
+When a Pod is marked as terminated, the control plane marks the `Dataplane` object as unhealthy, which triggers a configuration update to all the clients to remove it as a destination.
 This can take a couple of seconds depending on the size of the mesh, resources available to the control plane, XDS configuration interval, etc.
 
 To learn how Kubernetes handles the Pod lifecycle, see the [Kubernetes docs](https://kubernetes.io/docs/concepts/workloads/Pods/Pod-lifecycle/#Pod-termination). 
 
-If the application served by the {{site.mesh_product_name}} sidecar quits immediately after the SIGTERM signal, there is a high chance that clients will still try to send traffic to this destination. To mitigate this, we need to either:
+If the application served by the {{site.mesh_product_name}} sidecar quits immediately after the SIGTERM signal, there is a high chance that clients will still try to send traffic to this destination. To mitigate this, you must either:
 
 * Support graceful shutdown in the application. For example, the application should wait X seconds to exit after receiving the first SIGTERM signal.
 * Add a pre-stop hook to postpone stopping the application container:
@@ -346,9 +344,8 @@ If you want to modify the default container configuration, you can use the `Cont
 It allows configuration of both sidecar and init containers. 
 `ContainerPatch` resources are namespace-scoped and can only be applied in a namespace where a {{site.mesh_product_name}} control plane is running.
 
-{:.warning}
-> In most cases you shouldn't need to override the sidecar and init container configurations. 
-> `ContainerPatch` is a feature which requires good understanding of both {{site.mesh_product_name}} and Kubernetes.
+In most cases you shouldn't need to override the sidecar and init container configurations. 
+`ContainerPatch` is a feature which requires good understanding of both {{site.mesh_product_name}} and Kubernetes.
 
 A `ContainerPatch` specification consists of the list of [JSON patch](https://datatracker.ietf.org/doc/html/rfc6902) strings that describe the modifications. See [the entire resource schema](#schema) for more information.
 
@@ -505,7 +502,7 @@ kumactl install control-plane --env-var "KUMA_RUNTIME_KUBERNETES_INJECTOR_CONTAI
 ### Error modes and validation
 
 When applying `ContainerPatch`, {{site.mesh_product_name}} validates that the rendered container spec meets the Kubernetes specification.
-However, {{site.mesh_product_name}} doesn't validate that it's a sane configuration.
+However, {{site.mesh_product_name}} doesn't validate that the configuration works.
 
 If a workload refers to a `ContainerPatch` that doesn't exist, the injection will explicitly fail and log the failure.
 
@@ -515,7 +512,7 @@ On Kubernetes, by default:
 * Data plane proxies communicate with each other by leveraging the `ClusterIP` address of the `Service` resources. 
 * Any request made to another Service is automatically load-balanced client-side by the data plane proxy that originates the request (they are load balanced by the local Envoy proxy sidecar proxy).
 
-There are situations where you may want to bypass the client-side load balancing and directly access services by using their IP address (for example, in the case of Prometheus wanting to scrape metrics from services by their individual IP address).
+There are situations where you may want to bypass the client-side load balancing and directly access services by using their IP address (for example, in the case of Prometheus scraping metrics from services by their individual IP address).
 
 When an originating Service wants to directly consume other Services by their IP address, the originating service's `Deployment` resource must include the following annotation:
 
@@ -544,9 +541,9 @@ spec:
 ```
 
 {:.info}
-> When using direct access with a [headless Service](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services), the destination Service will be accessible at: `{{site.mesh_product_name}}-service.pod-name.mesh`
+> When using direct access with a [headless Service](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services), the destination Service will be accessible at `{{site.mesh_product_name}}-service.pod-name.mesh`.
 
-We can also use `*` to indicate direct access to every Service in the mesh:
+You can also use `*` to indicate direct access to every Service in the mesh:
 
 ```yaml
 kuma.io/direct-access-services: *
