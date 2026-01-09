@@ -295,8 +295,8 @@ When the {{site.mesh_product_name}} sidecar receives a SIGTERM signal, it:
 
 While draining, Envoy can still accept connections, however:
 
-1. It is marked unhealthy on the Envoy Admin `/ready` endpoint.
-1. It sends `connection: close` for HTTP/1.1 requests and the `GOAWAY` frame for HTTP/2. This forces clients to close their connection and reconnect to the new instance.
+* It is marked unhealthy on the Envoy Admin `/ready` endpoint.
+* It sends `connection: close` for HTTP/1.1 requests and the `GOAWAY` frame for HTTP/2. This forces clients to close their connection and reconnect to the new instance.
 
 Whenever a user or system deletes a Pod, Kubernetes does the following:
 
