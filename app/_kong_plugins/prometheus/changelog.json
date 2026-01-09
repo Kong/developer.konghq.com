@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added a new label `type` for `http_requests_total` and `stream_sessions_total` metrics providing more specific information.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    },
+    {
+      "message": "Fixed an issue where the Prometheus plugin would not return DB connections to the connection pool, potentially leading to exhaustion of available connections under high load.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where WebSocket wasn't recorded in the Prometheus metrics.\n",

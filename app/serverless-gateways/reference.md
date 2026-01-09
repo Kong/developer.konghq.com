@@ -3,7 +3,7 @@ title: "Serverless Gateway"
 content_type: reference
 layout: reference
 description: | 
-    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned.
+    Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned.
 
 breadcrumbs:
   - /konnect/
@@ -22,17 +22,17 @@ faqs:
     a: Deployment on the same region is not guaranteed.
   - q: What {{site.base_gateway}} version do Serverless Gateways run?
     a: The {{site.base_gateway}} version can't be configured. The default is always `latest` and will be automatically upgraded.
-  - q: Can Control Planes contain both Serverless Gateway Data Planes and self-managed Data Planes?
-    a: No. Control Planes that use Serverless Gateways can't mix types of Data Planes.
-  - q: Can I configure the size of the Data Planes?
-    a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
+  - q: Can control planes contain both Serverless Gateway data planes and self-managed data planes?
+    a: No. Control planes that use Serverless Gateways can't mix types of data planes.
+  - q: Can I configure the size of the data planes?
+    a: No, configuration is handled automatically during the provisioning of the Serverless Gateway control plane.
   - q: Does Serverless Gateway support private networking?
     a: |
-        No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong Data Planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
-  - q: Does plugin functionality change with serverless gateways?
+        No, Serverless Gateways only support public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
+  - q: Does plugin functionality change with Serverless Gateways?
     a: |
-      * Any plugins that depend on a local agent will not work with serverless gateways.
-      * Any plugins that depend on the Status API or on Admin API endpoints will not work with serverless gateways.
+      * Any plugins that depend on a local agent will not work with Serverless Gateways.
+      * Any plugins that depend on the Status API or on Admin API endpoints will not work with Serverless Gateways.
       * Any plugins or functionality that depend on AWS IAM AssumeRole will have to be configured differently. 
   - q: My serverless custom domain attachment failed, how do I troubleshoot it?
     a: |
@@ -48,32 +48,33 @@ faqs:
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-  - text: Control Plane and Data Plane communication
+  - text: Control plane and data plane communication
     url: /gateway/cp-dp-communication/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
 
 ---
-Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless Gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
-You can manage your serverless gateway nodes under **API Gateway** in {{site.konnect_short_name}}.
+You can manage your Serverless Gateway nodes under **API Gateway** in {{site.konnect_short_name}}.
 
-## How do serverless gateways work?
+## How do Serverless Gateways work?
 
-When you create a serverless gateway, {{site.konnect_short_name}} creates a Control Plane that is hosted by {{site.konnect_short_name}}. Then, a hosted Data Plane is provisioned automatically and configured to connect to the Control Plane. 
+When you create a Serverless Gateway, {{site.konnect_short_name}} creates a control plane that is hosted by {{site.konnect_short_name}}. Then, a hosted data plane is provisioned automatically and configured to connect to the control plane. 
 
 
 {% include konnect/deployment-topologies.md %}
 
-## How do I provision a serverless gateway?
+## How do I provision a Serverless Gateway?
 
-Provisioning a serverless gateway includes creating the serverless Control Plane and hosted Data Plane.
+To provision a Serverless Gateway, you need to create a serverless control plane and a hosted data plane. 
+Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authentication) set in your environment.
 	
-1. Create a serverless gateway Control Plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane).
+1. Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
 <!-- vale off -->
 {% capture request1 %}
 {% control_plane_request %}
-  url: /v2/control-planes/$CONTROL_PLANE_ID/
+  url: /v2/control-planes/
   status_code: 201
   method: POST
   headers:
@@ -81,18 +82,23 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
       - 'Accept: application/json'
       - 'Content-Type: application/json'
   body:
-
       name: serverless-gateway-control-plane
-      description: A test Control Plane for Serverless Gateways.
+      description: A test control plane for Serverless Gateways.
       cluster_type: CLUSTER_TYPE_SERVERLESS
       cloud_gateway: false
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
 {% endcapture %}
-
 {{ request1 | indent:3 }}
 <!--vale on -->
-2. Create a hosted Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+
+1. Export the generated control plane ID to an environment variable: 
+
+    ```
+    export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+    ```
+
+1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request2 %}
 {% konnect_api_request %}
@@ -115,6 +121,8 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
 
 {{ request2 | indent:3 }}
 <!--vale on -->
+
+You can now proxy requests through your Serverless Gateway, and it will use the hosted data plane to process traffic.
 
 ## How do I configure a custom domain?
 
@@ -168,12 +176,12 @@ Once a Serverless Gateway custom DNS record has been validated, it will _not_ be
 
 ## Securing backend communication
 
-Serverless gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
+Serverless Gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
 
-To securely connect a serverless gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
+To securely connect a Serverless Gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
 
 1. Ensure the backend accepts a known token like an Authorization header.
-2. Attach a new plugin to the Control Plane and Gateway Service that you want to secure:
+2. Attach a new plugin to the control plane and Gateway Service that you want to secure:
 
 <!--vale off-->
 {% control_plane_request %}

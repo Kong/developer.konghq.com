@@ -150,7 +150,7 @@ If the authorization server does not support Dynamic Client Registration, you ca
 Insomnia supports **MCP Elicitation**, a feature that allows a server to request additional information from the client during a request. When a server returns an elicitation request, Insomnia displays the fields defined by the server so you can provide the required information. Insomnia then returns the submitted values to the server so it can continue processing the original request.
 
 Elicitation supports workflows where the server needs more context or specific field values before it completes an action. Insomnia manages the entire flow: 
-1. It displays the elicitation UI
+1. Displays the elicitation UI
 1. Collects the user input
 1. Returns the elicitation response to the server
 
@@ -163,3 +163,20 @@ Elicitation supports workflows where the server needs more context or specific f
 1. The server continues processing using the new information.
 
 For more details, see the MCP client specification for [elicitation](https://modelcontextprotocol.io/specification/draft/client/elicitation)
+
+## Sampling responses
+
+Insomnia supports **MCP Sampling**. Sampling is a workflow where an MCP server requests Insomnia to generate a model response based on the current context. Insomnia then uses its AI integration to produce the sampling response, and it presents the request and response steps in a dedicated interface in the Response pane.
+
+### How sampling works
+
+1. The MCP server issues a `sampling/createMessage` request to the Insomnia MCP client.
+1. Insomnia displays the sampling request in the Response pane so that the user can review and modify it before generation.
+1. After the user approves the request, Insomnia forwards it to the model that's using Insomnia AI.
+1. Insomnia receives the model’s output and then displays the response so that the user can review and modify it.
+1. After the user approves the response, Insomnia then returns the final result to the MCP server. 
+
+{:.info}
+> When supported by the server, this process can continue across additional turns.
+
+For more information about sampling, go to the MCP [Sampling](https://modelcontextprotocol.io/specification/draft/client/sampling) documentation.

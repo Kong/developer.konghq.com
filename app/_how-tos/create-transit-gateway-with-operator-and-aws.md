@@ -46,7 +46,7 @@ faqs:
   - q: Can I create a {{site.konnect_short_name}} Transit Gateway linked to an Azure virtual network?
     a: Yes, refer to [Azure peering](/dedicated-cloud-gateways/azure-peering/) to learn how to configure your VNET Peering App on Azure, then configure the [`KonnectCloudGatewayTransitGateway`](/operator/reference/custom-resources/#konnectcloudgatewaytransitgateway) resource with the [`azureTransitGateway`](/operator/reference/custom-resources/#azuretransitgateway) field.
   - q: I'm getting a `unable to create transit gateway with cidr block 10.10.0.0/24 because it overlaps with cidr blocks from an existing attachment` error when I try to validate my transit gateway resource, how do I fix it?
-    a: This is caused by a CIDR block overlap. Contact [Kong Support](https://support.konghq.com/support/s/) to resolve this.
+    a: This is caused by a CIDR block overlap. To resolve this, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 related_resources:
   - text: AWS Transit Gateway peering
     url: /dedicated-cloud-gateways/transit-gateways/

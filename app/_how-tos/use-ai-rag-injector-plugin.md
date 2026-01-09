@@ -67,8 +67,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy Advanced plugin
@@ -148,93 +146,97 @@ are structured data other than plain texts.
 
 The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID.
 
-Save the script as `inject_policy.py`:
+{% validation custom-command %}
+command: |
+  cat <<EOF > inject_policy.py
+  from langchain_text_splitters import RecursiveCharacterTextSplitter
+  import requests
 
-```python
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-import requests
+  TEXT = ["""
+  Acme Corp. Travel Policy
+  1. Purpose
+  This policy outlines the guidelines for employees traveling on company business to ensure efficient, cost-effective, and accountable use of company funds.
+  1. Scope
+  This policy applies to all employees traveling on company business, including domestic and international travel.
+  1. Travel Approval
 
-TEXT = ["""
-Acme Corp. Travel Policy
-1. Purpose
-This policy outlines the guidelines for employees traveling on company business to ensure efficient, cost-effective, and accountable use of company funds.
-2. Scope
-This policy applies to all employees traveling on company business, including domestic and international travel.
-3. Travel Approval
+      All travel must be pre-approved by the employee's supervisor and, if applicable, by higher management, based on business need and cost-effectiveness.
+      Travel requests should be submitted at least [Number] weeks/days in advance, including destination, purpose, dates, and estimated costs.
+      Travel requests should be submitted using the designated travel request form.
 
-    All travel must be pre-approved by the employee's supervisor and, if applicable, by higher management, based on business need and cost-effectiveness.
-    Travel requests should be submitted at least [Number] weeks/days in advance, including destination, purpose, dates, and estimated costs.
-    Travel requests should be submitted using the designated travel request form.
+  2. Transportation
 
-4. Transportation
+      Air Travel:
 
-    Air Travel:
+      Employees should book the most cost-effective airfare, considering time and cost.
 
-    Employees should book the most cost-effective airfare, considering time and cost.
+  Business class or first-class travel is only permitted with prior approval and for exceptional circumstances.
+  Employees should choose direct flights whenever possible.
 
-Business class or first-class travel is only permitted with prior approval and for exceptional circumstances.
-Employees should choose direct flights whenever possible.
+  Ground Transportation:
 
-Ground Transportation:
+      For travel to and from airports or within the destination, employees should use cost-effective options such as shuttles, public transportation, or car services.
 
-    For travel to and from airports or within the destination, employees should use cost-effective options such as shuttles, public transportation, or car services.
+  Personal vehicle use is permitted for business travel, with reimbursement at the standard IRS mileage rate.
+  Parking and tolls: are reimbursable when necessary.
 
-Personal vehicle use is permitted for business travel, with reimbursement at the standard IRS mileage rate.
-Parking and tolls: are reimbursable when necessary.
+  Train Travel:
 
-Train Travel:
+      Train travel is considered an appropriate mode of transportation for certain destinations and will be reimbursed if the cost is less than other means of transportation.
 
-    Train travel is considered an appropriate mode of transportation for certain destinations and will be reimbursed if the cost is less than other means of transportation.
+  5. Lodging
 
-5. Lodging
+      Employees should choose lodging that is cost-effective and meets the needs of the business trip.
+      Hotel selection: should be based on location, proximity to meeting venues, and cost.
+      Employees should book accommodations in advance to secure the best rates.
+      Travelers should share hotel rooms with other employees when feasible and appropriate.
 
-    Employees should choose lodging that is cost-effective and meets the needs of the business trip.
-    Hotel selection: should be based on location, proximity to meeting venues, and cost.
-    Employees should book accommodations in advance to secure the best rates.
-    Travelers should share hotel rooms with other employees when feasible and appropriate.
+  6. Meals
 
-6. Meals
+      Meals are reimbursable during business travel, but expenses should be kept reasonable and appropriate.
+      Employees should present receipts for all meal expenses.
+      Alcoholic beverages: are not reimbursable.
+      When attending business functions with meals provided, expenses for meals purchased elsewhere are not reimbursed unless specifically authorized in advance.
 
-    Meals are reimbursable during business travel, but expenses should be kept reasonable and appropriate.
-    Employees should present receipts for all meal expenses.
-    Alcoholic beverages: are not reimbursable.
-    When attending business functions with meals provided, expenses for meals purchased elsewhere are not reimbursed unless specifically authorized in advance.
+  7. Other Expenses
 
-7. Other Expenses
+      Entertainment expenses: are generally not reimbursable, except for business-related entertainment that is necessary for client relations.
+      Telephone expenses: are reimbursable when necessary for business travel, but should be kept to a minimum.
+      Internet access: is reimbursable when necessary for business travel.
 
-    Entertainment expenses: are generally not reimbursable, except for business-related entertainment that is necessary for client relations.
-    Telephone expenses: are reimbursable when necessary for business travel, but should be kept to a minimum.
-    Internet access: is reimbursable when necessary for business travel.
+  8. Reimbursement
 
-8. Reimbursement
+      Employees should submit all travel expenses for reimbursement within 27 days of the trip.
+      Employees should submit receipts for all travel expenses.
+      Reimbursement will be made in accordance with company policy.
 
-    Employees should submit all travel expenses for reimbursement within 27 days of the trip.
-    Employees should submit receipts for all travel expenses.
-    Reimbursement will be made in accordance with company policy.
+  9. Compliance
 
-9. Compliance
+      All employees are expected to comply with this travel policy.
+      Violation of this policy may result in disciplinary action.
 
-    All employees are expected to comply with this travel policy.
-    Violation of this policy may result in disciplinary action.
+  10. Policy Updates
 
-10. Policy Updates
+      This policy may be updated from time to time as needed.
+      Employees will be notified of any changes to this policy.
+  """]
 
-    This policy may be updated from time to time as needed.
-    Employees will be notified of any changes to this policy.
-"""]
+  text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+  docs = text_splitter.create_documents(TEXT)
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-docs = text_splitter.create_documents(TEXT)
+  print("Injecting %d chunks..." % len(docs))
 
-print("Injecting %d chunks..." % len(docs))
-
-for doc in docs:
-    response = requests.post(
-        "http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk", # Replace the placeholder with your AI RAG Injector plugin ID
-        data={'content': doc.page_content}
-    )
-    print(response.json())
-```
+  for doc in docs:
+      response = requests.post(
+          "http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk", # Replace the placeholder with your AI RAG Injector plugin ID
+          data={'content': doc.page_content}
+      )
+      print(response.json())
+  EOF
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 {:.info}
 > You can replace `print(response.json())` with `print(response.text)` to view the raw HTTP response body as a plain string instead of a parsed JSON object. This is useful for debugging cases where:
@@ -247,9 +249,12 @@ for doc in docs:
 
 Run the `inject_policy.py` script in your terminal:
 
-```bash
-python3 ./inject_policy.py
-```
+{% validation custom-command %}
+command: python3 ./inject_policy.py
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 This will output the number of chunks created and display the response from the injector endpoint for each chunk:
 
@@ -261,7 +266,7 @@ Injecting 4 chunks...
 {"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d4e5f678-9012-3456-de78-90abcdef1234"}}
 ```
 {:.no-copy-code}
-{:.no-copy-code}
+
 
 ### Ingest content to the vector database
 
@@ -272,7 +277,8 @@ The following example shows how to ingest content to the vector database for bui
 <!--vale off-->
 {% control_plane_request %}
 url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
-status_code: 201
+method: POST
+status_code: 200
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
@@ -285,6 +291,7 @@ This will return something like the following:
 ```sh
 {"metadata":{"embeddings_tokens_count":3,"chunk_id": "3fa85f64-5717-4562-b3fc-2c963fabcdef","ingest_duration":550}}
 ```
+{:.no-copy-code}
 
 ## Test RAG configuration
 
@@ -301,6 +308,8 @@ Use the following in-scope questions to verify that the AI responds accurately b
 
   {% validation request-check %}
   url: /anything
+  method: POST
+  status_code: 200
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -314,6 +323,8 @@ Use the following in-scope questions to verify that the AI responds accurately b
 
   {% validation request-check %}
   url: /anything
+  method: POST
+  status_code: 200
   headers:
     - 'Content-Type: application/json'
     - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -330,6 +341,8 @@ Use the following in-scope questions to verify that the AI responds accurately b
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -343,6 +356,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -359,6 +374,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -372,6 +389,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -402,6 +421,8 @@ Use the following out-of-scope questions to confirm that the AI correctly refuse
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -413,6 +434,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -429,6 +452,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -440,6 +465,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -455,6 +482,8 @@ These prompts reference company policies that aren't part of the travel policy c
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -466,6 +495,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -482,6 +513,8 @@ These prompts are vague, outside compliance scope, or might encourage hallucinat
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -493,6 +526,8 @@ body:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -513,7 +548,8 @@ To evaluate which documents are retrieved for a specific prompt, use the followi
 <!--vale off-->
 {% control_plane_request %}
 url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/lookup_chunks
-status_code: 201
+method: POST
+status_code: 200
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
@@ -534,7 +570,7 @@ If you are running {{site.base_gateway}} in traditional mode, you can update con
 
 However, this won't work in hybrid mode or {{site.konnect_short_name}} because the control plane can't access the plugin's backend storage.
 
-To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, you can use the below Python script for splitting content into chunks:
+To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, you can use the below Lua script for splitting content into chunks:
 
 1. Retrieve the ID of the AI RAG Injector plugin that you want to update.
 2. Copy and paste the following script to a local file, for example `ingest_update.lua`:

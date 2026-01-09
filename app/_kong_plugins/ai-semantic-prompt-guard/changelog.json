@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "deprecate config.rules.max_request_body_size with config.max_request_body_size.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed the deletion of guard instances and improved error handling.\n",

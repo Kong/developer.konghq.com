@@ -33,6 +33,45 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.13.x breaking changes
+
+Review the [changelog](/gateway/changelog/#31300) for all the changes in this release.
+
+### 3.13.0.0
+
+Breaking changes in the 3.13.0.0 release.
+
+#### Admin API: empty value encoding
+
+Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects. 
+They were previously incorrectly encoded as arrays. 
+
+#### AI Semantic Prompt Guard: request body size parameter
+
+Replaced the parameter `config.rules.max_request_body_size` with `config.max_request_body_size`. 
+
+`config.rules.max_request_body_size` is now deprecated and will be removed in a future version.
+
+#### Known issues in 3.13.0.0
+
+The following is a list of known issues in 3.13.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenTelemetry plugin: Incorrect attribute name for request count metric"
+    description: |
+      The `http.server.request.count` metric exposes the attribute `kong.response.status_code` instead of `http.response.status_code`.
+    status: Not fixed
+{% endtable %}
+
+
 ## 3.12.x breaking changes
 
 Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.

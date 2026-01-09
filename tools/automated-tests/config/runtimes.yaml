@@ -4,6 +4,10 @@ gateway:
     SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
     ANTHROPIC_API_KEY: anthropic-api-key
   versions:
+    - version: "3.13"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.13"
     - version: "3.12"
       env:
         KONG_IMAGE_NAME: kong/kong-gateway
@@ -32,12 +36,12 @@ gateway:
     setup:
       commands:
         - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
-        - sleep 5
 
       rbac:
         commands:
           - |
             curl -Ls https://get.konghq.com/quickstart | bash -s --  -r ""  -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e "KONG_LICENSE_DATA" -e "KONG_ENFORCE_RBAC=on" -e "KONG_ADMIN_GUI_AUTH=basic-auth" -e "KONG_PASSWORD=kong" -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
+
       wasm:
         commands:
           - |
@@ -55,7 +59,6 @@ gateway:
     setup:
       commands:
         - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
-        - sleep 5
 
     cleanup:
       commands:

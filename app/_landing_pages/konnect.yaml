@@ -85,6 +85,17 @@ rows:
               - text: Set up {{site.konnect_catalog}} integrations
                 url: /catalog/
                 align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.metering_and_billing}}"
+            description: |
+                {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices. 
+            icon: /assets/icons/metering-and-billing.svg
+            ctas:
+              - text: Set up {{site.metering_and_billing}}
+                url: /metering-and-billing/
+                align: end
 
   - header:
       type: h2

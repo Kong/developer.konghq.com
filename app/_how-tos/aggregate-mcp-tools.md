@@ -122,7 +122,6 @@ prereqs:
       - currency-route
       - listener-route
 
-automated_tests: false
 ---
 
 ## Configure the first AI MCP Proxy plugin

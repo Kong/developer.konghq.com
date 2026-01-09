@@ -88,6 +88,8 @@ related_resources:
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
 
+You need the [Content Editor role](/konnect-platform/teams-and-roles/#dev-portal) to edit snippets, pages, and customization.
+
 ![Dev Portal Editor](/assets/images/dev-portal/dev-portal-editor.png)
 > _**Figure 1:** The Portal Editor UI in Dev Portal._
 

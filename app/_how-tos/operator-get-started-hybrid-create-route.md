@@ -6,7 +6,7 @@ content_type: how_to
 permalink: /operator/dataplanes/get-started/hybrid/create-route/
 series:
   id: operator-get-started-hybrid
-  position: 3
+  position: 4
 
 breadcrumbs:
   - /operator/

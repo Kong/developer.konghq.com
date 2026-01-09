@@ -35,23 +35,7 @@ tldr:
 
 ## Generate a certificate
 
-1. Generate a new certificate and key:
-
-    ```sh
-    openssl req -new -x509 -nodes -newkey rsa:2048 -subj "/CN=kongdp/C=US" -keyout ./tls.key -out ./tls.crt
-    ```
-
-1. Create a Kubernetes secret that contains the certificate:
-
-    ```sh
-    kubectl create -n kong secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
-    ```
-
-1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
-
-    ```sh
-    kubectl label -n kong secret konnect-client-tls konghq.com/konnect-dp-cert=true
-    ```
+{% include k8s/operator_client_certificate.md namespace="kong" %}
 
 ## Create a KonnectExtension
 
@@ -62,7 +46,6 @@ tldr:
 ## Validate your configuration
 
 To ensure that the correct certificate has been used, fetch the Data Plane certificate from the {{ site.konnect_short_name }} API.
-
 
 Fetch the Control Plane ID:
 

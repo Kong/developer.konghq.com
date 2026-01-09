@@ -150,7 +150,17 @@ data:
 
 1. Create a Route to the `echo` service to test your custom plugin: 
 
-{% include_cached /k8s/httproute.md path='/echo' name='echo' service='echo' port='1027' skip_host=true indent=4 %}
+<!--vale off-->
+{% httproute %}
+name: echo
+matches:
+  - path: /echo
+    service: echo
+    port: 1027
+skip_host: true
+indent: 4
+{% endhttproute %}
+<!--vale on-->
 
 ## Validate your configuration
 
