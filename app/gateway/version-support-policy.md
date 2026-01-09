@@ -129,6 +129,9 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% endfor %}
 {% endnavtabs %}
 
+{:.info}
+> **Note**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
+
 For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
 
 ## Marketplaces

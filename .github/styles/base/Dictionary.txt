@@ -710,7 +710,9 @@ requeue
 request_counts
 requestable
 RequestResponse
+rerank
 Rerank
+reranked
 reranking
 resourceVersion
 response_format
