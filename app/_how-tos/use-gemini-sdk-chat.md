@@ -44,20 +44,25 @@ prereqs:
   inline:
     - title: Gemini AI
       content: |
-        Before you begin, you must get the following credentials from Google Cloud:
+        Before you begin, you must get the Gemini API key from Google Cloud:
 
-        - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
-        - **Project ID**: Your Google Cloud project identifier
-        - **Location ID**: The region where your Vertex AI endpoint is deployed (for example, `us-central1`)
-        - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
+        1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+        2. Select or create a project.
+        3. Enable the **Generative Language API**:
+           - Navigate to **APIs & Services > Library**.
+           - Search for "Generative Language API".
+           - Click **Enable**.
+        4. Create an API key:
+           - Navigate to **APIs & Services > Credentials**.
+           - Click **Create Credentials > API Key**.
+           - Copy the generated API key.
 
-        Export these values as environment variables:
+
+        Export the API key as an environment variable:
         ```sh
-        export GEMINI_API_KEY="<your_gemini_api_key>"
-        export GCP_PROJECT_ID="<your-gemini-project-id>"
-        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
-        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
+        export DECK_GEMINI_API_KEY="<your_gemini_api_key>"
         ```
+      icon_url: /assets/icons/gcp.svg
     - title: Python
       include_content: prereqs/python
       icon_url: /assets/icons/python.svg
@@ -84,54 +89,37 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Configure the AI Proxy Advanced plugin
+## Configure the AI Proxy plugin
 
-The AI Proxy Advanced plugin supports Google's Gemini models and works with the Google Generative AI SDK. This configuration allows you to use the standard Gemini SDK while Kong AI Gateway handles authentication with GCP service accounts and manages the connection to Vertex AI endpoints.
-
-Apply the plugin configuration with your GCP service account credentials:
+The AI Proxy plugin supports Google's Gemini models and works with the Google Generative AI SDK. This configuration allows you to use the standard Gemini SDK. Apply the plugin configuration with your GCP service account credentials:
 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy-advanced
+    - name: ai-proxy
       service: gemini-service
       config:
+        route_type: llm/v1/chat
         llm_format: gemini
-        genai_category: text/generation
-        targets:
-          - route_type: llm/v1/chat
-            logging:
-              log_payloads: false
-              log_statistics: true
-            model:
-              provider: gemini
-              name: gemini-3-pro-preview
-              options:
-                gemini:
-                  api_endpoint: ${gcp_api_endpoint}
-                  project_id: ${gcp_project_id}
-                  location_id: ${gcp_location_id}
-            auth:
-              allow_override: false
-              gcp_use_service_account: true
-              gcp_service_account_json: ${gcp_service_account_json}
+        auth:
+            param_name: key
+            param_value: ${gcp_api_key}
+            param_location: query
+        model:
+            provider: gemini
+            name: gemini-2.0-flash-exp
 variables:
-  gcp_api_endpoint:
-    value: $GCP_API_ENDPOINT
-  gcp_project_id:
-    value: $GCP_PROJECT_ID
-  gcp_service_account_json:
-    value: $GCP_SERVICE_ACCOUNT_JSON
-  gcp_location_id:
-    value: $GCP_LOCATION_ID
+  gcp_api_key:
+    value: $GCP_API_KEY
 {% endentity_examples %}
 
 ## Test with Google Generative AI SDK
 
 Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because Kong AI Gateway handles authentication, then sends a generation request through the gateway:
+
 ```py
-cat << 'EOF' > gemini.py
 #!/usr/bin/env python3
+import os
 from google import genai
 
 BASE_URL = "http://localhost:8000/gemini"
@@ -142,8 +130,11 @@ def gemini_chat():
         print(f"Connecting to: {BASE_URL}")
 
         client = genai.Client(
-            api_key="dummy-key",  # Replace with your Gemini API Key
-            vertexai=False
+            api_key=os.environ.get("DECK_GEMINI_API_KEY"),
+            vertexai=False,
+            http_options={
+                "base_url": BASE_URL
+            }
         )
 
         print("Sending message...")
@@ -161,7 +152,6 @@ def gemini_chat():
 
 if __name__ == "__main__":
     gemini_chat()
-EOF
 ```
 
 Run the script:

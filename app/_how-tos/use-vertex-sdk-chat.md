@@ -120,6 +120,7 @@ Create a test script that sends a request using Vertex AI's native API format. T
 ```py
 cat << 'EOF' > vertex.py
 #!/usr/bin/env python3
+import os
 from google import genai
 import sys
 import time
@@ -138,8 +139,11 @@ def spinner():
 
 client = genai.Client(
     vertexai=True,
-    project="your-project", # Replace with your project ID
-    location="your-vertex-project-location" # Replace with your loaction ID
+    project=os.environ.get("DECK_GCP_PROJECT_ID", "gcp-sdet-test"),
+    location=os.environ.get("DECK_GCP_LOCATION_ID", "us-central1"),
+    http_options={
+        "base_url": "http://localhost:8000/gemini"
+    }
 )
 
 stop_spinner = False
@@ -149,7 +153,7 @@ spinner_thread.start()
 try:
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp",
-        contents="Hello!"
+        contents="Hello! Say hello back to me!"
     )
     stop_spinner = True
     spinner_thread.join()
@@ -159,6 +163,7 @@ except Exception as e:
     stop_spinner = True
     spinner_thread.join()
     print(f"Error: {e}")
+EOF
 ```
 
 ## Validate the configuration
