@@ -87,7 +87,6 @@ rows:
             description: |
               Designed for use with {{site.base_gateway}} on-prem, the `kong-gateway` provider allows you to manage Kong Entities using Terraform
 
-              This provider is currently available as a **BETA** release
             ctas:
               - text: GitHub
                 url: "https://github.com/Kong/terraform-provider-kong-gateway"
