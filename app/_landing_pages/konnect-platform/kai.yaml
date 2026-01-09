@@ -28,7 +28,7 @@ rows:
                     Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
                     KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts.
                     KAi is always disabled by default for Enterprise accounts.
-                    Enterprise accounts can enable KAi by contacting their Kong account manager.
+                    Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
 
                     KAi can help you do the following:
                     * Run a debug session to analyze API performance issues
@@ -162,11 +162,11 @@ rows:
                 supported: Planned
               - product: Kong Mesh
                 supported: Planned
-              - product: Developer Portal
+              - product: Dev Portal
                 supported: Planned
-              - product: Service Catalog
+              - product: "{{site.konnect_catalog}}"
                 supported: Planned
-              - product: OpenMeter
+              - product: "{{site.metering_and_billing}}"
                 supported: Planned (~Q1'26)
               - product: Analytics
                 supported: Planned (~Q1'26))
