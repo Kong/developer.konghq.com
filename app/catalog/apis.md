@@ -408,12 +408,12 @@ Once published, the API appears in the selected Dev Portal. If [user authenticat
 
 ### Allow developers to try requests from the Dev Portal spec renderer
 
-When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. Additionally, you can specify the `x-kong-client-credentials-config` field in your OpenAPI specs and it will add additional input fields to the API that users can fill out. For example, you can require the non-standard `audience` parameter to be passed when requesting the token using the `clientCredentials` flow.
+When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
 
 The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
 
 
-You must also enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
+You may need to enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
 
 {% feature_table %} 
 item_title: Use case
@@ -442,6 +442,27 @@ features:
       * Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
     cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
+
+When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters.
+
+For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
+
+```yaml
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-kong-client-credentials-config:
+        extraTokenRequestParameters:
+          - name: audience
+            label: Audience
+            description: The audience of the authorization server to scope tokens to
+            omitIfEmpty: true
+            required: true
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://example.com/oauth/token'
+```
 
 ### Filtering published APIs in Dev Portal
 
