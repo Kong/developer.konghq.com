@@ -1,0 +1,3 @@
+{:.info}
+> This quickstart script is meant for demo purposes only, therefore it runs locally with most default parameters and a small number of exposed ports.
+If you want to run {{ site.base_gateway }} as a part of a production-ready platform, set up your control plane and data planes through the [{{site.konnect_short_name}} UI](/event-gateway/?tab=konnect-ui#install-event-gateway), or using [Terraform](/terraform/).
