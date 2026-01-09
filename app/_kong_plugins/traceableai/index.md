@@ -3,7 +3,7 @@ title: 'Traceable.ai'
 name: 'Traceable.ai'
 
 content_type: plugin
-
+tier: enterprise
 publisher: traceable-ai
 description: 'API security with inline request blocking and data capture'
 

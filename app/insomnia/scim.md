@@ -58,9 +58,6 @@ faqs:
   - q: Does Insomnia store the SCIM token value?
     a: |
       No. Insomnia does not store the SCIM token value. Store the token securely after it is generated.
-=======
-    a: |
-      Yes. SCIM tokens can expire. However, Insomnia automatically attempts to refresh the token every 90 days. If the automatic refresh fails, Insomnia warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. If it fails, on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view, manually refresh the token.
 ---
 
 Use SCIM (System for Cross-domain Identity Management) to manage users and teams in Insomnia through your identity provider (IdP) instead of managing them manually.

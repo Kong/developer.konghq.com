@@ -754,8 +754,6 @@ schema's
 scim
 SCIM
 Scriptable
-scim 
-SCIM
 SDKs
 search_by_username
 secret_id
