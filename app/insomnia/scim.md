@@ -67,8 +67,6 @@ SCIM is available on the Enterprise plan and is designed to work alongside [Sing
 - Manage user access, team membership, and license consumption through your IdP after configuring SSO.
 - Keep existing manually managed users unchanged unless you explicitly modify them.
 
-{:.info}
-> SCIM applies only to users and groups that are provisioned through your IdP. Users who were added manually before SCIM was enabled remain unchanged and continue to consume licenses until you update or remove them manually.
 
 ## User and team provisioning
 SCIM provisioning in Insomnia follows predictable, non-destructive rules:
@@ -79,7 +77,7 @@ SCIM provisioning in Insomnia follows predictable, non-destructive rules:
 SCIM provisioning lets you manage access to Insomnia through your IdP, in the same way that you manage access to other enterprise applications.
 
 {:.info}
-> Users who were added manually before SCIM was enabled you enabled SCIM remain separate from users that were provisioned through your IdP. Insomnia does not automatically change or reconcile manually added users when you enable SCIM. This behavior is expected and prevents unintended changes to existing accounts.
+> SCIM applies only to users and groups provisioned through your identity provider. Users who were added manually before SCIM was enabled remain unchanged and continue to consume licenses until you update or remove them manually. Insomnia does not automatically reconcile or modify manually added users when you enable SCIM. This behavior prevents unintended changes to existing accounts.
 
 ## License usage
 - Users provisioned through SCIM consume Enterprise licenses.
