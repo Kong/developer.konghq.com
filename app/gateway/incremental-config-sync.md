@@ -127,7 +127,7 @@ Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which prot
 >
 > We recommend the following best practices:
 >
-> - Avoid direct database modifications; use supported interfaces (Admin API, decK, Terraform).
+> - Avoid direct database modifications; use [supported interfaces](/tools/) (Admin API, decK, Terraform).
 > - If unavoidable, clear the DP cache (`/usr/local/kong/dbless.lmdb`) and restart to force a full sync.
 > - Restart DPs after imports to receive a fresh snapshot from the CP.
 
