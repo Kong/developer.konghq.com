@@ -20,9 +20,11 @@ related_resources:
   - text: Enterprise account management
     url: /insomnia/enterprise-account-management/
 faqs:
-  - q: How long are SCIM connector tokens valid?
+  - q: Do SCIM tokens expire?
     a: |
-      SCIM connector tokens in Insomnia are valid for **90 days**. After 90 days, generate a new token and update it in your Identity Provider to keep synchronization active. 
+      Yes. SCIM tokens can expire. However, Insomnia automatically attempts to refresh the token every 90 days. If the automatic refresh fails, Insomnia warns the account owner and co-owners by email starting 20 days before the token expires. They also see warnings on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view. 
+      
+      To fix an automatic token refresh failure, go to [SCIM](https://app.insomnia.rest/app/enterprise/scim), and click **Refresh Token**. Then, in the **Passphrase** field, enter your passphrase, and click **Refresh Token** again. This manually refreshes your SCIM connector token.
 ---
 
 System for Cross-domain Identity Management (SCIM) allows Insomnia to provision Enterprise member accounts and teams using an Identity Provider configured for [Single Sign-On](/insomnia/sso/). 
