@@ -34,31 +34,17 @@ kind: Namespace
 metadata:
   name: kuma-example
   labels:
-    # injects {{site.mesh_product_name}} sidecar into every Pod in that namespace,
-    # unless a user explicitly opts out on per-Pod basis
+    # injects {{site.mesh_product_name}} sidecar into every Pod in that namespace
     kuma.io/sidecar-injection: enabled
 ```
 
-To opt out of data plane injection into a particular Pod, you need to label it with `kuma.io/sidecar-injection=disabled`:
+If you want to exclude certain Pods from the mesh, you can opt out of data plane injection using the `kuma.io/sidecar-injection=disabled` label.
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: example-app
-  namespace: kuma-example
-spec:
-  ...
-  template:
-    metadata:
-      ...
-      labels:
-        # indicates to {{site.mesh_product_name}} that this Pod doesn't need a sidecar
-        kuma.io/sidecar-injection: disabled
-    spec:
-      containers:
-        ...
-```
+{:.warning}
+> {% new_in 2.11%} You must label the namespace with `kuma.io/sidecar-injection=disabled`, and then label Pods that require sidecar injection with `kuma.io/sidecar-injection=enabled`. Labeling a specific Pod with `kuma.io/sidecar-injection=disabled` when the namespace is labeled with `kuma.io/sidecar-injection=enabled` will not prevent sidecar injection.
+
+{:.info}
+> Since {{ site.mesh_product_name }} 2.11, each namespace in the mesh must have the `kuma.io/sidecar-injection` label. 
 
 Once your Pod is running you can see the data plane CRD that matches it using `kubectl`:
 
