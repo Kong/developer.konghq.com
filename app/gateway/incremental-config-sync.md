@@ -121,13 +121,14 @@ Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which prot
 * You can roll out incremental config sync incrementally by toggling this variable per data plane, no additional changes are required.
 
 {:.warning}
-> Direct Control Plane database writes (outside the Admin API, decK, or Terraform) can cause Data Planes—especially with incremental sync—to treat themselves as
-> up-to-date and skip pulling changes.
-> Symptoms: new config not applied; routes returning 404.
-> Recommended:
-> 
-> - Avoid direct DB modifications; use supported interfaces (Admin API, decK, Terraform).
-> - If unavoidable, clear the DP cache (/usr/local/kong/dbless.lmdb) and restart to force a full sync.
+> Direct control plane database writes (outside the Admin API, decK, or Terraform) can cause data planes to treat themselves as up-to-date and skip pulling changes. 
+> This is especially likely when using incremental config sync. 
+> If this happens, new configuration won't be applied, and valid Routes will return 404 errors.
+>
+> We recommend the following best practices:
+>
+> - Avoid direct database modifications; use supported interfaces (Admin API, decK, Terraform).
+> - If unavoidable, clear the DP cache (`/usr/local/kong/dbless.lmdb`) and restart to force a full sync.
 > - Restart DPs after imports to receive a fresh snapshot from the CP.
 
 ### Rolling back to full sync
