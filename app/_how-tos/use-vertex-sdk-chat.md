@@ -169,6 +169,7 @@ EOF
 ## Validate the configuration
 
 Now, let's run the script we created in the previous step:
+
 ```sh
 python3 vertex.py
 ```
@@ -176,6 +177,5 @@ python3 vertex.py
 Expected output:
 
 ```text
-Model: gemini-2.0-flash-exp
-Hello there! How can I help you today?
+Hello there!
 ```

@@ -9,7 +9,7 @@ related_resources:
   - text: Google Generative AI SDK
     url: https://ai.google.dev/gemini-api/docs/sdks
 
-description: "Configure the AI Proxy Advanced plugin for Gemini and test with the Google Generative AI SDK using the standard Gemini API format."
+description: "Configure the AI Proxy plugin for Gemini and test with the Google Generative AI SDK using the standard Gemini API format."
 
 products:
   - gateway
@@ -160,10 +160,9 @@ python3 gemini.py
 ```
 
 Expected output:
+
 ```text
 Connecting to: http://localhost:8000/gemini
 Sending message...
 Response: Hello! I'm doing well, thank you for asking. As a large language model, I don't experience feelings or emotions in the way humans do, but I'm functioning properly and ready to assist you. How can I help you today?
 ```
-
-The response contains the model's generated text. The SDK handles the request formatting and response parsing, while Kong AI Gateway manages authentication and proxying to Vertex AI.
