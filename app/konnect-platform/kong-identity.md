@@ -121,7 +121,9 @@ You can configure dynamic claim templates to generate custom claims during runti
 
 The type is inferred from the value. 
 
-JWT claim values can also be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries.
+JWT claim values can also be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries. For example:
+* `${ uuidv4 }` will create a UUID every time a new token is created.
+* `${ or ( .RequestHeaders.uuid | uuidParse ) uuidv4 }` will source the header UUID from the request and if it's not found or not a UUID, it would generate one.
 
 Claims support templating via the context passed to the client during the authentication, in the following format:
 
@@ -163,6 +165,196 @@ Claims support templating via the context passed to the client during the authen
 ```
 
 To test the templating, you can use the [`/v1/auth-servers/$authServerId/clients/$clientId/test-claim` endpoint](/api/konnect/kong-identity/v1/#/operations/testClaimForClient).
+
+Dynamic claim templates support all the following functions from [sprig](https://masterminds.github.io/sprig/) in the claim templating engine:
+
+<!--vale off -->
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Supported functions
+    key: functions
+rows:
+  - type: Date functions
+    functions: |
+      * `ago`
+      * `date`
+      * `dateInZone`
+      * `dateModify`
+      * `duration`
+      * `durationRound`
+      * `htmlDate`
+      * `htmlDateInZone`
+      * `mustDateModify`
+      * `mustToDate`
+      * `now`
+      * `toDate`
+      * `unixEpoch`
+  - type: Strings
+    functions: |
+      * `abbrev`
+      * `abbrevboth`
+      * `trunc`
+      * `trim`
+      * `upper`
+      * `lower`
+      * `title`
+      * `untitle`
+      * `substr`
+      * `repeat`
+      * `trimAll`
+      * `trimSuffix`
+      * `trimPrefix`
+      * `nospace`
+      * `initials`
+      * `randAlphaNum`
+      * `randAlpha`
+      * `randAscii`
+      * `randNumeric`
+      * `swapcase`
+      * `shuffle`
+      * `snakecase`
+      * `camelcase`
+      * `kebabcase`
+      * `wrap`
+      * `wrapWith`
+      * `contains`
+      * `hasPrefix`
+      * `hasSuffix`
+      * `quote`
+      * `squote`
+      * `cat`
+      * `indent`
+      * `nindent`
+      * `replace`
+      * `plural`
+      * `sha1sum`
+      * `sha256sum`
+      * `adler32sum`
+      * `toString`
+      * `atoi`
+      * `int64`
+      * `int`
+      * `float64`
+      * `seq`
+      * `toDecimal`
+      * `split`
+      * `splitList`
+      * `splitn`
+      * `toStrings`
+      * `until`
+      * `untilStep`
+      * `join`
+      * `sortAlpha`
+  - type: Math
+    functions: |
+      * `add1`
+      * `add`
+      * `sub`
+      * `div`
+      * `mod`
+      * `mul`
+      * `randInt`
+      * `add1f`
+      * `addf`
+      * `subf`
+      * `divf`
+      * `mulf`
+      * `biggest`
+      * `max`
+      * `min`
+      * `maxf`
+      * `minf`
+      * `ceil`
+      * `floor`
+      * `round`
+  - type: Defaults
+    functions: |
+      * `default`
+      * `empty`
+      * `coalesce`
+      * `all`
+      * `any`
+      * `compact`
+      * `mustCompact`
+      * `fromJson`
+      * `toJson`
+      * `toPrettyJson`
+      * `toRawJson`
+      * `mustFromJson`
+      * `mustToJson`
+      * `mustToPrettyJson`
+      * `mustToRawJson`
+      * `ternary`
+      * `deepCopy`
+      * `mustDeepCopy`
+  - type: Paths
+    functions: |
+      * `base`
+      * `dir`
+      * `clean`
+      * `ext`
+      * `isAbs`
+  - type: Encoding
+    functions: |
+      * `b64enc`
+      * `b64dec`
+      * `b32enc`
+      * `b32dec`
+  - type: Data Structures
+    functions: |
+      * `tuple`
+      * `list`
+      * `dict`
+      * `get`
+      * `set`
+      * `unset`
+      * `hasKey`
+      * `pluck`
+      * `keys`
+      * `pick`
+      * `omit`
+      * `merge`
+      * `mergeOverwrite`
+      * `mustMerge`
+      * `mustMergeOverwrite`
+      * `values`
+      * `append`
+      * `mustAppend`
+      * `prepend`
+      * `mustPrepend`
+      * `first`
+      * `mustFirst`
+      * `rest`
+      * `mustRest`
+      * `last`
+      * `mustLast`
+      * `initial`
+      * `mustInitial`
+      * `reverse`
+      * `mustReverse`
+      * `uniq`
+      * `mustUniq`
+      * `without`
+      * `mustWithout`
+      * `has`
+      * `mustHas`
+      * `slice`
+      * `mustSlice`
+      * `concat`
+      * `dig`
+      * `chunk`
+      * `mustChunk`
+  - type: UUIDs
+    functions: |
+      * `uuidv4`
+  - type: URLs
+    functions: |
+      * `urlParse`
+      * `urlJoin`
+{% endtable %}
+<!--vale on -->
 
 
 ## Configure Kong Identity
