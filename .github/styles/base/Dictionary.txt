@@ -749,6 +749,8 @@ SCCs
 SCCs
 schema's
 Scriptable
+scim 
+SCIM
 SDKs
 search_by_username
 secret_id
