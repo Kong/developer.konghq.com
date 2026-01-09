@@ -129,7 +129,6 @@ The script includes two optional flags for debugging and inspection:
 ```py
 cat << 'EOF' > vertex_stream.py
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 from google import genai
 from google.genai.types import HttpOptions
 import os
