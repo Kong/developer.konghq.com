@@ -7,8 +7,8 @@ permalink: /mesh/federate/
 bread-crumbs: 
   - /mesh/
 related_resources:
-  - text: Add a builtin gateway
-    url: '/mesh/add-builtin-gateway/'
+  - text: Set up a built-in gateway with {{site.mesh_product_name}}
+    url: '/how-to/set-up-a-built-in-mesh-gateway/'
   - text: 'Producer and Consumer policies'
     url: /mesh/consumer-producer-policies/
   - text: 'Multi-zone deployment'
