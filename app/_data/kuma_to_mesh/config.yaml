@@ -493,17 +493,6 @@ pages:
 
 # Post GA
   -
-    path: app/_src/documentation/configuration.md
-    title: 'Control Plane configuration'
-    description: 'Guide for configuring the {{site.mesh_product_name}} Control Plane using environment variables or YAML, with details on store types (memory, Kubernetes, PostgreSQL) and configuration inspection.'
-    url: '/mesh/cp-config/'
-    related_resources:
-
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Use Kong as a delegated Gateway
-        url: '/mesh/gateway-delegated/'
-  -
     path: app/_src/documentation/health.md
     title: 'Dataplane Health'
     description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
@@ -511,8 +500,8 @@ pages:
     related_resources:
       - text: Mesh CLI
         url: '/mesh/cli/'
-      - text: Mesh Control Plane configuration
-        url: '/mesh/cp-config/'
+      - text: Mesh control plane configuration
+        url: '/mesh/control-plane-configuration/'
       - text: Mesh observability
         url: '/mesh/observability/'
   -
