@@ -28,11 +28,13 @@ All possible parameters and their default values are in the [`kuma-cp` reference
 
 {:.info}
 > Environment variables usually match the YAML path by replacing `.` with `_`, capitalizing names and prefixing with `KUMA_`.
-> For the YAML path `store.postgres.port` for example, the corresponding environment variable is `KUMA_STORE_POSTGRES_PORT`.
+> For example, for the YAML path `store.postgres.port`, the corresponding environment variable is `KUMA_STORE_POSTGRES_PORT`.
 
 ## Configuration examples
 
-Let's say that we want to configure the refresh interval for configuration with the data plane proxy, the examples below show you how to do that with environment variables or a YAML file, on Kubernetes or Universal.
+The following examples show you how to apply configuration with environment variables or a YAML file, on Kubernetes or Universal.
+
+These examples show you how to set the refresh interval, but the format applies to all {{site.mesh_product_name}} control plane configuration options.
 
 ### Kubernetes
 
@@ -87,7 +89,7 @@ KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL=5s \
 {% endnavtab %}
 {% navtab "YAML configuration file" %}
 
-To configure the {{site.mesh_product_name}} control plane on Universal with a YAML file, create a `kuma-cp.conf.overrides.yml` file with the following content:
+To configure the {{site.mesh_product_name}} control plane on Universal with a YAML file, create a `kuma-cp.conf.overrides.yaml` file with the following content:
 
 ```yaml
 xdsServer:
@@ -97,7 +99,7 @@ xdsServer:
 
 Use this configuration file in the `kuma-cp run` command:
 ```sh
-kuma-cp run -c kuma-cp.conf.overrides.yml
+kuma-cp run -c kuma-cp.conf.overrides.yaml
 ```
 
 {:.warning}
@@ -113,9 +115,9 @@ kuma-cp run -c kuma-cp.conf.overrides.yml
 There are many ways to see your control plane configuration:
 
 - In the `kuma-cp` logs, the configuration is logged on startup.
-- With the control plane API server `/config` endpoint (for example, `http://<CP_ADDRESS>:5681/config`).
+- Using the control plane API server `/config` endpoint (for example, `http://YOUR_CP_ADDRESS:5681/config`).
 - In the UI's **Diagnostic** tab.
-- With the `kumactl inspect zones -o yaml` command on a global control plane in a multi-zone deployment.
+- Using the `kumactl inspect zones -o yaml` command on a global control plane in a multi-zone deployment.
 
 ## Store
 
@@ -135,12 +137,12 @@ This is only usable if the control plane is running in Kubernetes mode. You can'
 
 ### Memory
 
-{{site.mesh_product_name}} stores all the state in-memory. Restarting {{site.mesh_product_name}} will delete all the data, and you can't have more than one control plane instance running.
+{{site.mesh_product_name}} stores all the state in-memory. Restarting {{site.mesh_product_name}} deletes all the data, and you can't have more than one control plane instance running.
 
 Memory is the **default** memory store when running in Universal mode and is only available in Universal mode.
 
 {:.danger}
-> Don't use this store in production, the state isn't persisted.
+> Don't use this store in production, as the state isn't persisted.
 
 ### PostgreSQL
 
@@ -158,23 +160,20 @@ KUMA_STORE_TYPE=postgres \
   kuma-cp run
 ```
 
-{:.info}
-> For great availability and low maintenance cost, you can use a PostgreSQL database offered by any cloud vendor.
-
 #### TLS
 
-Connection between PostgreSQL and {{site.mesh_product_name}} control planes should be secured with TLS.
+Connections between PostgreSQL and {{site.mesh_product_name}} control planes should be secured with TLS.
+You can configure the TLS mode with the `KUMA_STORE_POSTGRES_TLS_MODE` environment variable, or the `store.postgres.tls.mode` YAML path.
 
 The following modes are available to secure the connection to PostgreSQL:
-* `disable`: The connection is not secured with TLS (secrets will be transmitted over network in plain text).
-* `verifyNone`: The connection is secured but neither hostname, nor by which CA the certificate is signed is checked.
+* `disable`: The connection is not secured with TLS. Secrets will be transmitted over network in plain text.
+* `verifyNone`: The connection is secured but the hostname and the signing CA are not checked.
 * `verifyCa`: The connection is secured and the certificate presented by the server is verified using the provided CA.
-* `verifyFull`: The connection is secured, the certificate presented by the server is verified using the provided CA and the server hostname must match the one in the certificate.
+* `verifyFull`: The connection is secured, the certificate presented by the server is verified using the provided CA, and the server hostname must match the one in the certificate.
 
-The TLS mode is configured with the `KUMA_STORE_POSTGRES_TLS_MODE` environment variable.
-The CA used to verify the server's certificate is configured with the `KUMA_STORE_POSTGRES_TLS_CA_PATH` environment variable.
+For the`verifyCA` and `verifyFull` options, you also need to configure the `KUMA_STORE_POSTGRES_TLS_CA_PATH` environment variable or the `store.postgres.tls.capath` YAML path.
 
-After configuring the security settings above in {{site.mesh_product_name}}, you also have to configure PostgreSQL's [`pg_hba.conf`](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html) file to restrict unsecured connections.
+After configuring the PostgreSQL TLS security settings in {{site.mesh_product_name}}, you also have to configure PostgreSQL's [`pg_hba.conf`](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html) file to restrict unsecured connections.
 
 Here is an example configuration that allows only TLS connections and requires a username and password:
 
@@ -183,14 +182,15 @@ Here is an example configuration that allows only TLS connections and requires a
 hostssl all             all             0.0.0.0/0               password
 ```
 
-You can also provide a client key and certificate for mTLS using the `KUMA_STORE_POSTGRES_TLS_CERT_PATH` and `KUMA_STORE_POSTGRES_TLS_KEY_PATH` variables.
+You can also provide a client key and certificate for mTLS using the `KUMA_STORE_POSTGRES_TLS_CERT_PATH` and `KUMA_STORE_POSTGRES_TLS_KEY_PATH` variables, or their YAML paths.
 This pair can be used in conjunction with the `cert` authentication method. For more information, see the [PostgreSQL documentation](https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html).
 
 #### Migrations
 
-To provide easy upgrades between {{site.mesh_product_name}} versions there is a migration system for the PostgreSQL database schema.
+To simplify upgrades to new versions, {{site.mesh_product_name}} provides a migration system for the PostgreSQL database schema.
 
-When upgrading to a new version of {{site.mesh_product_name}}, run `kuma-cp migrate up` so the new schema is applied:
+When upgrading to a new version of {{site.mesh_product_name}}, run `kuma-cp migrate up` to apply the new schema:
+
 ```sh
 KUMA_STORE_TYPE=postgres \
   KUMA_STORE_POSTGRES_HOST=localhost \
