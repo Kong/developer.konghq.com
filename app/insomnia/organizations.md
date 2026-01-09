@@ -24,6 +24,8 @@ Insomnia organizations allows users to share collections and environments safely
 
 Members of an organization can make commits and set up branches for their collections. They can also view commits and branches from other members.
 
+To view a complete list of your organizations, go to [**Enterprise Controls** > **Organizations**](https://app.insomnia.rest/app/dashboard/organizations).
+
 ## Create an organization
 
 1. Go to your [Insomnia dashboard](https://app.insomnia.rest/app/dashboard).
