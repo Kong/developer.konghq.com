@@ -1,5 +1,5 @@
 ---
-title: Stream responses from Vertex AI through Kong AI Gateway
+title: Stream responses from Vertex AI through Kong AI Gateway using Google Generative AI SDK
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -49,13 +49,13 @@ prereqs:
     - title: Python
       include_content: prereqs/python
       icon_url: /assets/icons/python.svg
-    - title: Python requests library
+    - title: Google Generative AI SDK
       content: |
-        Install the requests library:
-        ```sh
-        pip install requests
+        Install the Google Generative AI SDK:
+         ```sh
+        python3 -m pip install google-genai
         ```
-      icon_url: /assets/icons/python.svg
+  icon_url: /assets/icons/gcp.svg
   entities:
     services:
       - gemini-service
@@ -127,111 +127,74 @@ The script includes two optional flags for debugging and inspection:
 ```py
 cat << 'EOF' > vertex_stream.py
 #!/usr/bin/env python3
-import requests
-import json
-import sys
+#!/usr/bin/env python3
+from google import genai
+from google.genai.types import HttpOptions
 import os
+import sys
 
-BASE_URL = "http://localhost:8000/gemini"
 PROJECT_ID = os.getenv("DECK_GCP_PROJECT_ID")
-LOCATION = os.getenv("DECK_GCP_LOCATION_ID", "us-central1")
-MODEL = "gemini-2.0-flash-exp"
+LOCATION = os.getenv("DECK_GCP_LOCATION_ID")
+
+if not PROJECT_ID:
+    print("Error: DECK_GCP_PROJECT_ID environment variable not set")
+    sys.exit(1)
 
 def vertex_stream(show_raw=False, show_chunks=False):
     """Stream responses from Vertex AI through Kong Gateway"""
 
-    url = f"{BASE_URL}/v1/projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{MODEL}:streamGenerateContent"
+    # Configure client to route through Kong Gateway
+    client = genai.Client(
+        vertexai=True,
+        project=PROJECT_ID,
+        location=LOCATION,
+        http_options=HttpOptions(
+            base_url="http://localhost:8000/gemini",
+            api_version="v1"
+        )
+    )
 
-    headers = {
-        "Content-Type": "application/json",
-    }
+    try:
+        if show_raw:
+            print("Streaming with raw output...\n")
 
-    payload = {
-        "contents": [{
-            "role": "user",
-            "parts": [{"text": "Explain quantum entanglement in one paragraph"}]
-        }]
-    }
+        chunk_num = 0
+        for chunk in client.models.generate_content_stream(
+            model="gemini-2.0-flash-exp",
+            contents="Explain quantum entanglement in one paragraph"
+        ):
+            chunk_num += 1
 
-    print(f"Connecting to: {url}\n")
+            if show_chunks:
+                print(f"\n--- Chunk {chunk_num} ---")
+                if hasattr(chunk, 'candidates') and chunk.candidates:
+                    candidate = chunk.candidates[0]
+                    if hasattr(candidate, 'finish_reason') and candidate.finish_reason:
+                        print(f"Finish reason: {candidate.finish_reason}")
+                    if hasattr(chunk, 'usage_metadata') and chunk.usage_metadata:
+                        if hasattr(chunk.usage_metadata, 'total_token_count'):
+                            print(f"Total tokens: {chunk.usage_metadata.total_token_count}")
+                print("Text: ", end="")
 
-    response = requests.post(url, headers=headers, json=payload, stream=True)
+            if show_raw:
+                print(f"\nChunk {chunk_num}:", chunk)
+                print("-" * 80)
 
-    if response.status_code != 200:
-        print(f"Error {response.status_code}: {response.text}")
-        return
+            print(chunk.text, end="", flush=True)
 
-    raw_data = response.text.strip()
+            if show_chunks:
+                print()
 
-    if show_raw:
-        try:
-            parsed = json.loads(raw_data)
-            print("Raw JSON structure:")
-            print(json.dumps(parsed, indent=2))
-            print("\n" + "="*80 + "\n")
-        except json.JSONDecodeError:
-            print("Raw response (invalid JSON):")
-            print(raw_data)
-            print("\n" + "="*80 + "\n")
+        if not show_chunks:
+            print()
 
-    if raw_data.startswith('['):
-        raw_data = raw_data[1:]
-    if raw_data.endswith(']'):
-        raw_data = raw_data[:-1]
-
-    objects = []
-    current = ""
-    depth = 0
-
-    for char in raw_data:
-        current += char
-        if char == '{':
-            depth += 1
-        elif char == '}':
-            depth -= 1
-            if depth == 0 and current.strip():
-                objects.append(current.strip().lstrip(',').strip())
-                current = ""
-
-    chunk_num = 0
-    for obj_str in objects:
-        if not obj_str:
-            continue
-        try:
-            data = json.loads(obj_str)
-            if "candidates" in data:
-                chunk_num += 1
-                for candidate in data["candidates"]:
-                    content = candidate.get("content", {})
-                    finish_reason = candidate.get("finishReason")
-
-                    if show_chunks:
-                        print(f"\n--- Chunk {chunk_num} ---")
-                        if finish_reason:
-                            print(f"Finish reason: {finish_reason}")
-                        usage = data.get("usageMetadata", {})
-                        if usage.get("totalTokenCount"):
-                            print(f"Total tokens: {usage.get('totalTokenCount')}")
-                        print("Text: ", end="")
-
-                    for part in content.get("parts", []):
-                        if "text" in part:
-                            print(part["text"], end="", flush=True)
-
-                    if show_chunks:
-                        print()
-        except json.JSONDecodeError as e:
-            print(f"\nJSON parse error: {e}")
-            print(f"Failed object: {obj_str[:100]}")
-
-    if not show_chunks:
-        print()
+    except Exception as e:
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     show_raw = "--raw" in sys.argv
     show_chunks = "--chunks" in sys.argv
     vertex_stream(show_raw, show_chunks)
-EOF
 ```
 
 ## Response format
@@ -299,14 +262,29 @@ Expected output:
 Connecting to: http://localhost:8000/gemini/v1/projects/your-project/locations/us-central1/publishers/google/models/gemini-2.0-flash-exp:streamGenerateContent
 
 --- Chunk 1 ---
-Text: Quantum entanglement is a peculiar phenomenon
+Total tokens: None
+Text: Quantum
 
 --- Chunk 2 ---
-Finish reason: STOP
-Total tokens: 87
-Text:  where two or more particles become linked together in a way that their fates are intertwined, regardless of the distance separating them.
+Total tokens: None
+Text:  entanglement is a
 
-...
+--- Chunk 3 ---
+Total tokens: None
+Text:  bizarre phenomenon where two or more particles become linked together in such a way that they
+
+--- Chunk 4 ---
+Total tokens: None
+Text:  share the same fate, no matter how far apart they are. Measuring the properties
+
+--- Chunk 5 ---
+Total tokens: None
+Text:  of one entangled particle instantaneously determines the corresponding properties of the other, even if they're separated by vast distances. This correlation isn't due to some pre-existing hidden
+
+--- Chunk 6 ---
+Finish reason: STOP
+Total tokens: 100
+Text:  information but is instead a fundamental connection arising from their shared quantum state, defying classical intuition about locality and causality.
 ```
 
 ### Inspect raw JSON response
