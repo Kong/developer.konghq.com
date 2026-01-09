@@ -116,7 +116,7 @@ Direct mode is the recommended way to operate with `Dataplane` resources on Univ
 
 #### Joining the mesh
 
-To join the mesh, pass the `Dataplane` resource directly to the `kuma-dp run` command. 
+To allow the data plane to join the mesh, pass the `Dataplane` resource directly to the `kuma-dp run` command. 
 The `Dataplane` resource can be a [Mustache template](http://mustache.github.io/mustache.5.html):
 
 ```yaml
