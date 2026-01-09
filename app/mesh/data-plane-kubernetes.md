@@ -22,9 +22,11 @@ related_resources:
     url: /mesh/zone-ingress/
 ---
 
-On Kubernetes, the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity is automatically created for you, and because transparent proxying is used to communicate between the Service and the [sidecar proxy](/mesh/concepts/#data-plane-proxy-sidecar), no code changes are required in your applications.
+In {{site.mesh_product_name}}, data planes manage traffic between services using [data plane proxies](/mesh/data-plane-proxy/) (also known as sidecars on Kubernetes). The data plane proxies use the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity to manage the data plane configuration.
 
-The {{ site.mesh_product_name }} control plane injects a `kuma-sidecar` container into your Pod's container to join your Kubernetes services to the mesh. If you're not using the CNI, it also injects a `kuma-init` into `initContainers` to setup [transparent proxying](/mesh/transparent-proxying/).
+On Kubernetes, the {{ site.mesh_product_name }} control plane injects a `kuma-sidecar` container into your Pod's container to join your Kubernetes services to the mesh. If you're not using the CNI, it also injects a `kuma-init` into `initContainers` to setup [transparent proxying](/mesh/transparent-proxying/).
+
+The `Dataplane` entity is automatically created for you, and because transparent proxying is used to communicate between the Service and the sidecar, no code changes are required in your applications.
 
 You can control whether {{site.mesh_product_name}} automatically injects the [data plane proxy](/mesh/concepts/#data-plane-proxy-sidecar) by labeling either the namespace or the Pod with `kuma.io/sidecar-injection=enabled`:
 
