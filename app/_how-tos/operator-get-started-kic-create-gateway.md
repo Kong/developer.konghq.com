@@ -127,12 +127,12 @@ spec:
 {% tip %}
 
 When using cert-manager or other external certificate managers with {{ site.base_gateway }}'s HTTPS listeners,
-the generated `Secret`s must have a label applied which corresponds to {{ site.operator_product_name }}'s `Secret` label selector.
+the generated `Secret` resources must have a label applied which corresponds to {{ site.operator_product_name }}'s `Secret` label selector.
 By default that's `konghq.com/secret: "true"`.
 
-For cert-manager, you can use `Certificate`'s `spec.secretTemplate.labels` field to apply the required label to the generated `Secret`.
+For cert-manager, you can use `Certificate` resource's `spec.secretTemplate.labels` field to apply the required label to the generated `Secret`.
 
-For more information on this see: [Label selectors for Secrets and ConfigMaps](/operator/reference/labelselectors/).
+For more information, see [Label selectors for Secrets and ConfigMaps](/operator/reference/labelselectors/).
 
 {% endtip %}
 
