@@ -27,7 +27,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. You can also plug in {{site.konnect_product_name}} to your AI agents to automate tasks like configuration management and performance troubleshooting.
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. You can also plug in {{site.konnect_product_name}} MCP Server to your AI agents to automate tasks like configuration management and performance troubleshooting.
 
                     The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}}.
 
@@ -264,7 +264,7 @@ rows:
                   key: description
               rows:
                 - category: Gateway entities
-                  tools: "[GetControlPlane](/konnect-platform/konnect-mcp/tools/#getcontrolplane), [GetConsumer](/konnect-platform/konnect-mcp/tools/#getconsumer), [GetConsumerGroup](/konnect-platform/konnect-mcp/tools/#getconsumergroup), [GetService](/konnect-platform/konnect-mcp/tools/#getservice), [GetRoute](/konnect-platform/konnect-mcp/tools/#getroute), [GetPlugin](/konnect-platform/konnect-mcp/tools/#getplugin), [GetVault](/konnect-platform/konnect-mcp/tools/#getvault)"
+                  tools: "[GetControlPlane](/konnect-platform/konnect-mcp/tools/#getcontrolplane), [GetControlPlaneGroup](/konnect-platform/konnect-mcp/tools/#getcontrolplanegroup), [GetConsumer](/konnect-platform/konnect-mcp/tools/#getconsumer), [GetConsumerGroup](/konnect-platform/konnect-mcp/tools/#getconsumergroup), [GetService](/konnect-platform/konnect-mcp/tools/#getservice), [GetRoute](/konnect-platform/konnect-mcp/tools/#getroute), [GetPlugin](/konnect-platform/konnect-mcp/tools/#getplugin), [GetVault](/konnect-platform/konnect-mcp/tools/#getvault)"
                   description: Query and manage {{site.base_gateway}} configuration
                 - category: Debugging
                   tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
@@ -460,7 +460,7 @@ rows:
                   The following are the latest changes in {{site.konnect_product_name}} MCP Server:
 
                   * Public Beta release (December 19, 2025)
-                  
+
                   For a complete changelog of all {{site.konnect_product_name}} MCP Server releases, see the [{{site.konnect_product_name}} MCP Server changelog](/konnect-platform/konnect-mcp/changelog/).
   - header:
         text: "Frequently asked questions"

@@ -182,6 +182,6 @@ If an IP address is shown, the `Gateway` is being managed by Kong:
 
 ## Unmanaged Gateways
 
-Using {{ site.kic_product_name }} without [{{ site.operator_product_name }}](/operator/) results in all `Gateway` resources with the same `spec.controllerName` being merged into a single configuration. {{ site.base_gateway }} deployments are created externally to {{ site.kic_product_name }}, which means that we cannot dynamically control the configuration in response to `Gateway` listeners.
+Using {{ site.kic_product_name }} without [{{ site.operator_product_name }}](/operator/) results in all `Gateway` resources associated with `GatewayClass` resources with the same `spec.controllerName` being merged into a single configuration. {{ site.base_gateway }} deployments are created externally to {{ site.kic_product_name }}, which means that we cannot dynamically control the configuration in response to `Gateway` listeners.
 
 When using _unmanaged_ mode, Routes from all `Gateway` instances are merged together and sent to all {{ site.base_gateway }} instances being managed by the single {{ site.kic_product_name }}.

@@ -126,7 +126,7 @@ sections:
       - path: /mesh/reference/kuma-cp/
       - path: /mesh/data-collection/
       - path: /mesh/configure-data-plane-proxy-membership/
-      - path: /mesh/cp-config/
+      - path: /mesh/control-plane-configuration/
       - path: /mesh/dns/
       - path: /mesh/ipv6-support/
       - path: /mesh/performance-tuning/

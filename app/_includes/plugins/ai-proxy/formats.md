@@ -142,7 +142,7 @@ rows:
       - `/generate`
       - `/generate_stream`
   - llm_format: "`anthropic`"
-    provider: Hugging Face
+    provider: Anthropic
     apis: |
       - `/v1/messages`
       - `/v1/messages/batches`
