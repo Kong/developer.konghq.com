@@ -104,7 +104,7 @@ entities:
           param_location: query
         model:
           provider: gemini
-          name: gemini-2.0-flash-exp
+          name: gemini-2.5-flash
 variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
@@ -147,7 +147,7 @@ Test the Gemini CLI setup:
 1. In the terminal where you exported your environment variables, run:
 
    ```sh
-   gemini --model gemini-2.0-flash-exp
+   gemini --model gemini-2.5-flash
    ```
 
    You should see the Gemini CLI interface start up.
@@ -163,7 +163,7 @@ Test the Gemini CLI setup:
 3. Check that LLM traffic went through Kong AI Gateway:
 
     ```sh
-   docker exec kong-quickstart-gateway cat /tmp/file.json | jq
+   docker exec kong-quickstart-gateway cat /tmp/gemini.json | jq
     ```
 
    Look for entries similar to:
@@ -182,8 +182,8 @@ Test the Gemini CLI setup:
          },
          "meta": {
            "provider_name": "gemini",
-           "request_model": "gemini-2.0-flash-exp",
-           "response_model": "gemini-2.0-flash-exp",
+           "request_model": "gemini-2.5-flash",
+           "response_model": "gemini-2.5-flash",
            "llm_latency": 5078,
            "request_mode": "stream"
          }
