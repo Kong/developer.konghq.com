@@ -45,14 +45,8 @@ tools:
 prereqs:
   inline:
     - title: Google Gemini API
+      include_content: prereqs/gemini
       icon_url: /assets/icons/gcp.svg
-      content: |
-        You need a Google Gemini API key to use this tutorial.
-
-            ```sh
-            export GEMINI_API_KEY=your_api_key_here
-            ```
-
     - title: Gemini CLI
       icon_url: /assets/icons/gcp.svg
       content: |
