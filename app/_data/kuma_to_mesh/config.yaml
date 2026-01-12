@@ -81,20 +81,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/introduction/architecture.md
-    title: 'Architecture'
-    description: 'Understand the architecture of a {{site.mesh_product_name}} mesh, including control and Data Plane components, Kubernetes and Universal modes, and how services integrate into the mesh.'
-    url: '/mesh/architecture/'
-    related_resources:
-      - text: Mesh concepts
-        url: /mesh/concepts/
-      - text: About service meshes
-        url: '/mesh/about/'
-      - text: Mesh policies
-        url: '/mesh/policies-introduction/'
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
-  -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
