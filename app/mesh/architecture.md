@@ -64,25 +64,23 @@ Communication happens between the control and data plane as well as between the 
 
 ## Components
 
-A minimal {{site.mesh_product_name}} deployment involves one or more instances of the control plane executable, `kuma-cp`.
-For each service in your mesh, you'll have one or more instances of the data plane proxy executable, `kuma-dp`.
+A minimal {{site.mesh_product_name}} deployment involves one or more instances of the control plane executable `kuma-cp`.
+For each service in your mesh, you'll have one or more instances of the data plane proxy executable `kuma-dp`.
 
-Users interact with the control plane via the command-line tool `kumactl`.
+You can interact with the control plane via the command-line tool `kumactl`.
 
 There are two modes that the {{site.mesh_product_name}} control plane can run in:
 
-- `kubernetes`: users configure {{site.mesh_product_name}} via Kubernetes resources and
-  {{site.mesh_product_name}} uses the Kubernetes API server as the data store.
-- `universal`: users configure {{site.mesh_product_name}} via the {{site.mesh_product_name}} API server and {{site.mesh_product_name}} resources.
+- `kubernetes`: Configure {{site.mesh_product_name}} via Kubernetes resources and {{site.mesh_product_name}} uses the Kubernetes API Server as the data store.
+- `universal`: Configure {{site.mesh_product_name}} via the {{site.mesh_product_name}} API server and {{site.mesh_product_name}} resources.
   PostgreSQL serves as the data store.
-  This mode works for any infrastructure other than Kubernetes, though you can
-  run a `universal` control plane on top of a Kubernetes cluster.
+  This mode works for any infrastructure other than Kubernetes, though you can also run a `universal` control plane on top of a Kubernetes cluster.
 
 ## Kubernetes mode
 
-When running in **Kubernetes** mode, {{site.mesh_product_name}} stores all of its state and configuration on the underlying Kubernetes API Server.
+When running in Kubernetes mode, {{site.mesh_product_name}} stores all of its state and configuration on the underlying Kubernetes API Server.
 
-The only step necessary to join your Kubernetes services to the mesh is enabling _sidecar injection_.
+The only step necessary to join your Kubernetes Services to the mesh is enabling sidecar injection.
 For any `Pods` configured with sidecar injection, {{site.mesh_product_name}} adds the `kuma-dp` sidecar container.
 The following label on any `Namespace` or `Pod` controls this injection:
 
@@ -90,17 +88,18 @@ The following label on any `Namespace` or `Pod` controls this injection:
 kuma.io/sidecar-injection: enabled
 ```
 
-**Injection**: learn more about sidecar injection in the section on [`Dataplane`](/mesh/data-plane-kubernetes/) resources.
+For more information, see:
+* [{{site.mesh_product_name}} on Kubernetes](/mesh/data-plane-kubernetes/)
+* [Kubernetes annotations](/mesh/annotations/)
+* [Policies](/mesh/policies-introduction/)
 
-**Annotations**: see [the complete list of the Kubernetes annotations](/mesh/annotations/).
-
-**Policies with Kubernetes**: when using {{site.mesh_product_name}} in Kubernetes mode you create [policies](/mesh/policies-introduction/) using `kubectl` and `kuma.io` CRDs.
-
-### Services and pods
+### Services and Pods
 
 #### Pods with Service
 
-For all Pods associated with a Kubernetes `Service` resource, {{site.mesh_product_name}} control plane automatically generates an annotation `kuma.io/service: <name>_<namespace>_svc_<port>` where `<name>`, `<namespace>` and `<port>` come from the `Service`. For example, the following resources generates `kuma.io/service: echo-server_kuma-test_svc_80`:
+For all Pods associated with a Kubernetes `Service` resource, the {{site.mesh_product_name}} control plane automatically generates an annotation `kuma.io/service: <name>_<namespace>_svc_<port>` where `<name>`, `<namespace>` and `<port>` come from the `Service`. 
+
+For example, the following resources generates `kuma.io/service: echo-server_kuma-test_svc_80`:
 
 ```yaml
 apiVersion: v1
@@ -179,6 +178,8 @@ spec:
 
 ## Universal mode
 
-When running in **Universal** mode, {{site.mesh_product_name}} requires a PostgreSQL database to store its state. This replaces the Kubernetes API. With Universal, you use `kumactl` to interact directly with the {{site.mesh_product_name}} API server to manage policies.
+When running in Universal mode, {{site.mesh_product_name}} requires a PostgreSQL database to store its state. 
+This replaces the Kubernetes API Server. 
+With Universal, you can use `kumactl` to interact directly with the {{site.mesh_product_name}} API server to manage policies.
 
-Read [the docs about the PostgreSQL backend](/mesh/control-plane-configuration/#postgres) for more details.
+For more information, see [the PostgreSQL section](/mesh/control-plane-configuration/#postgresql) in the control plane configuration docs.
