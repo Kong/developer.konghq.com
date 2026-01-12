@@ -20,41 +20,47 @@ related_resources:
     url: '/mesh/about/'
   - text: Mesh policies
     url: '/mesh/policies-introduction/'
-  - text: Install Kong Mesh
+  - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh
 ---
 
-This sections gives an overview of a {{site.mesh_product_name}} [service mesh](/mesh/concepts/#mesh).
-It also covers how to start integrating your services into your mesh.
-
 A {{site.mesh_product_name}} service mesh consists of two main components:
 
-- The **[data plane](/docs/{{ page.release }}/introduction/concepts#data-plane)** consists of the proxies that run alongside your services.
-  All of your mesh traffic flows through these proxies
-  on its way to its destination.
-  {{site.mesh_product_name}}'s uses [Envoy](https://www.envoyproxy.io/) for its [data plane proxy](/docs/{{ page.release }}/introduction/concepts#data-plane-proxy--sidecar).
-- The **[control plane](/docs/{{ page.release }}/introduction/concepts#control-plane)** configures the data plane proxies for handling mesh traffic.
-  However, the control plane runs independently of the data plane and does not
-  interact with mesh traffic directly.
-  {{site.mesh_product_name}} users create [policies](/mesh/concepts/#policy)
-  that the {{site.mesh_product_name}} control plane processes to generate configuration for the data plane proxies.
+- The [data plane](/mesh/concepts/#data-plane) consists of the proxies that run alongside your services.
+  All of your mesh traffic flows through these proxies on its way to its destination.
+  {{site.mesh_product_name}} uses [Envoy](https://www.envoyproxy.io/) for its [data plane proxy](/mesh/concepts/#data-plane-proxy-sidecar).
+- The [control plane](/mesh/concepts/#control-plane) configures the data plane proxies for handling mesh traffic.
+  The control plane runs independently of the data plane and doesn't interact with mesh traffic directly.
+  {{site.mesh_product_name}} users create [policies](/mesh/concepts/#policy) that the {{site.mesh_product_name}} control plane processes to generate configuration for the data plane proxies.
 
 {:.info}
-> **Multi-mesh**: one {{site.mesh_product_name}} control plane deployment can control multiple, isolated data planes using the [`Mesh`](/mesh/mesh-multi-tenancy/#usage) resource. As compared to one control plane per data plane, this option lowers the complexity and operational cost of supporting multiple meshes.
+> One {{site.mesh_product_name}} control plane deployment can control multiple isolated data planes using the [`Mesh`](/mesh/mesh-multi-tenancy/#usage) resource. Compared to using one control plane per data plane, this option lowers the complexity and operational cost of supporting multiple meshes.
 
-This is a high level visualization of a {{site.mesh_product_name}} service mesh:
-
+Here's a diagram that show the {{site.mesh_product_name}} architecture :
 {% mermaid %}
+flowchart TB
+    CP[Control plane]
+      subgraph M[Mesh]
+        direction LR
+        subgraph S1[Service]
+            subgraph DP1[Data plane]
+                DPP1[Data plane proxy]
+            end
+        end
+        subgraph S2[Service]
+            subgraph DP2[Data plane]
+                DPP2[Data plane proxy]
+            end
+        end
+        DPP1 <--> DPP2
+    end
+
+    CP <----> DPP1 & DPP2
 {% endmermaid %}
 
-Communication happens between the control and data plane
-as well as between the services and their data plane proxies:
-
-{% mermaid %}
-{% endmermaid %}
-
-{:.info}
-> {{site.mesh_product_name}} implements the [Envoy **xDS** APIs](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol) so that data plane proxies can retrieve their configuration from the control plane.
+Communication happens between the control and data plane as well as between the services and their data plane proxies:
+* Data plane proxies retrieve their configuration from the control plane, using the [Envoy **xDS** APIs](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol).
+* Requests to and from the service go through the data plane proxy.
 
 ## Components
 
@@ -75,9 +81,6 @@ There are two modes that the {{site.mesh_product_name}} control plane can run in
 ## Kubernetes mode
 
 When running in **Kubernetes** mode, {{site.mesh_product_name}} stores all of its state and configuration on the underlying Kubernetes API Server.
-
-{% mermaid %}
-{% endmermaid %}
 
 The only step necessary to join your Kubernetes services to the mesh is enabling _sidecar injection_.
 For any `Pods` configured with sidecar injection, {{site.mesh_product_name}} adds the `kuma-dp` sidecar container.
@@ -177,8 +180,5 @@ spec:
 ## Universal mode
 
 When running in **Universal** mode, {{site.mesh_product_name}} requires a PostgreSQL database to store its state. This replaces the Kubernetes API. With Universal, you use `kumactl` to interact directly with the {{site.mesh_product_name}} API server to manage policies.
-
-{% mermaid %}
-{% endmermaid %}
 
 Read [the docs about the PostgreSQL backend](/mesh/control-plane-configuration/#postgres) for more details.
