@@ -144,7 +144,7 @@ For information about FIPS, see the [FIPS support policy](/gateway/fips-support/
 
 ## Supported public cloud deployment platforms
 
-{{site.base_gateway}} supports the following public cloud deployment platforms:
+{{site.base_gateway}} will run on supported [Certified Kubernetes distributions by the (CNCF)](https://www.cncf.io/training/certification/software-conformance/) and Docker based environments including the following public cloud deployment platforms:
 
 {% for platform in site.data.products.gateway.cloud_deployment_platforms %}
 * {{ platform }}
