@@ -1,6 +1,6 @@
 ---
 title: "{{site.mesh_product_name}} architecture"
-description: Understand the architecture of a {{site.mesh_product_name}} service mesh, including control plane and pata plane components, Kubernetes and Universal modes, and how services integrate into the mesh.
+description: Understand the architecture of a {{site.mesh_product_name}} service mesh, including control plane and data plane components, Kubernetes and Universal modes, and how services integrate into the mesh.
 content_type: reference
 layout: reference
 products:
