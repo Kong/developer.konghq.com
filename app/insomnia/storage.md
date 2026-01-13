@@ -117,6 +117,7 @@ Cloud sync provides the following abilities on top of the base Insomnia function
 * Revert to a previous commit
 * Share commits across devices or with members of your organization
 * Create and work on separate branches
+* Store MCP Client configuration as part of the project
 
 Key use case features:
 * **End-to-End Encryption (E2EE):** Ensures data is encrypted during transmission and storage.
@@ -168,11 +169,12 @@ Key features:
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
-* {% new_in 10.2 %} **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
+* **Built-in conflict resolution**: Resolve conflicts in Insomnia when pulling or pushing changes.
+* **MCP clients feature**: Store MCP Client configuration in the Git repository as part of the project.
 
 {:.info}
 > When you create a project with Git sync in an organization, it's only available to you. The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization. <br><br>
-> {% new_in 11.5 %} You can also create the Git Sync project now and add a repository later. 
+> You can also create the Git Sync project now and add a repository later. 
 
 ### Git sync data flow
 
