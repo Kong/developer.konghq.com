@@ -150,7 +150,7 @@ When xDS connection between the proxy and kuma-cp is established, the `Dataplane
 
 To join the mesh in a graceful way, you need to make sure the application is ready to serve traffic before it can be considered a valid traffic destination.
 By default, a proxy will be considered healthy regardless of its state. 
-Consider using service probes to mark the data plane proxy as healthy only after all health checks are passed.
+Consider using [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes) to mark the data plane proxy as healthy only after all health checks are passed.
 
 #### Leaving the mesh
 
