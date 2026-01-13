@@ -85,7 +85,6 @@ The control plane uses policies and `Dataplane` entities to generate the DPP con
 
 ### Data plane proxy ports
 
-The `kuma-dp` process and its child process offer a number of services. These services need to listen to a few ports to provide their functionalities. 
 
 When you start a data plane via `kuma-dp`, you expect all the inbound and outbound service traffic to go through it. The inbound and outbound ports are defined in the data plane specification when running in Universal mode, while on Kubernetes the service-to-service traffic always runs on port `15001`.
 
