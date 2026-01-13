@@ -35,7 +35,7 @@ faqs:
       If Insomnia cannot refresh the SCIM token automatically, SCIM provisioning stops. SCIM remains enabled, but syncing pauses until the issue is resolved. A **Refresh Token** action is available in **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
   - q: How will I know that the SCIM token is expiring or has expired?
     a: |
-      There's two ways for Insomnia to alert you to an expiring token:
+      There are two ways that Insomnia will alert you that a token is going to expire:
       
       - **Admin UI**: A warning or error message that indicates that the token is expiring soon or has already expired.
       - **Email**: Insomnia sends an email to organization administrators when a token is expiring and could not be refreshed automatically, or when syncing has stopped because the token has expired.
@@ -67,26 +67,51 @@ SCIM is available on the Enterprise plan and is designed to work alongside [Sing
 - Manage user access, team membership, and license consumption through your IdP after configuring SSO.
 - Keep existing manually managed users unchanged unless you explicitly modify them.
 
+Insomnia supports SCIM provisioning with the following identity providers:
+- Okta
+- Azure
+
+
+## Insomnia SCIM requirements
+
+Before enabling SCIM, you must meet all of the following requirements in Insomnia:
+- Your organization is on the Enterprise plan.
+- You are an Owner or Co-Owner in the Insomnia organization.
+- You have verified at least one [domain in Insomnia](https://app.insomnia.rest/app/enterprise/domains/list).
+- You configured [SSO](https://app.insomnia.rest/app/enterprise/sso/list) for your identity provider.
+
+In your IdP, you must:
+- Have an administrator account
+- Have permission to configure SCIM provisioning for the Insomnia application
+- Configure [SSO](/insomnia/sso/) between your IdP and Insomnia.
 
 ## User and team provisioning
 SCIM provisioning in Insomnia follows predictable, non-destructive rules:
 - Users and teams that you assigned to the Insomnia application in your IdP are provisioned by Insomnia.
 - Existing Insomnia users are matched to IdP users by email address.
-- If a user exists in Insomnia but not in the IdP, Insomnia does not remove or disable that user automatically.
+- If a user exists in Insomnia but not in the IdP, Insomnia doesn't remove or disable that user automatically.
 
 SCIM provisioning lets you manage access to Insomnia through your IdP, in the same way that you manage access to other enterprise applications.
 
 {:.info}
 > SCIM applies only to users and groups provisioned through your identity provider. Users who were added manually before SCIM was enabled remain unchanged and continue to consume licenses until you update or remove them manually. Insomnia does not automatically reconcile or modify manually added users when you enable SCIM. This behavior prevents unintended changes to existing accounts.
 
-## License usage
+When SCIM is enabled, Insomnia licenses are consumed like the following:
 - Users provisioned through SCIM consume Enterprise licenses.
 - Manually added users continue to consume licenses until you remove them or transition them to IdP-managed provisioning.
 
-For more information about license management, go to [Enterprise user management](/insomnia/enterprise-user-management/).
+For more information about license management, see [Enterprise user management](/insomnia/enterprise-user-management/).
 
 ## SCIM connector token lifecycle
 SCIM provisioning uses a connector URL and token generated in Insomnia. The token authorizes your identity provider to provision users and teams.
+
+Administrators can view the current SCIM token status in Insomnia:
+1. From the Insomnia Enterprise control dashboard sidebar, click [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
+1. Review the SCIM configuration page to see:
+  - If SCIM is enabled.
+  - If the token is valid, expiring soon, or expired.
+
+When a token is close to expiration and cannot be refreshed automatically, Insomnia displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
 ### Automatic token refresh
 
@@ -95,6 +120,16 @@ Insomnia automatically attempts to refresh the SCIM connector token every 90 day
 If the automatic refresh succeeds, SCIM provisioning continues without interruption.
 
 If the automatic refresh fails, Insomnia warns the account owner and co-owners and requires manual action to prevent provisioning from stopping.
+
+When an SCIM token refresh fails:
+      - New users aren't provisioned from the identity provider.
+      - Users deactivated in the identity provider aren't removed from Insomnia.
+
+If the token refresh fails, you can manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
+1. In the Insomnia web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+2. Select **Refresh Token**.
+3. Enter your passphrase to generate a new token.
+4. In your identity provider, update the token.
 
 ### View token status
 Administrators can view the current SCIM token status in Insomnia:
