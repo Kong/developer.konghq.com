@@ -53,6 +53,8 @@ pages:
         url: '/mesh/observability/'
       - text: Policy Hub
         url: /mesh/policies/
+      - text: Service meshes
+        url: /mesh/service-mesh/
     min_version:
       mesh: '2.7'
   -
@@ -194,6 +196,8 @@ pages:
     related_resources:
       - text: Policy hub
         url: '/mesh/policies/'
+      - text: Service meshes
+        url: /mesh/service-mesh/
   -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
