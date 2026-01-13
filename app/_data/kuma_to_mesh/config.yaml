@@ -212,6 +212,8 @@ pages:
         url: '/mesh/multi-zone-authentication/'
       - text: 'Single-zone deployment'
         url: '/mesh/single-zone/'
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -568,6 +570,8 @@ pages:
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
   -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
@@ -588,18 +592,6 @@ pages:
         url: '/mesh/observability/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/dp-config/dpp-on-kubernetes.md
-    title: 'Data plane on Kubernetes'
-    description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-kubernetes/'
-    related_resources:
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
   -
     path: app/_src/production/dp-config/dpp-on-universal.md
     title: 'Data plane on Universal'
@@ -728,6 +720,8 @@ pages:
         url: /mesh/openshift-quickstart/
       - text: Deploy Kong Mesh on Universal
         url: /mesh/universal/
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
     tags:
       - get-started
   -
