@@ -23,13 +23,17 @@ related_resources:
     url: /mesh/zone-ingress/
 ---
 
-On Universal, you need to create a data plane definition and pass it to the `kuma-dp run` command.
+To connect your services to the control plane, you need one or more data planes. To create a data plane on Universal, you need to create a data plane definition and pass it to the `kuma-dp run` command.
 
-When transparent proxying is not enabled, the outbound service dependencies have to be manually specified in the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity.
+{:.info}
+> On Universal, data planes need to start with a token for authentication. 
+> To learn how to generate tokens, see the [data plane authentication docs](/mesh/dp-auth/#data-plane-proxy-token).
+
+When transparent proxying isn't enabled, the outbound service dependencies have to be manually specified in the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity.
 This also means that without transparent proxying, you must update your codebases to consume those external services on `127.0.0.1`, on the port specified in the `outbound` section.
 
 {:.info}
-> To avoid users bypassing the sidecar, have the service listen only on the internal interface (`127.0.0.1` or `::1`) instead of all interfaces (`0.0.0.0` or `::`).
+> To avoid users bypassing the proxy, have the service listen only on the internal interface (`127.0.0.1` or `::1`) instead of all interfaces (`0.0.0.0` or `::`).
 
 For example, here's how to start a `Dataplane` for a Redis service, and then start the `kuma-dp` process:
 
@@ -68,9 +72,6 @@ networking:
 
 This configuration indicates that your service is listening on `192.168.1.10`, and incoming traffic will be redirected to that address.
 
-{:.info}
-> On Universal, data planes need to start with a token for authentication. 
-> To learn how to generate tokens, see the [data plane authentication docs](/mesh/dp-auth/#data-plane-proxy-token).
 
 Now let's assume that we have another service called "Backend" that listens on port `80`, and that makes outgoing requests to the `redis` service:
 
@@ -100,8 +101,8 @@ kuma-dp run \
   --dataplane-token-file=/tmp/kuma-dp-backend-1-token
 ```
 
-In order for the `backend` service to successfully consume `redis`, we specify an `outbound` networking section in the `Dataplane` configuration instructing the DP to listen on a new port `10000` and to proxy any outgoing request on port `10000` to the `redis` service.
-For this to work, we must update our application to consume `redis` on `127.0.0.1:10000`.
+For the `backend` service to successfully consume `redis`, you must specify an `outbound` networking section in the `Dataplane` configuration instructing the data plane to listen on a new port `10000` and to proxy any outgoing requests on port `10000` to the `redis` service.
+For this to work, you must update your application to consume `redis` on `127.0.0.1:10000`.
 
 {:.info}
 > You can parametrize your `Dataplane` definition to reuse the same file for many `kuma-dp` instances or even services.
@@ -156,20 +157,20 @@ To leave the mesh in a graceful shutdown, you need to remove the traffic destina
 Upon receiving SIGTERM, the `kuma-dp` process starts listener draining in Envoy, then it waits for the draining time before stopping the process.
 During the draining process, Envoy can still accept connections, however:
 
-1. It is marked as unhealthy on Envoy Admin `/ready` endpoint
+1. It is marked as unhealthy on the Envoy Admin `/ready` endpoint
 1. It sends `connection: close` for HTTP/1.1 requests and GOAWAY frame for HTTP/2. This forces clients to close a connection and reconnect to the new instance.
 
 If the application next to the `kuma-dp` process quits immediately after the SIGTERM signal, there's a high chance that clients will still try to send traffic to this destination.
 To mitigate this, we need to support graceful shutdown in the application. For example, the application should wait X seconds to exit after receiving the first SIGTERM signal.
 
-Consider using service probes to mark data plane proxy as unhealthy when it is in draining state.
+Consider using [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes) to mark data plane proxy as unhealthy when it is in draining state.
 
-If the data plane proxy is shutdown gracefully, kuma-cp automatically deletes the `Dataplane` resource.
+If the data plane proxy is shutdown gracefully, the control plane automatically deletes the `Dataplane` resource.
 
 If the data plane proxy goes down ungracefully, the `Dataplane` resource isn't deleted immediately. The following sequence of the events should happen:
 
 {% capture ungraceful-shutdown %}
-1. After the time specified in `KUMA_METRICS_DATAPLANE_IDLE_TIMEOUT` (5 minutes by default), the data plane proxy is marked as offline. This is because there's no active xDS connection between the proxy and kuma-cp.
+1. After the time specified in `KUMA_METRICS_DATAPLANE_IDLE_TIMEOUT` (five minutes by default), the data plane proxy is marked as offline. This is because there's no active xDS connection between the proxy and kuma-cp.
 1. After the time specified in `KUMA_RUNTIME_UNIVERSAL_DATAPLANE_CLEANUP_AGE` (75 hours by default), offline data plane proxies are deleted.
 {% endcapture %}
 
@@ -200,7 +201,7 @@ kuma-cp run \
 
 After the connection between the proxy and kuma-cp is established, kuma-cp finds the `Dataplane` resource with `name` and `mesh` in the store.
 
-To join the mesh in a graceful way, you can use service probes.
+To join the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
 
 #### Leaving the mesh
 
@@ -213,7 +214,7 @@ If data plane proxy went down ungracefully, then the following sequence of the e
 
 {{ungraceful-shutdown}}
 
-To leave the mesh in a graceful way, you can use service probes.
+To leave the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
 
 ## Envoy
 
