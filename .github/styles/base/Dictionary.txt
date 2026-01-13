@@ -807,6 +807,8 @@ submodule
 submodule's
 subnet
 subnets
+subprocess
+subprocesses
 subresource
 substring
 subtable

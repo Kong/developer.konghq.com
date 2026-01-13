@@ -53,6 +53,8 @@ pages:
         url: '/mesh/observability/'
       - text: Policy Hub
         url: /mesh/policies/
+      - text: Service meshes
+        url: /mesh/service-mesh/
     min_version:
       mesh: '2.7'
   -
@@ -86,8 +88,8 @@ pages:
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
     url: '/mesh/concepts/'
     related_resources:
-      - text: About service meshes
-        url: '/mesh/about/'
+      - text: Service meshes
+        url: '/mesh/service-mesh/'
       - text: Mesh Policies
         url: '/mesh/policies-introduction/'
       - text: Mesh architecture
@@ -180,6 +182,8 @@ pages:
     related_resources:
       - text: Policy hub
         url: '/mesh/policies/'
+      - text: Service meshes
+        url: /mesh/service-mesh/
   -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
@@ -198,6 +202,12 @@ pages:
         url: '/mesh/multi-zone-authentication/'
       - text: 'Single-zone deployment'
         url: '/mesh/single-zone/'
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
+      - text: "{{ site.mesh_product_name }} data plane proxy"
+        url: /mesh/data-plane-proxy/
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -319,6 +329,8 @@ pages:
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
     url: '/mesh/universal/'
     related_resources:
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
       - text: Zone Egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
@@ -506,22 +518,6 @@ pages:
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
-
-
-  -
-    path: app/_src/introduction/about-service-meshes.md
-    title: 'About service meshes'
-    description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.'
-    url: '/mesh/about/'
-    related_resources:
-      - text: Mesh architecture
-        url: '/mesh/architecture/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-      - text: Mesh concepts
-        url: /mesh/concepts/
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service discovery'
@@ -554,6 +550,12 @@ pages:
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
+      - text: "{{ site.mesh_product_name }} data plane proxy"
+        url: /mesh/data-plane-proxy/
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
   -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
@@ -574,46 +576,6 @@ pages:
         url: '/mesh/observability/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/dp-config/dpp-on-kubernetes.md
-    title: 'Data plane on Kubernetes'
-    description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-kubernetes/'
-    related_resources:
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/dp-config/dpp-on-universal.md
-    title: 'Data plane on Universal'
-    description: 'How to run and configure Data Plane proxies on Universal mode with {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-universal/'
-    related_resources:
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/dp-config/dpp.md
-    title: 'Data plane proxy'
-    description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-proxy/'
-    related_resources:
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: 'Data plane on Universal'
-        url: '/mesh/data-plane-universal/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
   -
     path: app/_src/production/dp-config/ipv6.md
     title: 'IPv6 support'
@@ -714,6 +676,8 @@ pages:
         url: /mesh/openshift-quickstart/
       - text: Deploy Kong Mesh on Universal
         url: /mesh/universal/
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
     tags:
       - get-started
   -
