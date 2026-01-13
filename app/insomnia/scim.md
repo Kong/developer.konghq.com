@@ -119,45 +119,17 @@ Insomnia automatically attempts to refresh the SCIM connector token every 90 day
 
 If the automatic refresh succeeds, SCIM provisioning continues without interruption.
 
-If the automatic refresh fails, Insomnia warns the account owner and co-owners and requires manual action to prevent provisioning from stopping.
+If the automatic refresh fails, Insomnia warns the account owner and co-owners, and requires manual action to prevent provisioning from stopping.
 
-When an SCIM token refresh fails:
-      - New users aren't provisioned from the identity provider.
-      - Users deactivated in the identity provider aren't removed from Insomnia.
+If the token isn't refreshed after it expires, then the following happen:
+* New users aren't provisioned from the identity provider.
+* Users deactivated in the identity provider aren't removed from Insomnia.
 
 If the token refresh fails, you can manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
 1. In the Insomnia web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
 2. Select **Refresh Token**.
 3. Enter your passphrase to generate a new token.
 4. In your identity provider, update the token.
-
-### View token status
-Administrators can view the current SCIM token status in Insomnia:
-1. From the Insomnia Enterprise control dashboard, in the sidebar, select [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
-1. Review the SCIM configuration page too see:
-  - If SCIM is enabled.
-  - If the token is valid, expiring soon, or expired.
-
-When a token is close to expiration and cannot be refreshed automatically, Insomnia displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
-
-## Supported identity providers
-
-Insomnia supports SCIM provisioning with the following identity providers:
-- Okta
-- Azure
-
-## Requirements
-
-Before enabling SCIM, you must meet all of the following requirements in Insomnia:
-- Your organization is on the Enterprise plan.
-- You are an Owner or Co-Owner in the Insomnia organization.
-- You have verified at least one [domain in Insomnia](https://app.insomnia.rest/app/enterprise/domains/list).
-- You configured [SSO](https://app.insomnia.rest/app/enterprise/sso/list) for your identity provider.
-
-From your IdP, you must:
-- Have an administrator account in your identity provider.
-- Have permission to configure SCIM provisioning for the Insomnia application.
-- Configure SSO between your IdP and Insomnia.
 
 ## Next steps
 
