@@ -214,6 +214,8 @@ pages:
         url: '/mesh/single-zone/'
       - text: '{{site.mesh_product_name}} data plane on Kubernetes'
         url: /mesh/data-plane-kubernetes/
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -335,6 +337,8 @@ pages:
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
     url: '/mesh/universal/'
     related_resources:
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
       - text: Zone Egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
@@ -572,6 +576,8 @@ pages:
         url: /mesh/meshmultizoneservice/
       - text: '{{site.mesh_product_name}} data plane on Kubernetes'
         url: /mesh/data-plane-kubernetes/
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
   -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
