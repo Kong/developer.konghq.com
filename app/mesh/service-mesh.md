@@ -2,6 +2,17 @@
 title: Service meshes
 description: Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a control plane.
 
+content_type: reference
+layout: reference
+products:
+  - mesh
+breadcrumbs:
+  - /mesh/
+
+tags:
+  - control-plane
+  - data-plane
+
 related_resources:
   - text: "{{site.mesh_product_name}} architecture"
     url: /mesh/architecture/
