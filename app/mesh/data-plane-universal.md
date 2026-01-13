@@ -109,9 +109,9 @@ For this to work, you must update your application to consume `redis` on `127.0.
 
 ## Lifecycle
 
-On Universal you can manage `Dataplane` resources either in [direct](#direct) mode or in [indirect](#indirect) mode:
-* **Direct mode:** Recommended method of operating `Dataplane` resources on Universal.
-* **Indirect mode:** In this mode, there is no strict dependency between the `Dataplane` resource creation and the startup of the data plane proxy. This can be useful if you have some external components that manage the `Dataplane` lifecycle.
+On Universal you can manage `Dataplane` resources either in direct mode or in indirect mode:
+* [Direct mode](#direct): The `Dataplane` resource is created at the same time as the data plane proxy. This is the recommended method of operating `Dataplane` resources on Universal.
+* [Indirect mode](#indirect): The `Dataplane` resource is created before the data plane proxy starts. This can be useful if you have some external components that manage the `Dataplane` lifecycle.
 
 ### Direct
 
@@ -154,7 +154,7 @@ Consider using service probes to mark the data plane proxy as healthy only after
 
 #### Leaving the mesh
 
-To leave the mesh in a graceful shutdown, you need to remove the traffic destination from all the clients before shutting it down.
+To allow the data plane to leave the mesh in a graceful shutdown, you need to remove the traffic destination from all the clients before shutting it down.
 
 Upon receiving SIGTERM, the `kuma-dp` process starts listener draining in Envoy, then it waits for the draining time before stopping the process.
 During the draining process, Envoy can still accept connections, however:
@@ -203,7 +203,7 @@ kuma-cp run \
 
 After the connection between the proxy and kuma-cp is established, kuma-cp finds the `Dataplane` resource with `name` and `mesh` in the store.
 
-To join the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
+To allow the data plane to join the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
 
 #### Leaving the mesh
 
@@ -216,7 +216,7 @@ If data plane proxy went down ungracefully, then the following sequence of the e
 
 {{ungraceful-shutdown}}
 
-To leave the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
+To allow the data plane to leave the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
 
 ## Envoy
 
