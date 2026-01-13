@@ -32,7 +32,11 @@ faqs:
       To fix an automatic token refresh failure, go to [SCIM](https://app.insomnia.rest/app/enterprise/scim), and click **Refresh Token**. Then, in the **Passphrase** field, enter your passphrase, and click **Refresh Token** again. This manually refreshes your SCIM connector token.
   - q: What happens if Insomnia cannot refresh the SCIM token automatically?
     a: |
-      If Insomnia cannot refresh the SCIM token automatically, SCIM provisioning stops. SCIM remains enabled, but syncing pauses until the issue is resolved. A **Refresh Token** action is available in **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+      SCIM effectively breaks. Account owners **must** manually refresh the token to continue SCIM provisioning. You can manually refresh the token by doing the following:
+      1. In the Insomnia web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
+      2. Select **Refresh Token**.
+      3. Enter your passphrase to generate a new token.
+      4. In your identity provider, update the token.
   - q: How will I know that the SCIM token is expiring or has expired?
     a: |
       There are two ways that Insomnia will alert you that a token is going to expire:
@@ -115,17 +119,15 @@ When a token is close to expiration and cannot be refreshed automatically, Insom
 
 ### Automatic token refresh
 
-Insomnia automatically attempts to refresh the SCIM connector token every 90 days, before it expires. This helps prevent provisioning interruptions that are caused by routine token expiration and reduces the need for manual maintenance.
+Insomnia automatically attempts to refresh the SCIM connector token every 90 days, before it expires. This helps prevent provisioning interruptions that are caused by routine token expiration and reduces the need for manual maintenance. If the automatic refresh succeeds, SCIM provisioning continues without interruption.
 
-If the automatic refresh succeeds, SCIM provisioning continues without interruption.
+{:.danger}
+> **Warning:** If the automatic refresh fails, SCIM effectively breaks. Account owners **must** manually refresh the token to continue SCIM provisioning. Insomnia will warn the account owner and co-owners that the refresh failed.
+> If the token isn't refreshed after it expires, then the following happen:
+> * New users aren't provisioned from the identity provider.
+> * Users deactivated in the identity provider aren't removed from Insomnia.
 
-If the automatic refresh fails, Insomnia warns the account owner and co-owners, and requires manual action to prevent provisioning from stopping.
-
-If the token isn't refreshed after it expires, then the following happen:
-* New users aren't provisioned from the identity provider.
-* Users deactivated in the identity provider aren't removed from Insomnia.
-
-If the token refresh fails, you can manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
+If the token refresh fails, you must manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
 1. In the Insomnia web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
 2. Select **Refresh Token**.
 3. Enter your passphrase to generate a new token.
