@@ -37,7 +37,7 @@ tags:
 
 tldr:
   q: How do I run Google Gemini CLI through Kong AI Gateway?
-  a: Create a Gateway Service and Route, attach AI Proxy to forward requests to Google Gemini, then enable file-log to inspect traffic, and point Gemini CLI to the local proxy endpoint so all LLM requests go through the Gateway for monitoring and control.
+  a: Configure the AI Proxy plugin to forward requests to Google Gemini, then enable the File Log plugin to inspect traffic, and point Gemini CLI to the local proxy endpoint so all LLM requests go through the Gateway for monitoring and control.
 
 tools:
   - deck
@@ -85,7 +85,7 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, let's configure the AI Proxy plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model.
+First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model.
 
 {% entity_examples %}
 entities:
@@ -129,7 +129,7 @@ export GEMINI_API_KEY=<your_gcp_api_key>
 
 ## Configure the File Log plugin
 
-To inspect the exact payloads traveling between Gemini CLI and AI Gateway, attach a File Log plugin to the service. This creates a local log file for examining requests and responses as Gemini CLI runs through Kong.
+Now, let's configure the [File Log](/plugins/file-log/)  plugin to inspect the traffic between Gemini CLI and AI Gateway, attach a File Log plugin to the service. This creates a local log file for examining requests and responses as Gemini CLI runs through Kong.
 
 {% entity_examples %}
 entities:
