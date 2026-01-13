@@ -36,7 +36,7 @@ tags:
 
 tldr:
   q: How do I run Qwen Code CLI through Kong AI Gateway?
-  a: Configure AI Proxy to forward requests to OpenAI, enable file-log to inspect traffic, and point Qwen Code CLI to the local proxy endpoint so all requests go through the Gateway for monitoring and control.
+  a: Configure AI Proxy to forward requests to OpenAI, enable the File Log plugin to inspect traffic, and point Qwen Code CLI to the local proxy endpoint so all requests go through the Gateway for monitoring and control.
 
 tools:
   - deck
@@ -83,7 +83,7 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin. The Qwen Code CLI uses OpenAI-compatible endpoints for LLM communication. The plugin handles authentication using a bearer token header and forwards requests to the specified model.
+First, configure the [AI Proxy](/plugins/ai-proxy/) plugin. The [Qwen Code CLI](https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/) uses OpenAI-compatible endpoints for LLM communication. The plugin handles authentication using a bearer token header and forwards requests to the specified model.
 
 The `max_request_body_size` parameter is set to 4194304 bytes (4MB) to accommodate large code files and extended context windows that Qwen Code CLI sends during code analysis tasks.
 
@@ -115,12 +115,14 @@ variables:
 ## Export environment variables
 
 Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
+
 ```sh
 export OPENAI_BASE_URL="http://localhost:8000/qwen"
 export OPENAI_API_KEY=<your_openai_api_key>
 export OPENAI_MODEL="gpt-5"
 ```
 {: data-deployment-topology="on-prem" }
+
 ```sh
 export OPENAI_BASE_URL="$KONNECT_PROXY_URL/qwen"
 export OPENAI_API_KEY=<your_openai_api_key>
@@ -130,7 +132,7 @@ export OPENAI_MODEL="gpt-5"
 
 ## Configure the File Log plugin
 
-To inspect the exact payloads traveling between Qwen Code CLI and AI Gateway, attach a File Log plugin to the service. This creates a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
+Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and AI Gateway. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
 
 {% entity_examples %}
 entities:
@@ -146,6 +148,7 @@ entities:
 Test the Qwen Code CLI setup:
 
 1. In the terminal where you exported your environment variables, run:
+
    ```sh
    qwen
    ```
@@ -161,11 +164,13 @@ Test the Qwen Code CLI setup:
    Expected output will show the model's response to your prompt.
 
 3. Check that LLM traffic went through Kong AI Gateway:
+
    ```sh
    docker exec kong-quickstart-gateway cat /tmp/qwen.json | jq
    ```
 
    Look for entries similar to:
+
 ```json
    {
      ...
