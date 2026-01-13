@@ -13,33 +13,42 @@ related_resources:
     url: /mesh/concepts/
 ---
 
-Service Mesh is a technology pattern that implements a better way to implement modern networking and connectivity among the different services that make up an application. While it is commonly used in the context of microservices, it can be used to improve connectivity among every architecture and on every platform like VMs and containers.
+A service mesh is a technology pattern that provides a way to implement modern networking and connectivity among the different services that make up an application. While it's commonly used in the context of microservices, it can be used to improve connectivity in every architecture and on every platform, such as VMs and containers.
 
-{% tip %}
-**Reliable service connectivity** is a pre-requisite for every modern digital application. Transitioning to microservices - and to the Cloud - can be disastrous if network connectivity is not taken care of, and this is exactly why {{site.mesh_product_name}} was built.
-{% endtip %}
+When a service wants to communicate with another service over the network, like a monolith talking to a database or a microservice talking to another microservice, by default the connectivity among them is unreliable. The network can be slow, unsecure by default, and those network requests are not logged anywhere in case you need to debug an error.
 
-When a service wants to communicate to another service over the network - like a monolith talking to a database or a microservices talking to another microservice - by default the connectivity among them is unreliable: the network can be slow, it is unsecure by default, and by default of those network requests are not being logged anywhere in case we need to debug an error.
+In order to implement some of these functionalities, you have two options:
 
-In order to implement some of these functionalities, we have two options:
+* You can extend your applications yourself to address these concerns. Over time, this creates technical debt and more code to maintain in addition to the business logic that your application delivers to the end-user. It also creates fragmentation and security issues as more teams try to address the same concerns on different technology stacks.
+* You can delegate the network management to something else that does it for you. For example, an out-of-process proxy that runs on the same underlying host. This proxy is called a [data plane proxy](/mesh/data-plane-proxy/), or sidecar.
 
-* We extend our applications ourselves in order to address these concerns. Over time this creates technical debt, and yet more code to maintain in addition to the business logic that our application is delivering to the end-user. It also creates fragmentation and security issues as more teams try to address the same concerns on different technology stacks.
-* We delegate the network management to something else that does it for us. Like - for instance - an out-of-process proxy that runs on the same underlying host. Sure, we have to deal with a slightly increased latency between our services and the local proxy, but the benefits are so high that it quickly becomes irrelevant. This proxy - as we will learn later - is called *sidecar proxy* and sits on the data plane of our requests.
+In the latter scenario, when delegating network management to another process, you have a data plane proxy for each replica of every service. This is required so you can tolerate a failure to one of the proxies without affecting other replicas, and also because you can assign an identity to each proxy and therefore to each replica of your services. It's also important that the data plane proxy is very lightweight since you'll have many instances running.
 
-In the latter scenario - when delegating network management to another process - we are going to be having a data plane proxy for each replica of every service. This is required so we can tolerate a failure to one of the proxies without affecting other replicas, and also because we can assign an identity to each proxy and therefore to each replica of our services. It is also important that the data plane proxy is very lightweight since we are going to be having many instances running.
+While having data plane proxies deployed alongside your services helps with the network concerns described above, managing so many data plane proxies can become challenging. When you want to update your network policies, you don't want to manually reconfigure each one of them. You need a source of truth that can collect all of your configuration, segmented by service or other properties, and then push the configuration to the individual data plane proxies whenever required. This component is called the [control plane](/mesh/control-plane-configuration/). It controls the proxies and, unlike the proxies, it doesn't sit on the execution path of the service traffic.
 
-While having data plane proxies deployed alongside our services helps with the network concerns we have described earlier, it introduces a new problem: managing so many data plane proxies becomes challenging, and when we want to update our network policies we certainly don't want to manually reconfigure each one of them. In short, we need a source of truth that can collect all of our configuration - segmented by service or other properties - and then push the configuration to the individual data plane proxies whenever required. This component is called the control plane: it controls the proxies and - unlike the proxies - it doesn't sit on the execution path of the service traffic.
+{% mermaid %}
+flowchart TB
+    U[User]
+    subgraph CP[Control plane]
+        C[Configuration]
+        P[Policies]
+        M[Monitoring]
+    end
+    subgraph H1[Host/VM/Pod]
+        DP1[Data plane proxy]
+        S1[Service]
+        S1 <--> DP1
+    end
+    subgraph H2[Host/VM/Pod]
+        DP2[Data plane proxy]
+        S2[Service]
+        S2 <--> DP2
+    end
 
-<center>
-<img src="/assets/images/docs/0.4.0/diagram-14.jpg" alt="" style="padding-top: 20px; padding-bottom: 10px;"/>
-</center>
+    U --> CP
+    CP <---> DP1 & DP2
+{% endmermaid %}
 
-We are going to be having many proxies connected to the control plane in order to always propagate the latest configuration, while simultaneously processing the service-to-service traffic among our infrastructure. {{site.mesh_product_name}} is a control plane (and it is being shipped in a `kuma-cp` binary) while Envoy is a data plane proxy (shipped as an `envoy` binary). When using {{site.mesh_product_name}} we don't have to worry about learning to use Envoy, because {{site.mesh_product_name}} abstracts away that complexity by bundling Envoy into another binary called `kuma-dp` (`kuma-dp` under the hood will invoke the `envoy` binary but that complexity is hidden from you, the end user of {{site.mesh_product_name}}).
-
-Service Mesh does not introduce new concerns or use-cases: it addresses a concern that we are already taking care of (usually by writing more code, if we are doing anything at all): dealing with the connectivity in our network. 
-
-<center>
-<img src="/assets/images/docs/0.5.0/diagram-01.jpg" alt="" style="width: 500px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-As we will learn, {{site.mesh_product_name}} takes care of these concerns so that we don't have to worry about the network, and in turn making our applications more reliable.
+You'll have many proxies connected to the control plane in order to always propagate the latest configuration, while simultaneously processing the service-to-service traffic among your infrastructure. 
+{{site.mesh_product_name}} includes a control plane (shipped in a `kuma-cp` binary) and Envoy as a data plane proxy (shipped as an `envoy` binary). 
+You don't need to learn to use Envoy to use {{site.mesh_product_name}}, because {{site.mesh_product_name}} abstracts away that complexity by bundling Envoy into another binary called `kuma-dp`. Under the hood, `kuma-dp` invokes the `envoy` binary.
