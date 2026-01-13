@@ -218,7 +218,7 @@ If data plane proxy went down ungracefully, then the following sequence of the e
 
 To allow the data plane to leave the mesh in a graceful way, you can use [service probes](/mesh/dataplane-health/#kubernetes-and-universal-service-probes).
 
-## Envoy
+## Envoy configuration
 
 `Envoy` has a powerful [Admin API](https://www.envoyproxy.io/docs/envoy/latest/operations/admin) for monitoring and troubleshooting.
 
