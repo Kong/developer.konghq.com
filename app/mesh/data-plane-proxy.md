@@ -30,7 +30,7 @@ A DPP is composed of the following components:
   * `Envoy` receives configuration from the control plane to manage traffic correctly.
   * `core-dns` resolves {{site.mesh_product_name}} specific DNS entries.
 
-We have one instance of `kuma-dp` for every instance of every service.
+Each service instance runs its own `kuma-dp` instance.
 
 ## Concepts
 
@@ -42,13 +42,13 @@ An inbound defines the port exposed for each workload. It consists of:
 * The port the workload listens on.
 * A set of [tags](#tags).
 
-Most of the time a DPP exposes a single inbound. When a workload exposes multiple ports, multiple inbounds can be defined.
+A DPP typically exposes a single inbound. When a workload exposes multiple ports, multiple inbounds can be defined.
 
 ### Tags
 Tags are a set of key-value pairs that are defined for each DPP inbound. These tags can serve the following purposes:
 * Specifying the service this DPP inbound is part of.
 * Adding metadata about the exposed service.
-* Allowing subsets of DPPs to be selected by these tags/
+* Allowing subsets of DPPs to be selected by these tags.
 
 Tags prefixed with `kuma.io` are reserved:
 * `kuma.io/service` identifies the service name. On Kubernetes this tag is automatically created, while on Universal it must be specified manually. This tag must always be present.
@@ -60,7 +60,7 @@ A service is a group of all DPP inbounds that have the same `kuma.io/service` ta
 
 ### Outbounds
 An outbound allows the workload to consume a service in the mesh using a local port.
-This is only useful when you're not using [transparent proxying](/mesh/transparent-proxying/). 
+Outbounds are not required when using [transparent proxying](/mesh/transparent-proxying/). 
 
 ## `Dataplane` entity
 
