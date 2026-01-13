@@ -1,0 +1,5 @@
+name: qwen-route
+paths:
+  - /qwen
+service:
+  name: qwen-service
