@@ -36,7 +36,7 @@ A {{site.mesh_product_name}} service mesh consists of two main components:
 {:.info}
 > One {{site.mesh_product_name}} control plane deployment can control multiple isolated data planes using the [`Mesh`](/mesh/mesh-multi-tenancy/#usage) resource. Compared to using one control plane per data plane, this option lowers the complexity and operational cost of supporting multiple meshes.
 
-Here's a diagram that show the {{site.mesh_product_name}} architecture :
+Here's a diagram that shows the {{site.mesh_product_name}} architecture :
 {% mermaid %}
 flowchart TB
     CP[Control plane]
@@ -58,9 +58,9 @@ flowchart TB
     CP <----> DPP1 & DPP2
 {% endmermaid %}
 
-Communication happens between the control and data plane as well as between the services and their data plane proxies:
-* Data plane proxies retrieve their configuration from the control plane, using the [Envoy **xDS** APIs](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol).
-* Requests to and from the service go through the data plane proxy.
+Data plane proxies handle two types of communication:
+* Configuration retrieval from the control plane using the [Envoy **xDS** APIs](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol).
+* Request proxying for all traffic to and from the service.
 
 ## Components
 
@@ -80,9 +80,7 @@ There are two modes that the {{site.mesh_product_name}} control plane can run in
 
 When running in Kubernetes mode, {{site.mesh_product_name}} stores all of its state and configuration on the underlying Kubernetes API Server.
 
-The only step necessary to join your Kubernetes Services to the mesh is enabling sidecar injection.
-For any `Pods` configured with sidecar injection, {{site.mesh_product_name}} adds the `kuma-dp` sidecar container.
-The following label on any `Namespace` or `Pod` controls this injection:
+Enable sidecar injection to add Pods to the mesh. {{site.mesh_product_name}} injects the `kuma-dp` sidecar container into any Pod configured for injection. The following label on a `Namespace` or `Pod` controls this behavior:
 
 ```
 kuma.io/sidecar-injection: enabled
@@ -178,8 +176,4 @@ spec:
 
 ## Universal mode
 
-When running in Universal mode, {{site.mesh_product_name}} requires a PostgreSQL database to store its state. 
-This replaces the Kubernetes API Server. 
-With Universal, you can use `kumactl` to interact directly with the {{site.mesh_product_name}} API server to manage policies.
-
-For more information, see [the PostgreSQL section](/mesh/control-plane-configuration/#postgresql) in the control plane configuration docs.
+When running in Universal mode, {{site.mesh_product_name}} requires a PostgreSQL database to store its state. You can use `kumactl` to interact with the {{site.mesh_product_name}} API server to manage policies. For more information, see [the PostgreSQL section](/mesh/control-plane-configuration/#postgresql) in the control plane configuration docs.
