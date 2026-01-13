@@ -48,7 +48,7 @@ prereqs:
       content: |
         This tutorial requires an OpenAI API key with access to GPT models. You can obtain an API key from the [OpenAI Platform](https://platform.openai.com/api-keys).
     - title: Qwen Code CLI
-      icon_url: /assets/icons/code.svg
+      icon_url: /assets/icons/qwen.svg
       content: |
         This tutorial uses the Qwen Code CLI tool. Install Node.js 18+ if needed (verify with `node --version`), then install and launch Qwen Code CLI:
 
