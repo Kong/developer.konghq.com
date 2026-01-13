@@ -127,7 +127,7 @@ rows:
 
 ## Configuring SSL connections through kong.conf
 
-You can directly upload certificates and keys to {{site.base_gateway}} through configuration in `kong.conf`.
+You can directly upload certificates and keys to {{site.base_gateway}} through [configuration in `kong.conf`](/gateway/configuration/).
 
 All of the following parameters can also be set via [environment variables](/gateway/manage-kong-conf/).
 
@@ -145,6 +145,7 @@ config:
   - name: status_ssl_cert
   - name: status_ssl_cert_key
   - name: lua_ssl_trusted_certificate
+  - name: tls_certificate_verify
 directives:
   - name: nginx_proxy_proxy_ssl_trusted_certificate
     description: |
@@ -153,3 +154,16 @@ directives:
 <!--vale on-->
 
 {{site.base_gateway}} also provides many customization settings for SSL connections. See the [Kong Configuration Reference](/gateway/configuration/) for all available options.
+
+### Enforcing TLS verification globally {% new_in 3.13 %}
+
+You can set [`tls_certificate_verify`](/gateway/configuration/#tls_certificate_verify) to `true` to enforce global certificate verification when connecting to secure endpoints. When this setting is enabled, configurations containing Services or plugins where `tls_verify` is set to `off` will fail to be inserted or updated. You will need to manually update each Service or plugin instance to resolve this error.
+
+When certificate verification is enforced:
+
+* **Traditional deployments** will fail to start if {{site.base_gateway}} detects insecure configurations. This happens when an upstream is configured to use a secure protocol (such as HTTPS) but certificate verification is disabled.
+* **Hybrid deployments** will fail to push such insecure configurations to Data Planes that start with this option enabled.
+
+This feature is designed primarily for **highly federated environments**, where platform operators need to guarantee that all teams and users deploying configuration through {{site.base_gateway}} adhere to certificate-verification requirements.
+
+Keep in mind that enabling certificate verification does not change how {{site.base_gateway}} validates certificates themselves. If you configure Services or system components (such as Postgres or Redis) with certificates that are invalid or self-signed without an appropriate trusted CA, {{site.base_gateway}} will be unable to establish those connections. This behavior is not new. However, enabling global enforcement may surface misconfigurations that were previously unnoticed.

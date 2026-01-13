@@ -24,6 +24,10 @@ module Jekyll
         def container
           @container ||= how_tos_config.fetch('container')
         end
+
+        def command
+          @command ||= @yaml.fetch('command', '')
+        end
       end
     end
   end

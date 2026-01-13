@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import yaml from "js-yaml";
 import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
+import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
 import { executeCommand } from "../docker-helper.js";
@@ -74,12 +75,30 @@ async function checkSetup(setup, runtimeConfig, container) {
   return true;
 }
 
-async function runPrereqs(prereqs, container) {
+async function runPrereqs(prereqs, container, runtimeConfig) {
   log("Running prereqs...");
   if (prereqs) {
     const config = await processPrereqs(prereqs);
+
+    if (config.commands) {
+      for (const command of config.commands) {
+        if (typeof command === "string") {
+          await executeCommand(container, command);
+        } else {
+          await validate(container, command, runtimeConfig);
+        }
+      }
+      log(`   prereq ✅ .`);
+    }
+  }
+}
+
+async function runCleanup(cleanup, container) {
+  log("Running cleanup...");
+  if (cleanup) {
+    const config = await processCleanup(cleanup);
     await runConfig(config, container);
-    log(`   prereq ✅ .`);
+    log(`   cleanup ✅ .`);
   }
 }
 
@@ -142,7 +161,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       }
     }
 
-    await runPrereqs(instructions.prereqs, container);
+    await runPrereqs(instructions.prereqs, container, runtimeConfig);
 
     const assertions = await runSteps(
       instructions.steps,
@@ -166,6 +185,8 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       await executeCommand(container, command);
     }
   }
+
+  await runCleanup(instructions.cleanup, container);
 
   return result;
 }

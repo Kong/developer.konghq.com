@@ -1,0 +1,188 @@
+<svg width="1400" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg-dark { fill: #1e1e1e; }
+      .bg-darker { fill: #252526; }
+      .bg-sidebar { fill: #333333; }
+      .bg-titlebar { fill: #323233; }
+      .bg-tab { fill: #2d2d30; }
+      .bg-user-msg { fill: #2d2d30; }
+      .bg-tool-call { fill: #1e3a5f; }
+      .bg-input { fill: #1e1e1e; }
+      .bg-status { fill: #007acc; }
+      .bg-mcp-badge { fill: #4ec9b0; }
+      
+      .text-white { fill: #ffffff; }
+      .text-light { fill: #cccccc; }
+      .text-dim { fill: #858585; }
+      .text-code { fill: #d4d4d4; }
+      .text-blue { fill: #9cdcfe; }
+      .text-teal { fill: #4ec9b0; }
+      .text-placeholder { fill: #666666; }
+      
+      .border-blue { stroke: #007acc; stroke-width: 2; fill: none; }
+      .border-light { stroke: #3e3e42; stroke-width: 1; fill: none; }
+      .border-left-blue { stroke: #007acc; stroke-width: 3; }
+      
+      text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+      }
+      .text-small { font-size: 11px; }
+      .text-mono {
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 12px;
+      }
+      .text-bold { font-weight: 600; }
+    </style>
+  </defs>
+  
+  <!-- Main Background -->
+  <rect width="1400" height="900" class="bg-dark"/>
+  
+  <!-- Title Bar -->
+  <rect width="1400" height="35" class="bg-titlebar"/>
+  <circle cx="16" cy="17" r="6" fill="#ff5f57"/>
+  <circle cx="36" cy="17" r="6" fill="#febc2e"/>
+  <circle cx="56" cy="17" r="6" fill="#28c840"/>
+  <text x="600" y="22" class="text-light">konnect-gateway-config.js — kong-api-project</text>
+  
+  <!-- Sidebar -->
+  <rect x="0" y="35" width="50" height="843" class="bg-sidebar"/>
+  <text x="15" y="65" class="text-dim">📁</text>
+  <text x="15" y="105" class="text-dim">🔍</text>
+  <text x="15" y="145" class="text-dim">📦</text>
+  <text x="15" y="185" class="text-white">💬</text>
+  <line x1="0" y1="168" x2="0" y2="210" class="border-left-blue"/>
+  
+  <!-- File Explorer -->
+  <rect x="50" y="35" width="250" height="843" class="bg-darker"/>
+  <text x="60" y="55" class="text-light text-small text-bold">EXPLORER</text>
+  <text x="70" y="80" class="text-light text-small">📁 kong-api-project</text>
+  <text x="85" y="100" class="text-light text-small">📁 src</text>
+  <text x="100" y="120" class="text-light text-small">📄 konnect-gateway-config.js</text>
+  <text x="85" y="140" class="text-light text-small">📄 package.json</text>
+  <text x="85" y="160" class="text-light text-small">📄 README.md</text>
+  
+  <!-- Editor Area -->
+  <rect x="300" y="35" width="700" height="843" class="bg-dark"/>
+  
+  <!-- Tab Bar -->
+  <rect x="300" y="35" width="700" height="35" class="bg-tab"/>
+  <rect x="300" y="35" width="200" height="35" class="bg-dark"/>
+  <text x="310" y="57" class="text-white">konnect-gateway-config.js</text>
+  
+  <!-- Code Content -->
+  <g class="text-mono text-code">
+    <text x="310" y="90" class="text-dim">1</text>
+    <text x="350" y="90" fill="#6a9955">// Kong Konnect Gateway Configuration</text>
+    
+    <text x="310" y="110" class="text-dim">2</text>
+    <text x="350" y="110"><tspan fill="#569cd6">const</tspan> <tspan fill="#9cdcfe">axios</tspan> = <tspan fill="#dcdcaa">require</tspan>(<tspan fill="#ce9178">'axios'</tspan>);</text>
+    
+    <text x="310" y="130" class="text-dim">3</text>
+    
+    <text x="310" y="150" class="text-dim">4</text>
+    <text x="350" y="150"><tspan fill="#569cd6">const</tspan> <tspan fill="#9cdcfe">CONTROL_PLANE_ID</tspan> = <tspan fill="#ce9178">'abc123-control-plane'</tspan>;</text>
+    
+    <text x="310" y="170" class="text-dim">5</text>
+    
+    <text x="310" y="190" class="text-dim">6</text>
+    <text x="350" y="190"><tspan fill="#569cd6">async function</tspan> <tspan fill="#dcdcaa">configureRateLimiting</tspan>() {</text>
+    
+    <text x="310" y="210" class="text-dim">7</text>
+    <text x="350" y="210" fill="#6a9955">  // Apply rate limiting to API routes</text>
+    
+    <text x="310" y="230" class="text-dim">8</text>
+    <text x="350" y="230">  <tspan fill="#569cd6">const</tspan> <tspan fill="#9cdcfe">config</tspan> = {</text>
+    
+    <text x="310" y="250" class="text-dim">9</text>
+    <text x="350" y="250">    <tspan fill="#9cdcfe">minute</tspan>: 100,</text>
+    
+    <text x="310" y="270" class="text-dim">10</text>
+    <text x="350" y="270">    <tspan fill="#9cdcfe">policy</tspan>: <tspan fill="#ce9178">'local'</tspan></text>
+    
+    <text x="310" y="290" class="text-dim">11</text>
+    <text x="350" y="290">  };</text>
+    
+    <text x="310" y="310" class="text-dim">12</text>
+    <text x="350" y="310">  <tspan fill="#569cd6">return</tspan> <tspan fill="#9cdcfe">config</tspan>;</text>
+    
+    <text x="310" y="330" class="text-dim">13</text>
+    <text x="350" y="330">}</text>
+  </g>
+  
+  <!-- Chat Sidebar -->
+  <rect x="1000" y="35" width="400" height="843" class="bg-darker"/>
+  
+  <!-- Chat Header -->
+  <rect x="1000" y="35" width="400" height="50" class="bg-tab"/>
+  <text x="1015" y="65" class="text-light text-bold">AI Assistant</text>
+  <rect x="1280" y="50" width="80" height="20" rx="10" class="bg-mcp-badge"/>
+  <text x="1305" y="65" class="text-small" fill="#000000" font-weight="600">MCP</text>
+  
+  <!-- Chat Messages -->
+  <!-- User Message 1 -->
+  <text x="1015" y="110" class="text-small text-dim text-bold">You</text>
+  <rect x="1120" y="120" width="260" height="50" rx="8" class="bg-user-msg"/>
+  <text x="1130" y="140" class="text-light text-small">Show me all routes in my</text>
+  <text x="1130" y="157" class="text-light text-small">production control plane</text>
+  
+  <!-- Assistant Message 1 -->
+  <text x="1015" y="195" class="text-small text-dim text-bold">Assistant</text>
+  <text x="1015" y="215" class="text-light text-small">I'll query your production control plane</text>
+  <text x="1015" y="230" class="text-light text-small">to retrieve all routes.</text>
+  
+  <!-- Tool Call 1 -->
+  <rect x="1015" y="245" width="355" height="40" rx="6" class="bg-tool-call"/>
+  <line x1="1015" y1="245" x2="1015" y2="285" stroke="#007acc" stroke-width="3"/>
+  <text x="1025" y="262" class="text-teal text-mono text-bold">GetControlPlane</text>
+  <text x="1025" y="278" class="text-blue text-mono text-small">operation="get_by_name", name="production"</text>
+  
+  <!-- Tool Call 2 -->
+  <rect x="1015" y="295" width="355" height="40" rx="6" class="bg-tool-call"/>
+  <line x1="1015" y1="295" x2="1015" y2="335" stroke="#007acc" stroke-width="3"/>
+  <text x="1025" y="312" class="text-teal text-mono text-bold">GetRoute</text>
+  <text x="1025" y="328" class="text-blue text-mono text-small">control_plane_id="cp-prod-001", operation="list"</text>
+  
+  <!-- Results -->
+  <text x="1015" y="360" class="text-light text-small">Found 8 routes in your production control plane:</text>
+  <text x="1015" y="380" class="text-light text-small">1. <tspan font-weight="600">/api/users</tspan> → users-service</text>
+  <text x="1015" y="395" class="text-light text-small">2. <tspan font-weight="600">/api/orders</tspan> → orders-service</text>
+  <text x="1015" y="410" class="text-light text-small">3. <tspan font-weight="600">/api/products</tspan> → products-service</text>
+  <text x="1015" y="425" class="text-light text-small">4. <tspan font-weight="600">/api/auth</tspan> → auth-service</text>
+  <text x="1015" y="440" class="text-light text-small">5. <tspan font-weight="600">/api/payments</tspan> → payments-service</text>
+  <text x="1015" y="455" class="text-light text-small">6. <tspan font-weight="600">/webhooks</tspan> → webhook-handler</text>
+  <text x="1015" y="470" class="text-light text-small">7. <tspan font-weight="600">/health</tspan> → health-service</text>
+  <text x="1015" y="485" class="text-light text-small">8. <tspan font-weight="600">/metrics</tspan> → metrics-collector</text>
+  
+  <!-- User Message 2 -->
+  <text x="1015" y="520" class="text-small text-dim text-bold">You</text>
+  <rect x="1080" y="530" width="290" height="50" rx="8" class="bg-user-msg"/>
+  <text x="1090" y="550" class="text-light text-small">Which plugins are applied to the</text>
+  <text x="1090" y="567" class="text-light text-small">payments route?</text>
+  
+  <!-- Assistant Message 2 -->
+  <text x="1015" y="605" class="text-small text-dim text-bold">Assistant</text>
+  
+  <!-- Tool Call 3 -->
+  <rect x="1015" y="615" width="355" height="35" rx="6" class="bg-tool-call"/>
+  <line x1="1015" y1="615" x2="1015" y2="650" stroke="#007acc" stroke-width="3"/>
+  <text x="1025" y="630" class="text-teal text-mono text-bold">GetPlugin</text>
+  <text x="1025" y="643" class="text-blue text-mono text-small">control_plane_id="cp-prod-001", operation="list"</text>
+  
+  <!-- Plugin Results -->
+  <text x="1015" y="675" class="text-light text-small">The <tspan font-weight="600">/api/payments</tspan> route has 3 plugins:</text>
+  <text x="1015" y="695" class="text-light text-small">• <tspan font-weight="600">rate-limiting</tspan> (100 req/min)</text>
+  <text x="1015" y="710" class="text-light text-small">• <tspan font-weight="600">key-auth</tspan> (enabled)</text>
+  <text x="1015" y="725" class="text-light text-small">• <tspan font-weight="600">cors</tspan> (allow all origins)</text>
+  
+  <!-- Chat Input -->
+  <rect x="1015" y="815" width="355" height="40" rx="6" class="bg-input"/>
+  <rect x="1015" y="815" width="355" height="40" rx="6" class="border-light"/>
+  <text x="1025" y="840" class="text-placeholder text-small">Ask about your Kong Konnect resources...</text>
+  
+  <!-- Status Bar -->
+  <rect x="0" y="878" width="1400" height="22" class="bg-status"/>
+  <text x="10" y="893" class="text-white text-small">🔌 Kong Konnect MCP Server  |  Connected  |  Region: US</text>
+</svg>

@@ -64,8 +64,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
@@ -162,6 +160,8 @@ This prompt is within allowed IT topics like automation, DevOps, and CI/CD:
 
 {% validation request-check %}
 url: /anything
+display_headers: true
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -169,6 +169,7 @@ body:
   messages:
     - role: user
       content: What are the best tools for DevOps?
+status_code: 200
 {% endvalidation %}
 
 
@@ -179,6 +180,8 @@ This prompt relates to the allowed topic about productivity tools:
 
 {% validation request-check %}
 url: /anything
+display_headers: true
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -186,6 +189,7 @@ body:
   messages:
     - role: user
       content: What productivity tools would you recommend?
+status_code: 200
 {% endvalidation %}
 
 
@@ -196,6 +200,8 @@ This prompt attempts to access or modify systems without permission:
 
 {% validation request-check %}
 url: /anything
+display_headers: true
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -216,6 +222,8 @@ This prompt falls outside the scope of acceptable work-related use:
 
 {% validation request-check %}
 url: /anything
+display_headers: true
+method: POST
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'

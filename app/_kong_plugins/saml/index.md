@@ -151,3 +151,5 @@ Remove the header and footer before including the certificate in the `idp_certif
 ```
 <certificate contents>
 ```
+
+{% include plugins/redis-cloud-auth.md %}

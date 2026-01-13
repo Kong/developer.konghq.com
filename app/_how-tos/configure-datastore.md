@@ -24,6 +24,18 @@ prereqs:
        [Install {{site.base_gateway}}](/gateway/install/#linux)
     - title: Install PostgreSQL
       include_content: prereqs/postgres
+    - title: Configure PostgreSQL authentication (RHEL only)
+      content: |
+        On Red Hat–based distributions, PostgreSQL defaults to `ident` or `peer`
+        authentication. {{site.base_gateway}} requires password-based authentication.
+
+        Edit the active `pg_hba.conf` file and update local and localhost rules to use `md5`,
+        then restart PostgreSQL: 
+        ```sh
+        sudo systemctl restart postgresql
+        ```
+        By default, the `pg_hba.conf` file is located at `/var/lib/pgsql/data/pg_hba.conf`.
+
     - title: Configure environment variables
       content: |
         Set the following variables so that `kong.conf` can interact with the datastore:
@@ -95,6 +107,11 @@ sudo -E kong migrations bootstrap
 ```
 
 This command must be run as the `root` user.
+
+{:.warning}
+> This command must be run with `sudo -E` to preserve the environment variables set in the prerequisites.
+> If the `kong` command is not found when running with `sudo`, you can create a symlink so it is available from the default PATH:
+> `sudo ln -s /usr/local/bin/kong /usr/bin/kong`
 
 ## Validate
 

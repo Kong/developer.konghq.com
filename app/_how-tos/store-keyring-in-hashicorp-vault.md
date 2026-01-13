@@ -80,51 +80,63 @@ next_steps:
 The Keyring integration with HashiCorp Vaults allows you to store and version Keyring data. {{site.base_gateway}} nodes can read the keys directly from the Vault to encrypt and decrypt sensitive data. 
 
 First, we need to add a key and key ID to the Vault. Let's create a secret named `keyring`:
-```sh
-vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="
-```
+{% validation custom-command %}
+command: |
+  curl http://localhost:8200/v1/secret/data/keyring \
+       -H "X-Vault-Token: $VAULT_TOKEN" \
+       -H "Content-Type: application/json" \
+       -d '{"data":{"id":"8zgITLQh","key":"t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="}}'
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
-## Set environment variables
 
-Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp Vault. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
-```sh
-export KONG_LICENSE_DATA="LICENSE-CONTENTS-GO-HERE"
-export KONG_KEYRING_ENABLED="on"
-export KONG_KEYRING_STRATEGY="vault"
-export KONG_KEYRING_VAULT_HOST="http://host.docker.internal:8200"
-export KONG_KEYRING_VAULT_MOUNT="secret"
-export KONG_KEYRING_VAULT_PATH="keyring"
-export KONG_KEYRING_VAULT_AUTH_METHOD="token"
-export KONG_KEYRING_VAULT_TOKEN="root"
-```
 
 ## Start {{site.base_gateway}}
 
+Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp Vault.
+Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
+
 Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
-    -e KONG_KEYRING_ENABLED \
-    -e KONG_KEYRING_STRATEGY \
-    -e KONG_KEYRING_VAULT_HOST \
-    -e KONG_KEYRING_VAULT_MOUNT  \
-    -e KONG_KEYRING_VAULT_PATH \
-    -e KONG_KEYRING_VAULT_AUTH_METHOD  \
-    -e KONG_KEYRING_VAULT_TOKEN
-```
+{% validation custom-command %}
+command: |
+  curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -e KONG_LICENSE_DATA \
+      -e KONG_KEYRING_ENABLED=on \
+      -e KONG_KEYRING_STRATEGY=vault \
+      -e KONG_KEYRING_VAULT_HOST=$VAULT_ADDR \
+      -e KONG_KEYRING_VAULT_MOUNT=secret  \
+      -e KONG_KEYRING_VAULT_PATH=keyring \
+      -e KONG_KEYRING_VAULT_AUTH_METHOD=token  \
+      -e KONG_KEYRING_VAULT_TOKEN=$VAULT_TOKEN
+expected:
+  return_code: 0
+render_output: false
+{% endvalidation %}
 
 ## Synchronize the Vault with the Keyring
 
 Once the container is created, use the following command to sync the Keyring data from the HashiCorp Vault to the {{site.base_gateway}} Keyring.
-```sh
-curl -i -X POST http://localhost:8001/keyring/vault/sync
-```
+
+{% control_plane_request %}
+url: /keyring/vault/sync
+method: POST
+status_code: 204
+display_headers: true
+{% endcontrol_plane_request %}
+
+
 
 ## Validate
 
 Check that the Keyring contains the key that we created in the HashiCorp Vault:
-```sh
-curl -i http://localhost:8001/keyring
-```
+
+{% control_plane_request %}
+url: /keyring/
+status_code: 200
+display_headers: true
+{% endcontrol_plane_request %}
+
 
 The response should contain the ID of the key we created:
 ```json
