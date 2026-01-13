@@ -109,7 +109,9 @@ For this to work, you must update your application to consume `redis` on `127.0.
 
 ## Lifecycle
 
-On Universal you can manage `Dataplane` resources either in [direct](#direct) mode or in [indirect](#indirect) mode.
+On Universal you can manage `Dataplane` resources either in [direct](#direct) mode or in [indirect](#indirect) mode:
+* **Direct mode:** Recommended method of operating `Dataplane` resources on Universal.
+* **Indirect mode:** In this mode, there is no strict dependency between the `Dataplane` resource creation and the startup of the data plane proxy. This can be useful if you have some external components that manage the `Dataplane` lifecycle.
 
 ### Direct
 
