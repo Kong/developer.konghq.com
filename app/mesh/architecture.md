@@ -16,8 +16,8 @@ tags:
 related_resources:
   - text: Mesh concepts
     url: /mesh/concepts/
-  - text: About service meshes
-    url: '/mesh/about/'
+  - text: Service meshes
+    url: '/mesh/service-mesh/'
   - text: Mesh policies
     url: '/mesh/policies-introduction/'
   - text: Install {{site.mesh_product_name}}
