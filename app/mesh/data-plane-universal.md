@@ -21,6 +21,8 @@ related_resources:
     url: '/mesh/mesh-multizone-service-deployment/'
   - text: Zone Ingress
     url: /mesh/zone-ingress/
+  - text: "{{ site.mesh_product_name }} data plane proxy"
+    url: /mesh/data-plane-proxy/
 ---
 
 To connect your services to the control plane, you need one or more data planes. To create a data plane on Universal, you need to create a data plane definition and pass it to the `kuma-dp run` command.
