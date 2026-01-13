@@ -28,7 +28,7 @@ flowchart LR
         K <-->|Watches CRDs events| KO
 
         subgraph NS1[Namespace A]
-            KO["Kong Operator<br/>(Controller Manager)"]
+            KO["{{site.operator_product_name}}<br/>(Controller Manager)"]
             CP["Control plane<br/>(In-memory KIC)"]
         end
 
@@ -56,7 +56,7 @@ flowchart LR
 
 {% mermaid %}
 flowchart LR
-    subgraph KOKO[Kong Konnect]
+    subgraph KOKO[{{site.konnect_product_name}}]
         CP[Control plane]
     end
     subgraph K8s[Kubernetes Cluster]
@@ -65,7 +65,7 @@ flowchart LR
         K <-->|Watches CRDs events| KO
 
         subgraph NS1[Namespace A]
-            KO["Kong Operator<br/>(Controller Manager)"]
+            KO["{{site.operator_product_name}}<br/>(Controller Manager)"]
         end
 
         subgraph NS2[Namespace B]
