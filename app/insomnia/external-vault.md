@@ -57,7 +57,7 @@ Insomnia supports the following vault services:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Credentials**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
 1. For Service Provider Credential List, click **Add Credentials**.
 1. Select **AWS**.
 1. Select a **Credential Type** and fill in the required fields.
@@ -113,7 +113,7 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Credentials**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
 1. For Service Provider Credential List, click **Add Credentials**.
 1. Select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
 {% endnavtab %}
@@ -132,7 +132,7 @@ export INSOMNIA_GCP_SERVICEACCOUNTKEYFILEPATH = 'GCP SERVICE ACCOUNT KEY FILE PA
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Credentials**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
 1. For Service Provider Credential List, click **Add Credentials**.
 1. Select **HashiCorp**.
 1. Choose your environment:
@@ -175,7 +175,7 @@ For HashiCorp, the environment variables to define for Inso CLI depend on the pl
 
 ## Azure Key Vault
 
-1. Navigate to **Preferences > Credentials**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
 1. For Service Provider Credential List, click **Add Credentials**.
 1. Select **Azure**.
 1. You will be redirected to authorize Insomnia in your browser.
