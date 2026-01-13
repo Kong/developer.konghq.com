@@ -83,7 +83,7 @@ An MCP Server is an HTTP JSON-RPC endpoint that advertises callable operations:
 
 The Insomnia **MCP Client** discovers these elements, which enables you to invoke, query, or test them directly in the app. Each workspace can include multiple MCP Clients.
 
-MCP Clients are project-scoped resources and can be stored in: 
+{% new_in 12.3 %} MCP Clients are project-scoped resources and can be stored in: 
 - Git projects
 - Cloud projects
 - Local projects
