@@ -53,6 +53,8 @@ pages:
         url: '/mesh/observability/'
       - text: Policy Hub
         url: /mesh/policies/
+      - text: Service meshes
+        url: /mesh/service-mesh/
     min_version:
       mesh: '2.7'
   -
@@ -88,8 +90,8 @@ pages:
     related_resources:
       - text: Mesh concepts
         url: /mesh/concepts/
-      - text: About service meshes
-        url: '/mesh/about/'
+      - text: Service meshes
+        url: '/mesh/service-mesh/'
       - text: Mesh policies
         url: '/mesh/policies-introduction/'
       - text: Install Kong Mesh
@@ -100,8 +102,8 @@ pages:
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
     url: '/mesh/concepts/'
     related_resources:
-      - text: About service meshes
-        url: '/mesh/about/'
+      - text: Service meshes
+        url: '/mesh/service-mesh/'
       - text: Mesh Policies
         url: '/mesh/policies-introduction/'
       - text: Mesh architecture
@@ -194,6 +196,8 @@ pages:
     related_resources:
       - text: Policy hub
         url: '/mesh/policies/'
+      - text: Service meshes
+        url: /mesh/service-mesh/
   -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
@@ -522,22 +526,6 @@ pages:
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
-
-
-  -
-    path: app/_src/introduction/about-service-meshes.md
-    title: 'About service meshes'
-    description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.'
-    url: '/mesh/about/'
-    related_resources:
-      - text: Mesh architecture
-        url: '/mesh/architecture/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-      - text: Mesh concepts
-        url: /mesh/concepts/
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service discovery'
