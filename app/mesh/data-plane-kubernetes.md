@@ -22,6 +22,8 @@ related_resources:
     url: /mesh/zone-ingress/
   - text: "{{ site.mesh_product_name }} data plane proxy"
     url: /mesh/data-plane-proxy/
+  - text: "{{site.mesh_product_name}} data plane on Universal"
+    url: /mesh/data-plane-universal/
 ---
 
 In {{site.mesh_product_name}}, data planes manage traffic between services using [data plane proxies](/mesh/data-plane-proxy/) (also known as sidecars on Kubernetes). The data plane proxies use the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity to manage the data plane configuration.
