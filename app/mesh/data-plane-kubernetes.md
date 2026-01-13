@@ -20,6 +20,8 @@ related_resources:
     url: '/mesh/mesh-multizone-service-deployment/'
   - text: Zone Ingress
     url: /mesh/zone-ingress/
+  - text: "{{ site.mesh_product_name }} data plane proxy"
+    url: /mesh/data-plane-proxy/
   - text: "{{site.mesh_product_name}} data plane on Universal"
     url: /mesh/data-plane-universal/
 ---
