@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@69259a625e4d22b0ca16e2681b2c0d13bfdcfaef
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/69259a625e4d22b0ca16e2681b2c0d13bfdcfaef'
+  x-oas-source: kong/platform-api@b7eea2c5573ba61412826916daec1a48f50c108b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b7eea2c5573ba61412826916daec1a48f50c108b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -865,6 +865,41 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Event Gateway Listener Policies
+  '/event-gateways/{gatewayId}/listeners/{eventGatewayListenerId}/policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/eventGatewayListenerId'
+    get:
+      operationId: get-event-gateway-listener-policy-chain
+      summary: Get Policy Chain for Listener
+      description: |
+        Get the policy chain for a listener composed of all the ids of the policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Listener Policies
+    put:
+      operationId: update-event-gateway-listener-policy-chain
+      summary: Update Policy Chain for Listener
+      description: Update the policy chain for a listener by providing an ordered list of policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Listener Policies
   '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/consume-policies':
     parameters:
       - $ref: '#/components/parameters/gatewayId'
@@ -1014,6 +1049,41 @@ paths:
       responses:
         '204':
           description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Consume Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/consume-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-consume-policy-chain
+      summary: Get Consume Policy Chain
+      description: |
+        Get the consume policy chain for a virtual cluster composed of all the ids of the consume policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Consume Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-consume-policy-chain
+      summary: Update Consume Policy Chain
+      description: Update the consume policy chain for a virtual cluster by providing an ordered list of consume policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1179,6 +1249,41 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Event Gateway Virtual Cluster Produce Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/produce-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-produce-policy-chain
+      summary: Get Produce Policy Chain for Virtual Cluster
+      description: |
+        Get the produce policy chain for a virtual cluster composed of all the ids of the produce policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Produce Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-produce-policy-chain
+      summary: Update Produce Policy Chain
+      description: Update the produce policy chain for a virtual cluster by providing an ordered list of produce policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Produce Policies
   '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/cluster-policies':
     parameters:
       - $ref: '#/components/parameters/gatewayId'
@@ -1328,6 +1433,41 @@ paths:
       responses:
         '204':
           description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/cluster-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-cluster-level-policy-chain
+      summary: Get Cluster Policy Chain for Virtual Cluster
+      description: |
+        Get the cluster-level policy chain for a virtual cluster composed of all the ids of the cluster-level policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-cluster-level-policy-chain
+      summary: Update Cluster Policy Chain
+      description: Update the cluster-level policy chain for a virtual cluster by providing an ordered list of cluster-level policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1700,6 +1840,7 @@ components:
         description:
           description: A human-readable description of the listener.
           type: string
+          default: ''
           maxLength: 512
         addresses:
           $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -1765,6 +1906,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         destination:
           $ref: '#/components/schemas/BackendClusterReference'
@@ -2091,6 +2233,7 @@ components:
         description:
           description: A human-readable description of the backend cluster.
           type: string
+          default: ''
           maxLength: 512
         authentication:
           $ref: '#/components/schemas/BackendClusterAuthenticationSensitiveDataAwareScheme'
@@ -2341,6 +2484,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2377,6 +2521,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2407,6 +2552,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2594,6 +2740,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -2620,6 +2767,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -2646,6 +2794,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -2698,6 +2847,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -2736,6 +2886,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -2925,6 +3076,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3137,6 +3289,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3152,6 +3305,7 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3202,6 +3356,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3217,6 +3372,7 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3271,6 +3427,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3296,6 +3453,7 @@ components:
             `record.value` fields.
           type: string
           example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3330,6 +3488,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3355,6 +3514,7 @@ components:
             `record.value` fields.
           type: string
           example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3393,6 +3553,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3408,6 +3569,7 @@ components:
             `record.value` fields.
           type: string
           example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3440,6 +3602,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3455,6 +3618,7 @@ components:
             `record.value` fields.
           type: string
           example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3536,6 +3700,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3561,6 +3726,7 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3593,6 +3759,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3608,6 +3775,7 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -3684,6 +3852,7 @@ components:
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
@@ -3699,6 +3868,7 @@ components:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
           example: context.auth.principal.name == "this-user"
+          default: ''
           maxLength: 1000
           x-expression:
             type: boolean
@@ -4253,6 +4423,7 @@ components:
         description:
           description: A human-readable description of the static key.
           type: string
+          default: ''
           maxLength: 512
         labels:
           $ref: '#/components/schemas/Labels'
@@ -4285,6 +4456,7 @@ components:
         description:
           description: A human-readable description of the static key.
           type: string
+          default: ''
           maxLength: 512
         labels:
           $ref: '#/components/schemas/Labels'
@@ -4293,6 +4465,16 @@ components:
       required:
         - name
         - value
+    EventGatewayPolicyReference:
+      description: A reference to an Event Gateway policy.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the policy.
+          type: string
+          format: uuid
+      required:
+        - id
     CursorMetaPage:
       type: object
       properties:
@@ -4891,6 +5073,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               addresses:
                 $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -4918,6 +5101,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               addresses:
                 $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -4942,6 +5126,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               destination:
                 $ref: '#/components/schemas/BackendClusterReferenceModify'
@@ -4974,6 +5159,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               destination:
                 $ref: '#/components/schemas/BackendClusterReferenceModify'
@@ -5006,6 +5192,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               authentication:
                 $ref: '#/components/schemas/BackendClusterAuthenticationScheme'
@@ -5041,6 +5228,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               authentication:
                 $ref: '#/components/schemas/BackendClusterAuthenticationSensitiveDataAwareScheme'
@@ -5186,6 +5374,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/EventGatewayStaticKeyCreate'
+    UpdateEventGatewayPolicyChainRequest:
+      description: The request schema for updating the policy chain.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/EventGatewayPolicyReference'
   responses:
     EventGatewayNodeStatus:
       description: The status of an event gateway node.
@@ -5379,6 +5575,14 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/EventGatewayStaticKey'
+    EventGatewayPolicyChainResponse:
+      description: A response containing the list of policies in order of execution.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/EventGatewayPolicyReference'
     BadRequest:
       description: Bad Request
       content:
