@@ -214,6 +214,8 @@ pages:
         url: '/mesh/single-zone/'
       - text: '{{site.mesh_product_name}} data plane on Kubernetes'
         url: /mesh/data-plane-kubernetes/
+      - text: "{{ site.mesh_product_name }} data plane proxy"
+        url: /mesh/data-plane-proxy/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -572,6 +574,8 @@ pages:
         url: /mesh/meshmultizoneservice/
       - text: '{{site.mesh_product_name}} data plane on Kubernetes'
         url: /mesh/data-plane-kubernetes/
+      - text: "{{ site.mesh_product_name }} data plane proxy"
+        url: /mesh/data-plane-proxy/
   -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
@@ -602,20 +606,6 @@ pages:
         url: '/mesh/universal/'
       - text: 'Data plane on Kubernetes'
         url: '/mesh/data-plane-kubernetes/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/dp-config/dpp.md
-    title: 'Data plane proxy'
-    description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-proxy/'
-    related_resources:
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: 'Data plane on Universal'
-        url: '/mesh/data-plane-universal/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Zone Ingress
