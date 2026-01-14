@@ -134,6 +134,9 @@ export OPENAI_MODEL="gpt-5"
 ```
 {: data-deployment-topology="konnect" }
 
+{:.info}
+> Make sure that `OPENAI_MODEL` variable points to the same model configured for the AI Proxy plugin.
+
 ## Configure the File Log plugin
 
 Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and AI Gateway. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
