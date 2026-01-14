@@ -24,7 +24,8 @@ related_resources:
 
 In a [multi-zone deployment](/mesh/mesh-multizone-service-deployment/), you can use the `ZoneIngress` proxy to manage cross-zone communication.
 These proxies are not attached to any specific workloads, they are bound to a specific zone.
-A zone ingress can proxy traffic between all meshes, so you only need one deployment in each zone.  
+A zone ingress can proxy traffic between all meshes, so you only need one deployment in each zone. 
+
 All requests that are sent from one zone to another will be directed to the proper instance by the zone ingress.
 
 {:.info}
@@ -35,7 +36,7 @@ The `ZoneIngress` entity includes the following parameters:
 * `type`: Must be `ZoneIngress`.
 * `name`: The name of the zone ingress instance, it must be unique for any given zone.
 * `networking`: The networking parameters of the zone ingress.
-    * `address`: The address of the network interface that the zone ingress is listening on. it can be the address of either
+    * `address`: The address of the network interface that the zone ingress is listening on. It can be the address of either
       the public or private network interface, but the latter must be used with a load balancer.
     * `port`: The port that the zone ingress is listening on. The default is `10001`.
     * `advertisedAddress`: An IP address or hostname that will be used to communicate with the zone ingress. The zone ingress
