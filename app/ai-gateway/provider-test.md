@@ -28,4 +28,8 @@ min_version:
 ---
 
 
-{% include plugins/ai-proxy/tables/providers.html providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
+{% include plugins/ai-proxy/tables/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
+
+I'm using Gemini here for testing purposes:
+
+{% include plugins/ai-proxy/tables/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}

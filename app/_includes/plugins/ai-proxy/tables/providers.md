@@ -1,18 +1,13 @@
-{% comment %}
-Usage: {% include per-provider-capabilities.html providers=site.data.providers.providers provider_name="OpenAI" %}
-{% endcomment %}
-
 {% assign provider = include.providers.providers | where: "name", include.provider_name | first %}
 
 {% if provider %}
 
 You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway using the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
 
-## Base URL
+## {{ provider.name }} base URL
 
 The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
 
-{% comment %}Check which categories have supported features{% endcomment %}
 {% assign has_text = false %}
 {% assign has_advanced_text = false %}
 {% assign has_processing = false %}
@@ -53,11 +48,11 @@ The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{ro
 
 The following tables show the AI capabilities supported by {{ provider.name }} provider when used with the [AI Proxy](/plugins/ai-proxy/) or the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
-{% comment %}Text Generation{% endcomment %}
 {% if has_text %}
+
 ### Text generation
 
-Standard text generation capabilities including chat, completions, and embeddings.
+Support for basic text generation capabilities including chat, completions, and embeddings:
 
 <table>
   <thead>
@@ -107,11 +102,11 @@ Standard text generation capabilities including chat, completions, and embedding
 </table>
 {% endif %}
 
-{% comment %}Advanced Text Generation{% endcomment %}
 {% if has_advanced_text %}
+
 ### Advanced text generation
 
-Function calling allows models to use external tools and APIs.
+Support for function calling to allow {{ provider.name }} models to use external tools and APIs:
 
 <table>
   <thead>
@@ -139,11 +134,11 @@ Function calling allows models to use external tools and APIs.
 </table>
 {% endif %}
 
-{% comment %}Processing{% endcomment %}
 {% if has_processing %}
+
 ### Processing
 
-File management, batch operations, assistants, and response handling.
+Support for file operations, batch operations, assistants, and response handling:
 
 <table>
   <thead>
@@ -203,7 +198,6 @@ File management, batch operations, assistants, and response handling.
   </tbody>
 </table>
 
-{% comment %}Processing notes{% endcomment %}
 {% assign has_processing_notes = false %}
 {% if provider.files.note.content or provider.batches.note.content %}
   {% assign has_processing_notes = true %}
@@ -217,11 +211,10 @@ File management, batch operations, assistants, and response handling.
 {% endif %}
 {% endif %}
 
-{% comment %}Audio{% endcomment %}
 {% if has_audio %}
 ### Audio
 
-Text-to-speech, transcription, and translation capabilities.
+Support for text-to-speech, transcription, and translation capabilities:
 
 <table>
   <thead>
@@ -271,11 +264,11 @@ Text-to-speech, transcription, and translation capabilities.
 </table>
 {% endif %}
 
-{% comment %}Image{% endcomment %}
 {% if has_image %}
+
 ### Image
 
-Image generation and editing capabilities.
+Support for image generation and editing capabilities:
 
 <table>
   <thead>
@@ -314,11 +307,11 @@ Image generation and editing capabilities.
 </table>
 {% endif %}
 
-{% comment %}Video{% endcomment %}
 {% if has_video %}
+
 ### Video
 
-Video generation capabilities.
+Support for video generation capabilities.
 
 <table>
   <thead>
@@ -346,11 +339,11 @@ Video generation capabilities.
 </table>
 {% endif %}
 
-{% comment %}Realtime{% endcomment %}
 {% if has_realtime %}
+
 ### Realtime
 
-Bidirectional streaming for realtime applications.
+Support for bidirectional streaming for realtime applications.
 
 <table>
   <thead>
