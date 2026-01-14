@@ -60,7 +60,7 @@ You can specify a `Mesh` for `Gateway` and `HTTPRoute` resources by setting the 
 ## Cross-mesh
 
 [Cross-mesh gateways](/mesh/gateway-listeners/#cross-mesh) are supported with the Gateway API.
-You just need to create a corresponding `GatewayClass` pointing to a `MeshGatewayConfig` that sets `crossMesh: true`:
+Create a corresponding `GatewayClass` pointing to a `MeshGatewayConfig` that sets `crossMesh: true`:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1

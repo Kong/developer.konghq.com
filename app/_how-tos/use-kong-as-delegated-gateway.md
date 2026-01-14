@@ -13,6 +13,8 @@ bread-crumbs:
 related_resources:
   - text: Set up a built-in gateway with {{site.mesh_product_name}}
     url: /how-to/set-up-a-built-in-mesh-gateway/
+  - text: Set up a built-in gateway on Kubernetes with {{site.mesh_product_name}}
+    url: /how-to/set-up-a-built-in-kubernetes-gateway/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
   - text: "{{site.kic_product_name}}"

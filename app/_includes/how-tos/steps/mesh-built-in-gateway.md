@@ -62,7 +62,7 @@ In production, you typically set up a gateway to receive traffic external to the
 {% endcapture %}
 
 {% capture traffic %}
-1. Add a `MeshTrafficPermission` resource to allow traffic to the service:
+1. Add a `MeshTrafficPermission` resource to allow traffic to the Service:
    
    ```sh
    echo "apiVersion: kuma.io/v1alpha1
@@ -115,7 +115,7 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    ```
    
    {:.info}
-   > Since we're using a self-signed certificate for testing purposes, we need the `--insecure` flag  .
+   > Since we're using a self-signed certificate for testing purposes, we need the `--insecure` flag.
    
    You should see a successful request with a TLS handshake:
 
