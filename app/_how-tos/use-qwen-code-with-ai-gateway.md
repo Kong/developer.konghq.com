@@ -83,9 +83,12 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, configure the [AI Proxy](/plugins/ai-proxy/) plugin. The [Qwen Code CLI](https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/) uses OpenAI-compatible endpoints for LLM communication. The plugin handles authentication using a bearer token header and forwards requests to the specified model. Routing CLI tools through Kong AI Gateway centralizes authentication, enforces rate limits, tracks usage costs, and caches repeated requests.
+First, configure the [AI Proxy](/plugins/ai-proxy/) plugin. The [Qwen Code CLI](https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/) uses OpenAI-compatible endpoints for LLM communication. The plugin handles authentication using a bearer token header and forwards requests to the specified model.
 
-The `max_request_body_size` parameter is set to 4194304 bytes (4MB) to accommodate large code files and extended context windows that Qwen Code CLI sends during code analysis tasks.
+CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult. Routing CLI tools through Kong AI Gateway removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
+
+{:.info}
+> The `max_request_body_size` parameter is set to 4194304 bytes (4MB) to accommodate large code files and extended context windows that Qwen Code CLI sends during code analysis tasks.
 
 
 {% entity_examples %}
