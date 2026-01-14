@@ -139,7 +139,7 @@ You'll see an `Authorization` header with your access token in the response.
 When passing the token in a query string, you don't need to include the `Bearer` portion of the token.
 Copy the token without `Bearer`, and export the value of the header to an environment variable:
 
-```
+```sh
 export TOKEN='YOUR_TOKEN_WITHOUT_BEARER_PREFIX'
 ```
 

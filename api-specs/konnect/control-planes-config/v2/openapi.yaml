@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
-  x-oas-source: kong/platform-api@875fd1ffb3d0a25b8579863b2c14f2382dfaae64
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/875fd1ffb3d0a25b8579863b2c14f2382dfaae64'
+  x-oas-source: kong/platform-api@a9e9d3f05153987999aa0775a067eaefa890c09d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a9e9d3f05153987999aa0775a067eaefa890c09d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -267,6 +267,26 @@ paths:
           $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - Custom Plugin Schemas
+  '/control-planes/{controlPlaneId}/core-entities/targets':
+    get:
+      operationId: list-targets
+      summary: List all targets for a control plane
+      description: Returns a collection of all targets for a control plane.
+      parameters:
+        - $ref: '#/components/parameters/controlPlaneId'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListTargets'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Targets
   '/control-planes/{controlPlaneId}/config-stores':
     get:
       operationId: list-config-stores
@@ -5235,6 +5255,7 @@ components:
         secret:
           type: string
           nullable: true
+          x-encrypted: true
         tags:
           description: A set of strings representing tags.
           type: array
@@ -5274,6 +5295,7 @@ components:
         secret:
           type: string
           nullable: true
+          x-encrypted: true
         tags:
           description: A set of strings representing tags.
           type: array
@@ -5801,6 +5823,70 @@ components:
         config:
           type: object
           properties:
+            cloud_authentication:
+              description: Cloud auth related configs for connecting to a Cloud Provider's Redis instance.
+              type: object
+              properties:
+                auth_provider:
+                  description: Auth providers to be used to authenticate to a Cloud Provider's Redis instance.
+                  type: string
+                  enum:
+                    - aws
+                    - azure
+                    - gcp
+                  x-referenceable: true
+                aws_access_key_id:
+                  description: AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_assume_role_arn:
+                  description: The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_cache_name:
+                  description: The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.
+                  type: string
+                  x-referenceable: true
+                aws_is_serverless:
+                  description: This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.
+                  type: boolean
+                  default: true
+                aws_region:
+                  description: The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.
+                  type: string
+                  x-referenceable: true
+                aws_role_session_name:
+                  description: The session name for the temporary credentials when assuming the IAM role.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_secret_access_key:
+                  description: AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_client_id:
+                  description: Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_client_secret:
+                  description: Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_tenant_id:
+                  description: Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                gcp_service_account_json:
+                  description: GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
             database:
               description: Database to use for the Redis connection when using the `redis` strategy
               type: integer
@@ -5890,6 +5976,70 @@ components:
         config:
           type: object
           properties:
+            cloud_authentication:
+              description: Cloud auth related configs for connecting to a Cloud Provider's Redis instance.
+              type: object
+              properties:
+                auth_provider:
+                  description: Auth providers to be used to authenticate to a Cloud Provider's Redis instance.
+                  type: string
+                  enum:
+                    - aws
+                    - azure
+                    - gcp
+                  x-referenceable: true
+                aws_access_key_id:
+                  description: AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_assume_role_arn:
+                  description: The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_cache_name:
+                  description: The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.
+                  type: string
+                  x-referenceable: true
+                aws_is_serverless:
+                  description: This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.
+                  type: boolean
+                  default: true
+                aws_region:
+                  description: The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.
+                  type: string
+                  x-referenceable: true
+                aws_role_session_name:
+                  description: The session name for the temporary credentials when assuming the IAM role.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                aws_secret_access_key:
+                  description: AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_client_id:
+                  description: Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_client_secret:
+                  description: Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                azure_tenant_id:
+                  description: Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
+                gcp_service_account_json:
+                  description: GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.
+                  type: string
+                  x-encrypted: true
+                  x-referenceable: true
             cluster_max_redirections:
               description: Maximum retry attempts for redirection.
               type: integer
@@ -5929,6 +6079,7 @@ components:
               description: 'A string representing a host name, such as example.com.'
               type: string
               default: 127.0.0.1
+              x-referenceable: true
             keepalive_backlog:
               description: 'Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.'
               type: integer
@@ -5951,6 +6102,7 @@ components:
               default: 6379
               maximum: 65535
               minimum: 0
+              x-referenceable: true
             read_timeout:
               description: An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.
               type: integer
@@ -6002,6 +6154,7 @@ components:
             server_name:
               description: A string representing an SNI (server name indication) value for TLS.
               type: string
+              x-referenceable: true
             ssl:
               description: 'If set to true, uses SSL to connect to Redis.'
               type: boolean
@@ -8395,6 +8548,26 @@ components:
                     description: An ISO-8604 timestamp representation of custom plugin schema update date.
                     type: integer
                     example: 1422412345
+    ListTargets:
+      description: A paginated list response for a collection of targets.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Target'
+              page:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  next_cursor:
+                    type: string
+                  has_next_page:
+                    type: boolean
     ListConfigStoresResponse:
       description: List of Config Stores
       content:

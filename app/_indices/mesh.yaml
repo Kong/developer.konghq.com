@@ -3,7 +3,7 @@ sections:
   - title: Overview
     items:
       - path: /mesh/
-      - path: /mesh/about/
+      - path: /mesh/service-mesh/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -25,9 +25,6 @@ sections:
       - path: /mesh/ubi-images/
       - path: /mesh/deploy-with-terraform-konnect/
       - path: /mesh/import-konnect-deployment-to-terraform/
-      - title: Mesh Manager with Konnect
-        description: Manage service meshes and Control Planes in Konnect.
-        url: /mesh-manager/
 
   - title: Mesh guides
     items:
@@ -129,7 +126,7 @@ sections:
       - path: /mesh/reference/kuma-cp/
       - path: /mesh/data-collection/
       - path: /mesh/configure-data-plane-proxy-membership/
-      - path: /mesh/cp-config/
+      - path: /mesh/control-plane-configuration/
       - path: /mesh/dns/
       - path: /mesh/ipv6-support/
       - path: /mesh/performance-tuning/

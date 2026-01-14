@@ -6,7 +6,7 @@ content_type: how_to
 permalink: /operator/dataplanes/get-started/hybrid/create-route/
 series:
   id: operator-get-started-hybrid
-  position: 3
+  position: 4
 
 breadcrumbs:
   - /operator/
@@ -38,7 +38,8 @@ next_steps:
 {:data-deployment-topology='konnect'}
 ## Create a Service
 
-Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service in your [Gateway Manager](/gateway-manager/).  You can refer to the CR [API](/operator/reference/custom-resources/#kongservice) to see all the available fields.
+Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service for your [API Gateway](/gateway/). 
+You can refer to the CR [API](/operator/reference/custom-resources/#kongservice) to see all the available fields.
 
 Your `KongService` must be associated with a `KonnectGatewayControlPlane` object that you've created in your cluster.
 
@@ -61,12 +62,12 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-At this point, you should see the Service in the Gateway Manager UI.
+At this point, you should see the Service in the API Gateway UI.
 
 ## Create a Route
 
-Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route in
-your [Gateway Manager](/gateway-manager/).
+Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route for
+your [API Gateway](/gateway/).
 You can refer to the CR [API](/operator/reference/custom-resources/#kongroute) to see all the available fields.
 
 ### Associate a Route with a Service

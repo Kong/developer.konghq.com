@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.0.10
+  version: 3.0.11
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1a50c0a00fdbbab1b9d085e7bb215490eca69682
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1a50c0a00fdbbab1b9d085e7bb215490eca69682'
+  x-oas-source: kong/platform-api@b4016a6364a5babc31b78a52b072e6cd046b7481
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b4016a6364a5babc31b78a52b072e6cd046b7481'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -689,7 +689,7 @@ paths:
       security:
         - {}
       tags:
-        - Content
+        - Portal
   /api/v3/developer:
     post:
       operationId: register
@@ -3197,6 +3197,17 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Too Many Requests
+    CredentialListItem:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+      additionalProperties: false
+      required:
+        - id
+        - display_name
     ListCredentialsResponse:
       type: object
       properties:
@@ -3205,16 +3216,7 @@ components:
         data:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            properties:
-              id:
-                $ref: '#/components/schemas/UUID'
-              display_name:
-                type: string
-            required:
-              - id
-              - display_name
+            $ref: '#/components/schemas/CredentialListItem'
       additionalProperties: false
       required:
         - data
@@ -3544,7 +3546,7 @@ components:
               type: boolean
               default: true
             try_it_insomnia:
-              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
               type: boolean
               default: true
             infinite_scroll:

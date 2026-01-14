@@ -1,0 +1,118 @@
+name: Generate Kong Configuration JSON
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Kong version to generate config for (e.g., 3.9)'
+        required: true
+        type: string
+      kong_ee_branch:
+        description: 'Branch to use from kong-ee repository'
+        required: true
+        default: 'main'
+        type: string
+      dev_site_base_branch:
+        description: 'Dev site base branch, e.g. main'
+        required: true
+        type: string
+      kong_conf_path:
+        description: 'Path to kong.conf file in kong-ee repo (relative to repo root)'
+        required: false
+        default: 'kong.conf.default'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-kong-conf-json:
+    name: Generate Kong Configuration JSON
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+          
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: tools/kong-conf-to-json/package-lock.json
+
+      - name: Install kong-conf-to-json dependencies
+        run: |
+          cd tools/kong-conf-to-json
+          npm ci
+
+      - name: Checkout kong-ee repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          repository: 'Kong/kong-ee'
+          token: ${{ steps.app-token.outputs.token }}
+          path: 'kong-ee'
+          ref: ${{ inputs.kong_ee_branch }}
+
+      - name: Create kong-conf data directory
+        run: |
+          mkdir -p app/_data/kong-conf
+
+      - name: Generate kong.conf JSON
+        run: |
+          cd tools/kong-conf-to-json
+          node run.js --file="../../kong-ee/${{ inputs.kong_conf_path }}" --version="${{ inputs.version }}"
+
+      - name: Generate index file
+        run: |
+          cd tools/kong-conf-to-json
+          node index-file.js
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8
+        with:
+          title: Generate Kong configuration JSON for version ${{ inputs.version }}
+          commit-message: Generate Kong configuration JSON for version ${{ inputs.version }}
+          body: |
+            **Changes:**
+            - Generated JSON representation of kong.conf file
+            - Updated kong-conf index file with version information
+            - Processed Kong version ${{ inputs.version }}
+
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          branch: auto/generate-kong-conf-json-${{ github.run_number }}
+          base: ${{ inputs.dev_site_base_branch }}
+          add-paths: |
+            app/**
+
+      - name: No changes detected
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "No changes detected in the kong-conf JSON files. No pull request will be created."

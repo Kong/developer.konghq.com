@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@6881a8c85f5465901c42ea861179c5ea7adb3372
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6881a8c85f5465901c42ea861179c5ea7adb3372'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1616,6 +1616,7 @@ components:
         - `ready` - The transit gateway attachment is fully operational and can route traffic as configured.
         - `terminating` - The attachment is in the process of being deleted and is no longer accepting new traffic.
         - `terminated` - The attachment has been fully deleted and is no longer available.
+        - `error` - The attachment is in an error state.
       type: string
       enum:
         - created
@@ -1625,6 +1626,7 @@ components:
         - ready
         - terminating
         - terminated
+        - error
       readOnly: true
       title: Transit Gateway State
     AwsResourceEndpointConfigState:
@@ -2580,11 +2582,19 @@ components:
             - resource_config
       required:
         - transit_gateway_attachment_config
+    PatchAwsTransitGateway:
+      description: Request schema for updating AWS Transit Gateway
+      properties:
+        cidr_blocks:
+          $ref: '#/components/schemas/TransitGatewayCIDRBlocks'
+      required:
+        - cidr_blocks
     PatchTransitGatewayRequest:
       description: Request schema for updating a transit gateway.
       type: object
       oneOf:
         - $ref: '#/components/schemas/PatchAwsResourceEndpointGateway'
+        - $ref: '#/components/schemas/PatchAwsTransitGateway'
       title: PatchTransitGatewayRequest
     CustomDomainState:
       description: State of the custom domain.

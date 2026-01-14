@@ -173,7 +173,16 @@ data:
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
-{% include_cached /k8s/httproute.md path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
+<!--vale off-->
+{% httproute %}
+name: echo
+matches:
+  - path: /echo
+    service: echo
+    port: 1027
+skip_host: true
+{% endhttproute %}
+<!--vale on-->
 
 ## Validate your configuration
 

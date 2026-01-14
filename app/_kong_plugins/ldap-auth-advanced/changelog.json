@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support for the `tls_certificate_verify` global option. When this option is enabled and LDAPS is used, the plugin's `verify_ldap_host` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed a group validation issue where LDAP group names containing asterisk (`*`) characters were incorrectly marked as invalid during Kong Manager RBAC authentication. Group names with asterisk characters (such as `*Dev - EXAMPLE - TOP`) now properly validate and allow role mapping.\n",

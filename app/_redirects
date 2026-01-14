@@ -1,5 +1,22 @@
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+# Renames
+/mesh-manager/federate-zone/  /mesh/federate-zone/
+/mesh-manager/migrate-zone/  /mesh/migrate-zone/
+/mesh-manager/service-mesh/  /mesh/konnect-global-control-plane/
+/mesh-manager/ /mesh/
+/gateway-manager/aws-private-link/ /gateway/aws-private-link/
+/gateway-manager/data-plane-reference/ /gateway/data-plane-reference/
+/gateway-manager/control-plane-groups/ /gateway/control-plane-groups/
+/gateway-manager/control-plane-resource-limits/ /gateway/control-resource-limits/
+/gateway-manager/konnect-labels/ /konnect-platform/konnect-labels/
+/gateway-manager/version-compatibility/ /gateway/data-plane-version-compatibility/
+/gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
+/gateway-manager/ /gateway/
+/ai-manager/ /ai-gateway/
+/mesh/requirements/ /mesh/version-compatibility/
+/mesh/cp-config/    /mesh/control-plane-configuration/
+/mesh/about/    /mesh/service-mesh/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -23,7 +40,7 @@
 /mesh/guides/federate   /mesh/federate/
 /mesh/guides/gateway-api    /mesh/gateway-api/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
-/mesh/documentation/configuration    /mesh/cp-config/
+/mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
 /mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/managing-ingress-traffic/gateway/
 /mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
@@ -125,6 +142,7 @@
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
 /dev-portal/publishing/ /catalog/apis/
+/dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
 
 
 # Gateway LTS
@@ -141,6 +159,7 @@
 ## Insomnia
 /insomnia/concepts/ /insomnia/terminology/
 /insomnia/install/ /insomnia/#install-insomnia
+/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 
 ## Indices
 

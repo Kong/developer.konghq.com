@@ -1,0 +1,69 @@
+description: |
+  Use a dynamic internal auth endpoint to inject request headers before proxying a request.
+
+extended_description: |
+  Use a dynamic internal auth endpoint to inject request headers before proxying a request.
+
+  This example contains the following nodes:
+  1. The node `STATIC_INPUTS` sets some static values that will be used as inputs to other nodes.
+  1. The node `BUILD_HEADERS` fetches an API key from the client query and injects it into the request headers that will be sent to the auth service.
+  1. The node `BUILD_URL` constructs the auth service URL dynamically based on the request path parameter from request headers.
+  1. The node `AUTH_REQUEST` makes a POST request to the auth service.
+  1. The node `UPSTREAM_AUTH_HEADER` composes an Authorization header from the access token received from the auth service and 
+  adds it to the service request headers before proxying the request.
+
+title: Authenticate Kong to a third-party service resolved at runtime
+weight: 900
+
+config:
+  nodes:
+  - name: STATIC_INPUTS
+    type: static
+    values:
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      body: grant_type=client_credentials
+
+  - name: BUILD_HEADERS
+    type: jq
+    inputs:
+      headers: STATIC_INPUTS.headers
+      query: request.query
+    jq: |
+      .headers * {
+        "X-Api-Key": (.query.api_key // "none")
+      }
+  
+  - name: BUILD_URL
+    type: jq
+    input: request.headers
+    jq: |
+      "https://my-token-service/" + .path + "/auth-token"
+
+  - name: AUTH_REQUEST
+    type: call
+    inputs:
+      headers: BUILD_HEADERS
+      body: STATIC_INPUTS.body
+      url: BUILD_URL
+    url: "https://my-token-service/auth-token"
+    method: POST
+
+  - name: UPSTREAM_AUTH_HEADER
+    type: jq
+    input: AUTH_REQUEST.body
+    output: service_request.headers
+    jq: |
+      {
+        Authorization: (.token_type + " " + .access_token)
+      }
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.13'

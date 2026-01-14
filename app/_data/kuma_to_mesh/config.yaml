@@ -16,32 +16,7 @@ links:
   '/features/?': '/mesh/enterprise/'
 
 pages:
-# Must for GA      
-  -
-    path: app/_src/production/secure-deployment/manage-control-plane-permissions-on-kubernetes.md
-    title: 'Manage Control Plane permissions on Kubernetes'
-    description: 'This guide explains how to manage Control Plane permissions on Kubernetes'
-    url: /mesh/manage-control-plane-permissions-on-kubernetes/
-    related_resources: 
-      - text: Restrict permissions to selected namespaces on Kubernetes
-        url: '/mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/'
-    min_version:
-      mesh: '2.11'
-  -
-  
-    path: app/_src/guides/federate-kv.md
-    title: 'Federate zone Control Plane'
-    description: 'Learn how to federate a {{site.base_product}} zone Control Plane into a multi-zone deployment. This guide walks through setting up a global Control Plane, copying resources, connecting zones, and verifying policy synchronization.'
-    url: /mesh/federate/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: 'Producer and Consumer policies'
-        url: /mesh/consumer-producer-policies/
-      - text: 'Multi-zone deployment'
-        url: '/mesh/mesh-multizone-service-deployment/'
-    min_version:
-      mesh: '2.6'
+# Must for GA    
   -
     path: app/_src/guides/gateway-api.md
     title: 'Kubernetes Gateway API'
@@ -69,18 +44,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/guides/migration-to-the-new-policies.md
-    title: 'Migration to the new policies'
-    description: 'Migrate from old to new policies in {{site.mesh_product_name}} to improve flexibility and transparency.'
-    url: '/mesh/migration-to-the-new-policies/'
-    related_resources:
-      - text: Mesh policies
-        url: '/mesh/policies-introduction/'
-      - text: Policy Hub
-        url: /mesh/policies/
-    min_version:
-      mesh: '2.7'
-  -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'
     description: 'Collect and export metrics from {{site.mesh_product_name}} with OpenTelemetry and visualize them using Prometheus and Grafana.'
@@ -90,6 +53,8 @@ pages:
         url: '/mesh/observability/'
       - text: Policy Hub
         url: /mesh/policies/
+      - text: Service meshes
+        url: /mesh/service-mesh/
     min_version:
       mesh: '2.7'
   -
@@ -111,32 +76,20 @@ pages:
     related_resources:
       - text: MeshTLS policy
         url: /mesh/policies/meshtls/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
     min_version:
       mesh: '2.9'
-  -
-    path: app/_src/introduction/architecture.md
-    title: 'Architecture'
-    description: 'Understand the architecture of a {{site.mesh_product_name}} mesh, including control and Data Plane components, Kubernetes and Universal modes, and how services integrate into the mesh.'
-    url: '/mesh/architecture/'
-    related_resources:
-      - text: Mesh concepts
-        url: /mesh/concepts/
-      - text: About service meshes
-        url: '/mesh/about/'
-      - text: Mesh policies
-        url: '/mesh/policies-introduction/'
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
   -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
     url: '/mesh/concepts/'
     related_resources:
-      - text: About service meshes
-        url: '/mesh/about/'
+      - text: Service meshes
+        url: '/mesh/service-mesh/'
       - text: Mesh Policies
         url: '/mesh/policies-introduction/'
       - text: Mesh architecture
@@ -145,18 +98,6 @@ pages:
         url: /mesh/#install-kong-mesh
     min_version:
       mesh: '2.7'
-  -
-    path: app/_src/introduction/kuma-requirements.md
-    title: 'Requirements'
-    description: 'Learn about the requirements for running {{site.mesh_product_name}}, including supported platforms, sizing guidelines, and Kubernetes setup.'
-    url: '/mesh/requirements/'
-    related_resources:
-      - text: Kong Mesh GUI and ports reference
-        url: /mesh/use-kuma/
-      - text: Version support policy
-        url: '/mesh/support-policy/'
-      - text: Mesh concepts
-        url: /mesh/concepts/
   -
     path: app/_src/networking/dns.md
     title: 'DNS'
@@ -195,8 +136,10 @@ pages:
         url: /mesh/policies/
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
     min_version:
       mesh: '2.8'
   -
@@ -209,8 +152,14 @@ pages:
         url: /mesh/policies/
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
+      - text: 'Zone ingress'
+        url: /mesh/zone-ingress/
+      - text: Zone egress
+        url: /mesh/zone-egress/
     min_version:
       mesh: '2.9'
   -
@@ -223,8 +172,10 @@ pages:
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
     min_version:
       mesh: '2.8'
   -
@@ -235,6 +186,8 @@ pages:
     related_resources:
       - text: Policy hub
         url: '/mesh/policies/'
+      - text: Service meshes
+        url: /mesh/service-mesh/
   -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
@@ -243,14 +196,22 @@ pages:
     related_resources:
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
       - text: Install Kong Mesh
         url: /mesh/#install-kong-mesh
       - text: Multi-zone authentication
         url: '/mesh/multi-zone-authentication/'
       - text: 'Single-zone deployment'
         url: '/mesh/single-zone/'
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
+      - text: "{{ site.mesh_product_name }} data plane proxy"
+        url: /mesh/data-plane-proxy/
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -297,7 +258,7 @@ pages:
     description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
     url: '/mesh/secure-access/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -311,12 +272,14 @@ pages:
     related_resources:
       - text: Data plane proxy
         url: '/mesh/data-plane-proxy/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
       - text: 'Secure access across services'
         url: '/mesh/secure-access/'
       - text: Configure zone proxy authentication
@@ -329,7 +292,7 @@ pages:
     related_resources:
       - text: Configure transparent proxying
         url: '/mesh/configure-transparent-proxying/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
         url: '/mesh/observability/'
@@ -370,12 +333,16 @@ pages:
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
     url: '/mesh/universal/'
     related_resources:
-      - text: Zone Egress
+      - text: "{{site.mesh_product_name}} data plane on Universal"
+        url: /mesh/data-plane-universal/
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
       - text: Mesh on Amazon ECS
         url: '/mesh/ecs/'
 
@@ -389,21 +356,23 @@ pages:
     related_resources:
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
       - text: Deploy Kong Mesh on Universal
         url: '/mesh/universal/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
   -
     path: app/_src/reference/kuma-cp.md
     title: 'kuma-cp configuration reference'
     description: 'Configuration Reference'
     url: '/mesh/reference/kuma-cp/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -411,8 +380,10 @@ pages:
         url: '/mesh/universal/'
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
   -
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
     title: 'Running built-in gateway pods on Kubernetes'
@@ -524,17 +495,6 @@ pages:
 
 # Post GA
   -
-    path: app/_src/documentation/configuration.md
-    title: 'Control Plane configuration'
-    description: 'Guide for configuring the {{site.mesh_product_name}} Control Plane using environment variables or YAML, with details on store types (memory, Kubernetes, PostgreSQL) and configuration inspection.'
-    url: '/mesh/cp-config/'
-    related_resources:
-
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Use Kong as a delegated Gateway
-        url: '/mesh/gateway-delegated/'
-  -
     path: app/_src/documentation/health.md
     title: 'Dataplane Health'
     description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
@@ -542,22 +502,10 @@ pages:
     related_resources:
       - text: Mesh CLI
         url: '/mesh/cli/'
-      - text: Mesh Control Plane configuration
-        url: '/mesh/cp-config/'
+      - text: Mesh control plane configuration
+        url: '/mesh/control-plane-configuration/'
       - text: Mesh observability
         url: '/mesh/observability/'
-  -
-    path: app/_src/explore/cli.md
-    title: 'CLI'
-    description: 'Reference for the CLI tools included in {{site.mesh_product_name}}, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.'
-    url: '/mesh/cli/'
-    related_resources:
-      - text: 'kuma-cp configuration reference'
-        url: '/mesh/reference/kuma-cp/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Policy Hub
-        url: /mesh/policies/
   -
     path: app/_src/explore/observability.md
     title: 'Observability'
@@ -566,28 +514,14 @@ pages:
     related_resources:
       - text: Audit logs
         url: /mesh/access-audit/
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
       - text: Policy Hub
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
-
-
-  -
-    path: app/_src/introduction/about-service-meshes.md
-    title: 'About service meshes'
-    description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.'
-    url: '/mesh/about/'
-    related_resources:
-      - text: Mesh architecture
-        url: '/mesh/architecture/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-      - text: Mesh concepts
-        url: /mesh/concepts/
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service discovery'
@@ -611,26 +545,6 @@ pages:
       - text: Mesh Service Discovery
         url: '/mesh/service-discovery/'
   -
-    path: app/_src/production/cp-deployment/zone-ingress.md
-    title: 'Zone Ingress'
-    description: 'How to deploy and configure Zone Ingress for cross-zone communication in multi-zone mode.'
-    url: '/mesh/zone-ingress/'
-    related_resources:
-      - text: Zone Egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-  -
-    path: app/_src/production/cp-deployment/zoneegress.md
-    title: 'Zone Egress'
-    description: 'How to configure Zone Egress to isolate cross-zone and external service traffic.'
-    url: '/mesh/zone-egress/'
-    related_resources:
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-  -
     path: app/_src/production/cp-deployment/zoneproxy-auth.md
     title: 'Configure zone proxy authentication'
     description: 'How to configure zone proxy authentication methods in multi-zone mode.'
@@ -640,46 +554,6 @@ pages:
         url: '/mesh/observability/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/dp-config/dpp-on-kubernetes.md
-    title: 'Data plane on Kubernetes'
-    description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-kubernetes/'
-    related_resources:
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/dp-config/dpp-on-universal.md
-    title: 'Data plane on Universal'
-    description: 'How to run and configure Data Plane proxies on Universal mode with {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-universal/'
-    related_resources:
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/dp-config/dpp.md
-    title: 'Data plane proxy'
-    description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-proxy/'
-    related_resources:
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: 'Data plane on Universal'
-        url: '/mesh/data-plane-universal/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
   -
     path: app/_src/production/dp-config/ipv6.md
     title: 'IPv6 support'
@@ -752,16 +626,20 @@ pages:
     related_resources:
       - text: Mesh GUI
         url: '/mesh/kuma-user-interface-gui/'
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
   -
     path: app/_src/reference/data-collection.md
     title: 'Kong Mesh data collection'
     description: 'Enable or disable data collection in {{site.mesh_product_name}}. Understand what telemetry is collected and how to configure reporting.'
     url: '/mesh/data-collection/'
     related_resources:
-      - text: Mesh requirements
-        url: '/mesh/requirements/'
+      - text: '{{site.mesh_product_name}} resource sizing guidelines'
+        url: '/mesh/resource-sizing-guidelines/'
+      - text: '{{site.mesh_product_name}} version compatibility'
+        url: '/mesh/version-compatibility/'
       - text: Audit logs
         url: /mesh/access-audit/
     tags:
@@ -776,6 +654,8 @@ pages:
         url: /mesh/openshift-quickstart/
       - text: Deploy Kong Mesh on Universal
         url: /mesh/universal/
+      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
+        url: /mesh/data-plane-kubernetes/
     tags:
       - get-started
   -

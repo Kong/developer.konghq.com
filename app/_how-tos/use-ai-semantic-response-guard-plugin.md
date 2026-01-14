@@ -64,8 +64,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
@@ -159,6 +157,8 @@ This prompt asks for advice about good tools for productivity:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -176,9 +176,12 @@ This prompt covers backup and recovery strategy — allowed:
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+status_code: 200
 body:
   messages:
     - role: user
@@ -193,6 +196,8 @@ This request could cause the LLM to generate content that assists impersonation 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
@@ -211,6 +216,8 @@ This request could produce a response that helps bypass licensing or DRM, which 
 
 {% validation request-check %}
 url: /anything
+method: POST
+status_code: 200
 headers:
   - 'Content-Type: application/json'
   - 'Authorization: Bearer $DECK_OPENAI_API_KEY'

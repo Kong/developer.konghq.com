@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.0
+  version: 3.0.1
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@a3242e0831b3701ebb62066c39c05da0ce00bee8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a3242e0831b3701ebb62066c39c05da0ce00bee8'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -763,6 +763,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -1078,6 +1080,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -4703,6 +4707,7 @@ components:
               updated_at: '2022-08-02T08:35:49Z'
               expires_at: '2022-12-31T12:52:23Z'
               last_used_at: '2022-10-24T13:05:42Z'
+              token: spat_12345678901234567890123456789012345678901234567890
             title: System Account Access Token Created Response
           examples:
             Sample Access Token:
@@ -4713,7 +4718,7 @@ components:
                 updated_at: '2019-08-24T14:15:22Z'
                 expires_at: '2019-08-24T14:15:22Z'
                 last_used_at: '2019-08-24T14:15:22Z'
-                token: npat_12345678901234567890123456789012345678901234567890
+                token: spat_12345678901234567890123456789012345678901234567890
     MeOrganization:
       description: Me Organization
       content:

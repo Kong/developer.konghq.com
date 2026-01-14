@@ -16,8 +16,7 @@ related_resources:
     url: /gateway/network/
   - text: " {{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
-  - text: Mesh Manager
-    url: /mesh-manager/
+
 faqs:
   - q: What types of data travel between the {{site.konnect_short_name}} Control Plane and the Data Plane nodes, and how?
     a: |
@@ -156,6 +155,33 @@ rows:
 {:.warning}
 > **Important:** Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for a full list of regional and service ingress IPs. The `ingressIPs` section contains a list of all ingress IPs per geo and consolidated IPs per service. To avoid coupling firewall rules to specific services or DNS suffixes (such as `cp`, `tp`), we recommend allowlisting the values in the `ingressIPs` block for each region. This ensures your setup is more resilient to future infrastructure or DNS changes. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
-## Mesh Manager hostnames
+## Mesh hostnames in {{site.konnect_short_name}}
 
-If you use [Mesh Manager](/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+
+## Specify IP addresses that can connect to {{site.konnect_short_name}}
+
+Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin AP](/admin-api/), [decK](/decK/), and [Terraform](/terraform/).
+
+This IP allow list applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
+
+{:.warning}
+> **Important:** 
+* If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
+> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
+
+To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/source-ip-restriction
+status_code: 201
+method: PATCH
+body:
+    enabled: true
+    allowed_ips:
+    - 192.168.1.1
+    - 192.168.1.0/22
+{% endkonnect_api_request %}
+<!--vale on-->
+
