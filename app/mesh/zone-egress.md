@@ -103,7 +103,7 @@ spec:
 ```
 
 {% endnavtab %}
-{% tab "Universal" %}
+{% navtab "Universal" %}
 
 ```shell
 cat <<EOF | kumactl apply -f -
