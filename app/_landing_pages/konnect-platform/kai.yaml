@@ -134,7 +134,7 @@ rows:
               - type: text
                 text: |
                   The following are the latest changes in KAi:
-                  * KAi internal release
+                  * Beta trial is available for Enterprise accounts in [{{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
 
                   For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
       - blocks:
