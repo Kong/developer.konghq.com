@@ -1444,6 +1444,7 @@ cloud_deployment_platforms:
   - Google Cloud GKE
   - Google Cloud GKE Autopilot
   - Google Cloud Run
+  - Red Hat OpenShift
 
 marketplaces:
   - Azure Marketplace
