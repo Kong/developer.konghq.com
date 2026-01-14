@@ -2,7 +2,7 @@
 title: "OpenAI provider"
 layout: reference
 content_type: reference
-description: Test
+description: Reference for supported capabilities for OpenAI provider
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
@@ -29,7 +29,5 @@ min_version:
 
 
 {% include plugins/ai-proxy/tables/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
-
-I'm using Gemini here for testing purposes:
 
 {% include plugins/ai-proxy/tables/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
