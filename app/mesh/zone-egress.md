@@ -69,7 +69,7 @@ networking:
   port: 10002
 ```
 
-Apply the zone egress configuration, passing the IP address of the control plane and your instance should start.
+Apply the zone egress configuration, passing the IP address of the control plane:
 
 ```bash
 kuma-dp run \
