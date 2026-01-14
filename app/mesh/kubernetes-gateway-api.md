@@ -20,8 +20,10 @@ related_resources:
     url: /mesh/kubernetes/
   - text: Data Plane on Kubernetes
     url: /mesh/data-plane-kubernetes/
-  - text: Configure a built-in gateway
+  - text: "Reference: Configuring a built-in gateway"
     url: '/mesh/managing-ingress-traffic/gateway/'
+  - text: "Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}"
+    url: /how-to/set-up-a-built-in-kubernetes-gateway/
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
 ---
