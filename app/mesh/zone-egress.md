@@ -19,7 +19,7 @@ related_resources:
 The `ZoneEgress` proxy is used to isolate outgoing traffic to Services in other zones or [external Services](/mesh/policies/external-services/) in the local zone.
 
 {:.info}
-> Since the `ZoneEngress` proxy uses [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) to route traffic, [mTLS](/mesh/policies/mutual-tls/) is required.
+> Since the `ZoneEgress` proxy uses [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) to route traffic, [mTLS](/mesh/policies/mutual-tls/) is required.
 
 This proxy is not attached to any specific workloads, it's bound to a specific zone.
 A zone egress can proxy traffic between all meshes, so you only need one deployment in each zone.
@@ -46,17 +46,17 @@ The `ZoneEgress` entity includes the following parameters:
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
-To install the `ZoneEngress` proxy in Kubernetes:
-* With kumactl, add the `--engress-enabled` flag to your `kumactl install control-plane` command.
+To install the `ZoneEgress` proxy in Kubernetes:
+* With kumactl, add the `--egress-enabled` flag to your `kumactl install control-plane` command.
 * With Helm, add the `{{site.set_flag_values_prefix}}egress.enabled: true` parameter to your `values.yaml`.
 
 {% endnavtab %}
 {% navtab "Universal" %}
 
-In Universal mode, a token is required to authenticate the `ZoneEngress` instance. Create the token with `kumactl`:
+In Universal mode, a token is required to authenticate the `ZoneEgress` instance. Create the token with `kumactl`:
 
 ```bash
-kumactl generate zone-token --valid-for 720h --scope engress > $TOKEN_FILE
+kumactl generate zone-token --valid-for 720h --scope egress > $TOKEN_FILE
 ```
 
 Create a `ZoneEgress` configuration to allow `kuma-cp` Services to proxy traffic to other zones or external Services:
