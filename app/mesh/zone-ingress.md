@@ -68,7 +68,7 @@ You can provide your own public address and port using the following annotations
 {% endnavtab %}
 {% navtab "Universal" %}
 
-In Universal mode, a token is required to authenticate `ZoneIngress` instance. Create the token with `kumactl`:
+In Universal mode, a token is required to authenticate the `ZoneIngress` instance. Create the token with `kumactl`:
 
 ```bash
 kumactl generate zone-token --valid-for 720h --scope ingress > $TOKEN_FILE
@@ -86,7 +86,7 @@ networking:
   advertisedPort: 10001 # Adapt to the port of the load balancer in front of you ZoneIngress
 ```
 
-Apply the ingress configuration, passing the IP address of the control plane and your instance should start.
+Apply the zone ingress configuration, passing the IP address of the control plane:
 
 ```sh
 kuma-dp run \
