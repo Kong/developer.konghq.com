@@ -104,7 +104,7 @@ When RBAC is enabled for a Dev Portal, the option to configure API access polici
 
 Authentication strategies determine how [published APIs](/catalog/apis/#publish-your-api-to-dev-portal) are authenticated, and how developers create API Keys. 
 
-Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
+Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not from API Gateway.
 
 #### Default application authentication strategy 
 

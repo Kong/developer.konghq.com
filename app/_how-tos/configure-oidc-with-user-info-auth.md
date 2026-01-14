@@ -66,7 +66,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Enable the OpenID Connect plugin with user info auth

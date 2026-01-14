@@ -64,7 +64,8 @@ prereqs:
            2. Export the API key and deployment ID:
            ```bash
            export DECK_AZURE_OPENAI_API_KEY='YOUR_AZURE_OPENAI_MODEL_API_KEY'
-           export DECK_AZURE_DEPLOYMENT_ID='YOUR_AZURE_OPENAI_DEPLOYMENT_NAME'```
+           export DECK_AZURE_DEPLOYMENT_ID='YOUR_AZURE_OPENAI_DEPLOYMENT_NAME'
+           ```
     - title: Batch .jsonl file
       content: |
         To complete this tutorial, create a `batch.jsonl` to generate asynchronous batched LLM responses. We use `/v1/chat/completions` because it handles chat-based generation requests, instructing the LLM to produce conversational completions in batch mode.
@@ -73,14 +74,11 @@ prereqs:
 
         ```bash
         cat <<EOF > batch.jsonl
-        {"custom_id": "prod1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a compelling product description for a solar-powered smart garden light."}], "max_tokens": 60}}
-        {"custom_id": "prod2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a product description for an energy-efficient smart thermostat for home use."}], "max_tokens": 60}}
-        {"custom_id": "prod3", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write an engaging product description for a biodegradable bamboo kitchen utensil set."}], "max_tokens": 60}}
-        {"custom_id": "prod4", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a detailed product description for a water-saving smart shower head."}], "max_tokens": 60}}
-        {"custom_id": "prod5", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-4o", "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Write a concise product description for a compact indoor air purifier that uses natural filters."}], "max_tokens": 60}}
+        {% include _files/ai-gateway/batch.jsonl %}
         EOF
 
         ```
+        {: data-test-prereqs="block"}
   entities:
     services:
       - files-service
@@ -97,8 +95,6 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-
-automated_tests: false
 ---
 ## Configure AI Proxy plugins for /files route
 
@@ -167,10 +163,12 @@ Now, let's use the following command to upload our [batching file](/#batch-jsonl
 <!-- vale off -->
 {% validation request-check %}
 url: "/files"
-status_code: 200
+status_code: 201
+method: POST
 form_data:
   purpose: "batch"
   file: "@batch.jsonl"
+file_dir: ai-gateway
 extract_body:
   - name: 'id'
     variable: FILE_ID
@@ -209,7 +207,8 @@ Now, we can send a `POST` request to the `/batches` Route to create a batch usin
 <!-- vale off -->
 {% validation request-check %}
 url: '/batches'
-status_code: 201
+method: POST
+status_code: 200
 body:
   input_file_id: $FILE_ID
   endpoint: "/v1/chat/completions"
@@ -266,9 +265,11 @@ Wait for a moment for the batching request to be completed, then check the statu
 <!-- vale off -->
 {% validation request-check %}
 url: /batches/$BATCH_ID
+status_code: 200
 extract_body:
   - name: 'output_file_id'
     variable: OUTPUT_FILE_ID
+retry: true
 {% endvalidation %}
 <!-- vale on -->
 
@@ -319,9 +320,11 @@ The output file ID will only be available once the batch request has completed. 
 
 Now, we can download the batched responses from the `/files` endpoint by appending `/content` to the file ID URL. For details, see the [OpenAI API documentation](https://platform.openai.com/docs/api-reference/files/retrieve-contents).
 
-```bash
-curl http://localhost:8000/files/$OUTPUT_FILE_ID/content > batched-response.jsonl
-```
+{% validation request-check %}
+url: "/files/$OUTPUT_FILE_ID/content"
+status_code: 200
+output: batched-response.jsonl
+{% endvalidation %}
 
 This command saves the batched responses to the `batched-response.jsonl` file.
 
@@ -335,3 +338,4 @@ The batched response file contains one JSON object per line, each representing a
 {"custom_id": "prod5", "response": {"body": {"id": "chatcmpl-AQ12WS34ED56RF78TG90HY12UJ", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "Breathe easy with our compact indoor air purifier, designed to deliver fresh and clean air using natural filters. This eco-friendly purifier quietly removes allergens, dust, and odors without synthetic materials, making it perfect for any small space. Stylish, efficient, and sustainable—experience pure air, naturally.", "refusal": null, "annotations": []}, "finish_reason": "stop", "logprobs": null}], "usage": {"completion_tokens": 59, "prompt_tokens": 33, "total_tokens": 92}, "system_fingerprint": "fp_random1234"},"request_id": "req-444ddd55-ee66-ff77-8899-001122334455", "status_code": 200}, "error": null}
 {"custom_id": "prod2", "response": {"body": {"id": "chatcmpl-PO98LK76JI54HG32FE10DC98VB", "object": "chat.completion", "created": 1761909664, "model": "gpt-4o-2024-11-20", "choices": [{"index": 0, "message": {"role": "assistant", "content": "**EcoSmart Pro Wi-Fi Thermostat: Energy Efficiency Meets Smart Technology**  \n\nUpgrade your home’s comfort and save energy with the EcoSmart Pro Wi-Fi Thermostat. Designed for modern living, this sleek and intuitive thermostat lets you take control of your heating and cooling while minimizing energy waste. Whether you're", "refusal": null, "annotations": []}, "finish_reason": "length", "logprobs": null}], "usage": {"completion_tokens": 60, "prompt_tokens": 31, "total_tokens": 91}, "system_fingerprint": "fp_random1234"},"request_id": "req-555eee66-ff77-8899-0011-223344556677", "status_code": 200}, "error": null}
 ```
+{:.no-copy-code}

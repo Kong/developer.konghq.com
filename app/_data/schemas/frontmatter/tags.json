@@ -163,6 +163,7 @@
     "slack",
     "slsa",
     "solace",
+    "sonarqube",
     "sso",
     "statsd",
     "status",
@@ -193,6 +194,7 @@
     "webhook",
     "websocket",
     "windows",
+    "xai",
     "zipkin",
     "zone-tokens",
     "zones"

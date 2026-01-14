@@ -1,0 +1,248 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "auth": {
+          "properties": {
+            "azure_client_id": {
+              "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "azure_client_secret": {
+              "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "azure_tenant_id": {
+              "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "azure_use_managed_identity": {
+              "default": false,
+              "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
+              "type": "boolean"
+            },
+            "header_name": {
+              "description": "If AI model requires authentication via Authorization or API key header, specify its name here.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "header_value": {
+              "description": "Specify the full auth header value for 'header_name', for example 'Bearer key' or just 'key'.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "param_location": {
+              "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body.",
+              "enum": [
+                "body",
+                "query"
+              ],
+              "type": "string"
+            },
+            "param_name": {
+              "description": "If AI model requires authentication via query parameter, specify its name here.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            },
+            "param_value": {
+              "description": "Specify the full parameter value for 'param_name'.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string"
+            }
+          },
+          "required": [
+
+          ],
+          "type": "object"
+        },
+        "logging": {
+          "properties": {
+            "log_payloads": {
+              "default": false,
+              "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
+              "type": "boolean"
+            },
+            "log_statistics": {
+              "default": false,
+              "description": "If enabled and supported by the driver, will add model usage and token metrics into the Kong log plugin(s) output.",
+              "type": "boolean"
+            }
+          },
+          "required": [
+
+          ],
+          "type": "object"
+        },
+        "model": {
+          "properties": {
+            "name": {
+              "description": "Model name to execute.",
+              "type": "string"
+            },
+            "options": {
+              "description": "Key/value settings for the model",
+              "properties": {
+                "anthropic_version": {
+                  "description": "Defines the schema/API version, if using Anthropic provider.",
+                  "type": "string"
+                },
+                "azure_api_version": {
+                  "default": "2023-05-15",
+                  "description": "'api-version' for Azure OpenAI instances.",
+                  "type": "string"
+                },
+                "azure_deployment_id": {
+                  "description": "Deployment ID for Azure OpenAI instances.",
+                  "type": "string"
+                },
+                "azure_instance": {
+                  "description": "Instance name for Azure OpenAI hosted models.",
+                  "type": "string"
+                },
+                "llama2_format": {
+                  "description": "If using llama2 provider, select the upstream message format.",
+                  "enum": [
+                    "ollama",
+                    "openai",
+                    "raw"
+                  ],
+                  "type": "string"
+                },
+                "max_tokens": {
+                  "default": 256,
+                  "description": "Defines the max_tokens, if using chat or completion models.",
+                  "type": "integer"
+                },
+                "mistral_format": {
+                  "description": "If using mistral provider, select the upstream message format.",
+                  "enum": [
+                    "ollama",
+                    "openai"
+                  ],
+                  "type": "string"
+                },
+                "response_streaming": {
+                  "default": "allow",
+                  "description": "Whether to 'optionally allow', 'deny', or 'always' (force) the streaming of answers via server sent events.",
+                  "enum": [
+                    "allow",
+                    "always",
+                    "deny"
+                  ],
+                  "type": "string"
+                },
+                "temperature": {
+                  "description": "Defines the matching temperature, if using chat or completion models.",
+                  "maximum": 5,
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "top_k": {
+                  "description": "Defines the top-k most likely tokens, if supported.",
+                  "maximum": 500,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "top_p": {
+                  "description": "Defines the top-p probability mass, if supported.",
+                  "maximum": 1,
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "upstream_path": {
+                  "description": "Manually specify or override the AI operation path, used when e.g. using the 'preserve' route_type.",
+                  "type": "string"
+                },
+                "upstream_url": {
+                  "description": "Manually specify or override the full URL to the AI operation endpoints, when calling (self-)hosted models, or for running via a private endpoint.",
+                  "type": "string"
+                }
+              },
+              "required": [
+
+              ],
+              "type": "object"
+            },
+            "provider": {
+              "description": "AI provider request format - Kong translates requests to and from the specified backend compatible formats.",
+              "enum": [
+                "anthropic",
+                "azure",
+                "cohere",
+                "llama2",
+                "mistral",
+                "openai"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider"
+          ],
+          "type": "object"
+        },
+        "route_type": {
+          "description": "The model's operation implementation, for this provider. Set to `preserve` to pass through without transformation.",
+          "enum": [
+            "llm/v1/chat",
+            "llm/v1/completions",
+            "preserve"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "model",
+        "route_type"
+      ],
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "required": [
+
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

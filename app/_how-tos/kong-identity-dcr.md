@@ -2,7 +2,6 @@
 title: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
 description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Kong Identity.
 content_type: how_to
-beta: true
 products:
     - gateway
     - dev-portal

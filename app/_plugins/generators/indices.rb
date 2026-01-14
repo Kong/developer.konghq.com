@@ -219,7 +219,8 @@ module Jekyll
     def render(index, groups, site)
       context = {
         'index' => index,
-        'groups' => groups
+        'groups' => groups,
+        'site' => site.config
       }
       Liquid::Template.parse(template).render(context, registers: { site: site })
     end

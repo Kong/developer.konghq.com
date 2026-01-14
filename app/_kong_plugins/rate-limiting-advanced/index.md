@@ -164,6 +164,8 @@ Otherwise the field will be regenerated automatically with every update.
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+{% include plugins/redis-cloud-auth.md %}
+
 ### Fallback from Redis
 
 When the `redis` strategy is used and a {{site.base_gateway}} node is disconnected from Redis, the `rate-limiting-advanced` plugin will fall back to `local`.

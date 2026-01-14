@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.2.1.0": [
     {
       "message": "This plugin can now handle custom messages from the OPA server.",

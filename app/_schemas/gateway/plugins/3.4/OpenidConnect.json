@@ -1,0 +1,1860 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "anonymous": {
+          "description": "An optional string (consumer UUID or username) value that functions as an “anonymous” consumer if authentication fails. If empty (default null), requests that fail authentication will return a `4xx` HTTP status code. This value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`.",
+          "type": "string"
+        },
+        "audience": {
+          "description": "The audience passed to the authorization endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audience_claim": {
+          "default": [
+            "aud"
+          ],
+          "description": "The claim that contains the audience.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audience_required": {
+          "description": "The audiences (`audience_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "auth_methods": {
+          "default": [
+            "authorization_code",
+            "bearer",
+            "client_credentials",
+            "introspection",
+            "kong_oauth2",
+            "password",
+            "refresh_token",
+            "session",
+            "userinfo"
+          ],
+          "description": "Types of credentials/grants to enable.",
+          "items": {
+            "enum": [
+              "authorization_code",
+              "bearer",
+              "client_credentials",
+              "introspection",
+              "kong_oauth2",
+              "password",
+              "refresh_token",
+              "session",
+              "userinfo"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authenticated_groups_claim": {
+          "description": "The claim that contains authenticated groups. This setting can be used together with ACL plugin, but it also enables IdP managed groups with other applications and integrations.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authorization_cookie_domain": {
+          "description": "The authorization cookie Domain flag.",
+          "type": "string"
+        },
+        "authorization_cookie_http_only": {
+          "default": true,
+          "description": "Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property.",
+          "type": "boolean"
+        },
+        "authorization_cookie_name": {
+          "default": "authorization",
+          "description": "The authorization cookie name.",
+          "type": "string"
+        },
+        "authorization_cookie_path": {
+          "default": "/",
+          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+          "type": "string"
+        },
+        "authorization_cookie_same_site": {
+          "default": "Default",
+          "description": "Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks.",
+          "enum": [
+            "Default",
+            "Lax",
+            "None",
+            "Strict"
+          ],
+          "type": "string"
+        },
+        "authorization_cookie_secure": {
+          "description": "Cookie is only sent to the server when a request is made with the https: scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks.",
+          "type": "boolean"
+        },
+        "authorization_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "authorization_query_args_client": {
+          "description": "Extra query arguments passed from the client to the authorization endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authorization_query_args_names": {
+          "description": "Extra query argument names passed to the authorization endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authorization_query_args_values": {
+          "description": "Extra query argument values passed to the authorization endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authorization_rolling_timeout": {
+          "default": 600,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "bearer_token_cookie_name": {
+          "description": "The name of the cookie in which the bearer token is passed.",
+          "type": "string"
+        },
+        "bearer_token_param_type": {
+          "default": [
+            "body",
+            "header",
+            "query"
+          ],
+          "description": "Where to look for the bearer token: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body - `cookie`: search the HTTP request cookies specified with `config.bearer_token_cookie_name`",
+          "items": {
+            "enum": [
+              "body",
+              "cookie",
+              "header",
+              "query"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "by_username_ignore_case": {
+          "default": false,
+          "description": "If `consumer_by` is set to `username`, specify whether `username` can match consumers case-insensitively.",
+          "type": "boolean"
+        },
+        "cache_introspection": {
+          "default": true,
+          "description": "Cache the introspection endpoint requests.",
+          "type": "boolean"
+        },
+        "cache_token_exchange": {
+          "default": true,
+          "description": "Cache the token exchange endpoint requests.",
+          "type": "boolean"
+        },
+        "cache_tokens": {
+          "default": true,
+          "description": "Cache the token endpoint requests.",
+          "type": "boolean"
+        },
+        "cache_tokens_salt": {
+          "description": "Salt used for generating the cache key that is used for caching the token endpoint requests.",
+          "type": "string"
+        },
+        "cache_ttl": {
+          "default": 3600,
+          "description": "The default cache ttl in seconds that is used in case the cached object does not specify the expiry.",
+          "type": "number"
+        },
+        "cache_ttl_max": {
+          "description": "The maximum cache ttl in seconds (enforced).",
+          "type": "number"
+        },
+        "cache_ttl_min": {
+          "description": "The minimum cache ttl in seconds (enforced).",
+          "type": "number"
+        },
+        "cache_ttl_neg": {
+          "description": "The negative cache ttl in seconds.",
+          "type": "number"
+        },
+        "cache_ttl_resurrect": {
+          "description": "The resurrection ttl in seconds.",
+          "type": "number"
+        },
+        "cache_user_info": {
+          "default": true,
+          "description": "Cache the user info requests.",
+          "type": "boolean"
+        },
+        "client_alg": {
+          "items": {
+            "enum": [
+              "ES256",
+              "ES384",
+              "ES512",
+              "EdDSA",
+              "HS256",
+              "HS384",
+              "HS512",
+              "PS256",
+              "PS384",
+              "PS512",
+              "RS256",
+              "RS384",
+              "RS512"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "client_arg": {
+          "default": "client_id",
+          "description": "The client to use for this request (the selection is made with a request parameter with the same name).",
+          "type": "string"
+        },
+        "client_auth": {
+          "description": "The authentication method used by the client (plugin) when calling the endpoint.",
+          "items": {
+            "enum": [
+              "client_secret_basic",
+              "client_secret_jwt",
+              "client_secret_post",
+              "none",
+              "private_key_jwt"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "client_credentials_param_type": {
+          "default": [
+            "body",
+            "header",
+            "query"
+          ],
+          "description": "Where to look for the client credentials: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search from the HTTP request body",
+          "items": {
+            "enum": [
+              "body",
+              "header",
+              "query"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "client_id": {
+          "description": "The client id(s) that the plugin uses when it calls authenticated endpoints on the identity provider.\nThis field is [encrypted](/gateway/keyring/).",
+          "items": {
+            "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "client_jwk": {
+          "items": {
+            "properties": {
+              "alg": {
+                "type": "string"
+              },
+              "crv": {
+                "type": "string"
+              },
+              "d": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "dp": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "dq": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "e": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "k": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "key_ops": {
+                "items": {
+                  "required": [
+
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "kid": {
+                "type": "string"
+              },
+              "kty": {
+                "type": "string"
+              },
+              "n": {
+                "type": "string"
+              },
+              "oth": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "p": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "q": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "qi": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "r": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "t": {
+                "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+                "type": "string"
+              },
+              "use": {
+                "type": "string"
+              },
+              "x": {
+                "type": "string"
+              },
+              "x5c": {
+                "items": {
+                  "required": [
+
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "x5t": {
+                "type": "string"
+              },
+              "x5t#S256": {
+                "type": "string"
+              },
+              "x5u": {
+                "type": "string"
+              },
+              "y": {
+                "type": "string"
+              }
+            },
+            "required": [
+
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "client_secret": {
+          "description": "The client secret.\nThis field is [encrypted](/gateway/keyring/).",
+          "items": {
+            "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "consumer_by": {
+          "default": [
+            "custom_id",
+            "username"
+          ],
+          "description": "Consumer fields used for mapping: - `id`: try to find the matching Consumer by `id` - `username`: try to find the matching Consumer by `username` - `custom_id`: try to find the matching Consumer by `custom_id`",
+          "items": {
+            "enum": [
+              "custom_id",
+              "id",
+              "username"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "consumer_claim": {
+          "description": "The claim used for consumer mapping.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "consumer_optional": {
+          "default": false,
+          "description": "Do not terminate the request if consumer mapping fails.",
+          "type": "boolean"
+        },
+        "credential_claim": {
+          "default": [
+            "sub"
+          ],
+          "description": "The claim used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin), in case the consumer mapping is not used.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "disable_session": {
+          "description": "Disable issuing the session cookie with the specified grants.",
+          "items": {
+            "enum": [
+              "authorization_code",
+              "bearer",
+              "client_credentials",
+              "introspection",
+              "kong_oauth2",
+              "password",
+              "refresh_token",
+              "session",
+              "userinfo"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "discovery_headers_names": {
+          "description": "Extra header names passed to the discovery endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "discovery_headers_values": {
+          "description": "Extra header values passed to the discovery endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "display_errors": {
+          "default": false,
+          "description": "Display errors on failure responses.",
+          "type": "boolean"
+        },
+        "domains": {
+          "description": "The allowed values for the `hd` claim.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "downstream_access_token_header": {
+          "description": "The downstream access token header.",
+          "type": "string"
+        },
+        "downstream_access_token_jwk_header": {
+          "description": "The downstream access token JWK header.",
+          "type": "string"
+        },
+        "downstream_headers_claims": {
+          "description": "The downstream header claims.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "downstream_headers_names": {
+          "description": "The downstream header names for the claim values.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "downstream_id_token_header": {
+          "description": "The downstream id token header.",
+          "type": "string"
+        },
+        "downstream_id_token_jwk_header": {
+          "description": "The downstream id token JWK header.",
+          "type": "string"
+        },
+        "downstream_introspection_header": {
+          "description": "The downstream introspection header.",
+          "type": "string"
+        },
+        "downstream_introspection_jwt_header": {
+          "type": "string"
+        },
+        "downstream_refresh_token_header": {
+          "description": "The downstream refresh token header.",
+          "type": "string"
+        },
+        "downstream_session_id_header": {
+          "description": "The downstream session id header.",
+          "type": "string"
+        },
+        "downstream_user_info_header": {
+          "description": "The downstream user info header.",
+          "type": "string"
+        },
+        "downstream_user_info_jwt_header": {
+          "description": "The downstream user info JWT header (in case the user info returns a JWT response).",
+          "type": "string"
+        },
+        "enable_hs_signatures": {
+          "default": false,
+          "description": "Enable shared secret, for example, HS256, signatures (when disabled they will not be accepted).",
+          "type": "boolean"
+        },
+        "end_session_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "expose_error_code": {
+          "default": true,
+          "type": "boolean"
+        },
+        "extra_jwks_uris": {
+          "description": "JWKS URIs whose public keys are trusted (in addition to the keys found with the discovery).",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "forbidden_destroy_session": {
+          "default": true,
+          "description": "Destroy any active session for the forbidden requests.",
+          "type": "boolean"
+        },
+        "forbidden_error_message": {
+          "default": "Forbidden",
+          "description": "The error message for the forbidden requests (when not using the redirection).",
+          "type": "string"
+        },
+        "forbidden_redirect_uri": {
+          "description": "Where to redirect the client on forbidden requests.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "groups_claim": {
+          "default": [
+            "groups"
+          ],
+          "description": "The claim that contains the groups.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "groups_required": {
+          "description": "The groups (`groups_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "hide_credentials": {
+          "default": false,
+          "description": "Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication.",
+          "type": "boolean"
+        },
+        "http_proxy": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "http_proxy_authorization": {
+          "description": "The HTTP proxy authorization.",
+          "type": "string"
+        },
+        "http_version": {
+          "default": 1.1,
+          "description": "The HTTP version used for the requests by this plugin: - `1.1`: HTTP 1.1 (the default) - `1.0`: HTTP 1.0",
+          "type": "number"
+        },
+        "https_proxy": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "https_proxy_authorization": {
+          "description": "The HTTPS proxy authorization.",
+          "type": "string"
+        },
+        "id_token_param_name": {
+          "description": "The name of the parameter used to pass the id token.",
+          "type": "string"
+        },
+        "id_token_param_type": {
+          "default": [
+            "body",
+            "header",
+            "query"
+          ],
+          "description": "Where to look for the id token: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body",
+          "items": {
+            "enum": [
+              "body",
+              "header",
+              "query"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "ignore_signature": {
+          "default": [
+
+          ],
+          "description": "Skip the token signature verification on certain grants: - `password`: OAuth password grant - `client_credentials`: OAuth client credentials grant - `authorization_code`: authorization code flow - `refresh_token`: OAuth refresh token grant - `session`: session cookie authentication - `introspection`: OAuth introspection - `userinfo`: OpenID Connect user info endpoint authentication",
+          "items": {
+            "enum": [
+              "authorization_code",
+              "client_credentials",
+              "introspection",
+              "password",
+              "refresh_token",
+              "session",
+              "userinfo"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspect_jwt_tokens": {
+          "default": false,
+          "description": "Specifies whether to introspect the JWT access tokens (can be used to check for revocations).",
+          "type": "boolean"
+        },
+        "introspection_accept": {
+          "default": "application/json",
+          "description": "The value of `Accept` header for introspection requests: - `application/json`: introspection response as JSON - `application/token-introspection+jwt`: introspection response as JWT (from the current IETF draft document) - `application/jwt`: introspection response as JWT (from the obsolete IETF draft document)",
+          "enum": [
+            "application/json",
+            "application/jwt",
+            "application/token-introspection+jwt"
+          ],
+          "type": "string"
+        },
+        "introspection_check_active": {
+          "default": true,
+          "description": "Check that the introspection response has an `active` claim with a value of `true`.",
+          "type": "boolean"
+        },
+        "introspection_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "introspection_endpoint_auth_method": {
+          "description": "The introspection endpoint authentication method: - `client_secret_basic`: send `client_id` and `client_secret` in `Authorization: Basic` header - `client_secret_post`: send `client_id` and `client_secret` as part of the body - `client_secret_jwt`: send client assertion signed with the `client_secret` as part of the body - `private_key_jwt`:  send client assertion signed with the `private key` as part of the body - `none`: do not authenticate",
+          "enum": [
+            "client_secret_basic",
+            "client_secret_jwt",
+            "client_secret_post",
+            "none",
+            "private_key_jwt"
+          ],
+          "type": "string"
+        },
+        "introspection_headers_client": {
+          "description": "Extra headers passed from the client to the introspection endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspection_headers_names": {
+          "description": "Extra header names passed to the introspection endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspection_headers_values": {
+          "description": "Extra header values passed to the introspection endpoint.\nThis field is [encrypted](/gateway/keyring/).",
+          "items": {
+            "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspection_hint": {
+          "default": "access_token",
+          "description": "Introspection hint parameter value passed to the introspection endpoint.",
+          "type": "string"
+        },
+        "introspection_post_args_client": {
+          "description": "Extra post arguments passed from the client to the introspection endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspection_post_args_names": {
+          "description": "Extra post argument names passed to the introspection endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "introspection_post_args_values": {
+          "description": "Extra post argument values passed to the introspection endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "issuer": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "issuers_allowed": {
+          "description": "The issuers allowed to be present in the tokens (`iss` claim).",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "jwt_session_claim": {
+          "default": "sid",
+          "description": "The claim to match against the JWT session cookie.",
+          "type": "string"
+        },
+        "jwt_session_cookie": {
+          "description": "The name of the JWT session cookie.",
+          "type": "string"
+        },
+        "keepalive": {
+          "default": true,
+          "description": "Use keepalive with the HTTP client.",
+          "type": "boolean"
+        },
+        "leeway": {
+          "default": 0,
+          "description": "Allow some leeway (in seconds) on the ttl / expiry verification.",
+          "type": "number"
+        },
+        "login_action": {
+          "default": "upstream",
+          "description": "What to do after successful login: - `upstream`: proxy request to upstream service - `response`: terminate request with a response - `redirect`: redirect to a different location",
+          "enum": [
+            "redirect",
+            "response",
+            "upstream"
+          ],
+          "type": "string"
+        },
+        "login_methods": {
+          "default": [
+            "authorization_code"
+          ],
+          "description": "Enable login functionality with specified grants.",
+          "items": {
+            "enum": [
+              "authorization_code",
+              "bearer",
+              "client_credentials",
+              "introspection",
+              "kong_oauth2",
+              "password",
+              "refresh_token",
+              "session",
+              "userinfo"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "login_redirect_mode": {
+          "default": "fragment",
+          "description": "Where to place `login_tokens` when using `redirect` `login_action`: - `query`: place tokens in query string - `fragment`: place tokens in url fragment (not readable by servers)",
+          "enum": [
+            "fragment",
+            "query"
+          ],
+          "type": "string"
+        },
+        "login_redirect_uri": {
+          "description": "Where to redirect the client when `login_action` is set to `redirect`.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "login_tokens": {
+          "default": [
+            "id_token"
+          ],
+          "description": "What tokens to include in `response` body or `redirect` query string or fragment: - `id_token`: include id token - `access_token`: include access token - `refresh_token`: include refresh token - `tokens`: include the full token endpoint response - `introspection`: include introspection response",
+          "items": {
+            "enum": [
+              "access_token",
+              "id_token",
+              "introspection",
+              "refresh_token",
+              "tokens"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "logout_methods": {
+          "default": [
+            "DELETE",
+            "POST"
+          ],
+          "description": "The request methods that can activate the logout: - `POST`: HTTP POST method - `GET`: HTTP GET method - `DELETE`: HTTP DELETE method",
+          "items": {
+            "enum": [
+              "DELETE",
+              "GET",
+              "POST"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "logout_post_arg": {
+          "description": "The request body argument that activates the logout.",
+          "type": "string"
+        },
+        "logout_query_arg": {
+          "description": "The request query argument that activates the logout.",
+          "type": "string"
+        },
+        "logout_redirect_uri": {
+          "description": "Where to redirect the client after the logout.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "logout_revoke": {
+          "default": false,
+          "description": "Revoke tokens as part of the logout.",
+          "type": "boolean"
+        },
+        "logout_revoke_access_token": {
+          "default": true,
+          "description": "Revoke the access token as part of the logout.",
+          "type": "boolean"
+        },
+        "logout_revoke_refresh_token": {
+          "default": true,
+          "description": "Revoke the refresh token as part of the logout.",
+          "type": "boolean"
+        },
+        "logout_uri_suffix": {
+          "description": "The request URI suffix that activates the logout.",
+          "type": "string"
+        },
+        "max_age": {
+          "description": "The maximum age (in seconds) compared to the `auth_time` claim.",
+          "type": "number"
+        },
+        "no_proxy": {
+          "description": "Do not use proxy with these hosts.",
+          "type": "string"
+        },
+        "password_param_type": {
+          "default": [
+            "body",
+            "header",
+            "query"
+          ],
+          "description": "Where to look for the username and password: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body",
+          "items": {
+            "enum": [
+              "body",
+              "header",
+              "query"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "preserve_query_args": {
+          "default": false,
+          "description": "With this parameter, you can preserve request query arguments even when doing authorization code flow.",
+          "type": "boolean"
+        },
+        "redirect_uri": {
+          "description": "The redirect URI passed to the authorization and token endpoints.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "rediscovery_lifetime": {
+          "default": 30,
+          "description": "Specifies how long (in seconds) the plugin waits between discovery attempts. Discovery is still triggered on an as-needed basis.",
+          "type": "number"
+        },
+        "refresh_token_param_name": {
+          "description": "The name of the parameter used to pass the refresh token.",
+          "type": "string"
+        },
+        "refresh_token_param_type": {
+          "default": [
+            "body",
+            "header",
+            "query"
+          ],
+          "description": "Where to look for the refresh token: - `header`: search the HTTP headers - `query`: search the URL's query string - `body`: search the HTTP request body",
+          "items": {
+            "enum": [
+              "body",
+              "header",
+              "query"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "refresh_tokens": {
+          "default": true,
+          "description": "Specifies whether the plugin should try to refresh (soon to be) expired access tokens if the plugin has a `refresh_token` available.",
+          "type": "boolean"
+        },
+        "resolve_distributed_claims": {
+          "default": false,
+          "description": "Distributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims. If this parameter is set to `true`, the plugin explicitly resolves these distributed claims.",
+          "type": "boolean"
+        },
+        "response_mode": {
+          "default": "query",
+          "description": "The response mode passed to the authorization endpoint: - `query`: Instructs the identity provider to pass parameters in query string - `form_post`: Instructs the identity provider to pass parameters in request body - `fragment`: Instructs the identity provider to pass parameters in uri fragment (rarely useful as the plugin itself cannot read it)",
+          "enum": [
+            "form_post",
+            "fragment",
+            "query"
+          ],
+          "type": "string"
+        },
+        "response_type": {
+          "default": [
+            "code"
+          ],
+          "description": "The response type passed to the authorization endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "reverify": {
+          "default": false,
+          "description": "Specifies whether to always verify tokens stored in the session.",
+          "type": "boolean"
+        },
+        "revocation_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "revocation_endpoint_auth_method": {
+          "description": "The revocation endpoint authentication method: - `client_secret_basic`: send `client_id` and `client_secret` in `Authorization: Basic` header - `client_secret_post`: send `client_id` and `client_secret` as part of the body - `client_secret_jwt`: send client assertion signed with the `client_secret` as part of the body - `private_key_jwt`:  send client assertion signed with the `private key` as part of the body - `none`: do not authenticate",
+          "enum": [
+            "client_secret_basic",
+            "client_secret_jwt",
+            "client_secret_post",
+            "none",
+            "private_key_jwt"
+          ],
+          "type": "string"
+        },
+        "roles_claim": {
+          "default": [
+            "roles"
+          ],
+          "description": "The claim that contains the roles.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "roles_required": {
+          "description": "The roles (`roles_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "run_on_preflight": {
+          "default": true,
+          "description": "Specifies whether to run this plugin on pre-flight (`OPTIONS`) requests.",
+          "type": "boolean"
+        },
+        "scopes": {
+          "default": [
+            "openid"
+          ],
+          "description": "The scopes passed to the authorization and token endpoints.",
+          "items": {
+            "description": "This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scopes_claim": {
+          "default": [
+            "scope"
+          ],
+          "description": "The claim that contains the scopes.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scopes_required": {
+          "description": "The scopes (`scopes_claim` claim) required to be present in the access token (or introspection results) for successful authorization. This config parameter works in both **AND** / **OR** cases.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "search_user_info": {
+          "default": false,
+          "description": "Specify whether to use the user info endpoint to get additional claims for consumer mapping, credential mapping, authenticated groups, and upstream and downstream headers.",
+          "type": "boolean"
+        },
+        "session_absolute_timeout": {
+          "default": 86400,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "session_audience": {
+          "default": "default",
+          "description": "The session audience, which is the intended target application. For example `\"my-application\"`.",
+          "type": "string"
+        },
+        "session_cookie_domain": {
+          "description": "The session cookie Domain flag.",
+          "type": "string"
+        },
+        "session_cookie_http_only": {
+          "default": true,
+          "description": "Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property.",
+          "type": "boolean"
+        },
+        "session_cookie_name": {
+          "default": "session",
+          "description": "The session cookie name.",
+          "type": "string"
+        },
+        "session_cookie_path": {
+          "default": "/",
+          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+          "type": "string"
+        },
+        "session_cookie_same_site": {
+          "default": "Lax",
+          "description": "Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks.",
+          "enum": [
+            "Default",
+            "Lax",
+            "None",
+            "Strict"
+          ],
+          "type": "string"
+        },
+        "session_cookie_secure": {
+          "description": "Cookie is only sent to the server when a request is made with the https: scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks.",
+          "type": "boolean"
+        },
+        "session_enforce_same_subject": {
+          "default": false,
+          "description": "When set to `true`, audiences are forced to share the same subject.",
+          "type": "boolean"
+        },
+        "session_hash_storage_key": {
+          "default": false,
+          "description": "When set to `true`, the storage key (session ID) is hashed for extra security. Hashing the storage key means it is impossible to decrypt data from the storage without a cookie.",
+          "type": "boolean"
+        },
+        "session_hash_subject": {
+          "default": false,
+          "description": "When set to `true`, the value of subject is hashed before being stored. Only applies when `session_store_metadata` is enabled.",
+          "type": "boolean"
+        },
+        "session_idling_timeout": {
+          "default": 900,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "session_memcached_host": {
+          "default": "127.0.0.1",
+          "description": "The memcached host.",
+          "type": "string"
+        },
+        "session_memcached_port": {
+          "default": 11211,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "session_memcached_prefix": {
+          "description": "The memcached session key prefix.",
+          "type": "string"
+        },
+        "session_memcached_socket": {
+          "description": "The memcached unix socket path.",
+          "type": "string"
+        },
+        "session_redis_cluster_max_redirections": {
+          "description": "The Redis cluster maximum redirects.",
+          "type": "integer"
+        },
+        "session_redis_cluster_nodes": {
+          "description": "The Redis cluster node host. Takes an array of host records, with either `ip` or `host`, and `port` values.",
+          "items": {
+            "properties": {
+              "ip": {
+                "default": "127.0.0.1",
+                "description": "A string representing a host name, such as example.com.",
+                "type": "string"
+              },
+              "port": {
+                "default": 6379,
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "maximum": 65535,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "session_redis_connect_timeout": {
+          "description": "Network IO timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_host": {
+          "default": "127.0.0.1",
+          "description": "The Redis host",
+          "type": "string"
+        },
+        "session_redis_password": {
+          "description": "Password to use for Redis connection when the `redis` session storage is defined. If undefined, no AUTH commands are sent to Redis.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string"
+        },
+        "session_redis_port": {
+          "default": 6379,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "session_redis_prefix": {
+          "description": "The Redis session key prefix.",
+          "type": "string"
+        },
+        "session_redis_read_timeout": {
+          "description": "Network IO timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_send_timeout": {
+          "description": "Network IO timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_server_name": {
+          "description": "The SNI used for connecting the Redis server.",
+          "type": "string"
+        },
+        "session_redis_socket": {
+          "description": "The Redis unix socket path.",
+          "type": "string"
+        },
+        "session_redis_ssl": {
+          "default": false,
+          "description": "Use SSL/TLS for Redis connection.",
+          "type": "boolean"
+        },
+        "session_redis_ssl_verify": {
+          "default": false,
+          "description": "Verify identity provider server certificate.",
+          "type": "boolean"
+        },
+        "session_redis_username": {
+          "description": "Username to use for Redis connection when the `redis` session storage is defined and ACL authentication is desired. If undefined, ACL authentication will not be performed. This requires Redis v6.0.0+. The username **cannot** be set to `default`.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "session_remember": {
+          "default": false,
+          "description": "Enables or disables persistent sessions.",
+          "type": "boolean"
+        },
+        "session_remember_absolute_timeout": {
+          "default": 2592000,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "session_remember_cookie_name": {
+          "default": "remember",
+          "description": "Persistent session cookie name. Use with the `remember` configuration parameter.",
+          "type": "string"
+        },
+        "session_remember_rolling_timeout": {
+          "default": 604800,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "session_request_headers": {
+          "items": {
+            "enum": [
+              "absolute-timeout",
+              "audience",
+              "id",
+              "idling-timeout",
+              "rolling-timeout",
+              "subject",
+              "timeout"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "session_response_headers": {
+          "items": {
+            "enum": [
+              "absolute-timeout",
+              "audience",
+              "id",
+              "idling-timeout",
+              "rolling-timeout",
+              "subject",
+              "timeout"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "session_rolling_timeout": {
+          "default": 3600,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "session_secret": {
+          "description": "The session secret.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string"
+        },
+        "session_storage": {
+          "default": "cookie",
+          "description": "The session storage for session data: - `cookie`: stores session data with the session cookie (the session cannot be invalidated or revoked without changing session secret, but is stateless, and doesn't require a database) - `memcache`: stores session data in memcached - `redis`: stores session data in Redis",
+          "enum": [
+            "cookie",
+            "memcache",
+            "memcached",
+            "redis"
+          ],
+          "type": "string"
+        },
+        "session_store_metadata": {
+          "default": false,
+          "description": "Configures whether or not session metadata should be stored. This metadata includes information about the active sessions for a specific audience belonging to a specific subject.",
+          "type": "boolean"
+        },
+        "ssl_verify": {
+          "default": false,
+          "description": "Verify identity provider server certificate.",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Network IO timeout in milliseconds.",
+          "type": "number"
+        },
+        "token_cache_key_include_scope": {
+          "default": false,
+          "description": "Include the scope in the token cache key, so token with different scopes are considered diffrent tokens.",
+          "type": "boolean"
+        },
+        "token_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "token_endpoint_auth_method": {
+          "description": "The token endpoint authentication method: - `client_secret_basic`: send `client_id` and `client_secret` in `Authorization: Basic` header - `client_secret_post`: send `client_id` and `client_secret` as part of the body - `client_secret_jwt`: send client assertion signed with the `client_secret` as part of the body - `private_key_jwt`:  send client assertion signed with the `private key` as part of the body - `none`: do not authenticate",
+          "enum": [
+            "client_secret_basic",
+            "client_secret_jwt",
+            "client_secret_post",
+            "none",
+            "private_key_jwt"
+          ],
+          "type": "string"
+        },
+        "token_exchange_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "token_headers_client": {
+          "description": "Extra headers passed from the client to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_headers_grants": {
+          "description": "Enable the sending of the token endpoint response headers only with certain grants: - `password`: with OAuth password grant - `client_credentials`: with OAuth client credentials grant - `authorization_code`: with authorization code flow - `refresh_token` with refresh token grant",
+          "items": {
+            "enum": [
+              "authorization_code",
+              "client_credentials",
+              "password",
+              "refresh_token"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_headers_names": {
+          "description": "Extra header names passed to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_headers_prefix": {
+          "description": "Add a prefix to the token endpoint response headers before forwarding them to the downstream client.",
+          "type": "string"
+        },
+        "token_headers_replay": {
+          "description": "The names of token endpoint response headers to forward to the downstream client.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_headers_values": {
+          "description": "Extra header values passed to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_post_args_client": {
+          "description": "Pass extra arguments from the client to the OpenID-Connect plugin. If arguments exist, the client can pass them using: - Query parameters - Request Body - Request Header  This parameter can be used with `scope` values, like this:  `config.token_post_args_client=scope`  In this case, the token would take the `scope` value from the query parameter or from the request body or from the header and send it to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_post_args_names": {
+          "description": "Extra post argument names passed to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "token_post_args_values": {
+          "description": "Extra post argument values passed to the token endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "unauthorized_destroy_session": {
+          "default": true,
+          "description": "Destroy any active session for the unauthorized requests.",
+          "type": "boolean"
+        },
+        "unauthorized_error_message": {
+          "default": "Unauthorized",
+          "description": "The error message for the unauthorized requests (when not using the redirection).",
+          "type": "string"
+        },
+        "unauthorized_redirect_uri": {
+          "description": "Where to redirect the client on unauthorized requests.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "unexpected_redirect_uri": {
+          "description": "Where to redirect the client when unexpected errors happen with the requests.",
+          "items": {
+            "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "upstream_access_token_header": {
+          "default": "authorization:bearer",
+          "description": "The upstream access token header.",
+          "type": "string"
+        },
+        "upstream_access_token_jwk_header": {
+          "description": "The upstream access token JWK header.",
+          "type": "string"
+        },
+        "upstream_headers_claims": {
+          "description": "The upstream header claims.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "upstream_headers_names": {
+          "description": "The upstream header names for the claim values.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "upstream_id_token_header": {
+          "description": "The upstream id token header.",
+          "type": "string"
+        },
+        "upstream_id_token_jwk_header": {
+          "description": "The upstream id token JWK header.",
+          "type": "string"
+        },
+        "upstream_introspection_header": {
+          "description": "The upstream introspection header.",
+          "type": "string"
+        },
+        "upstream_introspection_jwt_header": {
+          "type": "string"
+        },
+        "upstream_refresh_token_header": {
+          "description": "The upstream refresh token header.",
+          "type": "string"
+        },
+        "upstream_session_id_header": {
+          "description": "The upstream session id header.",
+          "type": "string"
+        },
+        "upstream_user_info_header": {
+          "description": "The upstream user info header.",
+          "type": "string"
+        },
+        "upstream_user_info_jwt_header": {
+          "description": "The upstream user info JWT header (in case the user info returns a JWT response).",
+          "type": "string"
+        },
+        "userinfo_accept": {
+          "default": "application/json",
+          "description": "The value of `Accept` header for user info requests: - `application/json`: user info response as JSON - `application/jwt`: user info response as JWT (from the obsolete IETF draft document)",
+          "enum": [
+            "application/json",
+            "application/jwt"
+          ],
+          "type": "string"
+        },
+        "userinfo_endpoint": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "userinfo_headers_client": {
+          "description": "Extra headers passed from the client to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "userinfo_headers_names": {
+          "description": "Extra header names passed to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "userinfo_headers_values": {
+          "description": "Extra header values passed to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "userinfo_query_args_client": {
+          "description": "Extra query arguments passed from the client to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "userinfo_query_args_names": {
+          "description": "Extra query argument names passed to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "userinfo_query_args_values": {
+          "description": "Extra query argument values passed to the user info endpoint.",
+          "items": {
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "using_pseudo_issuer": {
+          "default": false,
+          "description": "If the plugin uses a pseudo issuer. When set to true, the plugin will not discover the configuration from the issuer URL.",
+          "type": "boolean"
+        },
+        "verify_claims": {
+          "default": true,
+          "description": "Verify tokens for standard claims.",
+          "type": "boolean"
+        },
+        "verify_nonce": {
+          "default": true,
+          "description": "Verify nonce on authorization code flow.",
+          "type": "boolean"
+        },
+        "verify_parameters": {
+          "default": false,
+          "description": "Verify plugin configuration against discovery.",
+          "type": "boolean"
+        },
+        "verify_signature": {
+          "default": true,
+          "description": "Verify signature of tokens.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "issuer"
+      ],
+      "shorthand_fields": {
+        "authorization_cookie_httponly": {
+          "type": "boolean"
+        },
+        "authorization_cookie_lifetime": {
+          "type": "number"
+        },
+        "authorization_cookie_samesite": {
+          "type": "string"
+        },
+        "session_compressor": {
+          "type": "string"
+        },
+        "session_cookie_httponly": {
+          "type": "boolean"
+        },
+        "session_cookie_idletime": {
+          "type": "number"
+        },
+        "session_cookie_lifetime": {
+          "type": "number"
+        },
+        "session_cookie_maxsize": {
+          "type": "integer"
+        },
+        "session_cookie_renew": {
+          "type": "number"
+        },
+        "session_cookie_samesite": {
+          "type": "string"
+        },
+        "session_memcache_host": {
+          "type": "string"
+        },
+        "session_memcache_port": {
+          "type": "integer"
+        },
+        "session_memcache_prefix": {
+          "type": "string"
+        },
+        "session_memcache_socket": {
+          "type": "string"
+        },
+        "session_redis_cluster_maxredirections": {
+          "type": "integer"
+        },
+        "session_strategy": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "required": [
+
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

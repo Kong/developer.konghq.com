@@ -73,3 +73,30 @@ The matching behavior is as follows:
 * If any `allow` expressions are set, but the request matches none of the allowed expressions, the caller also receives a 400 response.
 * If any `allow` expressions are set, and the request matches one of the `allow` expressions, the request passes through to the LLM.
 * If there are both `deny` and `allow` expressions set, the `deny` condition takes precedence over `allow`. Any request that matches an entry in the `deny` list will return a 400 response, even if it also matches an expression in the `allow` list. If the request does not match an expression in the `deny` list, then it must match an expression in the `allow` list to be passed through to the LLM.
+
+## Best practices
+
+Configure the AI Prompt Guard plugin to detect hidden unicode characters that attackers commonly use to embed malicious instructions in user input:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-prompt-guard
+      config:
+        deny_patterns:
+        # Zero Width Characters (U+200B-U+200D, U+FEFF)
+        - (\xE2\x80[\x8B-\x8D]|\xEF\xBB\xBF)
+
+        # Bidirectional Text Controls (U+202A-U+202E)
+        - \xE2\x80[\xAA-\xAE]
+
+        # Format Controls (U+2060-U+206F)
+        - \xE2\x81[\xA0-\xAF]
+
+        # Unicode Tag Characters (U+E0020-U+E007F)
+        - \xF3\xA0\x80[\xA0-\xBF]|\xF3\xA0\x81[\x80-\xBF]
+formats:
+  - deck
+{% endentity_examples %}
+
+These patterns block invisible characters that can hide prompt injection attempts. Zero-width and bidirectional control characters render as blank space in most interfaces but remain visible to the LLM, allowing attackers to insert hidden commands.

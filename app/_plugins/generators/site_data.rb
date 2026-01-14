@@ -8,28 +8,11 @@ module Jekyll
     priority :highest
 
     def generate(site)
-      site.data['referenceable_fields'] = plugins_data(site, 'plugin_referenceable_fields_path')
-      site.data['plugin_priorities'] = plugins_data(site, 'plugin_priorities_path')
       site.data['searchFilters'] = search_filters(site)
       site.data['searchSources'] = site.data.dig('search', 'sources')
 
       product_latest_release(site)
       tools_latest_release(site)
-    end
-
-    def plugins_data(site, key)
-      Dir.glob("#{files_path(site, key)}/*").each_with_object({}) do |file, h|
-        release = file_path_to_release(file)
-        h[release] = JSON.parse(File.read(file))
-      end
-    end
-
-    def files_path(site, key)
-      site.config[key]
-    end
-
-    def file_path_to_release(file)
-      File.basename(file).gsub('.x.json', '')
     end
 
     def search_filters(site)

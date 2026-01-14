@@ -22,8 +22,9 @@ module Jekyll
 
         def priority
           @priority ||= site.data.dig(
-            'plugin_priorities',
-            @release.number,
+            'plugins',
+            'priorities',
+            @release.number.gsub('.', ''),
             @plugin.data['slug']
           )
         end

@@ -1,0 +1,112 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "auth_password": {
+          "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "auth_username": {
+          "description": "The username to authenticate with, if the forward proxy is protected\nby basic authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "http_proxy_host": {
+          "description": "A string representing a host name, such as example.com.",
+          "type": "string"
+        },
+        "http_proxy_port": {
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "https_proxy_host": {
+          "description": "A string representing a host name, such as example.com.",
+          "type": "string"
+        },
+        "https_proxy_port": {
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "https_verify": {
+          "default": false,
+          "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
+          "type": "boolean"
+        },
+        "proxy_scheme": {
+          "default": "http",
+          "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+          "enum": [
+            "http"
+          ],
+          "type": "string"
+        },
+        "x_headers": {
+          "default": "append",
+          "description": "Determines how to handle headers when forwarding the request.",
+          "enum": [
+            "append",
+            "delete",
+            "transparent"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

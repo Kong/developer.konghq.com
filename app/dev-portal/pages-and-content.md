@@ -80,8 +80,6 @@ faqs:
 related_resources:
   - text: Dev Portal Markdown components reference
     url: https://portaldocs.konghq.com/
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
@@ -90,12 +88,16 @@ related_resources:
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
 
+You need the [Content Editor role](/konnect-platform/teams-and-roles/#dev-portal) to edit snippets, pages, and customization.
+
 ![Dev Portal Editor](/assets/images/dev-portal/dev-portal-editor.png)
 > _**Figure 1:** The Portal Editor UI in Dev Portal._
 
 ## Pages
 
 You can create multiple pages in the Dev Portal, similar to how a website is structured. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
+
+Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
 
 ### Page structure
 

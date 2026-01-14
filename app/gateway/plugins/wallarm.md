@@ -8,7 +8,7 @@ permalink: /plugins/wallarm/
 
 related_resources:
   - text: Wallarm documentation
-    url: https://docs.wallarm.com/admin-en/installation-kong-en/?utm_source=konghub
+    url: https://docs.wallarm.com/installation/connectors/kong-ingress-controller/?utm_source=konghub
   - text: Wallarm API Security Platform
     url: https://www.wallarm.com/product/api-security-overview?utm_source=konghub
 
@@ -53,4 +53,4 @@ You can try out Wallarm with a [free trial license](https://my.wallarm.com/signu
 
 ## Install the Wallarm plugin
 
-See the Wallarm documentation for [installation instructions](https://docs.wallarm.com/installation/connectors/kong-api-gateway/?utm_source=konghub) with the {{site.kic_product_name}}. 
+See the Wallarm documentation for [installation instructions](https://docs.wallarm.com/installation/connectors/kong-ingress-controller/?utm_source=konghub) with the {{site.kic_product_name}}. 

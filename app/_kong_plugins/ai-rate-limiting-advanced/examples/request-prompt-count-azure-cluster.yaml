@@ -1,0 +1,70 @@
+description: Rate limit requests based on a custom token with Azure Managed Redis cluster auth
+extended_description: |
+  Protect your LLM services with rate limiting and Azure Managed Redis cluster auth.
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response
+  to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses request prompt rate limiting, which lets you you rate limit requests based on a custom token. See the [how-to guide](/how-to/use-custom-function-for-ai-rate-limiting/) for a step-by-step walkthrough.
+
+title: 'Request prompt function with Azure Managed Redis cluster auth'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - A running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
+  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
+
+weight: 900
+
+config:
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: ${cluster_address}
+      port: 6379
+    username: ${cluster_username}
+    port: 6379
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: ${azure_client_id}
+      azure_client_secret: ${azure_client_secret}
+      azure_tenant_id: ${azure_tenant_id}
+  sync_rate: 0
+  llm_providers:
+  - name: cohere
+    limit:
+    - 100
+    - 1000
+    window_size:
+    - 60
+    - 3600
+  request_prompt_count_function: |
+    local header_count = tonumber(kong.request.get_header("x-prompt-count"))
+    if header_count then
+      return header_count
+    end
+    return 0
+
+variables:
+  cluster_address:
+    value: $CLUSTER_ADDRESS
+    description: The Azure Managed Redis cluster address.
+  cluster_username:
+    value: $CLUSTER_USERNAME
+    description: The object (principal) ID of the Principal/Identity with essential access.
+  azure_client_id:
+    value: $AZURE_CLIENT_ID
+    description: The client ID of the Principal/Identity. 
+  azure_client_secret:
+    value: $AZURE_CLIENT_SECRET
+    description: (Optional) The client secret of the Principal/Identity.
+  azure_tenant_id:
+    value: $AZURE_TENANT_ID
+    description: (Optional) The tenant ID of the Principal/Identity.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -1,0 +1,446 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "anonymous": {
+          "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer. If not set, a Kong Consumer must exist for the SAML IdP user credentials, mapping the username format to the Kong Consumer username.",
+          "type": "string"
+        },
+        "assertion_consumer_path": {
+          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+          "type": "string"
+        },
+        "idp_certificate": {
+          "description": "The public certificate provided by the IdP. This is used to validate responses from the IdP.  Only include the contents of the certificate. Do not include the header (`BEGIN CERTIFICATE`) and footer (`END CERTIFICATE`) lines.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "idp_sso_url": {
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+          "type": "string"
+        },
+        "issuer": {
+          "description": "The unique identifier of the IdP application. Formatted as a URL containing information about the IdP so the SP can validate that the SAML assertions it receives are issued from the correct IdP.",
+          "type": "string"
+        },
+        "nameid_format": {
+          "default": "EmailAddress",
+          "description": "The requested `NameId` format. Options available are: - `Unspecified` - `EmailAddress` - `Persistent` - `Transient`",
+          "enum": [
+            "EmailAddress",
+            "Persistent",
+            "Transient",
+            "Unspecified"
+          ],
+          "type": "string"
+        },
+        "request_digest_algorithm": {
+          "default": "SHA256",
+          "description": "The digest algorithm for Authn requests: - `SHA256` - `SHA1`",
+          "enum": [
+            "SHA1",
+            "SHA256"
+          ],
+          "type": "string"
+        },
+        "request_signature_algorithm": {
+          "default": "SHA256",
+          "description": "The signature algorithm for signing Authn requests. Options available are: - `SHA256` - `SHA384` - `SHA512`",
+          "enum": [
+            "SHA256",
+            "SHA384",
+            "SHA512"
+          ],
+          "type": "string"
+        },
+        "request_signing_certificate": {
+          "description": "The certificate for signing requests.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "request_signing_key": {
+          "description": "The private key for signing requests.  If this parameter is set, requests sent to the IdP are signed.  The `request_signing_certificate` parameter must be set as well.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "response_digest_algorithm": {
+          "default": "SHA256",
+          "description": "The algorithm for verifying digest in SAML responses: - `SHA256` - `SHA1`",
+          "enum": [
+            "SHA1",
+            "SHA256"
+          ],
+          "type": "string"
+        },
+        "response_encryption_key": {
+          "description": "The private encryption key required to decrypt encrypted assertions.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "response_signature_algorithm": {
+          "default": "SHA256",
+          "description": "The algorithm for validating signatures in SAML responses. Options available are: - `SHA256` - `SHA384` - `SHA512`",
+          "enum": [
+            "SHA256",
+            "SHA384",
+            "SHA512"
+          ],
+          "type": "string"
+        },
+        "session_absolute_timeout": {
+          "default": 86400,
+          "description": "The session cookie absolute timeout in seconds. Specifies how long the session can be used until it is no longer valid.",
+          "type": "number"
+        },
+        "session_audience": {
+          "default": "default",
+          "description": "The session audience, for example \"my-application\"",
+          "type": "string"
+        },
+        "session_cookie_domain": {
+          "description": "The session cookie domain flag.",
+          "type": "string"
+        },
+        "session_cookie_http_only": {
+          "default": true,
+          "description": "Forbids JavaScript from accessing the cookie, for example, through the `Document.cookie` property.",
+          "type": "boolean"
+        },
+        "session_cookie_name": {
+          "default": "session",
+          "description": "The session cookie name.",
+          "type": "string"
+        },
+        "session_cookie_path": {
+          "default": "/",
+          "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+          "type": "string"
+        },
+        "session_cookie_same_site": {
+          "default": "Lax",
+          "description": "Controls whether a cookie is sent with cross-origin requests, providing some protection against cross-site request forgery attacks.",
+          "enum": [
+            "Default",
+            "Lax",
+            "None",
+            "Strict"
+          ],
+          "type": "string"
+        },
+        "session_cookie_secure": {
+          "description": "The cookie is only sent to the server when a request is made with the https:scheme (except on localhost), and therefore is more resistant to man-in-the-middle attacks.",
+          "type": "boolean"
+        },
+        "session_enforce_same_subject": {
+          "default": false,
+          "description": "When set to `true`, audiences are forced to share the same subject.",
+          "type": "boolean"
+        },
+        "session_hash_storage_key": {
+          "default": false,
+          "description": "When set to `true`, the storage key (session ID) is hashed for extra security. Hashing the storage key means it is impossible to decrypt data from the storage without a cookie.",
+          "type": "boolean"
+        },
+        "session_hash_subject": {
+          "default": false,
+          "description": "When set to `true`, the value of subject is hashed before being stored. Only applies when `session_store_metadata` is enabled.",
+          "type": "boolean"
+        },
+        "session_idling_timeout": {
+          "default": 900,
+          "description": "The session cookie idle time in seconds.",
+          "type": "number"
+        },
+        "session_memcached_host": {
+          "default": "127.0.0.1",
+          "description": "The memcached host.",
+          "type": "string"
+        },
+        "session_memcached_port": {
+          "default": 11211,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "session_memcached_prefix": {
+          "description": "The memcached session key prefix.",
+          "type": "string"
+        },
+        "session_memcached_socket": {
+          "description": "The memcached unix socket path.",
+          "type": "string"
+        },
+        "session_redis_cluster_max_redirections": {
+          "description": "The Redis cluster maximum redirects.",
+          "type": "integer"
+        },
+        "session_redis_cluster_nodes": {
+          "description": "The Redis cluster node host. Takes an array of host records, with either `ip` or `host`, and `port` values.",
+          "items": {
+            "properties": {
+              "ip": {
+                "default": "127.0.0.1",
+                "description": "A string representing a host name, such as example.com.",
+                "type": "string"
+              },
+              "port": {
+                "default": 6379,
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "maximum": 65535,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "session_redis_connect_timeout": {
+          "description": "The Redis connection timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_host": {
+          "default": "127.0.0.1",
+          "description": "The Redis host IP.",
+          "type": "string"
+        },
+        "session_redis_password": {
+          "description": "Password to use for Redis connection when the `redis` session storage is defined. If undefined, no auth commands are sent to Redis. This value is pulled from\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "session_redis_port": {
+          "default": 6379,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "session_redis_prefix": {
+          "description": "The Redis session key prefix.",
+          "type": "string"
+        },
+        "session_redis_read_timeout": {
+          "description": "The Redis read timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_send_timeout": {
+          "description": "The Redis send timeout in milliseconds.",
+          "type": "integer"
+        },
+        "session_redis_server_name": {
+          "description": "The SNI used for connecting to the Redis server.",
+          "type": "string"
+        },
+        "session_redis_socket": {
+          "description": "The Redis unix socket path.",
+          "type": "string"
+        },
+        "session_redis_ssl": {
+          "default": false,
+          "description": "Use SSL/TLS for the Redis connection.",
+          "type": "boolean"
+        },
+        "session_redis_ssl_verify": {
+          "default": false,
+          "description": "Verify the Redis server certificate.",
+          "type": "boolean"
+        },
+        "session_redis_username": {
+          "description": "Redis username if the `redis` session storage is defined and ACL authentication is desired.If undefined, ACL authentication will not be performed.  This requires Redis v6.0.0+. The username **cannot** be set to `default`.\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "session_remember": {
+          "default": false,
+          "description": "Enables or disables persistent sessions",
+          "type": "boolean"
+        },
+        "session_remember_absolute_timeout": {
+          "default": 2592000,
+          "description": "Persistent session absolute timeout in seconds.",
+          "type": "number"
+        },
+        "session_remember_cookie_name": {
+          "default": "remember",
+          "description": "Persistent session cookie name",
+          "type": "string"
+        },
+        "session_remember_rolling_timeout": {
+          "default": 604800,
+          "description": "Persistent session rolling timeout in seconds.",
+          "type": "number"
+        },
+        "session_request_headers": {
+          "items": {
+            "enum": [
+              "absolute-timeout",
+              "audience",
+              "id",
+              "idling-timeout",
+              "rolling-timeout",
+              "subject",
+              "timeout"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "session_response_headers": {
+          "items": {
+            "enum": [
+              "absolute-timeout",
+              "audience",
+              "id",
+              "idling-timeout",
+              "rolling-timeout",
+              "subject",
+              "timeout"
+            ],
+            "required": [
+
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "session_rolling_timeout": {
+          "default": 3600,
+          "description": "The session cookie absolute timeout in seconds. Specifies how long the session can be used until it is no longer valid.",
+          "type": "number"
+        },
+        "session_secret": {
+          "description": "The session secret. This must be a random string of 32 characters from the base64 alphabet (letters, numbers, `/`, `_` and `+`). It is used as the secret key for encrypting session data as well as state information that is sent to the IdP in the authentication exchange.\nThis field is [encrypted](/gateway/keyring/).\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "maxLength": 32,
+          "minLength": 32,
+          "pattern": "^[0-9a-zA-Z/_+]+$",
+          "type": "string"
+        },
+        "session_storage": {
+          "default": "cookie",
+          "description": "The session storage for session data: - `cookie`: stores session data with the session cookie. The session cannot be invalidated or revoked without changing the session secret, but is stateless, and doesn't require a database. - `memcached`: stores session data in memcached - `redis`: stores session data in Redis",
+          "enum": [
+            "cookie",
+            "memcache",
+            "memcached",
+            "redis"
+          ],
+          "type": "string"
+        },
+        "session_store_metadata": {
+          "default": false,
+          "description": "Configures whether or not session metadata should be stored. This includes information about the active sessions for the `specific_audience` belonging to a specific subject.",
+          "type": "boolean"
+        },
+        "validate_assertion_signature": {
+          "default": true,
+          "description": "Enable signature validation for SAML responses.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "assertion_consumer_path",
+        "idp_sso_url",
+        "issuer",
+        "session_secret"
+      ],
+      "shorthand_fields": {
+        "session_auth_ttl": {
+          "type": "number"
+        },
+        "session_compressor": {
+          "type": "string"
+        },
+        "session_cookie_httponly": {
+          "type": "boolean"
+        },
+        "session_cookie_idletime": {
+          "type": "number"
+        },
+        "session_cookie_lifetime": {
+          "type": "number"
+        },
+        "session_cookie_maxsize": {
+          "type": "integer"
+        },
+        "session_cookie_renew": {
+          "type": "number"
+        },
+        "session_cookie_samesite": {
+          "type": "string"
+        },
+        "session_memcache_host": {
+          "type": "string"
+        },
+        "session_memcache_port": {
+          "type": "integer"
+        },
+        "session_memcache_prefix": {
+          "type": "string"
+        },
+        "session_memcache_socket": {
+          "type": "string"
+        },
+        "session_redis_cluster_maxredirections": {
+          "type": "integer"
+        },
+        "session_strategy": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "required": [
+
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

@@ -51,7 +51,6 @@ features:
     examples: |
       * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`llm/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -75,21 +74,36 @@ features:
       * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
       * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
 
+  - title: "Video generation"
+    description: Generates videos from text prompts for multimodal agent output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/videos/generations`](./examples/video-generation-openai/)<br>
+
   - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "HuggingFace text generation"
+    description: |
+      Provides text generation and streaming using open-source Hugging Face models.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for HuggingFace.
     openai_compatible: false
     examples: |
       * [`/text-generation`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context.
+    description: |
+      Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
@@ -120,7 +134,6 @@ features:
     examples: |
       * [`/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
   - title: "Batch and files"
     description: Supports parallel LLM requests and file upload for long documents and structured input.
@@ -144,6 +157,12 @@ features:
       * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
       * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
 
+  - title: "Video generation"
+    description: Generates videos from text prompts for multimodal agent output.
+    openai_compatible: true
+    examples: |
+      * [`/v1/videos/generations`](./examples/video-generation-openai/)<br>
+
   - title: "Realtime streaming"
     description: "Stream completions token-by-token for low-latency, interactive experiences, and live analytics."
     openai_compatible: true
@@ -151,20 +170,29 @@ features:
       * [`/v1/realtime`](./examples/realtime-route-openai/)<br>
 
   - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "HuggingFace text generation"
+    description: |
+      Provides text generation and streaming using open-source Hugging Face models.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for HuggingFace.
     openai_compatible: false
     examples: |
       * [`/text-generation`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+    description: |
+      Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+      <br><br>
+      This capability is available only while using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
@@ -194,9 +222,12 @@ Support for chat, completions, and embeddings:
 
 ### Advanced text generation {% new_in 3.11 %}
 
-Support for function calling, tool use, and batch processing:
+Support for files and batch processing and function calling (tool use):
 
 {% include plugins/ai-proxy/tables/supported-providers-processing.html providers=providers %}
+
+{:.info}
+> Function calling uses the llm/v1/chat route type.
 
 ### Audio features {% new_in 3.11 %}
 
@@ -209,6 +240,12 @@ Support for text-to-speech, transcription, and translation:
 Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %}, and realtime streaming{% endif %} interaction:
 
 {% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
+
+### Video features {% new_in 3.13 %}
+
+Support for video generation:
+
+{% include plugins/ai-proxy/tables/supported-providers-video.html providers=providers plugin=plugin %}
 
 ## How it works
 

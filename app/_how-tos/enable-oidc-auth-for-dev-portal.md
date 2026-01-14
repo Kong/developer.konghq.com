@@ -42,6 +42,9 @@ prereqs:
     routes:
       - example-route
   inline:
+    - title: "{{site.konnect_product_name}} roles"
+      include_content: prereqs/dev-portal-auth-strategy-roles
+      icon_url: /assets/icons/gateway.svg
     - title: Configure a Dev Portal
       include_content: prereqs/dev-portal-configure
       icon_url: /assets/icons/dev-portal.svg

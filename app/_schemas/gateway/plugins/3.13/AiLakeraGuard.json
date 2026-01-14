@@ -1,0 +1,140 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "api_key": {
+          "description": "API key for the Lakera Guard subscription. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "guarding_mode": {
+          "default": "INPUT",
+          "description": "The guardrail mode to use for the request",
+          "enum": [
+            "BOTH",
+            "INPUT",
+            "OUTPUT"
+          ],
+          "type": "string"
+        },
+        "lakera_service_url": {
+          "default": "https://api.lakera.ai/v2/guard",
+          "description": "The guard-operation URL of the Lakera Guard service. Defaults to the SaaS /v2/guard endpoint. It can be set to a locally hosted instance of Lakera Guard. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "project_id": {
+          "description": "Project ID to apply filters from. If null, it will use the subscription's default project. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "request_failure_message": {
+          "default": "Request was filtered by Lakera Guard",
+          "description": "The message to return when a failure occurs on the request phase.",
+          "type": "string"
+        },
+        "response_buffer_size": {
+          "default": 100,
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the Lakera Guard service. This only applies to the response content guard.",
+          "type": "number"
+        },
+        "response_failure_message": {
+          "default": "Response was filtered by Lakera Guard",
+          "description": "The message to return when a failure occurs on the response phase.",
+          "type": "string"
+        },
+        "reveal_failure_categories": {
+          "default": false,
+          "description": "Whether to reveal failure categories in the response to the caller. They will always be written to the gateway logs, even if set to false.",
+          "type": "boolean"
+        },
+        "stop_on_error": {
+          "default": true,
+          "description": "Stop processing if an error occurs.",
+          "type": "boolean"
+        },
+        "text_source": {
+          "default": "concatenate_all_content",
+          "description": "Select where to pick the 'text' for the Lakera Guard request (when text/generation is selected).",
+          "enum": [
+            "concatenate_all_content",
+            "concatenate_user_content",
+            "last_message"
+          ],
+          "type": "string"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Connection timeout with the Lakera Guard service",
+          "type": "number"
+        },
+        "verify_ssl": {
+          "default": true,
+          "description": "Whether to verify the SSL certificate of the configured Lakera Guard endpoint.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

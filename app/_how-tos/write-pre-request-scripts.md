@@ -27,6 +27,15 @@ faqs:
     a: Yes, you can copy and paste your pre-request scripts directly from Postman into an Insomnia pre-request script.
   - q: Can I run pre-request scripts without a collection?
     a: No, you can only run pre-request scripts from a collection or a collection that was generated from a document.
+  - q: Can I use variables in request paths?
+    a: |
+      Yes. Insomnia supports variables in request paths through **template tags** and **environment variables**.  
+      
+      Define variables in your environment, then reference them directly in a request URL using Liquid syntax, for example:  
+      ```liquid
+      {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
+      ```  
+      For detailed usage examples, go to [**Requests**](/insomnia/requests/#faqs) and [**Pre-request scripts**](/how-to/write-pre-request-scripts/).  
 
 prereqs:
     inline:

@@ -45,7 +45,7 @@ kind: KonnectGatewayControlPlane
 name: gateway-control-plane
 {% endvalidation %}
 
-At this point, labels should be visible in the [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
+At this point, labels should be visible in the {{site.konnect_short_name}} UI.
 
 ## Tagging
 
@@ -78,4 +78,31 @@ kind: KongService
 name: service
 {% endvalidation %}
 
-At this point, tags should be visible in the [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
+At this point, tags should be visible in the {{site.konnect_short_name}} UI.
+
+### `konghq.com/tags` annotation
+
+Alternatively you can use the `konghq.com/tags` annotation to add tags to any {{site.konnect_product_name}} entity that supports tagging.
+
+The value of this annotation is treated as comma-separated list of tags.
+
+For example, to add tags to a `KongService` object using the `konghq.com/tags` annotation, you can apply the following YAML manifest:
+
+```yaml
+echo '
+kind: KongService
+apiVersion: configuration.konghq.com/v1alpha1
+metadata:
+  name: service
+  namespace: default
+  annotations:
+    konghq.com/tags: "production,devops" # Arbitrary list of strings as comma-separated values
+spec:
+  name: service
+  host: example.com
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: gateway-control-plane # Reference to the KonnectGatewayControlPlane object
+  ' | kubectl apply -f -
+```

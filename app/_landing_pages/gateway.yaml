@@ -34,7 +34,6 @@ rows:
                   text: |
                     <img src="/assets/images/gateway/kong-gateway-overview-light.svg" alt="Diagram of how {{ site.base_gateway }} works" class="flex dark:hidden">
                     <img src="/assets/images/gateway/kong-gateway-overview-dark.svg" alt="Diagram of how {{ site.base_gateway }} works" class="hidden dark:flex">
-
   - header:
       type: h2
       text: "Install {{ site.base_gateway }}"
@@ -108,6 +107,31 @@ rows:
             cta:
               url: /gateway/deployment-topologies/
               align: end
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "API Gateway in {{site.konnect_short_name}}"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} lets you catalog, connect to, and monitor 
+                    the status of all API Gateway control planes (CPs) and data plane nodes (DPs) in one place.
+                    
+                    Key features include:
+                    - Manage control planes and their configurations
+                    - Deploy and monitor data plane nodes
+                    - Use fully-managed cloud gateways or self-hosted infrastructure
+                    - Ensure high availability, security, and scalability for your API traffic
+                    
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway-manager/konnect-control-plane-dashboard.png
+              alt_text: "API Gateway dashboard in {{site.konnect_short_name}}"
+
   - header:
       type: h2
       text: "Core concepts in {{site.base_gateway}}"

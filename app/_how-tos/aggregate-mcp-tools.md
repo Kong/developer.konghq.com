@@ -6,6 +6,8 @@ related_resources:
     url: /ai-gateway/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
+  - text: Use Insomnia MCP clients to test aggregated MCP tools
+    url: /how-to/use-insomnia-mcp-clients-to-test-aggregated-mcp-tools/  
 
 description: Learn how to aggregate MCP tools from multiple RESTful APIs using AI MCP Proxy plugins in conversion-only and listener modes.
 
@@ -120,7 +122,6 @@ prereqs:
       - currency-route
       - listener-route
 
-automated_tests: false
 ---
 
 ## Configure the first AI MCP Proxy plugin

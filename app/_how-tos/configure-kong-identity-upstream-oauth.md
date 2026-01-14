@@ -4,7 +4,6 @@ content_type: how_to
 breadcrumbs:
   - /kong-identity/
 
-beta: true
 entities:
   - route
   - service

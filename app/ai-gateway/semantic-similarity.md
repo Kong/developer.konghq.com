@@ -283,10 +283,13 @@ rows:
 The `vectordb.threshold` parameter controls how strictly the vector database evaluates similarity during a query. It is passed directly to the vector engine—such as Redis or PGVector—and defines which results qualify as matches. In Redis, for example, this maps to the `distance_threshold` query parameter. By default, Redis sets this to `0.2`, but you can override it to suit your use case.
 
 
-The threshold can vary depending on which embedding similarity metric you're using:
-* With **cosine similarity**, the threshold defines the minimum similarity score (between 0 and 1) required for a match. A value of `1` means only exact matches qualify, while lowering the threshold (for example, to `0.6`) allows for looser, less similar matches. Higher values mean stricter matching, and lower values mean broader matching. Cosine similarity measures the angle between two embedding vectors—scores near `1` indicate strong alignment (semantic closeness or zero angle), while scores near `0` indicate orthogonality, meaning the vectors are unrelated in direction and therefore semantically dissimilar. Users often configure thresholds above `0.5` for strong matches and `0.8–0.9` for near-exact similarity.
+The threshold defines how permissive the matching is. **Higher threshold values allow looser matches, while lower values enforce stricter matching.** The threshold range is 0 to 1.
 
-* For **Euclidean distance**, the threshold defines the minimum required similarity as well, normalized to follow the same logic: `1` represents an exact match (zero distance), while `0` allows the broadest match range. Just like with cosine similarity, **higher values enforce tighter similarity**, while **lower values allow looser matches**.
+* With **cosine similarity**, Kong uses cosine distance (1 - cosine similarity) as the comparison metric. The threshold sets the maximum allowable distance between embeddings. A value of `0` requires exact matches only (zero distance). A value of `1` allows matches with any similarity level (up to maximum distance). Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
+
+* For **Euclidean distance**, the threshold is normalized to a 0–1 range and sets the maximum allowable distance between embedding vectors. A value of `0` requires exact matches (zero distance). A value of `1` permits the broadest possible matches. Typical configurations use `0.1–0.2` for strict matching and `0.5–0.8` for broader matching.
+
+In both cases, if the [{{site.base_gateway}} logs](/gateway/logs/) indicate "no target can be found under threshold X," increase the threshold value to allow more matches.
 
 The optimal threshold depends on the selected distance metric, the embedding model's dimensionality, and the variation in your data. Tuning may be required for best results.
 

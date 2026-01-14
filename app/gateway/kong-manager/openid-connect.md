@@ -193,6 +193,13 @@ rows:
       If the mapping doesn't work as expected, decode the JWT that's created by your IdP, and make sure that the admin ID token includes the key:value pair 
       `groups:["default:super-admin"]` for the case of this example, or the appropriate claim name and claim value as set in your IdP.
 
+  - param: |
+      `authenticated_groups_delimiter` {% new_in 3.12 %}
+    description: |
+      Specifies the delimiter for splitting group values retrieved from JWT claims. This lets you extract multiple groups from a single claim value.
+      <br><br>
+      The delimiter can be any of the following values: `,`, `;`, `|`.
+
   - param: "`admin_auto_create_rbac_token_disabled`"
     description: |
       This is a boolean value that enables or disables RBAC token creation when automatically creating admins with OpenID Connect. 
@@ -207,6 +214,7 @@ rows:
       <br><br>
       * Set to `true` to enable automatic admin creation
       * Set to `false` to disable automatic admin creation
+
 {% endtable %}
 
 ### Set up authenticated group mapping

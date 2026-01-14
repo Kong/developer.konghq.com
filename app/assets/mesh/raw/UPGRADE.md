@@ -7,6 +7,40 @@ Make sure to also check the upgrade notes for the matching version of [Kuma](htt
 
 ## Upgrade to `2.13.x`
 
+### AWS IAM workload label validation for MeshIdentity
+
+Starting with Kong Mesh `2.13.x`, AWS IAM role tags are validated against dataplane metadata labels (not inbound tags). When a `MeshIdentity` uses the `kuma.io/workload` label in its SPIFFE ID path template, the IAM role must include a matching `kuma.io/workload` tag.
+
+**When this applies:**
+
+This validation is only enforced when a `MeshIdentity` resource exists for the mesh AND its SPIFFE ID path template references the `kuma.io/workload` label (e.g., `{{ label "kuma.io/workload" }}`).
+
+**Migration steps:**
+
+1. For each Mesh with a `MeshIdentity` that uses `kuma.io/workload` in its SPIFFE ID path, add the `kuma.io/workload` tag to IAM roles:
+   ```
+   kuma.io/workload: <workload-name>
+   ```
+
+2. Ensure dataplanes have matching `kuma.io/workload` in metadata labels:
+   - **Kubernetes**: Add to Pod labels (automatically synced to dataplane metadata)
+   - **Universal**: Add to dataplane metadata labels:
+     ```yaml
+     type: Dataplane
+     mesh: default
+     name: dp-1
+     labels:
+       kuma.io/workload: <workload-name>
+     networking:
+       address: 127.0.0.1
+       inbound:
+         - port: 8080
+           tags:
+             kuma.io/service: backend
+     ```
+
+**Note:** Meshes without `MeshIdentity` resources or MeshIdentities that don't use `kuma.io/workload` in their SPIFFE ID path are not affected.
+
 ### OPA using `dynamicconfig` instead of xDS server
 
 Starting with Kong Mesh `2.13.x`, the Open Policy Agent (OPA) integration uses the same mechanism for dynamic configuration as DNS and MeshMetrics.
@@ -19,6 +53,18 @@ If you are using `OPAPolicy`, two choices:
 2. Disable `dynconfig` for OPA by setting: `KMESH_OPA_EXPERIMENTAL_USE_DYNAMIC_CONFIG=false` in the environment variables of the data plane.
 
 ## Upgrade to `2.11.x`
+
+### Helm upgrade with `--reuse-values` and `namespaceAllowList`
+
+If you upgrade to `2.11.8` (or earlier `2.11.x` patch versions) using Helm with the `--reuse-values` flag, the upgrade may fail with a template error related to `namespaceAllowList`.
+
+**Workaround:** Add the following to your `values.yaml` file before upgrading:
+
+```yaml
+namespaceAllowList: []
+```
+
+This issue is resolved in version `2.11.9` and later.
 
 ### Introduce an option to skip RBAC creation
 

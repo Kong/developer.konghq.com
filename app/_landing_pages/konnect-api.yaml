@@ -142,7 +142,7 @@ rows:
           config: |
             Managed system accounts, denoted by `konnect_managed:true` in the Identity API, are system accounts whose lifecycle is managed by {{site.konnect_short_name}} instead of the user. 
 
-            [Mesh Manager](/mesh-manager/) automatically creates a managed system account that is only used to issue a token during the zone creation process. 
+            {{site.konnect_short_name}} automatically creates a managed system account that is only used to issue a token during the zone creation process. 
             This managed system account can't be edited or deleted manually. 
             Instead, it is deleted automatically by {{site.konnect_short_name}} when the zone is deleted.
     

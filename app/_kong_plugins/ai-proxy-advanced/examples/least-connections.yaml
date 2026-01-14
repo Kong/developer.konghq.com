@@ -1,0 +1,65 @@
+title: 'Load balancing: Least-connections'
+description: 'Configure the plugin to use two OpenAI models and route requests based on in-flight connection counts and spare capacity.'
+
+extended_description: |
+  {% new_in 3.13 %} Configure the plugin to use two OpenAI models and route requests to the backend with the highest spare capacity based on in-flight connection counts.
+
+  In this example, both models have equal weight (2), so requests are distributed based on which backend has fewer active connections. The algorithm automatically routes new requests to backends with more spare capacity, making it particularly effective when backends have varying response times.
+
+weight: 111
+
+requirements:
+  - An OpenAI account
+
+config:
+  balancer:
+    algorithm: least-connections
+    retries: 3
+    failover_criteria:
+    - error
+    - timeout
+    - http_429
+    - non_idempotent
+  targets:
+  - model:
+      name: gpt-4o
+      provider: openai
+      options:
+        max_tokens: 1024
+        temperature: 1.0
+    route_type: llm/v1/chat
+    weight: 2
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    logging:
+      log_statistics: true
+      log_payloads: true
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 1024
+        temperature: 1.0
+    route_type: llm/v1/chat
+    weight: 2
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    logging:
+      log_statistics: true
+      log_payloads: true
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: load-balancing

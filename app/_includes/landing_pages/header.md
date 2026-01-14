@@ -1,9 +1,14 @@
 {% capture header %}
 <{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>
 
-    {% if include.config.type == 'h1' and page.tier %}
+    {% if include.config.type == 'h1' %}
         <div class="flex gap-2 items-center">
+        {% if page.tier %}
             {% include tier.html products=page.products tier=page.tier %}
+        {% endif %}
+         {%- if page.beta == true or page.tech_preview == true -%}
+            {%- include_cached badges/stage.html beta=page.beta tech_preview=page.tech_preview -%}
+         {% endif %}
         </div>
     {% endif %}
 
