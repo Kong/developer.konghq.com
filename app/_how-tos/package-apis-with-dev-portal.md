@@ -1,6 +1,6 @@
 ---
-title: "Package APIs for partners with Dev Portal"
-description: "Learn how to package existing APIs in Dev Portal into API packages for partners."
+title: "Package APIs with Dev Portal"
+description: "Learn how to compose existing APIs in Dev Portal into API packages."
 content_type: how_to
 related_resources:
   - text: About Dev Portal
@@ -9,7 +9,7 @@ related_resources:
     url: /dev-portal/api-catalog-and-packaging/
 automated_tests: false
 products:
-    - konnect
+    - gateway
     - dev-portal
 
 works_on:
@@ -29,11 +29,7 @@ tldr:
         1. Apply the Access Control Enforcement (ACE) plugin globally.
         1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
 prereqs:
-  show_works_on: false
   inline:
-    - title: "{{site.konnect_product_name}}"
-      include_content: prereqs/products/konnect-account-only
-      icon_url: /assets/icons/gateway.svg
     - title: "{{site.konnect_short_name}} roles"
       content: |
         To recover create API packages, you need the following [roles](/konnect-platform/teams-and-roles/):
@@ -46,17 +42,40 @@ prereqs:
       icon_url: /assets/icons/dev-portal.svg
     - title: Dev Portal APIs
       content: |
-        To complete this guide, you'll need an API in Dev Portal. 
+        To complete this guide, you'll need an API in Catalog. 
         1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
         1. Click [**New API**](https://cloud.konghq.com/apis/create).
         1. In the **API name** field, enter `MyAPI`.
         1. Click **Create**.
       icon_url: /assets/icons/dev-portal.svg
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
+    - title: Required entities
+      content: |
+        For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
+
+        1. Run the following command:
+           ```yaml
+           echo '
+           _format_version: "3.0"
+           services:
+             - name: example-service
+               url: http://httpbin.konghq.com/anything
+           routes:
+             - name: example-route
+               paths:
+               - "/anything"
+               methods:
+               - GET
+               - PUT
+               - POST
+               - PATCH
+               - DELETE
+               service:
+                 name: example-service
+           ' | deck gateway apply -
+           ```
+
+           To learn more about entities, you can read our [entities documentation](/gateway/entities).
+
 
 cleanup:
   inline:
@@ -71,11 +90,11 @@ You can compose API packages from existing APIs in Dev Portal. API packages allo
 * Apply rate limiting policies to an API Package, or per operation.
 * Manage role-based access control to specific developers and teams.
 
-### Associate a control plane
+## Associate a control plane
 
 To allow developers to consume your API, you must first link an API Gateway and control plane to your API.
 
-1. In {{site.konnect_short_name}}, click **Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/apis/).
 1. Click **MyAPI**.
 1. Click the **Gateway** tab.
 1. Click **Link gateway**.
@@ -84,20 +103,22 @@ To allow developers to consume your API, you must first link an API Gateway and 
 1. In the Add the Access Control and Enforcement plugin settings, click **Add plugin**.
 1. Click **Link gateway**.
 
-### Assign operations to API packages
+## Assign operations to API packages
 
-1. In {{site.konnect_short_name}}, click **Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
 1. Click **Create API package**.
-1. In the **API package name** field, enter `Partner package`.
-1. Enable the Package rate limit and configure your rate limit.
-1. Click **Add operations from APIs** in the API operations settings.
-1. In the Add API operations pane, click your API and click **Add** next to the operations you want to package.
+1. In the **API package name** field, enter `Company package`.
+1. Enable the Package rate limit.
+1. For the rate limit, enter `5` and select "Minute".
+1. In the API operations settings, click **Add operations from APIs**.
+1. In the Add API operations pane, click your API and click **Add** next to the operations you want to package. NEED TO MODIFY THIS
 1. Click **Create API package**. 
 
-### Publish packages to Dev Portal
+## Publish packages to Dev Portal
 
-1. In {{site.konnect_short_name}}, navigate to **Dev Portal** > **APIs** in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+1. In the Dev Portal sidebar, click **APIs**.
 1. Click the **API packages** tab.
 1. Click your API package.
 1. Click **Publish API**.
