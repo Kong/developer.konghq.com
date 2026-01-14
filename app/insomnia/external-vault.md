@@ -42,7 +42,7 @@ faqs:
 
 Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
 
-You can configure vault integration from the Insomnia UI, in **Preferences > Cloud Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
+You can configure vault integration from the Insomnia UI, in **Preferences > Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
 
 Insomnia supports the following vault services:
 
@@ -57,8 +57,9 @@ Insomnia supports the following vault services:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials** and select **AWS**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **AWS**.
 1. Select a **Credential Type** and fill in the required fields.
     
 {% endnavtab %}
@@ -112,8 +113,9 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
 {% endnavtab %}
 
 {% navtab "Inso CLI" %}
@@ -130,8 +132,10 @@ export INSOMNIA_GCP_SERVICEACCOUNTKEYFILEPATH = 'GCP SERVICE ACCOUNT KEY FILE PA
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **HashiCorp**, and choose your environment:
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **HashiCorp**.
+1. Choose your environment:
     * For HashiCorp Cloud Platform, select **Cloud** and provide credentials using a [service principal](https://developer.hashicorp.com/hcp/docs/hcp/iam/service-principal#create-a-service-principal) client ID and client secret.
     * For HashiCorp Vault Server, select **On-Premises** and choose an authentication method:
         * With [**AppRole**](https://developer.hashicorp.com/vault/docs/auth/approle), enter the server address, role ID, and secret ID.
@@ -171,8 +175,9 @@ For HashiCorp, the environment variables to define for Inso CLI depend on the pl
 
 ## Azure Key Vault
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **Azure**.
+1. Navigate to **Preferences > Credentials** {% new_in 12.3 %} or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **Azure**.
 1. You will be redirected to authorize Insomnia in your browser.
 1. After authorization, you'll return to Insomnia with your Azure account credential added.
 
@@ -188,4 +193,4 @@ External vault secrets can be referenced anywhere in Insomnia requests using [te
 Vault secret caching works like the following in Insomnia:
 - Secrets retrieved from cloud vault services are cached in memory for 30 minutes by default.
 - If the cache expires or is missing, Insomnia re-fetches the secret automatically.
-- You can configure cache duration and reset the cache in **Preferences > Cloud Credentials**.
+- You can configure cache duration and reset the cache in **Preferences > Credentials**.
