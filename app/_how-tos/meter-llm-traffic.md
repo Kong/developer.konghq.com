@@ -65,7 +65,9 @@ entities:
 In Metering & Billing, meters track and record the consumption of a resource or service over time.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. Enable **AI Gateway Tokens**.
+1. For AI Gateway Tokens, click **Enable Related API Gateways**.
+1. Select the `quickstart` control plane.
+1. Click **Enable 1 Gateway**.
 
 You will see `kong_konnect_llm_tokens` available from the list of available meters.
 
