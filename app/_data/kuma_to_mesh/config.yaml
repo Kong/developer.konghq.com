@@ -156,6 +156,8 @@ pages:
         url: '/mesh/resource-sizing-guidelines/'
       - text: '{{site.mesh_product_name}} version compatibility'
         url: '/mesh/version-compatibility/'
+      - text: Zone egress
+        url: /mesh/zone-egress/
     min_version:
       mesh: '2.9'
   -
@@ -254,7 +256,7 @@ pages:
     description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
     url: '/mesh/secure-access/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -268,7 +270,7 @@ pages:
     related_resources:
       - text: Data plane proxy
         url: '/mesh/data-plane-proxy/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -288,7 +290,7 @@ pages:
     related_resources:
       - text: Configure transparent proxying
         url: '/mesh/configure-transparent-proxying/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
         url: '/mesh/observability/'
@@ -331,7 +333,7 @@ pages:
     related_resources:
       - text: "{{site.mesh_product_name}} data plane on Universal"
         url: /mesh/data-plane-universal/
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -352,7 +354,7 @@ pages:
     related_resources:
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -368,7 +370,7 @@ pages:
     description: 'Configuration Reference'
     url: '/mesh/reference/kuma-cp/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -546,7 +548,7 @@ pages:
     description: 'How to deploy and configure Zone Ingress for cross-zone communication in multi-zone mode.'
     url: '/mesh/zone-ingress/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -556,16 +558,7 @@ pages:
         url: /mesh/data-plane-proxy/
       - text: "{{site.mesh_product_name}} data plane on Universal"
         url: /mesh/data-plane-universal/
-  -
-    path: app/_src/production/cp-deployment/zoneegress.md
-    title: 'Zone Egress'
-    description: 'How to configure Zone Egress to isolate cross-zone and external service traffic.'
-    url: '/mesh/zone-egress/'
-    related_resources:
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
+
   -
     path: app/_src/production/cp-deployment/zoneproxy-auth.md
     title: 'Configure zone proxy authentication'
