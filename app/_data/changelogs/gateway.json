@@ -19591,5 +19591,32 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.23": {
+    "kong": [
+      {
+        "message": "Bumped lua-resty-healthcheck to version 3.1.1 to remove incorrect deprecation notice on active healthchecks headers.\n",
+        "type": "dependency",
+        "scope": "Core"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**kafka-upstream**: Fixed issue where Kafka producer cached TLS certificates, causing failures when certificates were updated. Now, the plugin properly reloads updated certificates.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenTelemetry**: Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**core**: Improved performance of deleting expired rows for Postgres versions below 12.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
