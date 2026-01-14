@@ -19,7 +19,7 @@ related_resources:
     url: '/mesh/data-plane-universal/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
-  - text: Zone Ingress
+  - text: Zone ingress
     url: /mesh/zone-ingress/
 ---
 

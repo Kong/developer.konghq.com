@@ -156,6 +156,8 @@ pages:
         url: '/mesh/resource-sizing-guidelines/'
       - text: '{{site.mesh_product_name}} version compatibility'
         url: '/mesh/version-compatibility/'
+      - text: '{{site.mesh_product_name}} zone ingress'
+        url: /mesh/zone-ingress/
     min_version:
       mesh: '2.9'
   -
@@ -541,28 +543,12 @@ pages:
       - text: Mesh Service Discovery
         url: '/mesh/service-discovery/'
   -
-    path: app/_src/production/cp-deployment/zone-ingress.md
-    title: 'Zone Ingress'
-    description: 'How to deploy and configure Zone Ingress for cross-zone communication in multi-zone mode.'
-    url: '/mesh/zone-ingress/'
-    related_resources:
-      - text: Zone Egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
-        url: /mesh/data-plane-kubernetes/
-      - text: "{{ site.mesh_product_name }} data plane proxy"
-        url: /mesh/data-plane-proxy/
-      - text: "{{site.mesh_product_name}} data plane on Universal"
-        url: /mesh/data-plane-universal/
-  -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
     description: 'How to configure Zone Egress to isolate cross-zone and external service traffic.'
     url: '/mesh/zone-egress/'
     related_resources:
-      - text: Zone Ingress
+      - text: '{{site.mesh_product_name}} zone ingress'
         url: /mesh/zone-ingress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/

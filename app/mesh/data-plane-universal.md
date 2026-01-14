@@ -19,9 +19,9 @@ related_resources:
     url: '/mesh/data-plane-kubernetes/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
-  - text: Zone Ingress
+  - text: Zone ingress
     url: /mesh/zone-ingress/
-  - text: "{{ site.mesh_product_name }} data plane proxy"
+  - text: "Data plane proxy"
     url: /mesh/data-plane-proxy/
 ---
 
