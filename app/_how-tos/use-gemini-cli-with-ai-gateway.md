@@ -50,7 +50,7 @@ prereqs:
     - title: Gemini CLI
       icon_url: /assets/icons/gcp.svg
       content: |
-        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install and launch Gemini CLI:
+        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install and launch the Gemini CLI:
 
         1. Run the following command in your terminal to install the Gemini CLI:
 
@@ -110,23 +110,6 @@ variables:
     value: $GEMINI_API_KEY
 {% endentity_examples %}
 
-
-## Export environment variables
-
-Open a new terminal window and export the variables that the Gemini CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from Gemini CLI will route:
-
-```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
-export GEMINI_API_KEY=<your_gcp_api_key>
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-export GOOGLE_GEMINI_BASE_URL="$KONNECT_PROXY_URL/gemini"
-export GEMINI_API_KEY=<your_gcp_api_key>
-```
-{: data-deployment-topology="konnect" }
-
 ## Configure the File Log plugin
 
 Now, let's configure the [File Log](/plugins/file-log/)  plugin to inspect the traffic between Gemini CLI and AI Gateway, attach a File Log plugin to the service. This creates a local log file for examining requests and responses as Gemini CLI runs through Kong.
@@ -140,11 +123,29 @@ entities:
         path: "/tmp/gemini.json"
 {% endentity_examples %}
 
+## Export environment variables
+
+Open a new terminal window and export the variables that the Gemini CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from Gemini CLI will route:
+
+```sh
+export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
+export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+```
+{: data-deployment-topology="on-prem" }
+
+```sh
+export GOOGLE_GEMINI_BASE_URL="export KONNECT_PROXY_URL="http://localhost:8000/gemini"
+export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+```
+If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
+{: data-deployment-topology="konnect" }
+
+
 ## Validate the configuration
 
 Test the Gemini CLI setup:
 
-1. In the terminal where you exported your environment variables, run:
+1. In the terminal where you exported your Gemini environment variables, run:
 
    ```sh
    gemini --model gemini-2.5-flash
@@ -160,7 +161,7 @@ Test the Gemini CLI setup:
 
    Expected output will show the model's response to your prompt.
 
-3. Check that LLM traffic went through Kong AI Gateway:
+3. In your other terminal window, check that LLM traffic went through Kong AI Gateway:
 
     ```sh
    docker exec kong-quickstart-gateway cat /tmp/gemini.json | jq
