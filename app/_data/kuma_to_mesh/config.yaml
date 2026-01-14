@@ -156,7 +156,7 @@ pages:
         url: '/mesh/resource-sizing-guidelines/'
       - text: '{{site.mesh_product_name}} version compatibility'
         url: '/mesh/version-compatibility/'
-      - text: '{{site.mesh_product_name}} zone ingress'
+      - text: 'Zone ingress'
         url: /mesh/zone-ingress/
       - text: Zone egress
         url: /mesh/zone-egress/
