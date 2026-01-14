@@ -12,7 +12,7 @@ related_resources:
     url: /mesh/production-usage-values/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
-  - text: Kubernetes Gateway API
+  - text: Kubernetes built-in gateways with {{site.mesh_product_name}}
     url: /mesh/kubernetes-gateway-api/
 
 min_version:
@@ -212,6 +212,8 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    ```
    {:.no-copy-code}
 
+<!-- Removed until we figure out why it doesn't work
+
 ## Secure your endpoint
 
 With the gateway, we exposed the application to a public endpoint. To secure it, we'll add TLS to our endpoint.
@@ -310,3 +312,4 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    {"counter":2,"zone":""}
    ```
    {:.no-copy-code}
+-->
