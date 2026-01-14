@@ -5,7 +5,7 @@ name: 'Prisma AI Runtime Security (AIRS) API Intercept'
 content_type: plugin
 
 publisher: palo-alto-networks
-description: 'Real-time security scanning for AI/LLM traffic using Palo Alto Networks Prisma AI Runtime Security'
+description: 'Real-time security scanning for AI/LLM traffic using PAN Prisma AI Runtime Security'
 
 products:
     - gateway
