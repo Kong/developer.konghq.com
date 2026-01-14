@@ -85,7 +85,9 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model.
+First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
+
+Routing CLI tools through Kong AI Gateway removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
 
 {% entity_examples %}
 entities:
@@ -134,7 +136,7 @@ export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
 {: data-deployment-topology="on-prem" }
 
 ```sh
-export GOOGLE_GEMINI_BASE_URL="export KONNECT_PROXY_URL="http://localhost:8000/gemini"
+export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
 export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
 ```
 If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
