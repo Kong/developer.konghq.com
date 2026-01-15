@@ -26,6 +26,7 @@ plugins:
   - ai-proxy
 
 min_version:
+  gateway: '3.13'
 
 related_resources:
   - text: Kong AI Gateway
