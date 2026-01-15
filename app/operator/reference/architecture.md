@@ -1,6 +1,6 @@
 ---
 title: "{{site.operator_product_name}} architecture"
-description: Learn about the {{site.operator_product_name}} architecture with a self-hosted control plane or with {{site.konnect_short_name}}.
+description: Learn about the {{site.operator_product_name}} architecture with a self-hosted control plane or with {{site.konnect_short_name}}, with a single or multiple tenants.
 content_type: reference
 layout: reference
 
@@ -17,9 +17,6 @@ works_on:
   - konnect
 ---
 
-
-
-
 {% mermaid %}
 flowchart LR
     subgraph K8s[Kubernetes Cluster]
@@ -34,9 +31,11 @@ flowchart LR
 
         subgraph NS2[Namespace B]
             DP1[Data plane]
+            CR1["Custom Resources<br/>(Gateway API, Kong CRs)"]
         end
         subgraph NS3[Namespace C]
             DP2[Data plane]
+            CR2["Custom Resources<br/>(Gateway API, Kong CRs)"]
         end
 
         S[Upstream services]
@@ -49,14 +48,11 @@ flowchart LR
         DP1 -->|Proxy traffic| S
         DP2 -->|Proxy traffic| S
     end
-
-    C[Client]
-    C ---->|HTTP/HTTPS| DP1 & DP2
 {% endmermaid %}
 
 {% mermaid %}
 flowchart LR
-    subgraph KOKO[{{site.konnect_product_name}}]
+    subgraph KOKO["{{site.konnect_product_name}}"]
         CP[Control plane]
     end
     subgraph K8s[Kubernetes Cluster]
@@ -66,13 +62,16 @@ flowchart LR
 
         subgraph NS1[Namespace A]
             KO["{{site.operator_product_name}}<br/>(Controller Manager)"]
+            CR1["Custom Resources<br/>({{site.konnect_short_name}} CRs)"]
         end
 
         subgraph NS2[Namespace B]
             DP1[Data plane]
+            CR2["Custom Resources<br/>(Gateway API, Kong CRs)"]
         end
         subgraph NS3[Namespace C]
             DP2[Data plane]
+            CR3["Custom Resources<br/>(Gateway API, Kong CRs)"]
         end
 
         S[Upstream services]
@@ -80,16 +79,9 @@ flowchart LR
         KO -->|Reconciles| CP
         KO -->|Deploys| DP1 & DP2
 
-        
-
         DP1 -->|Proxy traffic| S
         DP2 -->|Proxy traffic| S
     end
 
-
-
     CP --->|WSS config sync| DP1 & DP2
-    
-    C[Client]
-    C ---->|HTTP/HTTPS| DP1 & DP2
 {% endmermaid %}
