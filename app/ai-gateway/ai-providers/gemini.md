@@ -34,8 +34,19 @@ related_resources:
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+
+how_to_list:
+  config:
+    products:
+      - ai-gateway
+    tags:
+      - gemini
+    description: true
+    view_more: false
 ---
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
 
 {% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
+
+{% include plugins/ai-proxy/providers/how-tos.md %}

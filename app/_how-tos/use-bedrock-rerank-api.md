@@ -34,6 +34,7 @@ entities:
 
 tags:
   - ai
+  - bedrock
 
 tldr:
   q: How do I use AWS Bedrock Rerank with the AI Proxy plugin?

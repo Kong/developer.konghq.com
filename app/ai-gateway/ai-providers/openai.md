@@ -34,7 +34,19 @@ related_resources:
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
+
+how_to_list:
+  config:
+    products:
+      - ai-gateway
+    tags:
+      - openai
+    description: true
+    view_more: false
+
 ---
 
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
+
+{% include plugins/ai-proxy/providers/how-tos.md %}

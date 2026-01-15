@@ -36,6 +36,7 @@ tags:
   - ai
   - openai
   - azure
+  - bedrock
 
 tldr:
   q: How can I use the AI AWS Guardrails plugin with AI Gateway?
