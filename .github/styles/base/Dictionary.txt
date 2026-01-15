@@ -102,6 +102,7 @@ callout
 callouts
 camelCase
 cef
+Cerebras
 certificate_admin
 charset
 chatbot
@@ -161,6 +162,7 @@ DAOs
 DAOs
 daos
 dashboarding
+Dashscope
 Datadog
 Datadog
 datadog
