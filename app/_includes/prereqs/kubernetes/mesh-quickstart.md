@@ -1,6 +1,8 @@
 1. Install {{site.mesh_product_name}}:
 
    ```sh
+   helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
+   helm repo update
    helm upgrade \
      --install \
      --create-namespace \

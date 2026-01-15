@@ -102,6 +102,8 @@ faqs:
   - q: What rerank models are available?
     a: |
       AWS Bedrock offers `cohere.rerank-v3-5:0` and `amazon.rerank-v1:0`. Cohere Rerank 3.5 is available in most regions, while Amazon Rerank 1.0 is not available in us-east-1.
+
+automated_tests: false
 ---
 
 ## Configure the plugin

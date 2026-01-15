@@ -162,6 +162,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.23": [
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.2.0": [
     {
       "message": "fix an issue that resulted in traces with invalid parent IDs when `balancer` instrumentation was enabled",

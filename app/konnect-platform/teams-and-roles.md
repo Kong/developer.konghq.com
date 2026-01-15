@@ -414,7 +414,11 @@ columns:
     key: permissions
 rows:
   - role: "`Admin`"
-    description: Owner of an existing Dev Portal instance. The owner has full write access related to any developers and applications in the organization.
+    description: |
+      Owner of an existing Dev Portal instance. The owner has full write access related to any developers and applications in the organization.
+
+      {:.warning}
+      > This role has the ability to approve, revoke, and delete application registrations.
     permissions: |
       * Read, edit, list and delete Dev Portals
       * List, create, read, edit, and delete applications
@@ -424,6 +428,7 @@ rows:
       * Add, remove, and list developers from teams
       * Create, edit, delete, read, and list API versions
       * Publish to Dev Portal
+      * Grant API access
   - role: "`Appearance Maintainer`"
     description: Access the Portal instance and edit its appearance.
     permissions: |
@@ -433,7 +438,11 @@ rows:
     permissions: |
       * Create, read, and list Dev Portals
   - role: "`Maintainer`"
-    description: Edit, view, and delete Dev Portal applications, and view developers.
+    description: |
+      Edit, view, and delete Dev Portal applications, and view developers.
+
+      {:.warning}
+      > This role has the ability to approve, revoke, and delete application registrations.
     permissions: |
       * Read and list Dev Portals
       * List, read, edit, and delete applications
@@ -441,6 +450,7 @@ rows:
       * Create, edit, delete, read, and list API versions
       * Edit Dev Portal appearance
       * Publish to Dev Portal
+      * Grant API access
   - role: "`Product Publisher`"
     description: Manage publishing products to a Dev Portal.
     permissions: |
@@ -466,7 +476,7 @@ rows:
       Can approve Dev Portal application registrations.
 
       {:.info}
-      > This role also requires the Dev Portal Viewer role to list APIs. 
+      > This role also requires the Dev Portal Viewer role to view the application registrations within a Dev Portal. 
     permissions: |
       * Read and list APIs (permission is granted per API)
       * Grant API access

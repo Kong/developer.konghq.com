@@ -47,7 +47,7 @@ providers:
       model_example: 'n/a'
       min_version: ''
       note:
-        content: 'Bedrock does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+        content: 'Bedrock does not have a dedicated Files API. File storage uses AWS S3, similar to Google Cloud Storage for Gemini.'
     image:
       generations:
         supported: true

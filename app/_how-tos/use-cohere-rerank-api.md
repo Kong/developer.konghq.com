@@ -86,6 +86,8 @@ faqs:
   - q: What models support document grounding?
     a: |
       Cohere models including `command-a-03-2025` support document-grounded chat. Refer to the Cohere documentation for the complete list of available models.
+
+automated_tests: false
 ---
 
 ## Configure the plugin
