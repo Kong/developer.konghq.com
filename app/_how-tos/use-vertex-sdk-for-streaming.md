@@ -196,9 +196,9 @@ if __name__ == "__main__":
     show_raw = "--raw" in sys.argv
     show_chunks = "--chunks" in sys.argv
     vertex_stream(show_raw, show_chunks)
+EOF
 ```
 
-## Response format
 
 The streaming endpoint returns a JSON array. Each element contains a chunk with this structure:
 
@@ -232,6 +232,7 @@ The streaming endpoint returns a JSON array. Each element contains a chunk with 
   }
 ]
 ```
+{:.no-copy-code}
 
 The script extracts the `text` field from each `parts` array and prints it incrementally. The final element includes `finishReason` and complete token usage statistics.
 
