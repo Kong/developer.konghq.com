@@ -5,6 +5,7 @@ layout: reference
 
 products:
     - dev-portal
+    - catalog
 
 breadcrumbs: 
   - /dev-portal/
@@ -26,7 +27,7 @@ description: |
     Learn how to package APIs in Dev Portal and what API packages are.
 related_resources:
   - text: Dev Portal APIs
-    url: /dev-portal/apis/
+    url: /catalog/apis/
   - text: Automate your API catalog with Dev Portal
     url: /how-to/automate-api-catalog/
   - text: Automate your API catalog with Terraform
@@ -104,53 +105,11 @@ Packaging APIs involves the following steps:
 
 ### ACE plugin
 
-Previously, when you created an API catalog in Dev Portal and linked the APIs to a Gateway Service, {{site.konnect_short_name}} would automatically apply the {{site.konnect_short_name}} application auth (KAA) plugin automatically. 
-
-API packages uses the ACE plugin instead to manage developer access control to APIs. Unlike the KAA plugin, the ACE plugin can link to control planes to configure access control and create operations for Gateway Services in those control planes. 
-
-The ACE plugin runs *after* all other [authentication plugins](/plugins/?category=authentication) run. For example, if you have Key Authentication configured and it rejects a request, the ACE plugin *will not* run. If you're using the `config.anonymous` ACE plugin configuration, the [plugin priority](/gateway/entities/plugin/#plugin-priority) needs to be set in such a way that it executes after all other authentication plugins. For example, you can set a provisional priority of 949 so the plugin runs after KAA (which has a priority  of 950).
-
+{% include plugins/ace/ace-overview.md %}
 
 #### Route matching policy
 
-When you configure the ACE plugin, you must set either `required` or `present` for `config.match_policy`. This determines how the ACE plugin will behave when a request doesn't match an existing Route.
-
-The following table describes what the `match_policy` values do and when to use each:
-{% table %}
-columns:
-  - title: Setting
-    key: setting
-  - title: Description
-    key: description
-  - title: Limitations
-    key: limitations
-  - title: Use cases
-    key: use-case
-rows:
-  - setting: |
-      `required`
-    description: |
-      Requires every incoming request to match a defined operation from an API or API package in Dev Portal. If a request doesn't match, ACE rejects the request outright with a 404. All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
-
-      {:.danger}
-      > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
-    limitations: |
-      * Misconfigurations can overexpose unintended Routes.
-      * Shuts down all traffic outside of published Dev Portal APIs.
-      * If the plugin is improperly configured, potentially all traffic could be terminated.
-    use-case: |
-      * You want to lock down {{site.konnect_short_name}} so that only traffic that is part of an explicitly defined API operation is allowed through.
-      * You only plan to provide self-service access via your Dev Portal. 
-  - setting: |
-      `if_present`
-    description: |
-      The ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
-    limitations: |
-      All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. Dev Portal will not be able to protect all operations.
-    use-case: |
-      * You have an environment where some Gateway Services or Routes are governed by Dev Portal–exposed APIs (with ACE), while others are regular Routes that should be left alone.
-      * You already have existing traffic and other access controls in place and want to avoid interruption.
-{% endtable %}
+{% include plugins/ace/ace-route-matching.md %}
 
 ### Package rate limits
 
@@ -196,36 +155,47 @@ To package APIs with Dev Portal, you need:
 
 ### Associate a control plane
 
-1. In {{site.konnect_short_name}}, navigate to **Dev Portal** > **APIs** in the sidebar.
-1. Click your API.
+1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/apis/).
+1. Click **MyAPI**.
 1. Click the **Gateway** tab.
 1. Click **Link gateway**.
-1. Select a control plane from the **Control plane** dropdown menu.
+1. From the **Control plane** dropdown menu, select your control plane.
 1. Select **Link to a control plane**.
 1. In the Add the Access Control and Enforcement plugin settings, click **Add plugin**.
 1. Click **Link gateway**.
+1. Click the **API Specification** tab.
+1. Click **Upload Spec**.
+1. Click **Select file**.
+1. Select your spec that matches your Routes.
+1. Click **Save**.
 
 Your operations should now be autogenerated based on how your OpenAPI spec maps to your Routes.
 
 ### Assign operations to API packages
 
-1. In {{site.konnect_short_name}}, navigate to **Dev Portal** > **APIs** in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
 1. Click **Create API package**.
-1. Enter a name in the **API package name** field.
+1. In the **API package name** field, enter `Company package`.
 1. Enable the Package rate limit and configure your rate limit.
-1. Click **Add operations from APIs** in the API operations settings.
-1. In the Add API operations pane, click your API and click **Add** next to the operations you want to package.
+1. In the API operations settings, click **Add operations from APIs**.
+1. In the Add API operations pane, click your API.
+1. Click **Add** next to the operations you want to package.
+1. Exit the Add API operations pane.
 1. Click **Create API package**. 
+1. Click the **Specifications** tab.
+1. Click **Generate spec from operations**.
+1. Click **Save**.
 
 ### Publish packages to Dev Portal
 
-1. In {{site.konnect_short_name}}, navigate to **Dev Portal** > **APIs** in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
 1. Click your API package.
 1. Click **Publish API**.
-1. Select your Dev Portal from the **Portal** dropdown menu.
-1. Select an auth strategy from the **Authentication strategy** dropdown menu.
-1. Click **Publish API**. 
+1. From the **Portal** dropdown menu, select your Dev Portal.
+1. From the **Authentication strategy** dropdown menu, select an auth strategy.
+1. Click **Public**.
+1. Click **Publish API**.
 
 Your API package will now be published to your Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them.
