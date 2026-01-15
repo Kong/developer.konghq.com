@@ -76,6 +76,177 @@ prereqs:
            ```
 
            To learn more about entities, you can read our [entities documentation](/gateway/entities).
+    - title: API specification
+      content: |
+        To complete this guide, you'll need an API specification that matches the Route you created. {{site.konnect_catalog}} uses the spec to add operations to your API package.
+
+        ```sh
+        cat > example-api-spec.yaml << 'EOF'
+        openapi: 3.0.0
+        info:
+          title: Example API
+          description: Example API service for testing and documentation
+          version: 1.0.0
+
+        servers:
+          - url: http://httpbin.konghq.com
+            description: Backend service (HTTP only, port 80)
+
+        paths:
+          /anything:
+            get:
+              summary: Get anything
+              description: Echo back GET request details
+              operationId: getAnything
+              tags:
+                - Echo
+              responses:
+                '200':
+                  description: Successful response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/EchoResponse'
+                '426':
+                  description: Upgrade Required (HTTPS redirect)
+                  
+            post:
+              summary: Post anything
+              description: Echo back POST request details
+              operationId: postAnything
+              tags:
+                - Echo
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      additionalProperties: true
+              responses:
+                '200':
+                  description: Successful response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/EchoResponse'
+                '426':
+                  description: Upgrade Required (HTTPS redirect)
+                        
+            put:
+              summary: Put anything
+              description: Echo back PUT request details
+              operationId: putAnything
+              tags:
+                - Echo
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      additionalProperties: true
+              responses:
+                '200':
+                  description: Successful response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/EchoResponse'
+                '426':
+                  description: Upgrade Required (HTTPS redirect)
+                        
+            patch:
+              summary: Patch anything
+              description: Echo back PATCH request details
+              operationId: patchAnything
+              tags:
+                - Echo
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      additionalProperties: true
+              responses:
+                '200':
+                  description: Successful response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/EchoResponse'
+                '426':
+                  description: Upgrade Required (HTTPS redirect)
+                        
+            delete:
+              summary: Delete anything
+              description: Echo back DELETE request details
+              operationId: deleteAnything
+              tags:
+                - Echo
+              responses:
+                '200':
+                  description: Successful response
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/EchoResponse'
+                '426':
+                  description: Upgrade Required (HTTPS redirect)
+
+        components:
+          schemas:
+            EchoResponse:
+              type: object
+              properties:
+                args:
+                  type: object
+                  description: Query parameters
+                data:
+                  type: string
+                  description: Request body data
+                files:
+                  type: object
+                  description: Uploaded files
+                form:
+                  type: object
+                  description: Form data
+                headers:
+                  type: object
+                  description: Request headers
+                json:
+                  type: object
+                  description: JSON request body
+                method:
+                  type: string
+                  description: HTTP method used
+                origin:
+                  type: string
+                  description: Origin IP address
+                url:
+                  type: string
+                  description: Request URL
+
+        x-kong-service:
+          name: example-service
+          host: httpbin.konghq.com
+          port: 80
+          protocol: http
+          path: /anything
+          retries: 5
+          connect_timeout: 60000
+          write_timeout: 60000
+          read_timeout: 60000
+
+        x-kong-route:
+          name: example-route
+          protocols: [http, https]
+          methods: [GET, POST, PUT, PATCH, DELETE]
+          paths: [/anything]
+          strip_path: true
+          preserve_host: false
+          https_redirect_status_code: 426
+        EOF
+        ```
+      icon_url: /assets/icons/dev-portal.svg
 
 
 cleanup:
@@ -103,8 +274,15 @@ To allow developers to consume your API, you must first link an API Gateway and 
 1. Select **Link to a control plane**.
 1. In the Add the Access Control and Enforcement plugin settings, click **Add plugin**.
 1. Click **Link gateway**.
+1. Click the **API Specification** tab.
+1. Click **Upload Spec**.
+1. Click **Select file**.
+1. Select `example-api-spec.yaml`.
+1. Click **Save**.
 
 ## Assign operations to API packages
+
+Now, you can create an API package by picking operations from your API.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
@@ -119,8 +297,11 @@ To allow developers to consume your API, you must first link an API Gateway and 
 1. For POST /anything, click **Add**.
 1. Exit the Add API operations pane.
 1. Click **Create API package**. 
+1. Click the **Specifications** tab.
+1. Click **Generate spec from operations**.
+1. Click **Save**.
 
-## Publish packages to Dev Portal
+## Publish API packages to Dev Portal
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
@@ -135,27 +316,4 @@ Your API package will now be published to your Dev Portal. Published API package
 
 ## Validate
 
-Now that you've published your API package with a rate limit of 5 requests per minute, you can validate that the rate limiting is working correctly.
-
-Run the following command to send 11 GET requests to your API. 
-```bash
-for _ in {1..11}; do
-  curl -i -X GET http://localhost:8000/anything
-  echo
-done
-```
-
-**Expected results:**
-
-* The first 5 requests should return `HTTP/1.1 200 OK`
-* Requests 6-11 should return `HTTP/1.1 429 Too Many Requests` with a response body indicating the rate limit has been exceeded:
-```json
-  {
-    "message": "API rate limit exceeded"
-  }
-```
-
-The ACE plugin enforces the rate limit you configured (5 requests per minute) on the API package, protecting your backend service from excessive requests.
-
-{:.note}
-> **Note:** If you don't include the `apikey` header, the request may still succeed if the ACE plugin is configured with `config.enforce_consumer_groups: if_present`. To test unauthenticated access, try the same command without the `-H "apikey: YOUR_API_KEY"` header.
+Now that you've published your API package, you can verify that it was successfully published to your Dev Portal's URL. 
