@@ -94,7 +94,7 @@ entities:
             name: gemini-2.0-flash-exp
 variables:
   gcp_api_key:
-    value: $GCP_API_KEY
+    value: $GEMINI_API_KEY
 {% endentity_examples %}
 
 ## Test with Google Generative AI SDK
@@ -102,6 +102,7 @@ variables:
 Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because Kong AI Gateway handles authentication, then sends a generation request through the gateway:
 
 ```py
+cat << 'EOF' > gemini.py
 #!/usr/bin/env python3
 import os
 from google import genai
@@ -136,6 +137,7 @@ def gemini_chat():
 
 if __name__ == "__main__":
     gemini_chat()
+EOF    
 ```
 
 Run the script:

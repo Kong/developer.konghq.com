@@ -1,2 +1,2 @@
-name: example-service
+name: gemini-service
 url: http://httpbin.konghq.com/gemini
