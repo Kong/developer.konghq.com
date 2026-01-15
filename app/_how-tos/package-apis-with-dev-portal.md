@@ -10,6 +10,7 @@ related_resources:
 automated_tests: false
 products:
     - gateway
+    - catalog
     - dev-portal
 
 works_on:
@@ -112,18 +113,49 @@ To allow developers to consume your API, you must first link an API Gateway and 
 1. Enable the Package rate limit.
 1. For the rate limit, enter `5` and select "Minute".
 1. In the API operations settings, click **Add operations from APIs**.
-1. In the Add API operations pane, click your API and click **Add** next to the operations you want to package. NEED TO MODIFY THIS
+1. In the Add API operations pane, click **MyAPI**
+1. For GET /anything, click **Add**.
+1. For PUT /anything, click **Add**.
+1. For POST /anything, click **Add**.
+1. Exit the Add API operations pane.
 1. Click **Create API package**. 
 
 ## Publish packages to Dev Portal
 
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
-1. In the Dev Portal sidebar, click **APIs**.
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
-1. Click your API package.
+1. Click **Company package**.
 1. Click **Publish API**.
-1. Select your Dev Portal from the **Portal** dropdown menu.
-1. Select an auth strategy from the **Authentication strategy** dropdown menu.
+1. From the **Portal** dropdown menu, select "test".
+1. From the **Authentication strategy** dropdown menu, select "Disabled".
+1. Click **Public**.
 1. Click **Publish API**. 
 
 Your API package will now be published to your Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them.
+
+## Validate
+
+Now that you've published your API package with a rate limit of 5 requests per minute, you can validate that the rate limiting is working correctly.
+
+Run the following command to send 11 GET requests to your API. 
+```bash
+for _ in {1..11}; do
+  curl -i -X GET http://localhost:8000/anything
+  echo
+done
+```
+
+**Expected results:**
+
+* The first 5 requests should return `HTTP/1.1 200 OK`
+* Requests 6-11 should return `HTTP/1.1 429 Too Many Requests` with a response body indicating the rate limit has been exceeded:
+```json
+  {
+    "message": "API rate limit exceeded"
+  }
+```
+
+The ACE plugin enforces the rate limit you configured (5 requests per minute) on the API package, protecting your backend service from excessive requests.
+
+{:.note}
+> **Note:** If you don't include the `apikey` header, the request may still succeed if the ACE plugin is configured with `config.enforce_consumer_groups: if_present`. To test unauthenticated access, try the same command without the `-H "apikey: YOUR_API_KEY"` header.
