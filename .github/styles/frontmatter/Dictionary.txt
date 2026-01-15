@@ -37,3 +37,10 @@ virtual_cluster
 gateway_entity
 cerebras
 dashscope
+huggingface
+gemini
+cohere
+vertex
+anthropic
+xai
+bedrock
