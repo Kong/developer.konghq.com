@@ -27,6 +27,13 @@ plugins:
 min_version:
   gateway: '3.13'
 
+related_resources:
+  - text: Kong AI Gateway
+    url: /ai-gateway/
+  - text: Kong AI Gateway plugins
+    url: /plugins/?category=ai
+  - text: AI Providers
+    url: /ai-gateway/ai-providers/
 ---
 
 

@@ -113,7 +113,7 @@ rows:
             title: xAI
             icon: /assets/icons/xai.svg
             cta:
-              url: ./#xai
+              url: /ai-gateway/ai-providers/mistral/
       - blocks:
         - type: icon_card
           config:
