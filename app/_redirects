@@ -16,6 +16,7 @@
 /ai-manager/ /ai-gateway/
 /mesh/requirements/ /mesh/version-compatibility/
 /mesh/cp-config/    /mesh/control-plane-configuration/
+/mesh/about/    /mesh/service-mesh/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -26,6 +27,8 @@
 ## How-to renames
 /how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
+/mesh/add-builtin-gateway/  /how-to/set-up-a-built-in-mesh-gateway/
+/mesh/gateway-api/  /how-to/set-up-a-built-in-kubernetes-gateway/
 
 # Mesh redirects
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
@@ -34,10 +37,10 @@
 /mesh/quickstart/universal-demo    /mesh/universal/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
-/mesh/guides/gateway-builtin    /mesh/add-builtin-gateway/
+/mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
 /mesh/guides/gateway-delegated  /mesh/gateway-delegated/
 /mesh/guides/federate   /mesh/federate/
-/mesh/guides/gateway-api    /mesh/gateway-api/
+/mesh/guides/gateway-api    /how-to/set-up-a-built-in-kubernetes-gateway/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
 /mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
