@@ -7,6 +7,8 @@ breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/ai-providers/
 
+permalink: /ai-gateway/ai-providers/openai/
+
 works_on:
  - on-prem
  - konnect
@@ -28,6 +30,4 @@ min_version:
 ---
 
 
-{% include plugins/ai-proxy/tables/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}
-
-{% include plugins/ai-proxy/tables/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
+{% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="OpenAI" %}

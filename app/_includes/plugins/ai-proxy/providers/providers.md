@@ -8,6 +8,26 @@ You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway 
 
 The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
 
+{% comment %}First pass: collect all notes and assign numbers{% endcomment %}
+{% assign all_notes = "" | split: "" %}
+{% assign files_note_num = 0 %}
+{% assign batches_note_num = 0 %}
+{% assign realtime_note_num = 0 %}
+{% assign note_counter = 0 %}
+
+{% if provider.files.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign files_note_num = note_counter %}
+{% endif %}
+{% if provider.batches.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign batches_note_num = note_counter %}
+{% endif %}
+{% if provider.realtime.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign realtime_note_num = note_counter %}
+{% endif %}
+
 {% assign has_text = false %}
 {% assign has_advanced_text = false %}
 {% assign has_processing = false %}
@@ -69,7 +89,14 @@ Support for basic text generation capabilities including chat, completions, and 
     {% if provider.chat.supported %}
     <tr>
       <td>Chat completions</td>
-      <td><code>{{ provider.chat.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.chat.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.chat.upstream_path }}</code>
+        {% else %}
+          {{ provider.chat.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.chat.route_type }}</code></td>
       <td>{{ provider.chat.streaming | to_check }}</td>
       <td>{{ provider.chat.model_example }}</td>
@@ -80,7 +107,14 @@ Support for basic text generation capabilities including chat, completions, and 
     {% if provider.completions.supported %}
     <tr>
       <td>Completions</td>
-      <td><code>{{ provider.completions.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.completions.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.completions.upstream_path }}</code>
+        {% else %}
+          {{ provider.completions.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.completions.route_type }}</code></td>
       <td>{{ provider.completions.streaming | to_check }}</td>
       <td>{{ provider.completions.model_example }}</td>
@@ -91,7 +125,14 @@ Support for basic text generation capabilities including chat, completions, and 
     {% if provider.embeddings.supported %}
     <tr>
       <td>Embeddings</td>
-      <td><code>{{ provider.embeddings.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.embeddings.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.embeddings.upstream_path }}</code>
+        {% else %}
+          {{ provider.embeddings.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.embeddings.route_type }}</code></td>
       <td>{{ provider.embeddings.streaming | to_check }}</td>
       <td>{{ provider.embeddings.model_example }}</td>
@@ -123,7 +164,14 @@ Support for function calling to allow {{ provider.name }} models to use external
     {% if provider.function_calling.supported %}
     <tr>
       <td>Function calling</td>
-      <td><code>{{ provider.function_calling.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.function_calling.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.function_calling.upstream_path }}</code>
+        {% else %}
+          {{ provider.function_calling.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.function_calling.route_type }}</code></td>
       <td>{{ provider.function_calling.streaming | to_check }}</td>
       <td>{{ provider.function_calling.model_example }}</td>
@@ -154,8 +202,15 @@ Support for file operations, batch operations, assistants, and response handling
   <tbody>
     {% if provider.files.supported %}
     <tr>
-      <td>Files{% if provider.files.note.content %}<sup>*</sup>{% endif %}</td>
-      <td><code>{{ provider.files.upstream_path }}</code></td>
+      <td>Files{% if provider.files.note.content %}<sup>{{ files_note_num }}</sup>{% endif %}</td>
+      <td>
+        {% assign path_stripped = provider.files.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.files.upstream_path }}</code>
+        {% else %}
+          {{ provider.files.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.files.route_type }}</code></td>
       <td>{{ provider.files.streaming | to_check }}</td>
       <td>{{ provider.files.model_example }}</td>
@@ -165,8 +220,15 @@ Support for file operations, batch operations, assistants, and response handling
 
     {% if provider.batches.supported %}
     <tr>
-      <td>Batches{% if provider.batches.note.content %}<sup>*</sup>{% endif %}</td>
-      <td><code>{{ provider.batches.upstream_path }}</code></td>
+      <td>Batches{% if provider.batches.note.content %}<sup>{{ batches_note_num }}</sup>{% endif %}</td>
+      <td>
+        {% assign path_stripped = provider.batches.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.batches.upstream_path }}</code>
+        {% else %}
+          {{ provider.batches.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.batches.route_type }}</code></td>
       <td>{{ provider.batches.streaming | to_check }}</td>
       <td>{{ provider.batches.model_example }}</td>
@@ -177,7 +239,14 @@ Support for file operations, batch operations, assistants, and response handling
     {% if provider.assistants.supported %}
     <tr>
       <td>Assistants</td>
-      <td><code>{{ provider.assistants.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.assistants.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.assistants.upstream_path }}</code>
+        {% else %}
+          {{ provider.assistants.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.assistants.route_type }}</code></td>
       <td>{{ provider.assistants.streaming | to_check }}</td>
       <td>{{ provider.assistants.model_example }}</td>
@@ -188,7 +257,14 @@ Support for file operations, batch operations, assistants, and response handling
     {% if provider.responses.supported %}
     <tr>
       <td>Responses</td>
-      <td><code>{{ provider.responses.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.responses.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.responses.upstream_path }}</code>
+        {% else %}
+          {{ provider.responses.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.responses.route_type }}</code></td>
       <td>{{ provider.responses.streaming | to_check }}</td>
       <td>{{ provider.responses.model_example }}</td>
@@ -198,20 +274,18 @@ Support for file operations, batch operations, assistants, and response handling
   </tbody>
 </table>
 
-{% assign has_processing_notes = false %}
 {% if provider.files.note.content or provider.batches.note.content %}
-  {% assign has_processing_notes = true %}
+**Notes:**
+
+{% if provider.files.note.content %}<sup>{{ files_note_num }}</sup> {{ provider.files.note.content }}
+
 {% endif %}
-
-{% if has_processing_notes %}
-<sup>*</sup> Notes:
-
-{% if provider.files.note.content %}* {{ provider.files.note.content }}{% endif %}
-{% if provider.batches.note.content %}* {{ provider.batches.note.content }}{% endif %}
+{% if provider.batches.note.content %}<sup>{{ batches_note_num }}</sup> {{ provider.batches.note.content }}{% endif %}
 {% endif %}
 {% endif %}
 
 {% if has_audio %}
+
 ### Audio
 
 Support for text-to-speech, transcription, and translation capabilities:
@@ -231,7 +305,14 @@ Support for text-to-speech, transcription, and translation capabilities:
     {% if provider.audio.speech.supported %}
     <tr>
       <td>Speech</td>
-      <td><code>{{ provider.audio.speech.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.audio.speech.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.audio.speech.upstream_path }}</code>
+        {% else %}
+          {{ provider.audio.speech.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.audio.speech.route_type }}</code></td>
       <td>{{ provider.audio.speech.streaming | to_check }}</td>
       <td>{{ provider.audio.speech.model_example }}</td>
@@ -242,7 +323,14 @@ Support for text-to-speech, transcription, and translation capabilities:
     {% if provider.audio.transcriptions.supported %}
     <tr>
       <td>Transcriptions</td>
-      <td><code>{{ provider.audio.transcriptions.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.audio.transcriptions.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.audio.transcriptions.upstream_path }}</code>
+        {% else %}
+          {{ provider.audio.transcriptions.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.audio.transcriptions.route_type }}</code></td>
       <td>{{ provider.audio.transcriptions.streaming | to_check }}</td>
       <td>{{ provider.audio.transcriptions.model_example }}</td>
@@ -253,7 +341,14 @@ Support for text-to-speech, transcription, and translation capabilities:
     {% if provider.audio.translations.supported %}
     <tr>
       <td>Translations</td>
-      <td><code>{{ provider.audio.translations.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.audio.translations.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.audio.translations.upstream_path }}</code>
+        {% else %}
+          {{ provider.audio.translations.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.audio.translations.route_type }}</code></td>
       <td>{{ provider.audio.translations.streaming | to_check }}</td>
       <td>{{ provider.audio.translations.model_example }}</td>
@@ -285,7 +380,14 @@ Support for image generation and editing capabilities:
     {% if provider.image.generations.supported %}
     <tr>
       <td>Generations</td>
-      <td><code>{{ provider.image.generations.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.image.generations.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.image.generations.upstream_path }}</code>
+        {% else %}
+          {{ provider.image.generations.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.image.generations.route_type }}</code></td>
       <td>{{ provider.image.generations.streaming | to_check }}</td>
       <td>{{ provider.image.generations.model_example }}</td>
@@ -296,7 +398,14 @@ Support for image generation and editing capabilities:
     {% if provider.image.edits.supported %}
     <tr>
       <td>Edits</td>
-      <td><code>{{ provider.image.edits.upstream_path }}</code></td>
+      <td>
+        {% assign path_stripped = provider.image.edits.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.image.edits.upstream_path }}</code>
+        {% else %}
+          {{ provider.image.edits.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.image.edits.route_type }}</code></td>
       <td>{{ provider.image.edits.streaming | to_check }}</td>
       <td>{{ provider.image.edits.model_example }}</td>
@@ -328,7 +437,14 @@ Support for video generation capabilities.
     {% if provider.video.generations.supported %}
     <tr>
       <td>Generations</td>
-      <td>{{ provider.video.generations.upstream_path }}</td>
+      <td>
+        {% assign path_stripped = provider.video.generations.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          {{ provider.video.generations.upstream_path }}
+        {% else %}
+          {{ provider.video.generations.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.video.generations.route_type }}</code></td>
       <td>{{ provider.video.generations.streaming | to_check }}</td>
       <td>{{ provider.video.generations.model_example }}</td>
@@ -359,8 +475,15 @@ Support for bidirectional streaming for realtime applications.
   <tbody>
     {% if provider.realtime.supported %}
     <tr>
-      <td>Realtime{% if provider.realtime.note.content %}<sup>*</sup>{% endif %}</td>
-      <td><code>{{ provider.realtime.upstream_path }}</code></td>
+      <td>Realtime{% if provider.realtime.note.content %}<sup>{{ realtime_note_num }}</sup>{% endif %}</td>
+      <td>
+        {% assign path_stripped = provider.realtime.upstream_path | strip_html %}
+        {% if path_stripped contains '/' %}
+          <code>{{ provider.realtime.upstream_path }}</code>
+        {% else %}
+          {{ provider.realtime.upstream_path }}
+        {% endif %}
+      </td>
       <td><code>{{ provider.realtime.route_type }}</code></td>
       <td>{{ provider.realtime.streaming | to_check }}</td>
       <td>{{ provider.realtime.model_example }}</td>
@@ -370,11 +493,10 @@ Support for bidirectional streaming for realtime applications.
   </tbody>
 </table>
 
-{:.info}
-> Realtime interactions are only supported via WebSocket protocol. Use the [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin to enable this capability.
-
 {% if provider.realtime.note.content %}
-<sup>*</sup> {{ provider.realtime.note.content }}
+**Note:**
+
+<sup>{{ realtime_note_num }}</sup> {{ provider.realtime.note.content }}
 {% endif %}
 {% endif %}
 
