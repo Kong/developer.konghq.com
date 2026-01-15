@@ -22,37 +22,33 @@ related_resources:
 
 ---
 
-The built-in gateway is configured using a combination of [`MeshGateway`](/mesh/gateway-listeners/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/),
-and served by Envoy instances represented by `Dataplanes` configured as built-in
-gateways. {{ site.mesh_product_name }} policies are then used to configure
-built-in gateways.
+In {{site.mesh_product_name}}, you can et up a built-in gateway using a combination of the [`MeshGateway`](/mesh/gateway-listeners/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
 
-To learn how to configure a built-in gateway in a Kubernetes environment, see [Set up a built-in gateway](/how-to/set-up-a-built-in-mesh-gateway/).
+To learn how to create a built-in gateway in a Kubernetes environment, see [Set up a built-in gateway](/how-to/set-up-a-built-in-mesh-gateway/).
 
 ## Deploying gateways
 
-The process for deploying built-in gateways is different depending on whether
-you're running in Kubernetes or Universal mode.
+The process for deploying built-in gateways is different depending on whether you're running in Kubernetes or Universal mode.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
-For managing gateway instances on Kubernetes, {{site.mesh_product_name}} provides a
-[`MeshGatewayInstance`](/mesh/gateway-pods-k8s/) CRD.
+To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/gateway-pods-k8s/) CRD.
 
-This resource launches `kuma-dp` in your cluster.
-If you are running a multi-zone {{ site.mesh_product_name }}, `MeshGatewayInstance` needs to be created in a specific zone, not the global cluster.
-See the [dedicated section](#multi-zone) for using built-in gateways on
-multi-zone.
-
-This resource manages a Kubernetes `Deployment` and `Service`
-suitable for providing service capacity for the `MeshGateway`{% if_version lte:2.6.x inline:true %} with the matching `kuma.io/service` tag{% endif_version %}.
+This resource launches the `kuma-dp` binary in your cluster.
 
 {:.warning}
-> In previous versions of {{site.mesh_product_name}}, setting the `kuma.io/service` tag directly within a `MeshGatewayInstance` resource was used to identify the service. However, this practice is deprecated and no longer recommended for security reasons since {{site.mesh_product_name}} version 2.7.0.
+> If you're running a multi-zone {{ site.mesh_product_name }}, the `MeshGatewayInstance` needs to be created in a specific zone, not in the global cluster.
+> For more information, see the [Multi-zone](#multi-zone) section.
 
-> We've automatically switched to generating the service name for you based on your `MeshGatewayInstance` resource name and namespace (format: `{name}_{namespace}_svc`).
+The `MeshGatewayInstance` resource manages a Kubernetes `Deployment` and `Service` that can provide Service capacity for the `MeshGateway`.
 
+{:.warning}
+> In previous versions of {{site.mesh_product_name}}, setting the `kuma.io/service` tag directly in a `MeshGatewayInstance` resource was used to identify the Service. However, this practice is deprecated and no longer recommended for security reasons since {{site.mesh_product_name}} version 2.7.0.
+
+> We've automatically switched to generating the Service name for you based on your `MeshGatewayInstance` resource name and namespace. The Service name is generated using the following format: `{name}_{namespace}_svc`.
+
+Here's a `MeshGatewayInstance` configuration example:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -65,11 +61,11 @@ spec:
   serviceType: LoadBalancer
 ```
 
-See [the `MeshGatewayInstance` docs](/mesh/gateway-pods-k8s/) for more options.
+See [the `MeshGatewayInstance` docs](/mesh/gateway-pods-k8s/) for more information.
 {% endnavtab %}
 {% navtab "Universal" %}
 
-You'll need to create a `Dataplane` object for your gateway:
+To manage gateway instances on Universal, you must create a `Dataplane` object for your gateway:
 
 ```yaml
 type: Dataplane
@@ -85,35 +81,31 @@ networking:
 
 Note that this gateway has an identifying `kuma.io/service` tag.
 
-Now you need to explicitly run `kuma-dp`:
+Then, run `kuma-dp` with the `Dataplane` configuration file and a [token](/mesh/dp-auth/#data-plane-proxy-token):
 
 ```shell
 kuma-dp run \
   --cp-address=https://localhost:5678/ \
   --dns-enabled=false \
-  --dataplane-token-file=kuma-token-gateway \ # this needs to be generated like for regular Dataplane
-  --dataplane-file=my-gateway.yaml # the Dataplane resource described above
+  --dataplane-token-file=$TOKEN
+  --dataplane-file=$DATAPLANE_FILE
 ```
 
 {% endnavtab %}
 {% navtab "Kubernetes without MeshGatewayInstance" %}
 
-Using `MeshGatewayInstance` is highly recommended. If for any reason you are
-unable to use `MeshGatewayInstance` to deploy builtin gateways, you can manually create a `Deployment` and `Service`
-to manage `kuma-dp` instances and forward traffic to them.
-Keep in mind however, that you'll need to keep the listeners of your
-`MeshGateway` in sync with your `Service`.
+Using `MeshGatewayInstance` is highly recommended to manage built-in gateways with Kubernetes.
+If for any reason you are unable to use `MeshGatewayInstance`, you can manually create a `Deployment` and `Service` to manage `kuma-dp` instances and forward traffic to them.
+Keep in mind however, that you'll need to keep the listeners of your `MeshGateway` in sync with your `Service`.
 
+{:.warning}
+> The following example uses resources created by a `MeshGatewayInstance` with version 2.6.2, but remember to create a `MeshGatewayInstance` for your version to configure as much as you can and use it as a basis for your self-managed resources.
 
-These instructions will use the resources created by `MeshGatewayInstance` with
-version 2.6.2 as a
-guide but remember to create a `MeshGatewayInstance` _for your version_ to configure as
-much as you can and use it as a basis for these self-managed resources.
-
-
-Given a `MeshGateway` spec:
+With the following `MeshGateway` spec:
 
 ```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshGateway
 spec:
   conf:
     listeners:
@@ -121,15 +113,14 @@ spec:
       protocol: HTTP
   selectors:
   - match:
-      kuma.io/service: demo-app_gateway
+      kuma.io/service: demo-app-gateway
 ```
 
-#### `Service`
-
-The `Service` will forward traffic to the `kuma-dp` we'll configure in the next
-section. Its `ports` need to be in sync with the `MeshGateway` `listeners`.
+The `Service` will forward traffic to the `kuma-dp` configured in the next step. Its `ports` need to be in sync with the `MeshGateway` resource's `listeners`.
 
 ```yaml
+apiVersion: v1
+kind: Service
 metadata:
   annotations:
     kuma.io/gateway: builtin
@@ -145,24 +136,21 @@ spec:
     app: demo-app-gateway
 ```
 
-The `selector` should match the `Pod` template created in the next section.
+The `selector` should match the `Pod` template created in the next step.
 
-### `Deployment`
+The `Deployment` will manage running `kuma-dp` instances that are configured to serve traffic for your `MeshGateway`.
 
-The `Deployment` we'll create will manage running some number of `kuma-dp`
-instances that are configured to serve traffic for your `MeshGateway`.
+You'll need to change:
+* The `kuma.io/tags` annotation: It must match the `MeshGateway` `selectors`.
+* The `KUMA_CONTROL_PLANE_CA_CERT` environment variable: You can retrieve the value with `kubectl get secret {{site.mesh_product_name_path}}-tls-cert -n {{site.mesh_namespace}} -o=jsonpath='{.data.ca\.crt}' | base64 -d`.
+* The `containers[0].image` field: It should be the version of {{site.mesh_product_name}} you're using.
 
-We'll cover just `spec.selector` and `spec.template` here because
-other parts of the `Deployment` can be configured arbitrarily.
-Most importantly you'll need to change:
-
-* `kuma.io/tags` annotation - must match the `MeshGateway` `selectors`
-* `KUMA_CONTROL_PLANE_CA_CERT` environment variable - can be retrieved with `kubectl get secret {{site.mesh_product_name_path}}-tls-cert -n {{site.mesh_namespace}} -o=jsonpath='{.data.ca\.crt}' | base64 -d`
-* `containers[0].image` field - should be the version of {{site.mesh_product_name}} you're using
-
-Make sure `containers[0].resources` is appropriate for your use case.
+Make sure that the `containers[0].resources` value is appropriate for your use case.
 
 ```yaml
+apiVersion: apps/v1
+kind: Deployment
+spec:
   selector:
     matchLabels:
       app: demo-app-gateway
@@ -191,23 +179,7 @@ Make sure `containers[0].resources` is appropriate for your use case.
         - name: KUMA_CONTROL_PLANE_CA_CERT
           value: |
             -----BEGIN CERTIFICATE-----
-            MIIDDzCCAfegAwIBAgIQJlMQnmK1ZfnjhDt1KvTvQTANBgkqhkiG9w0BAQsFADAS
-            MRAwDgYDVQQDEwdrdW1hLWNhMB4XDTI0MDQxNTEyMzkxNFoXDTM0MDQxMzEyMzkx
-            NFowEjEQMA4GA1UEAxMHa3VtYS1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-            AQoCggEBALp6skN+nPPRQQ7Z2ZH4eDjcTtKnO/9n/ExM99tRuMgZCdaZe7zp5g6L
-            1wvdgi3mtOlplplFaYvLlC9QPn6A7TQSCOPd28vhTIqoUhZ4V7yjr54h0bn6wmH+
-            BdVXgnalXDb+mQtyDF4dvAY3f0QyOQAK3TjRp32OX+dYKsGGWtch1yiIPf7VnWPx
-            4/K2v4DTjRuDcXg6S0x4GskGZ9zAhR1WJYEa/2uM+XBmy0GmF9INn0WOeje7Jf3c
-            G5tCd+fPP6qEk5Q+tBVHd7Pz3xfD9TZjIfY1+h00UkpC50n/yE5FDK8aUpR17SUc
-            QKJUskOivKAqRD1pI9zfhnHBJ2URfbcCAwEAAaNhMF8wDgYDVR0PAQH/BAQDAgKk
-            MB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAPBgNVHRMBAf8EBTADAQH/
-            MB0GA1UdDgQWBBQRT2hdjPpIt/FzcLJo/EWPFafCQzANBgkqhkiG9w0BAQsFAAOC
-            AQEAO0Gfe750KCk+gMtBQHfHzEyQocO2qg2JXfZrBP/+rqeozbjXQj0BLYR9NXnp
-            tLrxJHoBHdeE+TOnTFsxB7IRIkF1njEElKX4DVx7MjZCL1qLeWDuaXQmEgtFoWDM
-            o4NqPZ4BIyuZZ9IVtYdeod5g5ucRopOP66zWr/RuwKFzdzni79BGaWuA3dNmLWcn
-            MdsbZ165hdXstF6b48yPFKFrOdGgLpJheSCLlR/6vp5a+pA03fQZ6qV2j2uSqvAm
-            XYl8Q3CdoI/yAX9p4mxkcYK7xaz0fQTrD/UyGD6l2cXgY90NP6LDAW1oYKHSD7Qc
-            Y8vutIcexOtJfAdTZ3/GxBxH1Q==
+            ...
             -----END CERTIFICATE-----
         - name: KUMA_CONTROL_PLANE_URL
           value: https://{{site.mesh_cp_name}}.{{site.mesh_namespace}}:5678
@@ -301,9 +273,8 @@ Make sure `containers[0].resources` is appropriate for your use case.
 
 ## Multi-zone
 
-The {{site.mesh_product_name}} Gateway resource types, `MeshGateway`, [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/), are synced across zones by the {{site.mesh_product_name}} control plane.
-If you have a multi-zone deployment, follow existing {{site.mesh_product_name}} practice and create any {{site.mesh_product_name}} Gateway resources in the global control plane.
-Once these resources exist, you can provision serving capacity in the zones where it is needed by deploying built-in gateway `Dataplanes` (in Universal zones) or `MeshGatewayInstances` (Kubernetes zones).
+In a multi-zone deployment, the {{site.mesh_product_name}} gateway resource types `MeshGateway`, [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) are synced across zones by the {{site.mesh_product_name}} control plane.
+Follow existing {{site.mesh_product_name}} practice and create any {{site.mesh_product_name}} gateway resources in the global control plane.
+Once these resources exist, you can provision serving capacity in the zones where it's needed by deploying built-in gateway `Dataplane` resources (in Universal zones) or `MeshGatewayInstances` (in Kubernetes zones).
 
-See the [multi-zone docs](/mesh/mesh-multizone-service-deployment/) for a
-refresher.
+For more information, see [Multi-zone deployment](/mesh/mesh-multizone-service-deployment/).
