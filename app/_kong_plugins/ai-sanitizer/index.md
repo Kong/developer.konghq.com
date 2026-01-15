@@ -42,7 +42,7 @@ tags:
 faqs:
   - q: Can I use a custom PII anonymization service instead of Kong's AI PII Anonymizer?
     a: |
-      To use a custom PII service, configure the [Request Callout](https://developer.konghq.com/plugins/request-callout/) or [Datakit](https://developer.konghq.com/plugins/datakit/) plugin to:
+      To use a custom PII service, configure the [Request Callout](/plugins/request-callout/) or [Datakit](/plugins/datakit/) plugin to:
       1. Send the request payload to your PII service.
       2. Receive the sanitized response.
       3. Forward the transformed payload to the upstream service.
