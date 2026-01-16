@@ -129,15 +129,15 @@ autonumber
 <!-- vale on-->
 
 In the access phase:
-1. **Request interception**: Plugin captures incoming chat completion requests
-1. **Prompt extraction**: Extracts user messages from the request payload
-1. **Security scan**: Sends prompt to Prisma AIRS for threat analysis
-1. **Verdict enforcement**: Blocks (403) or allows request based on scan results
+1. **Request interception**: Plugin captures incoming chat completion requests.
+1. **Prompt extraction**: Extracts user messages from the request payload.
+1. **Security scan**: Sends prompt to Prisma AIRS for threat analysis.
+1. **Verdict enforcement**: Blocks (403) or allows request based on scan results.
 
 In the response phase:
-1. **Response buffering**: Captures LLM response for post-processing
-1. **Response scan**: Scans the LLM completion for security issues
-1. **Final delivery**: Returns response to client if both scans pass
+1. **Response buffering**: Captures LLM response for post-processing.
+1. **Response scan**: Scans the LLM completion for security issues.
+1. **Final delivery**: Returns response to client if both scans pass.
 
 ### Request format
 
@@ -181,11 +181,11 @@ The plugin sends enriched metadata to Prisma AIRS. Here's an example of a scan p
 
 The plugin fails closed (blocks requests) in the following scenarios:
 
-* Missing or empty user prompt
-* API communication failures
-* Non-200 API responses
-* Malformed API responses
-* Security verdict is not "allow"
+* Missing or empty user prompt.
+* API communication failures.
+* Non-200 API responses.
+* Malformed API responses.
+* Security verdict is not "allow".
 
 You can find details on each error in the [logs](#check-logs). 
 
@@ -197,13 +197,13 @@ You can install the Prisma AIRS API Intercept plugin by downloading and mounting
 
 #### Prerequisites
 
-* {{site.konnect_short_name}} account with admin access
-* {{site.konnect_short_name}} personal access token (PAT) with appropriate permissions
-* Control plane already configured
-* Data plane running (Docker or Kubernetes)
-* [Prisma AIRS API key from PAN.dev](https://docs.paloaltonetworks.com/ai-runtime-security/administration/prevent-network-security-threats/airs-apirs-manage-api-keys-profile-apps)
-* [Prisma AIRS AI security profile](https://docs.paloaltonetworks.com/network-security/security-policy/administration/security-profiles/ai-security-profile)
-* Network access to Prisma AIRS endpoints
+* {{site.konnect_short_name}} account with admin access.
+* {{site.konnect_short_name}} personal access token (PAT) with appropriate permissions.
+* Control plane already configured.
+* Data plane running (Docker or Kubernetes).
+* [Prisma AIRS API key from PAN.dev](https://docs.paloaltonetworks.com/ai-runtime-security/administration/prevent-network-security-threats/airs-apirs-manage-api-keys-profile-apps).
+* [Prisma AIRS AI security profile](https://docs.paloaltonetworks.com/network-security/security-policy/administration/security-profiles/ai-security-profile).
+* Network access to Prisma AIRS endpoints.
 
 #### Upload plugin to {{site.konnect_short_name}}
 
@@ -364,10 +364,10 @@ Now that your plugin is installed, [enable it in your environment](/plugins/pris
 #### Prerequisites
 To run this plugin, you need:
 
-* {{site.base_gateway}} 3.4 or later
+* {{site.base_gateway}} 3.4 or later.
 * [Prisma AIRS API key from PAN.dev](https://docs.paloaltonetworks.com/ai-runtime-security/administration/prevent-network-security-threats/airs-apirs-manage-api-keys-profile-apps)
-* [Prisma AIRS AI security profile](https://docs.paloaltonetworks.com/network-security/security-policy/administration/security-profiles/ai-security-profile)
-* Network access to Prisma AIRS endpoints
+* [Prisma AIRS AI security profile](https://docs.paloaltonetworks.com/network-security/security-policy/administration/security-profiles/ai-security-profile).
+* Network access to Prisma AIRS endpoints.
 
 #### Install the Prisma AIRS API Intercept plugin on {{site.base_gateway}}
 
@@ -449,16 +449,16 @@ kubectl logs -f deployment/kong-dp | grep -i "SecurePrismaAIRS"
 ## Limitations
 
 This plugin has the following limitations:
-* Response scanning requires request buffering
-* The plugin performs synchronous scanning, with a 5 second timeout per scan
-* Designed for OpenAI-compatible chat completion format only
-* The response phase can't change the HTTP status code (already sent to client)
+* Response scanning requires request buffering.
+* The plugin performs synchronous scanning, with a 5 second timeout per scan.
+* Designed for OpenAI-compatible chat completion format only.
+* The response phase can't change the HTTP status code (already sent to client).
 
 ## Security considerations
 
 When setting up the plugin, consider the following best practices:
-* Store API keys securely (use [Kong Vault](/gateway/entities/vault/) or environment variables)
-* Use SSL verification in production by setting [`ssl_verify: true`](/plugins/prisma-airs-intercept/reference/#schema--config-ssl-verify))
-* Monitor AIRS API rate limits
-* Review blocked requests regularly
-* Keep plugin files secure and readable only by Kong users
+* Store API keys securely (use [Kong Vault](/gateway/entities/vault/) or environment variables).
+* Use SSL verification in production by setting [`ssl_verify: true`](/plugins/prisma-airs-intercept/reference/#schema--config-ssl-verify)).
+* Monitor AIRS API rate limits.
+* Review blocked requests regularly.
+* Keep plugin files secure and readable only by Kong users.
