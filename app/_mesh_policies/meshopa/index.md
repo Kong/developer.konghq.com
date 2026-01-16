@@ -527,8 +527,9 @@ metadata:
     kuma.io/mesh: default
 spec:
   targetRef:
-    kind: MeshService
-    name: test-server_kuma-demo_svc_80
+    kind: Mesh
+    labels:
+      kuma.io/service: test-server_kuma-demo_svc_80
   default:
     appendPolicies:
       - rego:

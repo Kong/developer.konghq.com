@@ -1,5 +1,3 @@
-Check that `{{ include.config.type }}` is `{{ include.config.status }}` on the `{{ include.config.name }}` resource:
-
 {% assign name = include.config.name %}
 {% assign kind = include.config.kind %}
 {% assign conditionType = include.config.conditionType | default: "Programmed" %}
@@ -9,7 +7,6 @@ Check that `{{ include.config.type }}` is `{{ include.config.status }}` on the `
 {% unless include.config.disableDescription %}
 You can verify the `{{ kind }}` was reconciled successfully by checking its `{{ conditionType }}` condition.
 {% endunless %}
-
 
 ```bash
 kubectl get {% if include.config.namespace %}-n {{ include.config.namespace }} {% endif %}{{ kind | downcase }} {{ name }} \

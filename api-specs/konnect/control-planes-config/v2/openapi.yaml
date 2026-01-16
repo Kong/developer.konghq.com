@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
-  x-oas-source: kong/platform-api@87319c805a2e11ad60d52bc0f2747fc6e7cc3284
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/87319c805a2e11ad60d52bc0f2747fc6e7cc3284'
+  x-oas-source: kong/platform-api@a9e9d3f05153987999aa0775a067eaefa890c09d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a9e9d3f05153987999aa0775a067eaefa890c09d'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -267,6 +267,26 @@ paths:
           $ref: '#/components/responses/KonnectCPLegacyNotFound'
       tags:
         - Custom Plugin Schemas
+  '/control-planes/{controlPlaneId}/core-entities/targets':
+    get:
+      operationId: list-targets
+      summary: List all targets for a control plane
+      description: Returns a collection of all targets for a control plane.
+      parameters:
+        - $ref: '#/components/parameters/controlPlaneId'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListTargets'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Targets
   '/control-planes/{controlPlaneId}/config-stores':
     get:
       operationId: list-config-stores
@@ -8528,6 +8548,26 @@ components:
                     description: An ISO-8604 timestamp representation of custom plugin schema update date.
                     type: integer
                     example: 1422412345
+    ListTargets:
+      description: A paginated list response for a collection of targets.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Target'
+              page:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  next_cursor:
+                    type: string
+                  has_next_page:
+                    type: boolean
     ListConfigStoresResponse:
       description: List of Config Stores
       content:

@@ -21,7 +21,9 @@ config:
     values:
       headers:
         Content-Type: application/x-www-form-urlencoded
-      body: grant_type=client_credentials
+      body:
+        grant_type: client_credentials
+        client_id: my_client_id
 
   - name: BUILD_HEADERS
     type: jq

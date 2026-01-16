@@ -1,4 +1,26 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added support for exporting OpenTelemetry metrics via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `metrics.endpoint` parameter in the OpenTelemetry plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for exporting access logs via OTLP/HTTP protocol to an observability backend (e.g. OpenTelemetry Collector). Please enable this feature by configuring the `access_logs_endpoint` parameter in the OpenTelemetry plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the reference removing did not match the correct property in otel logs.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added the `peer.service` attribute to the balancer span to link multiple services together. This allows for better tracing of requests that span multiple services.",
@@ -136,6 +158,13 @@
     },
     {
       "message": "fix otel sampling mode lua panic bug when http_response_header_for_traceid option enable",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.23": [
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
       "type": "bugfix",
       "scope": "Plugin"
     }

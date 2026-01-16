@@ -1,0 +1,501 @@
+metadata:
+  title: "{{site.konnect_product_name}} MCP Server"
+  content_type: landing_page
+  description: "Interact with {{site.konnect_product_name}} through AI clients using MCP tools."
+  products:
+    - konnect
+  breadcrumbs:
+    - /konnect/
+    - /konnect-platform/kai/
+  tags:
+    - ai
+    - mcp
+  search_aliases:
+    - ai assistant
+  beta: true
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_product_name}} MCP Server"
+      sub_text: "Interact with {{site.konnect_product_name}} through AI assistants and IDE copilots using the Model Context Protocol (MCP). Access {{site.base_gateway}} entities, debug API performance, and search documentation from your development environment."
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The {{site.konnect_product_name}} MCP Server enables developers to manage API infrastructure and debug performance issues directly from their development environment. You can also plug in {{site.konnect_product_name}} MCP Server to your AI agents to automate tasks like configuration management and performance troubleshooting.
+
+                    The same tools available in {{site.konnect_product_name}} MCP Server power [KAi (Kong's AI assistant)](/konnect-platform/kai/), an in-product AI assistant for {{site.konnect_product_name}}.
+
+                    {:.success}
+                    > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/konnect-mcp.svg
+              alt_text: "{{site.konnect_product_name}} MCP Server"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Use cases"
+            blocks:
+              - type: text
+                text: |
+                  The {{site.konnect_product_name}} MCP Server enables several workflows for managing and debugging your API infrastructure:
+
+                  * **{{site.konnect_product_name}} entity management**: Query control planes, services, routes, consumers, consumer groups, plugins, and vaults.
+                  * **API debugging**: Create debug sessions with active tracing to investigate performance issues and identify bottlenecks.
+                  * **Analytics and monitoring**: Query API request data with filters for time range, status codes, consumers, services, and routes.
+                  * **Kong documentation search**: Search Kong's documentation for configuration guidance and troubleshooting steps.
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "When should I use an MCP Server?"
+            blocks:
+              - type: text
+                text: |
+                  Use the {{site.konnect_product_name}} MCP Server when:
+
+                  * You want to manage {{site.konnect_short_name}} resources from your IDE or terminal
+                  * You need to debug API performance issues with active tracing
+                  * You prefer working with AI assistants for infrastructure tasks
+                  * You need to query analytics and traffic patterns programmatically
+
+  - header:
+      text: "How the {{site.konnect_product_name}} MCP Server works"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  {{site.konnect_product_name}} MCP Server provides programmatic access to your {{site.konnect_short_name}} resources through the Model Context Protocol. The server exposes specialized tools that AI assistants can use to query {{site.base_gateway}} entities, analyze traffic, debug performance issues, and search documentation.
+
+                  You can connect to the MCP server from:
+                  * IDEs with MCP client support (VS Code, Cursor, IntelliJ)
+                  * AI assistants like Claude and GitHub Copilot
+                  * Claude Code CLI for terminal-based workflows
+                  * Any MCP-compatible client application
+
+                  The server connects to {{site.konnect_short_name}} backend services to retrieve {{site.base_gateway}} configuration, analytics data, active tracing sessions, and Kong's documentation. This allows AI assistants to provide contextual assistance for debugging, configuration, and operational tasks.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/konnect-mcp-architecture.svg
+            alt_text: "Kong Konnect MCP Server architecture diagram showing user environment, MCP server, and backend services"
+
+  - header:
+      text: Authentication and access
+      type: h2
+      sub_text: |
+        The {{site.konnect_product_name}} MCP Server uses token-based authentication to ensure secure access to your {{site.konnect_short_name}} resources. You can authenticate using either a Personal Access Token (PAT) or a Service Accout Access Token, depending on your use case.
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Personal Access Token**
+
+                    The MCP server can authenticate using your [Personal Access Token (PAT)](https://cloud.konghq.com/global/account/tokens), which means it only accesses resources you have permission to view. Create a token by opening the [{{site.konnect_product_name}} tokens page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**. All queries respect your organization's role-based access controls and regional data boundaries.
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **System Account Access Token**
+
+                    For automated workflows, you can also use a [System Account Access Token](https://cloud.konghq.com/global/organization/system-accounts/). SPATs are tied to specific service accounts with defined permissions, allowing secure machine-to-machine authentication without user intervention.
+  - header:
+        text: "Regional server endpoints"
+        type: h2
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The MCP server is deployed regionally. Connect to the server in the same region where your {{site.konnect_short_name}} resources are deployed.
+
+          - type: table
+            config:
+              columns:
+                - title: Region
+                  key: region
+                - title: Server URL
+                  key: url
+              rows:
+                - region: United States (US)
+                  url: "`https://us.mcp.konghq.com/`"
+                - region: Europe (EU)
+                  url: "`https://eu.mcp.konghq.com/`"
+                - region: Australia (AU)
+                  url: "`https://au.mcp.konghq.com/`"
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+
+                    **Default endpoint**
+
+                    The regional endpoint defaults to **US region**.
+
+                    Organizations using multiple {{site.konnect_product_name}} regions require separate MCP server connections for each region. Resources cannot be accessed across regions from a single connection.
+
+                    **Organization settings**
+
+                    {{site.konnect_product_name}} MCP Server access is **enabled by default**. Organization administrators can disable it from the Organization Settings.
+
+
+
+  - header:
+      text: "Installation"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT. Select your preferred client below for specific installation instructions.
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/third-party/claude.svg
+            title: Claude Code CLI
+            description: |
+              Configure MCP server using the `claude mcp add` command or by editing `~/.claude.json`
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#claude-code-cli"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/vscode.svg
+            title: Visual Studio Code
+            description: |
+              Add MCP server configuration through VS Code's Command Palette and MCP settings
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#visual-studio-code"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cursor.svg
+            title: Cursor
+            description: |
+              Configure MCP server in Cursor Settings under Tools & MCP section
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#cursor"
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/github-copilot.svg
+            title: GitHub Copilot - VS Code
+            description: |
+              Set up MCP server for GitHub Copilot extension in Visual Studio Code
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#github-copilot-for-vs-code"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/github-copilot.svg
+            title: GitHub Copilot - JetBrains
+            description: |
+              Configure MCP server for IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#github-copilot-for-jetbrains"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cog.svg
+            title: Other IDEs
+            description: |
+              Manual setup instructions for Windsurf, Eclipse, and other IDEs
+            ctas:
+              - text: Installation guide
+                url: "/konnect-platform/konnect-mcp/installation/#other-ides"
+
+  - header:
+        text: "Available tools"
+        type: h2
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The {{site.konnect_product_name}} MCP Server provides tools for managing {{site.base_gateway}} entities, debugging performance, and accessing documentation.
+                    Tool availability depends on your user permissions and organization entitlements.
+
+                    [View detailed tool reference](/konnect-platform/konnect-mcp/tools/)
+          - type: table
+            config:
+              columns:
+                - title: Tool category
+                  key: category
+                - title: Tools
+                  key: tools
+                - title: Description
+                  key: description
+              rows:
+                - category: Gateway entities
+                  tools: "[GetControlPlane](/konnect-platform/konnect-mcp/tools/#getcontrolplane), [GetControlPlaneGroup](/konnect-platform/konnect-mcp/tools/#getcontrolplanegroup), [GetConsumer](/konnect-platform/konnect-mcp/tools/#getconsumer), [GetConsumerGroup](/konnect-platform/konnect-mcp/tools/#getconsumergroup), [GetService](/konnect-platform/konnect-mcp/tools/#getservice), [GetRoute](/konnect-platform/konnect-mcp/tools/#getroute), [GetPlugin](/konnect-platform/konnect-mcp/tools/#getplugin), [GetVault](/konnect-platform/konnect-mcp/tools/#getvault)"
+                  description: Query and manage {{site.base_gateway}} configuration
+                - category: Debugging
+                  tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
+                  description: Create tracing sessions and analyze performance
+                - category: Analytics
+                  tools: "[GetAnalytics](/konnect-platform/konnect-mcp/tools/#getanalytics)"
+                  description: Query API requests and traffic patterns
+                # - category: Alerting
+                #   tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
+                #   description: Investigate alert events with pre-configured debug parameters
+                - category: Documentation
+                  tools: "[KnowledgeBaseSearch](/konnect-platform/konnect-mcp/tools/#knowledgebasesearch)"
+                  description: Search Kong documentation and best practices
+
+  - header:
+      text: "Common usage patterns"
+      type: h2
+      sub_text: |
+        The following workflows combine multiple {{site.konnect_product_name}} MCP Server tools to accomplish specific debugging and management tasks. Each pattern shows the exact sequence of tool calls needed, which IDs to extract, and how to pass them to subsequent steps.
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 1: Debugging performance issues"
+            blocks:
+              - type: text
+                text: |
+                  Create a debug session and analyze trace data to identify bottlenecks.
+        - type: text
+          config: |
+            ```text
+            1. GetControlPlane (operation="list" or "get_by_name")
+               → Select target control plane
+               → Extract control_plane_id
+
+            2. CreateDebugSession (
+                 control_plane_id=<from_step_1>,
+                 http_path="/slow-endpoint",
+                 http_latency=">=1000ms",
+                 session_duration=60
+               )
+               → Confirm with user
+               → Extract debug_session_id
+
+            3. ActiveTracingSession (
+                 control_plane_id=<from_step_1>,
+                 debug_session_id=<from_step_2>,
+                 operation="fetch_status"
+               )
+               → Wait for status="completed"
+
+            4. ActiveTracingSession (
+                 control_plane_id=<from_step_1>,
+                 debug_session_id=<from_step_2>,
+                 operation="summarize_session"
+               )
+               → Analyze bottlenecks and latency distribution
+            ```
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 2: Investigating an API endpoint"
+            blocks:
+              - type: text
+                text: |
+                  Trace an API path through control plane, route, service, and plugin configuration.
+        - type: text
+          config: |
+            ```text
+            1. GetControlPlane (operation="get_by_route", path="/api/users")
+               → Extract control_plane_id
+
+            2. GetRoute (control_plane_id=<from_step_1>, operation="list")
+               → Find route matching the path
+               → Extract service_id from route
+
+            3. GetService (control_plane_id=<from_step_1>, operation="get_by_id", service_id=<from_step_2>)
+               → Review upstream configuration
+
+            4. GetPlugin (control_plane_id=<from_step_1>, operation="list")
+               → Check plugins affecting the route/service
+            ```
+        # - type: structured_text
+        #   config:
+        #     header:
+        #       text: "Pattern 3: Alert-driven investigation"
+        #     blocks:
+        #       - type: text
+        #         text: |
+        #           Use pre-configured parameters from alert events to start targeted debugging.
+        # - type: text
+        #   config: |
+        #     ```text
+        #     1. FetchAlertingEventDetails (alert_event_id=<from_notification>)
+        #        → Extract control_plane_id
+        #        → Check if debug_session_inputs exists
+
+        #     2. If debug_session_inputs present:
+        #        CreateDebugSession (
+        #          control_plane_id=<from_step_1>,
+        #          ...spread debug_session_inputs
+        #        )
+        #        → Use pre-configured optimal filters
+
+        #     3. Otherwise:
+        #        Manually configure CreateDebugSession based on alert context
+
+        #     4. Follow Pattern 2 steps 3-4 for analysis
+        #     ```
+
+  - column_count: 2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 3: Consumer-specific analysis"
+            blocks:
+              - type: text
+                text: |
+                  Identify failing consumers and analyze their request patterns.
+        - type: text
+          config: |
+            ```text
+            1. GetControlPlane (operation="list")
+               → Select target control plane
+               → Extract control_plane_id
+
+            2. GetAnalytics (
+                 time_range="24H",
+                 operation="query_api_requests",
+                 status_codes=[500, 502, 503]
+               )
+               → Identify top failing consumers from response
+
+            3. GetConsumer (
+                 control_plane_id=<from_step_1>,
+                 operation="get_by_id",
+                 consumer_id=<from_step_2_response>
+               )
+               → Review consumer configuration
+
+            4. GetAnalytics (
+                 time_range="24H",
+                 operation="get_consumer_requests",
+                 consumer_id=<from_step_3>,
+                 failureOnly=true
+               )
+               → Analyze consumer-specific failures
+
+            5. GetPlugin (
+                 control_plane_id=<from_step_1>,
+                 operation="list"
+               )
+               → Filter for consumer-scoped auth plugins
+            ```
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Pattern 4: Configuration audit"
+            blocks:
+              - type: text
+                text: |
+                  Audit {{site.base_gateway}} configuration across all control planes.
+        - type: text
+          config: |
+            ```text
+            1. GetControlPlane (operation="list")
+               → Iterate through all control planes
+
+            2. For each control plane:
+               a. GetService (control_plane_id=<current>, operation="list")
+               b. GetRoute (control_plane_id=<current>, operation="list")
+               c. GetPlugin (control_plane_id=<current>, operation="list")
+               d. GetConsumer (control_plane_id=<current>, operation="list")
+               e. GetVault (control_plane_id=<current>, operation="list")
+
+            3. Aggregate and analyze configurations across all control planes
+            ```
+  - header:
+      text: "What's new in {{site.konnect_product_name}} MCP Server"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The following are the latest changes in {{site.konnect_product_name}} MCP Server:
+
+                  * Public Beta release (December 19, 2025)
+
+                  For a complete changelog of all {{site.konnect_product_name}} MCP Server releases, see the [{{site.konnect_product_name}} MCP Server changelog](/konnect-platform/konnect-mcp/changelog/).
+  - header:
+        text: "Frequently asked questions"
+        type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Can I disable MCP access for my organization?
+              a: |
+                MCP server access is enabled by default for all organizations. Organization admins can disable this from **Organization > Settings**, after which no user will be able to access the MCP server.
+            - q: How does user access control work for MCP tools?
+              a: |
+                Access to MCP tools is based on the permission levels of the user whose PAT is used for authentication.
+            - q: How should I structure my tool workflows?
+              a: |
+                Start with GetControlPlane to identify the correct control plane before accessing nested resources. For `get_by_name` operations that return no results, fall back to `list` and perform fuzzy matching. Always confirm CreateDebugSession parameters with the user before starting, and check `fetch_status` until the session reaches `"completed"` before analyzing traces.
+            - q: What IDs should I extract for downstream tool use?
+              a: |
+                Extract these IDs as you work through tool chains: `control_plane_id`, `debug_session_id`, `consumer_id`, `service_id`, `route_id`. Use `debug_session_inputs` from FetchAlertingEventDetails directly with CreateDebugSession for optimal alert investigation.
+            - q: How can I improve tool performance?
+              a: |
+                Apply specific filters in GetAnalytics to reduce data volume and improve response times. Check entity `enabled` flags when troubleshooting, as disabled entities can cause failures.
+            - q: I'm experiencing authentication errors. What should I check?
+              a: |
+                Verify PAT validity, check your organization hasn't disabled MCP access, and ensure the token has required permissions.
+            - q: I can't connect to the MCP server. What should I do?
+              a: |
+                Check your internet connection, verify the regional server URL is correct, and ensure your firewall isn't blocking `mcp.konghq.com`.
+            - q: A tool doesn't appear in my tool list. Why?
+              a: |
+                Verify you have the required permissions, check your organization has the necessary entitlements, confirm feature flags are enabled, and restart your MCP client.
+            - q: Tools return empty results for resources I know exist. What's wrong?
+              a: |
+                Verify you're connecting to the correct regional server URL, check which region your resources are deployed in via the {{site.konnect_product_name}} UI, and restart your MCP client after URL changes.
+            - q: Tool execution is failing. How do I troubleshoot?
+              a: |
+                Check parameter correctness, verify you have resource access permissions, wait if you're rate limited, and confirm the resource exists.

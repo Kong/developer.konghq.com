@@ -13,6 +13,7 @@ agentic
 Agno
 Agno's
 Alertmanager
+Alibaba
 allow_terminated
 allowlist
 allowlisting
@@ -20,6 +21,7 @@ allowlisted
 Amal
 Amberflo
 amberflo
+andAll
 anonymization
 anonymized
 Anonymizer
@@ -104,6 +106,7 @@ certificate_admin
 charset
 chatbot
 chatbots
+chatwise
 cidr
 cidrs
 cleartext
@@ -145,6 +148,7 @@ crd
 crds
 created_at
 creationTimestamp
+CRMs
 cronjob
 CrowdStrike
 cryptocurrency
@@ -190,6 +194,7 @@ deserialize
 deserialized
 destructuring
 dev
+devops
 Dex
 Dex
 dict
@@ -216,6 +221,7 @@ DPPs
 drilldown
 dynatrace
 Dynatrace
+eason
 ecs
 ElastiCache
 ElastiCache
@@ -236,8 +242,10 @@ etcd
 event_hook
 eventhooks
 eventTime
+evaluable
 example_service
 exfiltrate
+extra_body
 failover
 fapi
 Fargate
@@ -261,6 +269,7 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+generationConfig
 geo
 geos
 getter
@@ -277,11 +286,16 @@ gluu
 Gluu
 gojira
 Golang
+googleSearch
+goroutine
 Goroutine
-Goroutine
+goroutines
+GPUs
 gbps
 grafana
 Grafana
+greaterThan
+greaterThanOrEquals
 grpc
 grpcbin
 GRPCRoute
@@ -425,6 +439,7 @@ Knatives
 knep
 kong
 kongair
+kong_konnect_api_request
 kong_name
 kong-ip
 Kong/kong
@@ -460,9 +475,12 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
+lessThan
+lessThanOrEquals
 Librato
 Librato
 libxml2
@@ -500,6 +518,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
@@ -628,6 +647,7 @@ PostgreSQL
 PowerShell
 PowerShell
 preferred_name
+premade
 prepend
 prepended
 prepending
@@ -681,6 +701,7 @@ Rekor
 remediation
 remediations
 repo
+repos
 reportingComponent
 reportingInstance
 requery
@@ -689,9 +710,12 @@ requeue
 request_counts
 requestable
 RequestResponse
+rerank
 Rerank
+reranked
 reranking
 resourceVersion
+response_format
 Resty
 Resty
 resty
@@ -727,6 +751,8 @@ SBOMs
 SCCs
 SCCs
 schema's
+scim
+SCIM
 Scriptable
 SDKs
 search_by_username
@@ -736,6 +762,7 @@ serializer
 serverless
 serviceaccounts
 serviceless
+service_name
 shm
 show_in_api
 Sigstore
@@ -782,6 +809,8 @@ submodule
 submodule's
 subnet
 subnets
+subprocess
+subprocesses
 subresource
 substring
 subtable
@@ -823,6 +852,9 @@ Terraform's
 Terraform's
 text_splitters
 tfvars
+thinkingConfig
+thinking_budget
+imageConfig
 timeframe
 timeframes
 timeseries
@@ -924,6 +956,7 @@ Valero
 Valero
 validator
 validators
+Valkey
 vararg
 vc
 viewport
@@ -955,7 +988,9 @@ workingDir
 workqueue
 workspace
 workspace's
+xai
 xbox
+xcode
 xenial
 yaml
 yml

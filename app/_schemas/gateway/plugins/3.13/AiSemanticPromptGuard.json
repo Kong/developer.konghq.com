@@ -1,0 +1,709 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "embeddings": {
+          "properties": {
+            "auth": {
+              "properties": {
+                "allow_override": {
+                  "default": false,
+                  "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the plugin.",
+                  "type": "boolean"
+                },
+                "aws_access_key_id": {
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this plugin instance. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "aws_secret_access_key": {
+                  "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this plugin instance. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "azure_client_id": {
+                  "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "azure_client_secret": {
+                  "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "azure_tenant_id": {
+                  "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "azure_use_managed_identity": {
+                  "default": false,
+                  "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
+                  "type": "boolean"
+                },
+                "gcp_service_account_json": {
+                  "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "gcp_use_service_account": {
+                  "default": false,
+                  "description": "Use service account auth for GCP-based providers and models.",
+                  "type": "boolean"
+                },
+                "header_name": {
+                  "description": "If AI model requires authentication via Authorization or API key header, specify its name here. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "header_value": {
+                  "description": "Specify the full auth header value for 'header_name', for example 'Bearer key' or just 'key'. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "param_location": {
+                  "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body.",
+                  "enum": [
+                    "body",
+                    "query"
+                  ],
+                  "type": "string"
+                },
+                "param_name": {
+                  "description": "If AI model requires authentication via query parameter, specify its name here. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "param_value": {
+                  "description": "Specify the full parameter value for 'param_name'. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
+            },
+            "model": {
+              "properties": {
+                "name": {
+                  "description": "Model name to execute.",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "Key/value settings for the model",
+                  "properties": {
+                    "azure": {
+                      "properties": {
+                        "api_version": {
+                          "default": "2023-05-15",
+                          "description": "'api-version' for Azure OpenAI instances.",
+                          "type": "string"
+                        },
+                        "deployment_id": {
+                          "description": "Deployment ID for Azure OpenAI instances.",
+                          "type": "string"
+                        },
+                        "instance": {
+                          "description": "Instance name for Azure OpenAI hosted models.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "bedrock": {
+                      "properties": {
+                        "aws_assume_role_arn": {
+                          "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful.",
+                          "type": "string"
+                        },
+                        "aws_region": {
+                          "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option.",
+                          "type": "string"
+                        },
+                        "aws_role_session_name": {
+                          "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session.",
+                          "type": "string"
+                        },
+                        "aws_sts_endpoint_url": {
+                          "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role.",
+                          "type": "string"
+                        },
+                        "embeddings_normalize": {
+                          "default": false,
+                          "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
+                          "type": "boolean"
+                        },
+                        "performance_config_latency": {
+                          "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration.",
+                          "type": "string"
+                        },
+                        "video_output_s3_uri": {
+                          "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "gemini": {
+                      "properties": {
+                        "api_endpoint": {
+                          "description": "If running Gemini on Vertex, specify the regional API endpoint (hostname only).",
+                          "type": "string"
+                        },
+                        "location_id": {
+                          "description": "If running Gemini on Vertex, specify the location ID.",
+                          "type": "string"
+                        },
+                        "project_id": {
+                          "description": "If running Gemini on Vertex, specify the project ID.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "huggingface": {
+                      "properties": {
+                        "use_cache": {
+                          "description": "Use the cache layer on the inference API",
+                          "type": "boolean"
+                        },
+                        "wait_for_model": {
+                          "description": "Wait for the model if it is not ready",
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "upstream_url": {
+                      "description": "upstream url for the embeddings",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "provider": {
+                  "description": "AI provider format to use for embeddings API",
+                  "enum": [
+                    "azure",
+                    "bedrock",
+                    "gemini",
+                    "huggingface",
+                    "mistral",
+                    "openai"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "provider"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "model"
+          ],
+          "type": "object"
+        },
+        "genai_category": {
+          "default": "text/generation",
+          "description": "Generative AI category of the request",
+          "enum": [
+            "audio/speech",
+            "audio/transcription",
+            "image/generation",
+            "realtime/generation",
+            "text/embeddings",
+            "text/generation"
+          ],
+          "type": "string"
+        },
+        "llm_format": {
+          "default": "openai",
+          "description": "LLM input and output format and schema to use",
+          "enum": [
+            "anthropic",
+            "bedrock",
+            "cohere",
+            "gemini",
+            "huggingface",
+            "openai"
+          ],
+          "type": "string"
+        },
+        "max_request_body_size": {
+          "default": 1048576,
+          "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "type": "integer"
+        },
+        "rules": {
+          "properties": {
+            "allow_prompts": {
+              "description": "List of prompts to allow.",
+              "items": {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxLength": 100,
+              "type": "array"
+            },
+            "deny_prompts": {
+              "description": "List of prompts to deny.",
+              "items": {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxLength": 100,
+              "type": "array"
+            },
+            "match_all_conversation_history": {
+              "default": false,
+              "description": "If false, will ignore all previous chat prompts from the conversation history.",
+              "type": "boolean"
+            },
+            "match_all_roles": {
+              "default": false,
+              "description": "If true, will match all roles in addition to 'user' role in conversation history.",
+              "type": "boolean"
+            },
+            "max_request_body_size": {
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "search": {
+          "properties": {
+            "threshold": {
+              "default": 0.5,
+              "description": "Threshold for the similarity score to be considered a match.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "vectordb": {
+          "properties": {
+            "dimensions": {
+              "description": "the desired dimensionality for the vectors",
+              "type": "integer"
+            },
+            "distance_metric": {
+              "description": "the distance metric to use for vector searches",
+              "enum": [
+                "cosine",
+                "euclidean"
+              ],
+              "type": "string"
+            },
+            "pgvector": {
+              "properties": {
+                "database": {
+                  "default": "kong-pgvector",
+                  "description": "the database of the pgvector database",
+                  "type": "string"
+                },
+                "host": {
+                  "default": "127.0.0.1",
+                  "description": "the host of the pgvector database",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "the password of the pgvector database \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "port": {
+                  "default": 5432,
+                  "description": "the port of the pgvector database",
+                  "type": "integer"
+                },
+                "ssl": {
+                  "default": false,
+                  "description": "whether to use ssl for the pgvector database",
+                  "type": "boolean"
+                },
+                "ssl_cert": {
+                  "description": "the path of ssl cert to use for the pgvector database",
+                  "type": "string"
+                },
+                "ssl_cert_key": {
+                  "description": "the path of ssl cert key to use for the pgvector database",
+                  "type": "string"
+                },
+                "ssl_required": {
+                  "default": false,
+                  "description": "whether ssl is required for the pgvector database",
+                  "type": "boolean"
+                },
+                "ssl_verify": {
+                  "default": false,
+                  "description": "whether to verify ssl for the pgvector database",
+                  "type": "boolean"
+                },
+                "ssl_version": {
+                  "default": "tlsv1_2",
+                  "description": "the ssl version to use for the pgvector database",
+                  "enum": [
+                    "any",
+                    "tlsv1_2",
+                    "tlsv1_3"
+                  ],
+                  "type": "string"
+                },
+                "timeout": {
+                  "default": 5000,
+                  "description": "the timeout of the pgvector database",
+                  "type": "number"
+                },
+                "user": {
+                  "default": "postgres",
+                  "description": "the user of the pgvector database \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
+            },
+            "redis": {
+              "properties": {
+                "cloud_authentication": {
+                  "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
+                  "properties": {
+                    "auth_provider": {
+                      "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "enum": [
+                        "aws",
+                        "azure",
+                        "gcp"
+                      ],
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "aws_access_key_id": {
+                      "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "aws_assume_role_arn": {
+                      "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "aws_cache_name": {
+                      "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "aws_is_serverless": {
+                      "default": true,
+                      "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                      "type": "boolean"
+                    },
+                    "aws_region": {
+                      "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                      "type": "string",
+                      "x-referenceable": true
+                    },
+                    "aws_role_session_name": {
+                      "description": "The session name for the temporary credentials when assuming the IAM role. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "aws_secret_access_key": {
+                      "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "azure_client_id": {
+                      "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "azure_client_secret": {
+                      "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "azure_tenant_id": {
+                      "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    },
+                    "gcp_service_account_json": {
+                      "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                      "type": "string",
+                      "x-encrypted": true,
+                      "x-referenceable": true
+                    }
+                  },
+                  "type": "object"
+                },
+                "cluster_max_redirections": {
+                  "default": 5,
+                  "description": "Maximum retry attempts for redirection.",
+                  "type": "integer"
+                },
+                "cluster_nodes": {
+                  "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element.",
+                  "items": {
+                    "properties": {
+                      "ip": {
+                        "default": "127.0.0.1",
+                        "description": "A string representing a host name, such as example.com.",
+                        "type": "string"
+                      },
+                      "port": {
+                        "default": 6379,
+                        "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                        "maximum": 65535,
+                        "minimum": 0,
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "minLength": 1,
+                  "type": "array"
+                },
+                "connect_timeout": {
+                  "default": 2000,
+                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "connection_is_proxied": {
+                  "default": false,
+                  "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
+                  "type": "boolean"
+                },
+                "database": {
+                  "default": 0,
+                  "description": "Database to use for the Redis connection when using the `redis` strategy",
+                  "type": "integer"
+                },
+                "host": {
+                  "default": "127.0.0.1",
+                  "description": "A string representing a host name, such as example.com. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "keepalive_backlog": {
+                  "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "keepalive_pool_size": {
+                  "default": 256,
+                  "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+                  "maximum": 2147483646,
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "password": {
+                  "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "port": {
+                  "default": 6379,
+                  "description": "An integer representing a port number between 0 and 65535, inclusive. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "maximum": 65535,
+                  "minimum": 0,
+                  "type": "integer",
+                  "x-referenceable": true
+                },
+                "read_timeout": {
+                  "default": 2000,
+                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "send_timeout": {
+                  "default": 2000,
+                  "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                  "maximum": 2147483646,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "sentinel_master": {
+                  "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel.",
+                  "type": "string"
+                },
+                "sentinel_nodes": {
+                  "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.",
+                  "items": {
+                    "properties": {
+                      "host": {
+                        "default": "127.0.0.1",
+                        "description": "A string representing a host name, such as example.com.",
+                        "type": "string"
+                      },
+                      "port": {
+                        "default": 6379,
+                        "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                        "maximum": 65535,
+                        "minimum": 0,
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "minLength": 1,
+                  "type": "array"
+                },
+                "sentinel_password": {
+                  "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "sentinel_role": {
+                  "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.",
+                  "enum": [
+                    "any",
+                    "master",
+                    "slave"
+                  ],
+                  "type": "string"
+                },
+                "sentinel_username": {
+                  "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "server_name": {
+                  "description": "A string representing an SNI (server name indication) value for TLS. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "ssl": {
+                  "default": false,
+                  "description": "If set to true, uses SSL to connect to Redis.",
+                  "type": "boolean"
+                },
+                "ssl_verify": {
+                  "default": false,
+                  "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
+                  "type": "boolean"
+                },
+                "username": {
+                  "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
+            },
+            "strategy": {
+              "description": "which vector database driver to use",
+              "enum": [
+                "pgvector",
+                "redis"
+              ],
+              "type": "string"
+            },
+            "threshold": {
+              "description": "the default similarity threshold for accepting semantic search results (float)",
+              "type": "number"
+            }
+          },
+          "required": [
+            "dimensions",
+            "distance_metric",
+            "strategy"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "embeddings",
+        "vectordb"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

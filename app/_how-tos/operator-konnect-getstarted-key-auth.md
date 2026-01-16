@@ -1,5 +1,5 @@
 ---
-title: Key Authentication
+title: Enable Key Authentication
 description: Secure an API using the `key-auth` plugin and credentials from a `KongConsumer`.
 content_type: how_to
 permalink: /operator/konnect/get-started/key-authentication/
@@ -13,7 +13,7 @@ breadcrumbs:
 
 series:
   id: operator-konnectcrds-get-started
-  position: 7
+  position: 8
 
 tldr:
   q: How do I secure an API with key authentication using {{site.konnect_short_name}} CRDs?
@@ -29,7 +29,6 @@ tools:
 works_on:
   - konnect
 
-entities: []
 next_steps:
   - text: See the Custom resource definitions (CRDs) reference
     url: /operator/reference/custom-resources/
@@ -83,19 +82,20 @@ Keys are stored as Kubernetes `Secrets` and Consumers are managed with the `Kong
 
 1. Create a new `Secret` labeled to use `key-auth` credential type:
 
-    ```bash
-    echo '
-    apiVersion: v1
-    kind: Secret
-    metadata:
-       name: alex-key-auth
-       namespace: kong
-       labels:
-          konghq.com/credential: key-auth
-    stringData:
-       key: hello_world
-    ' | kubectl apply -f -
-    ```
+   ```bash
+   echo '
+   apiVersion: v1
+   kind: Secret
+   metadata:
+      name: alex-key-auth
+      namespace: kong
+      labels:
+         konghq.com/credential: key-auth
+         konghq.com/secret: "true"
+   stringData:
+      key: hello_world
+   ' | kubectl apply -f -
+   ```
 
 1. Create a new Consumer and attach the credential:
 
@@ -125,4 +125,4 @@ konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-    The results will return successfully.
+The request should be successful.

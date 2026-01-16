@@ -33,7 +33,7 @@ faqs:
       To close a Plus or Enterprise account, you can:
       * Go to [**My Account**](https://cloud.konghq.com/global/account) > **Delete Account**.
       * Go to Organization > Settings > General > **Deactivate Organization**
-      * Request deactivation from [Kong Support](https://support.konghq.com/).
+      * Request deactivation from Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
   - q: When is my free account deactivated?
     a: |
       A free {{site.konnect_short_name}} organization is automatically deactivated after 30
@@ -62,7 +62,7 @@ faqs:
       nodes will keep running until manually stop them.
   - q: How do I deactivate or reactivate an org?
     a: |
-      Contact [Kong Support](https://support.konghq.com/) to do any of the following:
+      Contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com) to do any of the following:
       * Deactivate an organization that you registered
       * Reactivate an organization that has been deactivated
       * Unlock an email for use with another organization
@@ -86,6 +86,20 @@ faqs:
       1. Click **Save**
       
       If an Org Owner has left the organization without transfering ownership reach out to [Kong support](https://support.konghq.com/).
+  - q: How can I create a support case in {{site.konnect_short_name}}?
+    a: |
+      If you're an org admin with an Enterprise account and a [Kong Support portal](https://support.konghq.com/support/s/) account, you can create a support case in {{site.konnect_short_name}} by navigating to the **?** icon on the top right menu and clicking **Create support case**. 
+
+      This opens a pop-up dialog where you can enter your case type, description, and the related {{site.konnect_short_name}} entity.
+
+      You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
+      
+      If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
+  - q: Can a {{site.konnect_short_name}} Organization Admin or Owner reset a {{site.konnect_short_name}} user's password?
+    a: |
+      No, {{site.konnect_short_name}} Organization Admins or Owners can't reset a user's password directly. Each user can only reset their own password.
+      
+      To reset their password, the user should go through the password reset flow from the {{site.konnect_short_name}} [login page](https://signin.cloud.konghq.com). The user should enter their email, then click on **Forgot your password?** to start the reset flow.
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).

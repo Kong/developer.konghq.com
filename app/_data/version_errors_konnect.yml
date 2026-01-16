@@ -1892,6 +1892,18 @@ messages:
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
       [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
+  - ID: D276
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more instances are configured with
+      `targets[].model.provider` field set to: `huggingface` but Kong Gateway versions
+      < 3.9.0.0 do not support this value. The impacted plugin has been removed from
+      the configuration. Because of this, features that rely on these plugins are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.9.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
   - ID: D277
     Severity: error
     Description: |
@@ -1901,6 +1913,17 @@ messages:
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
       [Injection Protection plugin](/plugins/injection-protection/)
+  - ID: D278
+    Severity: error
+    Description: |
+      For the `ai-semantic-cache` plugin, one or more of the following `config` fields
+      are set: `ignore_tool_prompts` but Kong Gateway versions < 3.9.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.9.0.0` or above.
+    DocumentationURL: |
+      [AI Semantic Cache plugin](/plugins/ai-semantic-cache/)
   - ID: D279
     Severity: error
     Description: |
@@ -2510,7 +2533,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
-      [Vault entity](/gateway/api/admin-ee/latest/#/Vault)
+      [Vault entity](/gateway/entities/vault/)
   - ID: D352
     Severity: error
     Description: |
@@ -3293,6 +3316,27 @@ messages:
       Please set the `decrease_by_fractions_in_redis` field to false.
     DocumentationURL: |
       [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
+  - ID: D445
+    Severity: error
+    Description: |
+      For the `vaults` entity, one or more of the following schema fields are set:
+      `auth_method=jwt` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Vault entity](/gateway/entities/vault/)
+  - ID: D446
+    Severity: error
+    Description: |
+      For the `vaults` entity, one or more of the following schema fields are set:
+      `jwt_role`, `oauth2_token_endpoint`, `oauth2_client_id`, `oauth2_client_secret`,
+      `oauth2_audiences` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Vault entity](/gateway/entities/vault/)
   - ID: D447
     Severity: error
     Description: |
@@ -3327,6 +3371,380 @@ messages:
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
       [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/)
+  - ID: D450
+    Severity: error
+    Description: |
+      For the `ai-aws-guardrails` plugin, one or more of the following `config` fields
+      are set: `allow_masking` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/)
+  - ID: D451
+    Severity: error
+    Description: |
+      Plugin `ai-lakera-guard` is not available in Kong Gateway versions < 3.13.0.0.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Lakera Guard plugin](/plugins/ai-lakera-guard/)
+  - ID: D452
+    Severity: error
+    Description: |
+      For the `ai-proxy` plugin, the provider `xAI` is only compatible with Kong
+      versions 3.13.0.0 and above. The provider name has been set to `OpenAI` which
+      provides best-effort compatibility with xAI and the Grok AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
+  - ID: D453
+    Severity: error
+    Description: |
+      For the `ai-request-transformer` plugin, the provider `xAI` is only compatible
+      with Kong versions 3.13.0.0 and above. The provider name has been set to
+      `OpenAI` which provides best-effort compatibility with xAI and the Grok AI
+      models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
+  - ID: D454
+    Severity: error
+    Description: |
+      For the `ai-response-transformer` plugin, the provider `xAI` is only compatible
+      with Kong versions 3.13.0.0 and above. The provider name has been set to
+      `OpenAI` which provides best-effort compatibility with xAI and the Grok AI
+      models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
+  - ID: D455
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more instance targets are configured
+      with `model.provider` field set to `xai` but Kong Gateway versions < 3.13.0.0 do
+      not support this value. The impacted targets have been removed from the
+      configuration. Because of this, features that rely on these plugins are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D459
+    Severity: error
+    Description: |
+      For the `ai-proxy` plugin, the provider `Cerebras` is only compatible with Kong
+      versions 3.13.0.0 and above. The provider name has been set to `OpenAI` which
+      provides best-effort compatibility with Cerebras AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
+  - ID: D460
+    Severity: error
+    Description: |
+      For the `ai-request-transformer` plugin, the provider `Cerebras` is only
+      compatible with Kong versions 3.13.0.0 and above. The provider name has been set
+      to `OpenAI` which provides best-effort compatibility with Cerebras AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
+  - ID: D461
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more of the following `config` fields
+      are set: `balancer.max_fails`, `balancer.fail_timeout` but Kong Gateway versions
+      < 3.13.0.0 do not support these fields. Plugin features that rely on these
+      fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D462
+    Severity: error
+    Description: |
+      For the `ai-response-transformer` plugin, the provider `Cerebras` is only
+      compatible with Kong versions 3.13.0.0 and above. The provider name has been set
+      to `OpenAI` which provides best-effort compatibility with Cerebras AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
+  - ID: D463
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more instance targets are configured
+      with `model.provider` field set to `cerebras` but Kong Gateway versions <
+      3.13.0.0 do not support this value. The impacted targets have been removed from
+      the configuration. Because of this, features that rely on these plugins are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D464
+    Severity: error
+    Description: |
+      For the `ai-sanitizer` plugin, one or more of the following `config` fields are
+      set: `skip_logging_sanitized_items` but Kong Gateway versions < 3.13.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Sanitizer plugin](/plugins/ai-sanitizer/)
+  - ID: D465
+    Severity: error
+    Description: |
+      For the `ai-rag-injector` plugin, one or more of the following `config` fields
+      are set: `global_acl_config`, `collection_acl_config`, `max_filter_clauses`,
+      `filter_mode`, `stop_on_filter_error`, `consumer_identifier` but Kong Gateway
+      versions < 3.13.0.0 do not support these fields. Plugin features that rely on
+      these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI RAG Injector plugin](/plugins/ai-rag-injector/)
+  - ID: D469
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, one or more tools have an input scheme where one
+      or more of the parameters have `in` set to `cookie`, but Kong Gateway versions <
+      3.13.0.0 do not support this value. The impacted parameters have been removed
+      from these tools. Because of this, features that rely on these parameters will
+      not work as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: D470
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, one or more tools have a structured output
+      `response` schema defined, but Kong Gateway versions < 3.13.0.0 do not support
+      this. The response schema has been removed from these tools. Because of this,
+      features that rely on these parameters will not work as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: D472
+    Severity: error
+    Description: |
+      For the `ai-proxy` plugin, the provider `Dashscope` is only compatible with Kong
+      versions 3.13.0.0 and above. The provider name has been set to `OpenAI` which
+      provides best-effort compatibility with Dashscope AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
+  - ID: D473
+    Severity: error
+    Description: |
+      For the `ai-request-transformer` plugin, the provider `Dashscope` is only
+      compatible with Kong versions 3.13.0.0 and above. The provider name has been set
+      to `OpenAI` which provides best-effort compatibility with Dashscope AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
+  - ID: D474
+    Severity: error
+    Description: |
+      For the `ai-response-transformer` plugin, the provider `Dashscope` is only
+      compatible with Kong versions 3.13.0.0 and above. The provider name has been set
+      to `OpenAI` which provides best-effort compatibility with Dashscope AI models.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
+  - ID: D475
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more instance targets are configured
+      with `model.provider` field set to `dashscope` but Kong Gateway versions <
+      3.13.0.0 do not support this value. The impacted targets have been removed from
+      the configuration. Because of this, features that rely on these plugins are not
+      working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D477
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more of the following `config` fields
+      are set: `target[].metadata` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: D478
+    Severity: error
+    Description: |
+      For the `ai-llm-as-judge` plugin, one or more of the following `config` fields
+      are set: `llm.weight`, `llm.metadata`, `llm.description` but Kong Gateway
+      versions < 3.13.0.0 do not support these fields. Plugin features that rely on
+      these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI LLM as Judge plugin](/plugins/ai-llm-as-judge/)
+  - ID: D479
+    Severity: error
+    Description: |
+      For the `ai-rag-injector` plugin, one or more of the following `config` fields
+      are set: `vectordb.threshold` but Kong Gateway versions < 3.13.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI RAG Injector plugin](/plugins/ai-rag-injector/)
+  - ID: D480
+    Severity: error
+    Description: |
+      Unsupported field `ssl_verify` for datakit call nodes
+    Resolution: |
+      Remove the invalid field or upgrade the Kong Gateway to version `3.13.0.0` or
+      above.
+    DocumentationURL: |
+      [Plugins Datakit](/plugins/datakit/)
+  - ID: D481
+    Severity: error
+    Description: |
+      For the `mtls-auth` plugin, one or more of the following `config` fields are
+      set: `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [mTLS Authentication plugin](/plugins/mtls-auth/)
+  - ID: D482
+    Severity: error
+    Description: |
+      For the `ai-aws-guardrails` plugin, one or more of the following `config` fields
+      are set: `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/)
+  - ID: D483
+    Severity: error
+    Description: |
+      For the `jwt-signer` plugin, one or more of the following `config` fields are
+      set: `access_token_endpoints_ssl_verify`, `channel_token_endpoints_ssl_verify`
+      but Kong Gateway versions < 3.13.0.0 do not support these fields. Plugin
+      features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [JWT Signer plugin](/plugins/jwt-signer/)
+  - ID: D484
+    Severity: error
+    Description: |
+      For the `ai-azure-content-safety` plugin, one or more of the following `config`
+      fields are set: `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/)
+  - ID: D485
+    Severity: error
+    Description: |
+      For the `header-cert-auth` plugin, one or more of the following `config` fields
+      are set: `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Header Certificate Authentication plugin](/plugins/header-cert-auth/)
+  - ID: D486
+    Severity: error
+    Description: |
+      For the `openid-connect` plugin, one or more of the following `config` fields
+      are set: `session_memcached_ssl`, `session_memcached_ssl_verify` but Kong
+      Gateway versions < 3.13.0.0 do not support these fields. Plugin features that
+      rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [OpenID Connect plugin](/plugins/openid-connect/)
+  - ID: D487
+    Severity: error
+    Description: |
+      For the `kafka-log` plugin, one or more of the following `config` fields are
+      set: `security.ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Kafka Log plugin](/plugins/kafka-log/)
+  - ID: D488
+    Severity: error
+    Description: |
+      For the `kafka-consume` plugin, one or more of the following `config` fields are
+      set: `security.ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Kafka Consume plugin](/plugins/kafka-consume/)
+  - ID: D489
+    Severity: error
+    Description: |
+      For the `kafka-upstream` plugin, one or more of the following `config` fields
+      are set: `security.ssl_verify` but Kong Gateway versions < 3.13.0.0 do not
+      support these fields. Plugin features that rely on these fields are not working
+      as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Kafka Upstream plugin](/plugins/kafka-upstream/)
+  - ID: D490
+    Severity: error
+    Description: |
+      Bedrock provider does not support auth.allow_override=true in Gateway versions
+      before 3.13.0.0. This configuration uses Bedrock with auth.allow_override=true
+      which requires Gateway 3.13.0.0 or above. The value has been updated to false in
+      order to preserve compatibility with older dataplane versions. The AI Proxy
+      Plugin might not work as expected as a result.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
+  - ID: D491
+    Severity: error
+    Description: |
+      For the `confluent-consume` plugin, one or more of the following `config` fields
+      are set: `security` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Confluent Consume plugin](/plugins/confluent-consume/)
+  - ID: D492
+    Severity: error
+    Description: |
+      For the `confluent` plugin, one or more of the following `config` fields are
+      set: `security` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Confluent plugin](/plugins/confluent/)
   - ID: D497
     Severity: error
     Description: |
@@ -3336,19 +3754,8 @@ messages:
       this field are not working as intended.
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
-    DocumentationURL: |    
-      [OAuth 2.0 Introspection plugin](/plugins/oauth2-introspection/)
-  - ID: E999
-    Severity: error
-    Description: |
-      For the `jwt-signer` plugin, this is not compatible with Konnect. The plugin
-      configuration will still be sent to the data plane node; however it is
-      recommended you remove the plugin until it is officially available and supported
-      in Konnect.
-    Resolution: |
-      Remove the `jwt-signer` plugin from the configuration.
     DocumentationURL: |
-      [JWT Signer plugin](/plugins/jwt-signer/)
+      [OAuth 2.0 Introspection plugin](/plugins/oauth2-introspection/)
   - ID: EOL100
     Severity: error
     Description: |
@@ -3436,7 +3843,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.10 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-platform/compatibility/)    
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: P001
     Severity: error
     Description: |
@@ -5623,7 +6030,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
-      [Custom plugins](/custom-plugins/)   
+      [Custom plugins](/custom-plugins/)
   - ID: P309
     Severity: error
     Description: |
@@ -5646,7 +6053,7 @@ messages:
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
       [AI Response Transformer plugin](/plugins/ai-response-transformer/)
-      
+
   - ID: P311
     Severity: error
     Description: |
@@ -5659,7 +6066,7 @@ messages:
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
       [AI Proxy plugin](/plugins/ai-proxy/)
-      
+
   - ID: P312
     Severity: error
     Description: |
@@ -5671,7 +6078,7 @@ messages:
       Please upgrade Kong Gateway to version `3.9.0.0` or above.
     DocumentationURL: |
       [AI Proxy plugin](/plugins/ai-proxy/)
-      
+
   - ID: P313
     Severity: error
     Description: |
@@ -5682,7 +6089,7 @@ messages:
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
       [Prometheus plugin](/plugins/prometheus/)
-      
+
   - ID: P314
     Severity: error
     Description: |
@@ -5693,7 +6100,7 @@ messages:
       Please upgrade Kong Gateway to version `3.10.0.0` or above.
     DocumentationURL: |
       [`CORS` plugin](/plugins/cors/)
-      
+
   - ID: P315
     Severity: error
     Description: |
@@ -6049,6 +6456,115 @@ messages:
       Please upgrade Kong Gateway to version `3.13.0.0` or above.
     DocumentationURL: |
       [Basic Auth plugin](/plugins/basic-auth/)
+  - ID: P349
+    Severity: warning
+    Description: |
+      For the `ai-proxy-advanced` plugin, one or more of the following fields:
+      `llm_format` have been set to one or more of the following values: `anthropic`
+      but Kong Gateway versions < 3.13.0.0 do not support these values. Impacted
+      fields have been updated to the following default values in the data plane node:
+      `openai`. Plugin features that rely on these values may not be working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: P351
+    Severity: error
+    Description: |
+      For the `opentelemetry` plugin, one or more of the following `config` fields are
+      set: `access_logs_endpoint` but Kong Gateway versions < 3.13.0.0 do not support
+      these fields. Plugin features that rely on these fields are not working as
+      intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [OpenTelemetry plugin](/plugins/opentelemetry/)
+  - ID: P352
+    Severity: error
+    Description: |
+      For the `opentelemetry` plugin, one or more of the following `config` fields are
+      set: `metrics` but Kong Gateway versions < 3.13.0.0 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [OpenTelemetry plugin](/plugins/opentelemetry/)
+  - ID: P353
+    Severity: error
+    Description: |
+      For the `opentelemetry` plugin, the `protocol` field has been set to one of:
+      `ws`, `wss`, `tcp`, `tls`, `udp`, `tls_passthrough`. This is not supported in
+      Kong Gateway versions < 3.13.0.0. Unsupported protocols have been removed. If no
+      protocols are left, the plugin has been removed in the data plane node.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [OpenTelemetry plugin](/plugins/opentelemetry/)
+  - ID: P354
+    Severity: error
+    Description: |
+      For the `datadog` plugin, one or more of the following `config` fields are set:
+      `route_name_tag` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [Datadog plugin](/plugins/datadog/)
+  - ID: P355
+    Severity: warning
+    Description: |
+      For the `ai-proxy` plugin, one or more of the following fields: `llm_format`
+      have been set to one or more of the following values: `anthropic` but Kong
+      Gateway versions < 3.13.0.0 do not support these values. Impacted fields have
+      been updated to the following default values in the data plane node: `openai`.
+      Plugin features that rely on these values may not be working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy plugin](/plugins/ai-proxy/)
+  - ID: P356
+    Severity: error
+    Description: |
+      For the `ai-request-transformer` plugin, one or more of the following `config`
+      fields are set: `llm.weight`, `llm.metadata`, `llm.description` but Kong Gateway
+      versions < 3.13.0.0 do not support these fields. Plugin features that rely on
+      these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Request Transformer plugin](/plugins/ai-request-transformer/)
+  - ID: P357
+    Severity: error
+    Description: |
+      For the `ai-response-transformer` plugin, one or more of the following `config`
+      fields are set: `llm.weight`, `llm.metadata`, `llm.description` but Kong Gateway
+      versions < 3.13.0.0 do not support these fields. Plugin features that rely on
+      these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Response Transformer plugin](/plugins/ai-response-transformer/)
+  - ID: P358
+    Severity: error
+    Description: |
+      For the `http-log` plugin, one or more of the following `config` fields are set:
+      `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [HTTP Log plugin](/plugins/http-log/)
+  - ID: P359
+    Severity: error
+    Description: |
+      For the `tcp-log` plugin, one or more of the following `config` fields are set:
+      `ssl_verify` but Kong Gateway versions < 3.13.0.0 do not support these fields.
+      Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [TCP Log plugin](/plugins/tcp-log/)
   - ID: P360
     Severity: error
     Description: |
@@ -6060,6 +6576,82 @@ messages:
       Please upgrade Kong Gateway to version `3.11.0.0` or above.
     DocumentationURL: |
       [OpenTelemetry plugin](/plugins/opentelemetry/)
+  - ID: P362
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, one or more of the following `config` fields are
+      set: `tools[].name` but Kong Gateway versions < 3.13.0.0 do not support these
+      fields. Plugin features that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: P363
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, a `default_acl` block is defined, but Kong
+      Gateway versions < 3.13.0.0 do not support this. The ACL has been removed from
+      this plugin. Because of this, features that rely on these parameters will not
+      work as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: P364
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, one or more tools have an `acl` block defined,
+      but Kong Gateway versions < 3.13.0.0 do not support this. The ACLs have been
+      removed from these tools. Because of this, features that rely on these
+      parameters will not work as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: P365
+    Severity: error
+    Description: |
+      For the `ai-mcp-proxy` plugin, one or more of the following `config` fields are
+      set: `logging.log_audits`, `include_consumer_groups`, `consumer_identifier` but
+      Kong Gateway versions < 3.13.0.0 do not support these fields. Plugin features
+      that rely on these fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/)
+  - ID: P375
+    Severity: error
+    Description: |
+      For the `ai-proxy-advanced` plugin, `config.balancer.algorithm` has been set to
+      `least-connections`. This is not supported in Kong Gateway versions < 3.13.0.0.
+      The plugin configuration has been changed to `round-robin in the data plane node
+      (default value).
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/)
+  - ID: P376
+    Severity: error
+    Description: |
+      For the `ai-rate-limiting-advanced` plugin, one or more instances have been
+      configured with the `customCost` generic LLM provider. This is not supported in
+      Kong Gateway versions < 3.13.0.0. The plugin has been removed in the data plane
+      node.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
+  - ID: P377
+    Severity: error
+    Description: |
+      For the `ai-rate-limiting-advanced` plugin, one or more of the following
+      `config` fields are set: `custom_cost_count_function` but Kong Gateway versions
+      < 3.13.0.0 do not support these fields. Plugin features that rely on these
+      fields are not working as intended.
+    Resolution: |
+      Please upgrade Kong Gateway to version `3.13.0.0` or above.
+    DocumentationURL: |
+      [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/)
   - ID: P381
     Severity: error
     Description: |

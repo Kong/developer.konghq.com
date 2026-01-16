@@ -154,6 +154,55 @@ rows:
     description: Detected feature level for a user-defined category (for example, `Hate`, `Violence`). There can be multiple entries per request depending on configuration and detected content.
 {% endtable %}
 
+### AI Lakera Guard logs {% new_in 3.13 %}
+
+If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), AI Gateway logs include additional fields under the lakera-guard object for each plugin entry. These fields provide insight into inspection behavior. For example, processing latency, request UUIDs, and violation details when requests or responses are blocked.
+
+The following fields appear in AI logs when the AI Lakera Guard plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.lakera-guard.input_processing_latency`"
+    description: |
+      The time, in milliseconds, that Lakera took to process the inspected request.
+  - property: "`ai.proxy.lakera-guard.lakera_service_url`"
+    description: |
+      The Lakera API endpoint used for inspection, such as `https://api.lakera.ai/v2/guard`.
+  - property: "`ai.proxy.lakera-guard.input_request_uuid`"
+    description: |
+      The unique identifier assigned by Lakera for the inspected request.
+  - property: "`ai.proxy.lakera-guard.lakera_project_id`"
+    description: |
+      The Lakera project identifier used for the inspection.
+  - property: "`ai.proxy.lakera-guard.input_block_detail`"
+    description: |
+      An array of violation objects present when Lakera blocks a request.  
+      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,  
+      `detected` (boolean), and `detector_type`, such as `moderated_content/hate`.
+  - property: "`ai.proxy.lakera-guard.input_block_reason`"
+    description: |
+      The detector type that caused Lakera to block the request.
+  - property: "`ai.proxy.lakera-guard.output_processing_latency`"
+    description: |
+      The time, in milliseconds, that Lakera took to process the inspected response.
+  - property: "`ai.proxy.lakera-guard.output_request_uuid`"
+    description: |
+      The unique identifier assigned by Lakera for the inspected response.
+  - property: "`ai.proxy.lakera-guard.output_block_detail`"
+    description: |
+      An array of violation objects present when Lakera blocks a response.  
+      The structure matches `input_block_detail`.
+  - property: "`ai.proxy.lakera-guard.output_block_reason`"
+    description: |
+      The detector type that caused Lakera to block the response.
+{% endtable %}
+
+
 ### AI PII Sanitizer logs {% new_in 3.10 %}
 
 If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
@@ -310,7 +359,7 @@ rows:
 
 ### AI MCP logs {% new_in 3.12 %}
 
-If you're using the [AI MCP plugin](/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, and tool usage.
+If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage and {% new_in 3.13 %} access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
@@ -347,6 +396,30 @@ rows:
     description: The error message if an error occurred during the request.
   - property: "`ai.mcp.rpc[].response_body_size`"
     description: The size of the JSON-RPC response body, in bytes.
+  - property: "`ai.mcp.audit`"
+    description: |
+      {% new_in 3.13 %} An array of access control audit entries. Each entry records whether access was allowed or denied for a specific MCP primitive or globally.
+  - property: "`ai.mcp.audit[].primitive_name`"
+    description: |
+      {% new_in 3.13 %} The name of the MCP primitive (for example, `list_users`).
+  - property: "`ai.mcp.audit[].primitive`"
+    description: |
+      {% new_in 3.13 %} The type of MCP primitive (for example, `tool`, `resource`, or `prompt`).
+  - property: "`ai.mcp.audit[].action`"
+    description: |
+      {% new_in 3.13 %} The access control decision: `allow` or `deny`.
+  - property: "`ai.mcp.audit[].consumer.name`"
+    description: |
+      {% new_in 3.13 %} The name of the consumer making the request.
+  - property: "`ai.mcp.audit[].consumer.id`"
+    description: |
+      {% new_in 3.13 %} The UUID of the consumer.
+  - property: "`ai.mcp.audit[].consumer.identifier`"
+    description: |
+      {% new_in 3.13 %} The type of consumer identifier (for example, `consumer_group`).
+  - property: "`ai.mcp.audit[].scope`"
+    description: |
+      {% new_in 3.13 %} The scope of the access control check.
 {% endtable %}
 <!-- vale on -->
 
@@ -458,22 +531,43 @@ The following example shows a structured AI Gateway log entry:
 The following example shows an MCP log entry:
 
 ```json
-"ai": {
-  "mcp": {
-    "mcp_session_id": "session-id",
-    "rpc": [
-      {
-        "id": "4",
-        "latency": 1,
-        "payload": {
-          "response": "$OPTIONAL_MCP_PAYLOAD_REQUEST",
-          "request": "$OPTIONAL_MCP_PAYLOAD_REQUEST"
-        },
-        "method": "tools/call",
-        "tool_name": "tool 1",
-        "response_body_size": 100
-      }
-    ]
+{
+  "ai": {
+    "mcp": {
+      "rpc": [
+        {
+          "method": "tools/call",
+          "latency": 6,
+          "id": "2",
+          "response_body_size": 5030,
+          "tool_name": "list_orders"
+        }
+      ],
+      "audit": [
+        {
+          "primitive_name": "list_orders",
+          "consumer": {
+            "id": "6c95a611-9991-407b-b1c3-bc608d3bccc3",
+            "name": "admin",
+            "identifier": "consumer_group"
+          },
+          "scope": "primitive",
+          "primitive": "tool",
+          "action": "allow"
+        }
+      ]
+    }
+  },
+      "rpc": [
+        {
+          "method": "tools/call",
+          "id": "1",
+          "latency": 3,
+          "tool_name": "list_orders",
+          "response_body_size": 5030
+        }
+      ]
+    }
   }
 }
 ```

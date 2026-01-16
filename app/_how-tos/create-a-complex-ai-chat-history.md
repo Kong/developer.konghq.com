@@ -63,12 +63,11 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## Configure the AI Proxy plugin
 
-Configure the [AI Proxy](/plugins/ai-proxy/) plugin to forward requests to Cohere’s `command-a-03-2025` model:
+Configure the [AI Proxy](/plugins/ai-proxy/) plugin to forward requests to OpenAI's gpt-4.1 model:
 
 {% entity_examples %}
 entities:
@@ -77,18 +76,18 @@ entities:
       config:
         route_type: llm/v1/chat
         auth:
-          header_name: api-key
+          header_name: Authorization
           header_value: Bearer ${azure_api_key}
         model:
           provider: azure
           name: gpt-4.1
           options:
-            azure_api_version: '2024-12-01-preview'
+            azure_api_version: 2024-12-01-preview
             azure_instance: ${azure_instance_name}
             azure_deployment_id: ${azure_deployment_id}
 variables:
-  cohere_api_key:
-    value: $AZURE_API_KEY
+  azure_api_key:
+    value: $AZURE_OPENAI_API_KEY
   azure_instance_name:
     value: $AZURE_INSTANCE_NAME
   azure_deployment_id:
@@ -141,6 +140,7 @@ Use the following prompts to confirm that the assistant classifies sentiment acc
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -162,6 +162,7 @@ message: |
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:
@@ -182,6 +183,7 @@ message: |
 <!-- vale off -->
 {% validation request-check %}
 url: /anything
+method: POST
 headers:
   - 'Content-Type: application/json'
 body:

@@ -95,3 +95,5 @@ This plugin extends the [Proxy Cache plugin](/plugins/proxy-cache/) with Redis, 
 ## Managing cache entities
 
 {% include_cached /plugins/caching/api.md name=page.name slug=page.slug %}
+
+{% include plugins/redis-cloud-auth.md %}

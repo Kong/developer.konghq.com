@@ -34,6 +34,9 @@ prereqs:
     - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
+    - title: "{{site.konnect_product_name}} roles"
+      include_content: prereqs/dev-portal-dcr-roles
+      icon_url: /assets/icons/gateway.svg
     - title: Dev Portal
       include_content: prereqs/dev-portal-app-reg
       icon_url: /assets/icons/dev-portal.svg

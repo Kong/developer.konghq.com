@@ -1,4 +1,31 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Enabled at-rest keyring encryption for sensitive fields in AI AWS Guardrails plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added block reason info metrics to AWS Guardrails plugin analytics.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added the flag `ssl_verify` to control\ncertificate verification when connecting to the bedrock service.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the error does not reflect the root cause when the `guardrails_version` did not match the expected pattern.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where the ai-aws-guardrails metrics could not be recorded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Add support for AWS IAM role to the ai-aws-guardrails plugin.\n",
