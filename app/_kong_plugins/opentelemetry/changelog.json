@@ -47,6 +47,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.8": [
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
