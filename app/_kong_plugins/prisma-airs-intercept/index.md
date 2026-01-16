@@ -458,7 +458,7 @@ This plugin has the following limitations:
 
 When setting up the plugin, consider the following best practices:
 * Store API keys securely (use [Kong Vault](/gateway/entities/vault/) or environment variables).
-* Use SSL verification in production by setting [`ssl_verify: true`](/plugins/prisma-airs-intercept/reference/#schema--config-ssl-verify)).
+* Use SSL verification in production by setting [`ssl_verify: true`](/plugins/prisma-airs-intercept/reference/#schema--config-ssl-verify).
 * Monitor AIRS API rate limits.
 * Review blocked requests regularly.
 * Keep plugin files secure and readable only by Kong users.
