@@ -146,6 +146,9 @@ To begin using the Debugger, ensure the following requirements are met:
 
 Once the session starts, traces will be captured for requests that match the rule. Click a trace to view it in the span viewer.
 
+{:.success}
+> You can also start a debug session from the overview page of a control plane, Gateway Service, or Route by clicking the **Actions** dropdown menu and clicking **Start Debugging**. Additionally, you can use [KAi](/konnect-platform/kai/) to debug as well. 
+
 Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 7 days.
 
 For details on defining sampling rules, see [Debugger sessions](#debugger-sessions).
