@@ -204,7 +204,7 @@ Renew your certificates to prevent any interruption in communication between
 {{site.konnect_short_name}} and any configured Data Plane nodes. The following happens if a certificate expires and isn't replaced: 
 * The Data Plane node stops receiving configuration updates from
 the Control Plane.
-* The Data Plane node stops sending [analytics](/advanced-analytics/) and usage data to the Control Plane.
+* The Data Plane node stops sending [analytics](/observability/) and usage data to the Control Plane.
 * Each disconnected Data Plane node uses cached configuration to continue
 proxying and routing traffic.
 
