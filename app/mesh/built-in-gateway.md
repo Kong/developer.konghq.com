@@ -39,12 +39,24 @@ To learn how to create a built-in gateway in a Kubernetes environment, see [Set 
 
 ## Deploying gateways
 
-The process for deploying built-in gateways is different depending on whether you're running in Kubernetes or Universal mode.
+The process for deploying built-in gateways is different depending on whether you're running in [Kubernetes](/mesh/kubernetes/) or [Universal](/mesh/universal/) mode.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/gateway-pods-k8s/) CRD.
+Here's a `MeshGatewayInstance` configuration example:
+
+```yaml
+apiVersion: kuma.io/v1alpha1
+kind: MeshGatewayInstance
+metadata:
+  name: edge-gateway
+  namespace: default
+spec:
+  replicas: 1
+  serviceType: LoadBalancer
+```
 
 This resource launches the `kuma-dp` binary in your cluster.
 
@@ -59,18 +71,6 @@ The `MeshGatewayInstance` resource manages a Kubernetes `Deployment` and `Servic
 
 > We've automatically switched to generating the Service name for you based on your `MeshGatewayInstance` resource name and namespace. The Service name is generated using the following format: `{name}_{namespace}_svc`.
 
-Here's a `MeshGatewayInstance` configuration example:
-
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshGatewayInstance
-metadata:
-  name: edge-gateway
-  namespace: default
-spec:
-  replicas: 1
-  serviceType: LoadBalancer
-```
 
 See [the `MeshGatewayInstance` docs](/mesh/gateway-pods-k8s/) for more information.
 {% endnavtab %}
@@ -112,7 +112,7 @@ Keep in mind however, that you'll need to keep the listeners of your `MeshGatewa
 {:.warning}
 > The following example uses resources created by a `MeshGatewayInstance` with version 2.6.2, but remember to create a `MeshGatewayInstance` for your version to configure as much as you can and use it as a basis for your self-managed resources.
 
-With the following `MeshGateway` spec:
+Here's an example `MeshGateway` spec:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -127,7 +127,7 @@ spec:
       kuma.io/service: demo-app-gateway
 ```
 
-The `Service` will forward traffic to the `kuma-dp` configured in the next step. Its `ports` need to be in sync with the `MeshGateway` resource's `listeners`.
+The `Service` will forward traffic to the `kuma-dp` configured in the next step. Its `ports` need to be in sync with the `MeshGateway` resource's `listeners`:
 
 ```yaml
 apiVersion: v1
