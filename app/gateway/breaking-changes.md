@@ -255,7 +255,8 @@ While the `+` character represents the correct encoding of space in query string
 
 #### Free mode
 
-Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
+At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
 
 #### Known issues in 3.10.0.0
 
