@@ -48,4 +48,3 @@ related_resources:
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Cerebras" %}
 
-<!-- {% include plugins/ai-proxy/providers/how-tos.md %} -->
