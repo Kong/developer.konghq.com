@@ -272,6 +272,8 @@ gcp
 generationConfig
 geo
 geos
+gemini
+Gemini
 getter
 getters
 gevent
