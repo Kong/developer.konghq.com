@@ -37,7 +37,7 @@ rows:
         - type: card
           config:
             title: macOS
-            description: Download Insomnia for macOS.
+            description: Download and install Insomnia for macOS.
             icon:  /assets/icons/third-party/mac.svg
             cta:
               text: macOS Download
@@ -46,7 +46,7 @@ rows:
         - type: card
           config:
             title: Windows
-            description: Download Insomnia for Windows.
+            description: Download and install Insomnia for Windows.
             icon: /assets/icons/third-party/windows.svg
             cta:
               text: Windows Download
@@ -55,7 +55,7 @@ rows:
         - type: card
           config:
             title: Linux
-            description: Download Insomnia for Linux.
+            description: Download and install Insomnia for Linux.
             icon: /assets/icons/third-party/linux.svg
             cta:
               text: Linux Download
