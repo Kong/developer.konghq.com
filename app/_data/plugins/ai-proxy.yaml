@@ -156,6 +156,8 @@ providers:
       route_type: 'llm/v1/embeddings'
       model_example: 'text-embedding-ada-002<sup>1</sup>'
       min_version: '3.11'
+      note:
+        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use text-embedding-3-small for dynamic dimensions.'
     function_calling:
       supported: true
       streaming: false
@@ -184,6 +186,8 @@ providers:
       route_type: 'llm/v1/assistants'
       model_example: 'n/a'
       min_version: '3.11'
+      note:
+        content: 'Assistans API requires header <code>OpenAI-Beta: assistants=v2</code>'
     responses:
       supported: true
       streaming: false
@@ -191,6 +195,8 @@ providers:
       route_type: 'llm/v1/responses'
       model_example: 'n/a'
       min_version: '3.11'
+      note:
+        content: 'Responses API requires <code>config.azure_api_version</code> set to <code>"preview"</code>'
     audio:
       speech:
         supported: true
@@ -235,6 +241,8 @@ providers:
       route_type: 'realtime/v1/realtime'
       model_example: 'n/a'
       min_version: '3.11'
+      note:
+        content: 'For requests to AzureOpenAI realtime API, include include the header `OpenAI-Beta: realtime=v1`.'
     video:
       generations:
         supported: true
@@ -657,6 +665,8 @@ providers:
       route_type: 'llm/v1/assistants'
       model_example: 'gpt-4-1106-preview'
       min_version: '3.11'
+      note:
+        content: 'Requires header <code>OpenAI-Beta: assistants=v2</code>'
     responses:
       supported: true
       streaming: false
@@ -708,6 +718,8 @@ providers:
       route_type: 'realtime/v1/realtime'
       model_example: 'gpt-4o'
       min_version: '3.11'
+      note:
+        content: 'For requests to OpenAI realtime API, include include the header `OpenAI-Beta: realtime=v1`.'
     video:
       generations:
         supported: true

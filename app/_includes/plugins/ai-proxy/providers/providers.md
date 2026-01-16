@@ -9,12 +9,18 @@ You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway 
 The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
 
 {% comment %}First pass: collect all notes and assign numbers{% endcomment %}
-{% assign all_notes = "" | split: "" %}
+{% assign embeddings_note_num = 0 %}
 {% assign files_note_num = 0 %}
 {% assign batches_note_num = 0 %}
+{% assign assistants_note_num = 0 %}
+{% assign responses_note_num = 0 %}
 {% assign realtime_note_num = 0 %}
 {% assign note_counter = 0 %}
 
+{% if provider.embeddings.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign embeddings_note_num = note_counter %}
+{% endif %}
 {% if provider.files.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
   {% assign files_note_num = note_counter %}
@@ -22,6 +28,14 @@ The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{ro
 {% if provider.batches.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
   {% assign batches_note_num = note_counter %}
+{% endif %}
+{% if provider.assistants.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign assistants_note_num = note_counter %}
+{% endif %}
+{% if provider.responses.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign responses_note_num = note_counter %}
 {% endif %}
 {% if provider.realtime.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
@@ -124,7 +138,7 @@ Support for basic text generation capabilities including chat, completions, and 
 
     {% if provider.embeddings.supported %}
     <tr>
-      <td>Embeddings</td>
+      <td>Embeddings{% if provider.embeddings.note.content %}<sup>{{ embeddings_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.embeddings.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -141,6 +155,12 @@ Support for basic text generation capabilities including chat, completions, and 
     {% endif %}
   </tbody>
 </table>
+
+{% if provider.embeddings.note.content %}
+**Notes:**
+
+<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}
+{% endif %}
 {% endif %}
 
 {% if has_advanced_text %}
@@ -238,7 +258,7 @@ Support for file operations, batch operations, assistants, and response handling
 
     {% if provider.assistants.supported %}
     <tr>
-      <td>Assistants</td>
+      <td>Assistants{% if provider.assistants.note.content %}<sup>{{ assistants_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.assistants.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -256,7 +276,7 @@ Support for file operations, batch operations, assistants, and response handling
 
     {% if provider.responses.supported %}
     <tr>
-      <td>Responses</td>
+      <td>Responses{% if provider.responses.note.content %}<sup>{{ responses_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.responses.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -274,13 +294,19 @@ Support for file operations, batch operations, assistants, and response handling
   </tbody>
 </table>
 
-{% if provider.files.note.content or provider.batches.note.content %}
+{% if provider.files.note.content or provider.batches.note.content or provider.assistants.note.content or provider.responses.note.content %}
 **Notes:**
 
 {% if provider.files.note.content %}<sup>{{ files_note_num }}</sup> {{ provider.files.note.content }}
 
 {% endif %}
-{% if provider.batches.note.content %}<sup>{{ batches_note_num }}</sup> {{ provider.batches.note.content }}{% endif %}
+{% if provider.batches.note.content %}<sup>{{ batches_note_num }}</sup> {{ provider.batches.note.content }}
+
+{% endif %}
+{% if provider.assistants.note.content %}<sup>{{ assistants_note_num }}</sup> {{ provider.assistants.note.content }}
+
+{% endif %}
+{% if provider.responses.note.content %}<sup>{{ responses_note_num }}</sup> {{ provider.responses.note.content }}{% endif %}
 {% endif %}
 {% endif %}
 
@@ -357,6 +383,9 @@ Support for text-to-speech, transcription, and translation capabilities:
     {% endif %}
   </tbody>
 </table>
+
+{:.info}
+> For requests with large payloads (audio transcription/translation), consider increasing `config.max_request_body_size` to three times the raw binary size.
 {% endif %}
 
 {% if has_image %}
@@ -414,13 +443,16 @@ Support for image generation and editing capabilities:
     {% endif %}
   </tbody>
 </table>
+
+{:.info}
+> For requests with large payloads (image edits), consider increasing `config.max_request_body_size` to three times the raw binary size.
 {% endif %}
 
 {% if has_video %}
 
 ### Video
 
-Support for video generation capabilities.
+Support for video generation capabilities:
 
 <table>
   <thead>
@@ -440,7 +472,7 @@ Support for video generation capabilities.
       <td>
         {% assign path_stripped = provider.video.generations.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
-          {{ provider.video.generations.upstream_path }}
+          <code>{{ provider.video.generations.upstream_path }}</code>
         {% else %}
           {{ provider.video.generations.upstream_path }}
         {% endif %}
@@ -453,13 +485,20 @@ Support for video generation capabilities.
     {% endif %}
   </tbody>
 </table>
+
+{:.info}
+> For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
+
 {% endif %}
 
 {% if has_realtime %}
 
 ### Realtime
 
-Support for bidirectional streaming for realtime applications.
+Support for bidirectional streaming for realtime applications:
+
+{:.warning}
+> Realtime processing requires the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin and uses WebSocket protocol.
 
 <table>
   <thead>
@@ -494,7 +533,6 @@ Support for bidirectional streaming for realtime applications.
 </table>
 
 {% if provider.realtime.note.content %}
-**Note:**
 
 <sup>{{ realtime_note_num }}</sup> {{ provider.realtime.note.content }}
 {% endif %}
