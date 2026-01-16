@@ -322,7 +322,12 @@ The Vault entity can only be used once the database is initialized. Secrets for 
 
 ## Vault provider-specific configuration parameters
 
-When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault entity with a provider.
+When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider.
+
+You can set up a Vault in one of the following ways:
+* Using the Vault entity
+* Using environment variables, set at {{site.base_gateway}} startup
+* Using parameters in `kong.conf`, set at {{site.base_gateway}} startup
 
 {% navtabs "provider config" %}
 {% navtab "Env var" %}
@@ -332,67 +337,111 @@ When you set up a Vault, each provider has specific parameters that you can or m
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
-  - parameter: "`vaults.config.prefix`"
-    field-name: Environment Variable Prefix
+  - parameter: |
+      Environment Variable Prefix
+      <br><br>
+      * **Vault entity:** `vaults.config.prefix`
+      * **kong.conf parameter:** `vault_env_prefix`
+      * **Environment variable:** `KONG_VAULT_ENV_PREFIX`
     description: The prefix for the environment variable that the value will be stored in.
   - parameter: |
-      `vaults.config.base64_decode` {% new_in 3.11 %}
-    field-name: "Base64 Decode"
+      Base64 Decode {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.base64_decode`
+      * **kong.conf parameter:** `vault_env_base64_decode`
+      * **Environment variable:** `KONG_VAULT_ENV_BASE64_DECODE`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 {% navtab "AWS" %}
+
+Kong Gateway must have the required IAM roles to access any relevant secrets. 
+Configure the following [AWS environment variables](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html) on your Kong Gateway data plane:
+
+* `AWS_ACCESS_KEY_ID`
+* `AWS_SECRET_ACCESS_KEY`
+* `AWS_SESSION_TOKEN`
+* `AWS_REGION`
+
 For a complete tutorial on how to set up AWS as a Vault entity, see the following:
 * [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
 * [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
 
-<!--vale off-->
+The following table lists the available configuration parameters for AWS Secrets Manager:
+
 {% table %}
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
-  - parameter: "`vaults.config.region`"
-    field-name: "AWS region"
+  - parameter: |
+      AWS region
+      <br><br>
+      * **Vault entity:** `vaults.config.region`
+      * **kong.conf parameter:** `vault_aws_region`
+      * **Environment variable:** `KONG_VAULT_AWS_REGION`
     description: The AWS region where your vault is located.
   - parameter: |
-      `vaults.config.endpoint_url` {% new_in 3.4 %}
-    field-name: "AWS Secrets Manager Endpoint URL"
+      AWS Secrets Manager Endpoint URL {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.endpoint_url`
+      * **kong.conf parameter:** `vault_aws_endpoint_url`
+      * **Environment variable:** `KONG_VAULT_AWS_ENDPOINT_URL`
     description: The endpoint URL of the AWS Secrets Manager service. If not specified, the default is `https://secretsmanager.{region}.amazonaws.com`. You can override this by specifying a complete URL including the `http/https` scheme.
   - parameter: |
-      `vaults.config.assume_role_arn` {% new_in 3.4 %}
-    field-name: "Assume AWS IAM role ARN"
+      Assume AWS IAM Role ARN {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.assume_role_arn`
+      * **kong.conf parameter:** `vault_aws_assume_role_arn`
+      * **Environment variable:** `KONG_VAULT_AWS_ASSUME_ROLE_ARN`
     description: The target IAM role ARN to assume when accessing AWS Secrets Manager. If specified, the backend will assume this role using your current runtime's IAM Role. Leave empty if not using an assumed role.
   - parameter: |
-      `vaults.config.role_session_name` {% new_in 3.4 %}
-    field-name: "Role Session Name"
+      Role Session Name {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.role_session_name`
+      * **kong.conf parameter:** `vault_aws_role_session_name`
+      * **Environment variable:** `KONG_VAULT_AWS_ROLE_SESSION_NAME`
     description: The session name used when assuming a role. Defaults to `KongVault`.
   - parameter: |
-      `vaults.config.sts_endpoint_url` {% new_in 3.8 %}
-    field-name: "AWS STS Endpoint URL"
+      AWS STS Endpoint URL {% new_in 3.8 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.sts_endpoint_url`
+      * **kong.conf parameter:** `vault_aws_sts_endpoint_url`
+      * **Environment variable:** `KONG_VAULT_AWS_STS_ENDPOINT_URL`
     description: A custom STS endpoint URL used for IAM role assumption. Overrides the default `https://sts.amazonaws.com` or regional variant `https://sts.<region>.amazonaws.com`. Include the full `http/https` scheme. Only specify this if using a private VPC endpoint for STS.
-  - parameter: "`vaults.config.ttl`"
-    field-name: "TTL"
+  - parameter: |
+      TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_aws_ttl`
+      * **Environment variable:** `KONG_VAULT_AWS_TTL`
     description: The time-to-live (in seconds) for cached secrets. A value of 0 (default) disables rotation. If non-zero, use at least 60 seconds.
-  - parameter: "`vaults.config.neg_ttl`"
-    field-name: "Negative TTL"
+  - parameter: |
+      Negative TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_aws_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_AWS_NEG_TTL`
     description: The TTL (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. When the TTL expires, Kong will retry fetching the secret.
-  - parameter: "`vaults.config.resurrect_ttl`"
-    field-name: "Resurrect TTL"
+  - parameter: |
+      Resurrect TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_aws_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_AWS_RESURRECT_TTL`
     description: The duration (in seconds) for which expired secrets will continue to be used if the vault is unreachable or the secret is deleted. After this time, Kong stops retrying. The default is 1e8 seconds (~3 years) to ensure resilience during unexpected issues.
   - parameter: |
-      `vaults.config.base64_decode` {% new_in 3.11 %}
-    field-name: "Base64 Decode"
+      Base64 Decode {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.base64_decode`
+      * **kong.conf parameter:** `vault_aws_base64_decode`
+      * **Environment variable:** `KONG_VAULT_AWS_BASE64_DECODE`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -406,46 +455,79 @@ rows:
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
-  - parameter: "`vaults.config.vault_uri`"
-    field-name: "Vault URI"
+  - parameter: |
+      Vault URI
+      <br><br>
+      * **Vault entity:** `vaults.config.vault_uri`
+      * **kong.conf parameter:** `vault_azure_vault_uri`
+      * **Environment variable:** `KONG_VAULT_AZURE_VAULT_URI`
     description: |
       The URI from which the vault is reachable. This value can be found in your Azure Key Vault Dashboard under the Vault URI entry.
-  - parameter: "`vaults.config.client_id`"
-    field-name: "Client ID"
+  - parameter: |
+      Client ID
+      <br><br>
+      * **Vault entity:** `vaults.config.client_id`
+      * **kong.conf parameter:** `vault_azure_client_id`
+      * **Environment variable:** `KONG_VAULT_AZURE_CLIENT_ID`
     description: |
       The client ID for your registered application. You can find this in the Azure Dashboard under App Registrations.
-  - parameter: "`vaults.config.tenant_id`"
-    field-name: "Tenant ID"
+  - parameter: |
+      Tenant ID
+      <br><br>
+      * **Vault entity:** `vaults.config.tenant_id`
+      * **kong.conf parameter:** `vault_azure_tenant_id`
+      * **Environment variable:** `KONG_VAULT_AZURE_TENANT_ID`
     description: |
       The `DirectoryId` and `TenantId` are the same: both refer to the GUID representing your Azure Active Directory tenant. Microsoft documentation and products may use either term depending on context.
-  - parameter: "`vaults.config.location`"
-    field-name: "Location"
+  - parameter: |
+      Location
+      <br><br>
+      * **Vault entity:** `vaults.config.location`
+      * **kong.conf parameter:** `vault_azure_location`
+      * **Environment variable:** `KONG_VAULT_AZURE_LOCATION`
     description: |
       Each Azure geography includes one or more regions that meet specific data residency and compliance requirements.
-  - parameter: "`vaults.config.type`"
-    field-name: "Type"
+  - parameter: |
+      Type
+      <br><br>
+      * **Vault entity:** `vaults.config.type`
+      * **kong.conf parameter:** `vault_azure_type`
+      * **Environment variable:** `KONG_VAULT_AZURE_TYPE`
     description: |
       Azure Key Vault supports different data types such as keys, secrets, and certificates. Kong currently supports only `secrets`.
-  - parameter: "`vaults.config.ttl`"
-    field-name: "TTL"
+  - parameter: |
+      TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_azure_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_TTL`
     description: |
       Time-to-live (in seconds) for a cached secret. A value of 0 (default) means no rotation. For non-zero values, it is recommended to use intervals of at least 60 seconds.
-  - parameter: "`vaults.config.neg_ttl`"
-    field-name: "Negative TTL"
+  - parameter: |
+      Negative TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_azure_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_NEG_TTL`
     description: |
       Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. After `neg_ttl` expires, Kong retries fetching the secret.
-  - parameter: "`vaults.config.resurrect_ttl`"
-    field-name: "Resurrect TTL"
+  - parameter: |
+      Resurrect TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_azure_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_AZURE_RESURRECT_TTL`
     description: |
       Duration (in seconds) that secrets remain usable after expiration (`config.ttl` limit). Useful when the vault is unreachable or a secret is deleted. Kong retries refreshing the secret for this duration. Afterward, it stops. The default is 1e8 seconds (~3 years) to ensure resiliency during issues.
   - parameter: |
-      `vaults.config.base64_decode` {% new_in 3.11 %}
-    field-name: "Base64 Decode"
+      Base64 Decode {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.base64_decode`
+      * **kong.conf parameter:** `vault_azure_base64_decode`
+      * **Environment variable:** `KONG_VAULT_AZURE_BASE64_DECODE`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -460,30 +542,47 @@ For a complete tutorial on how to set up Google Cloud as a Vault entity, see the
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
-  - parameter: "`vaults.config.project_id`"
-    field-name: "Google Project ID"
+  - parameter: |
+      Google Project ID
+      <br><br>
+      * **Vault entity:** `vaults.config.project_id`
+      * **kong.conf parameter:** `vault_gcp_project_id`
+      * **Environment variable:** `KONG_VAULT_GCP_PROJECT_ID`
     description: |
       The project ID from your Google API Console. You can find it by visiting your Google API Console and selecting "Manage all projects" in the projects list.
-  - parameter: "`vaults.config.ttl`"
-    field-name: "TTL"
+  - parameter: |
+      TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_gcp_ttl`
+      * **Environment variable:** `KONG_VAULT_GCP_TTL`
     description: |
       Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use a minimum of 60 seconds.
-  - parameter: "`vaults.config.neg_ttl`"
-    field-name: "Negative TTL"
+  - parameter: |
+      Negative TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_gcp_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_GCP_NEG_TTL`
     description: |
       Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. Kong will retry fetching the secret after `neg_ttl` expires.
-  - parameter: "`vaults.config.resurrect_ttl`"
-    field-name: "Resurrect TTL"
+  - parameter: |
+      Resurrect TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_gcp_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_GCP_RESURRECT_TTL`
     description: |
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for `resurrect_ttl` seconds before giving up. The default is 1e8 seconds (~3 years) to support uninterrupted service during outages.
   - parameter: |
-      `vaults.config.base64_decode` {% new_in 3.11 %}
-    field-name: "Base64 Decode"
+      Base64 Decode {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.base64_decode`
+      * **kong.conf parameter:** `vault_gcp_base64_decode`
+      * **Environment variable:** `KONG_VAULT_GCP_BASE64_DECODE`
     description: Decode all secrets in this vault as base64. Useful for binary data. If some of the secrets in the vault are not base64-encoded, an error will occur when using them. We recommend creating a separate vault for base64 secrets.
 {% endtable %}
 <!--vale on-->
@@ -500,129 +599,217 @@ For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see 
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
-  - parameter: "`vaults.config.protocol`"
-    field-name: Protocol
+  - parameter: |
+      Protocol
+      <br><br>
+      * **Vault entity:** `vaults.config.protocol`
+      * **kong.conf parameter:** `vault_hcv_protocol`
+      * **Environment variable:** `KONG_VAULT_HCV_PROTOCOL`
     description: |
       The protocol to connect with. Accepts one of `http` or `https`.
-  - parameter: "`vaults.config.host`"
-    field-name: Host
+  - parameter: |
+      Host
+      <br><br>
+      * **Vault entity:** `vaults.config.host`
+      * **kong.conf parameter:** `vault_hcv_host`
+      * **Environment variable:** `KONG_VAULT_HCV_HOST`
     description: The hostname of your HashiCorp vault.
-  - parameter: "`vaults.config.port`"
-    field-name: Port
+  - parameter: |
+      Port
+      <br><br>
+      * **Vault entity:** `vaults.config.port`
+      * **kong.conf parameter:** `vault_hcv_port`
+      * **Environment variable:** `KONG_VAULT_HCV_PORT`
     description: The port number of your HashiCorp vault.
-  - parameter: "`vaults.config.mount`"
-    field-name: Mount
+  - parameter: |
+      Mount
+      <br><br>
+      * **Vault entity:** `vaults.config.mount`
+      * **kong.conf parameter:** `vault_hcv_mount`
+      * **Environment variable:** `KONG_VAULT_HCV_MOUNT`
     description: The mount point.
-  - parameter: "`vaults.config.kv`"
-    field-name: Kv
+  - parameter: |
+      Kv
+      <br><br>
+      * **Vault entity:** `vaults.config.kv`
+      * **kong.conf parameter:** `vault_hcv_kv`
+      * **Environment variable:** `KONG_VAULT_HCV_KV`
     description: |
       The secrets engine version. Accepts `v1` or `v2`.
-  - parameter: "`vaults.config.token`"
-    field-name: Token
+  - parameter: |
+      Token
+      <br><br>
+      * **Vault entity:** `vaults.config.token`
+      * **kong.conf parameter:** `vault_hcv_token`
+      * **Environment variable:** `KONG_VAULT_HCV_TOKEN`
     description: A token string.
-  - parameter: "`vaults.config.ttl`"
-    field-name: "TTL"
+  - parameter: |
+      TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_hcv_ttl`
+      * **Environment variable:** `KONG_VAULT_HCV_TTL`
     description: |
       Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
-  - parameter: "`vaults.config.neg_ttl`"
-    field-name: "Negative TTL"
+  - parameter: |
+      Negative TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_hcv_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_HCV_NEG_TTL`
     description: |
       Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. Kong retries after `neg_ttl` expires.
-  - parameter: "`vaults.config.resurrect_ttl`"
-    field-name: "Resurrect TTL"
+  - parameter: |
+      Resurrect TTL
+      <br><br>
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_hcv_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_HCV_RESURRECT_TTL`
     description: |
       Time (in seconds) that secrets remain in use after expiration (`config.ttl` is over). Useful if the vault is unreachable or a secret is deleted. Kong continues retrying for `resurrect_ttl` seconds, then stops. Default is 1e8 seconds (~3 years).
   - parameter: |
-      `vaults.config.namespace` {% new_in 3.1 %}
-    field-name: "Namespace"
+      Namespace {% new_in 3.1 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.namespace`
+      * **kong.conf parameter:** `vault_hcv_namespace`
+      * **Environment variable:** `KONG_VAULT_HCV_NAMESPACE`
     description: Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully.
   - parameter: |
-      `vaults.config.auth_method` {% new_in 3.1 %}
-    field-name: Authentication Method
+      Authentication Method {% new_in 3.1 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.auth_method`
+      * **kong.conf parameter:** `vault_hcv_auth_method`
+      * **Environment variable:** `KONG_VAULT_HCV_AUTH_METHOD`
     description: |
       Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, `approle`, or `oauth2`.
 
       For OAuth2, the IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
   - parameter: |
-      `vaults.config.kube_role` {% new_in 3.1 %}
-    field-name: Kubernetes Role
+      Kubernetes Role {% new_in 3.1 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.kube_role`
+      * **kong.conf parameter:** `vault_hcv_kube_role`
+      * **Environment variable:** `KONG_VAULT_HCV_KUBE_ROLE`
     description: |
       Role assigned to the Kubernetes service account. Only used when `keyring_vault_auth_method` is set to `kubernetes`.
   - parameter: |
-      `vaults.config.kube_api_token_file` {% new_in 3.1 %}
-    field-name: Kubernetes API Token File
+      Kubernetes API Token File {% new_in 3.1 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.kube_api_token_file`
+      * **kong.conf parameter:** `vault_hcv_kube_api_token_file`
+      * **Environment variable:** `KONG_VAULT_HCV_KUBE_API_TOKEN_FILE`
     description: |
       Path to the Kubernetes service account token file. Defaults to `/run/secrets/kubernetes.io/serviceaccount/token` if unspecified.
   - parameter: |
-      `vaults.config.kube_auth_path` {% new_in 3.4 %}
-    field-name: Kubernetes Auth Path
+      Kubernetes Auth Path {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.kube_auth_path`
+      * **kong.conf parameter:** `vault_hcv_kube_auth_path`
+      * **Environment variable:** `KONG_VAULT_HCV_KUBE_AUTH_PATH`
     description: |
       Path for enabling the Kubernetes auth method. Defaults to `kubernetes`. Single leading/trailing slashes are trimmed.
   - parameter: |
-      `vaults.config.approle_auth_path` {% new_in 3.4 %}
-    field-name: App Role Auth Path
+      App Role Auth Path {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.approle_auth_path`
+      * **kong.conf parameter:** `vault_hcv_approle_auth_path`
+      * **Environment variable:** `KONG_VAULT_HCV_APPROLE_AUTH_PATH`
     description: |
       Path for enabling the AppRole auth method. Defaults to `AppRole`. Single leading/trailing slashes are trimmed.
   - parameter: |
-      `vaults.config.approle_role_id` {% new_in 3.4 %}
-    field-name: App Role Role ID
+      App Role Role ID {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.approle_role_id`
+      * **kong.conf parameter:** `vault_hcv_approle_role_id`
+      * **Environment variable:** `KONG_VAULT_HCV_APPROLE_ROLE_ID`
     description: Specifies the AppRole role ID in HashiCorp Vault.
   - parameter: |
-      `vaults.config.approle_secret_id` {% new_in 3.4 %}
-    field-name: App Role Secret ID
+      App Role Secret ID {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.approle_secret_id`
+      * **kong.conf parameter:** `vault_hcv_approle_secret_id`
+      * **Environment variable:** `KONG_VAULT_HCV_APPROLE_SECRET_ID`
     description: Defines the AppRole's secret ID in HashiCorp Vault.
   - parameter: |
-      `vaults.config.approle_secret_id_file` {% new_in 3.4 %}
-    field-name: App Role Secret ID File
+      App Role Secret ID File {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.approle_secret_id_file`
+      * **kong.conf parameter:** `vault_hcv_approle_secret_id_file`
+      * **Environment variable:** `KONG_VAULT_HCV_APPROLE_SECRET_ID_FILE`
     description: Path to a file containing the AppRole secret ID.
   - parameter: |
-      `vaults.config.approle_response_wrapping` {% new_in 3.4 %}
-    field-name: App Role Response Wrapping
+      App Role Response Wrapping {% new_in 3.4 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.approle_response_wrapping`
+      * **kong.conf parameter:** `vault_hcv_approle_response_wrapping`
+      * **Environment variable:** `KONG_VAULT_HCV_APPROLE_RESPONSE_WRAPPING`
     description: |
       Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
   - parameter: |
-      `vaults.config.cert_auth_cert_key` {% new_in 3.11 %}
-    field-name: Cert Key
+      Cert Key {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.cert_auth_cert_key`
+      * **kong.conf parameter:** `vault_hcv_cert_auth_cert_key`
+      * **Environment variable:** `KONG_VAULT_HCV_CERT_AUTH_CERT_KEY`
     description: |
       The key file for the client certificate.
   - parameter: |
-      `vaults.config.cert_auth_cert` {% new_in 3.11 %}
-    field-name: Cert
+      Cert {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.cert_auth_cert`
+      * **kong.conf parameter:** `vault_hcv_cert_auth_cert`
+      * **Environment variable:** `KONG_VAULT_HCV_CERT_AUTH_CERT`
     description: |
       The client certificate file.
   - parameter: |
-      `vaults.config.cert_auth_role_name` {% new_in 3.11 %}
-    field-name: Role Name
+      Role Name {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.cert_auth_role_name`
+      * **kong.conf parameter:** `vault_hcv_cert_auth_role_name`
+      * **Environment variable:** `KONG_VAULT_HCV_CERT_AUTH_ROLE_NAME`
     description: |
       The trusted certificate role name.
   - parameter: |
-      `vaults.config.oauth2_role_name` {% new_in 3.13 %}
-    field-name: OAuth2 Role Name
+      OAuth2 Role Name {% new_in 3.13 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.oauth2_role_name`
+      * **kong.conf parameter:** `vault_hcv_oauth2_role_name`
+      * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_ROLE_NAME`
     description: |
       The configured role name in HashiCorp Vault for OAuth2 auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets.
   - parameter: |
-      `vaults.config.oauth2_token_endpoint` {% new_in 3.13 %}
-    field-name: OAuth2 Token Endpoint
+      OAuth2 Token Endpoint {% new_in 3.13 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.oauth2_token_endpoint`
+      * **kong.conf parameter:** `vault_hcv_oauth2_token_endpoint`
+      * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_TOKEN_ENDPOINT`
     description: |
       The OAuth2 token endpoint for Hashicorp Vault's OAuth2 auth method.
   - parameter: |
-      `vaults.config.oauth2_client_id` {% new_in 3.13 %}
-    field-name: OAuth2 Client ID
+      OAuth2 Client ID {% new_in 3.13 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.oauth2_client_id`
+      * **kong.conf parameter:** `vault_hcv_oauth2_client_id`
+      * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_CLIENT_ID`
     description: |
       The OAuth2 client ID.
   - parameter: |
-      `vaults.config.oauth2_client_secret` {% new_in 3.13 %}
-    field-name: OAuth2 Client Secret
+      OAuth2 Client Secret {% new_in 3.13 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.oauth2_client_secret`
+      * **kong.conf parameter:** `vault_hcv_oauth2_client_secret`
+      * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_CLIENT_SECRET`
     description: |
       The OAuth2 client secret.
   - parameter: |
-      `vaults.config.oauth2_audiences` {% new_in 3.13 %}
-    field-name: OAuth2 Audiences
+      OAuth2 Audiences {% new_in 3.13 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.oauth2_audiences`
+      * **kong.conf parameter:** `vault_hcv_oauth2_audiences`
+      * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_AUDIENCES`
     description: |
       Comma-separated list of OAuth2 audiences.
 {% endtable %}
@@ -637,45 +824,67 @@ See a tutorial about how to [set up CyberArk Conjur as a Vault in {{site.base_ga
 columns:
   - title: Parameter
     key: parameter
-  - title: Field name
-    key: field-name
   - title: Description
     key: description
 rows:
   - parameter: |
-      `vaults.config.endpoint_url` {% new_in 3.11 %}
-    field-name: "Endpoint URL"
+      Endpoint URL {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.endpoint_url`
+      * **kong.conf parameter:** `vault_conjur_endpoint_url`
+      * **Environment variable:** `KONG_VAULT_CONJUR_ENDPOINT_URL`
     description: |
       The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
   - parameter: |
-      `vaults.config.auth_method` {% new_in 3.11 %}
-    field-name: "Authentication method"
+      Authentication method {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.auth_method`
+      * **kong.conf parameter:** `vault_conjur_auth_method`
+      * **Environment variable:** `KONG_VAULT_CONJUR_AUTH_METHOD`
     description: "Defines the authentication mechanism for connecting to the CyberArk Conjur Vault service. Accepted value: `api_key`."
   - parameter: |
-      `vaults.config.account` {% new_in 3.11 %}
-    field-name: "Account"
+      Account {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.account`
+      * **kong.conf parameter:** `vault_conjur_account`
+      * **Environment variable:** `KONG_VAULT_CONJUR_ACCOUNT`
     description: The Conjur organization account name.
   - parameter: |
-      `vaults.config.login` {% new_in 3.11 %}
-    field-name: "Login"
+      Login {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.login`
+      * **kong.conf parameter:** `vault_conjur_login`
+      * **Environment variable:** `KONG_VAULT_CONJUR_LOGIN`
     description: The login name of the workload identity.
   - parameter: |
-      `vaults.config.api_key` {% new_in 3.11 %}
-    field-name: "API Key"
+      API Key {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.api_key`
+      * **kong.conf parameter:** `vault_conjur_api_key`
+      * **Environment variable:** `KONG_VAULT_CONJUR_API_KEY`
     description: The API key of the workload identity.
   - parameter: |
-      `vaults.config.ttl` {% new_in 3.11 %}
-    field-name: "TTL"
+      TTL {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.ttl`
+      * **kong.conf parameter:** `vault_conjur_ttl`
+      * **Environment variable:** `KONG_VAULT_CONJUR_TTL`
     description: Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
   - parameter: |
-      `vaults.config.neg_ttl` {% new_in 3.11 %}
-    field-name: "Negative TTL"
+      Negative TTL {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.neg_ttl`
+      * **kong.conf parameter:** `vault_conjur_neg_ttl`
+      * **Environment variable:** `KONG_VAULT_CONJUR_NEG_TTL`
     description: |
       Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. 
       Kong retries after `neg_ttl` expires.
   - parameter: |
-      `vaults.config.resurrect_ttl` {% new_in 3.11 %}
-    field-name: "Resurrect TTL"
+      Resurrect TTL {% new_in 3.11 %}
+      <br><br>
+      * **Vault entity:** `vaults.config.resurrect_ttl`
+      * **kong.conf parameter:** `vault_conjur_resurrect_ttl`
+      * **Environment variable:** `KONG_VAULT_CONJUR_RESURRECT_TTL`
     description: |
       Duration (in seconds) that secrets remain usable after expiration (`config.ttl` is over). 
       Useful when the vault is unreachable or a secret is deleted but not yet replaced. 
