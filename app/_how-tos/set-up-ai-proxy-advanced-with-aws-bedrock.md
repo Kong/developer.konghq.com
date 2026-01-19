@@ -30,7 +30,7 @@ entities:
 
 tags:
   - ai
-  - awsbedrock
+  - aws-bedrock
 
 tldr:
   q: How do I use the AI Proxy Advanced plugin with AWS Bedrock?
@@ -96,6 +96,7 @@ To set up AI Proxy Advanced with AWS Bedrock, specify the model and set the appr
 
 In this example, we'll use the Meta Llama 3 70B Instruct model:
 
+<!--vale off-->
 config:
   route_type: llm/v1/chat
   auth:
@@ -116,6 +117,7 @@ variables:
   secret:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key to use to connect to Bedrock.
+<!--vale on-->
 
 ## Validate
 
