@@ -41,7 +41,7 @@ To get traffic from outside your mesh with {{site.mesh_product_name}}, you can u
 
 With the [demo configuration](#install-kong-mesh-with-demo-configuration), traffic can only get in the mesh by port-forwarding to an instance of an app inside the mesh.
 In production, you typically set up a gateway to receive traffic external to the mesh.
-In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-api/) to add a [built-in gateway](/mesh/managing-ingress-traffic/gateway/) in front of the demo-app service and expose it publicly.
+In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-api/) to add a [built-in gateway](/mesh/built-in-gateway/) in front of the demo-app service and expose it publicly.
 
 ## Install the Gateway API CRDs
 

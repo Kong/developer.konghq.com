@@ -77,7 +77,7 @@ sections:
   - title: Built-in Gateways
     items:
       - path: /how-to/set-up-a-built-in-mesh-gateway/
-      - path: /mesh/managing-ingress-traffic/gateway/
+      - path: /mesh/built-in-gateway/
       - path: /mesh/gateway-listeners/
       - path: /mesh/gateway-routes/
       - path: /how-to/set-up-a-built-in-kubernetes-gateway/

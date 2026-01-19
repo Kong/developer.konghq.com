@@ -15,7 +15,7 @@ sections:
     items:
       - path: /dev-portal/
       - path: /catalog/
-      - path: /advanced-analytics/
+      - path: /observability/
       - path: /ai-manager/
       - path: /metering-and-billing/
       - path: /gateway/

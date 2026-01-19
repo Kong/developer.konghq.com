@@ -675,7 +675,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "Free mode is no longer available. Starting Kong without a license will now function the same as Kong with an expired license.",
+        "message": "Free mode is deprecated and will be removed in a future 3.x version of Kong Gateway Enterprise. At that point, running Kong Gateway without a license will behave the same as running it with an expired license.",
         "type": "Breaking Change",
         "scope": "Core"
       },
