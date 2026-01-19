@@ -87,6 +87,7 @@
     "hashicorp-vault",
     "headers",
     "helm",
+    "huggingface",
     "hybrid-mode",
     "impart-security",
     "import",
