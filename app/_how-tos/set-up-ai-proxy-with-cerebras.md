@@ -33,8 +33,8 @@ tags:
     - cerebras
 
 tldr:
-    q: How do I use the AI Proxy plugin with Cerebras?
-    a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Cerebras provider and add the model and your API key.
+    q: How do I use the AI Proxy Advanced plugin with Cerebras?
+    a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Cerebras provider and add the model and your API key.
 
 tools:
     - deck
@@ -75,6 +75,7 @@ To set up AI Proxy with Cerebras, we need to specify the model to use.
 
 In this example, we'll use the gpt-oss-120b model:
 
+<!--vale off-->
 config:
   route_type: llm/v1/chat
   auth:
@@ -86,18 +87,17 @@ config:
     options:
       max_tokens: 512
       temperature: 1.0
-
 variables:
   key:
     value: $CEREBRAS_API_KEY
     description: The API key to use to connect to Cerebras.
-
 tools:
   - deck
   - admin-api
   - konnect-api
   - kic
   - terraform
+<!--vale on-->
 
 ## Validate
 

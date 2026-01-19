@@ -4,8 +4,8 @@ content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
 
 description: Configure the AI Proxy Advanced plugin to create a chat route using Cerebras .
 
@@ -86,12 +86,10 @@ config:
     options:
       max_tokens: 512
       temperature: 1.0
-
 variables:
   key:
     value: $CEREBRAS_API_KEY
     description: The API key to use to connect to Cerebras.
-
 tools:
   - deck
   - admin-api
