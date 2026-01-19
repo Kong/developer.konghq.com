@@ -81,7 +81,7 @@ pages:
       - text: Configure the Kong Mesh CNI
         url: '/mesh/cni/'
       - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+        url: '/how-to/configure-transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
       - text: Mesh concepts
@@ -183,7 +183,7 @@ pages:
       - text: Mesh DNS
         url: '/mesh/dns/'
       - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+        url: '/how-to/configure-transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
   -
@@ -239,7 +239,7 @@ pages:
     url: '/mesh/performance-tuning/'
     related_resources:
       - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+        url: '/how-to/configure-transparent-proxying/'
       - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
@@ -430,16 +430,6 @@ pages:
         url: /mesh/cli/
       - text: Data plane health
         url: /mesh/dataplane-health/
-  -
-    path: app/_src/production/dp-config/transparent-proxying.md
-    title: 'Configure transparent proxying'
-    description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
-    url: '/mesh/configure-transparent-proxying/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
