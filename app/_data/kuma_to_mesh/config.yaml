@@ -431,18 +431,6 @@ pages:
       - text: Data plane health
         url: /mesh/dataplane-health/
   -
-    path: app/_src/networking/transparent-proxying.md
-    title: 'Transparent proxying'
-    description: 'Explains how Transparent Proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.'
-    url: '/mesh/transparent-proxying/'
-    related_resources:
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh Service Discovery
-        url: '/mesh/service-discovery/'
-  -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'
     description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
