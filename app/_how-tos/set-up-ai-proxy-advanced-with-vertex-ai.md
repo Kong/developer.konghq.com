@@ -1,13 +1,13 @@
 ---
-title: Set up AI Proxy with Vertex AI in {{site.base_gateway}}
+title: Set up AI Proxy Advanced with Vertex AI in {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy plugin to create a chat route using Vertex AI.
+description: Configure the AI Proxy Advanced plugin to create a chat route using Vertex AI.
 
 products:
   - gateway
@@ -21,7 +21,7 @@ min_version:
   gateway: '3.6'
 
 plugins:
-  - ai-proxy
+  - ai-proxy-advanced
 
 entities:
   - service
@@ -33,8 +33,8 @@ tags:
   - vertex-ai
 
 tldr:
-  q: How do I use the AI Proxy plugin with Vertex AI?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Vertex AI provider and add the model and your API key.
+  q: How do I use the AI Proxy Advanced plugin with Vertex AI?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Vertex AI provider and add the model and your API key.
 
 tools:
   - deck
@@ -62,7 +62,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with Vertex AI, specify the model and set the appropriate authentication header.
+To set up AI Proxy Advanced with Vertex AI, specify the model and set the appropriate authentication header.
 
 In this example, we'll use the Gemini 2.5 Flash model:
 
