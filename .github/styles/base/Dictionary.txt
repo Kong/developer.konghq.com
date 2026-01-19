@@ -103,6 +103,8 @@ callouts
 camelCase
 cef
 certificate_admin
+Cerebras
+cerebras
 charset
 chatbot
 chatbots
