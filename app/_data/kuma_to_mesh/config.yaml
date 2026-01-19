@@ -368,8 +368,8 @@ pages:
         url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in routes'
         url: '/mesh/gateway-routes/'
     min_version:
@@ -382,8 +382,8 @@ pages:
     related_resources:
       - text: Add a builtin gateway
         url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in routes'
         url: '/mesh/gateway-routes/'
     min_version:
@@ -396,28 +396,14 @@ pages:
     related_resources:
       - text: Add a builtin gateway
         url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in listeners'
         url: '/mesh/gateway-listeners/'
       - text: MeshHttpRoute policy
         url: /mesh/policies/meshhttproute/
       - text: MeshTCPRoute policy
         url: /mesh/policies/meshtcproute/
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/using-mesh/managing-ingress-traffic/builtin.md
-    title: 'Configure a built-in gateway'
-    description: 'Overview and deployment guide for configuring a built-in gateway with {{site.mesh_product_name}} using MeshGateway, MeshGatewayInstance, and Dataplane resources in both Kubernetes and Universal environments.'
-    url: '/mesh/managing-ingress-traffic/gateway/'
-    related_resources:
-      - text: Add a builtin gateway
-        url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: 'Configuring built-in listeners'
-        url: '/mesh/gateway-listeners/'
-      - text: 'Configuring built-in routes'
-        url: '/mesh/gateway-routes/'
     min_version:
       mesh: '2.6'
   -
@@ -430,8 +416,8 @@ pages:
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
     min_version:
       mesh: '2.6'
   -
@@ -440,8 +426,8 @@ pages:
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
     url: '/mesh/ingress/'
     related_resources:
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Delegated gateways'
         url: '/mesh/ingress-gateway-delegated/'
       - text: 'Data plane proxy'
