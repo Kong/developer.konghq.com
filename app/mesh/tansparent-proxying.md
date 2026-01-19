@@ -1,6 +1,6 @@
 ---
 title: Transparent proxying with {{site.mesh_product_name}}
-description: TODO
+description: Explains how transparent proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.
 
 content_type: reference
 layout: reference
@@ -11,8 +11,12 @@ breadcrumbs:
   - /mesh/
 
 related_resources:
-  - text: TODO
-    url: /
+  - text: Configure transparent proxying
+    url: /how-to/configure-transparent-proxying/
+  - text: Multi-zone deployment
+    url: /mesh/mesh-multizone-service-deployment/
+  - text: Mesh service discovery
+    url: /mesh/service-discovery/
 ---
 
 A transparent proxy is a type of server that can intercept network traffic to and from a service without changes to the client application code. In the case of {{site.mesh_product_name}} it is used to capture traffic and redirect it to `kuma-dp` so Mesh policies can be applied.
