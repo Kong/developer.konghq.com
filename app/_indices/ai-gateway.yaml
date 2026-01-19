@@ -38,9 +38,9 @@ sections:
       - title: Monitor AI LLM Metrics
         description: Explore how to monitor AI LLM metrics in AI Gateway.
         url: /ai-gateway/monitor-ai-llm-metrics/
-      - title: Advanced Analytics
+      - title: Observability
         description: Access advanced analytics features in AI Gateway.
-        url: /advanced-analytics/
+        url: /observability/
       - title: AI Gateway resource sizing guidelines
         description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/

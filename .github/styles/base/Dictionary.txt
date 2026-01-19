@@ -753,6 +753,8 @@ SBOMs
 SCCs
 SCCs
 schema's
+scim
+SCIM
 Scriptable
 SDKs
 search_by_username

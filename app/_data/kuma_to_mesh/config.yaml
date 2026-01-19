@@ -18,32 +18,6 @@ links:
 pages:
 # Must for GA    
   -
-    path: app/_src/guides/gateway-api.md
-    title: 'Kubernetes Gateway API'
-    description: 'Expose your services to external traffic using the Kubernetes Gateway API with {{site.base_product}}. This guide walks through setting up a built-in gateway, defining routes, securing traffic with TLS, and configuring permissions.'
-    url: /mesh/gateway-api/
-    related_resources:
-      - text: Add a builtin gateway
-        url: '/mesh/add-builtin-gateway/'
-      - text: Deploy Kong Mesh in Production with Helm
-        url: /mesh/production-usuage-values/
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-    min_version:
-      mesh: '2.9'
-  -
-    path: app/_src/guides/gateway-builtin-kv.md
-    title: 'Add a builtin gateway'
-    description: 'Deploy a built-in gateway in {{site.base_product}} to expose internal mesh services to external traffic. This guide walks through setting up MeshGatewayInstance and MeshGateway resources, defining routes with MeshHTTPRoute, configuring permissions, and securing the gateway with TLS.'
-    url: /mesh/add-builtin-gateway/
-    related_resources:
-      - text: Use Kong as a delegated Gateway
-        url: '/mesh/gateway-delegated/'
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/guides/otel-metrics.md
     title: 'Collect metrics with OpenTelemetry'
     description: 'Collect and export metrics from {{site.mesh_product_name}} with OpenTelemetry and visualize them using Prometheus and Grafana.'
@@ -156,6 +130,10 @@ pages:
         url: '/mesh/resource-sizing-guidelines/'
       - text: '{{site.mesh_product_name}} version compatibility'
         url: '/mesh/version-compatibility/'
+      - text: 'Zone ingress'
+        url: /mesh/zone-ingress/
+      - text: Zone egress
+        url: /mesh/zone-egress/
     min_version:
       mesh: '2.9'
   -
@@ -254,7 +232,7 @@ pages:
     description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
     url: '/mesh/secure-access/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -268,7 +246,7 @@ pages:
     related_resources:
       - text: Data plane proxy
         url: '/mesh/data-plane-proxy/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -288,7 +266,7 @@ pages:
     related_resources:
       - text: Configure transparent proxying
         url: '/mesh/configure-transparent-proxying/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
         url: '/mesh/observability/'
@@ -331,7 +309,7 @@ pages:
     related_resources:
       - text: "{{site.mesh_product_name}} data plane on Universal"
         url: /mesh/data-plane-universal/
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -352,7 +330,7 @@ pages:
     related_resources:
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -368,7 +346,7 @@ pages:
     description: 'Configuration Reference'
     url: '/mesh/reference/kuma-cp/'
     related_resources:
-      - text: Zone Egress
+      - text: Zone egress
         url: /mesh/zone-egress/
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
@@ -387,11 +365,11 @@ pages:
     url: '/mesh/gateway-pods-k8s/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
+        url: /how-to/set-up-a-built-in-mesh-gateway/
       - text: 'Deploy Kong Mesh on Kubernetes'
         url: '/mesh/kubernetes/'
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in routes'
         url: '/mesh/gateway-routes/'
     min_version:
@@ -403,9 +381,9 @@ pages:
     url: '/mesh/gateway-listeners/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+        url: /how-to/set-up-a-built-in-mesh-gateway/
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in routes'
         url: '/mesh/gateway-routes/'
     min_version:
@@ -417,29 +395,15 @@ pages:
     url: '/mesh/gateway-routes/'
     related_resources:
       - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+        url: /how-to/set-up-a-built-in-mesh-gateway/
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in listeners'
         url: '/mesh/gateway-listeners/'
       - text: MeshHttpRoute policy
         url: /mesh/policies/meshhttproute/
       - text: MeshTCPRoute policy
         url: /mesh/policies/meshtcproute/
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/using-mesh/managing-ingress-traffic/builtin.md
-    title: 'Configure a built-in gateway'
-    description: 'Overview and deployment guide for configuring a built-in gateway with {{site.mesh_product_name}} using MeshGateway, MeshGatewayInstance, and Dataplane resources in both Kubernetes and Universal environments.'
-    url: '/mesh/managing-ingress-traffic/gateway/'
-    related_resources:
-      - text: Add a builtin gateway
-        url: /mesh/add-builtin-gateway/
-      - text: 'Configuring built-in listeners'
-        url: '/mesh/gateway-listeners/'
-      - text: 'Configuring built-in routes'
-        url: '/mesh/gateway-routes/'
     min_version:
       mesh: '2.6'
   -
@@ -452,24 +416,8 @@ pages:
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/using-mesh/managing-ingress-traffic/gateway-api.md
-    title: 'Kubernetes Gateway API'
-    description: 'How to use Kubernetes Gateway API with {{site.mesh_product_name}}, including support for built-in gateways, HTTP/TCP routing, TLS, GAMMA, and multi-zone limitations.'
-    url: '/mesh/kubernetes-gateway-api/'
-    related_resources:
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Data Plane on Kubernetes
-        url: /mesh/data-plane-kubernetes/
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
     min_version:
       mesh: '2.6'
   -
@@ -478,8 +426,8 @@ pages:
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
     url: '/mesh/ingress/'
     related_resources:
-      - text: Configure a built-in gateway
-        url: '/mesh/managing-ingress-traffic/gateway/'
+      - text: Built-in gateways
+        url: '/mesh/built-in-gateway/'
       - text: 'Delegated gateways'
         url: '/mesh/ingress-gateway-delegated/'
       - text: 'Data plane proxy'
@@ -540,32 +488,6 @@ pages:
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Mesh Service Discovery
         url: '/mesh/service-discovery/'
-  -
-    path: app/_src/production/cp-deployment/zone-ingress.md
-    title: 'Zone Ingress'
-    description: 'How to deploy and configure Zone Ingress for cross-zone communication in multi-zone mode.'
-    url: '/mesh/zone-ingress/'
-    related_resources:
-      - text: Zone Egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
-        url: /mesh/data-plane-kubernetes/
-      - text: "{{ site.mesh_product_name }} data plane proxy"
-        url: /mesh/data-plane-proxy/
-      - text: "{{site.mesh_product_name}} data plane on Universal"
-        url: /mesh/data-plane-universal/
-  -
-    path: app/_src/production/cp-deployment/zoneegress.md
-    title: 'Zone Egress'
-    description: 'How to configure Zone Egress to isolate cross-zone and external service traffic.'
-    url: '/mesh/zone-egress/'
-    related_resources:
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
   -
     path: app/_src/production/cp-deployment/zoneproxy-auth.md
     title: 'Configure zone proxy authentication'

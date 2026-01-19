@@ -42,6 +42,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.23": [
+    {
+      "message": "Fixed issue where Kafka producer cached TLS certificates, causing failures when certificates were updated. Now, the plugin properly reloads updated certificates.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Fixed an issue where the plugin could lose connection to a broker when the broker leadership changed.",

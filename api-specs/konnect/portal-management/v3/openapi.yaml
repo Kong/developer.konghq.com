@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@b4016a6364a5babc31b78a52b072e6cd046b7481
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b4016a6364a5babc31b78a52b072e6cd046b7481'
+  x-oas-source: kong/platform-api@769ecd6fed907f69ed12f1662784f0cfd9495809
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/769ecd6fed907f69ed12f1662784f0cfd9495809'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2474,13 +2474,13 @@ components:
       description: ID of the team.
   schemas:
     PortalImageDataUri:
-      description: 'must be a data URL with base64 image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
-      type: string
-      format: uri
-      example: 'data:image/png;base64,YW5faW1hZ2VfZmlsZQ=='
-      pattern: '^data:image/(png|jpeg|svg\+xml|x-icon|ico|icon|vnd.microsoft.icon|gif)(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      oneOf:
+        - $ref: '#/components/schemas/ImagePNGDataUri'
+        - $ref: '#/components/schemas/ImageJPGDataUri'
+        - $ref: '#/components/schemas/ImageGIFDataUri'
+        - $ref: '#/components/schemas/ImageICODataUri'
+        - $ref: '#/components/schemas/ImageSVGDataUri'
       title: PortalImageDataUri
-      x-validation-message: 'must be a data URL with base64 image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
     PortalImageAssetBlob:
       description: Raw binary image data
       type: string
@@ -5138,6 +5138,46 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    ImagePNGDataUri:
+      description: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/png,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/png(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImagePNGDataUri
+      x-validation-message: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+    ImageJPGDataUri:
+      description: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/jpeg,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/jpeg(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageJPGDataUri
+      x-validation-message: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+    ImageGIFDataUri:
+      description: 'must be a data URL with base64 GIF image data, e.g., data:image/gif;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/gif,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/gif(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageGIFDataUri
+      x-validation-message: 'must be a data URL with base64 GIF image data, e.g., data:image/gif;base64,<BASE64_IMAGE_DATA>'
+    ImageICODataUri:
+      description: 'must be a data URL with base64 ICO image data, e.g., data:image/ico;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/ico,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/(x-icon|ico|icon|vnd.microsoft.icon)(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageICODataUri
+      x-validation-message: 'must be a data URL with base64 ICO image data, e.g., data:image/ico;base64,<BASE64_IMAGE_DATA>'
+    ImageSVGDataUri:
+      description: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/svg+xml,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/svg\+xml(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageSVGDataUri
+      x-validation-message: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
     PortalMenuItem:
       type: object
       properties:
