@@ -801,8 +801,8 @@ providers:
       statistics_logging: []
 
 parameters:
-  provider: 'config.targets[].model.provider'
-  route_type: 'config.targets.route_type'
-  options: 'config.targets[].model.options'
-  upstream_url: 'config.targets[].model.options.upstream_url'
-  model_name: 'config.targets[].model.name'
+  provider: 'config.model.provider'
+  route_type: 'config.route_type'
+  options: 'config.model.options'
+  upstream_url: 'config.model.options.upstream_url'
+  model_name: 'config.model.name'

@@ -8,6 +8,11 @@ You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway 
 
 The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
 
+{:.info}
+> While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
+>
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same `upstream_url` plugin option.
+
 {% comment %}First pass: collect all notes and assign numbers{% endcomment %}
 {% assign chat_note_num = 0 %}
 {% assign completions_note_num = 0 %}
@@ -126,6 +131,9 @@ The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{ro
 ## Supported capabilities
 
 The following tables show the AI capabilities supported by {{ provider.name }} provider when used with the [AI Proxy](/plugins/ai-proxy/) or the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+{:.info}
+> Set the plugin's [`route_type`](/plugins/ai-proxy/reference/#schema--config-route-type) based on the capability you want to use. See the tables below for supported route types.
 
 {% if has_text %}
 
@@ -250,9 +258,6 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
     {% endif %}
   </tbody>
 </table>
-
-{:.info}
-> Function calling uses the `llm/v1/chat` route type.
 
 {% if provider.function_calling.note.content %}
 

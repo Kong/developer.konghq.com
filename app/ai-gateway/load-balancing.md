@@ -27,31 +27,13 @@ min_version:
 related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
-    url: /plugins/?category=ai
-  - text: "{{site.base_gateway}} load balancing"
-    url: /gateway/load-balancing/
-  - text: "{{site.base_gateway}} round-robin load balancing"
-    url: /gateway/entities/upstream/#round-robin
-  - text: "{{site.base_gateway}} consistent-hashing load balancing"
-    url: /gateway/entities/upstream/#consistent-hashing
-  - text: "{{site.base_gateway}} least connections load balancing"
-    url: /gateway/entities/upstream/#least-connections
-  - text: "{{site.base_gateway}} latency load balancing"
-    url: /gateway/entities/upstream/#latency
-
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
 ---
-
 
 Kong AI Gateway gives you advanced load balancing capabilities to efficiently distribute requests across multiple LLM models. This helps you ensure fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-With the AI Proxy Advanced plugin, you can select from several load balancing algorithms—similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity](/gateway/entities/upstream/), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
-
-### Load balancing algorithms
-
-Kong AI Gateway supports multiple load balancing strategies to optimize traffic distribution across AI models. Each algorithm is suited for different performance goals such as balancing load, improving cache-hit ratios, reducing latency, or ensuring [failover reliability](#retry-and-fallback).
-
-The table below provides a detailed overview of the available algorithms, along with considerations to keep in mind when selecting the best option for your use case.
+With the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin, you can select from several load balancing algorithms similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity](/gateway/entities/upstream/), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
 
 ### Load balancing algorithms
 
@@ -100,7 +82,7 @@ rows:
   - algorithm: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
     description: |
       Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times. By default, the latency is calculated based on the time the model takes to generate each token (`tpot`).
-
+      <br><br>
       The latency algorithm is based on peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the backend by the lowest latency. The latency metric used is the full request cycle, from TCP connect to body response time. Since it's a moving average, the metrics will decay over time.
     considerations: |
       * Prioritizes models with the fastest response times.
@@ -109,7 +91,7 @@ rows:
   - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. In the configuration, embeddings are generated using a specified model (e.g., `text-embedding-3-small`), and similarity is calculated using vector search.
-
+      <br><br>
       {% new_in 3.13 %} Multiple targets can be configured with [identical descriptions](/plugins/ai-proxy-advanced/examples/semantic-with-fallback/). When multiple targets share the same description, the AI balancer performs round-robin fallback among these targets if the primary target fails. Weights affect the order in which fallback targets are selected.
     considerations: |
       * Uses vector search (for example, Redis) to find the best match based on prompt embeddings.
@@ -118,7 +100,7 @@ rows:
   - algorithm: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
     description: |
       Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier.
-
+      <br><br>
       By default, all models have the same priority. The balancer always chooses one of the targets in the group with the highest priority first. If all targets in the highest priority group are down, the balancer chooses one of the targets in the next highest priority group.
     considerations: |
       * Traffic first targets higher-priority groups; lower-priority groups are used only if needed (failover).
