@@ -41,13 +41,13 @@ tools:
 
 prereqs:
   inline:
-  - title: HuggingFace
-    content: |
-      You need an active HuggingFace account with API access. Sign up at [HuggingFace](https://huggingface.co/) and obtain your API token from the [Access Tokens page](https://huggingface.co/settings/tokens). Ensure you have access to the HuggingFace Inference API, and export your token to your environment:
-      ```sh
-      export DECK_HUGGINGFACE_API_TOKEN='YOUR HUGGINGFACE API TOKEN'
-      ```
-    icon_url: /assets/icons/huggingface.svg  
+    - title: HuggingFace
+      content: |
+        You need an active HuggingFace account with API access. Sign up at [HuggingFace](https://huggingface.co/) and obtain your API token from the [Access Tokens page](https://huggingface.co/settings/tokens). Ensure you have access to the HuggingFace Inference API, and export your token to your environment:
+        ```sh
+        export DECK_HUGGINGFACE_API_TOKEN='YOUR HUGGINGFACE API TOKEN'
+        ```
+      icon_url: /assets/icons/huggingface.svg  
   entities:
     services:
         - example-service
