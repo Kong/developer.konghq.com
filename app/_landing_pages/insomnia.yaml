@@ -49,7 +49,7 @@ rows:
             description: Download and install Insomnia for Windows.
             icon: /assets/icons/third-party/windows.svg
             cta:
-              text: Windows Download
+              text: Download
               url: https://updates.insomnia.rest/downloads/windows/latest?app=com.insomnia.app&source=website
       - blocks:
         - type: card
