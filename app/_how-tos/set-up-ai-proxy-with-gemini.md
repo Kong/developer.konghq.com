@@ -82,27 +82,25 @@ To set up AI Proxy with Gemini, configure API key authentication and specify the
 
 In this example, we use the `gemini-2.0-flash-exp` model:
 
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      service: gemini-service
-      config:
-        route_type: llm/v1/chat
-        llm_format: gemini
-        auth:
-          param_name: key
-          param_value: ${gemini_api_key}
-          param_location: query
-        model:
-          provider: gemini
-          name: gemini-2.0-flash-exp
+config:
+  route_type: llm/v1/chat
+  auth:
+    param_name: key
+    param_value: ${key}
+    param_location: query
+  model:
+    provider: gemini
+    name: gemini-1.5-flash
 variables:
-  gemini_api_key:
+  key:
     value: $GEMINI_API_KEY
-formats:
+    description: The API key to use to connect to Gemini.
+tools:
   - deck
-{% endentity_examples %}
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
 
 ## Validate
 To validate, send a request to the Route:
