@@ -1,5 +1,5 @@
 ---
-title: Set up AI Proxy with Gemini in {{site.base_gateway}}
+title: Set up AI Proxy Advanced with Gemini in {{site.base_gateway}}
 
 content_type: how_to
 
