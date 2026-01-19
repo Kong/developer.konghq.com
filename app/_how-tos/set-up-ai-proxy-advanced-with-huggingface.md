@@ -10,12 +10,12 @@ related_resources:
 description: Configure the AI Proxy Advanced plugin to create a chat route using HuggingFace.
 
 products:
-    - gateway
-    - ai-gateway
+  - gateway
+  - ai-gateway
 
 works_on:
-    - on-prem
-    - konnect
+  - on-prem
+  - konnect
 
 min_version:
   gateway: '3.6'
@@ -29,25 +29,25 @@ entities:
   - plugin
 
 tags:
-    - ai
-    - huggingface
+  - ai
+  - huggingface
 
 tldr:
-    q: How do I use the AI Proxy Advanced plugin with HuggingFace?
-    a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the HuggingFace provider and add the model and your API key.
+  q: How do I use the AI Proxy Advanced plugin with HuggingFace?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the HuggingFace provider and add the model and your API key.
 
 tools:
-    - deck
+  - deck
 
 prereqs:
   inline:
   - title: HuggingFace
-      icon_url: /assets/icons/huggingface.svg
       content: |
         You need an active HuggingFace account with API access. Sign up at [HuggingFace](https://huggingface.co/) and obtain your API token from the [Access Tokens page](https://huggingface.co/settings/tokens). Ensure you have access to the HuggingFace Inference API, and export your token to your environment:
         ```sh
         export DECK_HUGGINGFACE_API_TOKEN='YOUR HUGGINGFACE API TOKEN'
         ```
+      icon_url: /assets/icons/huggingface.svg  
   entities:
     services:
         - example-service
