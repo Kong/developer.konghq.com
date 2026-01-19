@@ -98,18 +98,18 @@ In this example, we'll use the Meta Llama 3 70B Instruct model:
 
 <!--vale off-->
 config:
-  route_type: llm/v1/chat
-  auth:
-    allow_override: false
-    aws_access_key_id: ${key}
-    aws_secret_access_key: ${secret}
-  model:
-    provider: bedrock
-    name: meta.llama3-70b-instruct-v1:0
-    options:
-      bedrock:
-        aws_region: us-east-1
-
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        allow_override: false
+        aws_access_key_id: ${key}
+        aws_secret_access_key: ${secret}
+      model:
+        provider: bedrock
+        name: meta.llama3-70b-instruct-v1:0
+        options:
+          bedrock:
+            aws_region: us-east-1
 variables:
   key:
     value: $AWS_ACCESS_KEY_ID
@@ -117,6 +117,12 @@ variables:
   secret:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key to use to connect to Bedrock.
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
 <!--vale on-->
 
 ## Validate

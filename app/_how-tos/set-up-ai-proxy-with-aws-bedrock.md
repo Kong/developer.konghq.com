@@ -109,7 +109,6 @@ config:
     options:
       bedrock:
         aws_region: us-east-1
-
 variables:
   key:
     value: $AWS_ACCESS_KEY_ID
@@ -117,6 +116,12 @@ variables:
   secret:
     value: $AWS_SECRET_ACCESS_KEY
     description: The AWS secret access key to use to connect to Bedrock.
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
 <!--vale on-->
 
 ## Validate
