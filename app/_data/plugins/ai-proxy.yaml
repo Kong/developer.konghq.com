@@ -36,7 +36,7 @@ providers:
       upstream_path: 'Uses the <code>ModelInvocationJob</code> API'
       route_type: 'llm/v1/batches'
       model_example: 'n/a'
-      min_version: ''
+      min_version: 'n/a'
       note:
         content: 'Batches processing for Bedrock is supported in the native format from SDK only'
     files:
@@ -45,9 +45,9 @@ providers:
       upstream_path: '/openai/files'
       route_type: 'llm/v1/files'
       model_example: 'n/a'
-      min_version: ''
+      min_version: 'n/a'
       note:
-        content: 'Bedrock does not have a dedicated Files API. File storage uses Google Cloud Storage, similar to AWS S3.'
+        content: 'Amazon Bedrock does not have a dedicated files API. File storage uses Google Cloud Storage, similar to AWS S3.'
     image:
       generations:
         supported: true
@@ -86,7 +86,7 @@ providers:
     limitations:
       provider_specific: []
       statistics_logging:
-        - 'No statistics logging for image generation or editing APIs'
+        - 'Statistics logging is not available for image generation or editing APIs for Amazon Bedrock'
 
   - name: 'Anthropic'
     url_pattern: 'https://api.anthropic.com:443/{route_type_path}'
@@ -118,7 +118,7 @@ providers:
       upstream_path: '/v1/messages/batches'
       route_type: 'files/v1/batches'
       model_example: 'n/a'
-      min_version: ''
+      min_version: 'n/a'
       note:
         content: 'Batches processing for Anthropic is supported in the native format from SDK only'
     native_formats:
@@ -157,7 +157,7 @@ providers:
       model_example: 'text-embedding-ada-002<sup>1</sup>'
       min_version: '3.11'
       note:
-        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use text-embedding-3-small for dynamic dimensions.'
+        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use `text-embedding-3-small`` for dynamic dimensions.'
     function_calling:
       supported: true
       streaming: false
@@ -242,7 +242,7 @@ providers:
       model_example: 'n/a'
       min_version: '3.11'
       note:
-        content: 'For requests to AzureOpenAI realtime API, include include the header `OpenAI-Beta: realtime=v1`.'
+        content: 'For requests to Azure OpenAI realtime API, include include the header `OpenAI-Beta: realtime=v1`.'
     video:
       generations:
         supported: true
@@ -376,7 +376,7 @@ providers:
       upstream_path: 'Uses <code>uploadFile</code> and <code>files</code> API'
       route_type: 'llm/v1/files'
       model_example: 'n/a'
-      min_version: ''
+      min_version: 'n/a'
       note:
         content: 'Files processing for Gemini is supported in the native format from SDK only'
     batches:
@@ -385,7 +385,7 @@ providers:
       upstream_path: 'Uses <code>batches</code> API'
       route_type: 'llm/v1/batches'
       model_example: 'n/a'
-      min_version: ''
+      min_version: 'n/a'
       note:
         content: 'Batches processing for Gemini is supported in the native format from SDK only'
     image:

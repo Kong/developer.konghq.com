@@ -9,17 +9,38 @@ You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway 
 The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
 
 {% comment %}First pass: collect all notes and assign numbers{% endcomment %}
+{% assign chat_note_num = 0 %}
+{% assign completions_note_num = 0 %}
 {% assign embeddings_note_num = 0 %}
+{% assign function_calling_note_num = 0 %}
 {% assign files_note_num = 0 %}
 {% assign batches_note_num = 0 %}
 {% assign assistants_note_num = 0 %}
 {% assign responses_note_num = 0 %}
+{% assign audio_speech_note_num = 0 %}
+{% assign audio_transcriptions_note_num = 0 %}
+{% assign audio_translations_note_num = 0 %}
+{% assign image_generations_note_num = 0 %}
+{% assign image_edits_note_num = 0 %}
+{% assign video_generations_note_num = 0 %}
 {% assign realtime_note_num = 0 %}
 {% assign note_counter = 0 %}
 
+{% if provider.chat.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign chat_note_num = note_counter %}
+{% endif %}
+{% if provider.completions.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign completions_note_num = note_counter %}
+{% endif %}
 {% if provider.embeddings.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
   {% assign embeddings_note_num = note_counter %}
+{% endif %}
+{% if provider.function_calling.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign function_calling_note_num = note_counter %}
 {% endif %}
 {% if provider.files.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
@@ -36,6 +57,30 @@ The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{ro
 {% if provider.responses.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
   {% assign responses_note_num = note_counter %}
+{% endif %}
+{% if provider.audio.speech.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign audio_speech_note_num = note_counter %}
+{% endif %}
+{% if provider.audio.transcriptions.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign audio_transcriptions_note_num = note_counter %}
+{% endif %}
+{% if provider.audio.translations.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign audio_translations_note_num = note_counter %}
+{% endif %}
+{% if provider.image.generations.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign image_generations_note_num = note_counter %}
+{% endif %}
+{% if provider.image.edits.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign image_edits_note_num = note_counter %}
+{% endif %}
+{% if provider.video.generations.note.content %}
+  {% assign note_counter = note_counter | plus: 1 %}
+  {% assign video_generations_note_num = note_counter %}
 {% endif %}
 {% if provider.realtime.note.content %}
   {% assign note_counter = note_counter | plus: 1 %}
@@ -86,7 +131,7 @@ The following tables show the AI capabilities supported by {{ provider.name }} p
 
 ### Text generation
 
-Support for basic text generation capabilities including chat, completions, and embeddings:
+Support for {{ provider.name }} basic text generation capabilities including chat, completions, and embeddings:
 
 <table>
   <thead>
@@ -102,7 +147,7 @@ Support for basic text generation capabilities including chat, completions, and 
   <tbody>
     {% if provider.chat.supported %}
     <tr>
-      <td>Chat completions</td>
+      <td>Chat completions{% if provider.chat.note.content %}<sup>{{ chat_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.chat.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -120,7 +165,7 @@ Support for basic text generation capabilities including chat, completions, and 
 
     {% if provider.completions.supported %}
     <tr>
-      <td>Completions</td>
+      <td>Completions{% if provider.completions.note.content %}<sup>{{ completions_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.completions.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -156,10 +201,15 @@ Support for basic text generation capabilities including chat, completions, and 
   </tbody>
 </table>
 
-{% if provider.embeddings.note.content %}
-**Notes:**
+{% if provider.chat.note.content or provider.completions.note.content or provider.embeddings.note.content %}
 
-<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}
+{% if provider.chat.note.content %}<sup>{{ chat_note_num }}</sup> {{ provider.chat.note.content }}
+
+{% endif %}
+{% if provider.completions.note.content %}<sup>{{ completions_note_num }}</sup> {{ provider.completions.note.content }}
+
+{% endif %}
+{% if provider.embeddings.note.content %}<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}{% endif %}
 {% endif %}
 {% endif %}
 
@@ -167,7 +217,7 @@ Support for basic text generation capabilities including chat, completions, and 
 
 ### Advanced text generation
 
-Support for function calling to allow {{ provider.name }} models to use external tools and APIs:
+Support for {{ provider.name }} function calling to allow {{ provider.name }} models to use external tools and APIs:
 
 <table>
   <thead>
@@ -183,7 +233,7 @@ Support for function calling to allow {{ provider.name }} models to use external
   <tbody>
     {% if provider.function_calling.supported %}
     <tr>
-      <td>Function calling</td>
+      <td>Function calling{% if provider.function_calling.note.content %}<sup>{{ function_calling_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.function_calling.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -200,13 +250,21 @@ Support for function calling to allow {{ provider.name }} models to use external
     {% endif %}
   </tbody>
 </table>
+
+{:.info}
+> Function calling uses the `llm/v1/chat` route type.
+
+{% if provider.function_calling.note.content %}
+
+<sup>{{ function_calling_note_num }}</sup> {{ provider.function_calling.note.content }}
+{% endif %}
 {% endif %}
 
 {% if has_processing %}
 
 ### Processing
 
-Support for file operations, batch operations, assistants, and response handling:
+Support for {{ provider.name }} file operations, batch operations, assistants, and response handling:
 
 <table>
   <thead>
@@ -295,7 +353,6 @@ Support for file operations, batch operations, assistants, and response handling
 </table>
 
 {% if provider.files.note.content or provider.batches.note.content or provider.assistants.note.content or provider.responses.note.content %}
-**Notes:**
 
 {% if provider.files.note.content %}<sup>{{ files_note_num }}</sup> {{ provider.files.note.content }}
 
@@ -314,7 +371,7 @@ Support for file operations, batch operations, assistants, and response handling
 
 ### Audio
 
-Support for text-to-speech, transcription, and translation capabilities:
+Support for {{ provider.name }} text-to-speech, transcription, and translation capabilities:
 
 <table>
   <thead>
@@ -330,7 +387,7 @@ Support for text-to-speech, transcription, and translation capabilities:
   <tbody>
     {% if provider.audio.speech.supported %}
     <tr>
-      <td>Speech</td>
+      <td>Speech{% if provider.audio.speech.note.content %}<sup>{{ audio_speech_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.audio.speech.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -348,7 +405,7 @@ Support for text-to-speech, transcription, and translation capabilities:
 
     {% if provider.audio.transcriptions.supported %}
     <tr>
-      <td>Transcriptions</td>
+      <td>Transcriptions{% if provider.audio.transcriptions.note.content %}<sup>{{ audio_transcriptions_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.audio.transcriptions.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -366,7 +423,7 @@ Support for text-to-speech, transcription, and translation capabilities:
 
     {% if provider.audio.translations.supported %}
     <tr>
-      <td>Translations</td>
+      <td>Translations{% if provider.audio.translations.note.content %}<sup>{{ audio_translations_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.audio.translations.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -386,13 +443,24 @@ Support for text-to-speech, transcription, and translation capabilities:
 
 {:.info}
 > For requests with large payloads (audio transcription/translation), consider increasing `config.max_request_body_size` to three times the raw binary size.
+
+{% if provider.audio.speech.note.content or provider.audio.transcriptions.note.content or provider.audio.translations.note.content %}
+
+{% if provider.audio.speech.note.content %}<sup>{{ audio_speech_note_num }}</sup> {{ provider.audio.speech.note.content }}
+
+{% endif %}
+{% if provider.audio.transcriptions.note.content %}<sup>{{ audio_transcriptions_note_num }}</sup> {{ provider.audio.transcriptions.note.content }}
+
+{% endif %}
+{% if provider.audio.translations.note.content %}<sup>{{ audio_translations_note_num }}</sup> {{ provider.audio.translations.note.content }}{% endif %}
+{% endif %}
 {% endif %}
 
 {% if has_image %}
 
 ### Image
 
-Support for image generation and editing capabilities:
+Support for {{ provider.name }} image generation and editing capabilities:
 
 <table>
   <thead>
@@ -408,7 +476,7 @@ Support for image generation and editing capabilities:
   <tbody>
     {% if provider.image.generations.supported %}
     <tr>
-      <td>Generations</td>
+      <td>Generations{% if provider.image.generations.note.content %}<sup>{{ image_generations_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.image.generations.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -426,7 +494,7 @@ Support for image generation and editing capabilities:
 
     {% if provider.image.edits.supported %}
     <tr>
-      <td>Edits</td>
+      <td>Edits{% if provider.image.edits.note.content %}<sup>{{ image_edits_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.image.edits.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -446,13 +514,21 @@ Support for image generation and editing capabilities:
 
 {:.info}
 > For requests with large payloads (image edits), consider increasing `config.max_request_body_size` to three times the raw binary size.
+
+{% if provider.image.generations.note.content or provider.image.edits.note.content %}
+
+{% if provider.image.generations.note.content %}<sup>{{ image_generations_note_num }}</sup> {{ provider.image.generations.note.content }}
+
+{% endif %}
+{% if provider.image.edits.note.content %}<sup>{{ image_edits_note_num }}</sup> {{ provider.image.edits.note.content }}{% endif %}
+{% endif %}
 {% endif %}
 
 {% if has_video %}
 
 ### Video
 
-Support for video generation capabilities:
+Support for {{ provider.name }} video generation capabilities:
 
 <table>
   <thead>
@@ -468,7 +544,7 @@ Support for video generation capabilities:
   <tbody>
     {% if provider.video.generations.supported %}
     <tr>
-      <td>Generations</td>
+      <td>Generations{% if provider.video.generations.note.content %}<sup>{{ video_generations_note_num }}</sup>{% endif %}</td>
       <td>
         {% assign path_stripped = provider.video.generations.upstream_path | strip_html %}
         {% if path_stripped contains '/' %}
@@ -489,13 +565,17 @@ Support for video generation capabilities:
 {:.info}
 > For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
 
+{% if provider.video.generations.note.content %}
+
+<sup>{{ video_generations_note_num }}</sup> {{ provider.video.generations.note.content }}
+{% endif %}
 {% endif %}
 
 {% if has_realtime %}
 
 ### Realtime
 
-Support for bidirectional streaming for realtime applications:
+Support for {{ provider.name }}'s bidirectional streaming for realtime applications:
 
 {:.warning}
 > Realtime processing requires the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin and uses WebSocket protocol.
