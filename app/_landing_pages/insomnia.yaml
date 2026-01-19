@@ -58,7 +58,7 @@ rows:
             description: Download and install Insomnia for Linux.
             icon: /assets/icons/third-party/linux.svg
             cta:
-              text: Linux Download
+              text: Download
               url: https://updates.insomnia.rest/downloads/ubuntu/latest?&app=com.insomnia.app&source=website
   - header:
       type: h2
