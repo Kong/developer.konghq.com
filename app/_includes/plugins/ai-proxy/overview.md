@@ -43,7 +43,7 @@ features:
     description: Generates conversational responses from a sequence of messages using supported LLM providers.
     openai_compatible: true
     examples: |
-      * [`llm/v1/chat`](./examples/chat-route-type/)<br>
+      * [`llm/v1/chat`](./examples/openai-chat-route/)<br>
 
   - title: "Embeddings"
     description: Converts text to vector representations for semantic search and similarity matching.
@@ -55,7 +55,7 @@ features:
     description: Allows models to invoke external tools and APIs based on conversation context.
     openai_compatible: true
     examples: |
-      * [`llm/v1/chat`](./examples/function-calling/)<br>
+      * llm/v1/chat
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
@@ -78,7 +78,7 @@ features:
     examples: |
       * [`audio/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
       * [`audio/v1/audio/speech`](./examples/audio-speech-openai/)<br>
-      * [`audio/v1/audio/translations`](./examples/audio-translations-openai/)<br>
+      * [`audio/v1/audio/translations`](./examples/audio-translation-openai/)<br>
 
   - title: "Image generation and editing"
     description: Generates or modifies images from text prompts.
@@ -139,7 +139,7 @@ features:
     description: Generates conversational responses from a sequence of messages using supported LLM providers.
     openai_compatible: true
     examples: |
-      * [`llm/v1/chat`](./examples/chat-route-type/)<br>
+      * [`llm/v1/chat`](./examples/openai-chat-route/)<br>
 
   - title: "Embeddings"
     description: Converts text to vector representations for semantic search and similarity matching.
@@ -151,7 +151,7 @@ features:
     description: Allows models to invoke external tools and APIs based on conversation context.
     openai_compatible: true
     examples: |
-      * [`llm/v1/chat`](./examples/function-calling/)<br>
+      * llm/v1/chat
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
@@ -174,7 +174,7 @@ features:
     examples: |
       * [`audio/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
       * [`audio/v1/audio/speech`](./examples/audio-speech-openai/)<br>
-      * [`audio/v1/audio/translations`](./examples/audio-translations-openai/)<br>
+      * [`audio/v1/audio/translations`](./examples/audio-translation-openai/)<br>
 
   - title: "Image generation and editing"
     description: Generates or modifies images from text prompts.
