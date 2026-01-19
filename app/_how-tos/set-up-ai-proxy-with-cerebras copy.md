@@ -75,6 +75,7 @@ To set up AI Proxy Advanced with Cerebras, we need to specify the model to use.
 
 In this example, we'll use the gpt-oss-120b model:
 
+<!--vale off-->
 config:
   route_type: llm/v1/chat
   auth:
@@ -96,6 +97,7 @@ tools:
   - konnect-api
   - kic
   - terraform
+<!--vale on-->
 
 ## Validate
 
