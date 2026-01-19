@@ -40,7 +40,7 @@ rows:
             description: Download and install Insomnia for macOS.
             icon:  /assets/icons/third-party/mac.svg
             cta:
-              text: macOS Download
+              text: Download
               url: https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.app&source=website
       - blocks:
         - type: card
