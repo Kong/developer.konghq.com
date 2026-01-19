@@ -1,19 +1,19 @@
-title: Advanced Analytics Documentation
+title: Observability Documentation
 sections:
   - title: Overview
     items:
-      - path: /advanced-analytics/
+      - path: /observability/
     auto_exclude: true
   - title: References
     items:
-      - path: /advanced-analytics/explorer/
-      - path: /advanced-analytics/llm-reporting/
+      - path: /observability/explorer/
+      - path: /observability/llm-reporting/
       - title: Analytics teams and roles
         description: Assign users to predefined Analytics teams in Konnect to control access levels.
         url: /konnect-platform/teams-and-roles/
   - title: Custom Dashboards
     items: 
-      - path: /advanced-analytics/custom-dashboards/
-      - path: /advanced-analytics/custom-dashboards-reference/
+      - path: /custom-dashboards/
+      - path: /observability/custom-dashboards-reference/
       - path: /how-to/create-custom-dashboards/
       - path: /how-to/automate-dashboard-terraform/

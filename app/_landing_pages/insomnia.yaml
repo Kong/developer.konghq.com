@@ -34,15 +34,32 @@ rows:
       text: Install Insomnia
     columns:
       - blocks:
-        - type: tabs
-          tab_group: install-on-os
+        - type: card
           config:
-            - title: macOS
-              include_content: tools/insomnia/install/osx
-            - title: Windows
-              include_content: tools/insomnia/install/windows
-            - title: Linux
-              include_content: tools/insomnia/install/linux
+            title: macOS
+            description: Download and install Insomnia for macOS.
+            icon:  /assets/icons/third-party/mac.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Windows
+            description: Download and install Insomnia for Windows.
+            icon: /assets/icons/third-party/windows.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/windows/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Linux
+            description: Download and install Insomnia for Linux.
+            icon: /assets/icons/third-party/linux.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/ubuntu/latest?&app=com.insomnia.app&source=website
   - header:
       type: h2
       text: Get started
