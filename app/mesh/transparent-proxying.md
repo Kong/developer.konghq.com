@@ -15,7 +15,7 @@ related_resources:
     url: /how-to/configure-transparent-proxying/
   - text: Multi-zone deployment
     url: /mesh/mesh-multizone-service-deployment/
-  - text: Mesh service discovery
+  - text: Service discovery
     url: /mesh/service-discovery/
 ---
 
