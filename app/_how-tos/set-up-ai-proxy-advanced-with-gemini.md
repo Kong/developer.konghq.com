@@ -82,6 +82,7 @@ To set up AI Proxy Advanced with Gemini, configure API key authentication and sp
 
 In this example, we use the `gemini-2.0-flash-exp` model:
 
+<!--vale off-->
 config:
   targets:
     - route_type: llm/v1/chat
@@ -102,6 +103,7 @@ tools:
   - konnect-api
   - kic
   - terraform
+<!--vale on-->
 
 ## Validate
 To validate, send a request to the Route:
