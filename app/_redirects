@@ -17,6 +17,7 @@
 /mesh/requirements/ /mesh/version-compatibility/
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
+/mesh/configure-transparent-proxying/   /how-to/configure-transparent-proxying/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -64,7 +65,7 @@
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/mesh   /mesh/mesh-multi-tenancy/
 /mesh/production/dp-config/cni      /mesh/cni/
-/mesh/production/dp-config/transparent-proxying     /mesh/configure-transparent-proxying/
+/mesh/production/dp-config/transparent-proxying     /how-to/configure-transparent-proxying/
 /mesh/production/dp-config/ipv6     /mesh/ipv6-support/
 /mesh/production/secure-deployment/api-access-control   /mesh/enterprise/
 /mesh/production/secure-deployment/dp-auth  /mesh/dp-auth/
