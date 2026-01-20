@@ -212,7 +212,6 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    ```
    {:.no-copy-code}
 
-<!-- Removed until we figure out why it doesn't work
 
 ## Secure your endpoint
 
@@ -312,4 +311,3 @@ With the gateway, we exposed the application to a public endpoint. To secure it,
    {"counter":2,"zone":""}
    ```
    {:.no-copy-code}
--->
