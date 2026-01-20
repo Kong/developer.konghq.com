@@ -91,10 +91,6 @@ variables:
     description: The token to use to connect to Hugging Face.
 formats:
   - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
 {% endentity_examples %}  
 <!--vale on-->
 
