@@ -108,6 +108,7 @@ event_gateway: Kong Event Gateway
 event_gateway_short: Event Gateway
 konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
+observability: Observability
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com

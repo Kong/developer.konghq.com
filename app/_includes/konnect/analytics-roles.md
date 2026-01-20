@@ -9,7 +9,7 @@ columns:
 rows:
   - role: "`Dashboard viewer`"
     description: >-
-      Users can view the [Analytics](/advanced-analytics/) summary and report data.<br>
+      Users can view the [Analytics](/observability/) summary and report data.<br>
       - Cannot edit dashboards<br>
       - Can apply temporary filters during a session<br>
       - Can only see dashboards they are explicitly granted access to

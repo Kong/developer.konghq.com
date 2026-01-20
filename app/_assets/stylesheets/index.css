@@ -84,8 +84,8 @@
     --kui-method-color-text-put: rgb(var(--color-semantic-yellow-primary));
     --kui-method-color-background-put: rgb(var(--color-semantic-yellow-secondary));
 
-    --color-advanced-analytics-brand: var(--color-semantic-yellow-primary);
-    --color-advanced-analytics-background: var(--color-semantic-yellow-secondary);
+    --color-observability-brand: var(--color-semantic-yellow-primary);
+    --color-observability-background: var(--color-semantic-yellow-secondary);
     --color-ai-gateway-brand: var(--color-semantic-green-primary);
     --color-ai-gateway-background: var(--color-semantic-green-secondary);
     --color-event-gateway-brand: var(--color-semantic-green-primary);
