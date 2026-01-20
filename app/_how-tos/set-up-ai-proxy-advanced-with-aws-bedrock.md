@@ -99,7 +99,7 @@ In this example, we'll use the Meta Llama 3 70B Instruct model:
 <!--vale off-->
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
         route_type: llm/v1/chat
         auth:
