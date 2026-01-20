@@ -75,7 +75,7 @@ In this example, we'll use the SmolLM model:
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
         targets:
           - route_type: llm/v1/chat
