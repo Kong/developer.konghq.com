@@ -97,10 +97,6 @@ variables:
     description: The API key to use to connect to Cerebras.
 formats:
   - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
 {% endentity_examples %}
 <!--vale on-->
 
