@@ -54,7 +54,7 @@ prereqs:
 
         Export these values as environment variables:
         ```sh
-        export GEMINI_API_KEY="<your_gemini_api_key>"
+        export DECK_GEMINI_API_KEY="<your_gemini_api_key>"
         export GCP_PROJECT_ID="<your-gemini-project-id>"
         export GEMINI_LOCATION_ID="<your-gemini-location_id>"
         export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
@@ -83,26 +83,24 @@ To set up AI Proxy Advanced with Gemini, configure API key authentication and sp
 In this example, we use the `gemini-2.0-flash-exp` model:
 
 <!--vale off-->
-config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        param_name: key
-        param_value: ${key}
-        param_location: query
-      model:
-        provider: gemini
-        name: gemini-1.5-flash
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        route_type: llm/v1/chat
+        auth:
+          param_name: key
+          param_value: ${gemini_api_key}
+          param_location: query
+        model:
+          provider: gemini
+          name: gemini-1.5-flash
 variables:
-  key:
+  gemini_api_key:
     value: $GEMINI_API_KEY
     description: The API key to use to connect to Gemini.
-tools:
-  - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
+{% endentity_examples %}
 <!--vale on-->
 
 ## Validate
