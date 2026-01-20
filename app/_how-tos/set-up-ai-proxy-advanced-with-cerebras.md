@@ -76,27 +76,32 @@ To set up AI Proxy Advanced with Cerebras, we need to specify the model to use.
 In this example, we'll use the gpt-oss-120b model:
 
 <!--vale off-->
-config:
-  route_type: llm/v1/chat
-  auth:
-    header_name: Authorization
-    header_value: Bearer ${key}
-  model:
-    provider: cerebras
-    name: gpt-oss-120b
-    options:
-      max_tokens: 512
-      temperature: 1.0
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      config:
+        route_type: llm/v1/chat
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${cerebras_api_key}
+        model:
+          provider: cerebras
+          name: gpt-oss-120b
+          options:
+            max_tokens: 512
+            temperature: 1.0
 variables:
-  key:
+  cerebras_api_key:
     value: $CEREBRAS_API_KEY
     description: The API key to use to connect to Cerebras.
-tools:
+formats:
   - deck
   - admin-api
   - konnect-api
   - kic
   - terraform
+{% endentity_examples %}
 <!--vale on-->
 
 ## Validate
