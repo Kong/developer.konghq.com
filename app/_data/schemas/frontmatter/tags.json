@@ -7,6 +7,7 @@
     "account-management",
     "after-response-scripts",
     "ai",
+    "ai-proxy",
     "allowlist",
     "amazon-certificate-manager",
     "analytics",

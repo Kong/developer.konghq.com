@@ -36,6 +36,7 @@ categories:
 
 tags:
   - ai
+  - ai-proxy
 
 search_aliases:
   - ai
