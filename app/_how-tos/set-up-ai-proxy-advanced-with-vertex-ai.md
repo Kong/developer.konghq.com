@@ -67,20 +67,23 @@ To set up AI Proxy Advanced with Vertex AI, specify the model and set the approp
 In this example, we'll use the Gemini 2.5 Flash model:
 
 <!--vale off-->
-config:
-  route_type: llm/v1/chat
-  auth:
-    param_name: key
-    param_value: ${key}
-    param_location: query
-  model:
-    provider: gemini
-    name: gemini-1.5-flash
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      config:
+        route_type: llm/v1/chat
+        auth:
+          param_name: key
+          param_value: ${gemini_api_key}
+          param_location: query
+        model:
+          provider: gemini
+          name: gemini-1.5-flash
 variables:
-  key:
+  gemini_api_key:
     value: $GEMINI_API_KEY
     description: The API key to use to connect to Gemini.
-tools:
+formats:
   - deck
   - admin-api
   - konnect-api
