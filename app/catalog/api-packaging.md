@@ -8,7 +8,7 @@ products:
     - catalog
 
 breadcrumbs: 
-  - /dev-portal/
+  - /catalog/
 tags:
   - api-catalog
   - api-composition
