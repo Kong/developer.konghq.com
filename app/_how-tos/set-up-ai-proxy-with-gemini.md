@@ -54,7 +54,7 @@ prereqs:
 
         Export these values as environment variables:
         ```sh
-        export GEMINI_API_KEY="<your_gemini_api_key>"
+        export DECK_GEMINI_API_KEY="<your_gemini_api_key>"
         export GCP_PROJECT_ID="<your-gemini-project-id>"
         export GEMINI_LOCATION_ID="<your-gemini-location_id>"
         export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
