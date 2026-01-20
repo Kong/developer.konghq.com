@@ -79,10 +79,10 @@ entities:
           param_location: query
         model:
           provider: gemini
-          name: gemini-1.5-flash
+          name: gemini-2.0-flash-exp
 variables:
   gemini_api_key:
-    value: $GEMINI_API_KEY
+    value: $VERTEX_API_KEY
     description: The API key to use to connect to Gemini.
 formats:
   - deck
