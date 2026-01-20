@@ -10,12 +10,12 @@ related_resources:
 description: Configure the AI Proxy plugin to create a chat route using HuggingFace.
 
 products:
-    - gateway
-    - ai-gateway
+  - gateway
+  - ai-gateway
 
 works_on:
-    - on-prem
-    - konnect
+  - on-prem
+  - konnect
 
 min_version:
   gateway: '3.6'
@@ -29,15 +29,15 @@ entities:
   - plugin
 
 tags:
-    - ai
-    - huggingface
+  - ai
+  - huggingface
 
 tldr:
-    q: How do I use the AI Proxy plugin with HuggingFace?
-    a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the HuggingFace provider and add the model and your API key.
+  q: How do I use the AI Proxy plugin with HuggingFace?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the HuggingFace provider and add the model and your API key.
 
 tools:
-    - deck
+  - deck
 
 prereqs:
   inline:
