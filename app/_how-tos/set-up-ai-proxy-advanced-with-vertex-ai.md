@@ -86,10 +86,6 @@ variables:
     description: The API key to use to connect to Gemini.
 formats:
   - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
 {% endentity_examples %}  
 <!--vale on-->
 
