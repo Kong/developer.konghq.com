@@ -17,6 +17,7 @@
 /mesh/requirements/ /mesh/version-compatibility/
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
+/mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -44,7 +45,7 @@
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
 /mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
-/mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/managing-ingress-traffic/gateway/
+/mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
 /mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
 /mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/ingress-gateway-delegated/
 /mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/gateway-pods-k8s/
@@ -183,3 +184,9 @@
 # Cloud Gateways
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
+
+# Observability rename
+/advanced-analytics/*   /observability/:splat   301
+/advanced-analytics     /observability          301
+/index/advanced-analytics/  /index/observability/  301
+/advanced-analytics/custom-dashboards/    /custom-dashboards/ 301

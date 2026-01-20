@@ -255,7 +255,8 @@ While the `+` character represents the correct encoding of space in query string
 
 #### Free mode
 
-Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
+At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
 
 #### Known issues in 3.10.0.0
 
@@ -646,7 +647,7 @@ As of this release, the product component known as Kong Enterprise Portal is no 
 
 In addition, the product component known as Vitals is no longer included in {{site.ee_product_name}}.
 Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism.
-{{site.konnect_product_name}} users can take advantage of our [API Analytics](/advanced-analytics/) offering, which provides a superset of Vitals functionality.
+{{site.konnect_product_name}} users can take advantage of our [API Analytics](/observability/) offering, which provides a superset of Vitals functionality.
 
 If you have purchased Kong Enterprise Portal or Vitals in the past and would like to continue to use it with this release or a future release of {{site.ee_product_name}}, contact [Kong Support](https://support.konghq.com/support/s/) for more information.
 <!--vale on-->

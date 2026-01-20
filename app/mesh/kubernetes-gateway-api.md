@@ -20,15 +20,15 @@ related_resources:
     url: /mesh/kubernetes/
   - text: Data Plane on Kubernetes
     url: /mesh/data-plane-kubernetes/
-  - text: "Reference: Configuring a built-in gateway"
-    url: '/mesh/managing-ingress-traffic/gateway/'
+  - text: "Built-in gateways"
+    url: '/mesh/built-in-gateway/'
   - text: "Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}"
     url: /how-to/set-up-a-built-in-kubernetes-gateway/
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
 ---
 
-{{site.mesh_product_name}} supports the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) for configuring [built-in gateways](/mesh/managing-ingress-traffic/gateway/) as well as traffic routing using the experimental [GAMMA](https://gateway-api.sigs.k8s.io/contributing/gamma/) [routing spec](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
+{{site.mesh_product_name}} supports the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) for configuring [built-in gateways](/mesh/built-in-gateway/) as well as traffic routing using the experimental [GAMMA](https://gateway-api.sigs.k8s.io/contributing/gamma/) [routing spec](https://gateway-api.sigs.k8s.io/geps/gep-1426/).
 
 To learn how to use the Kubernetes Gateway API to deploy a built-in gateway, see [Set up a built-in Kubernetes gateway with {{site.mesh_product_name}}](/how-to/set-up-a-built-in-kubernetes-gateway/). 
 
