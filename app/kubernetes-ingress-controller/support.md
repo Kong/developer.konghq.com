@@ -31,7 +31,7 @@ LTS versions of {{site.kic_product_name}} are supported for 3 years after releas
 
 ## Supported versions
 
-The following table lists {{site.kic_product_name}} compatibility with versions of other dependencies.
+{{site.kic_product_name}} can run on supported [Kubernetes distributions certified by the CNCF](https://www.cncf.io/training/certification/software-conformance/). The following table lists {{site.kic_product_name}} compatibility with versions of other dependencies.
 
 {:.info}
 > **Note**: The {{site.base_gateway}} versions listed here may or may not be currently supported by Kong. 
