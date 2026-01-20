@@ -80,7 +80,7 @@ cleanup:
 
 To set up AI Proxy with Gemini, configure API key authentication and specify the Gemini model to use. 
 
-In this example, we use the `gemini-2.0-flash-exp` model:
+In this example, we use the gemini-2.0-flash-exp model:
 
 <!--vale off-->
 {% entity_examples %}
@@ -100,12 +100,6 @@ variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
     description: The API key to use to connect to Gemini.
-formats:
-  - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
 {% endentity_examples %}
 <!--vale on-->
 
