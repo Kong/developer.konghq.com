@@ -122,10 +122,6 @@ variables:
     description: The AWS secret access key to use to connect to Bedrock.
 formats:
   - deck
-  - admin-api
-  - konnect-api
-  - kic
-  - terraform
 {% endentity_examples %}
 <!--vale on-->
 
