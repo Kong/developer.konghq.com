@@ -48,10 +48,10 @@ prereqs:
         export DECK_HUGGINGFACE_API_TOKEN='YOUR HUGGINGFACE API TOKEN'
         ```
       icon_url: /assets/icons/huggingface.svg  
-  entities:
-    services:
+    entities:
+      services:
         - example-service
-    routes:
+      routes:
         - example-route
 
 cleanup:
