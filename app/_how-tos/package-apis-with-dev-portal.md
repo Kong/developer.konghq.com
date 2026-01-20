@@ -6,7 +6,7 @@ related_resources:
   - text: About Dev Portal
     url: /dev-portal/
   - text: Dev Portal API packaging reference
-    url: /dev-portal/api-catalog-and-packaging/
+    url: /catalog/api-packaging/
 automated_tests: false
 products:
     - gateway
@@ -257,7 +257,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-You can compose [API packages](/dev-portal/api-packaging/) from existing APIs in Dev Portal. API packages allow you to:
+You can compose [API packages](/catalog/api-packaging/) from existing APIs in Dev Portal. API packages allow you to:
 * Create distinct APIs for specific use cases or partners based on existing API operations.
 * Link to multiple Gateway Services and/or Routes for developer self-service and application registration.
 * Apply rate limiting policies to an API Package, or per operation.
