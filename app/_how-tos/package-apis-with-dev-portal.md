@@ -28,7 +28,7 @@ tldr:
         1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
         1. Link a control plane to allow developer consumption. 
         1. Apply the Access Control Enforcement (ACE) plugin globally.
-        1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
+        1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -54,6 +54,7 @@ prereqs:
         For this tutorial, you’ll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn’t the focus of this guide.
 
         1. Run the following command:
+
            ```yaml
            echo '
            _format_version: "3.0"
@@ -256,7 +257,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-You can compose API packages from existing APIs in Dev Portal. API packages allow you to:
+You can compose [API packages](/dev-portal/api-packaging/) from existing APIs in Dev Portal. API packages allow you to:
 * Create distinct APIs for specific use cases or partners based on existing API operations.
 * Link to multiple Gateway Services and/or Routes for developer self-service and application registration.
 * Apply rate limiting policies to an API Package, or per operation.
@@ -282,7 +283,7 @@ To allow developers to consume your API, you must first link an API Gateway and 
 
 ## Assign operations to API packages
 
-Now, you can create an API package by picking operations from your API.
+Now, you can create an API package by picking operations from your API. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
@@ -307,7 +308,7 @@ Now, you can create an API package by picking operations from your API.
 1. Click the **API packages** tab.
 1. Click **Company package**.
 1. Click **Publish API**.
-1. From the **Portal** dropdown menu, select "test".
+1. From the **Portal** dropdown menu, select your Dev Portal.
 1. From the **Authentication strategy** dropdown menu, select "Disabled".
 1. Click **Public**.
 1. Click **Publish API**. 
@@ -316,4 +317,4 @@ Your API package will now be published to your Dev Portal. Published API package
 
 ## Validate
 
-Now that you've published your API package, you can verify that it was successfully published to your Dev Portal's URL. 
+Now that you've published your API package, you can verify that it was successfully published by navigating to your Dev Portal's URL. You can find your Dev Portal's URL by navigating to the [Dev Portal overview](https://cloud.konghq.com/portals/) in the {{site.konnect_short_name}} UI.
