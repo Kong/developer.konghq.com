@@ -37,7 +37,7 @@ related_resources:
 ---
 
 {:.success}
-> This is a reference guide, you can also follow along with our [Package APIs for partners with Dev Portal](/how-to/package-apis-for-partners-with-dev-portal/) tutorial.
+> This is a reference guide, you can also follow along with our [Package APIs for partners with Dev Portal](/how-to/package-apis-with-dev-portal/) tutorial.
 
 You can compose API packages from existing APIs in Dev Portal. API packages allow you to:
 * Create distinct APIs for specific use cases or partners based on existing API operations.
