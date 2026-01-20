@@ -103,6 +103,9 @@ In this guide we'll use the [Kubernetes Gateway API](/mesh/kubernetes-gateway-ap
    kv-648747567c-qhmxj                2/2     Running   0          106s
    ```
    {:.no-copy-code}
+
+   {:.info}
+   > It can take a few minutes for the `built-in-gateway` pod to appear. If you only see the `demo-app` and `kv` pods, wait and try again.
    
 1. Export the gateway's public IP: 
 
