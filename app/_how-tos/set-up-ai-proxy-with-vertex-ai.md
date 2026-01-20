@@ -67,7 +67,7 @@ To set up AI Proxy with Vertex AI, specify the model and set the appropriate aut
 In this example, we'll use the Gemini 2.5 Flash model:
 
 <!--vale off-->
-{% endentity_examples %}
+{% entity_examples %}
 entities:
   plugins:
     - name: ai-proxy
