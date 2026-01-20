@@ -97,7 +97,7 @@ There are several advantages when using transparent proxying in Universal mode:
 * Universal service naming with the `.mesh` [DNS domain](/mesh/dns) instead of explicit outbounds like `https://localhost:10001`.
 * Better service manageability (security, tracing).
 
-{:.note}
+{:.info}
 > If you run `firewalld` to manage firewalls and wrap `iptables`, add the `--store-firewalld` flag to `kumactl install transparent-proxy`. This persists the relevant rules across host restarts. The changes are stored in `/etc/firewalld/direct.xml`. There is no uninstall command for this feature.
 
 ### Upgrades
