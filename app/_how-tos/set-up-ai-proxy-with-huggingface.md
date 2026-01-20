@@ -72,7 +72,7 @@ To set up AI Proxy with HuggingFace, we need to specify the model to use.
 In this example, we'll use the SmolLM model:
 
 <!--vale off-->
-{% endentity_examples %}
+{% entity_examples %}
 entities:
   plugins:
     - name: ai-proxy
