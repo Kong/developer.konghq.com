@@ -86,7 +86,7 @@ In this example, we use the `gemini-2.0-flash-exp` model:
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
         route_type: llm/v1/chat
         auth:
