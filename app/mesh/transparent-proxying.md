@@ -25,6 +25,7 @@ A transparent proxy is a type of server that can intercept network traffic to an
 
 Here's a high level visualization of how transparent proxying works:
 
+<!-- vale off -->
 {% mermaid %}
  sequenceDiagram
  autonumber
@@ -46,6 +47,7 @@ Here's a high level visualization of how transparent proxying works:
      end
      ServiceMeshOut->>+Browser: Response to client
 {% endmermaid %}
+<!-- vale on -->
 
 If you choose to not use transparent proxying, or if you're running on a platform where transparent proxying isn't available, there are some additional consideration:
 
