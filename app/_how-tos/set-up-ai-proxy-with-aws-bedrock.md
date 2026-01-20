@@ -97,7 +97,7 @@ To set up AI Proxy with AWS Bedrock, specify the model and set the appropriate a
 In this example, we'll use the Meta Llama 3 70B Instruct model:
 
 <!--vale off-->
-{% endentity_examples %}
+{% entity_examples %}
 entities:
   plugins:
     - name: ai-proxy
