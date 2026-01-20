@@ -72,20 +72,23 @@ To set up AI Proxy Advanced with HuggingFace, we need to specify the model to us
 In this example, we'll use the SmolLM model:
 
 <!--vale off-->
-config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${token}
-      model:
-        provider: huggingface
-        name: HuggingFaceTB/SmolVLM-Base
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${huggingface_token}
+            model:
+              provider: huggingface
+              name: HuggingFaceTB/SmolVLM-Base
 variables:
-  token:
+  huggingface_token:
     value: $HUGGINGFACE_TOKEN
     description: The token to use to connect to Hugging Face.
-tools:
+formats:
   - deck
   - admin-api
   - konnect-api
