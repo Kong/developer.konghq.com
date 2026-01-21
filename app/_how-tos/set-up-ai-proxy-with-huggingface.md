@@ -77,14 +77,13 @@ entities:
   plugins:
     - name: ai-proxy
       config:
-        targets:
-          - route_type: llm/v1/chat
-            auth:
-              header_name: Authorization
-              header_value: Bearer ${huggingface_token}
-            model:
-              provider: huggingface
-              name: HuggingFaceTB/SmolVLM-Base
+        route_type: llm/v1/chat
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${{ env "DECK_HUGGINGFACE_TOKEN" }}
+        model:
+          provider: huggingface
+          name: Qwen/Qwen3-4B-Instruct-2507
 variables:
   huggingface_token:
     value: $HUGGINGFACE_TOKEN
