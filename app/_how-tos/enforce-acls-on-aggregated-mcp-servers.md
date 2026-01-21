@@ -64,13 +64,20 @@ prereqs:
            export DECK_WEATHERAPI_API_KEY='your-weatherapi-api-key'
            ```
       icon_url: /assets/icons/api.svg
+    - title: OpenAI API key
+      content: |
+        This tutorial uses OpenAI:
+
+        1. [Create an OpenAI account](https://auth.openai.com/create-account).
+        1. [Get an API key](https://platform.openai.com/api-keys).
     - title: ChatWise desktop application
       content: |
         Download and install [ChatWise](https://chatwise.app/) for your OS.
 
         After installation:
         1. Launch the app.
-        2. In Settings > Providers, configure your AI provider endpoint and API key.
+        1. Go to Settings > Providers > OpenAI.
+        1. Paste your OpenAI API key.
   entities:
     services:
       - weather-internet-service
@@ -79,6 +86,8 @@ prereqs:
       - weather-internet-mcp
       - cards-api-mcp
       - mcp-aggregation
+
+automated_tests: false
 ---
 
 ## Set up Consumer authentication
