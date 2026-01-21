@@ -72,22 +72,33 @@ entities:
   plugins:
     - name: ai-proxy-advanced
       config:
+        llm_format: gemini
         targets:
           - route_type: llm/v1/chat
-            auth:
-              param_name: key
-              param_value: ${gemini_api_key}
-              param_location: query
             model:
               provider: gemini
               name: gemini-2.0-flash-exp
+              options:
+                gemini:
+                  api_endpoint: us-central1-aiplatform.googleapis.com
+                  project_id: ${gcp_project_id}
+                  location_id: ${gcp_location_id}
+            auth:
+              gcp_use_service_account: true
+              gcp_service_account_json: ${gcp_service_account_json}
 variables:
-  gemini_api_key:
-    value: $VERTEX_API_KEY
-    description: The API key to use to connect to Gemini.
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+    description: The Google Cloud project ID that hosts the Vertex AI Gemini model.
+  gcp_location_id:
+    value: $GCP_LOCATION_ID
+    description: The Google Cloud region where Vertex AI is enabled.
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+    description: The JSON key for a Google Cloud service account with permission to access Vertex AI.
 formats:
   - deck
-{% endentity_examples %}  
+{% endentity_examples %}
 <!--vale on-->
 
 ## Validate
