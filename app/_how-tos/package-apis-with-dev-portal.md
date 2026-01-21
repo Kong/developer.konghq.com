@@ -9,9 +9,9 @@ related_resources:
     url: /catalog/api-packaging/
 automated_tests: false
 products:
+    - dev-portal
     - gateway
     - catalog
-    - dev-portal
 
 works_on:
     - konnect
@@ -25,11 +25,11 @@ tldr:
     q: How do I create API packages from existing Dev Portal APIs?
     a: |
         Packaging APIs involves the following steps:
-        1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
+        1. Create an API and attach an OpenAPI spec.
         1. Apply the Access Control Enforcement (ACE) plugin globally on the control plane you want to link.
         1. Link a control plane to the API to allow developer consumption. 
-        1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
-        1. Publish the API package to Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them
+        1. Create an API package by adding operations and package rate limits.
+        1. Publish the API package to Dev Portal. 
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -44,7 +44,7 @@ prereqs:
       icon_url: /assets/icons/dev-portal.svg
     - title: Dev Portal APIs
       content: |
-        To complete this guide, you'll need an API in Catalog. 
+        To complete this guide, you'll need an API in Catalog:
         1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
         1. Click [**New API**](https://cloud.konghq.com/apis/create).
         1. In the **API name** field, enter `MyAPI`.
@@ -77,7 +77,7 @@ prereqs:
            ' | deck gateway apply -
            ```
 
-           To learn more about entities, you can read our [entities documentation](/gateway/entities).
+           To learn more about entities, you can read our [entities documentation](/gateway/entities/).
     - title: API specification
       content: |
         To complete this guide, you'll need an API specification that matches the Route you created. {{site.konnect_catalog}} uses the spec to add operations to your API package.
@@ -262,12 +262,13 @@ You can compose [API packages](/catalog/api-packaging/) from existing APIs in De
 * Create distinct APIs for specific use cases or partners based on existing API operations.
 * Link to multiple Gateway Services and/or Routes for developer self-service and application registration.
 * Apply rate limiting policies to an API Package, or per operation.
-* Manage role-based access control to specific developers and teams.
+* Manage role-based access control for specific developers and teams.
 
 ## Associate a control plane
 
 To allow developers to consume your API, you must first link an API Gateway and control plane to your API.
 
+Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
 1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/apis/).
 1. Click **MyAPI**.
 1. Click the **Gateway** tab.
@@ -284,7 +285,7 @@ To allow developers to consume your API, you must first link an API Gateway and 
 
 ## Assign operations to API packages
 
-Now, you can create an API package by picking operations from your API. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
+Now, you can create an API package by picking operations from your API. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified – any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions to perform an action.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
@@ -294,9 +295,9 @@ Now, you can create an API package by picking operations from your API. Operatio
 1. For the rate limit, enter `5` and select "Minute".
 1. In the API operations settings, click **Add operations from APIs**.
 1. In the Add API operations pane, click **MyAPI**
-1. For GET /anything, click **Add**.
-1. For PUT /anything, click **Add**.
-1. For POST /anything, click **Add**.
+1. For GET `/anything`, click **Add**.
+1. For PUT `/anything`, click **Add**.
+1. For POST `/anything`, click **Add**.
 1. Exit the Add API operations pane.
 1. Click **Create API package**. 
 1. Click the **Specifications** tab.
@@ -304,7 +305,7 @@ Now, you can create an API package by picking operations from your API. Operatio
 1. Click **Save**.
 
 ## Publish API packages to Dev Portal
-
+Now you can make the API packages available to developers by publishing them to a Dev Portal.
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. Click the **API packages** tab.
 1. Click **Company package**.
