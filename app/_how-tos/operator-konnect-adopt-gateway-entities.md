@@ -1,6 +1,6 @@
 ---
-title: Adopting Existing Gateway Entities from {{ site.konnect_short_name }}
-description: "How to manage existing gateway entities using Kubernetes CRDs in {{ site.konnect_short_name }} by adoption"
+title: Adopt existing entities from {{ site.konnect_short_name }}
+description: "Manage existing gateway entities using Kubernetes CRDs in {{ site.konnect_short_name }}."
 content_type: how_to
 permalink: /operator/konnect/crd/adoption/gateway/
 breadcrumbs:
