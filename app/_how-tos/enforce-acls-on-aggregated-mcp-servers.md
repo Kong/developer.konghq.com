@@ -46,7 +46,6 @@ entities:
 tags:
   - ai
   - mcp
-  - acl
 
 tldr:
   q: How do I enforce ACLs on MCP tools aggregated from multiple sources?
