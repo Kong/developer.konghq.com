@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b7eea2c5573ba61412826916daec1a48f50c108b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b7eea2c5573ba61412826916daec1a48f50c108b'
+  x-oas-source: kong/platform-api@5e97271222d32442069ea582c04f9d3170d19715
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5e97271222d32442069ea582c04f9d3170d19715'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -733,6 +733,9 @@ paths:
       operationId: create-event-gateway-listener-policy
       summary: Create Policy for Listener
       description: Creates a new policy associated with the specified Event Gateway listener.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayListenerPolicyRequest'
       responses:
@@ -923,6 +926,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-consume-policy
       summary: Create Consume Policy for Virtual Cluster
       description: Creates a new consume policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayConsumePolicyRequest'
       responses:
@@ -1115,6 +1121,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-produce-policy
       summary: Create Produce Policy for Virtual Cluster
       description: Creates a new produce policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayProducePolicyRequest'
       responses:
@@ -1307,6 +1316,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-cluster-level-policy
       summary: Create Cluster Policy for Virtual Cluster
       description: Creates a new cluster-level policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayClusterPolicyRequest'
       responses:
@@ -1706,6 +1718,24 @@ components:
       in: path
       required: true
       description: The ID of the Event Gateway Node.
+    EventGatewayPolicyAfter:
+      schema:
+        type: string
+        format: uuid
+      in: query
+      name: after
+      description: |
+        Determines the id of the existing policy the new policy should be inserted after. Either 'before' or 'after' can be provided, when both are omitted the new policy is added to the end of the chain. When both are provided, the request fails with a 400 Bad Request.
+      required: false
+    EventGatewayPolicyBefore:
+      schema:
+        type: string
+        format: uuid
+      in: query
+      name: before
+      description: |
+        Determines the id of the existing policy the new policy should be inserted before. Either 'before' or 'after' can be provided, when both are omitted the new policy is added to the end of the chain. When both are provided, the request fails with a 400 Bad Request.
+      required: false
     EventGatewayPolicyListFilter:
       schema:
         type: object
@@ -2823,6 +2853,7 @@ components:
         - id
         - created_at
         - updated_at
+        - config
     EventGatewayTLSListenerSensitiveDataAwarePolicy:
       description: |
         The TLS Server policy defines the certificates and keys used by the gateway server when the client connects

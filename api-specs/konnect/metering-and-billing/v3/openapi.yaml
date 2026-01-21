@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@487b6df8012cde1138ec8ed851846558ee554e3d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/487b6df8012cde1138ec8ed851846558ee554e3d'
+  x-oas-source: kong/platform-api@19edf23a849cf198ee36ab1ba0a633565eb24c49
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/19edf23a849cf198ee36ab1ba0a633565eb24c49'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1696,15 +1696,6 @@ components:
       description: Subject key.
       type: string
       minLength: 1
-    SortQuery:
-      description: |
-        The `asc` suffix is optional as the default sort order is ascending.
-        The `desc` suffix is used to specify a descending order.
-        Multiple sort attributes may be provided via a comma separated list.
-        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
-      type: string
-      example: created_at desc
-      title: SortQuery
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -2038,6 +2029,15 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
     GoneError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
