@@ -69,7 +69,7 @@ cleanup:
 
 To set up AI Proxy with HuggingFace, we need to specify the model to use.
 
-In this example, we'll use the SmolLM model:
+In this example, we'll use the Qwen3-4B-Instruct-2507 model:
 
 <!--vale off-->
 {% entity_examples %}

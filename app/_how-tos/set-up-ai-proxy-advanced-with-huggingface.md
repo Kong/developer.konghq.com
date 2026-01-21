@@ -69,7 +69,7 @@ cleanup:
 
 To set up AI Proxy Advanced with HuggingFace, we need to specify the model to use.
 
-In this example, we'll use the SmolLM model:
+In this example, we'll use the Qwen3-4B-Instruct-2507 model:
 
 <!--vale off-->
 {% entity_examples %}
@@ -84,7 +84,7 @@ entities:
               header_value: Bearer ${huggingface_token}
             model:
               provider: huggingface
-              name: HuggingFaceTB/SmolVLM-Base
+              name: Qwen/Qwen3-4B-Instruct-2507
 variables:
   huggingface_token:
     value: $HUGGINGFACE_TOKEN
