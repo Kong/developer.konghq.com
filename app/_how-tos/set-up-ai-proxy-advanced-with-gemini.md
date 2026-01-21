@@ -48,16 +48,10 @@ prereqs:
         Before you begin, you must get the following credentials from Google Cloud:
 
         - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
-        - **Project ID**: Your Google Cloud project identifier
-        - **Location ID**: The region where your Vertex AI endpoint is deployed (for example, `us-central1`)
-        - **API Endpoint**: The Vertex AI API endpoint URL (typically `https://{location}-aiplatform.googleapis.com`)
 
         Export these values as environment variables:
         ```sh
         export DECK_GEMINI_API_KEY="<your_gemini_api_key>"
-        export GCP_PROJECT_ID="<your-gemini-project-id>"
-        export GEMINI_LOCATION_ID="<your-gemini-location_id>"
-        export GEMINI_API_ENDPOINT="<your_gemini_api_endpoint>"
         ```
       icon_url: /assets/icons/gcp.svg
   entities:
