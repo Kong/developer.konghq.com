@@ -362,7 +362,7 @@ Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWis
 ### Configure ChatWise
 
 1. Download and install [ChatWise](https://chatwise.app/).
-1. Open ChatWise and go to **Settings** (gear icon).
+1. Open ChatWise and go to **Settings** (gear icon at the bottom-left corner).
 1. In the left sidebar, click **Providers** and configure your preferred LLM provider (for example, OpenAI).
 1. In the left sidebar, click **MCP**.
 1. Click the **+** button at the bottom to add a new MCP server.
