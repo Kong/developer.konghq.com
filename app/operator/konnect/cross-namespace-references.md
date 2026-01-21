@@ -64,11 +64,11 @@ spec:
       # name: my-control-plane
 ```
 
-## Certificates configuration {% new_in 2.1 %}
+## Certificate configuration {% new_in 2.1 %}
 
-When configuring a `KongCertificates` and `KongCACertificate` objects, you can reference `Secret`s containing the actual certificates data in a different namespace.
+When configuring `KongCertificate` and `KongCACertificate` objects, you can reference `Secret` resource containing the actual certificate data in a different namespace.
 
-This reference can be done via the `spec.secretRef.namespace` and `spec.secretRefAlt.namespace` fields, by specifying the `namespace` of the `Secret` resource.
+You can do this with the `spec.secretRef.namespace` and `spec.secretRefAlt.namespace` fields, by specifying the `namespace` of the `Secret` resource:
 
 ```yaml
 apiVersion: configuration.konghq.com/{{ site.operator_kongcertificate_api_version }}
@@ -92,7 +92,7 @@ spec:
     namespace: tls-secrets-namespace
 ```
 
-In order to protect cross namespace references, the `Secret` resource must explicitly allow references from other namespaces by specifying `KongReferenceGrant` resources.
+In order to protect cross-namespace references, the `Secret` resource must explicitly allow references from other namespaces using `KongReferenceGrant` resources:
 
 ```yaml
 apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
