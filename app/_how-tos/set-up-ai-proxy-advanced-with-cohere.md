@@ -66,7 +66,7 @@ cleanup:
 
 To set up AI Proxy Advanced with Cohere, configure API key authentication and specify the Cohere model to use. 
 
-In this example, we use the Cohere command model:
+In this example, we'll use the Cohere command model:
 
 <!--vale off-->
 {% entity_examples %}
