@@ -11,7 +11,7 @@ related_resources:
   - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
     url: /mcp/aggregate-mcp-tools/
 
-description: Learn how to enforce access control lists on MCP tools exposed through an aggregating listener. This guide demonstrates how to convert REST APIs into MCP tools, define per-tool ACLs, and validate access using Consumer Groups.
+description: Restrict access to aggregated MCP tools using Consumer Groups. This guide shows how to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
 
 products:
   - gateway
