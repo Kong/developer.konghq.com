@@ -81,16 +81,17 @@ entities:
   plugins:
     - name: ai-proxy-advanced
       config:
-        route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${cerebras_api_key}
-        model:
-          provider: cerebras
-          name: gpt-oss-120b
-          options:
-            max_tokens: 512
-            temperature: 1.0
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${cerebras_api_key}
+            model:
+              provider: cerebras
+              name: gpt-oss-120b
+                options:
+                max_tokens: 512
+                temperature: 1.0
 variables:
   cerebras_api_key:
     value: $CEREBRAS_API_KEY
