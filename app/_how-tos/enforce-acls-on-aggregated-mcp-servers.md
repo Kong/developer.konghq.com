@@ -16,7 +16,6 @@ description: Learn how to enforce access control lists on MCP tools exposed thro
 products:
   - gateway
   - ai-gateway
-  - insomnia
 
 permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
 
