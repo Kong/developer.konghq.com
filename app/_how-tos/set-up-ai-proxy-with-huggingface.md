@@ -80,7 +80,7 @@ entities:
         route_type: llm/v1/chat
         auth:
           header_name: Authorization
-          header_value: Bearer ${{ env "DECK_HUGGINGFACE_TOKEN" }}
+          header_value: Bearer ${huggingface_token}
         model:
           provider: huggingface
           name: Qwen/Qwen3-4B-Instruct-2507
