@@ -62,13 +62,13 @@ prereqs:
            ```sh
            export DECK_WEATHERAPI_API_KEY='your-weatherapi-api-key'
            ```
-      icon_url: /assets/icons/api.svg
     - title: OpenAI API key
       content: |
         This tutorial uses OpenAI:
 
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
+      icon_url: /assets/icons/openai.svg
     - title: ChatWise desktop application
       content: |
         Download and install [ChatWise](https://chatwise.app/) for your OS.
@@ -368,7 +368,7 @@ Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWis
 1. Click the **+** button at the bottom to add a new MCP server.
 1. Configure the MCP server with the following settings:
    - **Type**: HTTP Server (http)
-   - **Name**: Enter a name to identify the server (for example, `weather`)
+   - **Name**: Enter a name to identify the server (for example, `aggregated-mcp`)
    - **URL**: `http://localhost:8000/mcp/aggregation`
 1. Under **HTTP headers**, click **+** to add an authentication header:
    - **Key**: `apikey`
