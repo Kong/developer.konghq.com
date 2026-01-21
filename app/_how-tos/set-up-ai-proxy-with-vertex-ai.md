@@ -80,11 +80,11 @@ entities:
             options:
               gemini:
                 api_endpoint: us-central1-aiplatform.googleapis.com
-                project_id: ${gcp_project_id}
-                location_id: ${gcp_location_id}
+                project_id: Bearer ${gcp_project_id}
+                location_id: Bearer ${gcp_location_id}
           auth:
             gcp_use_service_account: true
-            gcp_service_account_json: ${gcp_service_account_json}
+            gcp_service_account_json: Bearer ${gcp_service_account_json}
 variables:
   gcp_project_id:
     value: $GCP_PROJECT_ID
