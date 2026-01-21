@@ -20,10 +20,6 @@ products:
 
 permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
 
-series:
-  id: mcp-acls
-  position: 2
-
 works_on:
   - on-prem
   - konnect
@@ -388,11 +384,13 @@ Now verify access for each user by updating the API key in the MCP server settin
 1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
 1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
 1. Type:
+
    ```text
    shuffle cards
    ```
 
 1. ChatWise should call the `shuffle-cards` tool and respond with the deck ID:
+
    ```text
    The deck has been successfully shuffled. The new deck ID is xucbyje9gmy5.
    Let me know how many cards you would like to draw!
@@ -400,14 +398,15 @@ Now verify access for each user by updating the API key in the MCP server settin
    {:.no-copy-code}
 
 1. Type:
-  ```text
-   draw 1 card
+
+   ```text
+   Draw 1 card.
    ```
 
 1. ChatWise should call the `draw-cards` tool and display the drawn card with its image:
-  ```text
+   ```text
    The card drawn from the deck is the Queen of Hearts
-  ```
+   ```
    {:.no-copy-code}
 
 1. Type:
@@ -416,6 +415,7 @@ Now verify access for each user by updating the API key in the MCP server settin
    ```
 
 1. ChatWise should call the `weather-internet` tool and respond with the current weather:
+
    ```text
    The current weather in London is as follows:
    - Temperature: 7.2°C (45.0°F)
@@ -435,9 +435,10 @@ Now verify access for each user by updating the API key in the MCP server settin
 1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
 1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
 1. Type:
-  ```text
-   shuffle cards
-  ```
+
+   ```text
+   Shuffle cards.
+   ```
 
 1. ChatWise should successfully call the `shuffle-cards` tool and return a deck ID.
 
