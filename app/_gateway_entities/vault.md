@@ -359,19 +359,20 @@ rows:
 {% endnavtab %}
 {% navtab "AWS" %}
 
-Kong Gateway must have the required IAM roles to access any relevant secrets. 
-Configure the following [AWS environment variables](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html) on your Kong Gateway data plane:
+{{site.base_gateway}} must have the required IAM roles to access any relevant secrets. 
+Configure the following [AWS environment variables](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html) on your {{site.base_gateway}} data plane:
 
-* `AWS_ACCESS_KEY_ID`
-* `AWS_SECRET_ACCESS_KEY`
-* `AWS_SESSION_TOKEN`
-* `AWS_REGION`
+```sh
+export AWS_ACCESS_KEY_ID=your-access-key-id
+export AWS_SECRET_ACCESS_KEY=your-secret-access-key
+export AWS_SESSION_TOKEN=your-session-token
+```
 
 For a complete tutorial on how to set up AWS as a Vault entity, see the following:
 * [Set up AWS with {{ site.base_gateway }}](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)
 * [Set up AWS with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/aws/)
 
-The following table lists the available configuration parameters for AWS Secrets Manager:
+The following table lists all of the available configuration parameters for an AWS Secrets Manager Vault:
 
 {% table %}
 columns:
@@ -449,6 +450,27 @@ rows:
 {% endnavtab %}
 
 {% navtab "Azure" %}
+
+{{site.base_gateway}} uses a key to automatically authenticate
+with the [Azure Key Vaults API](https://learn.microsoft.com/en-us/rest/api/keyvault/) and grant you access.
+You must set the following environment variable on your data plane to connect with an Azure Key Vault:
+
+```bash
+export AZURE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+```
+
+At minimum, you'll also need to set the following values on your data plane. 
+
+{:.info}
+> **Note**: If you're using an Instance Managed Identity Token, setting these environment variables isn't necessary.
+
+```sh
+export KONG_VAULT_AZURE_VAULT_URI=https://your-vault.vault.azure.com
+export KONG_VAULT_AZURE_TENANT_ID=YOUR_TENANT_ID
+export KONG_VAULT_AZURE_CLIENT_ID=YOUR_CLIENT_ID
+```
+
+The following table lists all of the available configuration parameters for an Azure Key Vault:
 
 <!--vale off-->
 {% table %}
@@ -533,9 +555,27 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Google" %}
+
+To configure GCP Secret Manager, the `GCP_SERVICE_ACCOUNT` environment variable must be set to the JSON document referring to the [credentials for your service account](https://cloud.google.com/iam/docs/creating-managing-service-account-keys):
+
+```sh
+export GCP_SERVICE_ACCOUNT=$(cat gcp-project-c61f2411f321.json)
+```
+
+{{site.base_gateway}} uses the key to automatically authenticate with the GCP API and grant you access.
+
+To use GCP Secret Manager with [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) on a GKE cluster, update your pod spec so that the service account is attached to the pod. For configuration information, read the [Workload Identity configuration documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to).
+
+{:.info}
+> Notes:
+> * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn’t necessary.
+> * When using GCP Vault as a backend, make sure you have configured system as part of the [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate) configuration directive so that the SSL certificates used by the official GCP API can be trusted by Kong.
+
 For a complete tutorial on how to set up Google Cloud as a Vault entity, see the following:
 * [Set up Google Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
 * [Set up Google Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
+
+The following table lists the available configuration parameters for a GCP Secret Manager Vault:
 
 <!--vale off-->
 {% table %}
@@ -588,11 +628,13 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "HashiCorp" %}
-For a complete tutorial on how to set up HashiCorp Vault as a Vault entity, see the following:
+For a complete tutorial on how to set up HashiCorp Vault as a Kong Vault backend, see the following:
 * [Set up HashiCorp Vault with {{ site.base_gateway }}](/how-to/configure-hashicorp-vault-as-a-vault-backend/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and certificate authentication](/how-to/configure-hashicorp-vault-with-cert-auth/)
 * [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and OAuth2](/how-to/configure-hashicorp-vault-with-oauth2/)
+
+The following table lists the available configuration parameters for a HashiCorp Vault:
 
 <!--vale off-->
 {% table %}
@@ -817,7 +859,9 @@ rows:
 {% endnavtab %}
 {% navtab "Conjur" %}
 
-See a tutorial about how to [set up CyberArk Conjur as a Vault in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+See a tutorial about how to [set up CyberArk Conjur as a Kong Vault backend in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+
+The following table lists the available configuration parameters for a CyberArk Conjur Vault:
 
 <!--vale off-->
 {% table %}
