@@ -23,7 +23,7 @@ This allows you to reference resources that are located in different namespaces 
 
 ## ControlPlane configuration {% new_in 2.1 %}
 
-When configuring a `KonnectGatewayControlPlane`, you can reference it from entities defined ain a different namespace.
+When configuring a `KonnectGatewayControlPlane`, you can reference it from entities defined in a different namespace.
 
 This reference can be done via the `spec.controlPlaneRef.konnectNamespacedRef.namespace` field, by specifying the `namespace` of the `KonnectGatewayControlPlane` resource.
 
@@ -62,6 +62,55 @@ spec:
       # Optionally specify a specific KonnectGatewayControlPlane name to allow
       # only this specific resource to be referenced.
       # name: my-control-plane
+```
+
+## Certificate configuration {% new_in 2.1 %}
+
+When configuring `KongCertificate` and `KongCACertificate` objects, you can reference `Secret` resources containing the actual certificate data in a different namespace.
+
+You can do this with the `spec.secretRef.namespace` and `spec.secretRefAlt.namespace` fields, by specifying the `namespace` of the `Secret` resource:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongcertificate_api_version }}
+kind: KongCertificate
+metadata:
+  name: dual-cert-cross-namespace
+  namespace: default
+spec:
+  type: secretRef
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: my-control-plane
+  # Primary certificate (RSA) - cross-namespace reference
+  secretRef:
+    name: rsa-tls-secret
+    namespace: tls-secrets-namespace
+  # Alternative certificate (ECDSA) - cross-namespace reference
+  secretRefAlt:
+    name: ecdsa-tls-secret
+    namespace: tls-secrets-namespace
+```
+
+In order to protect cross-namespace references, the `Secret` resource must explicitly allow references from other namespaces using `KongReferenceGrant` resources:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-kongcertificate-to-secret
+  namespace: tls-secrets-namespace
+spec:
+  from:
+    - group: configuration.konghq.com
+      kind: KongCertificate
+      namespace: default
+  to:
+    - group: core
+      kind: Secret
+      # Optionally specify a specific Secret name to allow
+      # only this specific resource to be referenced.
+      # name: my-secret-name
 ```
 
 ## Troubleshooting
