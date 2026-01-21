@@ -9,6 +9,7 @@ sections:
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
       - path: /how-to/discover-and-govern-apis-with-service-catalog/
+      - path: /how-to/package-apis-with-dev-portal/
   - title: Services and scorecards
     items:
       - path: /catalog/scorecards/

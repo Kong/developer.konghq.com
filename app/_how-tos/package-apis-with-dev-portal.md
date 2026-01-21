@@ -5,7 +5,7 @@ content_type: how_to
 related_resources:
   - text: About Dev Portal
     url: /dev-portal/
-  - text: Dev Portal API packaging reference
+  - text: API packaging reference
     url: /catalog/api-packaging/
 automated_tests: false
 products:
@@ -26,9 +26,10 @@ tldr:
     a: |
         Packaging APIs involves the following steps:
         1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
-        1. Link a control plane to allow developer consumption. 
-        1. Apply the Access Control Enforcement (ACE) plugin globally.
+        1. Apply the Access Control Enforcement (ACE) plugin globally on the control plane you want to link.
+        1. Link a control plane to the API to allow developer consumption. 
         1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
+        1. Publish the API package to Dev Portal. Published API packages appear the same as published APIs in the Dev Portal, and both allow developers to register applications with them
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
