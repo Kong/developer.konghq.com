@@ -89,7 +89,7 @@ entities:
             model:
               provider: cerebras
               name: gpt-oss-120b
-                options:
+              options:
                 max_tokens: 512
                 temperature: 1.0
 variables:
