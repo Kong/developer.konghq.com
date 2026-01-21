@@ -1,13 +1,13 @@
 ---
-title: Set up AI Proxy Advanced with Vertex AI in {{site.base_gateway}}
+title: Set up AI Proxy with Vertex AI in {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Gateway
     url: /ai-gateway/
-  - text: AI Proxy Advanced
-    url: /plugins/ai-proxy-advanced/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using Vertex AI.
+description: Configure the AI Proxy plugin to create a chat route using Vertex AI.
 
 products:
   - gateway
@@ -21,7 +21,7 @@ min_version:
   gateway: '3.6'
 
 plugins:
-  - ai-proxy-advanced
+  - ai-proxy
 
 entities:
   - service
@@ -33,8 +33,8 @@ tags:
   - vertex-ai
 
 tldr:
-  q: How do I use the AI Proxy Advanced plugin with Vertex AI?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Vertex AI provider and add the model and your API key.
+  q: How do I use the AI Proxy plugin with Vertex AI?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Vertex AI provider and add the model and your API key.
 
 tools:
   - deck
@@ -62,7 +62,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Vertex AI, specify the model and set the appropriate authentication header.
+To set up AI Proxy with Vertex AI, specify the model and set the appropriate authentication header.
 
 In this example, we'll use the Gemini 2.5 Flash model:
 
@@ -70,10 +70,9 @@ In this example, we'll use the Gemini 2.5 Flash model:
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy-advanced
+    - name: ai-proxy
       config:
         llm_format: gemini
-        targets:
           - route_type: llm/v1/chat
             model:
               provider: gemini
@@ -89,10 +88,13 @@ entities:
 variables:
   gcp_project_id:
     value: $GCP_PROJECT_ID
+    description: The Google Cloud project ID that hosts the Vertex AI Gemini model.
   gcp_location_id:
     value: $GCP_LOCATION_ID
+    description: The Google Cloud region where Vertex AI is enabled.
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    description: The JSON key for a Google Cloud service account with permission to access Vertex AI.
 formats:
   - deck
 {% endentity_examples %}
