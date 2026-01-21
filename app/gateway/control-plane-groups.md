@@ -71,6 +71,12 @@ faqs:
   - q: What happens if Control Plane configurations conflict in a group?
     a: Even if configurations conflict and can’t be merged, the Control Plane Group is still created. Conflict detection only occurs after a Data Plane node is connected.
 
+  - q: What is a runtime group?
+    a: |
+      The term "runtime group" is a deprecated name for a "control plane". This term is no longer used.
+      * Runtime group -> control plane
+      * Composite runtime group -> control plane group
+
 related_resources:
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
