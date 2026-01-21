@@ -95,8 +95,8 @@ entities:
           - route_type: llm/v1/chat
             auth:
               allow_override: false
-              aws_access_key_id: ${aws_access_key_id}
-              aws_secret_access_key: ${aws_secret_access_key}
+              aws_access_key_id: Bearer ${aws_access_key}
+        aws_secret_access_key: Bearer ${aws_secret_access_key}
             model:
               provider: bedrock
               name: meta.llama3-70b-instruct-v1:0
@@ -106,10 +106,8 @@ entities:
 variables:
   aws_access_key_id:
     value: $AWS_ACCESS_KEY_ID
-    description: The AWS access key ID to use to connect to Bedrock.
   aws_secret_access_key:
     value: $AWS_SECRET_ACCESS_KEY
-    description: The AWS secret access key to use to connect to Bedrock.
 formats:
   - deck
   {% endentity_examples %}
