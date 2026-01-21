@@ -34,7 +34,7 @@ tags:
 
 tldr:
   q: How do I use the AI Proxy Advanced plugin with AWS Bedrock?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the AWS Bedrock provider and add the model and your API key.
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the AWS Bedrock provider and add the model and your AWS credentials.
 
 tools:
   - deck
@@ -81,7 +81,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with AWS Bedrock, specify the model and set the appropriate authentication header.
+To set up AI Proxy Advanced with AWS Bedrock, specify the model and set the authenticate using AWS credentials.
 
 In this example, we'll use the Meta Llama 3 70B Instruct model:
 
