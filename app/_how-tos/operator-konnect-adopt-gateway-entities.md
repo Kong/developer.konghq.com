@@ -2,14 +2,11 @@
 title: Adopting Existing Gateway Entities from {{ site.konnect_short_name }}
 description: "How to manage existing gateway entities using Kubernetes CRDs in {{ site.konnect_short_name }} by adoption"
 content_type: how_to
-permalink: /operator/konnect/crd/adoption/gateway
+permalink: /operator/konnect/crd/adoption/gateway/
 breadcrumbs:
   - /operator/
   - index: operator
     group: Konnect
-  - index: operator
-    group: Konnect
-    section: "Konnect CRDs: Adopting from Existing Entities"
 
 products:
   - operator
@@ -18,55 +15,121 @@ works_on:
   - konnect
 search_aliases:
   - operator gateway entity adoption
-entities: []
+entities:
+  - service
+  - route
+  - plugin
 tags:
   - konnect-crd
  
 tldr:
-  q: How do I manage existing gateway entities (like services, routes, plugins, ...) in {{ site.konnect_short_name }} by Kubernetes CRDs?
-  a: Create a Kubernetes resource adopting the existing entity by its {{ site.konnect_short_name }} ID.
+  q: How can I manage existing {{site.base_gateway}} entities in {{ site.konnect_short_name }} with Kubernetes CRDs?
+  a: |
+    Create a resource for each entity you want to manage and configure the `spec.adopt` parameters:
+    * Set `spec.adopt.konnect.id` to the entity's {{ site.konnect_short_name }} ID.
+    * Set `spec.adopt.mode` to:
+      * `override` if you want to change the entity's configuration.
+      * `match` if you want to keep the existing configuration.
+
+faqs:
+  - q: Why can't I override certain entities?
+    a: |
+      Immutable entities only support adoption in `match` mode and can't be modified after adoption. This is the case for:
+      * Cloud Gateway resources: Networks, data plane group configurations, and transit gateways.
+      * Data plane client certificates.
+      
+      You must adopt these entities in `match` mode and configure the resource to match the existing entity in {{ site.konnect_short_name }}.
+
+      Here's an example of network adoption:
+
+      <!-- vale off -->
+      {% konnect_crd %}
+      kind: KonnectCloudGatewayNetwork
+      apiVersion: konnect.konghq.com/v1alpha1
+      metadata:
+        name: adopt-konnect-network
+        namespace: default
+      spec:
+        adopt:
+          from: konnect
+          mode: match
+          konnect:
+            id: $NETWORK_ID
+        name: network1 
+        cloud_gateway_provider_account_id: $CLOUD_GATEWAY_PROVIDER_ID
+        availability_zones:
+        - "use1-az1"
+        - "use1-az2"
+        - "use1-az4"
+        - "use1-az5"
+        - "use1-az6"
+        cidr_block: "10.0.0.1/24"
+        region: "us-east-1"
+        konnect:
+          authRef:
+            name: konnect-api-auth
+      {% endkonnect_crd %}
 
 
 prereqs:
   operator:
     konnect:
       auth: true
-      control_plane: true
-
+  inline:
+    - title: Create resources in {{ site.konnect_short_name }}
+      include_content: /prereqs/operator/konnect_resources_adoption
+    - title: Create the KonnectGatewayControlPlane resource
+      include_content: /prereqs/operator/konnect_control_plane_reference
 ---
 
-You can manage a gateway entity in {{ site.konnect_short_name }} by a Kubernetes custom resource adopting it. To create such a custom resource, you need to have the control plane already created in the Kubernetes cluster.
+## Adopt a Gateway Service
 
-## Create a Custom Resource in Kubernetes to adopt the entity
+To adopt entities directly referencing a control plane, such as [Services](/gateway/entities/service/), make sure you've created the [`KonnectGatewayControlPlane` resource](#create-the-konnectgatewaycontrolplane-resource) to manage the {{ site.konnect_short_name }} control plane.
 
-### Create a Custom Resource directly referencing a control plane
+In this example, we'll adopt the Service we created in the [prerequisites](#create-resources-in-konnect) in `match` mode. This mode is useful if you want to adopt an entity without making any changes to it yet.
 
-For entities directly referencing the control plane where they are in like services, you need to first have the `KonnectGatewayControlPlane` in the cluster to manage the {{ site.konnect_short_name }} control plane. Then you can create a custom resource to adopt it. Take a `service` as an example:
-
+Specify the Service's parameters to match the ones we defined when creating it, and add the Service's {{site.konnect_short_name}} ID and the reference to the control plane:
 <!-- vale off -->
 {% konnect_crd %}
 kind: KongService
 apiVersion: configuration.konghq.com/v1alpha1
 metadata:
   name: adopt-service
+  namespace: kong
 spec:
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
-      name: gateway-control-plane # Reference to the KonnectGatewayControlPlane object
+      name: gateway-control-plane
   adopt:
     from: konnect
-    mode: override # Set to "override" to override the service in Konnect by the spec in the resource
+    mode: match
     konnect:
-      id: "08433c21-28b2-4738-b66c-3aa25f16032d" # The ID of the service in Konnect
-  host: "example.com"
-  protocol: "https"
+      id: $SERVICE_ID
+  name: demo-service
+  protocol: http
+  host: httpbin.konghq.com
+  path: /anything
 {% endkonnect_crd %}
 <!-- vale on -->
 
-### Create a resource attaching to another resource
+You can validate that the Route was successfully adopted by fetching its configuration using the {{site.konnect_short_name}} API:
 
-For entities that is attached to another entity (like a route attached to a service), you need have the `KonnectGatewayControlPlane` and also the parent resource already created in the Kubernetes cluster (the `KongService` in the example). Then you can create a resource to manage the existing entity, like a `KongRoute` for the route:
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/$SERVICE_ID
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+
+You should see `k8s-*` tags, which indicate that the Service is managed with Kubernetes.
+
+## Adopt a Route
+
+To adopt entities that are attached to another entity, such as a [Route](/gateway/entities/route/) attached to a Service, make sure you've created the [`KonnectGatewayControlPlane` resource](#create-the-konnectgatewaycontrolplane-resource) and the [parent resource](#adopt-a-gateway-service). 
+
+Let's adopt the Route we created in the [prerequisites](#create-resources-in-konnect), and this time we'll use `override` mode to change its configuration.
+
+Specify the Route's new parameters, and add the Route's {{site.konnect_short_name}} ID and the reference to the Service:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -74,99 +137,92 @@ kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
 metadata:
   name: adopt-route
+  namespace: kong
 spec:
   serviceRef:
     type: namespacedRef
     namespacedRef:
-      name: adopt-service # The name of the `KongService` it attaches to
+      name: adopt-service
   adopt:
     from: konnect
-    mode: override # Set to "override" to override the route in Konnect by the spec in the resource
+    mode: override
     konnect:
-      id: "08433c21-28b2-4738-ae86-faab31415926" # The ID of the route in Konnect
-    name: route-1
-    protocols:
-    - http
-    hosts:
-    - example.com
-    paths:
-    - "/example"
+      id: $ROUTE_ID
+  name: demo-route
+  paths:
+  - "/new"
 {% endkonnect_crd %}
 <!-- vale on -->
 
-### Create a KongPluginBinding and a KongPlugin to adopt a plugin
+You can validate that the Route was successfully adopted by fetching its configuration using the {{site.konnect_short_name}} API:
 
-For Plugins, you need to create 2 different custom resource for adopting a plugin in {{ site.konnect_short_name }}. A `KongPlugin` needs to be created to specify the configuration of the plugin and a `KongPluginBinding` needs to be created to adopt the plugin by ID and specify the relationship of the plugin and attached entities.
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/routes/$ROUTE_ID
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
 
-The example below shows the resources needs to be created for adopting a `rate-limiting` plugin attached to a service in {{ site.konnect_short_name }}.
+You should see the updated configuration and the `k8s-*` tags.
 
+## Adopt a plugin
+
+To adopt a plugin, we need to create two different resources:
+* A `KongPlugin` resource to specify the configuration of the plugin.
+* A `KongPluginBinding` resource to adopt the plugin by ID and specify the relationship between the plugin and other entities.
+
+In this example, we'll modify the configuration of the [Rate Limiting](/plugins/rate-limiting/) plugin we created in the [prerequisites](#create-resources-in-konnect).
+
+First, create the Rate Limiting `KongPlugin` resource:
 <!-- vale off -->
 {% konnect_crd %}
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
 metadata:
- name: rate-limit-5-min
+  name: rate-limit
+  namespace: kong
 config:
- minute: 5
+ second: 3
+ hour: 300
  policy: local
 plugin: rate-limiting
----
+{% endkonnect_crd %}
+<!-- vale on -->
+
+Create the `KongPluginBinding` resource to link the `KongPlugin` to the plugin we created in {{site.konnect_short_name}} and associate it to our Service:
+
+<!-- vale off -->
+{% konnect_crd %}
 apiVersion: configuration.konghq.com/v1alpha1
 kind: KongPluginBinding
 metadata:
   name: plugin-binding-kongservice
+  namespace: kong
 spec:
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
-      name: gateway-control-plane # Reference to the KonnectGatewayControlPlane object
+      name: gateway-control-plane
   pluginRef:
-    name: rate-limit-5-min # Reference to the KongPlugin resource storing the plugin configuration
+    name: rate-limit
   adopt:
     from: konnect
-    mode: override # Set to "override" to override the plugin in Konnect by the spec in the resource
+    mode: override
     konnect:
-      id: "08433c21-28b2-4739-bc01-abc012def456" # The ID of the plugin in Konnect  
+      id: $PLUGIN_ID 
   targets:
     serviceRef:
-      name: adopt-service # The name of the `KongService` it attaches to
+      name: adopt-service
       kind: KongService
       group: configuration.konghq.com
 {% endkonnect_crd %}
 <!-- vale on -->
 
-## Adopting Cloud Gateway Entities
+You can validate that the plugin was successfully adopted by fetching its configuration using the {{site.konnect_short_name}} API:
 
-The {{ site.konnect_short_name }} cloud gateway resources including networks, dataplane group configurations, and transit gateways are immutable, so we cannot modify them after created by adoption. We must adopt them in "match" mode, which adoption works only the spec of the Kubernetes resource matches the existing entity in {{ site.konnect_short_name }}.
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins/$PLUGIN_ID
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
 
-Also, {{ site.konnect_short_name }} dataplane client certificates are immutable so they only supports the match mode adoption.
-
-Here is an example of adopting a network in {{ site.konnect_short_name }} cloud gateway:
-
-<!-- vale off -->
-{% konnect_crd %}
-kind: KonnectCloudGatewayNetwork
-apiVersion: konnect.konghq.com/v1alpha1
-metadata:
-  name: adopt-konnect-network
-  namespace: default
-spec:
-  adopt:
-    from: konnect
-    mode: match # Can only set to "match" because CGW networks are immutable
-    konnect:
-      id: "01234567-a001-b234-c456-d789e654f321" # The ID of the network in Konnect
-  name: network1 # every field must match the existing network in Konnect, otherwise the adoption fails
-  cloud_gateway_provider_account_id: "01234567-a001-b234-c456-aabbccddeeff" # The cloud gateway provider ID that can be got from getting the network by API
-  availability_zones:
-  - "use1-az1"
-  - "use1-az2"
-  - "use1-az4"
-  - "use1-az5"
-  - "use1-az6"
-  cidr_block: "10.0.0.1/24"
-  region: "us-east-1"
-  konnect:
-    authRef:
-      name: konnect-api-auth
-{% endkonnect_crd %}
+You should see the updated configuration and the `k8s-*` tags.
