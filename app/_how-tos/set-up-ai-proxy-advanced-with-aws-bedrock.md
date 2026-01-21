@@ -96,7 +96,7 @@ entities:
             auth:
               allow_override: false
               aws_access_key_id: Bearer ${aws_access_key}
-        aws_secret_access_key: Bearer ${aws_secret_access_key}
+              aws_secret_access_key: Bearer ${aws_secret_access_key}
             model:
               provider: bedrock
               name: meta.llama3-70b-instruct-v1:0

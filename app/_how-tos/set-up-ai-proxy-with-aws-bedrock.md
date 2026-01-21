@@ -89,19 +89,19 @@ In this example, we'll use the Meta Llama 3 70B Instruct model:
 {% entity_examples %}
 entities:
   plugins:
-  - name: ai-proxy
-    config:
-      route_type: llm/v1/chat
-      auth:
-        allow_override: false
-        aws_access_key_id: Bearer ${aws_access_key}
-        aws_secret_access_key: Bearer ${aws_secret_access_key}
-      model:
-        provider: bedrock
-        name: meta.llama3-70b-instruct-v1:0
-        options:
-          bedrock:
-            aws_region: us-east-1
+    - name: ai-proxy
+      config:
+        route_type: llm/v1/chat
+        auth:
+          allow_override: false
+          aws_access_key_id: Bearer ${aws_access_key}
+          aws_secret_access_key: Bearer ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: meta.llama3-70b-instruct-v1:0
+          options:
+            bedrock:
+              aws_region: us-east-1
 variables:
   aws_access_key_id:
     value: $AWS_ACCESS_KEY_ID
