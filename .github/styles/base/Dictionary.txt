@@ -655,6 +655,7 @@ prepends
 prepopulated
 preread
 printf
+prisma
 private_key
 productize
 productized
