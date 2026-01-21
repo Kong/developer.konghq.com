@@ -75,7 +75,7 @@ prereqs:
 
         After installation:
         1. Launch the app.
-        1. Go to Settings > Providers > OpenAI.
+        1. Go to **Settings > Providers > OpenAI**.
         1. Paste your OpenAI API key.
   entities:
     services:
@@ -105,10 +105,11 @@ entities:
 
 ## Create Consumer Groups for each access tier
 
-Configure Consumer Groups that reflect access levels. These groups govern MCP tool permissions:
+Configure [Consumer Groups](/gateway/entities/consumer-group/) that reflect access levels. These groups govern MCP tool permissions:
 - `gold-partner` - full access to all tools
-- `silver-partner` - access to most tools
+- `silver-partner` - full access to all tools
 - `bronze-partner` - blocked from MCP tools
+- no group (`eason` user) - blocked from MCP tools
 
 {% entity_examples %}
 entities:
@@ -120,7 +121,7 @@ entities:
 
 ## Create Consumers
 
-Configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions which govern access to MCP tools:
+Configure individual [Consumers](/gateway/entities/consumer/) and assign them to groups. Each Consumer uses a unique API key and inherits group permissions which govern access to MCP tools:
 
 {% entity_examples %}
 entities:
@@ -208,7 +209,7 @@ entities:
 
 ## Configure the Deck of Cards MCP tools
 
-Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the Deck of Cards API endpoints into MCP tools. Each tool has its own ACL configuration.
+Configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin in `conversion-only` mode to convert the [Deck of Cards API](https://deckofcardsapi.com/) endpoints into MCP tools. Each tool has its own ACL configuration.
 
 {% entity_examples %}
 entities:
@@ -394,7 +395,7 @@ Now verify access for each user by updating the API key in the MCP server settin
 1. Type:
 
    ```text
-   shuffle cards
+   Shuffle cards
    ```
 
 1. ChatWise should call the `shuffle-cards` tool and respond with the deck ID:
@@ -468,7 +469,7 @@ Now verify access for each user by updating the API key in the MCP server settin
 1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
 1. Type:
    ```text
-   shuffle cards
+   Shuffle cards
    ```
 
 1. The tool call should fail. ChatWise will display:
