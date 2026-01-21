@@ -12,6 +12,7 @@ sections:
   - title: API catalog
     items:
       - path: /catalog/apis/
+      - path: /catalog/api-packaging/
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
       - path: /how-to/package-apis-with-dev-portal/

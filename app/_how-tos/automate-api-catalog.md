@@ -70,6 +70,8 @@ faqs:
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
+  - text: Create API packages
+    url: /catalog/api-packaging/
 ---
 
 ## Create an API

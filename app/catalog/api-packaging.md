@@ -1,11 +1,11 @@
 ---
-title: Dev Portal API packaging
+title: Package APIs
 content_type: reference
 layout: reference
 
 products:
-    - dev-portal
     - catalog
+    - dev-portal
 
 breadcrumbs: 
   - /catalog/
@@ -24,9 +24,9 @@ search_aliases:
   - API packaging
   - API bundle
 description: | 
-    Learn how to package APIs in Dev Portal and what API packages are.
+    Learn how to package APIs in Catalog and Dev Portal and what API packages are.
 related_resources:
-  - text: Dev Portal APIs
+  - text: APIs reference
     url: /catalog/apis/
   - text: Automate your API catalog with Dev Portal
     url: /how-to/automate-api-catalog/
