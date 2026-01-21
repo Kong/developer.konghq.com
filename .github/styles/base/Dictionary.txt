@@ -125,6 +125,8 @@ Cloudsmith
 cmd
 cncf
 cncf's
+Cohere
+cohere
 Cognito
 Cognito
 Collectd
