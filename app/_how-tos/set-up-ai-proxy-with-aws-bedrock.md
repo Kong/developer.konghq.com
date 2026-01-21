@@ -47,7 +47,7 @@ prereqs:
 
         - **AWS Access Key ID**: Your AWS access key
         - **AWS Secret Access Key**: Your AWS secret key
-        - **Region**: AWS region where Bedrock is available (for example, `us-west-2`)
+        - **Region**: AWS region where Bedrock is available (for example, `us-east-1`)
 
         1. Enable the rerank model in the [AWS Bedrock console](https://console.aws.amazon.com/bedrock/) under **Model Access**. Navigate to **Bedrock** > **Model access** and request access to `cohere.rerank-v3-5:0`.
 
@@ -55,25 +55,14 @@ prereqs:
            ```
            arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0
            ```
-           Replace `<region>` with your AWS region (for example, `us-west-2`).
+           Replace `<region>` with your AWS region (for example, `us-east-1`).
 
         3. Export the required values as environment variables:
            ```sh
            export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
            export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-           export DECK_AWS_REGION="<region>"
-           export DECK_AWS_MODEL="arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0"
            ```
-
-           Replace `<region>` in both `AWS_REGION` and the `AWS_MODEL` ARN with your AWS Bedrock deployment region. See [FAQs](./#what-rerank-models-are-available) below for more details.
       icon_url: /assets/icons/aws.svg
-    - title: Python and requests library
-      content: |
-        Install Python 3 and the requests library:
-        ```sh
-        pip install requests
-        ```
-      icon_url: /assets/icons/python.svg
   entities:
     services:
       - rerank-service
