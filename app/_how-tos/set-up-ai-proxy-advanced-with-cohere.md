@@ -72,23 +72,22 @@ In this example, we'll use the Cohere command model:
 {% entity_examples %}
 entities:
   plugins:
-  - name: ai-proxy-advanced
-    config:
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: Bearer ${{ env "DECK_COHERE_API_KEY" }}
-        model:
-          provider: cohere
-          name: command-a-03-2025
-          options:
-            max_tokens: 512
-            temperature: 1.0
+    - name: ai-proxy-advanced
+      config:
+        targets:
+          - route_type: llm/v1/chat
+            auth:
+              header_name: Authorization
+              header_value: Bearer ${cohere_api_key}
+            model:
+              provider: cohere
+              name: command-a-03-2025
+              options:
+                max_tokens: 512
+                temperature: 1.0
 variables:
-  key:
+  cohere_api_key:
     value: $COHERE_API_KEY
-    description: The API key to use to connect to Cohere.
 {% endentity_examples %}
 <!--vale on-->
 
