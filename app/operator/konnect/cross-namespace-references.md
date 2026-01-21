@@ -66,7 +66,7 @@ spec:
 
 ## Certificate configuration {% new_in 2.1 %}
 
-When configuring `KongCertificate` and `KongCACertificate` objects, you can reference `Secret` resource containing the actual certificate data in a different namespace.
+When configuring `KongCertificate` and `KongCACertificate` objects, you can reference `Secret` resources containing the actual certificate data in a different namespace.
 
 You can do this with the `spec.secretRef.namespace` and `spec.secretRefAlt.namespace` fields, by specifying the `namespace` of the `Secret` resource:
 
