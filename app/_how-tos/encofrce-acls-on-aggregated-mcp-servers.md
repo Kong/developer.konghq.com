@@ -1,0 +1,492 @@
+---
+title: Enforce ACLs on aggregated MCP servers
+content_type: how_to
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI MCP Proxy
+    url: /plugins/ai-mcp-proxy/
+  - text: Control MCP tool access with Consumer and Consumer Group ACLs
+    url: /mcp/use-access-controls-for-mcp-tools/
+  - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
+    url: /mcp/aggregate-mcp-tools/
+
+description: Learn how to enforce access control lists on MCP tools exposed through an aggregating listener. This guide demonstrates how to convert REST APIs into MCP tools, define per-tool ACLs, and validate access using Consumer Groups.
+
+products:
+  - gateway
+  - ai-gateway
+  - insomnia
+
+permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
+
+series:
+  id: mcp-acls
+  position: 2
+
+works_on:
+  - on-prem
+  - konnect
+
+min_version:
+  gateway: '3.13'
+
+plugins:
+  - ai-mcp-proxy
+  - key-auth
+  - request-transformer-advanced
+
+entities:
+  - service
+  - route
+  - plugin
+  - consumer
+  - consumer_group
+
+tags:
+  - ai
+  - mcp
+  - acl
+
+tldr:
+  q: How do I enforce ACLs on MCP tools aggregated from multiple sources?
+  a: |
+    Configure the AI MCP Proxy plugin in `listener` mode with `include_consumer_groups: true`
+    on your aggregation route. Define per-tool ACLs on individual conversion-only routes.
+    The listener enforces these ACLs based on the authenticated Consumer's group membership.
+
+tools:
+  - deck
+
+prereqs:
+  inline:
+    - title: WeatherAPI account
+      content: |
+        1. Go to [WeatherAPI](https://www.weatherapi.com/).
+        1. Navigate to [your dashboard](https://www.weatherapi.com/my/) and copy your API key.
+        1. Export your API key by running the following command in your terminal:
+           ```sh
+           export DECK_WEATHERAPI_API_KEY='your-weatherapi-api-key'
+           ```
+      icon_url: /assets/icons/api.svg
+    - title: ChatWise desktop application
+      content: |
+        Download and install [ChatWise](https://chatwise.app/) for your OS.
+
+        After installation:
+        1. Launch the app.
+        2. In Settings > Providers, configure your AI provider endpoint and API key.
+  entities:
+    services:
+      - weather-internet-service
+      - deck-of-cards
+    routes:
+      - weather-internet-mcp
+      - cards-api-mcp
+      - mcp-aggregation
+---
+
+## Set up Consumer authentication
+
+Configure authentication so {{site.base_gateway}} can identify each caller. Use the [Key Auth](/plugins/key-auth/) plugin so each user (or AI agent) presents an API key with requests:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      route: mcp-aggregation
+      config:
+        key_names:
+          - apikey
+{% endentity_examples %}
+
+## Create Consumer Groups for each access tier
+
+Configure Consumer Groups that reflect access levels. These groups govern MCP tool permissions:
+- `gold-partner` - full access to all tools
+- `silver-partner` - access to most tools
+- `bronze-partner` - blocked from MCP tools
+
+{% entity_examples %}
+entities:
+  consumer_groups:
+    - name: gold-partner
+    - name: silver-partner
+    - name: bronze-partner
+{% endentity_examples %}
+
+## Create Consumers
+
+Configure individual Consumers and assign them to groups. Each Consumer uses a unique API key and inherits group permissions which govern access to MCP tools:
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: alice
+      groups:
+        - name: gold-partner
+      keyauth_credentials:
+        - key: alice-key
+
+    - username: bob
+      groups:
+        - name: silver-partner
+      keyauth_credentials:
+        - key: bob-key
+
+    - username: carol
+      groups:
+        - name: bronze-partner
+      keyauth_credentials:
+        - key: carol-key
+
+    - username: eason
+      keyauth_credentials:
+        - key: eason-key
+{% endentity_examples %}
+
+## Configure the WeatherAPI MCP tool
+
+### Add an API key using the Request Transformer Advanced plugin
+
+To authenticate to WeatherAPI, configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin automatically appends your API key to the query string so that all requests are authenticated.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: request-transformer-advanced
+      service: weather-internet-service
+      config:
+        add:
+          querystring:
+            - key:${key}
+variables:
+  key:
+    value: $WEATHERAPI_API_KEY
+{% endentity_examples %}
+
+### Configure the AI MCP Proxy plugin for WeatherAPI
+
+Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the WeatherAPI endpoint into an MCP tool. The `acl` block defines which Consumer Groups can access this tool.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-mcp-proxy
+      route: weather-internet-mcp
+      tags:
+        - ai-gateway-mcp-aggregation
+      config:
+        mode: conversion-only
+        logging:
+          log_audits: true
+          log_payloads: true
+          log_statistics: true
+        tools:
+          - name: weather-internet
+            description: Get current weather for a location
+            method: GET
+            path: "./v1/current.json"
+            acl:
+              allow:
+                - gold-partner
+                - silver-partner
+              deny:
+                - bronze-partner
+            parameters:
+              - name: q
+                in: query
+                required: true
+                description: "Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode, IP address, latitude/longitude, or city name."
+                schema:
+                  type: string
+                  default: London
+{% endentity_examples %}
+
+## Configure the Deck of Cards MCP tools
+
+Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the Deck of Cards API endpoints into MCP tools. Each tool has its own ACL configuration.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-mcp-proxy
+      route: cards-api-mcp
+      tags:
+        - ai-gateway-mcp-aggregation
+      config:
+        mode: conversion-only
+        logging:
+          log_audits: true
+          log_payloads: true
+          log_statistics: true
+        max_request_body_size: 16384
+        tools:
+          - name: shuffle-cards
+            description: Shuffle a new deck of cards. Returns a deck_id to use with draw-cards.
+            method: GET
+            path: "/cards-api/new/shuffle/"
+            acl:
+              allow:
+                - gold-partner
+                - silver-partner
+              deny:
+                - bronze-partner
+            parameters:
+              - name: deck_count
+                in: query
+                required: false
+                description: "Number of decks to use (default 1, blackjack typically uses 6)"
+                schema:
+                  type: integer
+                  default: 1
+          - name: draw-cards
+            description: Draw cards from an existing deck. Requires a deck_id from shuffle-cards.
+            method: GET
+            path: "/cards-api/{deck_id}/draw/"
+            acl:
+              allow:
+                - gold-partner
+                - silver-partner
+              deny:
+                - bronze-partner
+            parameters:
+              - name: deck_id
+                in: path
+                required: true
+                description: "Deck ID returned from shuffle-cards"
+                schema:
+                  type: string
+              - name: count
+                in: query
+                required: true
+                description: "Number of cards to draw"
+                schema:
+                  type: integer
+                  default: 1
+          - name: shuffle-and-draw
+            description: Create a new shuffled deck and draw cards in one request.
+            method: GET
+            path: "./new/draw/"
+            acl:
+              allow:
+                - gold-partner
+                - silver-partner
+              deny:
+                - bronze-partner
+            parameters:
+              - name: count
+                in: query
+                required: true
+                description: "Number of cards to draw"
+                schema:
+                  type: integer
+                  default: 1
+{% endentity_examples %}
+
+## Configure the listener AI MCP Proxy plugin
+
+Configure the AI MCP Proxy plugin in `listener` mode to aggregate and expose the tools registered by the conversion-only plugins. The listener discovers tools based on their shared tag value and serves them through an MCP server that AI clients can connect to.
+
+The `include_consumer_groups: true` setting is essential. Without it, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
+
+The table below shows the effective permissions for the configuration:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: MCP Tool
+    key: tool
+  - title: gold-partner
+    key: gold
+  - title: silver-partner
+    key: silver
+  - title: bronze-partner
+    key: bronze
+  - title: No group
+    key: none
+
+rows:
+  - tool: "`weather-internet`"
+    gold: Yes
+    silver: Yes
+    bronze: No
+    none: No
+  - tool: "`shuffle-cards`"
+    gold: Yes
+    silver: Yes
+    bronze: No
+    none: No
+  - tool: "`draw-cards`"
+    gold: Yes
+    silver: Yes
+    bronze: No
+    none: No
+  - tool: "`shuffle-and-draw`"
+    gold: Yes
+    silver: Yes
+    bronze: No
+    none: No
+{% endtable %}
+<!-- vale on -->
+
+The following plugin configuration applies the ACL rules for the MCP tools shown in the table above:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-mcp-proxy
+      route: mcp-aggregation
+      tags:
+        - ai-gateway-mcp-aggregation
+      config:
+        mode: listener
+        include_consumer_groups: true
+        server:
+          tag: ai-gateway-mcp-aggregation
+          timeout: 45000
+        logging:
+          log_audits: true
+          log_statistics: true
+          log_payloads: true
+        max_request_body_size: 32768
+{% endentity_examples %}
+
+## Validate the configuration
+
+Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWise is a macOS AI chat client that supports MCP servers.
+
+### Configure ChatWise
+
+1. Download and install [ChatWise](https://chatwise.app/).
+1. Open ChatWise and go to **Settings** (gear icon).
+1. In the left sidebar, click **Providers** and configure your preferred LLM provider (for example, OpenAI).
+1. In the left sidebar, click **MCP**.
+1. Click the **+** button at the bottom to add a new MCP server.
+1. Configure the MCP server with the following settings:
+   - **Type**: HTTP Server (http)
+   - **Name**: Enter a name to identify the server (for example, `weather`)
+   - **URL**: `http://localhost:8000/mcp/aggregation`
+1. Under **HTTP headers**, click **+** to add an authentication header:
+   - **Key**: `apikey`
+   - **Value**: Enter the API key for the user you want to test (for example, `alice-key`)
+1. Click **Verify (View Tools)** to confirm the connection. You should see the available tools listed:
+   - `draw-cards`
+   - `shuffle-and-draw`
+   - `shuffle-cards`
+   - `weather-internet`
+1. Close the settings window.
+
+### Test tool access
+
+Now verify access for each user by updating the API key in the MCP server settings:
+
+{% navtabs "validate-mcp-access" %}
+{% navtab "Alice (gold-partner)" %}
+
+1. In the MCP settings, set the `apikey` header value to `alice-key`.
+1. Start a new chat
+1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
+1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
+1. Type:
+   ```text
+   shuffle cards
+   ```
+
+1. ChatWise should call the `shuffle-cards` tool and respond with the deck ID:
+   ```text
+   The deck has been successfully shuffled. The new deck ID is xucbyje9gmy5.
+   Let me know how many cards you would like to draw!
+   ```
+   {:.no-copy-code}
+
+1. Type:
+  ```text
+   draw 1 card
+   ```
+
+1. ChatWise should call the `draw-cards` tool and display the drawn card with its image:
+  ```text
+   The card drawn from the deck is the Queen of Hearts
+  ```
+   {:.no-copy-code}
+
+1. Type:
+   ```text
+   What's the weather in London
+   ```
+
+1. ChatWise should call the `weather-internet` tool and respond with the current weather:
+   ```text
+   The current weather in London is as follows:
+   - Temperature: 7.2°C (45.0°F)
+   - Condition: Light rain
+   - Wind: 14.1 mph (22.7 kph) from the south-southeast
+   - Humidity: 100%
+   ```
+   {:.no-copy-code}
+
+   Alice belongs to the **gold-partner** group and has access to all tools.
+
+{% endnavtab %}
+{% navtab "Bob (silver-partner)" %}
+
+1. In the MCP settings, set the `apikey` header value to `bob-key`.
+1. Start a new chat
+1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
+1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
+1. Type:
+  ```text
+   shuffle cards
+  ```
+
+1. ChatWise should successfully call the `shuffle-cards` tool and return a deck ID.
+
+1. Type:
+   ```text
+   What's the weather in London?
+   ```
+
+1. ChatWise should successfully call the `weather-internet` tool and return the weather data.
+
+   Bob belongs to the **silver-partner** group and has access to all tools in this configuration.
+
+{% endnavtab %}
+{% navtab "Carol (bronze-partner)" %}
+
+1. In the MCP settings, set the `apikey` header value to `carol-key`.
+1. Start a new chat
+1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
+1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
+1. Type:
+   ```text
+   shuffle cards
+   ```
+
+1. The tool call should fail. ChatWise will display:
+   ```text
+   It seems there is a restriction preventing me from shuffling the cards at the moment.
+   Unfortunately, I'm unable to proceed with this request. Please try again later.
+   ```
+   {:.no-copy-code}
+
+   Carol belongs to the **bronze-partner** group, which is explicitly denied access to all tools.
+
+{% endnavtab %}
+{% navtab "Eason (no group)" %}
+
+1. In the MCP settings, set the `apikey` header value to `eason-key`.
+1. Start a new chat
+1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
+1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
+1. Type:
+   ```text
+   What's the weather in London
+   ```
+
+1. The tool call should fail with a restriction message.
+
+   Eason is not part of any group and no tools explicitly allow ungrouped consumers.
+
+{% endnavtab %}
+{% endnavtabs %}
