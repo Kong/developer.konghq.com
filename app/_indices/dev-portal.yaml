@@ -15,6 +15,7 @@ sections:
       - path: /catalog/api-packaging/
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
+      - path: /how-to/package-apis-with-dev-portal/
   - title: Application registration
     items:
       - title: Developer sign-up

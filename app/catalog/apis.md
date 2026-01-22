@@ -28,7 +28,9 @@ related_resources:
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
-  - text: Create API packages
+  - text: Package APIs with Dev Portal
+    url: /how-to/package-apis-with-dev-portal/
+  - text: API packages reference
     url: /catalog/api-packaging/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?

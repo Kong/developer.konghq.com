@@ -36,6 +36,8 @@ related_resources:
       url: /dev-portal/application-registration/
     - text: Application authentication strategies
       url: /dev-portal/auth-strategies/ 
+    - text: Package APIs with Dev Portal
+      url: /how-to/package-apis-with-dev-portal/
 prereqs:
   skip_product: true
   inline:
