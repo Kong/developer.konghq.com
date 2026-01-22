@@ -177,7 +177,7 @@ variables:
 
 ### Configure the AI MCP Proxy plugin for WeatherAPI
 
-Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the WeatherAPI endpoint into an MCP tool. The `acl` block defines which Consumer Groups can access this tool.
+Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the WeatherAPI endpoint into an MCP tool and define access controls. The `tags` field enables the listener to discover this tool during aggregation. The `acl` block specifies which Consumer Groups can call this tool.
 
 {% entity_examples %}
 entities:
@@ -395,7 +395,7 @@ Alice belongs to the **gold-partner** group and has access to all tools.
 
 1. In ChatWise, start a new chat.
 1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. From the hammer dropdown menu, enable your MCP server. 
+1. From the hammer dropdown menu, enable your MCP server.
 1. Enter the following in the ChatWise chat:
 
    ```text
