@@ -228,7 +228,7 @@ render_output: false
 
 Note that this script is for demo purposes and hard-codes client id, client secret and scope.
 
-We then create a kafkactl configuration with both nonauthenticated and authenticated access:
+We then create a kafkactl configuration with both non authenticated and authenticated access:
 <!--vale off-->
 {% validation custom-command %}
 command: |
