@@ -86,6 +86,8 @@ pages:
         url: /mesh/annotations/
       - text: Mesh concepts
         url: /mesh/concepts/
+      - text: Service discovery
+        url: /mesh/service-discovery/
   -
     path: app/_src/networking/hostnamegenerator.md
     title: 'HostnameGenerator'
@@ -186,6 +188,8 @@ pages:
         url: /mesh/data-plane-proxy/
       - text: "{{site.mesh_product_name}} data plane on Universal"
         url: /mesh/data-plane-universal/
+      - text: Service discovery
+        url: /mesh/service-discovery/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -466,16 +470,6 @@ pages:
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
-  -
-    path: app/_src/networking/service-discovery.md
-    title: 'Service discovery'
-    description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between Data Plane and Control Plane in single-zone and multi-zone deployments.'
-    url: '/mesh/service-discovery/'
-    related_resources:
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh DNS
-        url: '/mesh/dns/'
   -
     path: app/_src/networking/transparent-proxying.md
     title: 'Transparent proxying'
