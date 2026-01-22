@@ -18,6 +18,7 @@
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
+/mesh/use-kuma/ /mesh/interact-with-control-plane/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -74,7 +75,7 @@
 /mesh/production/deployment/multi-zone      /mesh/mesh-multizone-service-deployment/
 /mesh/production/dp-config/dpp-on-universal     /mesh/data-plane-universal/
 /mesh/production/dp-config/dpp  /mesh/data-plane-proxy/
-/mesh/production/use-mesh       /mesh/use-kuma/
+/mesh/production/use-mesh       /mesh/interact-with-control-plane/
 /mesh/production/cp-deployment/zoneegress   /mesh/zone-egress/
 /mesh/:version/production/cp-deployment/zoneegress   /mesh/zone-egress/
 /mesh/production/secure-deployment/certificates/    /mesh/secure-access/

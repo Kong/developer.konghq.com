@@ -509,7 +509,7 @@ pages:
       - text: 'Manage secrets'
         url: '/mesh/manage-secrets/'
       - text: Mesh ports
-        url: /mesh/use-kuma/#control-plane-ports
+        url: /mesh/interact-with-control-plane/#control-plane-ports
       - text: Zone Ingress
         url: /mesh/zone-ingress/
   -
@@ -534,18 +534,6 @@ pages:
         url: '/mesh/authentication-with-the-api-server/'
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
-  -
-    path: app/_src/production/use-mesh.md
-    title: 'Kong Mesh GUI and ports reference'
-    description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.'
-    url: '/mesh/use-kuma/'
-    related_resources:
-      - text: Mesh GUI
-        url: '/mesh/kuma-user-interface-gui/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
   -
     path: app/_src/reference/data-collection.md
     title: 'Kong Mesh data collection'
