@@ -12,7 +12,8 @@ products:
     - dev-portal
     - gateway
     - catalog
-
+min_version:
+  gateway: '3.13'
 works_on:
     - konnect
 tools:
