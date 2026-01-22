@@ -45,13 +45,24 @@ prereqs:
   inline:
     - title: Gemini
       content: |
-        Before you begin, you must get the following credentials from Google Cloud:
 
-        - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
+        Before you begin, you must get the Gemini API key from Google Cloud:
 
-        Export these values as environment variables:
+        1. Go to the Google Cloud Console.
+        1. Select or create a project.
+        1. Navigate to APIs & Services.
+        1. In the APIs & Services sidebar, click Library.
+        1. Search for “Generative Language API”.
+        1. Click Gemini API.
+        1. Click Enable.
+        1. Navigate back to APIs & Services.
+        1. In the APIs & Services sidebar, clickCredentials.
+        1. From the Create Credentials dropdown menu, select API Key.
+        1. Copy the generated API key.
+        1. Export the API key as an environment variable:
+
         ```sh
-        export DECK_GEMINI_API_KEY="<your_gemini_api_key>"
+        export DECK_GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
         ```
       icon_url: /assets/icons/gcp.svg
   entities:
@@ -82,14 +93,15 @@ entities:
   plugins:
     - name: ai-proxy-advanced
       config:
-        route_type: llm/v1/chat
-        auth:
-          param_name: key
-          param_value: ${gemini_api_key}
-          param_location: query
-        model:
-          provider: gemini
-          name: gemini-1.5-flash
+        targets:
+          - model:
+              provider: gemini
+              name: gemini-2.5-flash
+            auth:
+              param_name: key
+              param_value: ${gemini_api_key}
+              param_location: query
+            route_type: llm/v1/chat
 variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
