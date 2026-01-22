@@ -30,7 +30,7 @@ prereqs:
       position: before
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
-        Version >= 5.17.0 is needed to support pluggable oauth token generation.
+        Version >= 5.17.0 is needed to support script driven OAuth token generation.
 
     - title: Start a local Kafka cluster
       position: before
