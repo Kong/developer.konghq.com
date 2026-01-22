@@ -11,46 +11,77 @@
 
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
-Kong AI Gateway mediates the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}).
+Kong AI Gateway transforms requests and responses according to the configured [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), using the OpenAI format by default. {% new_in 3.10 %} To use a provider's native format instead, set [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`. The plugin then passes requests upstream without transformation. See [Supported native LLM formats](#supported-native-llm-formats) for available options.
 
-The `{{ route_type }}` must be configured respective to the required request and response format examples. Check specific [AI provider's reference page](/ai-gateway/ai-providers/) for more details.
+The following matrix maps each route type to its [OpenAI API](https://platform.openai.com/docs/api-reference) reference and generative AI category. See the [AI provider reference pages](/ai-gateway/ai-providers/) for provider-specific details.
+
+{% table %}
+columns:
+  - title: Route type
+    key: route
+  - title: OpenAI API reference
+    key: reference
+  - title: Category
+    key: category
+  - title: Min version
+    key: version
+rows:
+  - route: "`llm/v1/chat`"
+    reference: "[Chat completions](https://platform.openai.com/docs/api-reference/chat/create)"
+    category: "`text/generation`"
+    version: "3.6"
+  - route: "`llm/v1/completions`"
+    reference: "[Completions](https://platform.openai.com/docs/api-reference/completions)"
+    category: "`text/generation`"
+    version: "3.6"
+  - route: "`llm/v1/embeddings`"
+    reference: "[Embeddings](https://platform.openai.com/docs/api-reference/embeddings)"
+    category: "`text/embeddings`"
+    version: "3.11"
+  - route: "`llm/v1/files`"
+    reference: "[Files](https://platform.openai.com/docs/api-reference/files)"
+    category: "N/A"
+    version: "3.11"
+  - route: "`llm/v1/batches`"
+    reference: "[Batch](https://platform.openai.com/docs/api-reference/batch)"
+    category: "N/A"
+    version: "3.11"
+  - route: "`llm/v1/assistants`"
+    reference: "[Assistants](https://platform.openai.com/docs/api-reference/assistants)"
+    category: "`text/generation`"
+    version: "3.11"
+  - route: "`llm/v1/responses`"
+    reference: "[Responses](https://platform.openai.com/docs/api-reference/responses)"
+    category: "`text/generation`"
+    version: "3.11"
+  - route: "`audio/v1/audio/speech`"
+    reference: "[Create speech](https://platform.openai.com/docs/api-reference/audio/createSpeech)"
+    category: "`audio/speech`"
+    version: "3.11"
+  - route: "`audio/v1/audio/transcriptions`"
+    reference: "[Create transcription](https://platform.openai.com/docs/api-reference/audio/createTranscription)"
+    category: "`audio/transcription`"
+    version: "3.11"
+  - route: "`audio/v1/audio/translations`"
+    reference: "[Create translation](https://platform.openai.com/docs/api-reference/audio/createTranslation)"
+    category: "`audio/transcription`"
+    version: "3.11"
+  - route: "`image/v1/images/generations`"
+    reference: "[Create image](https://platform.openai.com/docs/api-reference/images)"
+    category: "`image/generation`"
+    version: "3.11"
+  - route: "`image/v1/images/edits`"
+    reference: "[Create image edit](https://platform.openai.com/docs/api-reference/images/createEdit)"
+    category: "`image/generation`"
+    version: "3.11"
+  - route: "`video/v1/videos/generations`"
+    reference: "[Create video](https://platform.openai.com/docs/api-reference/videos/create)"
+    category: "`video/generation`"
+    version: "3.13"
+{% endtable %}
 
 {:.info}
-> {% new_in 3.10 %} By default, Kong AI Gateway uses the OpenAI format, but you can customize this using [`config.llm_format`](./reference/#schema--config-llm-format). If `llm_format` is not set to `openai`, the plugin will not transform the request when sending it upstream and will leave it as-is.
->
-> See the [section below](#supported-native-llm-formats) for more details.
-
-### Input formats
-
-The {{ plugin }} plugin accepts the following inputs formats, standardized across all providers.
-
-#### Text generation inputs
-
-The following examples show standardized text-based request formats for each supported `llm/v1/*` route. These formats are normalized across providers to help simplify downstream parsing and integration.
-
-{% include plugins/ai-proxy/text-inputs.md %}
-
-#### Audio, image and video generation inputs
-
-The following examples show standardized audio and image request formats for each supported route. These formats are normalized across providers to help simplify downstream parsing and integration.
-
-{% include plugins/ai-proxy/image-audio-inputs.md %}
-
-### Response formats
-
-Conversely, the response formats are also transformed to a standard format across all providers:
-
-#### Text-based responses
-
-{% include plugins/ai-proxy/text-responses.md %}
-
-#### Image, audio and video responses
-
-The following examples show standardized response formats returned by supported `audio/` and `image/` routes. These formats are normalized across providers to support consistent multimodal output parsing.
-
-{% include plugins/ai-proxy/image-audio-responses.md %}
-
-The request and response formats are loosely modeled after OpenAI’s API. For detailed format specifications, see the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml).
+> Provider-specific parameters can be passed using the `extra_body` field in your request. See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml) for detailed format examples.
 
 ## Supported native LLM formats {% new_in 3.10 %}
 

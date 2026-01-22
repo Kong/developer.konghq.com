@@ -584,6 +584,8 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 
 {:.warning}
 > Realtime processing requires the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin and uses WebSocket protocol.
+>
+> To use the realtime route, you must configure the protocols `ws` and/or `wss` on both the Service and on the Route where the plugin is associated.
 
 <table>
   <thead>

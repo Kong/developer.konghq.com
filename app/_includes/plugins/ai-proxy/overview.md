@@ -151,7 +151,7 @@ features:
     description: Allows models to invoke external tools and APIs based on conversation context.
     openai_compatible: true
     examples: |
-      * llm/v1/chat
+      * "`llm/v1/chat`"
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
@@ -243,7 +243,7 @@ features:
 Kong AI Gateway supports proxying requests to the following AI providers. Each provider page documents supported capabilities, configuration requirements, and provider-specific details.
 
 {:.info}
-> For detailed capability support, configuration requirements, and provider-specific limitations, see the individual provider reference pages.
+> For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).
 
 <!-- vale off -->
 {% feature_table %}

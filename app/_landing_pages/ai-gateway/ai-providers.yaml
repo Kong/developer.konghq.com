@@ -139,7 +139,6 @@ rows:
               tags:
                 - ai-proxy
               products:
-                - gateway
                 - ai-gateway
               quantity: 6
               allow_empty: true
