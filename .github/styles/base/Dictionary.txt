@@ -337,6 +337,8 @@ HTTPie
 HTTPRoute
 HTTPRoutes
 https
+HuggingFace
+huggingface
 idempotency
 IdPs
 if_version
