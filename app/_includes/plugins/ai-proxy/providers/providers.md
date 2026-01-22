@@ -141,7 +141,8 @@ The following tables show the AI capabilities supported by {{ provider.name }} p
 
 Support for {{ provider.name }} basic text generation capabilities including chat, completions, and embeddings:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -208,6 +209,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {% if provider.chat.note.content or provider.completions.note.content or provider.embeddings.note.content %}
 
@@ -227,7 +229,8 @@ Support for {{ provider.name }} basic text generation capabilities including cha
 
 Support for {{ provider.name }} function calling to allow {{ provider.name }} models to use external tools and APIs:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -258,6 +261,7 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {% if provider.function_calling.note.content %}
 
@@ -271,7 +275,8 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
 
 Support for {{ provider.name }} file operations, batch operations, assistants, and response handling:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -356,6 +361,7 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {% if provider.files.note.content or provider.batches.note.content or provider.assistants.note.content or provider.responses.note.content %}
 
@@ -378,7 +384,8 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
 
 Support for {{ provider.name }} text-to-speech, transcription, and translation capabilities:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -445,6 +452,7 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {:.info}
 > For requests with large payloads (audio transcription/translation), consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -467,7 +475,8 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
 
 Support for {{ provider.name }} image generation and editing capabilities:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -516,6 +525,7 @@ Support for {{ provider.name }} image generation and editing capabilities:
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {:.info}
 > For requests with large payloads (image edits), consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -535,7 +545,8 @@ Support for {{ provider.name }} image generation and editing capabilities:
 
 Support for {{ provider.name }} video generation capabilities:
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -566,6 +577,7 @@ Support for {{ provider.name }} video generation capabilities:
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {:.info}
 > For requests with large payloads (video generation), consider increasing `config.max_request_body_size` to three times the raw binary size.
@@ -587,7 +599,8 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 >
 > To use the realtime route, you must configure the protocols `ws` and/or `wss` on both the Service and on the Route where the plugin is associated.
 
-<table>
+<div class="w-full overflow-x-auto">
+<table class="w-full">
   <thead>
     <tr>
       <th>Capability</th>
@@ -618,6 +631,7 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
     {% endif %}
   </tbody>
 </table>
+</div>
 
 {% if provider.realtime.note.content %}
 

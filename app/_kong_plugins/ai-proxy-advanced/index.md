@@ -191,7 +191,7 @@ The [AI load balancer](/ai-gateway/load-balancing/) supports configurable retrie
 The [AI load balancer](/ai-gateway/load-balancing/) supports circuit breakers to improve reliability. If a target reaches the failure threshold defined by [`config.balancer.max_fails`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-max-fails), the load balancer stops routing requests to it until the timeout period ([`config.balancer.fail_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-fail-timeout)) elapses.
 
 {:.info}
-> For configuration details and behavior examples, see [Circuit breaker](/ai-gateway/load-balancing/#circuit-breaker).
+> For configuration details and behavior examples, see [Circuit breaker](/ai-gateway/load-balancing/#health-check-and-circuit-breaker).
 
 ## Templating {% new_in 3.7 %}
 
