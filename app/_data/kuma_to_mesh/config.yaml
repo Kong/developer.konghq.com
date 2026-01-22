@@ -467,16 +467,6 @@ pages:
       - text: Mesh CLI
         url: /mesh/cli/
   -
-    path: app/_src/networking/service-discovery.md
-    title: 'Service discovery'
-    description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between Data Plane and Control Plane in single-zone and multi-zone deployments.'
-    url: '/mesh/service-discovery/'
-    related_resources:
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-  -
     path: app/_src/networking/transparent-proxying.md
     title: 'Transparent proxying'
     description: 'Explains how Transparent Proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.'
