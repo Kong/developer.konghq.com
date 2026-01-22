@@ -499,18 +499,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/dp-config/ipv6.md
-    title: 'IPv6 support'
-    description: 'Instructions for enabling or disabling IPv6 support in {{site.mesh_product_name}} across Universal and Kubernetes environments.'
-    url: '/mesh/ipv6-support/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'
     description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
