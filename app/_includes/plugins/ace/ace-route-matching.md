@@ -32,7 +32,7 @@ rows:
     description: |
       By default, the ACE plugin only engages with a request when it matches an operation. If a request doesn't match, ACE lets the request pass through untouched. This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
     limitations: |
-      * All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. Dev Portal will not be able to protect all operations.
+      * All traffic outside of published APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled; this must be configured with a [different authentication plugin](/plugins/?category=authentication). Dev Portal will not be able to protect all operations.
       * Since Routes aren't protected by default in this mode, any mistyped or omitted operation in API entities could result in open access.
     use-case: |
       * You have an environment where some Gateway Services or Routes are governed by Dev Portal–exposed APIs (with ACE), while others are regular Routes that should be left alone.

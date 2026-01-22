@@ -12,7 +12,8 @@ breadcrumbs:
 tags:
   - api-catalog
   - api-composition
-
+min_version:
+  gateway: '3.13'
 works_on:
     - konnect
 api_specs:
@@ -92,8 +93,6 @@ flowchart LR
   end
     1 --> 5 & 6
     2 --> 7 & 8 & 3 & 4
-    style subGraph2 fill:#C8E6C9
-    style subGraph1 fill:#BBDEFB
 {% endmermaid %}
 <!--vale on-->
 
@@ -101,7 +100,7 @@ Packaging APIs involves the following steps:
 1. Create an API and attach an OpenAPI spec. Operations from your API's OpenAPI spec should overlap with Routes to ensure requests will be routed to the correct Service. Gateway routing configuration isn't directly modified by adding operations.
 1. Link a control plane to allow developer consumption. 
 1. Apply the Access Control Enforcement (ACE) plugin globally.
-1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified– any unmatched operations will be highlighted to indicate that a user Gateway Manager permissions needs to perform an action.
+1. Create an API package by adding operations and package rate limits. Operations are automatically mapped to Routes using your API's OpenAPI spec or you can create them manually. The Gateway configuration isn't directly modified – any unmatched operations will be highlighted to indicate that a user needs Gateway Manager permissions needs to perform an action.
 
 ### ACE plugin
 
@@ -115,7 +114,7 @@ Packaging APIs involves the following steps:
 
 You can set individual rate limits on an API package as well as operations in that package. Keep the following in mind when configuring rate limits:
 * API package rate limits apply across all operations in the API package **cumulatively**, not individually.
-* Each Operation in an API Package can additionally have an individual rate limit defined. When an operation-level override is present, the package-level limit is ignored for that operation.
+* Each operation in an API Package can additionally have an individual rate limit defined. When an operation-level override is present, the package-level limit is ignored for that operation.
 * API package rate limits are applied simultaneously with rate limits from other plugins on gateway entities:
   * Requests that are under the current limit for the Service and API Package will be counted towards both.
   * Requests that surpass the rate limit of an API package won't be counted towards rate limits applied from other rate limiting plugins.
@@ -132,11 +131,11 @@ Because an operation-level override is present, the package-level limit is ignor
 
 When configuring API packages, keep the following limitations in mind:
 
-* If you have two endpoints in your spec, one with a trailing slash one without, both are generated as the same operation.
+* If you have two endpoints in your spec, one with a trailing slash and one without, both are generated as the same operation.
 * If two operations have the same path and method, they are generated as the same operation.
 * All operations for a control plane are removed when you unlink the control plane.
 * APIs can only be mapped to one control plane at a time.
-* You can't change a version or edit a spec for an API if it would remove an operation because this would result in a breaking change. The recommended method to remove an operation is to unlink the control plane from the API.
+* You can't change a version or edit a spec for an API if it would remove an operation because this would result in a breaking change. To remove an operation, we recommend unlinking the control plane from the API.
 
 ## Package APIs with Dev Portal
 
@@ -146,7 +145,7 @@ This guide shows you how to create an API package in the {{site.konnect_short_na
 
 To package APIs with Dev Portal, you need:
 * A v3 Dev Portal created in {{site.konnect_short_name}}
-* A [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and/or [Route](/gateway/entities/route/#set-up-a-route) added to your control plane ({{site.base_gateway}} 3.12 or later)
+* A [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and/or [Route](/gateway/entities/route/#set-up-a-route) added to your control plane ({{site.base_gateway}} 3.13 or later)
 * The following roles:
   * Editor role for APIs
   * Publisher role for the API and API package
