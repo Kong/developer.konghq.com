@@ -141,6 +141,8 @@ When configuring API packages, keep the following limitations in mind:
 
 This guide shows you how to create an API package in the {{site.konnect_short_name}} UI.
 
+For an end-to-end tutorial with sample data that walks you through setting up and using API Packages, see [Package APIs with Dev Portal](/how-to/package-apis-with-dev-portal/).
+
 ### Prerequisites
 
 To package APIs with Dev Portal, you need:
