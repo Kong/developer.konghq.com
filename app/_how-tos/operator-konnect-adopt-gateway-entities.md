@@ -21,6 +21,9 @@ entities:
   - plugin
 tags:
   - konnect-crd
+
+min_version:
+  operator: '2.1'
  
 tldr:
   q: How can I manage existing {{site.base_gateway}} entities in {{ site.konnect_short_name }} with Kubernetes CRDs?
