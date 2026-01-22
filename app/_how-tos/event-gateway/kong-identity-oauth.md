@@ -112,7 +112,7 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Notice that the cluster will accept both anonymous and oauth authentication method. We'll restrict access using ACLs.
+Notice that the cluster will accept both anonymous and OAuth authentication method. We'll restrict access using ACLs.
 
 ## Add a listener
 
@@ -193,7 +193,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Setup `kafkactl` to use oauth 
+## Setup `kafkactl` to use OAuth 
 
 {% warning %}
 This requires a kafkactl version >= 5.17.0 to check your version run `kafkactl version`
@@ -223,6 +223,7 @@ render_output: false
 Note that this script is for demo purposes and hard-codes client id, client secret and scope.
 
 We then create a kafkactl with both non authenticated and authenticated access:
+<!--vale off-->
 {% validation custom-command %}
 command: |
   cat <<EOF > kafkactl.yaml
@@ -251,6 +252,7 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!--vale on-->
 
 ## Validate
 
@@ -267,7 +269,7 @@ expected:
 render_output: false
 {% endvalidation %}
 
-### List topics using an authed client:
+### List topics using an authenticated client:
 
 {% validation custom-command %}
 command: |
@@ -302,4 +304,4 @@ The output should be:
 TOPIC     PARTITIONS     REPLICATION FACTOR
 ```
 
-As you can see, when using oauth we can retrieve the topic. However, when using anonymous access the topic isn't visible.
+As you can see, when using OAuth we can retrieve the topic. However, when using anonymous access the topic isn't visible.
