@@ -75,8 +75,10 @@ prereqs:
 
         After installation:
         1. Launch the app.
-        1. Go to **Settings > Providers > OpenAI**.
-        1. Paste your OpenAI API key.
+        1. Navigate to the app's settings.
+        1. Click **Providers** in the sidebar.
+        1. In the Providers sidebar, click **OpenAI**.
+        1. In the **API Key** field, enter your OpenAI API key.
   entities:
     services:
       - weather-internet-service
@@ -88,6 +90,8 @@ prereqs:
 
 automated_tests: false
 ---
+
+In this how-to, you'll restrict access to aggregated MCP tools using Consumer Groups. This allows you to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
 
 ## Set up Consumer authentication
 
@@ -121,7 +125,7 @@ entities:
 
 ## Create Consumers
 
-Configure individual [Consumers](/gateway/entities/consumer/) and assign them to groups. Each Consumer uses a unique API key and inherits group permissions which govern access to MCP tools:
+Configure individual [Consumers](/gateway/entities/consumer/) and assign them to groups. Consumers here can represent the humans or agents using the MCP tools. Each Consumer uses a unique API key and inherits group permissions which govern access to MCP tools:
 
 {% entity_examples %}
 entities:
@@ -150,6 +154,8 @@ entities:
 {% endentity_examples %}
 
 ## Configure the WeatherAPI MCP tool
+
+In this how-to, we'll use the WeatherAPI to demonstrate how you can enforce access limits on aggregated MCP servers by configuring it as an MCP tool.
 
 ### Add an API key using the Request Transformer Advanced plugin
 
@@ -358,23 +364,20 @@ entities:
 
 ## Validate the configuration
 
-Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWise is a macOS AI chat client that supports MCP servers.
+Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWise is an AI chat client that supports MCP servers. You should've already [downloaded and installed ChatWise](#chatwise-desktop-application) in the prerequisites for this how-to.
 
 ### Configure ChatWise
 
-1. Download and install [ChatWise](https://chatwise.app/).
-1. Open ChatWise and go to **Settings** (gear icon at the bottom-left corner).
-1. In the left sidebar, click **Providers** and configure your preferred LLM provider (for example, OpenAI).
-1. In the left sidebar, click **MCP**.
-1. Click the **+** button at the bottom to add a new MCP server.
-1. Configure the MCP server with the following settings:
-   - **Type**: HTTP Server (http)
-   - **Name**: Enter a name to identify the server (for example, `aggregated-mcp`)
-   - **URL**: `http://localhost:8000/mcp/aggregation`
-1. Under **HTTP headers**, click **+** to add an authentication header:
-   - **Key**: `apikey`
-   - **Value**: Enter the API key for the user you want to test (for example, `alice-key`)
-1. Click **Verify (View Tools)** to confirm the connection. You should see the available tools listed:
+1. In the ChatWise app, navigate to settings.
+1. Click **MCP** in the sidebar.
+1. Click the **+** button.
+1. Select "HTTP Server (http)".
+1. In the **Name** field, enter `aggregated-mcp`.
+1. In the **URL** field, enter `http://localhost:8000/mcp/aggregation`.
+1. Next to **HTTP headers**, click **+**.
+1. In the **Key** field, enter `apikey`.
+1. In the **Value** field, enter `alice-key`.
+1. Click **Verify (View Tools)** to confirm the connection. You should see the following tools listed:
    - `draw-cards`
    - `shuffle-and-draw`
    - `shuffle-cards`
@@ -388,11 +391,12 @@ Now verify access for each user by updating the API key in the MCP server settin
 {% navtabs "validate-mcp-access" %}
 {% navtab "Alice (gold-partner)" %}
 
-1. In the MCP settings, set the `apikey` header value to `alice-key`.
-1. Start a new chat
+Alice belongs to the **gold-partner** group and has access to all tools.
+
+1. In ChatWise, start a new chat.
 1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
-1. Type:
+1. From the hammer dropdown menu, enable your MCP server. 
+1. Enter the following in the ChatWise chat:
 
    ```text
    Shuffle cards
@@ -406,7 +410,7 @@ Now verify access for each user by updating the API key in the MCP server settin
    ```
    {:.no-copy-code}
 
-1. Type:
+1. Enter the following in the ChatWise chat:
 
    ```text
    Draw 1 card.
@@ -418,7 +422,7 @@ Now verify access for each user by updating the API key in the MCP server settin
    ```
    {:.no-copy-code}
 
-1. Type:
+1. Enter the following in the ChatWise chat:
    ```text
    What's the weather in London
    ```
@@ -434,40 +438,17 @@ Now verify access for each user by updating the API key in the MCP server settin
    ```
    {:.no-copy-code}
 
-   Alice belongs to the **gold-partner** group and has access to all tools.
 
 {% endnavtab %}
-{% navtab "Bob (silver-partner)" %}
-
-1. In the MCP settings, set the `apikey` header value to `bob-key`.
-1. Start a new chat
-1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
-1. Type:
-
-   ```text
-   Shuffle cards.
-   ```
-
-1. ChatWise should successfully call the `shuffle-cards` tool and return a deck ID.
-
-1. Type:
-   ```text
-   What's the weather in London?
-   ```
-
-1. ChatWise should successfully call the `weather-internet` tool and return the weather data.
-
-   Bob belongs to the **silver-partner** group and has access to all tools in this configuration.
 
 {% endnavtab %}
 {% navtab "Carol (bronze-partner)" %}
 
-1. In the MCP settings, set the `apikey` header value to `carol-key`.
-1. Start a new chat
-1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
-1. Type:
+Carol belongs to the **bronze-partner** group, which is explicitly denied access to all tools.
+
+1. In the ChatWise MCP settings, set the `apikey` header value to `carol-key`.
+1. Start a new chat.
+1. Enter the following in the ChatWise chat:
    ```text
    Shuffle cards
    ```
@@ -479,23 +460,21 @@ Now verify access for each user by updating the API key in the MCP server settin
    ```
    {:.no-copy-code}
 
-   Carol belongs to the **bronze-partner** group, which is explicitly denied access to all tools.
 
 {% endnavtab %}
 {% navtab "Eason (no group)" %}
 
-1. In the MCP settings, set the `apikey` header value to `eason-key`.
-1. Start a new chat
-1. In the chat input area, click the **hammer icon** to enable MCP tools. The icon turns blue when enabled.
-1. Click the hammer icon again to verify the MCP server is connected. You should see your server name (for example, `weather`) with `4 tools` listed.
-1. Type:
+   Eason is not part of any group and no tools explicitly allow ungrouped consumers.
+
+1. In the ChatWise MCP settings, set the `apikey` header value to `eason-key`.
+1. Start a new chat.
+1. Enter the following in the ChatWise chat:
    ```text
-   What's the weather in London
+   What's the weather in Berlin
    ```
 
 1. The tool call should fail with a restriction message.
 
-   Eason is not part of any group and no tools explicitly allow ungrouped consumers.
 
 {% endnavtab %}
 {% endnavtabs %}
