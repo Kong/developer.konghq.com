@@ -330,7 +330,7 @@ You can set up a Vault in one of the following ways:
 * Using parameters in `kong.conf`, set at {{site.base_gateway}} startup
 
 {% navtabs "provider config" %}
-{% navtab "Env var" %}
+{% navtab "Environment variable" %}
 
 <!--vale off-->
 {% table %}

@@ -1,5 +1,5 @@
 {% if include.type=="question" %}
-I don't want to use the Vault entity directly. Can I configure my Vault in another way?
+Can I configure Vault in a different way without using the Vault entity directly?
 {% endif %}
 
 {% if include.type=="answer" %}
