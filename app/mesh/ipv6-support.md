@@ -16,12 +16,7 @@ related_resources:
     url: /mesh/zone-ingress/
 ---
 
-All {{site.mesh_product_name}} entities support running in mixed IPv4 and IPv6 environments as well as IPv6-only setups. 
-This includes global and zone control planes, data plane proxies, iptables scripts, and the CNI.
-
-Generally, any IPv6 setup should work out of the box. 
-However, when data plane proxies run in an IPv6-only environment, the DNS should be set to generate relevant IPv6 addresses using `KUMA_DNS_SERVER_CIDR`.
-Make sure there is no overlap with a pre-existing network in your environment.
+All {{site.mesh_product_name}} entities support mixed IPv4/IPv6 environments and IPv6-only setups. This includes global and zone control planes, data plane proxies, iptables scripts, and the CNI. Most IPv6 configurations work without additional setup. However, when data plane proxies run in an IPv6-only environment, configure the DNS to generate IPv6 addresses by setting `KUMA_DNS_SERVER_CIDR` to an IPv6 CIDR block that does not overlap with any existing network in your environment.
 
 ## Disabling IPv6
 
