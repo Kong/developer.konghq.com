@@ -340,6 +340,7 @@ body:
     type: anonymous
   tls:
     enabled: false
+  insecure_allow_anonymous_virtual_cluster_auth: true
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
