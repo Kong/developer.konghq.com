@@ -19,7 +19,9 @@ description: "Learn how to secure Kafka traffic in Event Gateway with Kong Ident
 tldr: 
   q: "How do I secure Kafka traffic in Event Gateway with Kong Identity?"
   a: | 
-    "Create an auth server (`konnect_auth_server`), scope (`konnect_auth_server_scopes`), and clients (`konnect_auth_server_clients`) resources with Terraform. Then, create a Event Gateway with ACL (`konnect_event_gateway_virtual_cluster`) and record filtering policies. Each Kafka client authenticates with an access token from Kong Identity, and the Event Gateway enforces topic-level access based on the token’s `client_id` claim."
+    1. Create a Kong Identity auth server, scope, claim and client.
+    1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
+    1. Create an ACL policy to restrict access to a specific client.
 
 tools:
     - konnect-api
@@ -50,6 +52,8 @@ related_resources:
     url: /kong-identity/
   - text: Dynamic claim templating
     url: /kong-identity/#dynamic-claim-templates
+  - text: Event Gateway ACL policy
+    url: /event-gateway/policies/acl/
 ---
 
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
@@ -112,7 +116,7 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Notice that the cluster will accept both anonymous and OAuth authentication method. We'll restrict access using ACLs.
+Notice that the cluster will accept both anonymous and OAuth authentication method. We'll later restrict access using ACLs.
 
 ## Add a listener
 
@@ -166,7 +170,7 @@ body:
 For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}.
 In production, we recommend using [SNI routing](/event-gateway/architecture/#hostname-mapping) instead.
 
-## Create ACL policies for the client
+## Create an ACL policies for the client
 
 Add the ACL policy for the client:
 
@@ -192,6 +196,8 @@ body:
       - match: '*'
 {% endkonnect_api_request %}
 <!--vale on-->
+
+This ACL policy will add full topic access to the client with the matching client id.
 
 ## Setup `kafkactl` to use OAuth 
 
@@ -222,7 +228,7 @@ render_output: false
 
 Note that this script is for demo purposes and hard-codes client id, client secret and scope.
 
-We then create a kafkactl with both non authenticated and authenticated access:
+We then create a kafkactl configuration with both nonauthenticated and authenticated access:
 <!--vale off-->
 {% validation custom-command %}
 command: |
@@ -260,6 +266,7 @@ Run the following to validate your configuration.
 
 ### Create a topic bypassing the gateway 
 
+{% capture create-topic %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
@@ -268,17 +275,22 @@ expected:
   message: "topic created: my-test-topic"
 render_output: false
 {% endvalidation %}
+{% endcapture %}
 
 ### List topics using an authenticated client:
 
+{% capture list-topic-auth %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context vc-oauth list topics
 expected:
   return_code: 0
-  message: "topic created: my-test-topic"
+  message: |
+    TOPIC             PARTITIONS     REPLICATION FACTOR
+    my-test-topic     1              1
 render_output: false
 {% endvalidation %}
+{% endcapture %}
 
 The output should like:
 
@@ -289,14 +301,17 @@ my-test-topic     1              1
 
 ### List topics without auth
 
+{% capture list-topic-noauth %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context vc list topics
 expected:
-  return_code: 1
-  message: "topic created: my-test-topic"
+  return_code: 0
+  message: |
+    TOPIC             PARTITIONS     REPLICATION FACTOR
 render_output: false
 {% endvalidation %}
+{% endcapture %}
 
 The output should be:
 
@@ -304,4 +319,4 @@ The output should be:
 TOPIC     PARTITIONS     REPLICATION FACTOR
 ```
 
-As you can see, when using OAuth we can retrieve the topic. However, when using anonymous access the topic isn't visible.
+As you can see, when using OAuth we can retrieve the topic. However, when using anonymous access the topic isn't visible as this user does not have the appropriate ACLs.
