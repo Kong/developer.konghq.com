@@ -441,7 +441,6 @@ Alice belongs to the **gold-partner** group and has access to all tools.
 
 {% endnavtab %}
 
-{% endnavtab %}
 {% navtab "Carol (bronze-partner)" %}
 
 Carol belongs to the **bronze-partner** group, which is explicitly denied access to all tools.
