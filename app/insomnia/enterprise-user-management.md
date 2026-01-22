@@ -52,7 +52,7 @@ Let's say that you have an engineering organization and a product organization. 
 
 This would allow you to automatically add users to the relevant organizations by adding them to a team.
 
-To switch between multiple team instances that you have access to:
+If you have access to multiple team instances, switch between them:
 1. Go to your [Insomnia dashboard](https://app.insomnia.rest/app/dashboard).
 1. From the sidebar, click the name of the team that you're currently viewing.
 1. From the dropdown menu, select the name of the team that you want to switch to.
