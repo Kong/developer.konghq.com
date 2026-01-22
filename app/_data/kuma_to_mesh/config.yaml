@@ -439,18 +439,6 @@ pages:
 
 # Post GA
   -
-    path: app/_src/documentation/health.md
-    title: 'Dataplane Health'
-    description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
-    url: '/mesh/dataplane-health/'
-    related_resources:
-      - text: Mesh CLI
-        url: '/mesh/cli/'
-      - text: Mesh control plane configuration
-        url: '/mesh/control-plane-configuration/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-  -
     path: app/_src/explore/observability.md
     title: 'Observability'
     description: 'Learn how to configure observability in {{site.mesh_product_name}} using Prometheus, Grafana, Jaeger, Loki, and Datadog.'
@@ -466,6 +454,8 @@ pages:
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
+      - text: Data plane health
+        url: /mesh/dataplane-health/
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service discovery'

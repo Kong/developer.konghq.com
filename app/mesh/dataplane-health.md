@@ -12,8 +12,6 @@ min_version:
   mesh: '2.6'
 
 related_resources:
-  - text: "{{site.mesh_product_name}} CLI tools"
-    url: /mesh/cli/
   - text: Control plane configuration
     url: /mesh/control-plane-configuration/
   - text: Observability
