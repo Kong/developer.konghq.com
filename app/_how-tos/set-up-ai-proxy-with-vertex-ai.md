@@ -78,7 +78,7 @@ entities:
             name: gemini-2.0-flash-exp
             options:
               gemini:
-                api_endpoint: us-central1-aiplatform.googleapis.com
+                api_endpoint: Bearer ${gcp_api_endpoint}
                 project_id: Bearer ${gcp_project_id}
                 location_id: Bearer ${gcp_location_id}
           auth:
@@ -91,6 +91,8 @@ variables:
     value: $GCP_LOCATION_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+  gcp_api_endpoint:
+    value: $GCP_API_ENDPOINT  
 formats:
   - deck
 {% endentity_examples %}
