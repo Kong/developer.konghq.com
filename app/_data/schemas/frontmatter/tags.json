@@ -21,6 +21,7 @@
     "authorization",
     "automation",
     "aws",
+    "aws-bedrock",
     "azure",
     "backup",
     "blue-green",
