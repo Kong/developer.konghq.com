@@ -162,6 +162,7 @@ DAOs
 daos
 dashboarding
 DashScope
+dashscope
 Datadog
 Datadog
 datadog
