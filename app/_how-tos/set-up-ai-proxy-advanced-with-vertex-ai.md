@@ -72,7 +72,6 @@ entities:
   plugins:
     - name: ai-proxy-advanced
       config:
-        llm_format: gemini
         targets:
           - route_type: llm/v1/chat
             model:
