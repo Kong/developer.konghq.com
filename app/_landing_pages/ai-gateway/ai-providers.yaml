@@ -138,8 +138,6 @@ rows:
             config:
               tags:
                 - ai-proxy
-              products:
-                - gateway
-                - ai-gateway
+                - streaming
               quantity: 6
               allow_empty: true

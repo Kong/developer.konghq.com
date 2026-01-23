@@ -40,7 +40,7 @@ how_to_list:
     products:
       - ai-gateway
     tags:
-      - vertex
+      - vertex-ai
     description: true
     view_more: false
 ---

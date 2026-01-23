@@ -17,7 +17,6 @@ breadcrumbs:
   - /mcp/
 tags:
   - ai
-  - streaming
 
 plugins:
   - ai-proxy
