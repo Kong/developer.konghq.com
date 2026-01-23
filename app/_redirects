@@ -61,7 +61,7 @@
 /mesh/:version/reference/kuma-cp    /mesh/reference/kuma-cp/
 /mesh/introduction/install/     /mesh/#get-started
 /mesh/explore/cli       /mesh/cli/
-/mesh/production/gui    /mesh/kuma-user-interface-gui/
+/mesh/production/gui    /mesh/interact-with-control-plane/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/mesh   /mesh/mesh-multi-tenancy/

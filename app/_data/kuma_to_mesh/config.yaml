@@ -493,14 +493,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/gui.md
-    title: 'Kong Mesh user interface (GUI)'
-    description: 'Visual overview of your meshes, Data Planes, and policies using the {{site.mesh_product_name}} web-based GUI.'
-    url: '/mesh/kuma-user-interface-gui/'
-    related_resources:
-      - text: Mesh CLI
-        url: '/mesh/cli/'
-  -
     path: app/_src/production/secure-deployment/api-server-auth.md
     title: 'Authentication with the API server'
     description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
