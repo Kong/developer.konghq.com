@@ -52,6 +52,8 @@ related_resources:
     url: /dev-portal/application-registration/
   - text: Application authentication strategies
     url: /dev-portal/auth-strategies/
+  - text: Package APIs with Dev Portal
+    url: /how-to/package-apis-with-dev-portal/
 faqs:
   - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page.
@@ -68,6 +70,8 @@ faqs:
 next_steps:
   - text: Apply an authentication strategy to your APIs
     url: /dev-portal/auth-strategies/
+  - text: Create API packages
+    url: /catalog/api-packaging/
 ---
 
 ## Create an API
