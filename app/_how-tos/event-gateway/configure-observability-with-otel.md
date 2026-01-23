@@ -468,7 +468,7 @@ If we go to the query tab, we will see the metrics populated:
 1. Search for `kong` to see the list of available metrics.
 1. Let's look at a sample metric: `kong_keg_kafka_backend_roundtrip_duration_seconds_sum`.
 
-This tells you how it took for the {{site.event_gateway_short}} to send a request to the backend cluster and receive a response.
+This tells you how long it took for the {{site.event_gateway_short}} to send a request to the backend cluster and receive a response.
 
 ## View traces in Jaeger
 
