@@ -80,7 +80,7 @@ status_code: 200
 <!--vale on-->
 
 {:.info}
-> You might need to manually sync your AWS API Gateway integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the AWS API Gateway integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
+> You might need to manually sync your AWS API Gateway integration for resources to appear. In the {{site.konnect_short_name}} UI, by navigate to the AWS API Gateway integration you just installed and select **Sync Now** from the **Actions** dropdown menu.
 
 Export the resource ID you want to map to the service:
 

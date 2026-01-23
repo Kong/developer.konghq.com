@@ -1,13 +1,11 @@
 ---
-title: Discover Azure API Management APIs in Catalog with the Konnect UI
+title: "Discover Azure API Management APIs in Catalog with the {{site.konnect_short_name}} UI"
 content_type: how_to
 description: Learn how to connect an Azure API Management API to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:
   - catalog
 works_on:
   - konnect
-tools:
-  - konnect-ui
 tags:
   - integrations
   - azure
@@ -25,7 +23,7 @@ related_resources:
 automated_tests: false
 tldr:
   q: How do I discover Azure API Management APIs in {{site.konnect_short_name}}?
-  a: Install the Azure API Management integration in {{site.konnect_short_name}} and authorize access with OAuth, then link an API to your {{site.konnect_catalog}} service.
+  a: Install the Azure API Management integration in {{site.konnect_short_name}} and authorize access with OAuth, then link an Azure API to your {{site.konnect_catalog}} service.
 prereqs:
   inline:
     - title: "{{site.konnect_short_name}} roles"
@@ -75,7 +73,7 @@ Now that your integration is configured, you can create a {{site.konnect_catalog
 Your integration APIs are now discoverable from one {{site.konnect_catalog}} service.
 
 {:.info}
-> You might need to manually sync your Azure API Management integration for resources to appear. From the {{site.konnect_short_name}} UI by navigating to the Azure API Management integration you just installed and selecting **Sync Now** from the **Actions** dropdown menu.
+> You might need to manually sync your Azure API Management integration for resources to appear. In the {{site.konnect_short_name}} UI, by navigate to the Azure API Management integration you just installed and select **Sync Now** from the **Actions** dropdown menu.
 
 ## Validate the mapping
 

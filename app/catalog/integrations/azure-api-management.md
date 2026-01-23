@@ -71,7 +71,7 @@ columns:
     key: description
 rows:
   - entity: API
-    description: An Azure API Management API that relates to the {{site.konnect_catalog}} service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC specifications aren'tt supported.
+    description: An Azure API Management API that relates to the {{site.konnect_catalog}} service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC specifications aren't supported.
 {% endtable %}
 <!--vale on-->
 
