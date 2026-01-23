@@ -20,6 +20,8 @@ breadcrumbs:
   - /event-gateway/
 ---
 
+<!--vale off-->
+
 ## Kafka
 
 ### `kong_keg_kafka_acl_attempts_count`
@@ -438,3 +440,5 @@ The following labels are commonly used across multiple metrics:
 - `status_code`: HTTP status code
 - `error_code`: Kafka error code
 - `api_key`: Kafka API key
+
+<!--vale on-->
