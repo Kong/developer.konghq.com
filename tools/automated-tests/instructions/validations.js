@@ -146,7 +146,6 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       options.dispatcher = agent;
     }
 
-    console.log(`request body: ${JSON.stringify(options.body)}`);
     const url = replaceEnvVars(config.url, env);
 
     const response = await fetchWithOptionalJar(
@@ -345,9 +344,6 @@ async function envVariables(config, runtimeConfig, container) {
     }
     await setEnvVariable(container, key, value);
   }
-  const env = await getLiveEnv(container);
-  console.log("Validating environment variables...");
-  console.log(env);
 
   return [];
 }
