@@ -16,6 +16,8 @@ related_resources:
     url: /mesh/policies/
   - text: Use Kong as a delegated Gateway
     url: '/mesh/gateway-delegated/'
+  - text: Data plane health
+    url: /mesh/dataplane-health/
 ---
 
 There are two ways to customize the {{site.mesh_product_name}} control plane configuration:

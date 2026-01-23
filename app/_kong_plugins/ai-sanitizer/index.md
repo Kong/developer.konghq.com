@@ -114,12 +114,12 @@ sequenceDiagram
 
 Kong provides several [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `service:v0.1.2-en`: English model, version 0.1.2
-* `service:v0.1.2-it`: Italian model, version 0.1.2
-* `service:v0.1.2-fr`: French model, version 0.1.2
+* `service:v0.1.4-en`: English model, version 0.1.4
+* `service:v0.1.4-it`: Italian model, version 0.1.4
+* `service:v0.1.4-fr`: French model, version 0.1.4
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.2`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.4`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 ### Access the Docker images
@@ -155,7 +155,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
 Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
+docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -163,7 +163,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.2-en
+FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
 ```
 
 ### Available language tags

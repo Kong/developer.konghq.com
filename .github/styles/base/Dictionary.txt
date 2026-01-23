@@ -104,6 +104,8 @@ camelCase
 cef
 Cerebras
 certificate_admin
+Cerebras
+cerebras
 charset
 chatbot
 chatbots
@@ -126,6 +128,8 @@ Cloudsmith
 cmd
 cncf
 cncf's
+Cohere
+cohere
 Cognito
 Cognito
 Collectd
@@ -335,6 +339,8 @@ HTTPie
 HTTPRoute
 HTTPRoutes
 https
+HuggingFace
+huggingface
 idempotency
 IdPs
 if_version
@@ -657,6 +663,7 @@ prepends
 prepopulated
 preread
 printf
+prisma
 private_key
 productize
 productized

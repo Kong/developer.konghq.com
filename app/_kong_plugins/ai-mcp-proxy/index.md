@@ -70,6 +70,17 @@ search_aliases:
   - intelligence
   - language
   - model
+faqs:
+  - q: Which MCP protocol version does the AI MCP Proxy plugin use?
+    a: The AI MCP Proxy plugin uses MCP protocol version 2025-06-18.
+
+  - q: What MCP protocol versions are supported for upstream MCP servers?
+    a: |
+      The AI MCP Proxy plugin supports these upstream MCP server protocol versions:
+      * 2025-06-18
+      * 2025-11-25
+
+      Versions from 2024 are not supported.
 
 next_steps:
   - text: Learn about Kong MCP traffic gateway
