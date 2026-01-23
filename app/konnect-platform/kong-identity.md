@@ -112,7 +112,9 @@ When using plugins scoped to Consumer Groups:
 
 ## Dynamic claim templates
 
-You can configure dynamic claim templates to generate custom claims during runtime. These JWT claim values can be rendered as any of the following types:
+Dynamic claim templates allow you to create custom claims that adapt based on the authentication context. For example, you can use a dynamic claim template so that {{site.konnect_short_name}} populates a random UUID for the client. Dynamic claim templates generate the custom JWT claims from the specified contextual data and functions when the access token is minted. You can use dynamic claim templates for both the auth server and client. 
+
+These JWT claim values can be rendered as any of the following types:
 * Strings 
 * Integers
 * Floats
@@ -123,9 +125,20 @@ The type is inferred from the value.
 
 JWT claim values can also be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries. For example:
 * `${ uuidv4 }` will create a UUID every time a new token is created.
-* `${ or ( .RequestHeaders.uuid | uuidParse ) uuidv4 }` will source the header UUID from the request and if it's not found or not a UUID, it would generate one.
+* `${ .Client.Name }` will include the client's name in the token.
+* `${ now | date "2006-01-02T15:04:05Z07:00" }` will generate the current timestamp in ISO 8601 format.
+* `${ .AuthServer.Audience }-${ .Client.ID }` will concatenate the auth server's audience with the client ID.
+* `${ .Client.Labels.environment | default "production" }` will use the client's environment label, defaulting to "production" if it isn't set.
+* `${ upper .Client.Name }` will convert the client name to uppercase.
+* `${ randAlphaNum 16 }` will generate a random 16-character alphanumeric string for each token.
 
-Claims support templating via the context passed to the client during the authentication, in the following format:
+You can use `uuidParse` and `uuidValidate` in your dynamic claim templates to parse a string as a UUID and check for a valid UUID, respectively.
+
+To test the templating, you can use the [`/v1/auth-servers/$authServerId/clients/$clientId/test-claim` endpoint](/api/konnect/kong-identity/v1/#/operations/testClaimForClient).
+
+### Supported contexts
+
+Dynamic claims can use the context passed to the client during authentication in the following format:
 
 ```json
 {
@@ -164,7 +177,7 @@ Claims support templating via the context passed to the client during the authen
 }
 ```
 
-To test the templating, you can use the [`/v1/auth-servers/$authServerId/clients/$clientId/test-claim` endpoint](/api/konnect/kong-identity/v1/#/operations/testClaimForClient).
+### Supported functions
 
 Dynamic claim templates support all the following functions from [sprig](https://masterminds.github.io/sprig/) in the claim templating engine:
 
