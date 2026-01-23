@@ -20,8 +20,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@5e97271222d32442069ea582c04f9d3170d19715
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5e97271222d32442069ea582c04f9d3170d19715'
+  x-oas-source: kong/platform-api@811144b517e918fa03bf94b5a7eced162ab0072f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/811144b517e918fa03bf94b5a7eced162ab0072f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3160,6 +3160,7 @@ components:
         advertised_host:
           description: 'Virtual brokers are advertised to clients using this host. Any kind of host supported by kafka can be used. If not defined, it''s listen_address. If listen_address is `0.0.0.0` it''s the destination IP of the TCP connection.'
           type: string
+          pattern: '^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*$'
         bootstrap_port:
           description: |
             If set to `at_start`, the first port will be used as a bootstrap port.
