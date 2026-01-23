@@ -130,6 +130,7 @@ rows:
             * System accounts are not associated with an email address, so they aren't attached to any person's identity.
             * When you use a user account as part of an automation or integration and that user leaves the company, automation and integrations break. 
             If you use a system account instead, the automation and integrations wouldn't break.
+            * A system account access token (SPAT) has a maximum duration of 24 months.
 
             An access token created by a system account inherits the roles assigned to the system account, 
             and can be assigned roles directly or inherit the roles of a [team](/konnect-platform/teams-and-roles/).
