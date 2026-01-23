@@ -162,4 +162,5 @@ operator_konnectextension_api_version: "v1alpha2"
 operator_kongservice_api_version: "v1alpha1"
 operator_kongcertificate_api_version: "v1alpha1"
 operator_kongreferencegrant_api_version: "v1alpha1"
+operator_kongpluginbinding_api_version: "v1alpha1"
 render_banner: false

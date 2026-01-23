@@ -113,6 +113,54 @@ spec:
       # name: my-secret-name
 ```
 
+## KongPlugin configuration {% new_in 2.1 %}
+
+When configuring `KongPluginBinding` to bind targets to an existing `KongPlugin`, you can reference `KongPlugin` resources in a different namespace.
+
+You can do this with the `spec.pluginRef.namespace` field, by specifying the `namespace` of the `KongPlugin` resource:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongpluginbinding_api_version }}
+kind: KongPluginBinding
+metadata:
+  name: plugin-binding-kongservice
+  namespace: default
+spec:
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: demo-cp
+  pluginRef:
+    name: rate-limit-5-min
+    namespace: ns-plugin
+  targets:
+    serviceRef:
+      name: service-1
+      kind: KongService
+      group: configuration.konghq.com
+```
+
+In order to protect cross-namespace references, the `KongPlugin` resource must explicitly allow references from other namespaces using `KongReferenceGrant` resources:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-kongpluginbinding-to-kongplugin
+  namespace: ns-plugin
+spec:
+  from:
+    - group: configuration.konghq.com
+      kind: KongPluginBinding
+      namespace: default
+  to:
+    - group: configuration.konghq.com
+      kind: KongPlugin
+      # Optionally specify a specific KongPlugin name to allow
+      # only this specific resource to be referenced.
+      # name: my-plugin-name
+```
+
 ## Troubleshooting
 
 If you're having issues with cross namespace references, you can always check your
