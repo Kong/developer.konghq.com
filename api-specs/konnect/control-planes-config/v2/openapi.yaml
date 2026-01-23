@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
-  x-oas-source: kong/platform-api@3b8f54bdfd0fb1a5c1993c4c8d690cc4257fbf42
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/3b8f54bdfd0fb1a5c1993c4c8d690cc4257fbf42'
+  x-oas-source: kong/platform-api@a55404dcd795ea6dcbadca431e543c5807a37945
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a55404dcd795ea6dcbadca431e543c5807a37945'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -6972,6 +6972,10 @@ components:
           maximum: 65535
           minimum: 0
           nullable: true
+          x-go-type: types.IntOrString
+          x-go-type-import:
+            path: github.com/kong/koko/internal/server/public/openapi/controlplanesconfig/types
+            name: types
         protocol:
           description: The protocol used to communicate with the upstream.
           type: string
@@ -8891,6 +8895,7 @@ tags:
       - `grpcs`: At least one of `hosts`, `headers`, `paths`, or `snis`
       - `ws`: At least one of `hosts`, `headers`, or `paths`
       - `wss`: At least one of `hosts`, `headers`, `paths`, or `snis`
+
         <br>
         A route can't have both `tls` and `tls_passthrough` protocols at same time.
         <br><br>
