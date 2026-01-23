@@ -154,7 +154,7 @@ body:
 {% endvalidation %}
 <!--vale on-->
 
-This will generate AI LLM token useage that will be captured by Metering & Billing.
+This will generate AI LLM token usage that will be captured by Metering & Billing.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. In the Metering & Billing sidebar, click **Billing**.
