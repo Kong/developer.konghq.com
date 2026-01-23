@@ -100,7 +100,7 @@ entities:
           param_location: query
         model:
           provider: gemini
-          name: gemini-1.5-flash
+          name: gemini-2.5-flash
 variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
