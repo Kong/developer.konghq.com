@@ -81,7 +81,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
     {% if provider.chat.supported %}
     <tr>
       <td>Chat completions{% if chat_note_num != 0 %}<sup>{{ chat_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.chat.upstream_path }}</code></td>
+      <td>{% if provider.chat.upstream_path contains '<code>' %}{{ provider.chat.upstream_path }}{% else %}<code>{{ provider.chat.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.chat.route_type }}</code></td>
       <td>{{ provider.chat.streaming | to_check }}</td>
       <td>{{ provider.chat.model_example }}</td>
@@ -91,7 +91,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
     {% if provider.completions.supported %}
     <tr>
       <td>Completions{% if completions_note_num != 0 %}<sup>{{ completions_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.completions.upstream_path }}</code></td>
+      <td>{% if provider.completions.upstream_path contains '<code>' %}{{ provider.completions.upstream_path }}{% else %}<code>{{ provider.completions.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.completions.route_type }}</code></td>
       <td>{{ provider.completions.streaming | to_check }}</td>
       <td>{{ provider.completions.model_example }}</td>
@@ -101,7 +101,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
     {% if provider.embeddings.supported %}
     <tr>
       <td>Embeddings{% if embeddings_note_num != 0 %}<sup>{{ embeddings_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.embeddings.upstream_path }}</code></td>
+      <td>{% if provider.embeddings.upstream_path contains '<code>' %}{{ provider.embeddings.upstream_path }}{% else %}<code>{{ provider.embeddings.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.embeddings.route_type }}</code></td>
       <td>{{ provider.embeddings.streaming | to_check }}</td>
       <td>{{ provider.embeddings.model_example }}</td>
@@ -135,7 +135,7 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
     {% if provider.function_calling.supported %}
     <tr>
       <td>Function calling{% if function_calling_note_num != 0 %}<sup>{{ function_calling_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.function_calling.upstream_path }}</code></td>
+      <td>{% if provider.function_calling.upstream_path contains '<code>' %}{{ provider.function_calling.upstream_path }}{% else %}<code>{{ provider.function_calling.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.function_calling.route_type }}</code></td>
       <td>{{ provider.function_calling.streaming | to_check }}</td>
       <td>{{ provider.function_calling.model_example }}</td>
@@ -163,7 +163,7 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     {% if provider.files.supported %}
     <tr>
       <td>Files{% if files_note_num != 0 %}<sup>{{ files_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.files.upstream_path }}</code></td>
+      <td>{% if provider.files.upstream_path contains '<code>' %}{{ provider.files.upstream_path }}{% else %}<code>{{ provider.files.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.files.route_type }}</code></td>
       <td>{{ provider.files.streaming | to_check }}</td>
       <td>{{ provider.files.model_example }}</td>
@@ -173,7 +173,7 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     {% if provider.batches.supported %}
     <tr>
       <td>Batches{% if batches_note_num != 0 %}<sup>{{ batches_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.batches.upstream_path }}</code></td>
+      <td>{% if provider.batches.upstream_path contains '<code>' %}{{ provider.batches.upstream_path }}{% else %}<code>{{ provider.batches.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.batches.route_type }}</code></td>
       <td>{{ provider.batches.streaming | to_check }}</td>
       <td>{{ provider.batches.model_example }}</td>
@@ -183,7 +183,7 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     {% if provider.assistants.supported %}
     <tr>
       <td>Assistants{% if assistants_note_num != 0 %}<sup>{{ assistants_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.assistants.upstream_path }}</code></td>
+      <td>{% if provider.assistants.upstream_path contains '<code>' %}{{ provider.assistants.upstream_path }}{% else %}<code>{{ provider.assistants.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.assistants.route_type }}</code></td>
       <td>{{ provider.assistants.streaming | to_check }}</td>
       <td>{{ provider.assistants.model_example }}</td>
@@ -193,7 +193,7 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     {% if provider.responses.supported %}
     <tr>
       <td>Responses{% if responses_note_num != 0 %}<sup>{{ responses_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.responses.upstream_path }}</code></td>
+      <td>{% if provider.responses.upstream_path contains '<code>' %}{{ provider.responses.upstream_path }}{% else %}<code>{{ provider.responses.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.responses.route_type }}</code></td>
       <td>{{ provider.responses.streaming | to_check }}</td>
       <td>{{ provider.responses.model_example }}</td>
@@ -230,7 +230,7 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     {% if provider.audio.speech.supported %}
     <tr>
       <td>Speech{% if audio_speech_note_num != 0 %}<sup>{{ audio_speech_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.audio.speech.upstream_path }}</code></td>
+      <td>{% if provider.audio.speech.upstream_path contains '<code>' %}{{ provider.audio.speech.upstream_path }}{% else %}<code>{{ provider.audio.speech.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.audio.speech.route_type }}</code></td>
       <td>{{ provider.audio.speech.streaming | to_check }}</td>
       <td>{{ provider.audio.speech.model_example }}</td>
@@ -240,7 +240,7 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     {% if provider.audio.transcriptions.supported %}
     <tr>
       <td>Transcriptions{% if audio_transcriptions_note_num != 0 %}<sup>{{ audio_transcriptions_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.audio.transcriptions.upstream_path }}</code></td>
+      <td>{% if provider.audio.transcriptions.upstream_path contains '<code>' %}{{ provider.audio.transcriptions.upstream_path }}{% else %}<code>{{ provider.audio.transcriptions.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.audio.transcriptions.route_type }}</code></td>
       <td>{{ provider.audio.transcriptions.streaming | to_check }}</td>
       <td>{{ provider.audio.transcriptions.model_example }}</td>
@@ -250,7 +250,7 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     {% if provider.audio.translations.supported %}
     <tr>
       <td>Translations{% if audio_translations_note_num != 0 %}<sup>{{ audio_translations_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.audio.translations.upstream_path }}</code></td>
+      <td>{% if provider.audio.translations.upstream_path contains '<code>' %}{{ provider.audio.translations.upstream_path }}{% else %}<code>{{ provider.audio.translations.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.audio.translations.route_type }}</code></td>
       <td>{{ provider.audio.translations.streaming | to_check }}</td>
       <td>{{ provider.audio.translations.model_example }}</td>
@@ -287,7 +287,7 @@ Support for {{ provider.name }} image generation and editing capabilities:
     {% if provider.image.generations.supported %}
     <tr>
       <td>Generations{% if image_generations_note_num != 0 %}<sup>{{ image_generations_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.image.generations.upstream_path }}</code></td>
+      <td>{% if provider.image.generations.upstream_path contains '<code>' %}{{ provider.image.generations.upstream_path }}{% else %}<code>{{ provider.image.generations.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.image.generations.route_type }}</code></td>
       <td>{{ provider.image.generations.streaming | to_check }}</td>
       <td>{{ provider.image.generations.model_example }}</td>
@@ -297,7 +297,7 @@ Support for {{ provider.name }} image generation and editing capabilities:
     {% if provider.image.edits.supported %}
     <tr>
       <td>Edits{% if image_edits_note_num != 0 %}<sup>{{ image_edits_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.image.edits.upstream_path }}</code></td>
+      <td>{% if provider.image.edits.upstream_path contains '<code>' %}{{ provider.image.edits.upstream_path }}{% else %}<code>{{ provider.image.edits.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.image.edits.route_type }}</code></td>
       <td>{{ provider.image.edits.streaming | to_check }}</td>
       <td>{{ provider.image.edits.model_example }}</td>
@@ -331,7 +331,7 @@ Support for {{ provider.name }} video generation capabilities:
     {% if provider.video.generations.supported %}
     <tr>
       <td>Generations{% if video_generations_note_num != 0 %}<sup>{{ video_generations_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.video.generations.upstream_path }}</code></td>
+      <td>{% if provider.video.generations.upstream_path contains '<code>' %}{{ provider.video.generations.upstream_path }}{% else %}<code>{{ provider.video.generations.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.video.generations.route_type }}</code></td>
       <td>{{ provider.video.generations.streaming | to_check }}</td>
       <td>{{ provider.video.generations.model_example }}</td>
@@ -367,7 +367,7 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
     {% if provider.realtime.supported %}
     <tr>
       <td>Realtime{% if realtime_note_num != 0 %}<sup>{{ realtime_note_num }}</sup>{% endif %}</td>
-      <td><code>{{ provider.realtime.upstream_path }}</code></td>
+      <td>{% if provider.realtime.upstream_path contains '<code>' %}{{ provider.realtime.upstream_path }}{% else %}<code>{{ provider.realtime.upstream_path }}</code>{% endif %}</td>
       <td><code>{{ provider.realtime.route_type }}</code></td>
       <td>{{ provider.realtime.streaming | to_check }}</td>
       <td>{{ provider.realtime.model_example }}</td>
