@@ -69,7 +69,7 @@ In Metering & Billing, meters track and record the consumption of a resource or 
 1. Select the `quickstart` control plane.
 1. Click **Enable 1 Gateway**.
 
-You will see `kong_konnect_llm_tokens` available from the list of available meters.
+You will see `quickstart` in the list of available meters.
 
 ## Create a feature
 
@@ -107,13 +107,14 @@ In this section, you'll create a Premium plan that charges customers based on th
 1. Click **Save**.
 1. Click **Add Rate Card**.
 1. From the **Feature** dropdown menu, select "ai-token".
-1. Click **Next**.
+1. Click **Next Step**.
 1. From the **Pricing model** dropdown menu, select "Usage Based".
 1. In the **Price per unit** field, enter `0.00002`.
-1. Click **Next**. 
+1. Click **Next Step**. 
 1. Select **Boolean**.
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
+1. Click **Publish**.
 
 ## Start a subscription
 
@@ -128,8 +129,8 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
 1. From the **Subscribed Plan** dropdown, select "ai-plan".
-1. Click **Next**.
-1. Click **Create Subscription**.
+1. Click **Next Step**.
+1. Click **Start Subscription**.
 
 
 ## Validate
