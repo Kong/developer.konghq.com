@@ -133,8 +133,6 @@ export async function removeContainer(container) {
 }
 
 export async function setEnvVariable(container, name, value) {
-  console.log(`Setting env var ${name}=${value} in container ${container.id}`);
-
   if (value === undefined) {
     console.log(
       `Value for ${name} is undefined, skipping setting this variable.`,
