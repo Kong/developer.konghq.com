@@ -84,12 +84,6 @@ sections:
       - title: Observe MCP traffic
         description: Observe GitHub MCP traffic with Kong AI Gateway
         url: /mcp/observe-mcp-traffic
-      - title: "{{site.konnect_product_name}} MCP Server"
-        description: Get started with {{site.konnect_product_name}} MCP Server
-        url: /mcp/kong-mcp/get-started/
-      - title: "{{site.konnect_product_name}} MCP Server tools"
-        description: Check available {{site.konnect_product_name}} MCP Server tools
-        url: /mcp/kong-mcp/tools/
       - title: MCP logs
         description: Learn about logs available for MCP traffic via Kong AI Gateway
         url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
