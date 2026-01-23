@@ -86,6 +86,8 @@ pages:
         url: /mesh/annotations/
       - text: Mesh concepts
         url: /mesh/concepts/
+      - text: Service discovery
+        url: /mesh/service-discovery/
   -
     path: app/_src/networking/hostnamegenerator.md
     title: 'HostnameGenerator'
@@ -186,6 +188,8 @@ pages:
         url: /mesh/data-plane-proxy/
       - text: "{{site.mesh_product_name}} data plane on Universal"
         url: /mesh/data-plane-universal/
+      - text: Service discovery
+        url: /mesh/service-discovery/
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -439,18 +443,6 @@ pages:
 
 # Post GA
   -
-    path: app/_src/documentation/health.md
-    title: 'Dataplane Health'
-    description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
-    url: '/mesh/dataplane-health/'
-    related_resources:
-      - text: Mesh CLI
-        url: '/mesh/cli/'
-      - text: Mesh control plane configuration
-        url: '/mesh/control-plane-configuration/'
-      - text: Mesh observability
-        url: '/mesh/observability/'
-  -
     path: app/_src/explore/observability.md
     title: 'Observability'
     description: 'Learn how to configure observability in {{site.mesh_product_name}} using Prometheus, Grafana, Jaeger, Loki, and Datadog.'
@@ -466,16 +458,8 @@ pages:
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
-  -
-    path: app/_src/networking/service-discovery.md
-    title: 'Service discovery'
-    description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between Data Plane and Control Plane in single-zone and multi-zone deployments.'
-    url: '/mesh/service-discovery/'
-    related_resources:
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh DNS
-        url: '/mesh/dns/'
+      - text: Data plane health
+        url: /mesh/dataplane-health/
   -
     path: app/_src/networking/transparent-proxying.md
     title: 'Transparent proxying'
@@ -498,18 +482,6 @@ pages:
         url: '/mesh/observability/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/dp-config/ipv6.md
-    title: 'IPv6 support'
-    description: 'Instructions for enabling or disabling IPv6 support in {{site.mesh_product_name}} across Universal and Kubernetes environments.'
-    url: '/mesh/ipv6-support/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
   -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'

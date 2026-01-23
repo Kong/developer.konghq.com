@@ -67,7 +67,7 @@ rows:
               icon: /assets/logos/konglogo-gradient-secondary.svg
               cta:
                 text: Get started
-                url: https://cloud.konghq.com/gateway-manager/create-control-plane
+                url: https://cloud.konghq.com/gateway-manager/create-gateway
       - blocks:
           - type: card
             config:
