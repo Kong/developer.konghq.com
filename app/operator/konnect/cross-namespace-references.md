@@ -117,7 +117,7 @@ spec:
 
 When configuring `KongPluginBinding` to bind targets to an existing `KongPlugin`, you can reference `KongPlugin` resources in a different namespace.
 
-You can do this with the `spec.pluginRef.namespace` fields, by specifying the `namespace` of the `KongPlugin` resource:
+You can do this with the `spec.pluginRef.namespace` field, by specifying the `namespace` of the `KongPlugin` resource:
 
 ```yaml
 apiVersion: configuration.konghq.com/{{ site.operator_kongpluginbinding_api_version }}
