@@ -14,7 +14,7 @@ min_version:
 
 related_resources:
   - text: "{{site.mesh_product_name}} UI"
-    url: '/mesh/kuma-user-interface-gui/'
+    url: '/mesh/ui/'
   - text: Resource sizing guidelines
     url: /mesh/resource-sizing-guidelines/
   - text: Version compatibility
