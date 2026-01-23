@@ -49,7 +49,7 @@ function replaceEnvVars(object, variables) {
     if (typeof value === "string") {
       return value.replace(
         /\$(\w+)/g,
-        (_, name) => variables[name] || `\$${name}`
+        (_, name) => variables[name] || `\$${name}`,
       );
     } else if (Array.isArray(value)) {
       return value.map(replaceVars);
@@ -70,7 +70,7 @@ function logAndError(validationName, message, expecations) {
   log(`   ${validationName} ❌. ${message}`);
   throw new ValidationError(
     `ValidationError: ${validationName}. ${message}`,
-    expecations
+    expecations,
   );
 }
 
@@ -102,7 +102,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
 
     if (config.user) {
       const auth = Buffer.from(replaceEnvVars(config.user, env)).toString(
-        "base64"
+        "base64",
       );
       headers["Authorization"] = `Basic ${auth}`;
     }
@@ -128,7 +128,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
           const filesHostPath = path.resolve(
             __dirname,
             `../../../app/_includes/_files/${config.file_dir}`,
-            value.replace("@", "")
+            value.replace("@", ""),
           );
 
           const fileContent = fs.readFileSync(filesHostPath, "utf8");
@@ -151,7 +151,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
     const response = await fetchWithOptionalJar(
       url,
       options,
-      config.cookie_jar || config.cookie
+      config.cookie_jar || config.cookie,
     );
     let body = {};
 
@@ -171,12 +171,10 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
         let extractedValue;
         if (header.name === "Set-Cookie") {
           extractedValue = getSessionFromCookieHeader(
-            response.headers.get(header.name)
+            response.headers.get(header.name),
           );
-          await setEnvVariable(container, header.variable, extractedValue);
         } else {
           extractedValue = response.headers.get(header.name);
-          await setEnvVariable(container, header.variable, extractedValue);
         }
 
         if (
@@ -186,6 +184,9 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
             value === null)
         ) {
           shouldRetry = true;
+        } else {
+          await setEnvVariable(container, header.variable, extractedValue);
+          console.log(`extracted value: ${extractedValue}`);
         }
       }
     }
@@ -200,13 +201,14 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
         if (field.strip_bearer) {
           value = value.replace(/bearer\s*/i, "");
         }
-        await setEnvVariable(container, field.variable, value);
 
         if (
           config.retry &&
           (value === undefined || value === "" || value === null)
         ) {
           shouldRetry = true;
+        } else {
+          await setEnvVariable(container, field.variable, value);
         }
       }
     }
@@ -227,7 +229,7 @@ async function executeRequest(config, runtimeConfig, container, onResponse) {
       log(
         `Retry attempt ${
           attempt + 1
-        } - extracted values were undefined/empty, retrying in ${backoffDelay}ms...`
+        } - extracted values were undefined/empty, retrying in ${backoffDelay}ms...`,
       );
       await sleep(backoffDelay);
       continue;
@@ -244,7 +246,7 @@ async function validateRequest(
   config,
   runtimeConfig,
   container,
-  checks
+  checks,
 ) {
   const assertions = [];
 
@@ -284,7 +286,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
           ? config.expected_headers.map((header) => (response) => ({
               assert: response.headers.has(header),
               message: `Expected: request ${requestNumber} to have header '${header}', got: '${response.headers.get(
-                header
+                header,
               )}'.`,
             }))
           : []),
@@ -296,7 +298,7 @@ async function rateLimit(validationName, config, runtimeConfig, container) {
               }),
             ]
           : []),
-      ]
+      ],
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
@@ -321,7 +323,7 @@ async function unauthorizedCheck(
   validationName,
   config,
   runtimeConfig,
-  container
+  container,
 ) {
   return validateRequest(validationName, config, runtimeConfig, container, [
     (response) => ({
@@ -350,7 +352,7 @@ async function controlPlaneRequest(
   validationName,
   config,
   runtimeConfig,
-  container
+  container,
 ) {
   const statusCode =
     config.status_code !== undefined ? config.status_code : 200;
@@ -390,7 +392,7 @@ async function trafficGenerator(
   validationName,
   config,
   runtimeConfig,
-  container
+  container,
 ) {
   let assertions = [];
 
@@ -409,7 +411,7 @@ async function trafficGenerator(
           assert: response.status === expectedStatus,
           message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
         }),
-      ]
+      ],
     );
     assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
@@ -438,7 +440,7 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
     logAndError(
       validationName,
       "Failed to retrieve the secret from the vault",
-      [`Expected: command to have return code 0, got: ${result.exitCode}`]
+      [`Expected: command to have return code 0, got: ${result.exitCode}`],
     );
   } else if (
     expectedValue &&
@@ -448,7 +450,7 @@ async function vaultSecret(validationName, config, runtimeConfig, container) {
     logAndError(
       validationName,
       "Failed to retrieve the secret from the vault",
-      [`Expected: the vault to return ${expectedValue}, got: ${result}`]
+      [`Expected: the vault to return ${expectedValue}, got: ${result}`],
     );
   }
   return [];
@@ -464,7 +466,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "request-check":
@@ -473,7 +475,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "unauthorized-check":
@@ -481,7 +483,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "env-variables":
@@ -492,7 +494,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "custom-command":
@@ -500,7 +502,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "traffic-generator":
@@ -508,7 +510,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     case "vault-secret":
@@ -516,7 +518,7 @@ export async function validate(container, validation, runtimeConfig) {
         validation.name,
         validation.config,
         runtimeConfig,
-        container
+        container,
       );
       break;
     default:

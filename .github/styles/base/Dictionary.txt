@@ -103,6 +103,8 @@ callouts
 camelCase
 cef
 certificate_admin
+Cerebras
+cerebras
 charset
 chatbot
 chatbots
@@ -125,6 +127,8 @@ Cloudsmith
 cmd
 cncf
 cncf's
+Cohere
+cohere
 Cognito
 Cognito
 Collectd
@@ -333,6 +337,8 @@ HTTPie
 HTTPRoute
 HTTPRoutes
 https
+HuggingFace
+huggingface
 idempotency
 IdPs
 if_version

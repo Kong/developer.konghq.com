@@ -70,7 +70,10 @@ faqs:
       > * When using GCP Vault as a backend, make sure you have configured `system` as part of the
       > [`lua_ssl_trusted_certificate` configuration directive](/gateway/configuration/#lua-ssl-trusted-certificate)
       so that the SSL certificates used by the official GCP API can be trusted by {{site.base_gateway}}.
-
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
