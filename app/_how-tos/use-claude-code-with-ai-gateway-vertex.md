@@ -34,7 +34,7 @@ entities:
 
 tags:
   - ai
-  - vertex
+  - vertex-ai
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway?
