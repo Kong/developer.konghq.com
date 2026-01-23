@@ -61,7 +61,7 @@ tags:
 ## Konnect setup
 
 {:.info}
-> For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [control plane setup UI](https://cloud.konghq.com/us/gateway-manager/create-control-plane).
+> For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [control plane setup UI](https://cloud.konghq.com/gateway-manager/create-gateway).
 
 To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deployment, you need the following items:
 
