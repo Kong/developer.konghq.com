@@ -278,6 +278,8 @@ gcp
 generationConfig
 geo
 geos
+gemini
+Gemini
 getter
 getters
 gevent
@@ -914,6 +916,7 @@ ungrouped
 Unicode
 unicode
 unix
+unlinking
 unmanaged
 unmarshalled
 unnamespaced
