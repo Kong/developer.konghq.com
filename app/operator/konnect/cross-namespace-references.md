@@ -161,6 +161,52 @@ spec:
       # name: my-plugin-name
 ```
 
+## KongRoute configuration {% new_in 2.1 %}
+
+When configuring `KongRoute` to bind to a `KongService`, you can reference `KongService` in a different namespace.
+
+You can do this with the `spec.serviceRef.namespacedRef.namespace` field, by specifying the `namespace` of the `KongService` resource:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongroute_api_version }}
+kind: KongRoute
+metadata:
+  name: my-route
+  namespace: default
+spec:
+  name: route-1
+  protocols:
+  - http
+  hosts:
+  - example.com
+  serviceRef:
+    type: namespacedRef
+    namespacedRef:
+      name: my-service-name
+      namespace: service-namespace
+```
+
+In order to protect cross-namespace references, the `KongPlugin` resource must explicitly allow references from other namespaces using `KongReferenceGrant` resources:
+
+```yaml
+apiVersion: configuration.konghq.com/{{ site.operator_kongreferencegrant_api_version }}
+kind: KongReferenceGrant
+metadata:
+  name: allow-kongroute-to-kongservice
+  namespace: service-namespace
+spec:
+  from:
+    - group: configuration.konghq.com
+      kind: KongRoute
+      namespace: default
+  to:
+    - group: configuration.konghq.com
+      kind: KongService
+      # Optionally specify a specific KongService name to allow
+      # only this specific resource to be referenced.
+      # name: my-service-name
+```
+
 ## Troubleshooting
 
 If you're having issues with cross namespace references, you can always check your
