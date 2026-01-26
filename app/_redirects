@@ -146,6 +146,7 @@
 /dev-portal/access-and-approval/    /dev-portal/self-service/
 /dev-portal/publishing/ /catalog/apis/
 /dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
+/dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
 
 
 # Gateway LTS
