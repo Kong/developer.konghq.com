@@ -304,6 +304,7 @@ Starting log server on http://0.0.0.0:9999
 
 Send test requests to the `example-route` Route to see model responses scored:
 
+<!-- vale off -->
 {% validation traffic-generator %}
 iterations: 5
 url: '/anything'
@@ -315,6 +316,7 @@ body:
       content: "Who was Jozef Mackiewicz?"
 inline_sleep: 3
 {% endvalidation %}
+<!-- vale on -->
 
 You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
 
