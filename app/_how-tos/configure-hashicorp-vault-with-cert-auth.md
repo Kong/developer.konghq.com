@@ -176,6 +176,10 @@ faqs:
   - q: |
       I'm getting an `invalid response code 503 received when performing certificate-based authentication: {"errors":["Vault is sealed"]}` error, how do I fix this?
     a: To perform any operation on the Vault, it must be unsealed first. It was likely sealed intentionally or through a restart of the Vault process.
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 
 next_steps:
   - text: Review the Vaults entity

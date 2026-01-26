@@ -40,9 +40,9 @@ export async function fetchImage(docker, imageName, log) {
             (event) =>
               event.status
                 ? debugLog(event.status.trim())
-                : debugLog(event.stream?.trim())
+                : debugLog(event.stream?.trim()),
           );
-        }
+        },
       );
     });
   }
@@ -51,14 +51,19 @@ export async function fetchImage(docker, imageName, log) {
 export async function executeCommand(container, cmd) {
   return new Promise(async (resolve, reject) => {
     try {
+      // Get decoded environment variables
+      const env = await getLiveEnv(container);
+
+      // Convert to Docker Env format: ["KEY=value", "KEY2=value2"]
+      const envArray = Object.entries(env).map(
+        ([key, value]) => `${key}=${value}`,
+      );
+
       const execCommand = await container.exec({
-        Cmd: [
-          "bash",
-          "-c",
-          `touch /env-vars.sh && source /env-vars.sh && ${cmd}`,
-        ],
+        Cmd: ["bash", "-c", cmd],
         AttachStdout: true,
         AttachStderr: true,
+        Env: envArray,
       });
 
       const result = await new Promise((resolve, reject) => {
@@ -128,15 +133,58 @@ export async function removeContainer(container) {
 }
 
 export async function setEnvVariable(container, name, value) {
-  const writeEnvVar = await container.exec({
-    Cmd: [
-      "bash",
-      "-c",
-      `echo 'export ${name}="${value}"' | cat >> /env-vars.sh`,
-    ],
-    AttachStdout: true,
-    AttachStderr: true,
-  });
+  if (value === undefined) {
+    console.log(
+      `Value for ${name} is undefined, skipping setting this variable.`,
+    );
+    return;
+  }
+
+  let writeEnvVar;
+
+  // If value is a command substitution, execute it and handle the result
+  if (value.trim().startsWith("$(") && value.trim().endsWith(")")) {
+    const command = value.trim().slice(2, -1);
+    const result = await executeCommand(container, command);
+    const output = result.output.trim();
+
+    // Convert literal \n to actual newlines
+    const withNewlines = output.replace(/\\n/g, "\n");
+
+    // Base64 encode to safely store in env file
+    const base64Value = Buffer.from(withNewlines).toString("base64");
+
+    writeEnvVar = await container.exec({
+      Cmd: [
+        "bash",
+        "-c",
+        `echo 'export ${name}_BASE64="${base64Value}"' >> /env-vars.sh`,
+      ],
+      AttachStdout: true,
+      AttachStderr: true,
+    });
+
+    await new Promise((resolve, reject) => {
+      writeEnvVar.start((err, stream) => {
+        if (err) return reject(err);
+        container.modem.demuxStream(stream, process.stdout, process.stderr);
+        stream.on("end", resolve);
+        stream.on("error", reject);
+        stream.resume();
+      });
+    });
+    return;
+  } else {
+    writeEnvVar = await container.exec({
+      Cmd: [
+        "bash",
+        "-c",
+        `echo 'export ${name}="${value}"' | cat >> /env-vars.sh`,
+      ],
+      AttachStdout: true,
+      AttachStderr: true,
+    });
+  }
 
   await new Promise((resolve, reject) => {
     writeEnvVar.start((err, stream) => {
@@ -145,7 +193,7 @@ export async function setEnvVariable(container, name, value) {
       container.modem.demuxStream(stream, process.stdout, process.stderr);
       stream.on("end", resolve);
       stream.on("error", reject);
-      stream.resume(); // Drain output
+      stream.resume();
     });
   });
   return;
@@ -176,7 +224,7 @@ export async function getLiveEnv(container) {
           write: (chunk) => {
             stderr += chunk.toString();
           },
-        }
+        },
       );
 
       stream.on("end", () => {
@@ -191,7 +239,15 @@ export async function getLiveEnv(container) {
   const env = {};
   for (const envVar of output.split("\n")) {
     const [name, ...rest] = envVar.split("=");
-    env[name] = rest.join("=");
+    let value = rest.join("=");
+
+    // Decode base64-encoded values and store with original name
+    if (name.endsWith("_BASE64")) {
+      const originalName = name.slice(0, -7); // Remove _BASE64 suffix
+      env[originalName] = Buffer.from(value, "base64").toString("utf-8");
+    } else {
+      env[name] = value;
+    }
   }
   return env;
 }

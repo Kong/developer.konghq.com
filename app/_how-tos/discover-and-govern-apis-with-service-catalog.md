@@ -21,6 +21,8 @@ related_resources:
     url: /catalog/integrations/
   - text: AWS API Gateway reference
     url: /catalog/integrations/aws-api-gateway/
+  - text: Package APIs with Dev Portal
+    url: /how-to/package-apis-with-dev-portal/
 automated_tests: false
 tldr:
   q: How do I discover and govern third-party APIs in {{site.konnect_short_name}}?

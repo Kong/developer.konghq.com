@@ -158,13 +158,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Advanced Analytics 
+            title: "{{site.konnect_short_name}} {{site.observability}}" 
             description: |
-              Advanced Analytics is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
+              {{site.konnect_short_name}} {{site.observability}} is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
             icon: /assets/icons/analytics.svg
             cta:
               text: Explore analytics
-              url: /advanced-analytics/
+              url: /observability/
               align: end
       - blocks:
         - type: card

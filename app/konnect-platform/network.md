@@ -158,3 +158,30 @@ rows:
 ## Mesh hostnames in {{site.konnect_short_name}}
 
 If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+
+## Specify IP addresses that can connect to {{site.konnect_short_name}}
+
+Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin AP](/admin-api/), [decK](/decK/), and [Terraform](/terraform/).
+
+This IP allow list applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
+
+{:.warning}
+> **Important:** 
+* If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
+> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
+
+To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/source-ip-restriction
+status_code: 201
+method: PATCH
+body:
+    enabled: true
+    allowed_ips:
+    - 192.168.1.1
+    - 192.168.1.0/22
+{% endkonnect_api_request %}
+<!--vale on-->
+

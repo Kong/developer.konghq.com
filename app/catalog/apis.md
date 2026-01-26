@@ -28,6 +28,10 @@ related_resources:
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
+  - text: Package APIs with Dev Portal
+    url: /how-to/package-apis-with-dev-portal/
+  - text: API packages reference
+    url: /catalog/api-packaging/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
@@ -145,7 +149,6 @@ resource "konnect_api_version" "my_apiversion" {
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
-    type    = "oas3"
   }
   version = "1.0.0"
 }
