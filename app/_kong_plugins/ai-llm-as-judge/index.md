@@ -47,6 +47,10 @@ The **AI LLM as Judge** plugin enables automated evaluation of prompt-response p
 
 This plugin is part of the [**AI plugin suite**](/plugins/?category=ai), making it easy to integrate LLM-based evaluation workflows into your API pipelines.
 
+## Prerequisites
+
+This plugin requires the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin with [`config.balancer.tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) set to `llm-accuracy`. The balancer compares responses from at least two LLM models. When you enable AI LLM as Judge on a service or route, it evaluates all LLM requests handled by that service or route.
+
 ## Features
 
 The AI LLM as Judge plugin offers several configurable features that control how the LLM evaluates prompts and responses:
