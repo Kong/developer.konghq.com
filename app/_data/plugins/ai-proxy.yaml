@@ -157,7 +157,7 @@ providers:
       model_example: 'text-embedding-ada-002<sup>1</sup>'
       min_version: '3.11'
       note:
-        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use `text-embedding-3-small`` for dynamic dimensions.'
+        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use `text-embedding-3-small` for dynamic dimensions.'
     function_calling:
       supported: true
       streaming: false
@@ -638,7 +638,7 @@ providers:
       model_example: 'text-embedding-ada-002'
       min_version: '3.11'
       note:
-        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use `text-embedding-3-small`` for dynamic dimensions.'
+        content: 'The `text-embedding-ada-002` model requires a fixed dimension of 1536. Use `text-embedding-3-small` for dynamic dimensions.'
     function_calling:
       supported: true
       streaming: false
