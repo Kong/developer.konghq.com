@@ -1,6 +1,7 @@
 providers:
   - name: 'Amazon Bedrock'
-    url_pattern: 'https://bedrock-runtime.{region}.amazonaws.com'
+    url_patterns:
+      - 'https://bedrock-runtime.{region}.amazonaws.com'
     min_version: '3.8'
     chat:
       supported: true
@@ -89,7 +90,8 @@ providers:
         - 'Statistics logging is not available for image generation or editing APIs for Amazon Bedrock'
 
   - name: 'Anthropic'
-    url_pattern: 'https://api.anthropic.com:443/{route_type_path}'
+    url_patterns:
+      - 'https://api.anthropic.com:443/{route_type_path}'
     min_version: '3.6'
     chat:
       supported: true
@@ -133,7 +135,8 @@ providers:
         - 'No statistics logging for `llm/v1/completions`'
 
   - name: 'Azure'
-    url_pattern: 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
+    url_patterns:
+      - 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
     min_version: '3.6'
     chat:
       supported: true
@@ -257,7 +260,8 @@ providers:
         - 'No statistics logging for assistants, batch, or audio APIs'
 
   - name: 'Cerebras'
-    url_pattern: 'https://api.cerebras.ai/{route_type_path}'
+    url_patterns:
+      - 'https://api.cerebras.ai/{route_type_path}'
     min_version: '3.13'
     chat:
       supported: true
@@ -271,7 +275,8 @@ providers:
       statistics_logging: []
 
   - name: 'Cohere'
-    url_pattern: 'https://api.cohere.com:443/{route_type_path}'
+    url_patterns:
+      - 'https://api.cohere.com:443/{route_type_path}'
     min_version: '3.6'
     chat:
       supported: true
@@ -311,7 +316,9 @@ providers:
       statistics_logging: []
 
   - name: 'Dashscope'
-    url_pattern: 'https://dashscope.aliyuncs.com or https://dashscope-intl.aliyuncs.com'
+    url_patterns:
+      - 'https://dashscope.aliyuncs.com'
+      - 'https://dashscope-intl.aliyuncs.com'
     min_version: '3.13'
     chat:
       supported: true
@@ -347,7 +354,8 @@ providers:
       statistics_logging: []
 
   - name: 'Gemini'
-    url_pattern: 'https://generativelanguage.googleapis.com'
+    url_patterns:
+      - 'https://generativelanguage.googleapis.com'
     min_version: '3.8'
     chat:
       supported: true
@@ -436,7 +444,8 @@ providers:
       statistics_logging: []
 
   - name: 'Gemini Vertex'
-    url_pattern: 'https://aiplatform.googleapis.com/'
+    url_patterns:
+      - 'https://aiplatform.googleapis.com/'
     min_version: '3.11'
     chat:
       supported: true
@@ -520,7 +529,8 @@ providers:
       statistics_logging: []
 
   - name: 'Hugging Face'
-    url_pattern: 'https://api-inference.huggingface.co'
+    url_patterns:
+      - 'https://api-inference.huggingface.co'
     min_version: '3.9'
     chat:
       supported: true
@@ -555,7 +565,9 @@ providers:
 
   - name: 'Llama2'
     formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
-    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
+    url_patterns:
+      - '$UPSTREAM_URL'
+    url_is_variable: true
     min_version: '3.6'
     chat:
       supported: true
@@ -585,7 +597,9 @@ providers:
 
   - name: 'Mistral'
     formats: 'mistral.ai, OpenAI, raw, and OLLAMA formats'
-    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
+    url_patterns:
+      - '$UPSTREAM_URL'
+    url_is_variable: true
     min_version: '3.6'
     chat:
       supported: true
@@ -614,7 +628,8 @@ providers:
 
   - name: 'OpenAI'
     formats: 'GPT-3.5, GPT-4, GPT-4o, and Multi-Modal'
-    url_pattern: 'https://api.openai.com:443/{route_type_path}'
+    url_patterns:
+      - 'https://api.openai.com:443/{route_type_path}'
     min_version: '3.6'
     chat:
       supported: true
@@ -736,7 +751,8 @@ providers:
         - 'No statistics logging for assistants, batch, or audio APIs'
 
   - name: 'xAI'
-    url_pattern: 'https://api.x.ai:443/{route_type_path}'
+    url_patterns:
+      - 'https://api.x.ai:443/{route_type_path}'
     min_version: '3.13'
     chat:
       supported: true

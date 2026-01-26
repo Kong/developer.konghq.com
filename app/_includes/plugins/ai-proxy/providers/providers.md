@@ -6,7 +6,13 @@ You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway 
 
 ## {{ provider.name }} base URL
 
-The base URL for {{ provider.name }} is `{{ provider.url_pattern }}`, where `{route_type_path}` is determined by the capability being used.
+{% if provider.url_is_variable %}
+The base URL for {{ provider.name }} is defined in <code>{{ provider.url_patterns.first }}</code>, where `{route_type_path}` is determined by the capability being used.
+{% elsif provider.url_patterns.size > 1 %}
+The base URL for {{ provider.name }} is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}, where `{route_type_path}` is determined by the capability being used.
+{% else %}
+The base URL for {{ provider.name }} is `{{ provider.url_patterns.first }}`, where `{route_type_path}` is determined by the capability being used.
+{% endif %}
 
 ### Upstream paths
 
