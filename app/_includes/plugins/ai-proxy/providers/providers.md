@@ -23,91 +23,91 @@ Kong AI Gateway forwards requests to the following {{ provider.name }} API endpo
 <tbody>
   {% if provider.chat.supported %}
   <tr>
-    <td>Chat completions</td>
+    <td><a href="#text-generation">Chat completions</a></td>
     <td>{% if provider.chat.upstream_path contains '<code>' %}{{ provider.chat.upstream_path }}{% else %}<code>{{ provider.chat.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.completions.supported %}
   <tr>
-    <td>Completions</td>
+    <td><a href="#text-generation">Completions</a></td>
     <td>{% if provider.completions.upstream_path contains '<code>' %}{{ provider.completions.upstream_path }}{% else %}<code>{{ provider.completions.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.embeddings.supported %}
   <tr>
-    <td>Embeddings</td>
+    <td><a href="#text-generation">Embeddings</a></td>
     <td>{% if provider.embeddings.upstream_path contains '<code>' %}{{ provider.embeddings.upstream_path }}{% else %}<code>{{ provider.embeddings.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.function_calling.supported %}
   <tr>
-    <td>Function calling</td>
+    <td><a href="#advanced-text-generation">Function calling</a></td>
     <td>{% if provider.function_calling.upstream_path contains '<code>' %}{{ provider.function_calling.upstream_path }}{% else %}<code>{{ provider.function_calling.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.files.supported %}
   <tr>
-    <td>Files</td>
+    <td><a href="#processing">Files</a></td>
     <td>{% if provider.files.upstream_path contains '<code>' %}{{ provider.files.upstream_path }}{% else %}<code>{{ provider.files.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.batches.supported %}
   <tr>
-    <td>Batches</td>
+    <td><a href="#processing">Batches</a></td>
     <td>{% if provider.batches.upstream_path contains '<code>' %}{{ provider.batches.upstream_path }}{% else %}<code>{{ provider.batches.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.assistants.supported %}
   <tr>
-    <td>Assistants</td>
+    <td><a href="#processing">Assistants</a></td>
     <td>{% if provider.assistants.upstream_path contains '<code>' %}{{ provider.assistants.upstream_path }}{% else %}<code>{{ provider.assistants.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.responses.supported %}
   <tr>
-    <td>Responses</td>
+    <td><a href="#processing">Responses</a></td>
     <td>{% if provider.responses.upstream_path contains '<code>' %}{{ provider.responses.upstream_path }}{% else %}<code>{{ provider.responses.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.audio.speech.supported %}
   <tr>
-    <td>Speech</td>
+    <td><a href="#audio">Speech</a></td>
     <td>{% if provider.audio.speech.upstream_path contains '<code>' %}{{ provider.audio.speech.upstream_path }}{% else %}<code>{{ provider.audio.speech.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.audio.transcriptions.supported %}
   <tr>
-    <td>Transcriptions</td>
+    <td><a href="#audio">Transcriptions</a></td>
     <td>{% if provider.audio.transcriptions.upstream_path contains '<code>' %}{{ provider.audio.transcriptions.upstream_path }}{% else %}<code>{{ provider.audio.transcriptions.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.audio.translations.supported %}
   <tr>
-    <td>Translations</td>
+    <td><a href="#audio">Translations</a></td>
     <td>{% if provider.audio.translations.upstream_path contains '<code>' %}{{ provider.audio.translations.upstream_path }}{% else %}<code>{{ provider.audio.translations.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.image.generations.supported %}
   <tr>
-    <td>Image generations</td>
+    <td><a href="#image">Image generations</a></td>
     <td>{% if provider.image.generations.upstream_path contains '<code>' %}{{ provider.image.generations.upstream_path }}{% else %}<code>{{ provider.image.generations.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.image.edits.supported %}
   <tr>
-    <td>Image edits</td>
+    <td><a href="#image">Image edits</a></td>
     <td>{% if provider.image.edits.upstream_path contains '<code>' %}{{ provider.image.edits.upstream_path }}{% else %}<code>{{ provider.image.edits.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.video.generations.supported %}
   <tr>
-    <td>Video generations</td>
+    <td><a href="#video">Video generations</a></td>
     <td>{% if provider.video.generations.upstream_path contains '<code>' %}{{ provider.video.generations.upstream_path }}{% else %}<code>{{ provider.video.generations.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
   {% if provider.realtime.supported %}
   <tr>
-    <td>Realtime</td>
+    <td><a href="#realtime">Realtime</a></td>
     <td>{% if provider.realtime.upstream_path contains '<code>' %}{{ provider.realtime.upstream_path }}{% else %}<code>{{ provider.realtime.upstream_path }}</code>{% endif %}</td>
   </tr>
   {% endif %}
