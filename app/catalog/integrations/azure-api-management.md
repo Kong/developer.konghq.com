@@ -55,7 +55,7 @@ Before you configure the Azure API Management integration, ensure the following:
 1. In the **Display name** field, enter a name for your Azure API Management instance.
 1. In the **Instance name** field, enter a unique identifier for your Azure API Management instance.
 1. Click **Authorize** to authenticate with Azure using OAuth.
-1. Complete the Azure OAuth authentication flow in the popup window. ???????
+1. In the Azure authorization window, click **Accept**.
 1. Click **Save**. 
 
 ## Resources
@@ -71,7 +71,7 @@ columns:
     key: description
 rows:
   - entity: API
-    description: An Azure API Management API that relates to the {{site.konnect_catalog}} service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC specifications aren't supported.
+    description: An Azure API Management API that relates to the {{site.konnect_catalog}} service. Only HTTP specs can be added via the the **API Specs** tab on a service. gRPC, WebSocket, and GraphQL specifications aren't supported.
 {% endtable %}
 <!--vale on-->
 
