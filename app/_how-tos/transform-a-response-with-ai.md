@@ -29,6 +29,7 @@ entities:
 tags:
     - ai
     - transformations
+    - openai
 
 tldr:
     q: How can I use AI to transform a response before returning it to the client?

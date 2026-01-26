@@ -36,6 +36,7 @@ entities:
 
 tags:
   - ai
+  - openai
 
 tools:
   - deck
