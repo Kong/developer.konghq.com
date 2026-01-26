@@ -48,7 +48,7 @@ You can configure AWS managed caches for control planes and control plane groups
 1. Create a control plane group enabled for dedicated cloud gateways.
 1. Add AWS multi-region data plane groups to the control plane group.
 1. Add control planes to the control plane group.
-1. Set up a managed cache the control plane group, specifying the size of the cache:
+1. Set up a managed cache for the control plane group, specifying the size of the cache:
 
    {% capture create_addon %}
    <!--vale off-->
@@ -78,8 +78,8 @@ You can configure AWS managed caches for control planes and control plane groups
    {% capture get_addon %}
    {% konnect_api_request %}
    url: /v2/cloud-gateways/add-ons/{addOnId}
-   status_code: 201
-   method: POST
+   status_code: 200
+   method: GET
    region: global
    {% endkonnect_api_request %}
    {% endcapture %}
