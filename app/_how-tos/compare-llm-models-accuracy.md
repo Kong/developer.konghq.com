@@ -238,6 +238,7 @@ entities:
 
 Let's run a simple log collector script which collects logs at the `9999` port. Copy and run this snippet in your terminal:
 
+<!-- vale off -->
 {% validation custom-command %}
 command: |
   cat <<EOF > log_server.py
@@ -282,6 +283,7 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!-- vale on -->
 
 Now, run this script with Python:
 

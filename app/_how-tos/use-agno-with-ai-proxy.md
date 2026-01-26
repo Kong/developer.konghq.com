@@ -93,13 +93,14 @@ variables:
 
 Install the necessary Python packages for running the Agno's research agent:
 
+<!-- vale off -->
 {% validation custom-command %}
 command: pip3 install -U agno openai duckduckgo-search newspaper4k lxml_html_clean ddgs
 expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
-
+<!-- vale on -->
 
 ## Create an Agno script for research agent
 
