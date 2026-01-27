@@ -473,16 +473,6 @@ pages:
       - text: Mesh Service Discovery
         url: '/mesh/service-discovery/'
   -
-    path: app/_src/production/cp-deployment/zoneproxy-auth.md
-    title: 'Configure zone proxy authentication'
-    description: 'How to configure zone proxy authentication methods in multi-zone mode.'
-    url: '/mesh/zone-proxy-auth/'
-    related_resources:
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-  -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'
     description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
