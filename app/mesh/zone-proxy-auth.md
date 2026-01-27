@@ -30,7 +30,7 @@ On Kubernetes, a zone proxy authenticates by leveraging the [`ServiceAccountToke
 
 ## Zone token
 
-On Universal, a zone proxy proxy must be explicitly configured with a unique security token with the appropriate scope (`egress` or `ingress`).
+On Universal, a zone proxy must be explicitly configured with a unique security token with the appropriate scope (`egress` or `ingress`).
 
 The zone token used to identify zone proxies is a [JWT token](https://jwt.io) that contains:
 * The zone in which zone proxy operates
