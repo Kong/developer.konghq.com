@@ -229,6 +229,7 @@ render_output: false
 Note that this script is for demo purposes and hard-codes client id, client secret and scope.
 
 We then create a kafkactl configuration with both non authenticated and authenticated access:
+
 <!--vale off-->
 {% validation custom-command %}
 command: |
@@ -266,7 +267,6 @@ Run the following to validate your configuration.
 
 ### Create a topic bypassing the gateway 
 
-{% capture create-topic %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
@@ -275,11 +275,9 @@ expected:
   message: "topic created: my-test-topic"
 render_output: false
 {% endvalidation %}
-{% endcapture %}
 
 ### List topics using an authenticated client:
 
-{% capture list-topic-auth %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context vc-oauth list topics
@@ -290,7 +288,6 @@ expected:
     my-test-topic     1              1
 render_output: false
 {% endvalidation %}
-{% endcapture %}
 
 The output should like:
 
@@ -301,7 +298,6 @@ my-test-topic     1              1
 
 ### List topics without auth
 
-{% capture list-topic-noauth %}
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context vc list topics
@@ -311,7 +307,6 @@ expected:
     TOPIC             PARTITIONS     REPLICATION FACTOR
 render_output: false
 {% endvalidation %}
-{% endcapture %}
 
 The output should be:
 
