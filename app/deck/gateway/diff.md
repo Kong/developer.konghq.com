@@ -99,4 +99,48 @@ Run the same command with JSON output enabled:
 deck gateway diff ./kong.yaml --json-output
 ```
 
+An example response from the `--json-output` flag is:
+```bash
+{
+  "changes": {
+    "creating": [],
+    "updating": [
+      {
+        "kind": "plugin",
+        "name": "basic-auth (global)",
+        "body": {
+          "old": {
+            "config": {
+              "brute_force_protection": {
+                "redis": {
+                  "timeout": 2000
+                }
+              }
+            }
+          },
+          "new": {
+            "config": {
+              "brute_force_protection": {
+                "redis": {
+                  "timeout": 2001
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "deleting": []
+  },
+  "summary": {
+    "creating": 0,
+    "updating": 1,
+    "deleting": 0,
+    "total": 1
+  },
+  "warnings": [],
+  "errors": []
+}
+```
+
 The JSON output groups changes by operation type and includes both the previous and updated versions of each affected object.
