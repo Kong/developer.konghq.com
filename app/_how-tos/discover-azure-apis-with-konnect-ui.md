@@ -48,6 +48,8 @@ Before you can discover APIs in {{site.konnect_catalog}}, you must configure the
 1. Click **Azure API Management**.
 1. Click **Add Azure API Management instance**.
 1. In the **Subscription ID** field, enter your Azure API subscription ID.
+1. Click **Submit configuration**.
+1. In the **Add authorization** section, click **Authorize in Azure API Management**.
 1. Click **Authorize** to authenticate with Azure using OAuth.
 1. In the Azure authorization window, click **Accept**. 
 1. In the **Display name** field, enter `azure-api-management-test`.
