@@ -38,3 +38,5 @@ input/instructions/how-to/set-up-ai-proxy-with-cohere/gateway.yaml: "Expected: r
 input/instructions/how-to/set-up-ai-proxy-with-huggingface/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/set-up-ai-proxy-advanced-with-vertex-ai/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/how-to/set-up-ai-proxy-with-vertex-ai/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
+input/instructions/how-to/set-up-ai-proxy-with-gemini/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
+input/instructions/how-to/set-up-ai-proxy-advanced-with-gemini/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
