@@ -245,7 +245,7 @@
                             "x-referenceable": true,
                             "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
                           },
-                          "description": "Extra headers to be passed in the token endpoint request.",
+                          "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "object"
                         },
                         "token_post_args": {
@@ -254,7 +254,7 @@
                             "x-referenceable": true,
                             "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
                           },
-                          "description": "Extra post arguments to be passed in the token endpoint request.",
+                          "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "object"
                         },
                         "username": {
