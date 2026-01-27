@@ -81,25 +81,21 @@ rows:
 The following sequence diagram illustrates this simplified flow:
 
 {% mermaid %}
-
 sequenceDiagram
     actor Client
     participant AIP as AI Proxy Advanced
-    participant LLM_A as LLM Model A
-    participant LLM_B as LLM Model B
+    participant LLM as LLM Model (A or B)
     participant Judge as AI LLM as Judge
     participant JudgeLLM as Judge LLM
 
     Client->>AIP: Send prompt
-    AIP->>LLM_A: Forward prompt
-    AIP->>LLM_B: Forward prompt
-    LLM_A-->>AIP: Response A
-    LLM_B-->>AIP: Response B
-    AIP->>Judge: Prompt + responses
-    Judge->>JudgeLLM: Evaluate responses
-    JudgeLLM-->>Judge: Scores (1–100)
-    Judge-->>AIP: Evaluation results
-    AIP-->>Client: Selected response
+    AIP->>LLM: Forward prompt (balancer selects model)
+    LLM-->>AIP: Response
+    AIP->>Judge: Prompt + response
+    Judge->>JudgeLLM: Evaluate response
+    JudgeLLM-->>Judge: Score (1–100)
+    Judge-->>AIP: Evaluation result
+    AIP-->>Client: Response
 {% endmermaid %}
 
 ## Recommended LLM settings
