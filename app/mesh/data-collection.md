@@ -66,7 +66,7 @@ rows:
   - field: "`zones_total`"
     desc: The total number of zones deployed.
   - field: "`internal_services`"
-    desc: Tne total number of services running inside your meshes.
+    desc: The total number of services running inside your meshes.
   - field: "`external_services`"
     desc: The total number of external services configured for your meshes.
   - field: "`services_total`"
