@@ -111,7 +111,7 @@ docker run \
 ## Configure kumactl
 
 ```sh
-TOKEN=$(docker exec -it kong-mesh-zone-1 wget -q -O - http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d)
+TOKEN=$(docker exec -it kong-mesh-global wget -q -O - http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d)
 ```
 
 ```sh
@@ -120,12 +120,11 @@ export PATH=$(pwd)/kong-mesh-2.13.0/bin:$PATH
 
 ```sh
 kumactl config control-planes add \
- --name zone1 \
- --address http://localhost:25681 \
- --auth-type=tokens \
- --auth-conf token=$TOKEN \
- --skip-verify \
- --overwrite
+  --address http://localhost:5681 \
+  --headers "authorization=Bearer $TOKEN" \
+  --name "global-cp" \
+  --skip-verify \
+  --overwrite
 ```
 
 ```sh
