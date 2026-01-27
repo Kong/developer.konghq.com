@@ -48,7 +48,7 @@ rows:
   - field: "`product`"
     desc: The static value "{{site.mesh_product_name}}".
   - field: "`unique_id`"
-    desc: The control plane hostname followed by a random UUID generated each time control plane instance is restarted.
+    desc: The control plane hostname followed by a random UUID generated each time the control plane instance is restarted.
   - field: "`backend`"
     desc: "The storage mode for your configuration: in-memory, etcd, or Postgres."
   - field: "`mode`"
@@ -56,9 +56,9 @@ rows:
   - field: "`hostname`"
     desc: The hostname of each {{site.mesh_product_name}} control plane deploy.
   - field: "`signal`"
-    desc: "`start` sent when the control plane starts, then `ping` once per hour."
+    desc: "A `start` signal sent when the control plane starts, followed by a `ping` once each hour."
   - field: "`cluster_id`"
-    desc: Unique identifier for entire {{site.mesh_product_name}} cluster. The value is the same for all control planes in the cluster.
+    desc: Unique identifier for the entire {{site.mesh_product_name}} cluster. The value is the same for all control planes in the cluster.
   - field: "`dps_total`"
     desc: The total number of data plane proxies across all meshes.
   - field: "`meshes_total`"
