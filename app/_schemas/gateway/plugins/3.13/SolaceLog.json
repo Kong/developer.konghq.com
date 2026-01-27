@@ -192,7 +192,7 @@
                 "x-referenceable": true,
                 "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
               },
-              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "ssl_validate_certificate": {
