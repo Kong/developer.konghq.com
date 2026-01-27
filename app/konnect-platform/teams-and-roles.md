@@ -87,9 +87,9 @@ columns:
     key: description
 rows:
   - team: Analytics Admin
-    description: Users can fully manage all [Analytics](/observability/) content, which includes creating, editing, and deleting reports, as well as viewing the analytics summary. They also have the Dashboard Creator, Dashboard Admin (for all instances), Report Creator, and Report Admin (for all instances) roles. 
+    description: Users can fully manage all [Analytics](/observability/) content, which includes creating, editing, and deleting reports, as well as viewing the analytics summary. They also have [roles](#observability) for Dashboard Creator, Dashboard Admin (for all instances), Report Creator, and Report Admin (for all instances). 
   - team: Analytics Viewer
-    description: Users can view the [Analytics](/observability/) summary and report data. They also have the Dashboard Viewer and Report Viewer roles for all instances.
+    description: Users can view the [Analytics](/observability/) summary and report data. They also have [roles](#observability) for Dashboard Viewer and Report Viewer for all instances.
   - team: Organization Admin
     description: Users can fully manage all entities and configuration in the organization. In addition to users granted the Organization Admin role, each organization also has one Owner, who always has this role and is the only user who can delete the organization.
   - team: Organization Admin (Read Only)
