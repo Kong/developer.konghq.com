@@ -31,7 +31,7 @@ async function extractPrereqsBlocks(page) {
         } catch (error) {
           console.error(
             "There was an error parsing the prereq instruction:",
-            error
+            error,
           );
         }
       }
@@ -80,21 +80,20 @@ async function extractCleanup(page) {
 async function extractSetup(page) {
   // Fetch all elements that have data-test-setup and copy its value.
   const instructions = [];
-  const setups = await page.locator("[data-test-setup]").all();
 
-  for (const elem of setups) {
-    const cssClasses = await elem.getAttribute("class");
-    if ((await elem.isVisible()) || cssClasses?.includes("invisible")) {
-      const instruction = await elem.getAttribute("data-test-setup");
+  const elem = await page
+    .locator(
+      ".prerequisites > [data-deployment-topology][data-test-setup]:not(.hidden),.prerequisites > :not(.hidden) [data-test-setup]",
+    )
+    .first();
+  const instruction = await elem.getAttribute("data-test-setup");
 
-      try {
-        const json = JSON.parse(instruction);
-        instructions.push(json);
-      } catch (error) {
-        // Not a json, for products/platforms that don't have versions.
-        instructions.push(instruction);
-      }
-    }
+  try {
+    const json = JSON.parse(instruction);
+    instructions.push(json);
+  } catch (error) {
+    // Not a json, for products/platforms that don't have versions.
+    instructions.push(instruction);
   }
 
   return instructions;
@@ -135,7 +134,7 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
   const instructionsFile = path.join(
     config.instructionsDir,
     url.pathname,
-    `${runtime}.yaml`
+    `${runtime}.yaml`,
   );
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
@@ -180,6 +179,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         if (!(await option.isChecked())) {
           await page.locator("aside .switch__slider").click();
         }
+        await page.locator(`aside .switch input[value="${platform}"]`).check();
       }
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
@@ -198,11 +198,11 @@ export async function extractInstructionsFromURL(uri, config, context) {
           prereqs,
           steps,
           cleanup,
-        }
+        },
       );
 
       console.log(
-        `  Instructions extracted successfully to ${instructionsFile}`
+        `  Instructions extracted successfully to ${instructionsFile}`,
       );
 
       // On some machines, we need to wait before extracting the instructions
