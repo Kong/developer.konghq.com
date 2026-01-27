@@ -140,42 +140,91 @@ To test the templating, you can use the [`/v1/auth-servers/$authServerId/clients
 
 Dynamic claims can use the context passed to the client during authentication in the following format:
 
-```json
-{
-  "AuthServer": {
-    "ID": "uuid.UUID",
-    "CreatedAt": "DateTime",
-    "UpdatedAt": "DateTime",
-    "Name": "string",
-    "Description": "string",
-    "Audience": "string",
-    "SigningAlgorithm": "string",
-    "Labels": {
-      "key": "value"
-    }
-  },
-  "Client": {
-    "ID": "string",
-    "CreatedAt": "DateTime",
-    "UpdatedAt": "DateTime",
-    "Name": "string",
-    "Labels": {
-      "key": "value"
-    },
-    "GrantTypes": [
-      "string"
-    ],
-    "RedirectURIs": [
-      "string"
-    ],
-    "LoginURI": "string",
-    "ResponseTypes": [
-      "string"
-    ],
-    "AllowAllScopes": true
-  }
-}
-```
+<!--vale off-->
+{% table %}
+item_title: JWT context variables
+columns:
+  - title: Variable Name
+    key: variable
+  - title: Description
+    key: description
+  - title: Format
+    key: format
+
+rows:
+  - variable: AuthServer.ID
+    description: A regionally unique UUID of the auth server
+    format: uuid.UUID
+
+  - variable: AuthServer.CreatedAt
+    description: The timestamp when the auth server was created
+    format: DateTime
+
+  - variable: AuthServer.UpdatedAt
+    description: The timestamp when the auth server was last updated
+    format: DateTime
+
+  - variable: AuthServer.Name
+    description: The name of the auth server
+    format: string
+
+  - variable: AuthServer.Description
+    description: A description of the auth server
+    format: string
+
+  - variable: AuthServer.Audience
+    description: The intended audience for tokens issued by this auth server
+    format: string
+
+  - variable: AuthServer.SigningAlgorithm
+    description: The algorithm used to sign the JWT (e.g. RS256, HS256)
+    format: string
+
+  - variable: AuthServer.Labels.key
+    description: A key/value label for metadata tagging
+    format: string
+
+  - variable: Client.ID
+    description: The ID of the client
+    format: string
+
+  - variable: Client.CreatedAt
+    description: The timestamp when the client was created
+    format: DateTime
+
+  - variable: Client.UpdatedAt
+    description: The timestamp when the client was last updated
+    format: DateTime
+
+  - variable: Client.Name
+    description: The name of the client
+    format: string
+
+  - variable: Client.Labels.key
+    description: A key/value label for metadata tagging
+    format: string
+
+  - variable: Client.GrantTypes[]
+    description: The grant types supported by the client (e.g. client_credentials)
+    format: string
+
+  - variable: Client.RedirectURIs[]
+    description: Allowed redirect URIs for the client
+    format: string
+
+  - variable: Client.LoginURI
+    description: Login URI for interactive flows
+    format: string
+
+  - variable: Client.ResponseTypes[]
+    description: Supported OAuth response types (e.g. code, token)
+    format: string
+
+  - variable: Client.AllowAllScopes
+    description: Indicates if all scopes are allowed by default
+    format: boolean
+{% endtable %}
+<!--vale on-->
 
 ### Supported functions
 
