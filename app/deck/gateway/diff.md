@@ -80,13 +80,12 @@ If the live system has changed without a corresponding change to the state file,
 
 By default, `deck gateway diff` prints a unified diff that highlights changes line by line. This output is optimized for quick human review, but it can be difficult to interpret when configuration objects are large or when you need to inspect values in more detail.
 
-Use the `--json-output` flag to generate a JSON report that is easier to parse and inspect. The JSON output includes:
-- A `summary` of changes (creating, updating, deleting, total)
-- A `changes` object grouped by operation type (creating, updating, deleting)
+Use the `--json-output` flag to generate a JSON report that includes:
+- A `summary` of changes. For example, creating, updating, deleting, and total
+- A `changes` object grouped by operation type
 - For each updated entity, both the `old` and `new` configuration objects
 
 Use `--json-output` when you need to:
-
 - Inspect old and new configuration objects separately during troubleshooting
 - Parse diff output in scripts or CI pipelines
 - Investigate noisy diffs where ordering changes or large objects make unified diffs hard to read
