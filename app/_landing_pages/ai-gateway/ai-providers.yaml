@@ -139,5 +139,7 @@ rows:
               tags:
                 - ai-proxy
                 - streaming
+              products:
+                - ai-gateway
               quantity: 6
               allow_empty: true
