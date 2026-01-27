@@ -64,8 +64,10 @@ faqs:
       For example: `https://dcgw-domain-here.aws-us-east-2.edge.gateways.konggateway.com/___konnect/healthz`
 
       This endpoint returns a `200 OK` response when the gateway is running. 
-      However, this is a basic health check and only confirms that the gateway process is up and running. 
-      It does not verify that routing, plugins, upstreams, or networking configurations are functioning correctly.
+      
+      {:.info}
+      > **Note:** This is a basic health check and only confirms that the gateway process is up and running. 
+      It doesn't verify routing, plugins, upstreams, or networking configurations.
 
 related_resources:
   - text: Dedicated Cloud Gateways 
