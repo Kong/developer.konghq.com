@@ -50,9 +50,9 @@ rows:
   - field: "`unique_id`"
     desc: The control plane hostname followed by a random UUID generated each time control plane instance is restarted.
   - field: "`backend`"
-    desc: The storage mode for your configuration: in-memory, etcd, or Postgres.
+    desc: "The storage mode for your configuration: in-memory, etcd, or Postgres."
   - field: "`mode`"
-    desc: The control plane mode: zone or global.
+    desc: "The control plane mode: zone or global."
   - field: "`hostname`"
     desc: The hostname of each {{site.mesh_product_name}} control plane deploy.
   - field: "`signal`"
