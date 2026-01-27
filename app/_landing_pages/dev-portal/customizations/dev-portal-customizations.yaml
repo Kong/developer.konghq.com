@@ -199,6 +199,8 @@ rows:
                     * App registration approved
                     * App registration rejected
                     * App registration revoked
+                    * [API key expired](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
+                    * [API key expiring soon](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
                     * Confirm email address
                     * Reset password
                     * Account access rejected

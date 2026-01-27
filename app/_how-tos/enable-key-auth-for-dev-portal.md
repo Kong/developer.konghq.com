@@ -73,6 +73,24 @@ cleanup:
 faqs:
   - q: My published API is private in Dev Portal, how do I allow developers to see it?
     a: If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
+  - q: Can I configure they key auth key to expire?
+    a: |
+        Yes. To configure the key to expire at a certain time, do the following:
+        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+        1. In the Dev Portal sidebar, click **Application Auth**.
+        1. Click **New authentication strategy**.
+        1. Enter a name (for internal use) and a display name (visible to developers).
+        1. Select **Key auth** as the auth type.
+        1. Click **Advanced configuration**.
+        1. In the **Key Names** field, enter a name for your key that will display in the API request header.
+        1. Enable **Key expiration policy**.
+        1. In the **Key expires after** dropdown menu, select the number of days, weeks, or months after which the key will expire.
+        1. Click **Save**.
+
+        {:.info}
+        > **Key expiration notes:** 
+        > * If you configure key expiration and edit the expiration, any current keys will expire at the previous configuration value. For example, if you configure keys to expire in 14 days and then edit it so that they expire in 7 days, any keys that were created before you edited the expiration will expire in 14 days. Once those keys expire, then they will expire every 7 days.
+        > * You can [customize the email](/dev-portal/customizations/dev-portal-customizations/#developer-email-customization) users receive when a key is about to expire and when a key does expire by navigating to your Dev Portal, clicking **Portal Editor**, and then clicking the **Email** icon in the sidebar.
 
 next_steps:
   - text: Learn how to manage application registration requests
