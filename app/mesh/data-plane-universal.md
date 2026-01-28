@@ -23,6 +23,8 @@ related_resources:
     url: /mesh/zone-ingress/
   - text: "Data plane proxy"
     url: /mesh/data-plane-proxy/
+  - text: Configure data plane proxy membership
+    url: /mesh/configure-data-plane-proxy-membership/
 ---
 
 To connect your services to the control plane, you need one or more data planes. To create a data plane on Universal, you need to create a data plane definition and pass it to the `kuma-dp run` command.
