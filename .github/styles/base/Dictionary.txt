@@ -165,6 +165,8 @@ DAOs
 DAOs
 daos
 dashboarding
+DashScope
+dashscope
 Datadog
 Datadog
 datadog
@@ -685,6 +687,8 @@ Qdrant
 qubit
 querystring
 qux
+Qwen
+qwen
 ratelimit
 rbac
 reachability
