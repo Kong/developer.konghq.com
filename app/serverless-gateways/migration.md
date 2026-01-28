@@ -99,7 +99,7 @@ rows:
 
     This creates a control plane and deploys a data plane node so that you don't have to run one yourself.
 
-1. Copy the ID of your new conrol plane and adjust the `DECK_KONNECT_CONTROL_PLANE` environment variable:
+1. Copy the ID of your new control plane and adjust the `DECK_KONNECT_CONTROL_PLANE` environment variable:
 
    ```sh
    export DECK_KONNECT_CONTROL_PLANE=YOUR_SERVERLESS_V1_CONTROL_PLANE_ID
