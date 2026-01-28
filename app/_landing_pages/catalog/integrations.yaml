@@ -221,12 +221,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Mesh Manager
-              description: "Map Mesh Services from {{site.konnect_short_name}} Mesh Manager to visualize how configuration and policies are distributed across mesh deployments in multiple zones."
+              title: Service Mesh
+              description: "Map Mesh Services from {{site.konnect_short_name}} to visualize how configuration and policies are distributed across mesh deployments in multiple zones."
               icon: /assets/icons/mesh.svg
               ctas:
                 - text: Reference
-                  url: "/catalog/integrations/mesh-manager/"
+                  url: "/catalog/integrations/service-mesh/"
                 - text: Tutorial
-                  url: "/how-to/map-mesh-manager-resources/"
+                  url: "/how-to/map-service-mesh-resources/"
       
