@@ -173,23 +173,6 @@ Here is an example of how to use a {{site.mesh_product_name}} `Secret` with a `p
 The examples below assume that the `Secret` object has already been created:
 
 {% navtabs "Environments" %}
-{% navtab "Universal" %}
-
-```yaml
-type: Mesh
-name: default
-mtls:
-  backends:
-    - name: ca-1
-      type: provided
-      config:
-        cert:
-          secret: my-cert # name of the {{site.mesh_product_name}} secret
-        key:
-          secret: my-key # name of the {{site.mesh_product_name}} secret
-```
-
-{% endnavtab %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -207,6 +190,23 @@ spec:
             secret: my-cert # name of the Kubernetes secret
           key:
             secret: my-key # name of the Kubernetes secret
+```
+
+{% endnavtab %}
+{% navtab "Universal" %}
+
+```yaml
+type: Mesh
+name: default
+mtls:
+  backends:
+    - name: ca-1
+      type: provided
+      config:
+        cert:
+          secret: my-cert # name of the {{site.mesh_product_name}} secret
+        key:
+          secret: my-key # name of the {{site.mesh_product_name}} secret
 ```
 
 {% endnavtab %}
