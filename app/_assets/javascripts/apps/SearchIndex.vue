@@ -29,6 +29,17 @@
                     <ais-panel>
                         <template v-slot:default="{ hasRefinements }">
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
+                                <div class="text-sm text-brand font-semibold">Plugins</div>
+                                <div class="flex flex-col gap-3">
+                                    <ais-plugins-filter attribute="kong_plugins" :sort-by="['name']" :values="this.filters.kong_plugins" />
+                                </div>
+                            </div>
+                        </template>
+                    </ais-panel>
+
+                    <ais-panel>
+                        <template v-slot:default="{ hasRefinements }">
+                            <div class="flex flex-col gap-3" v-if="hasRefinements">
                                 <div class="text-sm text-brand font-semibold">Tools</div>
                                 <div class="flex flex-col gap-3">
                                     <ais-static-filter attribute="tools" :sort-by="['name']" :values="this.filters.tools" />
@@ -112,6 +123,7 @@ import { AisInstantSearch, AisConfigure, AisSearchBox, AisRefinementList, AisHit
 import AisStaticFilter from './components/AisStaticFilter.vue';
 import AisStaticTagsFilter from './components/AisStaticTagsFilter.vue';
 import AisProductsFilter from './components/AisProductsFilter.vue';
+import AisPluginsFilter from './components/AisPluginsFilter.vue';
 import MobileDrawer from './components/MobileDrawer.vue'
 import ProductIcon from './components/ProductIcon.vue';
 
@@ -133,6 +145,7 @@ export default {
         AisStaticFilter,
         AisStaticTagsFilter,
         AisProductsFilter,
+        AisPluginsFilter,
         MobileDrawer,
         ProductIcon
     },
