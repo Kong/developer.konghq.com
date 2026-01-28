@@ -501,18 +501,6 @@ pages:
       - text: Mesh CLI
         url: '/mesh/cli/'
   -
-    path: app/_src/production/secure-deployment/api-server-auth.md
-    title: 'Authentication with the API server'
-    description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
-    url: '/mesh/authentication-with-the-api-server/'
-    related_resources:
-      - text: 'Manage secrets'
-        url: '/mesh/manage-secrets/'
-      - text: Mesh ports
-        url: /mesh/use-kuma/#control-plane-ports
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
     path: app/_src/production/secure-deployment/dp-membership.md
     title: 'Configure Data Plane proxy membership'
     description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
