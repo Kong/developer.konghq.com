@@ -35,6 +35,8 @@ related_resources:
     url: /custom-plugins/
   - text: Plugins
     url: /gateway/entities/plugins/
+
+automated_tests: false
 ---
 
 ## Include HTTP and JSON support

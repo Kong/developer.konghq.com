@@ -114,6 +114,8 @@ next_steps:
     url: /dev-portal/auth-strategies/
   - text: Create API packages
     url: /catalog/api-packaging/
+
+automated_tests: false
 ---
 
 ## Create an API

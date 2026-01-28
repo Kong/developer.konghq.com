@@ -73,18 +73,18 @@ entities:
     - name: ai-proxy-advanced
       config:
         targets:
-          - route_type: llm/v1/chat
-            model:
-              provider: gemini
-              name: gemini-2.0-flash-exp
-              options:
-                gemini:
-                  api_endpoint: ${gcp_api_endpoint}
-                  project_id: ${gcp_project_id}
-                  location_id: ${gcp_location_id}
-            auth:
-              gcp_use_service_account: true
-              gcp_service_account_json: ${gcp_service_account_json}
+            - route_type: llm/v1/chat
+              model:
+                provider: gemini
+                name: gemini-2.0-flash-exp
+                options:
+                  gemini:
+                    api_endpoint: ${gcp_api_endpoint}
+                    project_id: ${gcp_project_id}
+                    location_id: ${gcp_location_id}
+              auth:
+                gcp_use_service_account: true
+                gcp_service_account_json: ${gcp_service_account_json}
 variables:
   gcp_project_id:
     value: $GCP_PROJECT_ID
@@ -92,11 +92,14 @@ variables:
     value: $GCP_LOCATION_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
   gcp_api_endpoint:
     value: $GCP_API_ENDPOINT     
 formats:
   - deck
 {% endentity_examples %}
+
+
 <!--vale on-->
 
 ## Validate
