@@ -483,17 +483,17 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/secure-deployment/api-server-auth.md
-    title: 'Authentication with the API server'
-    description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
-    url: '/mesh/authentication-with-the-api-server/'
+    path: app/_src/production/secure-deployment/dp-membership.md
+    title: 'Configure Data Plane proxy membership'
+    description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
+    url: '/mesh/configure-data-plane-proxy-membership/'
     related_resources:
-      - text: 'Manage secrets'
-        url: '/mesh/manage-secrets/'
-      - text: Mesh ports
-        url: /mesh/interact-with-control-plane/#control-plane-ports
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
+      - text: 'Data plane on Kubernetes'
+        url: '/mesh/data-plane-kubernetes/'
+      - text: 'Data plane on Universal'
+        url: '/mesh/data-plane-universal/'
+      - text: 'Data plane proxy'
+        url: '/mesh/data-plane-proxy/'
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
