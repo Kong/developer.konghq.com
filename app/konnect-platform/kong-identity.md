@@ -112,7 +112,11 @@ When using plugins scoped to Consumer Groups:
 
 ## Dynamic claim templates
 
-Dynamic claim templates allow you to create custom claims that adapt based on the authentication context. For example, you can use a dynamic claim template so that {{site.konnect_short_name}} populates a random UUID for the client. Dynamic claim templates generate the custom JWT claims from the specified contextual data and functions when the access token is minted. You can use dynamic claim templates for both the auth server and client. 
+Dynamic claim templates allow you to define custom JWT claims, where the claim value is determined at the time the access token is generated. 
+The value is based on contextual data and specified functions.
+For example, you can use a dynamic claim template so that {{site.konnect_short_name}} populates a random UUID for the client.
+
+You can use dynamic claim templates for both the auth server and client. 
 
 These JWT claim values can be rendered as any of the following types:
 * Strings 
@@ -123,14 +127,14 @@ These JWT claim values can be rendered as any of the following types:
 
 The type is inferred from the value. 
 
-JWT claim values can also be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries. For example:
-* `${ uuidv4 }` will create a UUID every time a new token is created.
-* `${ .Client.Name }` will include the client's name in the token.
-* `${ now | date "2006-01-02T15:04:05Z07:00" }` will generate the current timestamp in ISO 8601 format.
-* `${ .AuthServer.Audience }-${ .Client.ID }` will concatenate the auth server's audience with the client ID.
-* `${ .Client.Labels.environment | default "production" }` will use the client's environment label, defaulting to "production" if it isn't set.
-* `${ upper .Client.Name }` will convert the client name to uppercase.
-* `${ randAlphaNum 16 }` will generate a random 16-character alphanumeric string for each token.
+JWT claim values can be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries. For example:
+* `${ uuidv4 }` creates a UUID every time a new token is created.
+* `${ .Client.Name }` includes the client's name in the token.
+* `${ now | date "2006-01-02T15:04:05Z07:00" }` generates the current timestamp in ISO 8601 format.
+* `${ .AuthServer.Audience }-${ .Client.ID }` concatenates the auth server's audience with the client ID.
+* `${ .Client.Labels.environment | default "production" }` uses the client's environment label, defaulting to "production" if it isn't set.
+* `${ upper .Client.Name }` converts the client name to uppercase.
+* `${ randAlphaNum 16 }` generates a random 16-character alphanumeric string for each token.
 
 You can use `uuidParse` and `uuidValidate` in your dynamic claim templates to parse a string as a UUID and check for a valid UUID, respectively.
 
@@ -177,7 +181,7 @@ rows:
     format: string
 
   - variable: AuthServer.SigningAlgorithm
-    description: The algorithm used to sign the JWT (e.g. RS256, HS256)
+    description: The algorithm used to sign the JWT (for example, RS256, HS256)
     format: string
 
   - variable: AuthServer.Labels.key
@@ -205,7 +209,7 @@ rows:
     format: string
 
   - variable: Client.GrantTypes[]
-    description: The grant types supported by the client (e.g. client_credentials)
+    description: "The grant types supported by the client (for example, `client_credentials`)"
     format: string
 
   - variable: Client.RedirectURIs[]
@@ -217,7 +221,7 @@ rows:
     format: string
 
   - variable: Client.ResponseTypes[]
-    description: Supported OAuth response types (e.g. code, token)
+    description: Supported OAuth response types (for example, code, token)
     format: string
 
   - variable: Client.AllowAllScopes
