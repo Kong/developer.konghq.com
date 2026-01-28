@@ -85,12 +85,13 @@ cat cert.pem | base64
 echo "value" | base64
 ```
 
+## Secret scopes
 
 {{site.mesh_product_name}} provides two types of secrets:
 * [Mesh-scoped](#mesh-scoped-secrets)
 * [Global](#global-secrets)
 
-## Mesh-scoped secrets
+### Mesh-scoped secrets
 
 Mesh-scoped secrets are bound to a given mes.
 This is the only type of secret that can be used in mesh policies like [Provided CA](/mesh/policies/mutual-tls/#usage-of-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
@@ -126,7 +127,7 @@ data: dGVzdAo=
 {% endnavtab %}
 {% endnavtabs %}
 
-## Global secrets
+### Global secrets
 
 Global secrets are not bound to a given mesh and can't be used in mesh policies.
 Global secrets are used for internal purposes.
