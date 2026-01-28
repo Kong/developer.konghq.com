@@ -4797,6 +4797,18 @@ paths:
           $ref: '#/components/responses/MeshControlPlaneForbiddenError'
       tags:
         - Mesh
+      x-speakeasy-pagination:
+        type: offsetLimit
+        inputs:
+          - name: 'page[number]'
+            in: parameters
+            type: page
+          - name: 'page[size]'
+            in: parameters
+            type: limit
+        outputs:
+          results: $.data
+          numPages: $.meta.page.total
     post:
       x-speakeasy-entity-operation:
         terraform-resource: MeshControlPlane#create
@@ -4960,6 +4972,7 @@ components:
       schema:
         type: integer
         example: 1
+      x-speakeasy-terraform-ignore: true
     PageSize:
       name: 'page[size]'
       description: The maximum number of items to include per page. The last page of a collection may include fewer items.
@@ -4969,6 +4982,7 @@ components:
       schema:
         type: integer
         example: 10
+      x-speakeasy-terraform-ignore: true
   schemas:
     Index:
       description: Some metadata about the service

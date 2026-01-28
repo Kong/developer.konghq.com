@@ -39,6 +39,7 @@ tldr:
       Because Kong uses Github Actions to build and release, Kong also uses Github’s OIDC identity to sign images.
       You can verify these signatures using the `cosign verify` command.
 
+automated_tests: false
 ---
 
 ## Gather the digest information

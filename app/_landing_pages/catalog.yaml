@@ -50,6 +50,8 @@ rows:
             ctas:
               - text: APIs reference
                 url: "/catalog/apis/"
+              - text: API packages
+                url: /catalog/api-packaging/
               - text: Create an API catalog with the {{site.konnect_short_name}} API
                 url: "/how-to/automate-api-catalog/"
               - text: Create an API catalog with Terraform

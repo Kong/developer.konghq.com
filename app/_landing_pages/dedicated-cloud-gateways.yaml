@@ -44,7 +44,7 @@ rows:
             config:
               align: left
               text: Create a Dedicated Cloud Gateway
-              url: https://cloud.konghq.com/gateway-manager/create-control-plane
+              url: https://cloud.konghq.com/gateway-manager/create-gateway
       - blocks:
           - type: mermaid
             config:

@@ -49,15 +49,10 @@ prereqs:
         - **AWS Secret Access Key**: Your AWS secret key
         - **Region**: AWS region where Bedrock is available (for example, `us-east-1`)
 
-        1. Enable the rerank model in the [AWS Bedrock console](https://console.aws.amazon.com/bedrock/) under **Model Access**. Navigate to **Bedrock** > **Model access** and request access to `cohere.rerank-v3-5:0`.
+        1. Enable the chat model in the [AWS Bedrock console](https://console.aws.amazon.com/bedrock/) under **Model Access**. Navigate to **Bedrock** > **Model access** and request access to `meta.llama3-70b-instruct-v1:0`.
 
-        2. After model access is granted, construct the model ARN for your region:
-           ```
-           arn:aws:bedrock:<region>::foundation-model/cohere.rerank-v3-5:0
-           ```
-           Replace `<region>` with your AWS region (for example, `us-east-1`).
+        1. Export the required values as environment variables:
 
-        3. Export the required values as environment variables:
            ```sh
            export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
            export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
@@ -65,9 +60,9 @@ prereqs:
       icon_url: /assets/icons/aws.svg
   entities:
     services:
-      - rerank-service
+      - example-service
     routes:
-      - rerank-route
+      - example-route
 
 cleanup:
   inline:
@@ -95,7 +90,7 @@ entities:
           - route_type: llm/v1/chat
             auth:
               allow_override: false
-              aws_access_key_id: ${aws_access_key}
+              aws_access_key_id: ${aws_access_key_id}
               aws_secret_access_key: ${aws_secret_access_key}
             model:
               provider: bedrock
@@ -110,7 +105,7 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
 formats:
   - deck
-  {% endentity_examples %}
+{% endentity_examples %}
 <!--vale on-->
 
 ## Validate

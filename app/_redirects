@@ -147,6 +147,7 @@
 /dev-portal/access-and-approval/    /dev-portal/self-service/
 /dev-portal/publishing/ /catalog/apis/
 /dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
+/dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
 
 
 # Gateway LTS
@@ -191,3 +192,7 @@
 /advanced-analytics     /observability          301
 /index/advanced-analytics/  /index/observability/  301
 /advanced-analytics/custom-dashboards/    /custom-dashboards/ 301
+
+# Kong Konnect MCP server
+/mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
+/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
