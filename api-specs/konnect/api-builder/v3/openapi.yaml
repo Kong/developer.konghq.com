@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@21cb3feff57120a719a0ca8624b41e07bd02868e
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/21cb3feff57120a719a0ca8624b41e07bd02868e'
+  x-oas-source: kong/platform-api@d338ece9c89e865190819ddc20d925392fc59705
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d338ece9c89e865190819ddc20d925392fc59705'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -184,36 +184,6 @@ paths:
       responses:
         '204':
           description: API was deleted successfully.
-        '401':
-          $ref: '#/components/responses/ApiUnauthorized'
-        '403':
-          $ref: '#/components/responses/ApiForbidden'
-        '404':
-          $ref: '#/components/responses/ApiNotFound'
-      tags:
-        - API
-  /apis/_computed:
-    get:
-      operationId: list-apis-computed
-      summary: List APIs computed
-      description: Returns a collection of all APIs with computed fields.
-      parameters:
-        - $ref: '#/components/parameters/PageSize'
-        - $ref: '#/components/parameters/PageNumber'
-        - $ref: '#/components/parameters/ApiFilters'
-        - $ref: '#/components/parameters/ApiSort'
-      responses:
-        '200':
-          $ref: '#/components/responses/ListApiComputedResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/BadRequestError'
-              examples:
-                InvalidApiSortQueryBadRequestExample:
-                  $ref: '#/components/examples/InvalidApiSortQueryNameBadRequestExample'
         '401':
           $ref: '#/components/responses/ApiUnauthorized'
         '403':
@@ -1837,19 +1807,6 @@ components:
         - api_spec_ids
         - current_version_summary
       title: API
-    ApiComputedSchema:
-      type: object
-      properties:
-        id:
-          description: The API identifier.
-          type: string
-          format: uuid
-          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
-        api_spec_validation_messages_count:
-          description: 'The number of validation messages for the API specification attached to the API. If there are no validation messages, the value will be 0, or if there are no API specifications, the value will be 0.'
-          type: integer
-          example: 1
-      additionalProperties: false
     AuthStrategyApiSyncError:
       type: object
       properties:
@@ -4795,24 +4752,6 @@ components:
                     number: 1
                     size: 10
                     total: 2
-    ListApiComputedResponse:
-      description: List of APIs with computed fields
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              meta:
-                $ref: '#/components/schemas/PaginatedMeta'
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ApiComputedSchema'
-            additionalProperties: false
-            required:
-              - data
-              - meta
-            title: List Api Computed Response
     ApiPackageDocumentResponse:
       description: API Package document
       content:

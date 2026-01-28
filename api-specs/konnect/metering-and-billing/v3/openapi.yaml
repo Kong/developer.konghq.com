@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@225cfa39f6946904726e86f2a0ca94fb98f6ff9c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/225cfa39f6946904726e86f2a0ca94fb98f6ff9c'
+  x-oas-source: kong/platform-api@fff8d6357a54702356158b3bf2b5b80db22fc823
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fff8d6357a54702356158b3bf2b5b80db22fc823'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -283,6 +283,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
   '/openmeter/customers/{customerId}/billing/app-data':
@@ -316,6 +318,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
   '/openmeter/customers/{customerId}/billing/stripe/checkout-sessions':
@@ -359,6 +363,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
   '/openmeter/customers/{customerId}/billing/stripe/portal-sessions':
