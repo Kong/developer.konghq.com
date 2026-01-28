@@ -99,7 +99,7 @@ Run the same command with JSON output enabled:
 deck gateway diff ./kong.yaml --json-output
 ```
 
-An example response from the `--json-output` flag is:
+An example of a change report from the `--json-output` flag:
 ```bash
 {
   "changes": {
@@ -142,5 +142,3 @@ An example response from the `--json-output` flag is:
   "errors": []
 }
 ```
-
-The JSON output groups changes by operation type and includes both the previous and updated versions of each affected object.
