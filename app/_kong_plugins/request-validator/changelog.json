@@ -18,6 +18,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.8": [
+    {
+      "message": "Added support for specifying JSON schema draft versions.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where requests get rejected when defining an object parameter with form style and exploded.",

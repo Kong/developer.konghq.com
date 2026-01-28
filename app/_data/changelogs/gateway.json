@@ -19618,5 +19618,46 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.10.0.8": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**aws-lambda**: added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**request-validator**: Added support for specifying JSON schema draft versions.",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Kong incorrectly logged upstream status codes as 000 (or empty) when HTTP/2 clients disconnected during response processing. This occurred when response buffering was enabled. Kong now correctly records the actual upstream status code even when the HTTP/2 client disconnects before receiving the complete response.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `kong health` command would fail to run when kong configuration contains vault references.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenTelemetry**: Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Improved performance for OpenAPI 3.1.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
