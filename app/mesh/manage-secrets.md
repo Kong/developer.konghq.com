@@ -25,7 +25,7 @@ The `Secret` resource enables users to store sensitive data. This includes anyth
 * Passwords
 
 Secrets belong to a specific `Mesh` resource, and can't be shared across different `Meshes`.
-[Policies](/mesh/policies-introduction/on) use secrets at runtime.
+[Policies](/mesh/policies-introduction/) use secrets at runtime.
 
 {:.info}
 > {{site.mesh_product_name}} leverages `Secret` resources internally for certain operations, for example when storing auto-generated certificates and keys when Mutual TLS is enabled.
