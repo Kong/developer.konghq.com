@@ -86,6 +86,7 @@ rawLicenseString: '$(cat ./license.json)'
 
 {{cert | indent: 3}}
 
+{% include k8s/ca-cert.md %}
 
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
