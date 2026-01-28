@@ -99,12 +99,9 @@ To create an additional key auth strategy:
    1. In the **Key expires after** dropdown menu, select the number of days, weeks, or years after which the key will expire.
 1. Click **Save**.
 
-For a complete tutorial, see [Enable key authentication for Dev Portal apps](/how-to/enable-key-auth-for-dev-portal/).
+Once you've configured the key auth strategy, you must apply it to your [Dev Portal](#set-the-default-auth-strategy-of-a-dev-portal), [API packages](#apply-an-auth-strategy-to-an-api-package), and [APIs](#apply-an-auth-strategy-to-an-api). For a complete tutorial, see [Enable key authentication for Dev Portal apps](/how-to/enable-key-auth-for-dev-portal/).
 
-{:.info}
-> **Key expiration notes:** 
-> * If you configure key expiration and edit the expiration, any pre-existing keys will expire at the previous configuration value. For example, if you configure keys to expire in 14 days and then edit it so that they expire in 7 days, any pre-existing keys will expire in 14 days. 
-> * You can [customize the emails](/dev-portal/customizations/dev-portal-customizations/#developer-email-customization) users receive when a key is about to expire and when a key expires by navigating to your Dev Portal, clicking **Portal Editor**, and then clicking the **Email** icon in the sidebar.
+{% include /konnect/key-expiration-note.md %}
 
 ## Dev Portal OIDC authentication
 
@@ -222,3 +219,47 @@ Self-managed OIDC follows this workflow:
 {:.info}
 > **Note:** The Dev Portal doesn't create or manage IdP applications in this model. All application management is manual and handled by the developer or IdP admin.
 
+## Set the default auth strategy of a Dev Portal
+
+The default auth strategy of a Dev Portal will apply to any APIs that are published to that Dev Portal. If you want to override the default auth strategy, you can configure a different auth strategy on a per API basis.
+
+1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+1. Click your Dev Portal.
+1. From the **Actions** dropdown menu, select "Settings". 
+1. Click the **Security** tab.
+1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to set as the default.
+1. Click **Save changes**.
+
+## Apply an auth strategy to an API
+
+Once you've configured an auth strategy, you can apply it to APIs.
+
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. In the Catalog sidebar, click **APIs**.
+1. Click the API you want to apply the auth strategy to.
+1. Depending on the API's publication status, do one of the following:
+   1. Unpublished: Click **Publish API**.
+   1. Published: Click the more options menu and then click **Edit publication**.
+1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to apply to the API.
+1. Click **Save**.
+
+{:.important}
+> To enforce auth strategies on an app, you must [link your API to a Gateway Service](/catalog/apis/#allow-developers-to-consume-your-api).
+
+## Apply an auth strategy to an API package
+
+Once you've configured an auth strategy, you can apply it to API packages.
+
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. In the Catalog sidebar, click **APIs**.
+1. Click the **API packages** tab.
+1. Click the API package you want to apply the auth strategy to.
+1. Click the **Portals** tab.
+1. Depending on the API's publication status, do one of the following:
+   1. Unpublished: Click **Publish API**.
+   1. Published: Click the more options menu and then click **Edit publication**.
+1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to apply to the API.
+1. Click **Save**.
+
+{:.important}
+> To enforce auth strategies on an app, you must [link your API package to a Gateway Service](/how-to/package-apis-with-dev-portal/#associate-a-control-plane).

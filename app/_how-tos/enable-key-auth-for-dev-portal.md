@@ -88,10 +88,7 @@ faqs:
         1. In the **Key expires after** dropdown menu, select the number of days, weeks, or years after which the key will expire.
         1. Click **Save**.
 
-        {:.info}
-        > **Key expiration notes:** 
-        > * If you configure an initial key expiration time and then edit the expiration, any pre-existing keys will expire at the previous configuration value. For example, if you configure keys to expire in 14 days and then edit it so that they expire in 7 days, any pre-existing keys will expire in 14 days. 
-        > * You can [customize the emails](/dev-portal/customizations/dev-portal-customizations/#developer-email-customization) users receive when a key is about to expire and when a key expires by navigating to your Dev Portal, clicking **Portal Editor**, and then clicking the **Email** icon in the sidebar.
+        {% include /konnect/key-expiration-note.md %}
 
 next_steps:
   - text: Learn how to manage application registration requests
