@@ -73,6 +73,11 @@ faqs:
       {vault://aws-eu-central-vault/secret-name/foo}
       {vault://aws-us-west-vault/secret-name/snip}
       ```
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
+      
 
 next_steps:
   - text: Review the Vaults entity

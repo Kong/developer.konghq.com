@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv
+RUN apt-get update -y && apt-get install -y apt-utils curl docker.io uuid-runtime ca-certificates curl python3 python3-pip python3-venv jq
 
 # set python env
 RUN python3 -m venv /opt/myenv

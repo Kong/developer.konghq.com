@@ -76,6 +76,10 @@ faqs:
   - q: Can users and hosts be used to authenticate Conjur Vaults?
     a: |
         Yes. If you were authenticating the `Dave` user, you'd configure `"login": "Dave@BotApp"` along with the API key for `Dave`. If you were authenticating the host, you'd use `"login": "host/BotApp/myDemoApp"` along with the `host` API key.
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 
 next_steps:
   - text: Review the Vaults entity

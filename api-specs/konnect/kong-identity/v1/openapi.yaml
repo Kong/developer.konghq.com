@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 0.0.1
-  x-oas-source: kong/platform-api@08ca38f0c5f792f849a10852784d7ffe6d4a4ef6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/08ca38f0c5f792f849a10852784d7ffe6d4a4ef6'
+  version: 1.0.0
+  x-oas-source: kong/platform-api@bcf101f12410300cbb1a157c569049ead20dd78e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bcf101f12410300cbb1a157c569049ead20dd78e'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -622,7 +622,6 @@ components:
       description: OAuth 2.0 grant type
       type: string
       enum:
-        - authorization_code
         - implicit
         - client_credentials
     GrantTypes:
@@ -720,6 +719,18 @@ components:
       enum:
         - client_secret_post
         - none
+    TrustedOrigins:
+      description: A list or trusted origins to apply the CORS header on for the auth server
+      type: array
+      items:
+        $ref: '#/components/schemas/TrustedOrigin'
+      maxLength: 16
+      uniqueItems: true
+    TrustedOrigin:
+      description: A trusted origin for the auth server
+      type: string
+      format: uri
+      example: 'https://example.com'
     AuthServer:
       type: object
       properties:
@@ -747,6 +758,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        trusted_origins:
+          $ref: '#/components/schemas/TrustedOrigins'
       required:
         - id
         - name
@@ -963,7 +976,6 @@ components:
         - redirect_uris
         - allow_all_scopes
         - allow_scopes
-        - login_uri
         - access_token_duration
         - id_token_duration
         - labels
@@ -1599,7 +1611,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         response_types:
@@ -1622,7 +1633,6 @@ components:
           - id: kYa9iQFU5xPDSIUH9z1z
             name: Client 1
             grant_types:
-              - authorization_code
               - implicit
             allow_all_scopes: false
             allow_scopes:
@@ -1630,7 +1640,6 @@ components:
               - b5525b78-f3a0-4bd6-befc-7696be58717e
             redirect_uris:
               - 'https://client.com/callback'
-            login_uri: 'https://client.com/login'
             access_token_duration: 3600
             id_token_duration: 3600
             labels:
@@ -1647,7 +1656,6 @@ components:
             allow_all_scopes: true
             allow_scopes: []
             redirect_uris: []
-            login_uri: null
             access_token_duration: 3600
             id_token_duration: 3600
             labels:
@@ -1668,7 +1676,6 @@ components:
         name: Client 1
         grant_types:
           - client_credentials
-          - authorization_code
           - implicit
         allow_all_scopes: false
         allow_scopes:
@@ -1676,7 +1683,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         labels:
@@ -1698,7 +1704,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         labels:
@@ -1773,6 +1778,8 @@ components:
                 $ref: '#/components/schemas/Algorithm'
               labels:
                 $ref: '#/components/schemas/Labels'
+              trusted_origins:
+                $ref: '#/components/schemas/TrustedOrigins'
             required:
               - name
               - audience
@@ -1797,6 +1804,8 @@ components:
                 $ref: '#/components/schemas/UpdateAlgorithm'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              trusted_origins:
+                $ref: '#/components/schemas/TrustedOrigins'
           examples:
             AuthServer:
               $ref: '#/components/examples/UpdateAuthServer'

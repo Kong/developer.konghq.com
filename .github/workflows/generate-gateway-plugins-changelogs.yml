@@ -50,7 +50,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: '24'
           cache: 'npm'
@@ -110,7 +110,7 @@ jobs:
 
       - name: Create pull request
         if: steps.changes.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8
         with:
           title: Generate Gateway and plugins changelogs for version ${{ inputs.version }}
           commit-message: Generate Gateway and plugins changelogs for version ${{ inputs.version }}

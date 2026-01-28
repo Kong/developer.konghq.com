@@ -64,6 +64,12 @@ cleanup:
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg  
 
+faqs:
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
+
 automated_tests: false
 ---
 

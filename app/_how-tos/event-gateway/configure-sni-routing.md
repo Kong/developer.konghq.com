@@ -90,6 +90,7 @@ contexts:
       insecure: true
 EOF
 ```
+{: data-test-step="block" }
 
 ## Create Kafka topics
 
@@ -99,9 +100,9 @@ Create sample topics in the Kafka cluster that we created in the [prerequisites]
 {% validation custom-command %}
 command: |
   kafkactl -C kafkactl.yaml --context backend create topic \
-  analytics_pageviews analytics_clicks analytics_orders \
-  payments_transactions payments_refunds payments_orders \
-  user_actions
+    analytics_pageviews analytics_clicks analytics_orders \
+    payments_transactions payments_refunds payments_orders \
+    user_actions
 expected:
   return_code: 0
 render_output: false
@@ -117,19 +118,21 @@ Generate the certificates we'll need to enable TLS:
    ```sh
    openssl genrsa -out ./rootCA.key 4096
    openssl req -x509 -new -nodes -key ./rootCA.key \
-   -sha256 -days 3650 \
-   	-subj "/C=US/ST=Local/L=Local/O=Dev CA/CN=Dev Root CA" \
-   	-out ./rootCA.crt
+     -sha256 -days 3650 \
+     -subj "/C=US/ST=Local/L=Local/O=Dev CA/CN=Dev Root CA" \
+     -out ./rootCA.crt
    ```
+   {: data-test-step="block" }
 
-1.  Generate the gateway key and certificate signing request:
+1. Generate the gateway key and certificate signing request:
 
    ```sh
    openssl genrsa -out ./tls.key 2048
    openssl req -new -key ./tls.key \
-   -subj "/C=US/ST=Local/L=Local/O=Dev/CN=*.127-0-0-1.sslip.io" \
-   	-out ./tls.csr
+     -subj "/C=US/ST=Local/L=Local/O=Dev/CN=*.127-0-0-1.sslip.io" \
+     -out ./tls.csr
    ```
+   {: data-test-step="block" }
 
    We're setting the subject in the certificate signing request to `*.127-0-0-1.sslip.io`:
    * `*` is used for the virtual cluster prefixes, which are the `analytics` and `payments` DNS labels we configured when creating the virtual clusters.
@@ -150,21 +153,25 @@ Generate the certificates we'll need to enable TLS:
    DNS.2 = *.payments.127-0-0-1.sslip.io
    EOF
    ```
+   {: data-test-step="block" }
   
 1. To generate the certificate we'll need for the TLS listener policy, sign the gateway certificate signing request:
 
    ```sh
    openssl x509 -req -in ./tls.csr \
-   	-CA ./rootCA.crt -CAkey ./rootCA.key -CAcreateserial \
-   	-out ./tls.crt -days 825 -sha256 \
-   	-extfile ./tls.ext
+      -CA ./rootCA.crt -CAkey ./rootCA.key -CAcreateserial \
+      -out ./tls.crt -days 825 -sha256 \
+      -extfile ./tls.ext
    ```
+   {: data-test-step="block" }
 
 1. Export the key and certificate to your environment:
-   ```sh
-   export CERTIFICATE=$(awk '{printf "%s\\n", $0}' tls.crt)
-   export KEY=$(cat tls.key | base64)
-   ```
+   {% env_variables %}
+   CERTIFICATE: $(awk '{printf "%s\\n", $0}' tls.crt)
+   KEY: $(cat tls.key | base64)
+   {% endenv_variables %}
+
+
 
 ## Create a listener
 

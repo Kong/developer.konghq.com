@@ -86,7 +86,10 @@ faqs:
 
       {{site.base_gateway}} uses the client token retrieved in the authentication step to call the Read Secret API and retrieve the secret value. The request varies depending on the secrets engine version you're using.
       {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
-
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/

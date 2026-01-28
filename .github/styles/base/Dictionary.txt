@@ -103,6 +103,8 @@ callouts
 camelCase
 cef
 certificate_admin
+Cerebras
+cerebras
 charset
 chatbot
 chatbots
@@ -125,6 +127,8 @@ Cloudsmith
 cmd
 cncf
 cncf's
+Cohere
+cohere
 Cognito
 Cognito
 Collectd
@@ -272,6 +276,8 @@ gcp
 generationConfig
 geo
 geos
+gemini
+Gemini
 getter
 getters
 gevent
@@ -333,6 +339,8 @@ HTTPie
 HTTPRoute
 HTTPRoutes
 https
+HuggingFace
+huggingface
 idempotency
 IdPs
 if_version
@@ -655,6 +663,7 @@ prepends
 prepopulated
 preread
 printf
+prisma
 private_key
 productize
 productized
@@ -752,6 +761,8 @@ SBOMs
 SCCs
 SCCs
 schema's
+scim
+SCIM
 Scriptable
 SDKs
 search_by_username
@@ -808,6 +819,8 @@ submodule
 submodule's
 subnet
 subnets
+subprocess
+subprocesses
 subresource
 substring
 subtable
@@ -902,6 +915,7 @@ ungrouped
 Unicode
 unicode
 unix
+unlinking
 unmanaged
 unmarshalled
 unnamespaced

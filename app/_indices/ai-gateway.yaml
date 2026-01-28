@@ -38,9 +38,9 @@ sections:
       - title: Monitor AI LLM Metrics
         description: Explore how to monitor AI LLM metrics in AI Gateway.
         url: /ai-gateway/monitor-ai-llm-metrics/
-      - title: Advanced Analytics
+      - title: Observability
         description: Access advanced analytics features in AI Gateway.
-        url: /advanced-analytics/
+        url: /observability/
       - title: AI Gateway resource sizing guidelines
         description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
@@ -81,12 +81,6 @@ sections:
       - title: Observe MCP traffic
         description: Observe GitHub MCP traffic with Kong AI Gateway
         url: /mcp/observe-mcp-traffic
-      - title: "{{site.konnect_product_name}} MCP Server"
-        description: Get started with {{site.konnect_product_name}} MCP Server
-        url: /mcp/kong-mcp/get-started/
-      - title: "{{site.konnect_product_name}} MCP Server tools"
-        description: Check available {{site.konnect_product_name}} MCP Server tools
-        url: /mcp/kong-mcp/tools/
       - title: MCP logs
         description: Learn about logs available for MCP traffic via Kong AI Gateway
         url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
