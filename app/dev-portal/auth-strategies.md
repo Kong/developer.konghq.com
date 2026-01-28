@@ -243,7 +243,7 @@ Once you've configured an auth strategy, you can apply it to APIs.
 1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to apply to the API.
 1. Click **Save**.
 
-{:.important}
+{:.info}
 > To enforce auth strategies on an app, you must [link your API to a Gateway Service](/catalog/apis/#allow-developers-to-consume-your-api).
 
 ## Apply an auth strategy to an API package
@@ -261,5 +261,5 @@ Once you've configured an auth strategy, you can apply it to API packages.
 1. From the **Authentication strategy** dropdown menu, select the auth strategy you want to apply to the API.
 1. Click **Save**.
 
-{:.important}
+{:.info}
 > To enforce auth strategies on an app, you must [link your API package to a Gateway Service](/how-to/package-apis-with-dev-portal/#associate-a-control-plane).
