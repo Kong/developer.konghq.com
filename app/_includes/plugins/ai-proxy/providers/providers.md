@@ -254,6 +254,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
 >     }
 > }
 > ```
+> For more details see [Guardrails and content safety](/ai-gateway/#guardrails-and-content-safety).
 
 
 {% endif %}
@@ -390,7 +391,9 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
 </div>
 
 {:.info}
-> For requests with large payloads (audio transcription/translation), consider increasing `config.max_request_body_size` to three times the raw binary size.
+> For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
+>
+> Supported audio formats, voices, and parameters vary by model. Refer to your provider's documentation for available options.
 
 {% if provider.audio.speech.note.content %}<sup>{{ audio_speech_note_num }}</sup> {{ provider.audio.speech.note.content }}
 
@@ -435,7 +438,10 @@ Support for {{ provider.name }} image generation and editing capabilities:
 </div>
 
 {:.info}
-> For requests with large payloads (image edits), consider increasing `config.max_request_body_size` to three times the raw binary size.
+> For requests with large payloads, consider increasing `config.max_request_body_size` to three times the raw binary size.
+>
+> Supported image sizes and formats vary by model. Refer to your provider's documentation for allowed dimensions and requirements.
+
 
 {% if provider.image.generations.note.content %}<sup>{{ image_generations_note_num }}</sup> {{ provider.image.generations.note.content }}
 
