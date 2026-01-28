@@ -73,6 +73,22 @@ cleanup:
 faqs:
   - q: My published API is private in Dev Portal, how do I allow developers to see it?
     a: If an API is published as private, you must enable Dev Portal RBAC and [developers must sign in](/dev-portal/developer-signup/) to see APIs.
+  - q: Can I configure an expiration policy for a key auth key?
+    a: |
+        Yes. To configure expiration for a key, do the following:
+        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+        1. In the Dev Portal sidebar, click **Application Auth**.
+        1. Click **New authentication strategy**.
+        1. In the **Name** field, enter a name for internal use.
+        1. In the **Display name** field, enter a name for external use that is visible to developers.
+        1. From the **Authentication Type**, select "Key-Auth".
+        1. Click **Advanced configuration**.
+        1. In the **Key Names** field, enter a name for your key that will display in the API request header.
+        1. Enable **Key expiration policy**.
+        1. In the **Key expires after** dropdown menu, select the number of days, weeks, or years after which the key will expire.
+        1. Click **Save**.
+
+        {% include /konnect/key-expiration-note.md %}
 
 next_steps:
   - text: Learn how to manage application registration requests
