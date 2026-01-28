@@ -86,14 +86,20 @@ The following sequence diagram illustrates this simplified flow:
 
 {% mermaid %}
 sequenceDiagram
-    actor User as User
-    participant Plugin as AI LLM as Judge Plugin
-    participant LLM as Configured LLM
+    actor Client
+    participant AIP as AI Proxy Advanced
+    participant LLM as LLM Model (A or B)
+    participant Judge as AI LLM as Judge
+    participant JudgeLLM as Judge LLM
 
-    User->>Plugin: Sends prompt and response
-    Plugin->>LLM: Forward data for evaluation
-    LLM-->>Plugin: Returns numeric score (1 to 100)
-    Plugin->>User: Score available for downstream workflows
+    Client->>AIP: Send prompt
+    AIP->>LLM: Forward prompt (balancer selects model)
+    LLM-->>AIP: Response
+    AIP->>Judge: Prompt + response
+    Judge->>JudgeLLM: Evaluate response
+    JudgeLLM-->>Judge: Score (1–100)
+    Judge-->>AIP: Evaluation result
+    AIP-->>Client: Response
 {% endmermaid %}
 
 ## Recommended LLM settings
