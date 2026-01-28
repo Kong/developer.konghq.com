@@ -62,7 +62,7 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 > **Note**: This plugin has the following known limitations:
 > * Message compression is not supported.
 > * The message format is not customizable.
-> * {{site.base_gateway}} does not support Kafka 4.0.
+> * {{site.base_gateway}} supports Kafka 4.0 starting from version 3.10.
 
 ## Schema registry support {% new_in 3.11 %}
 
