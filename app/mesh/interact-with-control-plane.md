@@ -165,7 +165,7 @@ mtls:
 {% endnavtab %}
 {% endnavtabs %}
 
-{{site.mesh_product_name}}, being an application that improves the underlying connectivity between your services by making the underlying network more reliable, also comes with some networking requirements itself.
+{{site.mesh_product_name}} improves connectivity between your services and makes the network more reliable. However, it also has its own networking requirements.
 
 ## Control plane ports
 
@@ -195,7 +195,7 @@ When {{site.mesh_product_name}} runs as a distributed service mesh, the global c
 
 * {{p5443}}
 * {{p5680}}
-* `5681`: The HTTP API server used by `kumactl`, which you can also use to retrieve {{site.mesh_product_name}}'s policies and, when running in `universal`, that you can use to apply new policies. Manipulating data plane resources is not possible. It also exposes the {{site.mesh_product_name}} UI at `/gui`
+* `5681`: The HTTP API server used by `kumactl`, which you can also use to retrieve {{site.mesh_product_name}}'s policies and, when running in `universal`, that you can use to apply new policies. Manipulating data plane resources is not possible. It also exposes the {{site.mesh_product_name}} UI at `/gui`.
 * {{p5682}}
 * {{p5683}}
 * `5685`: The {{site.mesh_product_name}} Discovery Service port, leveraged in multi-zone deployments.
@@ -208,6 +208,6 @@ When {{site.mesh_product_name}} is run as a distributed service mesh, the zone c
 * `5676`: The Monitoring Assignment server that responds to discovery requests from monitoring tools, such as `Prometheus`, that are looking for a list of targets to scrape metrics from.
 * `5678`: The server for the control plane to data plane proxy communication (bootstrap configuration, xDS to retrieve data plane proxy configuration, SDS to retrieve mTLS certificates).
 * {{p5680}}
-* `5681`: The HTTP API server that is being used by `kumactl`. You can also use it to retrieve {{site.mesh_product_name}}'s policies and, when running in Universal mode, you can manage data plane resources. When not connected to a global control plane, it also exposes the {{site.mesh_product_name}} UI at `/gui`
+* `5681`: The HTTP API server that is being used by `kumactl`. You can also use it to retrieve {{site.mesh_product_name}}'s policies and, when running in Universal mode, you can manage data plane resources. When not connected to a global control plane, it also exposes the {{site.mesh_product_name}} UI at `/gui`.
 * {{p5682}}
 * {{p5683}}
