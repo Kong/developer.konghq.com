@@ -25,6 +25,9 @@ Jekyll::Hooks.register :site, :pre_render do |site|
     site.data['act_as_plugins'][slug] = doc
   end
 
+  site.data['searchFilters'][:kong_plugins] = site.data.fetch('kong_plugins', {}).map do |slug, plugin|
+    { label: plugin.data.fetch('name'), value: slug }
+  end
   site.data['searchFilters'][:tags] = site.data.dig('schemas', 'frontmatter', 'tags', 'enum').sort.map do |t|
     { label: t, value: t }
   end
