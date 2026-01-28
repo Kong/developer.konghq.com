@@ -525,16 +525,6 @@ pages:
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
   -
-    path: app/_src/production/secure-deployment/secrets.md
-    title: 'Manage secrets'
-    description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
-    url: '/mesh/manage-secrets/'
-    related_resources:
-      - text: 'Authentication with the API server'
-        url: '/mesh/authentication-with-the-api-server/'
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-  -
     path: app/_src/production/use-mesh.md
     title: 'Kong Mesh GUI and ports reference'
     description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.'
