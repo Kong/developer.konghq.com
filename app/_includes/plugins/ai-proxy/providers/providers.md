@@ -186,6 +186,7 @@ The following tables show the AI capabilities supported by {{ provider.name }} p
 
 Support for {{ provider.name }} basic text generation capabilities including chat, completions, and embeddings:
 
+
 <div class="w-full overflow-x-auto">
 <table class="w-full">
   {{ table_header }}
@@ -228,6 +229,32 @@ Support for {{ provider.name }} basic text generation capabilities including cha
 
 {% endif %}
 {% if provider.embeddings.note.content %}<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}
+
+{% endif %}
+{% if include.provider_name == "Amazon Bedrock" %}
+{:.info}
+> {% new_in 3.9 %} With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
+>
+> ```json
+> {
+>     "messages": [
+>         {
+>             "role": "system",
+>             "content": "You are a scientist."
+>         },
+>         {
+>             "role": "user",
+>             "content": "What is the Boltzmann equation?"
+>         }
+>     ],
+>     "guardrailConfig": {
+>         "guardrailIdentifier": "$GUARDRAIL-IDENTIFIER",
+>         "guardrailVersion": "1",
+>         "trace": "enabled"
+>     }
+> }
+> ```
+
 
 {% endif %}
 {% endif %}
