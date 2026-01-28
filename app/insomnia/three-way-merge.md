@@ -39,10 +39,6 @@ faqs:
       If a file exceeds 100,000 lines, Insomnia doesn't attempt a 3-way merge. Instead, it reverts to the previous conflict resolution behavior and prompts you to choose between:
       - The entire local file 
       - The entire remote file
-      
-      To change the limit of maximum lines for 3-way merge:
-      1. Navigate to **Preferences**.
-      1. From [REPLACE W/NEW SECTION NAME], [FINISH]
 ---
 
 3-way merge is Insomnia’s built-in conflict-resolution experience for Git sync. When your local work and the remote branch both change the same content, Insomnia opens a merge view so you can choose which changes to keep without leaving the app.
