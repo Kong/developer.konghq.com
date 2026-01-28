@@ -114,7 +114,13 @@ When using plugins scoped to Consumer Groups:
 
 ## Dynamic claim templates
 
-You can configure dynamic claim templates to generate custom claims during runtime. These JWT claim values can be rendered as any of the following types:
+Dynamic claim templates allow you to define custom JWT claims, where the claim value is determined at the time the access token is generated. 
+The value is based on contextual data and specified functions.
+For example, you can use a dynamic claim template so that {{site.konnect_short_name}} populates a random UUID for the client.
+
+You can use dynamic claim templates for both the auth server and client. 
+
+These JWT claim values can be rendered as any of the following types:
 * Strings 
 * Integers
 * Floats
@@ -123,48 +129,300 @@ You can configure dynamic claim templates to generate custom claims during runti
 
 The type is inferred from the value. 
 
-JWT claim values can also be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries.
+JWT claim values can be templated with contextual data and functions. Dynamic values must use `${}` as templating boundaries. For example:
+* `${ uuidv4 }` creates a UUID every time a new token is created.
+* `${ .Client.Name }` includes the client's name in the token.
+* `${ now | date "2006-01-02T15:04:05Z07:00" }` generates the current timestamp in ISO 8601 format.
+* `${ .AuthServer.Audience }-${ .Client.ID }` concatenates the auth server's audience with the client ID.
+* `${ .Client.Labels.environment | default "production" }` uses the client's environment label, defaulting to "production" if it isn't set.
+* `${ upper .Client.Name }` converts the client name to uppercase.
+* `${ randAlphaNum 16 }` generates a random 16-character alphanumeric string for each token.
 
-Claims support templating via the context passed to the client during the authentication, in the following format:
-
-```json
-{
-  "AuthServer": {
-    "ID": "uuid.UUID",
-    "CreatedAt": "DateTime",
-    "UpdatedAt": "DateTime",
-    "Name": "string",
-    "Description": "string",
-    "Audience": "string",
-    "SigningAlgorithm": "string",
-    "Labels": {
-      "key": "value"
-    }
-  },
-  "Client": {
-    "ID": "string",
-    "CreatedAt": "DateTime",
-    "UpdatedAt": "DateTime",
-    "Name": "string",
-    "Labels": {
-      "key": "value"
-    },
-    "GrantTypes": [
-      "string"
-    ],
-    "RedirectURIs": [
-      "string"
-    ],
-    "LoginURI": "string",
-    "ResponseTypes": [
-      "string"
-    ],
-    "AllowAllScopes": true
-  }
-}
-```
+You can use `uuidParse` and `uuidValidate` in your dynamic claim templates to parse a string as a UUID and check for a valid UUID, respectively.
 
 To test the templating, you can use the [`/v1/auth-servers/$authServerId/clients/$clientId/test-claim` endpoint](/api/konnect/kong-identity/v1/#/operations/testClaimForClient).
+
+### Supported contexts
+
+Dynamic claims can use the context passed to the client during authentication in the following format:
+
+<!--vale off-->
+{% table %}
+item_title: JWT context variables
+columns:
+  - title: Variable Name
+    key: variable
+  - title: Description
+    key: description
+  - title: Format
+    key: format
+
+rows:
+  - variable: AuthServer.ID
+    description: A regionally unique UUID of the auth server
+    format: uuid.UUID
+
+  - variable: AuthServer.CreatedAt
+    description: The timestamp when the auth server was created
+    format: DateTime
+
+  - variable: AuthServer.UpdatedAt
+    description: The timestamp when the auth server was last updated
+    format: DateTime
+
+  - variable: AuthServer.Name
+    description: The name of the auth server
+    format: string
+
+  - variable: AuthServer.Description
+    description: A description of the auth server
+    format: string
+
+  - variable: AuthServer.Audience
+    description: The intended audience for tokens issued by this auth server
+    format: string
+
+  - variable: AuthServer.SigningAlgorithm
+    description: The algorithm used to sign the JWT (for example, RS256, HS256)
+    format: string
+
+  - variable: AuthServer.Labels.key
+    description: A key/value label for metadata tagging
+    format: string
+
+  - variable: Client.ID
+    description: The ID of the client
+    format: string
+
+  - variable: Client.CreatedAt
+    description: The timestamp when the client was created
+    format: DateTime
+
+  - variable: Client.UpdatedAt
+    description: The timestamp when the client was last updated
+    format: DateTime
+
+  - variable: Client.Name
+    description: The name of the client
+    format: string
+
+  - variable: Client.Labels.key
+    description: A key/value label for metadata tagging
+    format: string
+
+  - variable: Client.GrantTypes[]
+    description: "The grant types supported by the client (for example, `client_credentials`)"
+    format: string
+
+  - variable: Client.RedirectURIs[]
+    description: Allowed redirect URIs for the client
+    format: string
+
+  - variable: Client.LoginURI
+    description: Login URI for interactive flows
+    format: string
+
+  - variable: Client.ResponseTypes[]
+    description: Supported OAuth response types (for example, code, token)
+    format: string
+
+  - variable: Client.AllowAllScopes
+    description: Indicates if all scopes are allowed by default
+    format: boolean
+{% endtable %}
+<!--vale on-->
+
+### Supported functions
+
+Dynamic claim templates support all the following functions from [sprig](https://masterminds.github.io/sprig/) in the claim templating engine:
+
+<!--vale off -->
+{% table %}
+columns:
+  - title: Type
+    key: type
+  - title: Supported functions
+    key: functions
+rows:
+  - type: Date functions
+    functions: |
+      * `ago`
+      * `date`
+      * `dateInZone`
+      * `dateModify`
+      * `duration`
+      * `durationRound`
+      * `htmlDate`
+      * `htmlDateInZone`
+      * `mustDateModify`
+      * `mustToDate`
+      * `now`
+      * `toDate`
+      * `unixEpoch`
+  - type: Strings
+    functions: |
+      * `abbrev`
+      * `abbrevboth`
+      * `trunc`
+      * `trim`
+      * `upper`
+      * `lower`
+      * `title`
+      * `untitle`
+      * `substr`
+      * `repeat`
+      * `trimAll`
+      * `trimSuffix`
+      * `trimPrefix`
+      * `nospace`
+      * `initials`
+      * `randAlphaNum`
+      * `randAlpha`
+      * `randAscii`
+      * `randNumeric`
+      * `swapcase`
+      * `shuffle`
+      * `snakecase`
+      * `camelcase`
+      * `kebabcase`
+      * `wrap`
+      * `wrapWith`
+      * `contains`
+      * `hasPrefix`
+      * `hasSuffix`
+      * `quote`
+      * `squote`
+      * `cat`
+      * `indent`
+      * `nindent`
+      * `replace`
+      * `plural`
+      * `sha1sum`
+      * `sha256sum`
+      * `adler32sum`
+      * `toString`
+      * `atoi`
+      * `int64`
+      * `int`
+      * `float64`
+      * `seq`
+      * `toDecimal`
+      * `split`
+      * `splitList`
+      * `splitn`
+      * `toStrings`
+      * `until`
+      * `untilStep`
+      * `join`
+      * `sortAlpha`
+  - type: Math
+    functions: |
+      * `add1`
+      * `add`
+      * `sub`
+      * `div`
+      * `mod`
+      * `mul`
+      * `randInt`
+      * `add1f`
+      * `addf`
+      * `subf`
+      * `divf`
+      * `mulf`
+      * `biggest`
+      * `max`
+      * `min`
+      * `maxf`
+      * `minf`
+      * `ceil`
+      * `floor`
+      * `round`
+  - type: Defaults
+    functions: |
+      * `default`
+      * `empty`
+      * `coalesce`
+      * `all`
+      * `any`
+      * `compact`
+      * `mustCompact`
+      * `fromJson`
+      * `toJson`
+      * `toPrettyJson`
+      * `toRawJson`
+      * `mustFromJson`
+      * `mustToJson`
+      * `mustToPrettyJson`
+      * `mustToRawJson`
+      * `ternary`
+      * `deepCopy`
+      * `mustDeepCopy`
+  - type: Paths
+    functions: |
+      * `base`
+      * `dir`
+      * `clean`
+      * `ext`
+      * `isAbs`
+  - type: Encoding
+    functions: |
+      * `b64enc`
+      * `b64dec`
+      * `b32enc`
+      * `b32dec`
+  - type: Data Structures
+    functions: |
+      * `tuple`
+      * `list`
+      * `dict`
+      * `get`
+      * `set`
+      * `unset`
+      * `hasKey`
+      * `pluck`
+      * `keys`
+      * `pick`
+      * `omit`
+      * `merge`
+      * `mergeOverwrite`
+      * `mustMerge`
+      * `mustMergeOverwrite`
+      * `values`
+      * `append`
+      * `mustAppend`
+      * `prepend`
+      * `mustPrepend`
+      * `first`
+      * `mustFirst`
+      * `rest`
+      * `mustRest`
+      * `last`
+      * `mustLast`
+      * `initial`
+      * `mustInitial`
+      * `reverse`
+      * `mustReverse`
+      * `uniq`
+      * `mustUniq`
+      * `without`
+      * `mustWithout`
+      * `has`
+      * `mustHas`
+      * `slice`
+      * `mustSlice`
+      * `concat`
+      * `dig`
+      * `chunk`
+      * `mustChunk`
+  - type: UUIDs
+    functions: |
+      * `uuidv4`
+  - type: URLs
+    functions: |
+      * `urlParse`
+      * `urlJoin`
+{% endtable %}
+<!--vale on -->
 
 
 ## Configure Kong Identity
