@@ -126,7 +126,6 @@ Kong AI Gateway forwards requests to the following {{ provider.name }} API endpo
 >
 > For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same `upstream_url` plugin option.
 
-{% comment %}Assign note numbers{% endcomment %}
 {% assign note_counter = 0 %}
 {% assign chat_note_num = 0 %}{% if provider.chat.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign chat_note_num = note_counter %}{% endif %}
 {% assign completions_note_num = 0 %}{% if provider.completions.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign completions_note_num = note_counter %}{% endif %}
@@ -144,7 +143,6 @@ Kong AI Gateway forwards requests to the following {{ provider.name }} API endpo
 {% assign video_generations_note_num = 0 %}{% if provider.video.generations.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign video_generations_note_num = note_counter %}{% endif %}
 {% assign realtime_note_num = 0 %}{% if provider.realtime.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign realtime_note_num = note_counter %}{% endif %}
 
-{% comment %}Check capability groups{% endcomment %}
 {% assign has_text = false %}
 {% assign has_advanced_text = false %}
 {% assign has_processing = false %}
@@ -161,7 +159,6 @@ Kong AI Gateway forwards requests to the following {{ provider.name }} API endpo
 {% if provider.video.generations.supported %}{% assign has_video = true %}{% endif %}
 {% if provider.realtime.supported %}{% assign has_realtime = true %}{% endif %}
 
-{% comment %}Table header used by all capability tables{% endcomment %}
 {% capture table_header %}
 <thead>
   <tr>
