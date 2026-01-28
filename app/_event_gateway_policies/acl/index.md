@@ -29,6 +29,8 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: Set up Kong Event Gateway with Kong Identity OAuth
+    url: /how-to/event-gateway/kong-identity-oauth/
 ---
 
 The ACL (Access Control List) policy manages authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/) by defining which actions principals can perform on specific resources.
