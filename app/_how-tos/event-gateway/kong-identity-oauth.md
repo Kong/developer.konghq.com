@@ -309,7 +309,7 @@ command: |
 expected:
   return_code: 0
   message: |
-    TOPIC             PARTITIONS     REPLICATION FACTOR
+    TOPIC     PARTITIONS     REPLICATION FACTOR
 render_output: false
 {% endvalidation %}
 
