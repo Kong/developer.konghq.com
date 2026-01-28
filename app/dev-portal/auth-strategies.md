@@ -92,7 +92,7 @@ To create an additional key auth strategy:
 1. In the **Name** field, enter a name for internal use.
 1. In the **Display name** field, enter a name for external use that is visible to developers.
 1. From the **Authentication Type**, select "Key-Auth".
-1. (Optional) To configure the key to expire at a certain time, do the following:
+1. (Optional) To configure an expiration time for the key, do the following:
    1. Click **Advanced configuration**.
    1. In the **Key Names** field, enter a name for your key that will display in the API request header.
    1. Enable **Key expiration policy**.
