@@ -46,6 +46,8 @@ faqs:
 
         If no CAA record exists, no changes are needed. For more information, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
 related_resources:
+  - text: Migrate from V0 to V1
+    url: /serverless-gateways/migration/
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
   - text: Control plane and data plane communication
@@ -73,10 +75,9 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
 {% navtabs 'provision-serverless' %}
 {% navtab "Serverless V1 beta (US region only)" %}
 
-1. Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
+Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
 
 <!-- vale off -->
-{% capture request1 %}
 {% control_plane_request %}
   url: /v2/control-planes/
   status_code: 201
@@ -93,20 +94,17 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
       cloud_gateway: true
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
-{% endcapture %}
 
-{{ request1 | indent:3 }}
+Export the generated control plane ID to an environment variable: 
 
-1. Export the generated control plane ID to an environment variable: 
-
-    ```
-    export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
-    ```
+```sh
+export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+```
 
 <!--vale on -->
-1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
-{% capture request2 %}
+
 {% konnect_api_request %}
   url: /v3/cloud-gateways/configurations
   status_code: 201
@@ -124,18 +122,15 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
           provider: aws
       kind: serverless.v1
 {% endkonnect_api_request %}
-{% endcapture %}
 
-{{ request2 | indent:3 }}
 <!--vale on -->
 
 {% endnavtab %}
 {% navtab "Global stable version (V0)" %}
 	
-1. Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
+Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
 
 <!-- vale off -->
-{% capture request1 %}
 {% control_plane_request %}
   url: /v2/control-planes/
   status_code: 201
@@ -151,20 +146,17 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
       cloud_gateway: false
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
-{% endcapture %}
 
-{{ request1 | indent:3 }}
+Export the generated control plane ID to an environment variable: 
 
-1. Export the generated control plane ID to an environment variable: 
-
-    ```
-    export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
-    ```
+```
+export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+```
 
 <!--vale on -->
-1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
-{% capture request2 %}
+
 {% konnect_api_request %}
   url: /v3/cloud-gateways/configurations
   status_code: 201
@@ -181,9 +173,6 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
         - region: na
       kind: serverless.v0
 {% endkonnect_api_request %}
-{% endcapture %}
-
-{{ request2 | indent:3 }}
 <!--vale on -->
 
 {% endnavtab %}
