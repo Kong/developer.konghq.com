@@ -26,14 +26,7 @@ tags:
 
 Dedicated Cloud Gateway (DCGW) Managed Cache introduces a built-in Redis-compatible datastore that powers all Redis-enabled plugins across {{site.base_gateway}} deployments. This enhancement enables seamless activation and operation of performance-critical, redis-backed plugins, including Proxy Caching, Rate Limiting, AI Rate Limiting, ACME, and more. This fully-managed Redis service is provisioned and operated by Kong, removing the need for you to host Redis infrastructure.
 
-You can configure AWS managed caches for control planes and control plane groups. When you configure a managed cache, you can select from the following cache sizes:
-* Micro: ~0.5 GiB capacity
-* Small: ~1 GiB capacity
-* Medium: ~3 GiB capacity
-* Large: ~6 GiB capacity
-* X Large: ~12 GiB capacity
-* 2X Large: ~25 GiB capacity
-* 4X Large: ~52 GiB capacity
+You can configure AWS managed caches for control planes and control plane groups. When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. 
 
 ## Limitations
 
