@@ -122,6 +122,10 @@ To finish setup in {{site.konnect_short_name}}:
   * One or more CIDR blocks (must not overlap with your {{site.konnect_short_name}} network)
   * RAM Share ARN
   * Transit Gateway ID
+
+   {:.info}
+   > **Note:** You can edit the CIDR blocks after the initial configuration if needed. This capability is specific to Transit Gateway peering and doesn't apply to VPC peering connections.
+  
 1. Add the IP addresses of DNS servers that will resolve to your private domains, along with any domains you want associated with your DNS. {{site.konnect_short_name}} supports the following mappings:
 {% table %}
 columns:
