@@ -118,7 +118,7 @@ columns:
     center: true
 features:
   - title: "[Kafka ACL](/event-gateway/policies/acl/)"
-    nonparsed: Yes
+    nonparsed: No
     parsed: No
   - title: "[Encrypt](/event-gateway/policies/encrypt/)"
     nonparsed: Yes
