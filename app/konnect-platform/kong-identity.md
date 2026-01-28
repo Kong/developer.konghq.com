@@ -28,6 +28,8 @@ related_resources:
     url: /how-to/configure-kong-identity-oauth-introspection/
   - text: Automatically create Dev Portal applications in Kong Identity with Dynamic Client Registration
     url: /how-to/kong-identity-dcr/
+  - text: Set up Kong Event Gateway with Kong Identity OAuth
+    url: /how-to/event-gateway/kong-identity-oauth/
 
 description: |
   Kong Identity enables you to use {{site.konnect_short_name}} to generate, authenticate and authorize API access. Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentication and authorization. 
