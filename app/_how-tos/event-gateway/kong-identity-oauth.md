@@ -14,10 +14,10 @@ tags:
     - event-gateway
     - kafka
 
-description: "Learn how to secure Kafka traffic in Event Gateway with Kong Identity."
+description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity."
 
 tldr: 
-  q: "How do I secure Kafka traffic in Event Gateway with Kong Identity?"
+  q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity?"
   a: | 
     1. Create a Kong Identity auth server, scope, claim and client.
     1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
@@ -201,11 +201,13 @@ This ACL policy will add full topic access to the client with the matching clien
 
 ## Setup `kafkactl` to use OAuth 
 
-{% warning %}
-This requires a kafkactl version >= 5.17.0 to check your version run `kafkactl version`
-{% endwarning %}
+{:.warning}
+> This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
+> <br><br>
+> Note that this script is for demo purposes only and hard-codes client ID, client secret, and scope. 
+For production, we recommended securing sensitive data. 
 
-Kafkactl will generate tokens using a script. Let's first create this script: 
+`kafkactl` will generate tokens using a script. Let's create the script: 
 
 <!--vale off-->
 {% validation custom-command %}
@@ -226,9 +228,7 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-Note that this script is for demo purposes and hard-codes client id, client secret and scope.
-
-We then create a kafkactl configuration with both non authenticated and authenticated access:
+Next, create a `kafkactl` configuration with both non-authenticated and authenticated access:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -263,9 +263,11 @@ render_output: false
 
 ## Validate
 
-Run the following to validate your configuration.
+Run through the following commands to validate your configuration.
 
-### Create a topic bypassing the gateway 
+### Access topics with auth
+
+Create a topic bypassing the gateway:
 
 {% validation custom-command %}
 command: |
@@ -276,7 +278,7 @@ expected:
 render_output: false
 {% endvalidation %}
 
-### List topics using an authenticated client:
+List topics using an authenticated client:
 
 {% validation custom-command %}
 command: |
@@ -289,14 +291,17 @@ expected:
 render_output: false
 {% endvalidation %}
 
-The output should like:
+The output should look like this:
 
 ```shell
 TOPIC             PARTITIONS     REPLICATION FACTOR
 my-test-topic     1              1
 ```
+{:.no-copy-code}
 
-### List topics without auth
+### Access topics without auth
+
+Now try listing topics without auth:
 
 {% validation custom-command %}
 command: |
@@ -308,10 +313,12 @@ expected:
 render_output: false
 {% endvalidation %}
 
-The output should be:
+The output should be an empty list:
 
 ```shell
 TOPIC     PARTITIONS     REPLICATION FACTOR
 ```
+{:.no-copy-code}
 
-As you can see, when using OAuth we can retrieve the topic. However, when using anonymous access the topic isn't visible as this user does not have the appropriate ACLs.
+As you can see, when using OAuth we can retrieve the topic. 
+However, when using anonymous access, the topic isn't visible as this user doesn't have the appropriate ACLs.
