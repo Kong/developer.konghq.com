@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@7351c73c5fe06b95e1de3a07c48b35355b21bf29
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7351c73c5fe06b95e1de3a07c48b35355b21bf29'
+  x-oas-source: kong/platform-api@cc1cf0cbab829ef3fd6fdd3470407154e5d36962
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cc1cf0cbab829ef3fd6fdd3470407154e5d36962'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -626,7 +626,7 @@ components:
       example:
         - 192.168.1.1
         - 192.168.1.0/22
-      maxItems: 100
+      maxItems: 1000
       minItems: 1
       uniqueItems: true
     OrganizationSourceIPRestriction:
