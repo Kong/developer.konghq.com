@@ -224,5 +224,5 @@ Now that your Insomnia Enterprise instance is configured, you and your collabora
 
 * [Import and export reference for Insomnia](/insomnia/import-export/)
 * [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
-* {% new_in 11.6 %} [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
+* [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
 * [Import an API specification as a design document in Insomnia](/how-to/import-an-api-spec-as-a-document/)
