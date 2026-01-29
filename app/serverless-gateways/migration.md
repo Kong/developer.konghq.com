@@ -37,11 +37,15 @@ related_resources:
 > **Note**: Serverless Gateways V1 are currently available for {{site.konnect_short_name}} organizations running in US regions only.
 
 Serverless Gateways V1 bring the following improvements to Serverless Gateways:
-* Support for rate limiting and authentication plugins
+
+* Terraform support
+* 99.9% SLA
+
+<!-- * Support for rate limiting and authentication plugins
 * Custom domains and private networking (pre-shared key)
-* API spec upload and seamless Developer Portal
+* API spec upload through Dev Portal
 * Metering, billing, and entitlements
-* Architecture tuning and performance enhancements
+* Architecture tuning and performance enhancements -->
 
 You can upgrade to Serverless Gateways V1 using [decK](/deck/).
 
@@ -60,7 +64,7 @@ columns:
 rows:
   - change: Proxy URL format
     v0: "`https://kong-0122456789.kongcloud.dev`"
-    v1: "`https://01234567.us.serverless.gateways.konggateway.com`"
+    v1: "`https://0123456789.us.serverless.gateways.konggateway.com`"
   - change: Control plane type
     v0: "`CLUSTER_TYPE_SERVERLESS`"
     v1: "`CLUSTER_TYPE_CLOUD_API_GATEWAY`"
@@ -86,6 +90,7 @@ rows:
    ```
 
 1. Create a new Serverless Gateway using the {{site.konnect_short_name}} UI:
+    
     1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
     1. Click the **New** button, then select **New API Gateway**.
     1. Select Serverless.
@@ -93,6 +98,8 @@ rows:
     1. Click **Create** to save.
 
     This creates a control plane and deploys a data plane node so that you don't have to run one yourself.
+    
+    If you prefer to use the API to create control planes and data planes, see the [Serverless Gateway reference](/serverless-gateways/reference/#konnect-apis).
 
 1. Import the control plane configuration to your new Serverless V1 gateway, making sure to target the new control plane.
 First, check the configuration diff:

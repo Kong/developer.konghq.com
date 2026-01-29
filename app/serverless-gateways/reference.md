@@ -1,5 +1,5 @@
 ---
-title: "Serverless Gateway"
+title: "Serverless Gateway reference"
 content_type: reference
 layout: reference
 description: | 
@@ -70,10 +70,29 @@ When you create a Serverless Gateway, {{site.konnect_short_name}} creates a cont
 ## How do I provision a Serverless Gateway?
 
 To provision a Serverless Gateway, you need to create a serverless control plane and a hosted data plane. 
+
+### {{site.konnect_short_name}} UI
+
+The easiest way to provision a Serverless Gateway is through the {{site.konnect_short_name}} UI, 
+where {{site.konnect_short_name}} creates both a control plane and a data plane in one step.
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click the **New** button, then select **New API Gateway**.
+1. Select Serverless.
+1. Give your Gateway a name and an optional description.
+1. Click **Create** to save.
+
+### {{site.konnect_short_name}} APIs
+
+You can use the {{site.konnect_short_name}} APIs to provision control planes and data planes programmatically.
+
 Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authentication) set in your environment.
 
 {% navtabs 'provision-serverless' %}
 {% navtab "Serverless V1 beta (US region only)" %}
+
+{:.info}
+> **Note**: If you want to migrate an existing V0 control plane to V1, see the [migration guide](/serverless-gateways/migration/).
 
 Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
 
