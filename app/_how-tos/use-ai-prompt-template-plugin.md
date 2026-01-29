@@ -37,7 +37,7 @@ entities:
 
 tags:
   - ai
-  - openai
+  - mistral
 
 tools:
   - deck

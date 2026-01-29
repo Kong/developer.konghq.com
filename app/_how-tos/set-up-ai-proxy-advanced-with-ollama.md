@@ -30,7 +30,6 @@ entities:
 
 tags:
   - ai
-  - openai
   - llama
 
 tldr:

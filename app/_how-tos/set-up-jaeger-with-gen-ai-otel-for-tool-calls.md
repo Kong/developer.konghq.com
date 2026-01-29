@@ -33,6 +33,7 @@ tags:
     - analytics
     - monitoring
     - ai
+    - openai
 
 tech_preview: true
 

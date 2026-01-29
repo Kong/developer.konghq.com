@@ -39,6 +39,8 @@ tags:
     - secrets-management
     - security
     - hashicorp-vault
+    - openai
+    - mistral
 
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?

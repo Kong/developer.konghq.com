@@ -34,6 +34,7 @@ entities:
 tags:
   - ai
   - openai
+  - llama
 
 tldr:
   q: How do I control and measure the accuracy of LLM responses?

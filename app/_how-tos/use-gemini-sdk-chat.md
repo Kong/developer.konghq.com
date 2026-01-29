@@ -32,6 +32,7 @@ entities:
 
 tags:
   - ai
+  - gemini
 
 tldr:
   q: How do I use the Google Generative AI SDK with Kong AI Gateway?
@@ -137,7 +138,7 @@ def gemini_chat():
 
 if __name__ == "__main__":
     gemini_chat()
-EOF    
+EOF
 ```
 
 Run the script:

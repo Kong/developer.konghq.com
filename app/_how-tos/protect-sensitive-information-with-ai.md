@@ -26,6 +26,7 @@ plugins:
 tags:
   - ai
   - security
+  - openai
 
 tldr:
   q: How can I anonymize PII in requests using AI?

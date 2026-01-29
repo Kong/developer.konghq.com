@@ -33,7 +33,7 @@ entities:
 
 tags:
   - ai
-  - openai
+  - mistral
 
 tldr:
   q: How do I allow only general IT-related prompts and block hacking content?

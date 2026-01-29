@@ -38,6 +38,7 @@ tags:
   - observability
   - prometheus
   - grafana
+  - mistral
 
 tldr:
   q: How can I visualize LLM traffic metrics in Kong AI Gateway?

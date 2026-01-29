@@ -32,6 +32,7 @@ entities:
 
 tags:
   - ai
+  - gemini
 
 tldr:
   q: How do I use Gemini's imageConfig with the AI Proxy plugin?
