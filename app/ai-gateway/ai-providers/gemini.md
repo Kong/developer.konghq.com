@@ -17,6 +17,13 @@ products:
   - gateway
   - ai-gateway
 
+tools:
+  - admin-api
+  - konnect-api
+  - deck
+  - kic
+  - terraform
+
 tags:
   - ai
 
@@ -47,7 +54,7 @@ faqs:
         1. Configure parameters like [`temperature`](/plugins/ai-proxy/reference/#schema--config-targets-model-options-temperature), [`top_p`](/plugins/ai-proxy/reference/#schema--config-targets-model-options-top-p), and [`top_k`](/plugins/ai-proxy/reference/#schema--config-targets-model-options-top-k) on the client side:
             ```python
             model = genai.GenerativeModel(
-                'gemini-1.5-flash',
+                'gemini-2.5-flash',
                 generation_config=genai.types.GenerationConfig(
                     temperature=0.7,
                     top_p=0.9,
@@ -77,5 +84,36 @@ how_to_list:
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
 
 {% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini" %}
+
+## Configure {{ provider.name }} with AI Proxy
+
+To use {{ provider.name }} with Kong AI Gateway, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+
+Here's a minimal configuration for chat completions:
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-proxy
+  config:
+    route_type: llm/v1/chat
+    auth:
+      param_name: key
+      param_value: ${key}
+      param_location: query
+    model:
+      provider: gemini
+      name: gemini-2.5-flash
+
+variables:
+  key:
+    value: $GEMINI_API_KEY
+    description: The API key to use to connect to Gemini.
+{% endentity_example %}
+
+{:.success}
+> For more configuration options and examples, see:
+> - [AI Proxy examples](/plugins/ai-proxy/examples/)
+> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
 {% include plugins/ai-proxy/providers/how-tos.md %}

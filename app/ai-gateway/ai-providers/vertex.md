@@ -17,6 +17,13 @@ products:
   - gateway
   - ai-gateway
 
+tools:
+  - admin-api
+  - konnect-api
+  - deck
+  - kic
+  - terraform
+
 tags:
   - ai
 
@@ -48,5 +55,44 @@ how_to_list:
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Gemini Vertex" %}
 
 {% include plugins/ai-proxy/providers/native-routes.md providers=site.data.plugins.ai-proxy provider_name="Gemini Vertex" %}
+
+## Configure {{ provider.name }} with AI Proxy
+
+To use {{ provider.name }} with Kong AI Gateway, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+
+Here's a minimal configuration for chat completions:
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-proxy
+  config:
+    route_type: llm/v1/chat
+    model:
+      provider: gemini
+      name: gemini-2.0-flash-exp
+      options:
+        gemini:
+          api_endpoint: Bearer ${gcp_api_endpoint}
+          project_id: Bearer ${gcp_project_id}
+          location_id: Bearer ${gcp_location_id}
+    auth:
+      gcp_use_service_account: true
+      gcp_service_account_json: Bearer ${gcp_service_account_json}
+variables:
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+  gcp_location_id:
+    value: $GCP_LOCATION_ID
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+  gcp_api_endpoint:
+    value: $GCP_API_ENDPOINT
+{% endentity_example %}
+
+{:.success}
+> For more configuration options and examples, see:
+> - [AI Proxy examples](/plugins/ai-proxy/examples/)
+> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
 {% include plugins/ai-proxy/providers/how-tos.md %}

@@ -17,6 +17,12 @@ products:
   - gateway
   - ai-gateway
 
+tools:
+  - admin-api
+  - konnect-api
+  - deck
+  - kic
+  - terraform
 
 tags:
   - ai
@@ -47,5 +53,38 @@ how_to_list:
 ---
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="Cerebras" %}
+
+## Configure {{ provider.name }} with AI Proxy
+
+To use {{ provider.name }} with Kong AI Gateway, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+
+Here's a minimal configuration for chat completions:
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-proxy
+  config:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      provider: cerebras
+      name: gpt-oss-120b
+      options:
+        max_tokens: 512
+        temperature: 1.0
+
+variables:
+  key:
+    value: $CEREBRAS_API_KEY
+    description: The API key to use to connect to Cerebras.
+{% endentity_example %}
+
+{:.success}
+> For more configuration options and examples, see:
+> - [AI Proxy examples](/plugins/ai-proxy/examples/)
+> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
 {% include plugins/ai-proxy/providers/how-tos.md %}
