@@ -30,11 +30,6 @@ rows:
                     - The AI Gateway gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
                     - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
-                - type: text
-                  text: |
-                    {:.info}
-                    > Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
-                    > See the specific provider documentation for more details.
   - column_count: 3
     columns:
       - blocks:
@@ -117,7 +112,7 @@ rows:
       - blocks:
         - type: icon_card
           config:
-            title: Alibaba Cloud DashScope
+            title: DashScope
             icon: /assets/icons/dashscope.svg
             cta:
               url: /ai-gateway/ai-providers/dashscope/
@@ -128,6 +123,16 @@ rows:
             icon: /assets/icons/cerebras.svg
             cta:
               url: /ai-gateway/ai-providers/cerebras/
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {:.info}
+                    > Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
+                    > See the specific provider documentation for more details.
 
   - header:
       type: h2
