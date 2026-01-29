@@ -34,13 +34,18 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
       
       release_date = date&.gsub('/', '-')
       
+      # Generate changelog URL (e.g., "3.12.0.2" becomes "#3-12-0-2")
+      changelog_anchor = full_version.gsub('.', '-')
+      changelog_url = "https://developer.konghq.com/gateway/changelog/##{changelog_anchor}"
+      
       versions << {
         release: full_version,
         tag: full_version,
         releaseDate: release_date,
         endOfLifeDate: eol_date,
         endOfsunset_date: sunset_date,
-        label: metadata[:label]
+        label: metadata[:label],
+        changelogUrl: changelog_url
       }
     end
     
