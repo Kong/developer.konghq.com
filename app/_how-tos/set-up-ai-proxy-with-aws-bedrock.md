@@ -53,10 +53,10 @@ prereqs:
 
         1. Export the required values as environment variables:
 
-          ```sh
-          export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
-          export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-          ```
+           ```sh
+           export DECK_AWS_ACCESS_KEY_ID="<your-access-key-id>"
+           export DECK_AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
+           ```
       icon_url: /assets/icons/aws.svg
   entities:
     services:
@@ -104,7 +104,7 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
 formats:
   - deck
-  {% endentity_examples %}
+{% endentity_examples %}
 <!--vale on-->
 
 

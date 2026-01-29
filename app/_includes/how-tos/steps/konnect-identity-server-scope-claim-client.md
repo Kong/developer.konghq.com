@@ -7,7 +7,7 @@ Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers
-status_code: 200
+status_code: 201
 method: POST
 headers:
   - 'Content-Type: application/json'
@@ -15,6 +15,11 @@ body:
   name: "Appointments Dev"
   audience: "http://myhttpbin.dev"
   description: "Auth server for the Appointment dev environment"
+extract_body:
+  - name: 'id'
+    variable: AUTH_SERVER_ID
+  - name: 'issuer'
+    variable: ISSUER_URL
 {% endkonnect_api_request %}
 
 Export the auth server ID and issuer URL:
@@ -30,7 +35,7 @@ Configure a scope in your auth server using the [`/v1/auth-servers/$AUTH_SERVER_
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/scopes 
-status_code: 200
+status_code: 201
 method: POST
 headers:
   - 'Content-Type: application/json'
@@ -40,13 +45,14 @@ body:
   default: false
   include_in_metadata: false
   enabled: true
+extract_body:
+  - name: 'id'
+    variable: SCOPE_ID
+capture: SCOPE_ID
+jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-Export your scope ID:
-```sh
-export SCOPE_ID='YOUR-SCOPE-ID'
-```
 
 ## Configure the auth server with custom claims
 
@@ -55,7 +61,7 @@ Configure a custom claim using the [`/v1/auth-servers/$AUTH_SERVER_ID/claims` en
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers/$AUTH_SERVER_ID/claims 
-status_code: 200
+status_code: 201
 method: POST
 headers:
   - 'Content-Type: application/json'
@@ -67,7 +73,6 @@ body:
   include_in_scopes: 
   - $SCOPE_ID
   enabled: true
-
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -98,6 +103,11 @@ body:
   response_types:
     - id_token
     - token
+extract_body:
+  - name: 'client_secret'
+    variable: CLIENT_SECRET
+  - name: 'id'
+    variable: CLIENT_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 

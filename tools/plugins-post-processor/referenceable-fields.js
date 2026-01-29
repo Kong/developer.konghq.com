@@ -29,6 +29,12 @@ function extractReferenceableFields(obj, basePath = "") {
     }
   }
 
+  if (obj.type === "object" && obj.additionalProperties?.["x-referenceable"]) {
+    if (basePath) {
+      referenceableFields.push(basePath);
+    }
+  }
+
   for (const [key, value] of Object.entries(obj)) {
     if (key.startsWith("x-") && key !== "x-referenceable") {
       continue;
@@ -55,7 +61,7 @@ function extractReferenceableFields(obj, basePath = "") {
       for (const [propKey, propValue] of Object.entries(value)) {
         const propPath = basePath ? `${basePath}.${propKey}` : propKey;
         referenceableFields.push(
-          ...extractReferenceableFields(propValue, propPath)
+          ...extractReferenceableFields(propValue, propPath),
         );
       }
     } else if (key === "items" && typeof value === "object") {
@@ -95,7 +101,7 @@ function getPluginName(filename) {
   try {
     const inputDir = path.resolve(
       __dirname,
-      `../../app/_schemas/gateway/plugins/${version}`
+      `../../app/_schemas/gateway/plugins/${version}`,
     );
 
     if (!fs.existsSync(inputDir)) {
@@ -104,7 +110,7 @@ function getPluginName(filename) {
 
     const outputDir = path.resolve(
       __dirname,
-      "../../app/_data/plugins/referenceable_fields"
+      "../../app/_data/plugins/referenceable_fields",
     );
     const outputFile = path.join(outputDir, `${version}.json`);
 
@@ -122,7 +128,7 @@ function getPluginName(filename) {
     }
 
     console.log(
-      `Processing ${jsonFiles.length} plugin schema files for version ${version}...`
+      `Processing ${jsonFiles.length} plugin schema files for version ${version}...`,
     );
 
     const referenceableFieldsData = {};
@@ -141,7 +147,7 @@ function getPluginName(filename) {
         if (referenceableFields.length > 0) {
           referenceableFieldsData[pluginName] = referenceableFields.sort();
           console.log(
-            `  Found ${referenceableFields.length} referenceable fields`
+            `  Found ${referenceableFields.length} referenceable fields`,
           );
         } else {
           console.log(`  No referenceable fields found`);
@@ -163,7 +169,7 @@ function getPluginName(filename) {
     console.log(
       `\nCompleted processing. Found ${
         Object.keys(sortedData).length
-      } plugins with referenceable fields.`
+      } plugins with referenceable fields.`,
     );
     console.log(`Output saved to: ${outputFile}`);
   } catch (error) {

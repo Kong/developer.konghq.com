@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@9a050eb9aa6945a9264b82c94804a22952e72173
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9a050eb9aa6945a9264b82c94804a22952e72173'
+  x-oas-source: kong/platform-api@6b57ebfa7cc09751d81d376d421cbb5909f7fde4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b57ebfa7cc09751d81d376d421cbb5909f7fde4'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -5107,6 +5107,8 @@ components:
                   definition:
                     control_plane_id: string
                     gateway_service_id: string
+                integration_data_schema: null
+                resource_id_template: '{{control_plane_id}}:{{gateway_service_id}}'
             discovery:
               resource_integration_data_examples:
                 gateway_svc:
@@ -5166,6 +5168,8 @@ components:
                   type: simple
                   definition:
                     report_id: string
+                integration_data_schema: null
+                resource_id_template: '{{report_id}}'
             discovery:
               resource_integration_data_examples:
                 report:
@@ -5194,6 +5198,8 @@ components:
                     mesh_name: string
                     mesh_service_name: string
                     global_control_plane_id: string
+                integration_data_schema: null
+                resource_id_template: '{{global_control_plane_id}}:{{mesh_name}}'
             discovery:
               resource_integration_data_examples:
                 service_insight:
@@ -6370,7 +6376,7 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
             SonarQube:
               $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/SampleInstanceCreateAzureApiManagementPayload'
             AzureDevops:
               $ref: '#/components/examples/SampleInstanceCreateAzureDevopsPayload'
@@ -6574,7 +6580,7 @@ components:
               $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/AzureApiManagementAuthConfigResponse'
             azureDevops:
               $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthResponse'
