@@ -58,36 +58,31 @@ columns:
   - title: V1 (new)
     key: v1
 rows:
-  - change: Change in proxy URL format
+  - change: Proxy URL format
     v0: "`https://kong-0122456789.kongcloud.dev`"
     v1: "`https://01234567.us.serverless.gateways.konggateway.com`"
-  - change: Change to control plane type
+  - change: Control plane type
     v0: "`CLUSTER_TYPE_SERVERLESS`"
     v1: "`CLUSTER_TYPE_CLOUD_API_GATEWAY`"
-  - change: Change to data plane type
+  - change: Data plane kind
     v0: "`serverless.v0`"
     v1: "`serverless.v1`"
 {% endtable %}
 
 ## Migration steps
 
-1. Set your {{site.konnect_short_name}} environment information:
+1. Create a [personal access token](/konnect-api/#konnect-api-authentication) in {{site.konnect_short_name}} and export it as an environment variable:
 
    ```sh
-   export DECK_KONNECT_ADDR=https://us.api.konghq.com
-   export DECK_KONNECT_TOKEN=YOUR_ACCESS_TOKEN
-   export DECK_KONNECT_CONTROL_PLANE=YOUR_SERVERLESS_V0_CONTROL_PLANE_ID
+   export KONNECT_TOKEN=YOUR_ACCESS_TOKEN
    ```
-  
-    Where:
-    * `DECK_KONNECT_ADDR`: The {{site.konnect_short_name}} API URL, in this case, only for the `us` region.
-    * `DECK_KONNECT_TOKEN`: A  {{site.konnect_short_name}} [personal access token](/konnect-api/#konnect-api-authentication).
-    * `DECK_KONNECT_CONTROL_PLANE`: ID of the control plane you'd like to upgrade.
 
 1. Export your current Serverless V0 control plane configuration into a decK file:
 
    ```sh
-   deck gateway dump > kong.yml
+   deck gateway dump -o kong.yaml \
+    --konnect-token "$KONNECT_TOKEN" \
+    --konnect-control-plane-name "MY_SERVERLESS_V0_CP"
    ```
 
 1. Create a new Serverless Gateway using the {{site.konnect_short_name}} UI:
@@ -99,20 +94,19 @@ rows:
 
     This creates a control plane and deploys a data plane node so that you don't have to run one yourself.
 
-1. Copy the ID of your new control plane and adjust the `DECK_KONNECT_CONTROL_PLANE` environment variable:
-
-   ```sh
-   export DECK_KONNECT_CONTROL_PLANE=YOUR_SERVERLESS_V1_CONTROL_PLANE_ID
-   ```
-
-1. Import the control plane configuration to your new Serverless V1 gateway. First, check the configuration diff:
+1. Import the control plane configuration to your new Serverless V1 gateway, making sure to target the new control plane.
+First, check the configuration diff:
     
    ```sh
-   deck gateway diff ./kong.yml
+   deck gateway diff ./kong.yaml \
+    --konnect-token "$KONNECT_TOKEN" \
+    --konnect-control-plane-name "MY_NEW_SERVERLESS_V1_CP"
    ```
 
 1. If you're satisfied with the update, run a sync to update your control plane:
     
    ```sh
-   deck gateway sync ./kong.yml
+   deck gateway sync ./kong.yml \
+    --konnect-token "$KONNECT_TOKEN" \
+    --konnect-control-plane-name "MY_NEW_SERVERLESS_V1_CP"
    ```
