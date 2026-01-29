@@ -148,3 +148,14 @@ rows:
                 - ai-gateway
               quantity: 6
               allow_empty: true
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Question
+              a: |
+                Answer
+
