@@ -90,11 +90,7 @@ Use `--json-output` when you need to:
 - Parse diff output in scripts or CI pipelines
 - Investigate noisy diffs where ordering changes or large objects make unified diffs hard to read
 
-Run `deck gateway diff` with the default unified diff output:
-```bash
-deck gateway diff ./kong.yaml
-```
-Run the same command with JSON output enabled:
+Run `deck gateway diff` with JSON output enabled:
 ```bash
 deck gateway diff ./kong.yaml --json-output
 ```
