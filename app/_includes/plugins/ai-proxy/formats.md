@@ -24,7 +24,7 @@ columns:
     key: reference
   - title: Gen AI Category
     key: category
-  - title: Min version
+  - title: Gateway min version
     key: version
 rows:
   - route: "`llm/v1/chat`"
