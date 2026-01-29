@@ -77,7 +77,7 @@ Choose one of the following configurations:
    {% endcapture %}
    {{ create_addon | indent: 3}}
 
-When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates.
+   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates.
 
 1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
 
@@ -91,57 +91,51 @@ When you configure a managed cache, you can select the small (~1 GiB capacity) c
    {% endcapture %}
    {{ get_addon | indent: 3}}
 
-1. Configure Redis for plugins:
+## Configure Redis for plugins:
 
-Control planes
-No manual Redis configuration is required. After the managed cache is ready, Konnect automatically creates a Redis partial configuration.
+* **Control planes:** No manual Redis configuration is required. After the managed cache is ready, Konnect automatically creates a Redis partial configuration. When configuring Redis-backed plugins, select Konnect Managed in the Redis configuration field.
+* **Control plane groups:** For control plane groups, you must manually create a Redis partial configuration on each control plane where Redis-backed plugins are enabled.
 
-When configuring Redis-backed plugins, select Konnect Managed in the Redis configuration field.
+1. Apply a Redis partial configuration using decK:
 
-Control plane groups
-For control plane groups, you must manually create a Redis partial configuration on each control plane where Redis-backed plugins are enabled.
-
-Apply a Redis partial configuration using decK:
-
-   {% capture redis_config %}
-   {% entity_examples %}
-   entities:
-     partial:
-       - name: test-partial
-         type: redis-ee
-         config:
-           cloud_authentication:
-               auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
-               aws_cache_name: "{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}"
-               aws_region: "{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}"
-               aws_is_serverless: false
-               aws_assume_role_arn: "{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}"
-           connect_timeout: 2000
-           connection_is_proxied: false
-           database: 0
-           host: "{vault://env/ADDON_MANAGED_CACHE_HOST}"
-           keepalive_backlog: 512
-           keepalive_pool_size: 256
-           port: "{vault://env/ADDON_MANAGED_CACHE_PORT}"
-           read_timeout: 5000
-           send_timeout: 2000
-           server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
-           ssl_verify: true
-           ssl: true
-           username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
-   {% endentity_examples %}
-   {% endcapture %}
-   {{ redis_config | indent: 3}}
+{% capture redis_config %}
+{% entity_examples %}
+entities:
+  partial:
+    - name: test-partial
+      type: redis-ee
+      config:
+        cloud_authentication:
+            auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
+            aws_cache_name: "{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}"
+            aws_region: "{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}"
+            aws_is_serverless: false
+            aws_assume_role_arn: "{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}"
+        connect_timeout: 2000
+        connection_is_proxied: false
+        database: 0
+        host: "{vault://env/ADDON_MANAGED_CACHE_HOST}"
+        keepalive_backlog: 512
+        keepalive_pool_size: 256
+        port: "{vault://env/ADDON_MANAGED_CACHE_PORT}"
+        read_timeout: 5000
+        send_timeout: 2000
+        server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
+        ssl_verify: true
+        ssl: true
+        username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
+{% endentity_examples %}
+{% endcapture %}
+{{ redis_config | indent: 3}}
 
 1. [Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup plugins.
-1. Configure plugins
+   
+   Use the managed Redis configuration when setting up Redis-backed plugins:
+   * For control planes, select the automatically created Konnect Managed Redis configuration.
+   * For control plane groups, reference the Redis partial configuration you created.
 
-Use the managed Redis configuration when setting up Redis-backed plugins:
-* For control planes, select the automatically created Konnect Managed Redis configuration.
-* For control plane groups, reference the Redis partial configuration you created.
-
-Repeat this setup on other control planes in the control plane group as needed.
+   Repeat this setup on other control planes in the control plane group as needed.
  
 1. Set up redis configuration and plugins on other CPs in that CPG as needed.
-
-You can add more data plane groups to the CPG or remove existing data plane groups. The cache is automatically updated accordingly. You can check the managed cache's ready status to make sure managed cache is up-to-date.
+   
+   You can add more data plane groups to the CPG or remove existing data plane groups. The cache is automatically updated accordingly. You can check the managed cache's ready status to make sure managed cache is up-to-date.
