@@ -36,7 +36,7 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
       
       versions << {
         release: full_version,
-        tag: major_minor,
+        tag: full_version,
         releaseDate: release_date,
         endOfLifeDate: eol_date,
         endOfsunset_date: sunset_date,
@@ -45,7 +45,11 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
     end
     
     
-    versions.sort_by! { |v| v[:releaseDate] }.reverse!
+    # Sort by version numbers (latest first)
+    versions.sort_by! do |v|
+      # Split version into parts and convert to integers for proper numeric sorting
+      v[:release].split('.').map(&:to_i)
+    end.reverse!
 
     FileUtils.mkdir_p("#{site.dest}/_api")
     File.write("#{site.dest}/_api/gateway-versions.json", versions.to_json)
