@@ -13,10 +13,10 @@ tags:
   - secrets-management
 
 related_resources:
-  - text: Authentication with the API server
-    url: /mesh/authentication-with-the-api-server/
-  - text: Data plane proxy
-    url: /mesh/data-plane-proxy/
+  - text: Mesh TLS policy
+    url: /mesh/policies/meshtls/
+  - text: Mesh policies
+    url: /mesh/policies/
 ---
 
 The `Secret` resource enables users to store sensitive data. This includes anything a user considers non-public, such as:
@@ -27,8 +27,11 @@ The `Secret` resource enables users to store sensitive data. This includes anyth
 Secrets belong to a specific `Mesh` resource, and can't be shared across different `Meshes`.
 [Policies](/mesh/policies-introduction/) use secrets at runtime.
 
-{:.info}
-> {{site.mesh_product_name}} leverages `Secret` resources internally for certain operations, for example when storing auto-generated certificates and keys when Mutual TLS is enabled.
+{{site.mesh_product_name}} leverages `Secret` resources internally for certain operations, for example when storing auto-generated certificates and keys when Mutual TLS is enabled.
+
+## Store secrets
+
+How you store secrets in the `Secrets` resource depends on if you're using Kubernetes or Universal for your envrionment.
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
@@ -93,8 +96,8 @@ echo "value" | base64
 
 ### Mesh-scoped secrets
 
-Mesh-scoped secrets are bound to a given mes.
-This is the only type of secret that can be used in mesh policies like [Provided CA](/mesh/policies/mutual-tls/#usage-of-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
+Mesh-scoped secrets are bound to a given mesh.
+This is the only type of secret that can be used in mesh policies like the [Provided CA](/mesh/policies/mutual-tls/#usage-of-provided-ca) or TLS setting in [External Service](/mesh/policies/external-services/).
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
@@ -166,7 +169,7 @@ Secrets are synced from the global control plane to the zones CPs, but not the o
 
 {% new_in 2.10 %} If there's a name conflict between a secret on the global CP and a secret on a zone CP, the secret is not overwritten and a warning will appear in the logs. In versions prior to 2.10, secrets can't be created on a zone control plane.
 
-## Example
+## Using secrets
 
 Here is an example of how to use a {{site.mesh_product_name}} `Secret` with a `provided` [Mutual TLS](/mesh/policies/mutual-tls/#usage-of-provided-ca) backend.
 
