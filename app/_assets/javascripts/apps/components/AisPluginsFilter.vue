@@ -27,6 +27,12 @@
       AisRefinementList
     },
     methods: {
+      sortPlugins(a, b) {
+        if (a.isRefined !== b.isRefined) {
+            return a.isRefined ? -1 : 1;
+        }
+        return a.label > b.label ? 1 : -1;
+      },
       getStaticValues(items, { results }) {
         return this.values.map(staticItem => {
           const item = items.find(item => item.value === staticItem.value);
@@ -50,7 +56,7 @@
               isRefined: selected || staticItem.isRefined,
               highlighted: staticItem.label,
           };
-        });
+        }).sort(this.sortPlugins);
       }
     }
   };
