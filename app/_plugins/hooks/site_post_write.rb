@@ -2,23 +2,50 @@
 
 module SupportedVersionAPI # rubocop:disable Style/Documentation
   def self.process(site) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    versions = site.data.dig('products', 'gateway', 'releases')
-    versions = versions.map do |version|
-      date = nil
-      sunset_date = nil
-      unless version['eol'].nil?
-        date = version['eol'].to_s
-        sunset_date = version['eol'].next_year.to_s
-      end
-
-      {
-        release: "#{version['release']}.x",
-        tag: version['release'],
-        endOfLifeDate: date,
-        endOfsunset_date: sunset_date,
+    major_versions = site.data.dig('products', 'gateway', 'releases')
+    release_dates = site.data.dig('products', 'gateway', 'release_dates')
+    
+    
+    version_metadata = {}
+    major_versions.each do |version|
+      version_metadata[version['release']] = {
+        eol: version['eol'],
         label: version['label']
       }
     end
+    
+    
+    versions = []
+    release_dates&.each do |full_version, date|
+      # Extract major.minor from the full version (e.g., "3.12" from "3.12.0.1")
+      major_minor = full_version.split('.')[0..1].join('.')
+      
+     
+      metadata = version_metadata[major_minor]
+      next unless metadata
+      
+      eol_date = nil
+      sunset_date = nil
+      unless metadata[:eol].nil?
+        eol_date = metadata[:eol].to_s
+        sunset_date = metadata[:eol].next_year.to_s
+      end
+      
+      
+      release_date = date&.gsub('/', '-')
+      
+      versions << {
+        release: full_version,
+        tag: major_minor,
+        releaseDate: release_date,
+        endOfLifeDate: eol_date,
+        endOfsunset_date: sunset_date,
+        label: metadata[:label]
+      }
+    end
+    
+    
+    versions.sort_by! { |v| v[:releaseDate] }.reverse!
 
     FileUtils.mkdir_p("#{site.dest}/_api")
     File.write("#{site.dest}/_api/gateway-versions.json", versions.to_json)
