@@ -4,19 +4,9 @@
 
 You can proxy requests to {{ provider.name }} AI models through Kong AI Gateway using the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. This reference documents all supported AI capabilities, configuration requirements, and provider-specific details needed for proper integration.
 
-## {{ provider.name }} base URL
+## Upstream paths
 
-{% if provider.url_is_variable %}
-The base URL for {{ provider.name }} is defined in <code>{{ provider.url_patterns.first }}</code>, where `{route_type_path}` is determined by the capability being used.
-{% elsif provider.url_patterns.size > 1 %}
-The base URL for {{ provider.name }} is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}, where `{route_type_path}` is determined by the capability being used.
-{% else %}
-The base URL for {{ provider.name }} is `{{ provider.url_patterns.first }}`, where `{route_type_path}` is determined by the capability being used.
-{% endif %}
-
-### Upstream paths
-
-Kong AI Gateway forwards requests to the following {{ provider.name }} API endpoints based on the capability:
+Kong AI Gateway automatically routes requests to the appropriate {{ provider.name }} API endpoints. The following table shows the upstream paths used for each capability.
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
@@ -120,11 +110,6 @@ Kong AI Gateway forwards requests to the following {{ provider.name }} API endpo
 </tbody>
 </table>
 </div>
-
-{:.info}
-> While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
->
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same `upstream_url` plugin option.
 
 {% assign note_counter = 0 %}
 {% assign chat_note_num = 0 %}{% if provider.chat.note.content %}{% assign note_counter = note_counter | plus: 1 %}{% assign chat_note_num = note_counter %}{% endif %}
@@ -509,6 +494,18 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 
 {% endif %}
 {% endif %}
+
+## {{ provider.name }} base URL
+
+{% if provider.url_is_variable %}
+The base URL is <code>{{ provider.url_patterns.first }}</code>, where `{route_type_path}` is determined by the capability.
+{% elsif provider.url_patterns.size > 1 %}
+The base URL is {% for url in provider.url_patterns %}<code>{{ url }}</code>{% unless forloop.last %} or {% endunless %}{% endfor %}, where `{route_type_path}` is determined by the capability.
+{% else %}
+The base URL is `{{ provider.url_patterns.first }}`, where `{route_type_path}` is determined by the capability.
+{% endif %}
+
+Kong AI Gateway uses this URL automatically. You only need to configure a URL if you're using a self-hosted or {{ provider.name }}-compatible endpoint, in which case set the `upstream_url` plugin option.
 
 {% else %}
 Provider "{{ include.provider_name }}" not found.
