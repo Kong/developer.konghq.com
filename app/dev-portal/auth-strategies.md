@@ -221,7 +221,9 @@ Self-managed OIDC follows this workflow:
 
 ## Set the default auth strategy of a Dev Portal
 
-The default auth strategy of a Dev Portal will apply to any APIs that are published to that Dev Portal. If you want to override the default auth strategy, you can configure a different auth strategy on a per API basis.
+The default auth strategy of a Dev Portal will apply to any APIs that are published to that Dev Portal. You can adjust the strategy through Dev Portal security settings.
+
+If you want to override the default auth strategy, you can configure a different auth strategy on a [per API](#apply-an-auth-strategy-to-an-api) or [per API package](#apply-an-auth-strategy-to-an-api-package) basis.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
 1. Click your Dev Portal.
@@ -232,7 +234,7 @@ The default auth strategy of a Dev Portal will apply to any APIs that are publis
 
 ## Apply an auth strategy to an API
 
-Once you've configured an auth strategy, you can apply it to APIs.
+After configuring an auth strategy, you can apply it to APIs.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **APIs**.
@@ -248,7 +250,7 @@ Once you've configured an auth strategy, you can apply it to APIs.
 
 ## Apply an auth strategy to an API package
 
-Once you've configured an auth strategy, you can apply it to API packages.
+After configuring an auth strategy, you can apply it to API packages.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **APIs**.
