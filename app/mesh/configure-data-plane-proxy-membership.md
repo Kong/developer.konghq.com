@@ -18,18 +18,20 @@ related_resources:
     url: /mesh/data-plane-proxy/
 ---
 
-Data plane proxy membership constraints allow you to define a set of rules that are executed when a data plane proxy is joining a mesh.
+Data plane proxy membership constraints allow you to define a set of rules that are executed when a data plane proxy is joining a mesh. These help determine if a data plane proxy can or can't join the mesh.
 
 Constraints contains two lists:
 * Requirements: A data plane proxy has to fulfill at least one requirement to join a mesh.
-* Restrictions: A data plane proxy cannot fulfill any restriction to join a mesh.
+* Restrictions: If a data plane proxy matches any of the restrictions, it can't join the mesh.
 
 {:.info}
-> Membership rules are enforced only on new data plane proxies. If you add rules that existing data plane proxies violate, you must remove them manually from the mesh.
+> Membership rules are enforced only on new data plane proxies. If existing data plane proxies violate rules, you must remove them manually from the mesh.
 
 Data plane proxy constraints are defined using the `constrains.dataplaneProxy.requirements` and `constrains.dataplaneProxy.restrictions` parameters. 
 
-## Examples
+## Membership constraint examples
+
+The following examples show you different ways you can configure data plane proxy membership constraints.
 
 ### Restrict data plane membership based on namespaces
 
