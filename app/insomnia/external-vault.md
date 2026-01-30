@@ -22,8 +22,6 @@ related_resources:
     url: /insomnia/storage/
   - text: Git sync
     url: /insomnia/storage/#git-sync
-min_version:
-  insomnia: '11'
 
 faqs:
   - q: What happens if I clear cloud credentials when I sign out of Insomnia?

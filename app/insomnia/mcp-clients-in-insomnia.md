@@ -6,9 +6,7 @@ description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Ser
 breadcrumbs:
   - /insomnia/
 products:
-  - insomnia
-min_version:
-    insomnia: '12.0'  
+  - insomnia  
 
 related_resources:
   - text: Use mock servers
