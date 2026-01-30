@@ -42,12 +42,6 @@ Kong AI Gateway supports multiple load balancing strategies for distributing tra
 
 The following table describes the available algorithms and considerations for selecting one.
 
-### Load balancing algorithms
-
-Kong AI Gateway supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
-
-The following table describes the available algorithms and considerations for selecting one.
-
 <!--vale off-->
 {% table %}
 columns:
