@@ -141,10 +141,12 @@ rows:
       - blocks:
           - type: reference_list
             config:
-              items:
-                - /plugins/ai-proxy/
-                - /plugins/ai-proxy-advanced/
-              quantity: 6
+              products:
+                - ai-gateway
+              tags:
+                - ai-proxy
+                - streaming
+              quantity: 5
               allow_empty: true
   - header:
       text: "Frequently Asked Questions"
