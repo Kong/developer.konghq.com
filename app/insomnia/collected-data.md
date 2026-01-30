@@ -221,12 +221,14 @@ Insomnia’s AI features are designed so that Kong doesn't collect, store, or pr
 When you use an AI feature, Insomnia sends the data for AI processing only to the AI model provider you configured. Insomnia doesn't proxy, inspect, or retain AI prompts, responses, or intermediate data.
 
 Depending on your configuration, AI processing can occur in one of the following locations:
-- Locally, using a local large language model that runs entirely on your machine
-- In your environment, using a self-hosted model endpoint or AI gateway
-- With a third-party AI provider, subject to that provider’s data handling policies
+- **Locally**: A local large language model that runs entirely on your machine
+- **In your environment**: A self-hosted model endpoint or AI gateway
+- **With a third-party AI provider**: In accordance with that provider’s data handling policies
 
-Insomnia doesn't store AI-related data on Kong-managed servers. Insomnia doesn't control the configured AI model provider’s data handling or processing behavior.
+Insomnia doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
 
 Enterprise administrators can enable or disable AI features in Insomnia Admin settings. This lets your organization either:
 - Disable AI features entirely
 - Allow AI features only in approved environments
+
+For more information, navigate to [AI in Insomnia](/insomnia/ai-in-insomnia/#get-started).
