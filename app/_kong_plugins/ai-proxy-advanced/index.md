@@ -73,9 +73,6 @@ examples_groups:
     text: claude-code
 
 faqs:
-  - q: Can I authenticate to Azure AI with Azure Identity?
-    a: |
-      {% include faqs/azure-identity.md %}
   - q: Can I override `config.model.name` by specifying a different model name in the request?
     a: |
       No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
@@ -83,10 +80,6 @@ faqs:
       Can I override `temperature`, `top_p`, and `top_k` from the request?
     a: |
       Yes. The values for [`temperature`](./reference/#schema--config-targets-model-options-temperature), [`top_p`](./reference/#schema--config-targets-model-options-top-p), and [`top_k`](./reference/#schema--config-targets-model-options-top-k) in the request take precedence over those set in `config.targets.model.options`.
-
-  - q: How can I set model generation parameters when calling Gemini?
-    a: |
-      {% include faqs/gemini-model-params.md %}
 
   - q: Can I override authentication values from the request?
     a: |

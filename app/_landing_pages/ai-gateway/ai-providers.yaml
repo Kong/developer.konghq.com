@@ -141,11 +141,9 @@ rows:
       - blocks:
           - type: reference_list
             config:
-              tags:
-                - ai-proxy
-                - streaming
-              products:
-                - ai-gateway
+              items:
+                - /plugins/ai-proxy/
+                - /plugins/ai-proxy-advanced/
               quantity: 6
               allow_empty: true
   - header:
