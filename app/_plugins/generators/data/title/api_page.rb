@@ -16,6 +16,15 @@ module Jekyll
           ]
         end
 
+        def llm_title
+          return page_title if @page.url == '/api/'
+
+          [
+            title,
+            'OpenAPI Specification'
+          ].join(' ')
+        end
+
         def version
           return if @page.data['canonical?']
 

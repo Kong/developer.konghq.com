@@ -14,6 +14,10 @@ module Jekyll
           ]
         end
 
+        def llm_title
+          page_title
+        end
+
         def version
           return if @page.data['canonical?']
 

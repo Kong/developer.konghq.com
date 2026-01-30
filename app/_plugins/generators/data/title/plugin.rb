@@ -17,6 +17,16 @@ module Jekyll
           ]
         end
 
+        def llm_title
+          return page_title unless @page.data['plugin?']
+
+          [
+            name,
+            'Plugin',
+            title
+          ].compact.join(' ')
+        end
+
         def version
           return unless @page.data['reference?']
           return if @page.data['canonical?']
