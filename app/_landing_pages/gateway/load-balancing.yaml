@@ -23,7 +23,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Distribute traffic across your upstream services, or, for AI Gateway, to different AI models.
+                    Distribute traffic across your upstream services.
 
 
   - columns:
