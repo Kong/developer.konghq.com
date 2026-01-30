@@ -24,10 +24,6 @@ rows:
 
                     You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
                     You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
-          - type: button
-            config:
-              text: "Start metering and billing API Gateway requests &rarr;"
-              url: /metering-and-billing/get-started/
 
       - blocks:
           - type: image
@@ -35,7 +31,31 @@ rows:
               url: /assets/images/konnect/metering.png
               alt_text: "{{site.metering_and_billing}} Overview"
 
+  - header:
+      type: h2
+      text: "Get started"
 
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Meter & bill API requests"
+              description: |
+                Learn how to meter and bill {{site.base_gateway}} API requests.
+              icon: /assets/icons/KogoBlue.svg
+              cta:
+                url: /metering-and-billing/get-started/
+      - blocks:
+          - type: card
+            config:
+              title: "Meter & bill LLM tokens"
+              description: |
+                Learn how to meter and bill AI Gateway LLM tokens.
+              icon: /assets/icons/ai.svg
+              cta:
+                url: /how-to/meter-llm-traffic/
+  
   - header:
       type: h2
       text: "Learn more"

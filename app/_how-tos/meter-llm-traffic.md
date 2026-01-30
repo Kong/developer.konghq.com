@@ -3,7 +3,6 @@ title: Meter LLM traffic in {{site.konnect_short_name}}
 description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} Metering & Billing.
 content_type: how_to
 
-permalink: /metering-and-billing/meter-llm-traffic/
 breadcrumbs:
   - /metering-and-billing/
 
@@ -18,17 +17,18 @@ tags:
     - get-started
 
 tools:
-    - deck
+    - deck 
   
 prereqs:
   inline:
     - title: OpenAI
       include_content: prereqs/openai
       icon_url: /assets/icons/ai.svg
-
-    - title: Configure AI Proxy
-      include_content: prereqs/ai-gateway
-      icon_url: /assets/icons/ai.svg
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 
 cleanup:
   inline:
@@ -39,7 +39,19 @@ tldr:
   q: How can I meter LLM traffic in {{site.konnect_short_name}}, and what does the Metering & Billing system provide?
   a: |
     To meter LLM traffic in {{site.konnect_short_name}}, you can use the Metering & Billing system to track and invoice usage based on defined products, plans, and features. This guide walks you through setting up a Consumer, creating a meter for LLM tokens, defining a feature, creating a Plan with Rate Cards, and starting a subscription for billing.
-
+related_resources:
+  - text: Kong AI Gateway
+    url: /ai-gateway/
+  - text: Product Catalog reference
+    url: /metering-and-billing/product-catalog/
+  - text: Metering reference
+    url: /metering-and-billing/metering/
+  - text: Customers and usage attribution
+    url: /metering-and-billing/customer/
+  - text: Billing, invoicing, and subscriptions
+    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Meter and bill {{site.base_gateway}} API requests
+    url: /metering-and-billing/get-started/
 
 automated_tests: false
 ---
@@ -51,14 +63,53 @@ This getting-started guide shows how to meter LLM traffic—such as token consum
 
 Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
-
-<!--vale off-->
 {% entity_examples %}
 entities:
   consumers:
-    - username: kong-air2
+    - username: kong-air
+      keyauth_credentials:
+        - key: hello_world
 {% endentity_examples %}
-<!--vale on-->
+
+To connect LLM usage to the Consumer, you'll need to configure an [authentication plugin](/plugins/?category=authentication). In this tutorial, we'll use [Key Authentication](/plugins/key-auth/). This will require the Consumer to use an API key to access any {{site.base_gateway}} Services.
+
+Configure the Key Auth plugin on the Service:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      service: example-service
+      config:
+        key_names:
+        - apikey
+{% endentity_examples %}
+
+## Configure the AI Proxy plugin
+
+To set up AI Proxy with OpenAI, specify the [model](https://platform.openai.com/docs/models) and set the appropriate authentication header. To collect meters, you must also enable `log_payloads` and `log_statistics`.
+
+In this example, we'll use the gpt-4o model:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        route_type: llm/v1/chat
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${openai_api_key}
+        model:
+          provider: openai
+          name: gpt-4o
+        logging:
+          log_payloads: true
+          log_statistics: true
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+{% endentity_examples %}
 
 ## Enable Metering  
 
@@ -87,7 +138,11 @@ In this guide, you'll create a feature for the `example-service` you created in 
    The group by filter ensures you only bill for LLM tokens from a specific provider.
 1. From the **Group by** dropdown menu, select "Provider".
 1. From the **Operator** dropdown menu, select "Equals".
-1. In the **Value** dropdown menu, enter `OpenAI`.
+1. In the **Value** dropdown menu, enter `openai`.
+1. Click **Add group by filter**. 
+1. From the **Group by** dropdown menu, select "type".
+1. From the **Operator** dropdown menu, select "Equals".
+1. In the **Value** dropdown menu, enter `request`.
 1. Click **Save**. 
 
 ## Create a Plan and Rate Card
@@ -128,7 +183,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select "ai-plan".
+1. From the **Subscribed Plan** dropdown, select "Token".
 1. Click **Next Step**.
 1. Click **Start Subscription**.
 
@@ -139,18 +194,19 @@ You can run the following command to test the that the Kong Air Consumer is invo
 
 <!--vale off-->
 {% validation request-check %}
-url: /chat
+url: /anything
 status_code: 200
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+    - 'apikey: hello_world'
 body:
-  model: gpt-4
-  messages:
-  - role: "user"
-    content: "Say this is a test!"
+    messages:
+        - role: "system"
+          content: "You are a mathematician"
+        - role: "user"
+          content: "What is 1+1?"
 {% endvalidation %}
 <!--vale on-->
 
