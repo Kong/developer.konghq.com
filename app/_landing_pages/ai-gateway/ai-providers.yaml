@@ -155,7 +155,25 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Question
+            - q: Can I authenticate to Azure AI with Azure Identity?
               a: |
-                Answer
+                {% include faqs/azure-identity.md %}
+            - q: Can I override `config.model.name` by specifying a different model name in the request?
+              a: |
+                No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+            - q: |
+                Can I override `temperature`, `top_p`, and `top_k` from the request?
+              a: |
+                Yes. The values for [`temperature`](./reference/#schema--config-model-options-temperature), [`top_p`](./reference/#schema--config-model-options-top-p), and [`top_k`](./reference/#schema--config-model-options-top-k) in the request take precedence over those set in `config.targets.model.options`.
 
+            - q: How can I set model generation parameters when calling Gemini?
+              a: |
+                {% include faqs/gemini-model-params.md %}
+
+            - q: Can I override authentication values from the request?
+              a: |
+                Yes, but only if [`config.auth.allow_override`](./reference/#schema--config-auth-allow-override) is set to `true` in the plugin configuration.
+                When enabled, this allows request-level auth parameters (such as API keys or bearer tokens) to override the static values defined in the plugin.
+            - q: How do I specify model IDs for AWS Bedrock cross-region inference profiles?
+              a: |
+                {% include faqs/bedrock-models.md %}

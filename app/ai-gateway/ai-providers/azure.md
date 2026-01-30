@@ -45,10 +45,7 @@ related_resources:
 faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
     a: |
-      Yes, if {{site.base_gateway}} is running on Azure, AI Proxy Advanced can detect the designated Managed Identity or User-Assigned Identity of that Azure Compute resource, and use it accordingly.
-      In your AI Proxy Advanced configuration, set the following parameters:
-      * [`config.auth.azure_use_managed_identity`](/plugins/ai-proxy/reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` to use an Azure-Assigned Managed Identity.
-      * [`config.targets.auth.azure_use_managed_identity`](/plugins/ai-proxy/reference/#schema--config-targets-auth-azure-use-managed-identity) to `true` and an [`config.targets.auth.azure_client_id`](/plugins/ai-proxy/reference/#schema--config-targets-auth-azure-client-id) to use a User-Assigned Identity.
+      {% include faqs/azure-identity.md %}
 
 how_to_list:
   config:
