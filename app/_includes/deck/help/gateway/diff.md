@@ -7,7 +7,7 @@ Flags:
                                               This allows policy overrides to work with Kong GW versions >= 3.4
                                               Warning: do not mix with consumer-group scoped plugins
   -h, --help                                  help for diff
-      --json-output                           Generate a JSON change report that includes a change summary and details for each entity       
+      --json-output                           generate command execution report in a JSON format
       --no-mask-deck-env-vars-value           do not mask DECK_ environment variable values at diff output.
       --non-zero-exit-code                    return exit code 2 if there is a diff present,
                                               exit code 0 if no diff is found,
