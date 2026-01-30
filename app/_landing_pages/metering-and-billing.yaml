@@ -38,33 +38,114 @@ rows:
 
   - header:
       type: h2
-      text: "Learn more"
+      text: "Get Started"
+    columns:
+      - blocks:
+          - type: button
+            config:
+              text: "Start Monetizing API Traffic"
+              url: /metering-and-billing/get-started/
 
+  - header:
+      type: h2
+      text: "Usage Metering"
     columns:
       - blocks:
           - type: card
             config:
-              title: Metering
+              title: Metering Overview
               description: |
-                {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
+                Real-time event based usage metering to aggregate consumption over time precisely.
               icon: /assets/icons/analytics.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/metering/
+
       - blocks:
           - type: card
             config:
-              title: Product Catalog
+              title: Event Ingestion
               description: |
-                {{site.konnect_short_name}} {{site.metering_and_billing}}’s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place.
+                Learn how to meter send events to {{site.metering_and_billing}}.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/#event-ingestion
+      - blocks:
+          - type: card
+            config:
+              title: Metering Examples
+              description: |
+                Common examples of how to meter usage from AI and API traffic to compute and billable transactions.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/#event-ingestion
+
+  - header:
+      type: h2
+      text: "Product Catalog"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Features
+              description: |
+                 Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/
+                url: /metering-and-billing/product-catalog/#features
       - blocks:
           - type: card
             config:
-              title: Customers and usage attribution
+              title: Plans
+              description: |
+                Plans are a collection of rate cards  that can be assigned to customers by starting a subscription.
+              icon: /assets/icons/document-list.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#plans
+
+      - blocks:
+          - type: card
+            config:
+              title: Rate Cards
+              description: |
+                A rate card describes a price and usage limits or access control for a feature.
+              icon: /assets/icons/document-list.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#rate-cards
+      - blocks:
+          - type: card
+            config:
+              title: Pricing Models
+              description: |
+                Pricing models describe how to price a feature. e.g. free, flat fee, usage-based, tiered
+              icon: /assets/icons/document-list.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#pricing-models
+      - blocks:
+          - type: card
+            config:
+              title: Entitlements
+              description: |
+                Entitlements describe customer access, usage-limits and configuration to features.
+              icon: /assets/icons/document-list.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#entitlements
+
+  - header:
+      type: h2
+      text: "Billing"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Customer
               description: |
                 Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
               icon: /assets/icons/team.svg
@@ -74,13 +155,33 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Billing, invoicing, and subscriptions
+              title: Subscriptions
               description: |
-                Learn how to set up billing, invoicing, and subscriptions in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+                Subscriptions are a collection of active rate cards that can be assigned to customers.
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/
+                url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+      - blocks:
+          - type: card
+            config:
+              title: Billing Profiles
+              description: |
+                Billing profiles handle invoicing, payment, and tax settings for a customer.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+      - blocks:
+          - type: card
+            config:
+              title: Invoicing
+              description: |
+                Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
 
   - header:
       type: h2
