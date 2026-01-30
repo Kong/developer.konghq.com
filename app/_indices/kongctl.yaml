@@ -1,0 +1,43 @@
+title: kongctl Documentation
+sections:
+  - title: Overview
+    items:
+      - path: /kongctl/
+      - path: /kongctl/get-started/
+      - path: /kongctl/**/*
+    auto_exclude: true
+  - title: Install & Configure
+    items:
+      - title: Install kongctl on macOS
+        description: Use Homebrew to install kongctl
+        url: /kongctl/?tab=macos#install-kongctl
+      - title: Install kongctl on Linux
+        description: Download and install the binary
+        url: /kongctl/?tab=linux#install-kongctl
+      - title: Install kongctl on Windows
+        description: Install the Windows binary
+        url: /kongctl/?tab=windows#install-kongctl
+      - path: /kongctl/authentication/
+  - title: Commands
+    items:
+      - path: /kongctl/commands/
+      - path: /kongctl/commands/login/
+      - path: /kongctl/commands/get/
+      - path: /kongctl/commands/view/
+      - path: /kongctl/commands/api/
+  - title: Declarative Configuration
+    items:
+      - path: /kongctl/declarative/
+      - path: /kongctl/declarative/ci-cd/
+      - path: /kongctl/commands/plan/
+      - path: /kongctl/commands/apply/
+      - path: /kongctl/commands/sync/
+      - path: /kongctl/commands/diff/
+      - path: /kongctl/commands/dump/
+      - path: /kongctl/commands/adopt/
+  - title: Reference
+    items:
+      - path: /kongctl/reference/**/*
+  - title: Troubleshooting
+    items:
+      - path: /kongctl/troubleshooting/

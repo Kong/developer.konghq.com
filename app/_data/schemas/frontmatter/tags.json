@@ -34,6 +34,7 @@
     "certificates",
     "changelog",
     "ci/cd",
+    "cli",
     "cloud-sync",
     "clustering",
     "cohere",
