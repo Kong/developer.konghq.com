@@ -89,7 +89,7 @@ rows:
             description: Learn about the various providers supported by AI Gateway.
             icon: /assets/icons/ai.svg
             cta:
-              url: /ai-gateway/ai-providers/
+              url: ./#ai-gateway-providers
               align: end
 
   - columns:
@@ -343,7 +343,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Kong AI Gatewy routes AI requests to various providers through a provider-agnostic API. This normalized API layer provides multiple benefits: client applications stay decoupled from provider-specific APIs, credentials are managed centrally, and request routing can be dynamic to optimize for cost, latency, or availability.
+                  Kong AI Gatewy routes AI requests to various providers through a [provider-agnostic API](./#universal-api). This normalized API layer provides multiple benefits: client applications stay decoupled from provider-specific APIs, credentials are managed centrally, and request routing can be dynamic to optimize for cost, latency, or availability.
 
   - column_count: 4
     columns:

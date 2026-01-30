@@ -1,12 +1,14 @@
 metadata:
   title: "AI Gateway providers"
   content_type: landing_page
-  description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
+  description: This page is an introduction to the AI providers available in Kong AI Gateway.
   products:
     - ai-gateway
   works_on:
     - on-prem
     - konnect
+  breadcrumbs:
+    - /ai-gateway/
   tags:
     - ai
 rows:
