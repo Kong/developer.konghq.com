@@ -32,16 +32,15 @@ module Jekyll
 
       process("#{File.basename(@page.url)}.md")
 
-      @data = page.data.deep_dup
+      @data = { 'output_format' => 'markdown', 'layout' => 'llm' }
       @content = page.content
-      @data.delete('permalink')
-
       @dir = File.dirname(@page.url)
-
-      @data['output_format'] = 'markdown'
     end
 
     def render
+      # We need to clone it here so we are sure that other generators ran
+      @data.merge!(@page.data.deep_dup.except('permalink'))
+
       payload = @site.site_payload
       payload['page'] = to_liquid
 
@@ -52,7 +51,7 @@ module Jekyll
       rendered_content = Liquid::Template.parse(@content).render!(payload, info)
 
       layout = @site.layouts['llm']
-      layout_payload = payload.merge('content' => rendered_content)
+      layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
       Liquid::Template.parse(layout.content).render!(layout_payload, info)
     end
 
