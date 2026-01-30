@@ -73,6 +73,7 @@ faqs:
   - q: Can I authenticate to Azure AI with Azure Identity?
     a: |
       {% include faqs/azure-identity.md %}
+  - q: Can I override `config.model.name` by specifying a different model name in the request?
     a: |
       No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
   - q: |
