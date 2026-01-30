@@ -140,7 +140,7 @@ AI Proxy Advanced supports several load balancing algorithms for distributing re
 {:.info}
 > For detailed algorithm descriptions and selection guidance, see [Load balancing algorithms](/ai-gateway/load-balancing/#load-balancing-algorithms).
 >
-> See also [Load balancing with {{ site.base_gateway }}](/gateway/load-balancing/)
+> For load balancing across Gateway Upstreams and Targets instead of LLMs, see [load balancing with {{ site.base_gateway }}](/gateway/load-balancing/).
 
 ## Retry and fallback
 
