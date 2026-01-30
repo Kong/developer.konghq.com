@@ -13,9 +13,6 @@ tags:
 - mock-servers
 - git
 
-min_version:
-  insomnia: '11.0'
-
 search_aliases:
   - git sync
 

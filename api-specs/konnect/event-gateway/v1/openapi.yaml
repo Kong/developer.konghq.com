@@ -16,12 +16,13 @@ info:
     When the value is an expression, the expression itself is stored and returned in API responses.
 
     `x-min-runtime-version` indicates the minimum Event Gateway runtime version required to use a certain policy or
-    policy feature. The runtime version can be configured at the Event Gateway entity level.
+    policy feature. The runtime version can be configured at the Event Gateway entity level. It must be a string
+    containing a semantic version in the `MAJOR.MINOR` format, e.g., `"1.1"`.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@811144b517e918fa03bf94b5a7eced162ab0072f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/811144b517e918fa03bf94b5a7eced162ab0072f'
+  x-oas-source: kong/platform-api@98c4f5c08ae8686225051759c1d9cffed8b2fb87
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/98c4f5c08ae8686225051759c1d9cffed8b2fb87'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2372,6 +2373,18 @@ components:
           default:
             - tls12
             - tls13
+        client_identity:
+          description: Client mTLS configuration.
+          type: object
+          properties:
+            certificate:
+              $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
+            key:
+              $ref: '#/components/schemas/GatewaySecret'
+          required:
+            - certificate
+            - key
+          x-min-runtime-version: '1.1'
       required:
         - enabled
     BackendMetadataUpdateIntervalSeconds:

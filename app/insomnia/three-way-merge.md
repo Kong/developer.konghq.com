@@ -9,9 +9,6 @@ layout: reference
 products:
   - insomnia
 
-min_version:
-  insomnia: '12.0'
-
 related_resources:
   - text: Version control
     url: /insomnia/version-control/
