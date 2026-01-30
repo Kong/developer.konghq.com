@@ -562,6 +562,40 @@ To enable DPoP for OpenID Connect:
 
 See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
 
+## Multiple clients
+
+You can configure the OIDC plugin with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
+client secrets ([`config.client_secret`](./reference/#schema--config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
+
+For example:
+
+```yaml
+config:
+  issuer: example-issuer-url
+  client_id:
+    - my-first-client
+    - my-second-client
+  client_secret:
+    - first-client-secret
+    - second-client-secret
+```
+
+When making a request, you can specify which client to target to use by including a client ID argument.
+For example, after configuring the plugin with two client IDs and client secrets, you can target a client by name:
+
+```sh
+curl -X GET "http://localhost:8000?client_id=my-second-client"
+```
+
+Or by its index value (starting with 1):
+
+```sh
+curl -X GET "http://localhost:8000?client_id=2"
+```
+
+If you don't specify a client ID in the request, the plugin will attempt to authenticate using the first client ID and client secret pair, or using the client specified in 
+[`config.client_arg`](./reference/#schema--config-client-arg).
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
