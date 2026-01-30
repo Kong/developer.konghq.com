@@ -596,6 +596,9 @@ curl -X GET "http://localhost:8000?client_id=2"
 If you don't specify a client ID in the request, the plugin will attempt to authenticate using the first client ID and client secret pair, or using the client specified in 
 [`config.client_arg`](./reference/#schema--config-client-arg).
 
+{:.info}
+> **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
