@@ -22,6 +22,7 @@ async function validateFrontmatters() {
     ["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"],
     {
       ignore: [
+        "app/_layouts/**",
         "app/_includes/**",
         "app/_kong_plugins/**/changelog.md",
         "app/_kong_plugins/**/reference.md",
