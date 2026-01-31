@@ -59,6 +59,7 @@ rows:
               title: API Gateway Metering
               description: |
                 Real-time usage metering for {{site.base_gateway}} API requests.
+                Monetize API traffic with flexible pricing models.
               icon: /assets/icons/gateway.svg
               cta:
                 text: Learn more
@@ -69,7 +70,8 @@ rows:
             config:
               title: Generic Metering
               description: |
-                Learn how to meter external events and send them to {{site.metering_and_billing}}.
+                Meter any billable usage, like compute, storage, or application layer.
+                Learn how to ingest usage events.
               icon: /assets/icons/data-object.svg
               cta:
                 text: Learn more
@@ -77,13 +79,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Metering Examples
+              title: Common Metering Examples
               description: |
-                Common examples of how to meter usage from AI and API traffic to compute and billable transactions.
+                Examples to meter AI, API, compute, GPUs, and storage usage.
               icon: /assets/icons/graduation.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/metering/#event-ingestion
+                url: /metering-and-billing/metering/#example-meter-use-cases
 
   - header:
       type: h2
@@ -181,7 +183,7 @@ rows:
   - header:
       type: h2
       text: "Integrations"
-      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing solutions."
+      sub_text: "Integrate with payment, CRM, and invoicing solutions to automate revenue operations."
 
     column_count: 3
     columns:
@@ -190,7 +192,7 @@ rows:
             config:
               title: Stripe
               description: |
-                Send invoices, calculate tax, and collect payments.
+                Send invoices, calculate tax, and collect payments. Great for self-serve customers.
               icon: /assets/icons/third-party/stripe.svg
               cta:
                 text: View integration
@@ -201,7 +203,7 @@ rows:
             config:
               title: Custom Invoicing
               description: |
-                Implement custom billing flows using your own invoicing and payment systems.
+                Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise customers.
               icon: /assets/icons/third-party/custom.svg
               cta:
                 text: View integration
