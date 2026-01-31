@@ -11,7 +11,7 @@ rows:
   - header:
       type: h1
       text: "{{site.metering_and_billing}}"
-      sub_text: Meter, bill, and monetize the entire AI connectivity data path.
+      sub_text: Meter, bill, and monetize the entire AI connectivity path.
     columns:
       - blocks:
           - type: structured_text
@@ -19,14 +19,15 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
-                    It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
+                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides:
 
-                    You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
-                    You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
+                    * Real-time scalable metering for AI, API, and external usage
+                    * Flexible pricing models, including free, flat fee, usage-based, and tiered
+                    * Subscription management to govern access and automate billing
+                    * Automated invoicing and integration with payment providers and ERPs
           - type: button
             config:
-              text: "Start metering and billing API Gateway requests &rarr;"
+              text: "Start metering {{site.base_gateway}} API requests &rarr;"
               url: /metering-and-billing/get-started/
 
       - blocks:
@@ -38,7 +39,8 @@ rows:
 
   - header:
       type: h2
-      text: "Get Started"
+      text: "Getting Started"
+      sub_text: "Start monetizing your usage with {{site.metering_and_billing}}."
     columns:
       - blocks:
           - type: button
@@ -49,35 +51,36 @@ rows:
   - header:
       type: h2
       text: "Usage Metering"
+      sub_text: "Learn how to meter AI, API, and external usage."
     columns:
       - blocks:
           - type: card
             config:
-              title: Metering Overview
+              title: API Gateway Metering
               description: |
-                Real-time event based usage metering to aggregate consumption over time precisely.
-              icon: /assets/icons/analytics.svg
+                Real-time usage metering for {{site.base_gateway}} API requests.
+              icon: /assets/icons/gateway.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/metering/
+                url: /metering-and-billing/get-started/
 
       - blocks:
           - type: card
             config:
-              title: Event Ingestion
+              title: Generic Metering
               description: |
-                Learn how to meter send events to {{site.metering_and_billing}}.
-              icon: /assets/icons/analytics.svg
+                Learn how to meter external events and send them to {{site.metering_and_billing}}.
+              icon: /assets/icons/data-object.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/metering/#event-ingestion
+                url: /metering-and-billing/metering
       - blocks:
           - type: card
             config:
               title: Metering Examples
               description: |
                 Common examples of how to meter usage from AI and API traffic to compute and billable transactions.
-              icon: /assets/icons/analytics.svg
+              icon: /assets/icons/graduation.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/metering/#event-ingestion
@@ -85,6 +88,7 @@ rows:
   - header:
       type: h2
       text: "Product Catalog"
+      sub_text: "Define your your pricing and packaging."
     columns:
       - blocks:
           - type: card
@@ -92,7 +96,7 @@ rows:
               title: Features
               description: |
                  Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
-              icon: /assets/icons/document-list.svg
+              icon: /assets/icons/widgets.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/product-catalog/#features
@@ -102,7 +106,7 @@ rows:
               title: Plans
               description: |
                 Plans are a collection of rate cards  that can be assigned to customers by starting a subscription.
-              icon: /assets/icons/document-list.svg
+              icon: /assets/icons/service-hub.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/product-catalog/#plans
@@ -110,20 +114,10 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Rate Cards
-              description: |
-                A rate card describes a price and usage limits or access control for a feature.
-              icon: /assets/icons/document-list.svg
-              cta:
-                text: Learn more
-                url: /metering-and-billing/product-catalog/#rate-cards
-      - blocks:
-          - type: card
-            config:
               title: Pricing Models
               description: |
                 Pricing models describe how to price a feature. e.g. free, flat fee, usage-based, tiered
-              icon: /assets/icons/document-list.svg
+              icon: /assets/icons/money.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/product-catalog/#pricing-models
@@ -141,11 +135,12 @@ rows:
   - header:
       type: h2
       text: "Billing"
+      sub_text: "Manage your customers, subscriptions, and invoicing."
     columns:
       - blocks:
           - type: card
             config:
-              title: Customer
+              title: Customers
               description: |
                 Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
               icon: /assets/icons/team.svg
@@ -158,7 +153,7 @@ rows:
               title: Subscriptions
               description: |
                 Subscriptions are a collection of active rate cards that can be assigned to customers.
-              icon: /assets/icons/money.svg
+              icon: /assets/icons/document.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
@@ -168,7 +163,7 @@ rows:
               title: Billing Profiles
               description: |
                 Billing profiles handle invoicing, payment, and tax settings for a customer.
-              icon: /assets/icons/money.svg
+              icon: /assets/icons/organization.svg
               cta:
                 text: Learn more
                 url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
@@ -186,7 +181,7 @@ rows:
   - header:
       type: h2
       text: "Integrations"
-      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing systems"
+      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing solutions."
 
     column_count: 3
     columns:
