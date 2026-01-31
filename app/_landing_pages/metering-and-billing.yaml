@@ -192,7 +192,7 @@ rows:
             config:
               title: Stripe
               description: |
-                Send invoices, calculate tax, and collect payments. Great for self-serve customers.
+                Send invoices, calculate tax, and collect payments. Great for self-serve and PLG sales motions.
               icon: /assets/icons/third-party/stripe.svg
               cta:
                 text: View integration
@@ -203,7 +203,7 @@ rows:
             config:
               title: Custom Invoicing
               description: |
-                Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise customers.
+                Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg
               cta:
                 text: View integration
