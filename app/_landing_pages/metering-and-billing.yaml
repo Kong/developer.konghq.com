@@ -79,6 +79,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Collectors
+              description: |
+                Collect usage events from external systems and send them to {{site.metering_and_billing}}.
+              icon: /assets/icons/rocket.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/collectors/
+      - blocks:
+          - type: card
+            config:
               title: Common Metering Examples
               description: |
                 Examples to meter AI, API, compute, GPUs, and storage usage.
