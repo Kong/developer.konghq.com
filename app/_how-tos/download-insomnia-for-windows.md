@@ -11,9 +11,6 @@ tags:
 breadcrumbs:
   - /insomnia/
 
-min_version:
-  insomnia: '11.3.0'
-
 prereqs:
   skip_product: true
   inline:

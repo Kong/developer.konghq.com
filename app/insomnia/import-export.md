@@ -80,7 +80,7 @@ rows:
   - use_case: Automate test execution from Insomnia test suites in CI
     method: |
       In CI, use `inso run test <identifier>` to run defined tests and return pass/fail exit codes.
-  - use_case: {% new_in 11.5 %} Import a Postman environment into Insomnia
+  - use_case: Import a Postman environment into Insomnia
     method: | 
       1. Organize each project into its own folder.
       1. Use **Import > From Folder** from within the Insomnia UI.

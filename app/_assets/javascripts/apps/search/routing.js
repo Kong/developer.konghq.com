@@ -37,6 +37,10 @@ export function routingConfig(indexName) {
         if (routeState.tags) {
           queryParameters.tags = routeState.tags.map(encodeURIComponent);
         }
+        if (routeState.kong_plugins) {
+          queryParameters.kong_plugins =
+            routeState.kong_plugins.map(encodeURIComponent);
+        }
 
         const queryString = qsModule.stringify(queryParameters, {
           addQueryPrefix: true,
@@ -55,6 +59,7 @@ export function routingConfig(indexName) {
           content = "",
           works_on = [],
           tags = [],
+          kong_plugins = [],
         } = qsModule.parse(location.search.slice(1));
 
         // `qs` does not return an array when there's a single value.
@@ -66,6 +71,7 @@ export function routingConfig(indexName) {
           content: content,
           works_on: getParamValue(works_on).map(decodeURIComponent),
           tags: getParamValue(tags).map(decodeURIComponent),
+          kong_plugins: getParamValue(kong_plugins).map(decodeURIComponent),
         };
 
         return test;
@@ -80,7 +86,7 @@ export function routingConfig(indexName) {
           if (indexUiState.configure) {
             if (indexUiState.configure.filters !== "") {
               content = Object.entries(sources).find(
-                ([, value]) => value.filters === indexUiState.configure.filters
+                ([, value]) => value.filters === indexUiState.configure.filters,
               )[0];
             }
           }
@@ -95,6 +101,9 @@ export function routingConfig(indexName) {
             indexUiState.refinementList && indexUiState.refinementList.tools,
           works_on:
             indexUiState.refinementList && indexUiState.refinementList.works_on,
+          kong_plugins:
+            indexUiState.refinementList &&
+            indexUiState.refinementList.kong_plugins,
           tags: indexUiState.refinementList && indexUiState.refinementList.tags,
           content,
         };
@@ -115,6 +124,7 @@ export function routingConfig(indexName) {
               tools: routeState.tools,
               works_on: routeState.works_on,
               tags: routeState.tags,
+              kong_plugins: routeState.kong_plugins,
             },
           },
         };

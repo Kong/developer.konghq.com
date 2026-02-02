@@ -495,18 +495,6 @@ pages:
       - text: Zone Ingress
         url: /mesh/zone-ingress/
   -
-    path: app/_src/production/secure-deployment/dp-membership.md
-    title: 'Configure Data Plane proxy membership'
-    description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
-    url: '/mesh/configure-data-plane-proxy-membership/'
-    related_resources:
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: 'Data plane on Universal'
-        url: '/mesh/data-plane-universal/'
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-  -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
     description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
