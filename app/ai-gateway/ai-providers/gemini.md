@@ -46,6 +46,15 @@ faqs:
   - q: How can I set model generation parameters when calling Gemini?
     a: |
       {% include faqs/gemini-model-params.md %}
+  - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
+    a: |
+      {% include faqs/gemini-search.md %}
+  - q: How do I control aspect ratio and resolution for Gemini image generation?
+    a: |
+      {% include faqs/gemini-image.md %}
+  - q: How do I get reasoning traces from Gemini models?
+    a: |
+      {% include faqs/gemini-thinking.md %}
 
 how_to_list:
   config:

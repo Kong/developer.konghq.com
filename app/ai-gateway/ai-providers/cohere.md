@@ -42,6 +42,11 @@ related_resources:
   - text: AI Providers
     url: /ai-gateway/ai-providers/
 
+faqs:
+  - q: How do I use Cohere's document-grounded chat for RAG pipelines?
+    a: |
+      {% include faqs/cohere-rerank.md %}
+
 how_to_list:
   config:
     products:
