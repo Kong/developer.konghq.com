@@ -10,15 +10,15 @@ breadcrumbs:
   - /mesh/
 
 related_resources:
-  - text: 'Manage secrets'
-    url: '/mesh/manage-secrets/'
+  - text: Manage secrets
+    url: /mesh/manage-secrets/
   - text: Mesh ports
     url: /mesh/use-kuma/#control-plane-ports
   - text: Zone Ingress
     url: /mesh/zone-ingress/
 ---
 
-{{site.mesh_product_name}} exposes API server on [ports](/docs/{{ page.release }}/production/use-mesh#control-plane-ports) `5681` and `5682` (protected by TLS).
+{{site.mesh_product_name}} exposes API server on [ports](/mesh/interact-with-control-plane/#control-plane-ports) `5681` and `5682` (protected by TLS).
 
 An authenticated user can be authorized to execute administrative actions such as
 * Managing administrative resources like {{site.mesh_product_name}} Secrets on Universal
@@ -41,7 +41,7 @@ A user can be a part of many groups. {{site.mesh_product_name}} adds two groups 
 
 {{site.mesh_product_name}} creates an admin user token on the first start of the control plane.
 The admin user token is a user token issued for user `mesh-system:admin` that belongs to `mesh-system:admin` group.
-This group is [authorized by default](/docs/{{ page.release }}/production/secure-deployment/api-access-control/) to execute all administrative operations.
+This group is authorized by default to execute all administrative operations.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -98,13 +98,13 @@ This group is [authorized by default](/docs/{{ page.release }}/production/secure
 3. Disable localhost is admin (optional)
 
    By default, all requests originated from localhost are authenticated as an `mesh-system:admin` user.
-   After you retrieve and store the admin token, [configure a control plane](/docs/{{ page.release }}/documentation/configuration) with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false`.
+   After you retrieve and store the admin token, [configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false`.
    {% endnavtab %}
    {% endnavtabs %}
 
 ### Generate user tokens
 
-You can generate user tokens only when you provide the credentials of a user [authorized to generate user tokens](/docs/{{ page.release }}/production/secure-deployment/api-access-control#generate-user-token).
+You can generate user tokens only when you provide the credentials of a user authorized to generate user tokens.
 `kumactl` configured with admin user token extracted in the preceding section is authorized to do it.
 
 ```sh
@@ -302,7 +302,7 @@ kubectl delete secret admin-user-token -n kuma-namespace
 ```
 
 2. Disable bootstrap of the token
-   [Configure a control plane](/docs/{{ page.release }}/documentation/configuration) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
+   [Configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
    {% endnavtab %}
    {% navtab "Universal" %}
 1. Delete `admin-user-token` Global Secret
@@ -311,7 +311,7 @@ kumactl delete global-secret admin-user-token
 ```
 
 2. Disable bootstrap of the token
-   [Configure a control plane](/docs/{{ page.release }}/documentation/configuration) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
+   [Configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
    {% endnavtab %}
    {% endnavtabs %}
 
@@ -355,7 +355,7 @@ Here's how to use offline issuing
 
 2. Configure the control plane with public key
 
-   [Configure a control plane](/docs/{{ page.release }}/documentation/configuration) with the following settings
+   [Configure a control plane](/mesh/control-plane-configuration/) with the following settings
    ```yaml
    apiServer:
      authn:
@@ -413,9 +413,8 @@ Signing key rotation works similarly:
 
 This section describes the alternative way of authenticating to API Server.
 
-{% warning %}
-Admin client certificates are deprecated. If you are using it, please migrate to the user token in preceding section.
-{% endwarning %}
+{:.warning}
+> Admin client certificates are deprecated. If you are using it, please migrate to the user token in preceding section.
 
 To use admin client certificates, set `KUMA_API_SERVER_AUTHN_TYPE` to `adminClientCerts`.
 
