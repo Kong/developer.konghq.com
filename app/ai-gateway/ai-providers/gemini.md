@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Gemini tutorials
-    url: /how-to/?tags=/how-to/?tags=gemini
+    url: /how-to/?tags=gemini
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

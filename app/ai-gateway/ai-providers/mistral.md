@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Mistral tutorials
-    url: /how-to/?tags=/how-to/?tags=mistral
+    url: /how-to/?tags=mistral
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

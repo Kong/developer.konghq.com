@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Vertex AI tutorials
-    url: /how-to/?tags=/how-to/?tags=vertex-ai
+    url: /how-to/?tags=vertex-ai
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

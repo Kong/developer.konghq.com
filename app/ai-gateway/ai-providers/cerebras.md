@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Cerebras tutorials
-    url: /how-to/?tags=/how-to/?tags=cerebras
+    url: /how-to/?tags=cerebras
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

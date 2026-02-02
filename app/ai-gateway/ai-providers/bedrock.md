@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Amazon Bedrock tutorials
-    url: /how-to/?tags=/how-to/?tags=bedrock
+    url: /how-to/?tags=bedrock
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

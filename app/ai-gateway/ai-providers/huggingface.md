@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Hugging Face tutorials
-    url: /how-to/?tags=/how-to/?tags=huggingface
+    url: /how-to/?tags=huggingface
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

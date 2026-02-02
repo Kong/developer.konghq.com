@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: Llama tutorials
-    url: /how-to/?tags=/how-to/?tags=llama
+    url: /how-to/?tags=llama
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers

@@ -38,7 +38,7 @@ related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
   - text: OpenAI tutorials
-    url: /how-to/?tags=/how-to/?tags=openai
+    url: /how-to/?tags=openai
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers
