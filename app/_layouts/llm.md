@@ -11,6 +11,11 @@ layout: null
 {{ content }}
 
 {% if page.related_resources %}
-## Related resources
+## Related Resources
 {% related_resources %}
+{% endif %}
+
+{% if page.next_steps %}
+## Next Steps
+{% next_steps %}
 {% endif %}
