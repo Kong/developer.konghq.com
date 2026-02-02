@@ -41,12 +41,6 @@ Serverless Gateways V1 bring the following improvements to Serverless Gateways:
 * Terraform support
 * 99.9% SLA
 
-<!-- * Support for rate limiting and authentication plugins
-* Custom domains and private networking (pre-shared key)
-* API spec upload through Dev Portal
-* Metering, billing, and entitlements
-* Architecture tuning and performance enhancements -->
-
 You can upgrade to Serverless Gateways V1 using [decK](/deck/).
 
 ## Breaking changes between V0 and V1
@@ -67,7 +61,7 @@ rows:
     v1: "`https://0123456789.us.serverless.gateways.konggateway.com`"
   - change: Control plane type
     v0: "`CLUSTER_TYPE_SERVERLESS`"
-    v1: "`CLUSTER_TYPE_CLOUD_API_GATEWAY`"
+    v1: "`CLUSTER_TYPE_SERVERLESS_V1`"
   - change: Data plane kind
     v0: "`serverless.v0`"
     v1: "`serverless.v1`"
