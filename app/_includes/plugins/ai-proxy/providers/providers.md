@@ -144,12 +144,23 @@ Kong AI Gateway automatically routes requests to the appropriate {{ provider.nam
 {% if provider.video.generations.supported %}{% assign has_video = true %}{% endif %}
 {% if provider.realtime.supported %}{% assign has_realtime = true %}{% endif %}
 
-{% capture table_header %}
+{% capture table_header_with_streaming %}
 <thead>
   <tr>
     <th>Capability</th>
     <th>Route type</th>
     <th>Streaming</th>
+    <th>Model example</th>
+    <th>Min version</th>
+  </tr>
+</thead>
+{% endcapture %}
+
+{% capture table_header_no_streaming %}
+<thead>
+  <tr>
+    <th>Capability</th>
+    <th>Route type</th>
     <th>Model example</th>
     <th>Min version</th>
   </tr>
@@ -171,7 +182,7 @@ Support for {{ provider.name }} basic text generation capabilities including cha
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_with_streaming }}
   <tbody>
     {% if provider.chat.supported %}
     <tr>
@@ -249,7 +260,7 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_with_streaming }}
   <tbody>
     {% if provider.function_calling.supported %}
     <tr>
@@ -276,13 +287,12 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.files.supported %}
     <tr>
       <td>Files{% if files_note_num != 0 %}<sup>{{ files_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.files.route_type }}</code></td>
-      <td>{{ provider.files.streaming | to_check }}</td>
       <td>{{ provider.files.model_example }}</td>
       <td>{{ provider.files.min_version }}</td>
     </tr>
@@ -291,7 +301,6 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     <tr>
       <td>Batches{% if batches_note_num != 0 %}<sup>{{ batches_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.batches.route_type }}</code></td>
-      <td>{{ provider.batches.streaming | to_check }}</td>
       <td>{{ provider.batches.model_example }}</td>
       <td>{{ provider.batches.min_version }}</td>
     </tr>
@@ -300,7 +309,6 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     <tr>
       <td>Assistants{% if assistants_note_num != 0 %}<sup>{{ assistants_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.assistants.route_type }}</code></td>
-      <td>{{ provider.assistants.streaming | to_check }}</td>
       <td>{{ provider.assistants.model_example }}</td>
       <td>{{ provider.assistants.min_version }}</td>
     </tr>
@@ -309,7 +317,6 @@ Support for {{ provider.name }} file operations, batch operations, assistants, a
     <tr>
       <td>Responses{% if responses_note_num != 0 %}<sup>{{ responses_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.responses.route_type }}</code></td>
-      <td>{{ provider.responses.streaming | to_check }}</td>
       <td>{{ provider.responses.model_example }}</td>
       <td>{{ provider.responses.min_version }}</td>
     </tr>
@@ -339,13 +346,12 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.audio.speech.supported %}
     <tr>
       <td>Speech{% if audio_speech_note_num != 0 %}<sup>{{ audio_speech_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.audio.speech.route_type }}</code></td>
-      <td>{{ provider.audio.speech.streaming | to_check }}</td>
       <td>{{ provider.audio.speech.model_example }}</td>
       <td>{{ provider.audio.speech.min_version }}</td>
     </tr>
@@ -354,7 +360,6 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     <tr>
       <td>Transcriptions{% if audio_transcriptions_note_num != 0 %}<sup>{{ audio_transcriptions_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.audio.transcriptions.route_type }}</code></td>
-      <td>{{ provider.audio.transcriptions.streaming | to_check }}</td>
       <td>{{ provider.audio.transcriptions.model_example }}</td>
       <td>{{ provider.audio.transcriptions.min_version }}</td>
     </tr>
@@ -363,7 +368,6 @@ Support for {{ provider.name }} text-to-speech, transcription, and translation c
     <tr>
       <td>Translations{% if audio_translations_note_num != 0 %}<sup>{{ audio_translations_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.audio.translations.route_type }}</code></td>
-      <td>{{ provider.audio.translations.streaming | to_check }}</td>
       <td>{{ provider.audio.translations.model_example }}</td>
       <td>{{ provider.audio.translations.min_version }}</td>
     </tr>
@@ -395,13 +399,12 @@ Support for {{ provider.name }} image generation and editing capabilities:
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.image.generations.supported %}
     <tr>
       <td>Generations{% if image_generations_note_num != 0 %}<sup>{{ image_generations_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.image.generations.route_type }}</code></td>
-      <td>{{ provider.image.generations.streaming | to_check }}</td>
       <td>{{ provider.image.generations.model_example }}</td>
       <td>{{ provider.image.generations.min_version }}</td>
     </tr>
@@ -410,7 +413,6 @@ Support for {{ provider.name }} image generation and editing capabilities:
     <tr>
       <td>Edits{% if image_edits_note_num != 0 %}<sup>{{ image_edits_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.image.edits.route_type }}</code></td>
-      <td>{{ provider.image.edits.streaming | to_check }}</td>
       <td>{{ provider.image.edits.model_example }}</td>
       <td>{{ provider.image.edits.min_version }}</td>
     </tr>
@@ -440,13 +442,12 @@ Support for {{ provider.name }} video generation capabilities:
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.video.generations.supported %}
     <tr>
       <td>Generations{% if video_generations_note_num != 0 %}<sup>{{ video_generations_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.video.generations.route_type }}</code></td>
-      <td>{{ provider.video.generations.streaming | to_check }}</td>
       <td>{{ provider.video.generations.model_example }}</td>
       <td>{{ provider.video.generations.min_version }}</td>
     </tr>
@@ -475,13 +476,12 @@ Support for {{ provider.name }}'s bidirectional streaming for realtime applicati
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.realtime.supported %}
     <tr>
       <td>Realtime{% if realtime_note_num != 0 %}<sup>{{ realtime_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.realtime.route_type }}</code></td>
-      <td>{{ provider.realtime.streaming | to_check }}</td>
       <td>{{ provider.realtime.model_example }}</td>
       <td>{{ provider.realtime.min_version }}</td>
     </tr>
