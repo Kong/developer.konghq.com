@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@98c4f5c08ae8686225051759c1d9cffed8b2fb87
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/98c4f5c08ae8686225051759c1d9cffed8b2fb87'
+  x-oas-source: kong/platform-api@b0852934fe6d461ff6ea7b8e818446fed2f2e81f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b0852934fe6d461ff6ea7b8e818446fed2f2e81f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -204,7 +204,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
-        - $ref: '#/components/parameters/EventGatewayCommonFilter'
+        - $ref: '#/components/parameters/EventGatewayListenersFilter'
       responses:
         '200':
           $ref: '#/components/responses/ListEventGatewayListenersResponse'
@@ -1711,6 +1711,19 @@ components:
       in: path
       required: true
       description: The ID of the Event Gateway Listener.
+    EventGatewayListenersFilter:
+      schema:
+        type: object
+        properties:
+          name:
+            $ref: '#/components/schemas/StringFieldContainsFilter'
+          virtual_cluster_id:
+            $ref: '#/components/schemas/StringFieldEqualsFilter'
+      in: query
+      name: filter
+      description: Filter listeners returned in the response.
+      required: false
+      style: deepObject
     eventGatewayNodeId:
       schema:
         type: string
@@ -4986,6 +4999,16 @@ components:
           title: Labels
       additionalProperties: false
       title: PatchGatewayRequest
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      properties:
+        eq:
+          type: string
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -4998,16 +5021,6 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      properties:
-        eq:
-          type: string
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     GatewaySecretReferenceOrLiteral:
       description: |
         A literal value or a reference to an existing secret as a template string expression.
