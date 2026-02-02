@@ -37,7 +37,7 @@ min_version:
 related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
-  - text: Mistral tutorials
+  - text: Vertex tutorials
     url: /how-to/?tags=/how-to/?tags=vertex-ai
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
