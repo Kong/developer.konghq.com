@@ -10,6 +10,11 @@ layout: null
 
 {{ content }}
 
+{% if page.faqs %}
+## FAQs
+{% faqs %}
+{% endif %}
+
 {% if page.related_resources %}
 ## Related Resources
 {% related_resources %}
