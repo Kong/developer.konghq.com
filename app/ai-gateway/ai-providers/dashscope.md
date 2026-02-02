@@ -37,6 +37,8 @@ min_version:
 related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
+  - text: Dashscope tutorials
+    url: /how-to/?tags=/how-to/?tags=dashscope
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: AI Providers
