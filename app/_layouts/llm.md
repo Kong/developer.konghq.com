@@ -6,4 +6,6 @@ layout: null
 
 {% include llm/metadata.md %}
 
+{% include llm/tldr.md %}
+
 {{ content }}
