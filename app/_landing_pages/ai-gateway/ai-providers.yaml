@@ -141,15 +141,14 @@ rows:
       text: References
     columns:
       - blocks:
-          - type: reference_list
-            config:
-              products:
-                - ai-gateway
-              tags:
-                - ai-proxy
-                - streaming
-              quantity: 5
-              allow_empty: true
+        - type: reference_list
+          config:
+            pages:
+              - /plugins/ai-proxy/
+              - /plugins/ai-proxy-advanced/
+              - /ai-gateway/load-balancing/
+              - /ai-gateway/resource-sizing-guidelines-ai/
+              - /how-to/?tags=ai
   - header:
       text: "Frequently Asked Questions"
       type: h2
