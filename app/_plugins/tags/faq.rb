@@ -28,7 +28,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/faqs.html'))
+      @template ||= if @page['output_format'] == 'markdown'
+                      File.read(File.expand_path('app/_includes/components/faqs.md'))
+                    else
+                      File.read(File.expand_path('app/_includes/components/faqs.html'))
+                    end
     end
   end
 end
