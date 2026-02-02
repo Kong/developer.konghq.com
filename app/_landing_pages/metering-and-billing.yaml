@@ -49,7 +49,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "Meter & bill LLM tokens"
+              title: "Monetize LLM traffic"
               description: |
                 Learn how to meter and bill AI Gateway LLM tokens.
               icon: /assets/icons/ai.svg

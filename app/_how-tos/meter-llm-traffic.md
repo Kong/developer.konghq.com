@@ -1,6 +1,6 @@
 ---
-title: Meter LLM traffic in {{site.konnect_short_name}}
-description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} Metering & Billing.
+title: Monetize LLM traffic in {{site.konnect_short_name}}
+description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 
 breadcrumbs:
@@ -36,9 +36,9 @@ cleanup:
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 tldr: 
-  q: How can I meter LLM traffic in {{site.konnect_short_name}}, and what does the Metering & Billing system provide?
+  q: How can I meter LLM traffic in {{site.konnect_short_name}}, and what does the {{site.metering_and_billing}} provide?
   a: |
-    To meter LLM traffic in {{site.konnect_short_name}}, you can use the Metering & Billing system to track and invoice usage based on defined products, plans, and features. This guide walks you through setting up a Consumer, creating a meter for LLM tokens, defining a feature, creating a Plan with Rate Cards, and starting a subscription for billing.
+    To meter LLM traffic in {{site.konnect_short_name}}, you can use the {{site.metering_and_billing}} to track and invoice usage based on defined products, plans, and features. This guide walks you through setting up a Consumer, creating a meter for LLM tokens, defining a feature, creating a Plan with Rate Cards, and starting a subscription for billing.
 related_resources:
   - text: Kong AI Gateway
     url: /ai-gateway/
@@ -56,12 +56,12 @@ related_resources:
 automated_tests: false
 ---
 
-This getting-started guide shows how to meter LLM traffic—such as token consumption or model-specific usage—from {{site.base_gateway}} and convert that raw LLM activity into billable usage with Metering & Billing in {{site.konnect_short_name}}.
+This getting-started guide shows how to meter LLM traffic—such as token consumption or model-specific usage—from {{site.base_gateway}} and convert that raw LLM activity into billable usage with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 
 
 ## Create a Consumer
 
-Before you configure metering and billing, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in Metering & Billing and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
+Before you configure {{site.metering_and_billing}}, you can set up a Consumer, Kong Air. [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. Later in this guide, you'll be mapping this Consumer to a customer in {{site.metering_and_billing}} and assigning them to a Premium plan. Doing this allows you map existing Consumers that are already consuming your APIs to customers to make them billable.
 
 {% entity_examples %}
 entities:
@@ -113,9 +113,9 @@ variables:
 
 ## Enable Metering  
 
-In Metering & Billing, meters track and record the consumption of a resource or service over time.
+In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. For AI Gateway Tokens, click **Enable Related API Gateways**.
 1. Select the `quickstart` control plane.
 1. Click **Enable 1 Gateway**.
@@ -129,8 +129,8 @@ Meters collect raw usage data, but features make that data billable. Without a f
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Product Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `ai-token`.
 1. From the **Meter** dropdown menu, select "AI Gateway Tokens". 
@@ -153,8 +153,8 @@ A rate card describes price and usage limits or access control for a feature or 
 
 In this section, you'll create a Premium plan that charges customers based on the AI token usage at a rate of $0.00002 per use.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Product Catalog**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click the **Plans** tab.
 1. Click **Create Plan**.
 1. In the **Name** field, enter `Token`.
@@ -175,8 +175,8 @@ In this section, you'll create a Premium plan that charges customers based on th
 
 Customers are the entities who pay for the consumption. In many cases, it's equal to your Consumer. Here you are going to create a customer and map our Consumer to it.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
 1. In the **Include usage from** dropdown, select "kong-air". 
@@ -210,13 +210,13 @@ body:
 {% endvalidation %}
 <!--vale on-->
 
-This will generate AI LLM token usage that will be captured by Metering & Billing.
+This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Billing**.
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
+1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the **Invoices** tab.
 1. Click **Kong Air**.
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see in Lines that `ai-token` is listed and was used once. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **Metering & Billing** > **Settings**.
+You'll see in Lines that `ai-token` is listed and was used once. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
