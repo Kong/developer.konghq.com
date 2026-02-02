@@ -432,7 +432,7 @@ All users that provide client certificate are authenticated as a user with the n
 2. Configure the control plane with client certificates
    {% capture tabs %}
    {% navtabs "Environment" %}
-   {% tab usage Kubernetes (kumactl) %}
+   {% navtab "Kubernetes (kumactl)" %}
    Create a secret in the namespace in which control plane is installed
    ```sh
    kubectl create secret generic api-server-client-certs -n {{site.mesh_namespace}} \
@@ -446,7 +446,7 @@ All users that provide client certificate are authenticated as a user with the n
      --tls-api-server-client-certs-secret=api-server-client-certs
    ```
    {% endnavtab %}
-   {% tab usage Kubernetes (HELM) %}
+   {% navtab "Kubernetes (Helm)" %}
    Create a secret in the namespace in which control plane is installed
    ```sh
    kubectl create secret generic api-server-client-certs -n {{site.mesh_namespace}} \
