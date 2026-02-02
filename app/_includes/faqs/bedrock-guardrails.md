@@ -20,4 +20,4 @@ Add a `guardrailConfig` object to your request body:
       }
 ```
 
-This feature requires Kong Gateway 3.9 or later. For more details, see [Guardrails and content safety](/ai-gateway/#guardrails-and-content-safety) and the [AWS Bedrock guardrails documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html).
+This feature requires {{site.base_gateway}} 3.9 or later. For more details, see [Guardrails and content safety](/ai-gateway/#guardrails-and-content-safety) and the [AWS Bedrock guardrails documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html).
