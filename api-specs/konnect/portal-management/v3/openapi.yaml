@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@0556e7410419870fb9a2f87fc8c81e0bfae498e7
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0556e7410419870fb9a2f87fc8c81e0bfae498e7'
+  x-oas-source: kong/platform-api@90e6da4043acbbd94d69a769beb1f3424f01cd56
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/90e6da4043acbbd94d69a769beb1f3424f01cd56'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -762,12 +762,7 @@ paths:
           description: Filter applications returned in the response.
           required: false
           schema:
-            type: object
-            properties:
-              developer_id:
-                $ref: '#/components/schemas/UuidFieldFilter'
-              name:
-                $ref: '#/components/schemas/StringFieldFilter'
+            $ref: '#/components/schemas/FilterApplications'
           style: deepObject
       responses:
         '200':
@@ -4676,6 +4671,13 @@ components:
         - description
         - scope
         - example
+    FilterApplications:
+      type: object
+      properties:
+        developer_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       properties:
