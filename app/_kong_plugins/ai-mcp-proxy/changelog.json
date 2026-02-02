@@ -71,6 +71,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where `tools/list` could expose tools to consumers denied by tool ACL in listener mode.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where PATCHing the tool caused an error.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",
