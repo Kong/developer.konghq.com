@@ -58,7 +58,7 @@ This group is authorized by default to execute all administrative operations.
    To access {{site.mesh_product_name}} CP via kumactl, you need to expose {{site.mesh_product_name}} CP outside of a cluster in one of the following ways:
    * Port-forward port 5681
    * Expose port 5681 and protect it by TLS or just expose 5682 with builtin TLS of `{{site.mesh_cp_name}}` service via a load balancer.
-   * Expose port 5681 of `{{site.mesh_cp_name}}` via `Ingress` (for example Kong Ingress Controller) and protect it with TLS
+   * Expose port 5681 of `{{site.mesh_cp_name}}` via `Ingress` (for example {{site.kic_product_name}}) and protect it with TLS
 
 3. Configure `kumactl` with admin user token
    ```sh
@@ -486,9 +486,9 @@ All users that provide client certificate are authenticated as a user with the n
 
    If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
 
-## Multizone
+## Multi-zone
 
-In a multizone setup, users execute a majority of actions on the global control plane.
+In a multi-zone setup, users execute a majority of actions on the global control plane.
 However, some actions like generating dataplane tokens are available on the zone control plane.
 The global control plane doesn't propagate authentication credentials to the zone control plane.
 You can set up consistent user tokens across the whole setup by manually copying signing key from global to zone control planes. 
