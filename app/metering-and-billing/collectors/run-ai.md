@@ -19,11 +19,14 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-{{site.metering_and_billing}} can integrate with Nvidia's Run:ai to collect allocated and utilized resources for your AI/ML workloads, including GPUs, CPUs, and memory. This is useful for companies using Run:ai to run GPU workloads and want to bill and invoice their customers based on consumption of allocated and utilized resources.
+The OpenMeter Collector can integrate with Nvidia's Run:ai to collect allocated and utilized resources for your AI/ML workloads, including GPUs, CPUs, and memory. 
+This is useful for companies using Run:ai to run GPU workloads and want to bill and invoice their customers based on consumption of allocated and utilized resources.
 
 ## How it works
 
-You can install the Collector as a Kubernetes pod in your Run:ai cluster to collect metrics from your Run:ai platform automatically. The collector periodically scrapes the metrics from your Run:ai platform and emits them as [CloudEvents](https://cloudevents.io/) to {{site.metering_and_billing}}. This allows you to track usage and billing for your Run:ai workloads.
+You can install the Collector as a Kubernetes pod in your Run:ai cluster to collect metrics from your Run:ai platform automatically. 
+The collector periodically scrapes the metrics from your Run:ai platform and emits them as [CloudEvents](https://cloudevents.io/) to {{site.metering_and_billing}}. 
+This allows you to track usage and monetize Run:ai workloads.
 
 Once you have the usage data ingested into {{site.metering_and_billing}}, you can use it to set up prices and billing for your customers based on their usage.
 

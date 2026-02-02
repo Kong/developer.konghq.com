@@ -79,16 +79,6 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Collectors
-              description: |
-                Collect usage events from external systems and send them to {{site.metering_and_billing}}.
-              icon: /assets/icons/rocket.svg
-              cta:
-                text: Learn more
-                url: /metering-and-billing/collectors/
-      - blocks:
-          - type: card
-            config:
               title: Common Metering Examples
               description: |
                 Examples to meter AI, API, compute, GPUs, and storage usage.
@@ -96,6 +86,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/metering/#example-meter-use-cases
+      - blocks:
+          - type: card
+            config:
+              title: Collectors
+              description: |
+                Meter external systems and data sources like Kubernetes, GPUs, and databases with the OpenMeter Collector.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/collectors/
 
   - header:
       type: h2

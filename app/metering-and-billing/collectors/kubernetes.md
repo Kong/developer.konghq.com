@@ -19,11 +19,13 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-The {{site.metering_and_billing}} Kubernetes Collector is a standalone application you can install in your Kubernetes cluster to meter resource usage, such as Pod runtime CPU, memory, and storage allocation. This is useful if you want to monetize customer workloads with usage-based billing and invoicing.
+The OpenMeter Kubernetes Collector is a standalone application you can install in your Kubernetes cluster to meter resource usage, such as Pod runtime CPU, memory, and storage allocation. 
+This is useful if you want to monetize customer workloads with usage-based billing and invoicing.
 
 ## How it works
 
-You can install the Collector as a deployment in your Kubernetes cluster to collect metrics from your Kubernetes Pods automatically. The collector periodically scrapes the Kubernetes API to collect running pods and resources and emits them as [CloudEvents](https://cloudevents.io/) to {{site.metering_and_billing}}. This allows you to track usage and billing for your Kubernetes workloads.
+The collector periodically scrapes the Kubernetes API to collect running pods and resources and emits them as [CloudEvents](https://cloudevents.io/) to {{site.metering_and_billing}}. 
+This allows you to track usage and monetize your Kubernetes workloads.
 
 Once you have the usage data ingested into {{site.metering_and_billing}}, you can use it to set up prices and billing for your customers based on their usage.
 
