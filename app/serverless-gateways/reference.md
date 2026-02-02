@@ -56,9 +56,13 @@ related_resources:
     url: /gateway/hybrid-mode/
 
 ---
-Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless Gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
-You can manage your Serverless Gateway nodes under **API Gateway** in {{site.konnect_short_name}}.
+Serverless Gateways are lightweight API gateways with a fully hosted control plane in {{site.konnect_short_name}} and automatically-provisioned data plane nodes.
+They are highly available, backed by a service-level agreement (SLA), and designed to handle lightweight production workloads. 
+
+Because you don't need to manage any infrastructure, Serverless Gateways are a strong fit for startups, new projects, and teams that want to run low-to-moderate production traffic, as well as for development, testing, and experimentation. 
+
+You can manage your Serverless Gateway nodes under [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
 
 ## How do Serverless Gateways work?
 
@@ -109,7 +113,7 @@ Create a Serverless Gateway control plane by issuing a `POST` request to the [Co
   body:
       name: serverless-gateway-control-plane
       description: A test control plane for Serverless Gateways.
-      cluster_type: CLUSTER_TYPE_CLOUD_API_GATEWAY
+      cluster_type: CLUSTER_TYPE_SERVERLESS_V1
       cloud_gateway: true
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
