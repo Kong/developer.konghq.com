@@ -34,14 +34,14 @@ Most Prometheus instances keep metrics only for a short period of time, while {{
 
 For example, if you already have Prometheus metrics about the number of API requests your application is serving for your customers, you can use the Collector to turn the Prometheus metrics into billable events and send them to {{site.metering_and_billing}} for billing.
 
-## Billing from Prometheus metrics
+## Monetizing Prometheus metrics
 
-Re-using existing Prometheus metrics can save you time and effort. However, be aware that Prometheus metrics are not designed for billing and can lead to inaccuracies due to the following reasons:
-
-* Metrics can be lost when the app restarts and the metrics wasn't collected by the Prometheus scraper.
-* Metrics are not deduplicated, so you can get multiple metrics for the same event.
-
-For these reasons, we recommend using Prometheus metrics for billing only for long running workloads where the impact of these inaccuracies is insignificant on the total bill.
+{:.warning}
+> Prometheus metrics and queries are not designed for billing and can lead to inaccuracies due to:
+> * Metrics can be lost when the app restarts and the metrics wasn't collected by the Prometheus scraper.
+> * Metrics are not deduplicated, so you can get multiple metrics for the same event.
+>
+> We only recommend monetizing Prometheus metrics for long running workloads, where the impact of inaccuracies is neglicteble.
 
 ## Get started
 

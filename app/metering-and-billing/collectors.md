@@ -34,11 +34,11 @@ columns:
     key: description
 rows:
   - collector: "[Kubernetes](/metering-and-billing/collectors/kubernetes/)"
-    description: "Collect resource usage from Kubernetes pods including CPU, memory, and GPU allocation."
+    description: "Monetize Kubernetes pod runtime per-second including CPU, memory, and GPU allocation."
   - collector: "[Run:ai](/metering-and-billing/collectors/run-ai/)"
-    description: "Collect GPU and compute metrics from Nvidia Run:ai workloads."
+    description: "Monetize GPU and compute metrics from Nvidia Run:ai workloads."
   - collector: "[OpenTelemetry](/metering-and-billing/collectors/opentelemetry/)"
-    description: "Collect usage data from OpenTelemetry logs and metrics."
+    description: "Monetize OpenTelemetry logs."
   - collector: "[Prometheus](/metering-and-billing/collectors/prometheus/)"
     description: "Query Prometheus metrics and convert them to billing events."
   - collector: "[S3](/metering-and-billing/collectors/s3/)"
