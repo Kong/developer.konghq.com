@@ -21,6 +21,7 @@ module Jekyll
         Data::MinVersion.new(site:, page:).process
         Data::AddAllDocIndices.new(site:, page:).process
         Data::TitleTag.new(site:, page:).process
+        Data::LlmMetadata.new(site:, page:).process
       end
     end
 
@@ -35,6 +36,7 @@ module Jekyll
         Data::MinVersion.new(site:, page:).process
         Data::AddAllDocIndices.new(site:, page:).process
         Data::TitleTag.new(site:, page:).process
+        Data::LlmMetadata.new(site:, page:).process
       end
     end
   end
