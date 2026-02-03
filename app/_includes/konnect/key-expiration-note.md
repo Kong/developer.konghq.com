@@ -1,0 +1,4 @@
+{:.info}
+> **Key expiration notes:** 
+> * If you configure key expiration and edit the expiration, any pre-existing keys will expire at the previous configuration value. For example, if you configure keys to expire in 14 days and then edit it so that they expire in 7 days, any pre-existing keys will expire in 14 days. 
+> * You can [customize the emails](/dev-portal/customizations/dev-portal-customizations/#developer-email-customization) users receive when a key is about to expire and when a key expires by navigating to your Dev Portal, clicking **Portal Editor**, and then clicking the **Email** icon in the sidebar.
