@@ -85,7 +85,7 @@ groups:
     sections:
       - title: Get Started
         items:
-          - path: /operator/get-started/**/*
+          - path: /operator/get-started/konnect-crds/**/*
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/
