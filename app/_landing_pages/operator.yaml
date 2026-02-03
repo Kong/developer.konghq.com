@@ -40,7 +40,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/logos/brand/KongPrimary.svg
+            icon: /assets/logos/konglogo-gradient-secondary.svg
             title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and the Konnect CRDs"
             description: |
               Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs)
