@@ -3,6 +3,8 @@
 module Jekyll
   class RenderKongConf < Liquid::Tag # rubocop:disable Style/Documentation
     def render(context)
+      @page = context.environments.first['page']
+
       context.stack do
         context['config'] = Drops::KongConf.new
         Liquid::Template.parse(template).render(context)
@@ -12,7 +14,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/kong_conf.html'))
+      @template ||= if @page['output_format'] == 'markdown'
+                      File.read(File.expand_path('app/_includes/components/kong_conf.md'))
+                    else
+                      File.read(File.expand_path('app/_includes/components/kong_conf.html'))
+                    end
     end
   end
 end
