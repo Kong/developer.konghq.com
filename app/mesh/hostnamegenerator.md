@@ -213,3 +213,4 @@ status:
         coreName: synced-kube-mesh-service
 ```
 {% endpolicy_yaml %}
+
