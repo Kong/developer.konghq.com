@@ -64,7 +64,7 @@ env:
 
 The Helm chart automatically converts these keys to environment variables with the `KONG_OPERATOR_` prefix (for example, `zap_log_level` becomes `KONG_OPERATOR_ZAP_LOG_LEVEL`).
 
-{:.note}
+{:.info}
 > The `env` and `args` sections are mutually exclusive. When both are provided, `args` takes precedence.
 
 ## Logging options
