@@ -235,205 +235,37 @@ the new signing key.
 
 ### Disable the admin user token
 
-You can remove the default admin user token from the storage and prevent it from being recreated.
+You can remove the default admin user token from storage and prevent it from being recreated.
 Keep in mind that removing the admin user token doesn't remove the signing key.
-A malicious actor that acquires the signing key, can generate an admin token.
+Anyone with access to the signing key can generate a new admin token.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
-1. Delete `admin-user-token` Secret
-```sh
-kubectl delete secret admin-user-token -n kuma-namespace
-```
-
-2. Disable bootstrap of the token
-   [Configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
-   {% endnavtab %}
-   {% navtab "Universal" %}
-1. Delete `admin-user-token` Global Secret
-```sh
-kumactl delete global-secret admin-user-token
-```
-
-2. Disable bootstrap of the token
-   [Configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` set to `false`.
-   {% endnavtab %}
-   {% endnavtabs %}
-
-
-### Offline token issuing
-
-In addition to the regular flow of generating signing keys, storing them in secret, and using them to sign tokens on the control plane, Kuma also offers offline signing of tokens.
-In this flow, you can generate a pair of public and private keys and configure the control plane only with public keys for token verification.
-You can generate all the tokens without running the control plane.
-
-The advantages of this mode are:
-* easier, more reproducible deployments of the control plane, and more in line with GitOps.
-* potentially more secure setup, because the control plane does not have access to the private keys.
-
-Here's how to use offline issuing
-
-1. Generate a pair of signing keys
-
-   The following commands generate standard RSA key of 2048 bits and outputs it in PEM-encoded format.
-   You can use any external tool to generate a pair of keys.
-
+1. Delete the `admin-user-token` secret
    ```sh
-   kumactl generate signing-key --format=pem > /tmp/key-private.pem
-   kumactl generate public-key --signing-key-path=/tmp/key-private.pem > /tmp/key-public.pem
+   kubectl delete secret admin-user-token -n kuma-namespace
    ```
 
-   The result should be similar to this output
+1. Disable the token bootstrap by [configuring your control plane](/mesh/control-plane-configuration/) with the `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` variable set to `false`.
+{% endnavtab %}
+{% navtab "Universal" %}
+1. Delete `admin-user-token` global secret:
    ```sh
-   cat /tmp/key-private.pem /tmp/key-public.pem 
-   -----BEGIN RSA PRIVATE KEY-----
-   MIIEpAIBAAKCAQEAsS61a79gC4mkr2Ltwi09ajakLyUR8YTkJWzZE805EtTkEn/r
-   ...
-   htKtzsYA7yGlt364IuDybrP+PlPMSK9cQAmWRRZIcBNsKOODkAgKFA==
-   -----END RSA PRIVATE KEY-----
-   -----BEGIN RSA PUBLIC KEY-----
-   MIIBCgKCAQEAsS61a79gC4mkr2Ltwi09ajakLyUR8YTkJWzZE805EtTkEn/rL2u/
-   ...
-   se7sx2Pt/NPbWFFTMGVFm3A1ueTUoorW+wIDAQAB
-   -----END RSA PUBLIC KEY----- 
+   kumactl delete global-secret admin-user-token
    ```
 
-2. Configure the control plane with public key
-
-   [Configure a control plane](/mesh/control-plane-configuration/) with the following settings
-   ```yaml
-   apiServer:
-     authn:
-       type: tokens
-       tokens:
-         enableIssuer: false # disable control plane token issuer that uses secrets
-         validator:
-           useSecrets: false # do not use signing key stored in secrets to validate the token
-           publicKeys:
-           - kid: "key-1"
-             key: |
-               -----BEGIN RSA PUBLIC KEY-----
-               MIIBCgKCAQEAsS61a79gC4mkr2Ltwi09ajakLyUR8YTkJWzZE805EtTkEn/rL2u/
-               ...
-               se7sx2Pt/NPbWFFTMGVFm3A1ueTUoorW+wIDAQAB
-               -----END RSA PUBLIC KEY-----
-   ```
-   
-3. Use the private key to issue tokens offline
-
-   The command is the same as with online signing, but with two additional arguments:
-   * `--kid` - ID of the key that should be used to validate the token. This should match `kid` specified in the control plane configuration.
-   * `--signing-key-path` - path to a PEM-encoded private key.
-
-   ```sh
-   kumactl generate user-token \
-     --name john.doe@example.com \
-     --group users \
-     --valid-for 24h \
-     --signing-key-path /tmp/key-private.pem \
-     --kid key-1
-   ```
-   
-   You can also use any external system that can issue JWT tokens using `RS256` signing method with the following claims:
-   * `Name` (string) - the name of the user
-   * `Groups` ([]string) - list of user groups
-   
-#### Migration
-
-You can use both offline and online issuing by keeping `apiServer.authn.tokens.enableIssuer` to true.
-You can use both secrets and public key static config validators by keeping `apiServer.authn.tokens.validator.useSecrets` to true.
-
-#### Management
-
-Token revocation works the same when using both online and offline issuing.
-
-Signing key rotation works similarly:
-* generate another pair of signing keys
-* configure a control plane with old and new public keys
-* regenerate tokens for all existing users with the new private key
-* remove the old public key from the configuration
+2. Disable the token bootstrap by [configuring your control plane](/mesh/control-plane-configuration/) with the `KUMA_API_SERVER_AUTHN_TOKENS_BOOTSTRAP_ADMIN_TOKEN` variable set to `false`.
+{% endnavtab %}
+{% endnavtabs %}
 
 
-## Admin client certificates
+## Offline token issuing
 
-This section describes the alternative way of authenticating to API Server.
-
-{:.warning}
-> Admin client certificates are deprecated. If you are using it, please migrate to the user token in preceding section.
-
-To use admin client certificates, set `KUMA_API_SERVER_AUTHN_TYPE` to `adminClientCerts`.
-
-All users that provide client certificate are authenticated as a user with the name `mesh-system:admin` that belongs to group `mesh-system:admin`.
-
-### Usage
-
-1. Generate client certificates by using kumactl
-   ```sh
-   kumactl generate tls-certificate --type=client \
-     --cert-file=/tmp/tls.crt \
-     --key-file=/tmp/tls.key
-   ```
-
-2. Configure the control plane with client certificates
-   {% capture tabs %}
-   {% navtabs "Environment" %}
-   {% navtab "Kubernetes (kumactl)" %}
-   Create a secret in the namespace in which control plane is installed
-   ```sh
-   kubectl create secret generic api-server-client-certs -n {{site.mesh_namespace}} \
-     --from-file=client1.pem=/tmp/tls.crt \
-   ```
-   You can provide as many client certificates as you want. Remember to only provide certificates without keys.
-
-   Point to this secret when installing {{site.mesh_product_name}}
-   ```sh
-   kumactl install control-plane \
-     --tls-api-server-client-certs-secret=api-server-client-certs
-   ```
-   {% endnavtab %}
-   {% navtab "Kubernetes (Helm)" %}
-   Create a secret in the namespace in which control plane is installed
-   ```sh
-   kubectl create secret generic api-server-client-certs -n {{site.mesh_namespace}} \
-     --from-file=client1.pem=/tmp/tls.crt \
-   ```
-   You can provide as many client certificates as you want. Remember to only provide certificates without keys.
-
-   Set `{{site.set_flag_values_prefix}}controlPlane.tls.apiServer.clientCertsSecretName` to `api-server-client-certs` via HELM
-   {% endnavtab %}
-   {% navtab "Universal" %}
-   Put all the certificates in one directory
-   ```sh
-   mkdir /opt/client-certs
-   cp /tmp/tls.crt /opt/client-certs/client1.pem 
-   ```
-   All client certificates must end with `.pem` extension. Remember to only provide certificates without keys.
-
-   Configure control plane by pointing to this directory
-   ```sh
-   KUMA_API_SERVER_AUTH_CLIENT_CERTS_DIR=/opt/client-certs \
-     kuma-cp run
-   ```
-   {% endnavtab %}
-   {% endnavtabs %}
-   {% endcapture %}
-   {{ tabs | indent }}
-
-3. Configure `kumactl` with valid client certificate
-   ```sh
-   kumactl config control-planes add \
-     --name=<NAME>
-     --address=https://<KUMA_CP_DNS_NAME>:5682 \
-     --client-cert-file=/tmp/tls.crt \
-     --client-key-file=/tmp/tls.key \
-     --ca-cert-file=/tmp/ca.crt
-   ```
-
-   If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
+{% include /mesh/offline-token.md type="user" %}
 
 ## Multi-zone
 
-In a multi-zone setup, users execute a majority of actions on the global control plane.
-However, some actions like generating dataplane tokens are available on the zone control plane.
+In multi-zone mode, users execute a majority of actions on the global control plane.
+However, some actions such as generating data plane tokens, are available on the zone control plane.
 The global control plane doesn't propagate authentication credentials to the zone control plane.
-You can set up consistent user tokens across the whole setup by manually copying signing key from global to zone control planes. 
+You can set up consistent user tokens across the whole environment by manually copying signing keys from the global control plane to zone control planes. 
