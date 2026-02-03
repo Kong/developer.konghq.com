@@ -473,16 +473,6 @@ pages:
       - text: Mesh Service Discovery
         url: '/mesh/service-discovery/'
   -
-    path: app/_src/production/cp-deployment/zoneproxy-auth.md
-    title: 'Configure zone proxy authentication'
-    description: 'How to configure zone proxy authentication methods in multi-zone mode.'
-    url: '/mesh/zone-proxy-auth/'
-    related_resources:
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-  -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'
     description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
@@ -493,14 +483,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/gui.md
-    title: 'Kong Mesh user interface (GUI)'
-    description: 'Visual overview of your meshes, Data Planes, and policies using the {{site.mesh_product_name}} web-based GUI.'
-    url: '/mesh/kuma-user-interface-gui/'
-    related_resources:
-      - text: Mesh CLI
-        url: '/mesh/cli/'
-  -
     path: app/_src/production/secure-deployment/api-server-auth.md
     title: 'Authentication with the API server'
     description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
@@ -509,21 +491,9 @@ pages:
       - text: 'Manage secrets'
         url: '/mesh/manage-secrets/'
       - text: Mesh ports
-        url: /mesh/use-kuma/#control-plane-ports
+        url: /mesh/interact-with-control-plane/#control-plane-ports
       - text: Zone Ingress
         url: /mesh/zone-ingress/
-  -
-    path: app/_src/production/secure-deployment/dp-membership.md
-    title: 'Configure Data Plane proxy membership'
-    description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
-    url: '/mesh/configure-data-plane-proxy-membership/'
-    related_resources:
-      - text: 'Data plane on Kubernetes'
-        url: '/mesh/data-plane-kubernetes/'
-      - text: 'Data plane on Universal'
-        url: '/mesh/data-plane-universal/'
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
@@ -534,32 +504,6 @@ pages:
         url: '/mesh/authentication-with-the-api-server/'
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
-  -
-    path: app/_src/production/use-mesh.md
-    title: 'Kong Mesh GUI and ports reference'
-    description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.'
-    url: '/mesh/use-kuma/'
-    related_resources:
-      - text: Mesh GUI
-        url: '/mesh/kuma-user-interface-gui/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-  -
-    path: app/_src/reference/data-collection.md
-    title: 'Kong Mesh data collection'
-    description: 'Enable or disable data collection in {{site.mesh_product_name}}. Understand what telemetry is collected and how to configure reporting.'
-    url: '/mesh/data-collection/'
-    related_resources:
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: Audit logs
-        url: /mesh/access-audit/
-    tags:
-      - security
   -
     path: app/_src/quickstart/kubernetes-demo.md
     title: 'Deploy Kong Mesh on Kubernetes'

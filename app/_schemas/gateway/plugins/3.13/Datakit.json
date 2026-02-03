@@ -920,7 +920,8 @@
               },
               "maxLength": 64,
               "minLength": 1,
-              "type": "object"
+              "type": "object",
+              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
             }
           },
           "type": "object"

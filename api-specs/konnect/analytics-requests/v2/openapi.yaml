@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b5b586c089e7650d9ba0424adccd6d652902cc3f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b5b586c089e7650d9ba0424adccd6d652902cc3f'
+  x-oas-source: kong/platform-api@9d894504533aac3107094b10429cc9c1f044f46a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d894504533aac3107094b10429cc9c1f044f46a'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -76,6 +76,7 @@ components:
           items:
             oneOf:
               - $ref: '#/components/schemas/ApiFilterByField'
+              - $ref: '#/components/schemas/ApiPackageFilterByField'
               - $ref: '#/components/schemas/ApiProductFilterByField'
               - $ref: '#/components/schemas/ApiProductVersionFilterByField'
               - $ref: '#/components/schemas/ApplicationFilterByField'
@@ -298,6 +299,10 @@ components:
             type: string
           api:
             description: API ID associated with the request.
+            type: string
+            nullable: true
+          api_package:
+            description: API Package ID associated with the request.
             type: string
             nullable: true
           api_product:
@@ -580,6 +585,22 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueUUID'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by api
+    ApiPackageFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_package
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueUUID'
+            - $ref: '#/components/schemas/FilterSingleValueUUID'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by api package
     ApiProductFilterByField:
       allOf:
         - type: object
@@ -1803,6 +1824,7 @@ components:
         results:
           - request_start: '2020-02-02T01:00:00.000Z'
             api: null
+            api_package: null
             api_product: 523468b1-2e74-4b58-b30e-6f904e99e4d0
             api_product_version: d40a6dd7-37e8-4937-8dfd-9fa988c7fc3e
             application: bc2587ae-a35e-4a34-b6b2-f4ca5ae06dc9
@@ -1859,6 +1881,7 @@ components:
             upstream_uri: /graphql
           - request_start: '2020-02-02T01:00:01.050Z'
             api: null
+            api_package: af4d23b1-d1cd-4fc3-8939-94fbfead746e
             api_product: b866c867-60e6-4258-adb3-e136cc26388b
             api_product_version: 3807c200-3d10-445d-85b2-7afe07ca3932
             application: null

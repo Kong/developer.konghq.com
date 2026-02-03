@@ -6,8 +6,7 @@ metadata:
     - /insomnia/
   products:
     - insomnia
-  min_version:
-    insomnia: '12.0'  
+ 
 rows:
   - header:
       type: h1

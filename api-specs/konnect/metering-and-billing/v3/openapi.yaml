@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@19edf23a849cf198ee36ab1ba0a633565eb24c49
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/19edf23a849cf198ee36ab1ba0a633565eb24c49'
+  x-oas-source: kong/platform-api@fff8d6357a54702356158b3bf2b5b80db22fc823
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fff8d6357a54702356158b3bf2b5b80db22fc823'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -22,6 +22,56 @@ servers:
   - url: 'https://sg.api.konghq.com/v3'
     description: Singapore Production region
 paths:
+  /openmeter/apps:
+    get:
+      operationId: list-apps
+      summary: List apps
+      description: List installed apps.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Apps
+  '/openmeter/apps/{appId}':
+    get:
+      operationId: get-app
+      summary: Get app
+      description: Get an installed app.
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: App response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingApp'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Apps
   /openmeter/customers:
     post:
       operationId: create-customer
@@ -174,6 +224,188 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing':
+    get:
+      operationId: get-customer-billing
+      summary: Get customer billing data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: CustomerBillingData response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+    put:
+      operationId: update-customer-billing
+      summary: Update customer billing data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertCustomerBillingDataRequest'
+      responses:
+        '200':
+          description: CustomerBillingData upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/app-data':
+    put:
+      operationId: update-customer-billing-app-data
+      summary: Update customer billing app data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAppCustomerDataRequest'
+      responses:
+        '200':
+          description: AppCustomerData upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/stripe/checkout-sessions':
+    post:
+      operationId: create-customer-stripe-checkout-session
+      summary: Create Stripe Checkout Session
+      description: |-
+        Create a [Stripe Checkout Session](https://docs.stripe.com/payments/checkout) for the customer.
+
+        Creates a Checkout Session for collecting payment method information from customers.
+        The session operates in "setup" mode, which collects payment details without charging
+        the customer immediately. The collected payment method can be used for future
+        subscription billing.
+
+        For hosted checkout sessions, redirect customers to the returned URL. For embedded
+        sessions, use the client_secret to initialize Stripe.js in your application.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCustomerStripeCreateCheckoutSessionRequest'
+      responses:
+        '201':
+          description: CreateStripeCheckoutSessionResult created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppStripeCreateCheckoutSessionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/stripe/portal-sessions':
+    post:
+      operationId: create-customer-stripe-portal-session
+      summary: Create Stripe customer portal session
+      description: |-
+        Create Stripe Customer Portal Session.
+
+        Useful to redirect the customer to the Stripe Customer Portal to manage their payment methods,
+        change their billing address and access their invoice history.
+        Only returns URL if the customer billing profile is linked to a stripe app and customer.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCustomerStripeCreateCustomerPortalSessionRequest'
+      responses:
+        '201':
+          description: CreateStripeCustomerPortalSessionResult created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppStripeCreateCustomerPortalSessionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
       tags:
         - OpenMeter Customers
   '/openmeter/customers/{customerId}/entitlement-access':
@@ -335,6 +567,148 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Meters
+  /openmeter/profiles:
+    get:
+      operationId: list-billing-profiles
+      summary: List billing profiles
+      description: List billing profiles.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfilePagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Billing
+    post:
+      operationId: create-billing-profile
+      summary: Create a new billing profile
+      description: |-
+        Create a new billing profile.
+
+        Billing profiles contain the settings for billing and controls invoice generation.
+        An organization can have multiple billing profiles defined.
+        A billing profile is linked to a specific app. This association is established during the billing profile's creation and remains immutable.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingProfileRequest'
+      responses:
+        '201':
+          description: BillingProfile created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Billing
+  '/openmeter/profiles/{id}':
+    get:
+      operationId: get-billing-profile
+      summary: Get a billing profile
+      description: Get a billing profile.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: BillingProfile response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
+    put:
+      operationId: update-billing-profile
+      summary: Update a billing profile
+      description: Update a billing profile.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertBillingProfileRequest'
+      responses:
+        '200':
+          description: BillingProfile updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
+    delete:
+      operationId: delete-billing-profile
+      summary: Delete a billing profile
+      description: |-
+        Delete a billing profile.
+
+        Only such billing profiles can be deleted that are:
+        - not the default profile
+        - not pinned to any customer using customer overrides
+        - only have finalized invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: Deleted response.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
   /openmeter/subscriptions:
     post:
       operationId: create-subscription
@@ -549,6 +923,583 @@ components:
             type: integer
       style: deepObject
   schemas:
+    AppPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingApp'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    BillingApp:
+      description: Installed application.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          stripe: '#/components/schemas/BillingAppStripe'
+          sandbox: '#/components/schemas/BillingAppSandbox'
+          external_invoicing: '#/components/schemas/BillingAppExternalInvoicing'
+      oneOf:
+        - $ref: '#/components/schemas/BillingAppStripe'
+        - $ref: '#/components/schemas/BillingAppSandbox'
+        - $ref: '#/components/schemas/BillingAppExternalInvoicing'
+    BillingAppCustomerData:
+      description: App customer data.
+      type: object
+      properties:
+        stripe:
+          description: Used if the customer has a linked Stripe app.
+          type: object
+          properties:
+            customer_id:
+              description: The Stripe customer ID used.
+              type: string
+              example: cus_1234567890
+              title: Stripe customer ID
+            default_payment_method_id:
+              description: The Stripe default payment method ID.
+              type: string
+              example: pm_1234567890
+              title: Stripe default payment method ID
+            labels:
+              description: Labels for this Stripe integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: Stripe
+        external_invoicing:
+          description: Used if the customer has a linked external invoicing app.
+          type: object
+          properties:
+            labels:
+              description: Labels for this external invoicing integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: External invoicing
+    BillingAppExternalInvoicing:
+      description: |-
+        External Invoicing app enables integration with third-party invoicing or payment system.
+
+        The app supports a bi-directional synchronization pattern where OpenMeter Billing manages
+        the invoice lifecycle while the external system handles invoice presentation and payment collection.
+
+        Integration workflow:
+        1. The billing system creates invoices and transitions them through lifecycle states (draft → issuing → issued)
+        2. The integration receives webhook notifications about invoice state changes
+        3. The integration calls back to provide external system IDs and metadata
+        4. The integration reports payment events back via the payment status API
+
+        State synchronization is controlled by hooks that pause invoice progression until the
+        external system confirms synchronization via API callbacks.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - external_invoicing
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+        enable_draft_sync_hook:
+          description: |-
+            Enable draft synchronization hook.
+
+            When enabled, invoices will pause at the draft state and wait for the integration
+            to call the draft synchronized endpoint before progressing to the issuing state.
+            This allows the external system to validate and prepare the invoice data.
+
+            When disabled, invoices automatically progress through the draft state based on
+            the configured workflow timing.
+          type: boolean
+        enable_issuing_sync_hook:
+          description: |-
+            Enable issuing synchronization hook.
+
+            When enabled, invoices will pause at the issuing state and wait for the integration
+            to call the issuing synchronized endpoint before progressing to the issued state.
+            This ensures the external invoicing system has successfully created and finalized
+            the invoice before it is marked as issued.
+
+            When disabled, invoices automatically progress through the issuing state and are
+            immediately marked as issued.
+          type: boolean
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+        - enable_draft_sync_hook
+        - enable_issuing_sync_hook
+    BillingAppSandbox:
+      description: Sandbox app can be used for testing billing features.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - sandbox
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+    BillingAppStripe:
+      description: Stripe app.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - stripe
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+        account_id:
+          description: The Stripe account ID associated with the connected Stripe account.
+          type: string
+          readOnly: true
+        livemode:
+          description: Indicates whether the app is connected to a live Stripe account.
+          type: boolean
+          readOnly: true
+        masked_api_key:
+          description: The masked Stripe API key that only exposes the first and last few characters.
+          type: string
+          readOnly: true
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+        - account_id
+        - livemode
+        - masked_api_key
+    BillingAppStripeCreateCheckoutSessionResult:
+      description: |-
+        Result of creating a Stripe Checkout Session.
+
+        Contains all the information needed to redirect customers to the checkout
+        or initialize an embedded checkout flow.
+      type: object
+      properties:
+        customer_id:
+          description: The customer ID in the billing system.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          title: ULID
+        stripe_customer_id:
+          description: The Stripe customer ID.
+          type: string
+        session_id:
+          description: The Stripe checkout session ID.
+          type: string
+        setup_intent_id:
+          description: The setup intent ID created for collecting the payment method.
+          type: string
+        client_secret:
+          description: |-
+            Client secret for initializing Stripe.js on the client side.
+
+            Required for embedded checkout sessions.
+            See: https://docs.stripe.com/payments/checkout/custom-success-page
+          type: string
+        client_reference_id:
+          description: |-
+            The client reference ID provided in the request.
+
+            Useful for reconciling the session with your internal systems.
+          type: string
+        customer_email:
+          description: Customer's email address if provided to Stripe.
+          type: string
+        currency:
+          description: Currency code for the checkout session.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        created_at:
+          description: Timestamp when the checkout session was created.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        expires_at:
+          description: Timestamp when the checkout session will expire.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        metadata:
+          description: Metadata attached to the checkout session.
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          description: |-
+            The status of the checkout session.
+
+            See: https://docs.stripe.com/api/checkout/sessions/object#checkout_session_object-status
+          type: string
+        url:
+          description: URL to redirect customers to the checkout page (for hosted mode).
+          type: string
+        mode:
+          description: |-
+            Mode of the checkout session.
+
+            Currently only "setup" mode is supported for collecting payment methods.
+          type: string
+          enum:
+            - setup
+        cancel_url:
+          description: The cancel URL where customers are redirected if they cancel.
+          type: string
+        success_url:
+          description: The success URL where customers are redirected after completion.
+          type: string
+        return_url:
+          description: The return URL for embedded sessions after authentication.
+          type: string
+      required:
+        - customer_id
+        - stripe_customer_id
+        - session_id
+        - setup_intent_id
+        - created_at
+        - mode
+    BillingAppStripeCreateCustomerPortalSessionResult:
+      description: |-
+        Result of creating a [Stripe Customer Portal Session](https://docs.stripe.com/api/customer_portal/sessions/object).
+
+        Contains all the information needed to redirect the customer to the Stripe Customer Portal.
+      type: object
+      properties:
+        id:
+          description: |-
+            The ID of the customer portal session.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-id
+          type: string
+        stripe_customer_id:
+          description: The ID of the stripe customer.
+          type: string
+        configuration_id:
+          description: |-
+            Configuration used to customize the customer portal.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-configuration
+          type: string
+        livemode:
+          description: |-
+            Livemode.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-livemode
+          type: boolean
+        created_at:
+          description: |-
+            Created at.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-created
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        return_url:
+          description: |-
+            Return URL.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-return_url
+          type: string
+        locale:
+          description: |-
+            The IETF language tag of the locale customer portal is displayed in.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-locale
+          type: string
+        url:
+          description: |-
+            The URL to redirect the customer to after they have completed
+            their requested actions.
+          type: string
+      required:
+        - id
+        - stripe_customer_id
+        - configuration_id
+        - livemode
+        - created_at
+        - return_url
+        - locale
+        - url
     BillingCustomer:
       description: Customers can be individuals or organizations that can subscribe to plans and have access to features.
       type: object
@@ -673,6 +1624,344 @@ components:
         - id
         - name
         - key
+    BillingCustomerData:
+      description: Billing customer data.
+      type: object
+      properties:
+        billing_profile:
+          description: |-
+            The billing profile for the customer.
+
+            If not provided, the default billing profile will be used.
+          type: object
+          properties:
+            id:
+              description: The ID of the billing profile.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          required:
+            - id
+          title: Billing profile
+        app_data:
+          description: App customer data.
+          type: object
+          properties:
+            stripe:
+              description: Used if the customer has a linked Stripe app.
+              type: object
+              properties:
+                customer_id:
+                  description: The Stripe customer ID used.
+                  type: string
+                  example: cus_1234567890
+                  title: Stripe customer ID
+                default_payment_method_id:
+                  description: The Stripe default payment method ID.
+                  type: string
+                  example: pm_1234567890
+                  title: Stripe default payment method ID
+                labels:
+                  description: Labels for this Stripe integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: Stripe
+            external_invoicing:
+              description: Used if the customer has a linked external invoicing app.
+              type: object
+              properties:
+                labels:
+                  description: Labels for this external invoicing integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: External invoicing
+          title: App customer data
+    BillingCustomerStripeCreateCheckoutSessionRequest:
+      description: |-
+        Request to create a Stripe Checkout Session for the customer.
+
+        Checkout Sessions are used to collect payment method information from customers
+        in a secure, Stripe-hosted interface. This integration uses setup mode to collect
+        payment methods that can be charged later for subscription billing.
+      type: object
+      properties:
+        stripe_options:
+          description: |-
+            Options for configuring the Stripe Checkout Session.
+
+            These options are passed directly to Stripe's [checkout session creation API](https://docs.stripe.com/api/checkout/sessions/create).
+          type: object
+          properties:
+            billing_address_collection:
+              description: |-
+                Whether to collect the customer's billing address.
+
+                Defaults to auto, which only collects the address when necessary for tax calculation.
+              type: string
+              default: auto
+              enum:
+                - auto
+                - required
+            cancel_url:
+              description: |-
+                URL to redirect customers who cancel the checkout session.
+
+                Not allowed when ui_mode is "embedded".
+              type: string
+            client_reference_id:
+              description: |-
+                Unique reference string for reconciling sessions with internal systems.
+
+                Can be a customer ID, cart ID, or any other identifier.
+              type: string
+            customer_update:
+              description: Controls which customer fields can be updated by the checkout session.
+              type: object
+              properties:
+                address:
+                  description: |-
+                    Whether to save the billing address to customer.address.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+                name:
+                  description: |-
+                    Whether to save the customer name to customer.name.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+                shipping:
+                  description: |-
+                    Whether to save shipping information to customer.shipping.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+            consent_collection:
+              description: Configuration for collecting customer consent during checkout.
+              type: object
+              properties:
+                payment_method_reuse_agreement:
+                  description: Controls the visibility of payment method reuse agreement.
+                  type: object
+                  properties:
+                    position:
+                      description: Position and visibility of the payment method reuse agreement.
+                      type: string
+                      enum:
+                        - auto
+                        - hidden
+                promotions:
+                  description: |-
+                    Enables collection of promotional communication consent.
+
+                    Only available to US merchants. When set to "auto", Checkout determines
+                    whether to show the option based on the customer's locale.
+                  type: string
+                  enum:
+                    - auto
+                    - none
+                terms_of_service:
+                  description: |-
+                    Requires customers to accept terms of service before payment.
+
+                    Requires a valid terms of service URL in your Stripe Dashboard settings.
+                  type: string
+                  enum:
+                    - none
+                    - required
+            currency:
+              description: |-
+                Three-letter ISO 4217 currency code in uppercase.
+
+                Required for payment mode sessions. Optional for setup mode sessions.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+            custom_text:
+              description: Custom text to display during checkout at various stages.
+              type: object
+              properties:
+                after_submit:
+                  description: Text displayed after the payment confirmation button.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                shipping_address:
+                  description: Text displayed alongside shipping address collection.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                submit:
+                  description: Text displayed alongside the payment confirmation button.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                terms_of_service_acceptance:
+                  description: Text replacing the default terms of service agreement text.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+            expires_at:
+              description: |-
+                Unix timestamp when the checkout session expires.
+
+                Can be 30 minutes to 24 hours from creation. Defaults to 24 hours.
+              type: integer
+              format: int64
+            locale:
+              description: |-
+                IETF language tag for the checkout UI locale.
+
+                If blank or "auto", uses the browser's locale. Example: "en", "fr", "de".
+              type: string
+            metadata:
+              description: |-
+                Set of key-value pairs to attach to the checkout session.
+
+                Useful for storing additional structured information.
+              type: object
+              additionalProperties:
+                type: string
+            return_url:
+              description: |-
+                Return URL for embedded checkout sessions after payment authentication.
+
+                Required if ui_mode is "embedded" and redirect-based payment methods are enabled.
+              type: string
+            success_url:
+              description: |-
+                Success URL to redirect customers after completing payment or setup.
+
+                Not allowed when ui_mode is "embedded".
+                See: https://docs.stripe.com/payments/checkout/custom-success-page
+              type: string
+            ui_mode:
+              description: |-
+                The UI mode for the checkout session.
+
+                "hosted" displays a Stripe-hosted page. "embedded" integrates directly into your app.
+                Defaults to "hosted".
+              type: string
+              default: hosted
+              enum:
+                - embedded
+                - hosted
+            payment_method_types:
+              description: |-
+                List of payment method types to enable (e.g., "card", "us_bank_account").
+
+                If not specified, Stripe enables all relevant payment methods.
+              type: array
+              items:
+                type: string
+            redirect_on_completion:
+              description: |-
+                Redirect behavior for embedded checkout sessions.
+
+                Controls when to redirect users after completion.
+                See: https://docs.stripe.com/payments/checkout/custom-success-page?payment-ui=embedded-form
+              type: string
+              enum:
+                - always
+                - if_required
+                - never
+            tax_id_collection:
+              description: Configuration for collecting tax IDs during checkout.
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable tax ID collection during checkout.
+
+                    Defaults to false.
+                  type: boolean
+                  default: false
+                required:
+                  description: |-
+                    Whether tax ID collection is required.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - if_supported
+                    - never
+      required:
+        - stripe_options
+    BillingCustomerStripeCreateCustomerPortalSessionRequest:
+      description: |-
+        Request to create a Stripe Customer Portal Session for the customer.
+
+        Useful to redirect the customer to the Stripe Customer Portal to manage their payment methods,
+        change their billing address and access their invoice history.
+        Only returns URL if the customer billing profile is linked to a stripe app and customer.
+      type: object
+      properties:
+        stripe_options:
+          description: Options for configuring the Stripe Customer Portal Session.
+          type: object
+          properties:
+            configuration_id:
+              description: |-
+                The ID of an existing [Stripe configuration](https://docs.stripe.com/api/customer_portal/configurations) to use for this session,
+                describing its functionality and features.
+                If not specified, the session uses the default configuration.
+              type: string
+            locale:
+              description: |-
+                The IETF [language tag](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-locale) of the locale customer portal is displayed in.
+                If blank or `auto`, the customer's preferred_locales or browser's locale is used.
+              type: string
+            return_url:
+              description: |-
+                The [URL to redirect](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) the customer to after they have completed
+                their requested actions.
+              type: string
+      required:
+        - stripe_options
     BillingEntitlementAccessResult:
       description: Entitlement access result.
       type: object
@@ -715,6 +2004,314 @@ components:
         - type
         - feature_key
         - has_access
+    BillingProfile:
+      description: Billing profiles contain the settings for billing and controls invoice generation.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        apps:
+          description: The applications used by this billing profile.
+          type: object
+          properties:
+            tax:
+              description: The tax app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            invoicing:
+              description: The invoicing app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            payment:
+              description: The payment app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+          required:
+            - tax
+            - invoicing
+            - payment
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - id
+        - name
+        - supplier
+        - workflow
+        - apps
+        - default
+    BillingProfilePagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingProfile'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
     BillingSubscription:
       description: Subscription.
       type: object
@@ -1149,6 +2746,349 @@ components:
       enum:
         - immediate
         - next_billing_cycle
+    BillingWorkflowCollectionAlignmentAnchored:
+      description: |-
+        BillingWorkflowCollectionAlignmentAnchored specifies the alignment for collecting the pending line items
+        into an invoice.
+      type: object
+      properties:
+        type:
+          description: The type of alignment.
+          type: string
+          enum:
+            - anchored
+        recurring_period:
+          description: The recurring period for the alignment.
+          type: object
+          properties:
+            anchor:
+              description: A date-time anchor to base the recurring period on.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Anchor time
+            interval:
+              description: The interval duration in ISO 8601 format.
+              type: string
+              format: ISO8601
+              example: P1M
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Interval in ISO 8601 duration format
+          required:
+            - anchor
+            - interval
+      required:
+        - type
+        - recurring_period
+    BillingWorkflowCollectionAlignmentSubscription:
+      description: |-
+        BillingWorkflowCollectionAlignmentSubscription specifies the alignment for collecting the pending line items
+        into an invoice.
+      type: object
+      properties:
+        type:
+          description: The type of alignment.
+          type: string
+          enum:
+            - subscription
+      required:
+        - type
+    BillingWorkflowPaymentChargeAutomaticallySettings:
+      description: Payment settings for a billing workflow when the collection method is charge automatically.
+      type: object
+      properties:
+        collection_method:
+          description: The collection method for the invoice.
+          type: string
+          enum:
+            - charge_automatically
+      required:
+        - collection_method
+    BillingWorkflowPaymentSendInvoiceSettings:
+      description: Payment settings for a billing workflow when the collection method is send invoice.
+      type: object
+      properties:
+        collection_method:
+          description: The collection method for the invoice.
+          type: string
+          enum:
+            - send_invoice
+        due_after:
+          description: |-
+            The period after which the invoice is due.
+            With some payment solutions it's only applicable for manual collection method.
+          type: string
+          format: ISO8601
+          example: P30D
+          default: P30D
+      required:
+        - collection_method
+    CreateBillingProfileRequest:
+      description: BillingProfile create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        apps:
+          description: The applications used by this billing profile.
+          type: object
+          properties:
+            tax:
+              description: The tax app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            invoicing:
+              description: The invoicing app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            payment:
+              description: The payment app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+          required:
+            - tax
+            - invoicing
+            - payment
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - name
+        - supplier
+        - workflow
+        - apps
+        - default
     CreateCustomerRequest:
       description: Customer create request.
       type: object
@@ -1600,6 +3540,344 @@ components:
       example: 01G65Z755AFWAKHE12NY0CQ9FH
       pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
       title: ULID
+    UpsertAppCustomerDataRequest:
+      description: AppCustomerData upsert request.
+      type: object
+      properties:
+        stripe:
+          description: Used if the customer has a linked Stripe app.
+          type: object
+          properties:
+            customer_id:
+              description: The Stripe customer ID used.
+              type: string
+              example: cus_1234567890
+              title: Stripe customer ID
+            default_payment_method_id:
+              description: The Stripe default payment method ID.
+              type: string
+              example: pm_1234567890
+              title: Stripe default payment method ID
+            labels:
+              description: Labels for this Stripe integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: Stripe
+        external_invoicing:
+          description: Used if the customer has a linked external invoicing app.
+          type: object
+          properties:
+            labels:
+              description: Labels for this external invoicing integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: External invoicing
+    UpsertBillingProfileRequest:
+      description: BillingProfile upsert request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - name
+        - supplier
+        - workflow
+        - default
+    UpsertCustomerBillingDataRequest:
+      description: CustomerBillingData upsert request.
+      type: object
+      properties:
+        billing_profile:
+          description: |-
+            The billing profile for the customer.
+
+            If not provided, the default billing profile will be used.
+          type: object
+          properties:
+            id:
+              description: The ID of the billing profile.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          required:
+            - id
+          title: Billing profile
+        app_data:
+          description: App customer data.
+          type: object
+          properties:
+            stripe:
+              description: Used if the customer has a linked Stripe app.
+              type: object
+              properties:
+                customer_id:
+                  description: The Stripe customer ID used.
+                  type: string
+                  example: cus_1234567890
+                  title: Stripe customer ID
+                default_payment_method_id:
+                  description: The Stripe default payment method ID.
+                  type: string
+                  example: pm_1234567890
+                  title: Stripe default payment method ID
+                labels:
+                  description: Labels for this Stripe integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: Stripe
+            external_invoicing:
+              description: Used if the customer has a linked external invoicing app.
+              type: object
+              properties:
+                labels:
+                  description: Labels for this external invoicing integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: External invoicing
+          title: App customer data
     UpsertCustomerRequest:
       description: Customer upsert request.
       type: object
@@ -2159,6 +4437,10 @@ components:
       description: |
         The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
 tags:
+  - name: OpenMeter Billing
+    description: 'Billing manages the billing profiles, and invoices for customers.'
+  - name: OpenMeter Apps
+    description: 'Apps enable you to extend and customize billing and usage workflows by integrating with external systems and services. Apps can automate and enhance your billing ecosystem by supporting capabilities such as synchronizing usage data with third-party platforms, calculating taxes, generating and delivering invoices, handling payment collection, and other billing-related tasks.'
   - name: OpenMeter Entitlements
     description: Entitlements are used to control access to features for customers.
   - name: OpenMeter Subscriptions

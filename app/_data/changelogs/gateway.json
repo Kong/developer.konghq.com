@@ -19618,5 +19618,102 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.13.0.1": {
+    "kong": [
+      {
+        "message": "Fixed an issue where DP's proxy listener could not be verified because of it was disabled in CP.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**acl**: Fixed an issue where the ACL plugin did not check consumer groups from all sources, causing it to incorrectly deny access when consumer groups were set by other plugins like ACE in `ngx.ctx.authenticated_consumer_groups`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**llm**: Fixed an issue where we could not specify the correct dimensions for Gemini embeddings model provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where we didn't clear header for absent claim.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where `tools/list` could expose tools to consumers denied by tool ACL in listener mode.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where PATCHing the tool caused an error.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**aws-lambda**: Fixed an issue where Lambda responses with empty or null body caused 500 errors when `is_proxy_integration` is enabled.\n",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**datakit**: Fixed xml_to_json node to recognize `text/xml` content-type in addition to `application/xml` for XML request body processing, ensuring RFC 7303 compliance.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where GCP tokens would not be proactively refreshed before expiration.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka**: Fixed issue where Kafka message key deserialization failed silently, returning raw string data instead of deserialized objects. \n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**confluent, confluent-consume**: Fix issue where Kafka plugin failed to encode and validate message keys when using Confluent Schema Registry.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka**: Fix issue where Kafka plugin produced records with incorrect `offsetDelta` in the record package.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where `kong health` command would fail to run when kong configuration contains vault references.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `http.response.status_code` attribute of the `http.server.request.count` metric was incorrectly set to `kong.response.status_code`. Now, the attribute name follows the OTel specification.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where the `kong.upstream.status_code` field of access logs was incorrectly populated with string value instead of integer value when there was one or more retries to the upstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the Redis cloud authentication feature cannot fetch a correct credential for connecting to Azure Redis, especially when using Azure Workload Identity.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the `network.peer.name` attribute in OpenTelemetry traces showed\nthe same hostname for all retry attempts instead of capturing the specific hostname\nfor each attempt.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

@@ -81,3 +81,22 @@ This data is maintained for 90 days. After 90 days without any activity, the dat
 
 {:.info}
 > For any user who last logged in before May 20, 2025, the date will show their last login date.
+
+## User types
+
+In your Enterprise Plan, there are two types of users:
+- **Managed Users**: A user that operates Insomnia from one of your verified domains and is associated with your Enterprise account. These users consume a license.
+- **Unmanaged Users**: A user that operates Insomnia from one of your verified domains, but is not associated with your Enterprise account. These users don't consume a license and not impacted by organization policies, for example, restrictions on allowed project storage types.
+
+You can review unmanaged users on a domain to identify accounts that you may want to add to your Enterprise organization. At this time, you must review unmanaged users on a per-domain basis. To view all of the unmanaged users associated with a domain:
+1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. Select your domain.
+1. From the **Unclaimed Accounts** section, click **Manage**.
+
+To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
+1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. Select your domain.
+1. Enable the **Enable** toggle.
+
+{:.info}
+> The number of unmanaged users is cumulative across all your domains. Unclaimed accounts are specific to one domain and only reflect the unmanaged users associated with that specific domain. As a result, if you have more than one domain, the number of unmanaged users won't match the number of unclaimed accounts.

@@ -21,6 +21,8 @@ related_resources:
     url: '/mesh/mesh-multizone-service-deployment/'
   - text: Zone ingress
     url: /mesh/zone-ingress/
+  - text: Configure data plane proxy membership
+    url: /mesh/configure-data-plane-proxy-membership/
 ---
 
 A data plane proxy (DPP), also known as a sidecar, is the part of {{site.mesh_product_name}} that runs next to each workload that is a member of the mesh.

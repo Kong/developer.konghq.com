@@ -107,13 +107,9 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-The [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin allows you to route requests to multiple LLM models and define load balancing, retries, timeouts, and token counting strategies. In this tutorial, we configure it to send requests to both OpenAI and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests.
+The [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin allows you to route requests to multiple LLM models and define load balancing, retries, timeouts, and token counting strategies. The AI LLM as Judge plugin requires AI Proxy Advanced with [`config.balancer.tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) set to `llm-accuracy`. This setting enables the balancer to compare responses from multiple LLM models and pass them to the judge for evaluation.
 
-{:.info}
-> For testing purposes only, we include a **less reliable Ollama model** in the configuration.
->
->
-This makes it easier to demonstrate the evaluation differences when responses are judged by the LLM as Judge plugin.
+In this tutorial, we configure AI Proxy Advanced to send requests to both OpenAI and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests. For testing purposes only, we include a less reliable Ollama model in the configuration. This makes it easier to demonstrate the evaluation differences when responses are judged by the AI LLM as Judge plugin.
 
 {% entity_examples %}
 entities:
@@ -237,6 +233,7 @@ entities:
 
 Let's run a simple log collector script which collects logs at the `9999` port. Copy and run this snippet in your terminal:
 
+<!-- vale off -->
 {% validation custom-command %}
 command: |
   cat <<EOF > log_server.py
@@ -281,15 +278,18 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!-- vale on -->
 
 Now, run this script with Python:
 
+<!-- vale off -->
 {% validation custom-command %}
 command: python3 log_server.py 2>&1 &
 expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!-- vale on -->
 
 If the script is successful, you'll receive the following prompt in your terminal:
 
@@ -301,6 +301,7 @@ Starting log server on http://0.0.0.0:9999
 
 Send test requests to the `example-route` Route to see model responses scored:
 
+<!-- vale off -->
 {% validation traffic-generator %}
 iterations: 5
 url: '/anything'
@@ -312,6 +313,7 @@ body:
       content: "Who was Jozef Mackiewicz?"
 inline_sleep: 3
 {% endvalidation %}
+<!-- vale on -->
 
 You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
 

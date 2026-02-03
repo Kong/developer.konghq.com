@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.31
+  version: 3.1.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@769ecd6fed907f69ed12f1662784f0cfd9495809
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/769ecd6fed907f69ed12f1662784f0cfd9495809'
+  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -732,8 +732,8 @@ paths:
   '/portals/{portalId}/default-content':
     post:
       operationId: create-default-content
-      summary: Creates Default Pages
-      description: Creates the default pages for a portal if they do not already exists.
+      summary: Create Boilerplate Content
+      description: 'Creates a default collection of pages, snippets, and customization config for a portal if they do not already exist. This endpoint is optional, you can call it to populate a newly created developer portal with default content, but it is not required. Existing pages and snippets will not be modified or deleted. If used, it is typically called once per portal shortly after creation.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
       responses:
@@ -762,12 +762,7 @@ paths:
           description: Filter applications returned in the response.
           required: false
           schema:
-            type: object
-            properties:
-              developer_id:
-                $ref: '#/components/schemas/UuidFieldFilter'
-              name:
-                $ref: '#/components/schemas/StringFieldFilter'
+            $ref: '#/components/schemas/FilterApplications'
           style: deepObject
       responses:
         '200':
@@ -3781,6 +3776,7 @@ components:
                 - profile
             claim_mappings:
               $ref: '#/components/schemas/PortalClaimMappings'
+          readOnly: true
           required:
             - issuer
             - client_id
@@ -4517,6 +4513,8 @@ components:
         - account-access-approved
         - account-access-rejected
         - account-access-revoked
+        - api-key-expiring-soon
+        - api-key-expired
     EmailTemplateVariableName:
       description: |
         Enum for available portal email template variables.
@@ -4532,6 +4530,8 @@ components:
         - api_name
         - api_version
         - application_name
+        - credential_name
+        - credential_expires_at
     DefaultEmailTemplate:
       type: object
       properties:
@@ -4675,6 +4675,13 @@ components:
         - description
         - scope
         - example
+    FilterApplications:
+      type: object
+      properties:
+        developer_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       properties:
@@ -5449,6 +5456,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id

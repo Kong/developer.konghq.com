@@ -41,6 +41,10 @@ tools:
 faqs:
   - q: What type of Azure Key Vaults objects can I reference?
     a: You can only reference secrets. Azure Key Vaults keys and certificates are not supported.
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 prereqs:
   gateway:
     - name: AZURE_CLIENT_SECRET
