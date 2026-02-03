@@ -18,9 +18,7 @@ related_resources:
     url: /mesh/zone-ingress/
 ---
 
-{{site.mesh_product_name}} exposes API server on [ports](/mesh/interact-with-control-plane/#control-plane-ports) `5681` and `5682` (protected by TLS).
-
-An authenticated user can be authorized to execute administrative actions such as:
+{{site.mesh_product_name}} exposes its API server on [ports](/mesh/interact-with-control-plane/#control-plane-ports) `5681` and `5682`. An authenticated user can be authorized to execute administrative actions such as:
 * Managing administrative resources like {{site.mesh_product_name}} secrets on Universal.
 * Generating user tokens, data plane proxy tokens, zone ingress tokens, and zone tokens.
 
