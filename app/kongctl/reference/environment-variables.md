@@ -221,7 +221,7 @@ deploy:
 
 ### Jenkins
 
-```groovy
+```bash
 environment {
     KONGCTL_DEFAULT_KONNECT_PAT = credentials('konnect-pat')
     KONGCTL_DEFAULT_REGION = 'us'

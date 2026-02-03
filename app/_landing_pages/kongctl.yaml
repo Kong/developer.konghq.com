@@ -57,6 +57,8 @@ rows:
               include_content: tools/kongctl/install/linux
             - title: Windows
               include_content: tools/kongctl/install/windows
+            - title: Mise
+              include_content: tools/kongctl/install/mise
 
   - header:
     columns:

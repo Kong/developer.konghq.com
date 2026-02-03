@@ -201,7 +201,7 @@ Add `KONGCTL_DEFAULT_KONNECT_PAT` as a CI/CD variable in project settings.
 
 Create `Jenkinsfile`:
 
-```groovy
+```bash
 pipeline {
     agent any
 

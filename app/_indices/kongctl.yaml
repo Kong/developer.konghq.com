@@ -17,6 +17,9 @@ sections:
       - title: Install kongctl on Windows
         description: Install the Windows binary
         url: /kongctl/?tab=windows#install-kongctl
+      - title: Install kongctl with Mise
+        description: Use mise package manager
+        url: /kongctl/?tab=mise#install-kongctl
       - path: /kongctl/authentication/
   - title: Commands
     items:
