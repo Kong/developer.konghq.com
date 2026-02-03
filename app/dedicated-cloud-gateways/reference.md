@@ -382,6 +382,10 @@ body:
 {% endkonnect_api_request %}
 <!-- vale on -->
 
+## CIDR size requirements
+
+{% include /konnect/cidr-minimum-requirements.md %}
+
 ## Securing backend communication
 
 Dedicated Cloud Gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.

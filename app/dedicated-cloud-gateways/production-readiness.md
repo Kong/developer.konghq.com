@@ -36,11 +36,21 @@ These steps are broken down into specific details in the sections that follow.
 
 ## {{site.konnect_short_name}} configuration
 
-### Custom Domains
+### Custom domains
 
-* Verify if the customer has correctly configured the CNAME Domain pointing to the Kong provided address. Check DNS records.
-* Verify if the customer has correctly configured the ACME domain for automated certificate management. Ensure the ACME challenge path is accessible.
-* Verify if the health of the custom domain is being reported as `healthy` in the Konnect UI. Monitor for certificate issuance and readiness.
+If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dns) with your Dedicated Cloud Gateway, you'll need to do the following:
+* Verify that the Kong-provided CNAME domain is correct in your DNS records.
+* Verify that ACME domain is correct and the challenge path is accessible.
+* Verify that the custom domain is healthy in the {{site.konnect_short_name}} UI.
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. Select your Dedicated Cloud Gateway.
+1. In the API Gateway sidebar, click **Custom Domains**.
+1. Verify that the status of your custom domain displays as `HEALTHY`. Monitor this for certificate issuance and readiness.
+1. Click the more options menu icon next to your custom domain.
+1. Click **Configure DNS**.
+1. The first CNAME value should match the CNAME domain in your DNS records.
+1. The second CNAME value is the ACME domain you must use for automated certificate management. Make sure that this challenge path is accessible.
 
 ### Data planes
 
@@ -57,35 +67,7 @@ These steps are broken down into specific details in the sections that follow.
 
 ## CIDR size requirements
 
-Kong Dedicated Cloud Gateway (DCGW) deployments require a Virtual Private Cloud (VPC) with a properly sized CIDR block. The following table outlines the minimum VPC CIDR requirements based on the number of Availability Zones (AZs) you plan to use for your DCGW deployment.
-
-Keep the following in mind:
-* Cloud Service Providers enforce a minimum subnet mask of /28 (16 IPs) and a maximum of /16 (65,536 IPs) for any VPC subnet.
-* The following table reflects the minimum recommended VPC CIDR sizes for Kong DCGW deployments to ensure sufficient IP address space for the required infrastructure.
-* Selecting a larger VPC CIDR block provides more flexibility for future growth and expansion.
-
-
-The following table details the minimum VPC sizes by AZ count:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Number of AZs
-    key: az_count
-  - title: Minimum VPC CIDR
-    key: cidr
-
-rows:
-  - az_count: 2
-    cidr: "/23 (512 IPs)"
-  - az_count: 3
-    cidr: "/22 (1,024 IPs)"
-  - az_count: 4
-    cidr: "/22 (1,024 IPs)"
-  - az_count: 5
-    cidr: "/21 (2,048 IPs)"
-{% endtable %}
-<!--vale on-->
+{% include /konnect/cidr-minimum-requirements.md %}
 
 ## AWS provider
 
