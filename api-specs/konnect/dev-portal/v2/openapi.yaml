@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
+  x-oas-source: kong/platform-api@87c5bf8554e31de72ddc11897dcb5054f55f49ec
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/87c5bf8554e31de72ddc11897dcb5054f55f49ec'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -960,10 +960,11 @@ components:
       name: credentialId
       in: path
       required: true
-      description: Id of the targeted credential
+      description: |
+        Id of the targeted credential.
+        Use the list-credentials endpoint to obtain the `id` field for each credential.
       schema:
         type: string
-        format: uuid
     DocumentId:
       schema:
         type: string
@@ -2208,17 +2209,30 @@ components:
         - client_id
         - client_secret
       title: Refresh token response
-    CredentialListItem:
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
       additionalProperties: false
       required:
+        - type
         - id
         - display_name
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -2239,20 +2253,34 @@ components:
           type: string
           maxLength: 255
       additionalProperties: false
-    CredentialCreationResponse:
+    ApiKeyCredentialCreationResponse:
+      description: Response when creating an API key credential.
       type: object
       properties:
-        credential:
+        type:
           type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        credential:
+          description: The API key value (only returned on creation)
+          type: string
       additionalProperties: false
       required:
-        - credential
+        - type
         - id
         - display_name
+        - credential
+    CredentialCreationResponse:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:

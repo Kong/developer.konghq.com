@@ -26,6 +26,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where certain query strings in URLs that did not conform to the configured OpenAPI specification could cause the plugin to throw an unexpected runtime error and respond with an HTTP 500 error.\n",
