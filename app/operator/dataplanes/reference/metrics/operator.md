@@ -676,3 +676,21 @@ gateway_operator_konnect_entity_operation_duration_milliseconds_bucket{entity_ty
 gateway_operator_konnect_entity_operation_duration_milliseconds_sum{entity_type="KonnectGatewayControlPlane",operation_type="update",server_url="https://us.api.konghq.tech",status_code="",success="true"} 0.592125953
 gateway_operator_konnect_entity_operation_duration_milliseconds_count{entity_type="KonnectGatewayControlPlane",operation_type="update",server_url="https://us.api.konghq.tech",status_code="",success="true"} 1
 ```
+
+## Data Plane Metrics
+
+While this page focuses on metrics exposed by the **Operator** itself, you can also collect metrics from the **Data Plane** instances managed by the Operator.
+
+### Direct Scraping
+
+Each Data Plane pod exposes its own metrics on port `8100` (by default) if the [Prometheus plugin](/plugins/prometheus/) is enabled. You can scrape these metrics directly by targeting the Data Plane pods or services.
+
+### Enriched Metrics via Extension
+
+{{ site.operator_product_name }} provides a [`DataPlaneMetricsExtension`](/operator/reference/custom-resources/#dataplanemetricsextension) that enables the Operator to scrape Data Plane instances, enrich the metrics with Kubernetes metadata (such as Pod name and Namespace), and re-expose them on the Operator's `/metrics` endpoint described above.
+
+This is particularly useful for:
+- **Autoscaling**: Using enriched metrics with the Horizontal Pod Autoscaler.
+- **Simplified Scraping**: Scraping a single endpoint (the Operator) to get aggregated metrics from multiple Data Planes.
+
+For a step-by-step guide on setting up monitoring, see [Monitor Kong Gateway with Prometheus](/operator/how-to/observability/prometheus/).
