@@ -158,7 +158,7 @@ spec:
 
 ## Template
 
-A template is a [golang text template](https://pkg.go.dev/text/template).
+A template is a [Golang text template](https://pkg.go.dev/text/template).
 It runs with the function `label` to retrieve labels from the `MeshService`, `MeshMultiZoneService`, or `MeshExternalService` resources,
 as well as the following attributes:
 * `.DisplayName`: The name of the resource in its original zone.
