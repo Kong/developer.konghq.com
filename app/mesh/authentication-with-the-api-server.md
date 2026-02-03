@@ -1,5 +1,5 @@
 ---
-title: Authentication with the API server
+title: Authentication with the {{site.mesh_product_name}} API server
 description: Authenticate users and automation tools to the control plane API server using user tokens, including token generation, rotation, and revocation.
 
 content_type: reference
@@ -20,92 +20,87 @@ related_resources:
 
 {{site.mesh_product_name}} exposes API server on [ports](/mesh/interact-with-control-plane/#control-plane-ports) `5681` and `5682` (protected by TLS).
 
-An authenticated user can be authorized to execute administrative actions such as
-* Managing administrative resources like {{site.mesh_product_name}} Secrets on Universal
-* Generating user token, data plane proxy token, zone ingress token, zone token
+An authenticated user can be authorized to execute administrative actions such as:
+* Managing administrative resources like {{site.mesh_product_name}} secrets on Universal.
+* Generating user tokens, data plane proxy tokens, zone ingress tokens, and zone tokens.
 
 ## User token
 
-A user token is a signed JWT token that contains
+A user token is a signed JWT token that contains:
 * The name of the user
 * The list of groups that a user belongs to
-* Expiration date of the token
+* The expiration date of the token
 
 ### Groups
 
-A user can be a part of many groups. {{site.mesh_product_name}} adds two groups to a user automatically:
-* authenticated users are a part of `mesh-system:authenticated`.
-* unauthenticated users are part of `mesh-system:unauthenticated`.
+Groups in {{site.mesh_product_name}} allow you to manage API permissions for users. A user can be a part of multiple groups. 
+{{site.mesh_product_name}} adds two groups to a user automatically:
+* Authenticated users are added to `mesh-system:authenticated`.
+* Unauthenticated users are added to `mesh-system:unauthenticated`.
 
 ### Admin user token
 
 {{site.mesh_product_name}} creates an admin user token on the first start of the control plane.
-The admin user token is a user token issued for user `mesh-system:admin` that belongs to `mesh-system:admin` group.
+The admin user token is a user token issued for users in. the `mesh-system:admin` group.
 This group is authorized by default to execute all administrative operations.
+
+#### Configure kumactl with an admin user token
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
-1. Access admin user token
-
-   Use `kubectl` to extract the admin token
+1. Use `kubectl` to extract the admin token:
 
    ```sh
    kubectl get secret admin-user-token -n {{site.mesh_namespace}} {% raw %}--template={{.data.value}}{% endraw %} | base64 -d
    ```
 
-2. Expose {{site.mesh_product_name}} CP to be accessible from your machine
+1. Expose the {{site.mesh_product_name}} control plane to make it accessible from your machine using one of the following methods:
+   * Port-forward port 5681.
+   * Expose port 5681 and protect it with TLS or expose port 5682 with built-in via a load balancer.
+   * Expose port 5681 using an `Ingress` (for example {{site.kic_product_name}}) and protect it with TLS.
 
-   To access {{site.mesh_product_name}} CP via kumactl, you need to expose {{site.mesh_product_name}} CP outside of a cluster in one of the following ways:
-   * Port-forward port 5681
-   * Expose port 5681 and protect it by TLS or just expose 5682 with builtin TLS of `{{site.mesh_cp_name}}` service via a load balancer.
-   * Expose port 5681 of `{{site.mesh_cp_name}}` via `Ingress` (for example {{site.kic_product_name}}) and protect it with TLS
-
-3. Configure `kumactl` with admin user token
+1. Configure `kumactl` with the admin user token:
    ```sh
    kumactl config control-planes add \
      --name my-control-plane \
-     --address https://<CONTROL_PLANE_ADDRESS>:5682 \
+     --address https://$CONTROL_PLANE_ADDRESS:5682 \
      --auth-type=tokens \
-     --auth-conf token=<GENERATED_TOKEN> \
-     --ca-cert-file=/path/to/ca.crt
+     --auth-conf token=$GENERATED_TOKEN \
+     --ca-cert-file=$CA_FILE_PATH
    ```
-   If you are using `5681` port, change the schema to `http://`.
 
-   If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
+   {:.info}
+   > If you are using the `5681` port, change the schema to `http://`. If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
 
 {% endnavtab %}
 {% navtab "Universal" %}
-1. Access admin user token
-
-   Execute the following command on the machine where you deployed the control plane.
+1. Run the following command on the machine where you deployed the control plane to generate the token:
    ```sh
    curl http://localhost:5681/global-secrets/admin-user-token | jq -r .data | base64 -d
    ```
 
-2. Configure `kumactl` with admin user token
+1. Configure `kumactl` with admin user token
    ```sh
    kumactl config control-planes add \
      --name my-control-plane \
-     --address https://<CONTROL_PLANE_ADDRESS>:5682 \
+     --address https://$CONTROL_PLANE_ADDRESS:5682 \
      --auth-type=tokens \
-     --auth-conf token=<GENERATED_TOKEN> \
-     --ca-cert-file=/path/to/ca.crt
+     --auth-conf token=$GENERATED_TOKEN \
+     --ca-cert-file=$CA_FILE_PATH
    ```
-   If you are using `5681` port, change the schema to `http://`.
 
-   If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
+   {:.info}
+   > If you are using the `5681` port, change the schema to `http://`. If you want to skip CP verification, use `--skip-verify` instead of `--ca-cert-file`.
 
-3. Disable localhost is admin (optional)
-
-   By default, all requests originated from localhost are authenticated as an `mesh-system:admin` user.
+1. Disable localhost as admin. By default, all requests originating from the localhost are authenticated as a `mesh-system:admin` user.
    After you retrieve and store the admin token, [configure a control plane](/mesh/control-plane-configuration/) with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false`.
-   {% endnavtab %}
-   {% endnavtabs %}
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Generate user tokens
 
-You can generate user tokens only when you provide the credentials of a user authorized to generate user tokens.
-`kumactl` configured with admin user token extracted in the preceding section is authorized to do it.
+To generate user tokens, you must provide the credentials of a user authorized to generate user tokens.
+If you have configured `kumactl` with an admin user token, you can use the following command to create a user token:
 
 ```sh
 kumactl generate user-token \
@@ -114,7 +109,7 @@ kumactl generate user-token \
   --valid-for 24h
 ```
 
-or you can use API
+With the API, you must provide a token in the `Authorization` header:
 
 ```sh
 curl localhost:5681/tokens/user \
@@ -123,64 +118,14 @@ curl localhost:5681/tokens/user \
   --data '{"name": "john","groups": ["team-a"], "validFor": "24h"}' 
 ```
 
-### Explore an example token
+### Revoke user tokens
 
-You can decode the tokens to validate the signature or explore details.
+{{site.mesh_product_name}} doesn't keep a list of issued tokens. To invalidate a token, you must can add it to the revocation list.
 
-For example, run:
+Every token has its own ID under the `jti` key.
+You can extract the ID from the token using jwt.io or the [`jwt-cli`](https://www.npmjs.com/package/jwt-cli) tool.
 
-```sh
-kumactl generate user-token \
-  --name john \
-  --group team-a \
-  --valid-for 24h
-```
-
-which returns:
-
-```
-eyJhbGciOiJSUzI1NiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJOYW1lIjoiam9obiIsIkdyb3VwcyI6WyJ0ZWFtLWEiXSwiZXhwIjoxNjM2ODExNjc0LCJuYmYiOjE2MzY3MjQ5NzQsImlhdCI6MTYzNjcyNTI3NCwianRpIjoiYmYzZDBiMmUtZDg0MC00Y2I2LWJmN2MtYjkwZjU0MzkxNDY4In0.XsaPcQ5wVzRLs4o1FWywf6kw4r2ceyLGxYO8EbyA0fAxU6BPPRsW71ueD8ZlS4JlD4UrVtQQ7LG-z_nIxlDRAYhx4mmHnSjtqWZIsVS13QRrm41zccZ0SKHYxGvWMW4IkGwUbA0UZOJGno8vbpI6jTGfY9bmof5FpJJAj_sf99jCaI1H_n3n5UxtwKVN7dXXD82r6axj700jgQD-2O8gnejzlTjZkBpPF_lGnlBbd39S34VNwT0UlvRJLmCRdfh5EL24dFt0tyzQqDG2gE1RuGvTV9LOT77ZsjfMP9CITICivF6Z7uqvlOYal10jd5gN0A6w6KSI8CCaDLmVgUHvAw
-```
-
-Paste the token into the UI at [jwt.io](https://jwt.io), or use [`jwt-cli`](https://www.npmjs.com/package/jwt-cli) tool
-
-```sh
-kumactl generate user-token --name=john --group=team-a --valid-for=24h | jwt
-
-To verify on jwt.io:
-
-https://jwt.io/#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJOYW1lIjoiam9obiIsIkdyb3VwcyI6WyJ0ZWFtLWEiXSwiZXhwIjoxNjM2ODExNjc0LCJuYmYiOjE2MzY3MjQ5NzQsImlhdCI6MTYzNjcyNTI3NCwianRpIjoiYmYzZDBiMmUtZDg0MC00Y2I2LWJmN2MtYjkwZjU0MzkxNDY4In0.XsaPcQ5wVzRLs4o1FWywf6kw4r2ceyLGxYO8EbyA0fAxU6BPPRsW71ueD8ZlS4JlD4UrVtQQ7LG-z_nIxlDRAYhx4mmHnSjtqWZIsVS13QRrm41zccZ0SKHYxGvWMW4IkGwUbA0UZOJGno8vbpI6jTGfY9bmof5FpJJAj_sf99jCaI1H_n3n5UxtwKVN7dXXD82r6axj700jgQD-2O8gnejzlTjZkBpPF_lGnlBbd39S34VNwT0UlvRJLmCRdfh5EL24dFt0tyzQqDG2gE1RuGvTV9LOT77ZsjfMP9CITICivF6Z7uqvlOYal10jd5gN0A6w6KSI8CCaDLmVgUHvAw
-
-✻ Header
-{
-  "alg": "RS256",
-  "kid": "1",
-  "typ": "JWT"
-}
-
-✻ Payload
-{
-  "Name": "john",
-  "Groups": [
-    "team-a"
-  ],
-  "exp": 1636811674,
-  "nbf": 1636724974,
-  "iat": 1636725274,
-  "jti": "bf3d0b2e-d840-4cb6-bf7c-b90f54391468"
-}
-   Issued At: 1636725274 11/12/2021, 2:54:34 PM
-   Not Before: 1636724974 11/12/2021, 2:49:34 PM
-   Expiration Time: 1636811674 11/13/2021, 2:54:34 PM
-
-✻ Signature XsaPcQ5wVzRLs4o1FWywf6kw4r2ceyLGxYO8EbyA0fAxU6BPPRsW71ueD8ZlS4JlD4UrVtQQ7LG-z_nIxlDRAYhx4mmHnSjtqWZIsVS13QRrm41zccZ0SKHYxGvWMW4IkGwUbA0UZOJGno8vbpI6jTGfY9bmof5FpJJAj_sf99jCaI1H_n3n5UxtwKVN7dXXD82r6axj700jgQD-2O8gnejzlTjZkBpPF_lGnlBbd39S34VNwT0UlvRJLmCRdfh5EL24dFt0tyzQqDG2gE1RuGvTV9LOT77ZsjfMP9CITICivF6Z7uqvlOYal10jd5gN0A6w6KSI8CCaDLmVgUHvAw
-```
-
-### Token revocation
-
-{{site.mesh_product_name}} doesn't keep the list of issued tokens. To invalidate the token, you can add it to a revocation list.
-Every user token has its own ID. As you saw in the previous section, it's available in payload under `jti` key.
-To revoke tokens, specify list of revoked IDs separated by `,` and store it as `GlobalSecret` named `user-token-revocations`
+To revoke user tokens, specify a comma-separated list of revoked IDs in a global secret named `user-token-revocations`.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -205,93 +150,93 @@ data: {{ revocations }}" | kumactl apply --var revocations=$(echo '0e120ec9-6b42
 {% endnavtab %}
 {% endnavtabs %}
 
-### Signing key
+### Rotate the signing key
 
-A user token is signed by a signing key that's autogenerated on the first start of the control plane.
-The signing key is a 2048-bit RSA key stored as a `GlobalSecret` with a name that looks like `user-token-signing-key-{serialNumber}`.
+A user token is signed by a signing key which is autogenerated on the first start of the control plane.
 
-### Signing key rotation
+If the signing key is compromised, you must rotate it. You must also rotate all the tokens that were signed by it.
 
-If the signing key is compromised, you must rotate it including all the tokens that were signed by it.
+1. Generate a new signing key.
+   The signing key is stored as a global secret named in the following format: `user-token-signing-key-<serial_number>`.
 
-1. Generate a new signing key
+   When generating a new signing key, assign it a serial number greater than the current key's serial number.
 
-   Make sure to generate the new signing key with a serial number greater than the serial number of the current signing key.
+{% capture navtabbed_content %}
+{% navtabs "Environment" %}
+{% navtab "Kubernetes" %}
+Get the current key's serial number:
+```sh
+kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/global-secret'
+NAME                       TYPE                           DATA   AGE
+user-token-signing-key-1   system.kuma.io/global-secret   1      25m
+```
 
-   {% capture tabs %}
-   {% navtabs "Environment" %}
-   {% navtab "Kubernetes" %}
-   Check what's the current highest serial number.
+In this example, the highest serial number is `1`. 
 
-   ```sh
-   kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/global-secret'
-   NAME                          TYPE                           DATA   AGE
-   user-token-signing-key-1   system.kuma.io/global-secret   1      25m
-   ```
+Generate a new signing key with a serial number of `2`:
+```sh
+TOKEN="$(kumactl generate signing-key)" && echo "
+apiVersion: v1
+data:
+  value: $TOKEN
+kind: Secret
+metadata:
+  name: user-token-signing-key-2
+  namespace: {{site.mesh_namespace}}
+type: system.kuma.io/global-secret
+" | kubectl apply -f - 
+```
 
-   In this case, the highest serial number is `1`. Generate a new signing key with a serial number of `2`
-   ```sh
-   TOKEN="$(kumactl generate signing-key)" && echo "
-   apiVersion: v1
-   data:
-     value: $TOKEN
-   kind: Secret
-   metadata:
-     name: user-token-signing-key-2
-     namespace: {{site.mesh_namespace}}
-   type: system.kuma.io/global-secret
-   " | kubectl apply -f - 
-   ```
+{% endnavtab %}
+{% navtab "Universal" %}
+Get the current key's serial number:
+```sh
+kumactl get global-secrets
+NAME                       AGE
+user-token-signing-key-1   36m
+```
 
-   {% endnavtab %}
-   {% navtab "Universal" %}
-   Check what's the current highest serial number.
-   ```sh
-   kumactl get global-secrets
-   NAME                             AGE
-   user-token-signing-key-1   36m
-   ```
+In this example, the highest serial number is `1`. 
 
-   In this case, the highest serial number is `1`. Generate a new signing key with a serial number of `2`
-   ```sh
-   echo "
-   type: GlobalSecret
-   name: user-token-signing-key-2
-   data: {{ key }}" | kumactl apply --var key=$(kumactl generate signing-key) -f -
-   ```
-   {% endnavtab %}
-   {% endnavtabs %}
-   {% endcapture %}
-   {{ tabs | indent }}
+Generate a new signing key with a serial number of `2`:
+```sh
+echo "
+type: GlobalSecret
+name: user-token-signing-key-2
+data: {{ key }}" | kumactl apply --var key=$(kumactl generate signing-key) -f -
+```
+{% endnavtab %}
+{% endnavtabs %}
+{% endcapture %}
+{{ navtabbed_content | indent }}
 
-2. Regenerate user tokens
+2. [Generate new tokens](#generate-user-tokens).
+   New tokens are generated with the signing key with the highest serial number.
+   At this point, tokens signed by either the new or old signing key are valid.
 
-   Create new user tokens. Tokens are always signed by the signing key with the highest serial number.
-   Starting from now, tokens signed by either new or old signing key are valid.
+3. Remove the old signing key:
+{% capture navtabbed_content %}
+{% navtabs "Environment" %}
+{% navtab "Kubernetes" %}
+```sh
+kubectl delete secret user-token-signing-key-1 -n {{site.mesh_namespace}}
+```
+{% endnavtab %}
+{% navtab "Universal" %}
+```sh
+kumactl delete global-secret user-token-signing-key-1
+```
+{% endnavtab %}
+{% endnavtabs %}
+All new connections to the control plane now require tokens signed with
+the new signing key.
+{% endcapture %}
+{{ navtabbed_content | indent }}
 
-3. Remove the old signing key
-   {% capture tabs %}
-   {% navtabs "Environment" %}
-   {% navtab "Kubernetes" %}
-   ```sh
-   kubectl delete secret user-token-signing-key-1 -n {{site.mesh_namespace}}
-   ```
-   {% endnavtab %}
-   {% navtab "Universal" %}
-   ```sh
-   kumactl delete global-secret user-token-signing-key-1
-   ```
-   {% endnavtab %}
-   {% endnavtabs %}
-   {% endcapture %}
-   {{ tabs | indent }}
-
-   All new requests to the control plane now require tokens signed with the new signing key.
-
-### Disabling bootstrap of the admin user token
+### Disable the admin user token
 
 You can remove the default admin user token from the storage and prevent it from being recreated.
-Keep in mind that even if you remove the admin user token, the signing key is still present.
+Keep in mind that removing the admin user token doesn't remove the signing key.
 A malicious actor that acquires the signing key, can generate an admin token.
 
 {% navtabs "Environment" %}

@@ -90,7 +90,7 @@ You can also pass the token as a `KUMA_DATAPLANE_RUNTIME_TOKEN` environment vari
 {{site.mesh_product_name}} doesn't keep a list of issued tokens. 
 Whenever a single token is compromised, you can add it to the revocation list to invalidate it.
 
-Every token has its own ID under `jti` key.
+Every token has its own ID under the `jti` key.
 You can extract the ID from the token using jwt.io or the [`jwt-cli`](https://www.npmjs.com/package/jwt-cli) tool.
 
 To revoke tokens, specify a comma-separated list of revoked IDs in a global secret named `zone-token-revocations`.
