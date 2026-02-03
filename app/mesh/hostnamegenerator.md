@@ -36,6 +36,7 @@ The following resource is automatically created on a zone control plane running 
 It creates a hostname for each `MeshService` created in a zone.
 For example, for a `MeshService` named `redis`, {{site.mesh_product_name}} creates a `redis.svc.mesh.local` hostname.
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: local-universal-mesh-service
@@ -46,6 +47,7 @@ spec:
         kuma.io/origin: zone
   template: "{% raw %}{{ .DisplayName }}.svc.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 
 ### Local MeshExternalService
@@ -54,7 +56,7 @@ The following resource is automatically created on a zone control plane.
 It creates a hostname for each `MeshExternalService` created in a zone.
 For example, for a `MeshExternalService` named `aurora`, {{site.mesh_product_name}} creates a `aurora.extsvc.mesh.local` hostname.
 
-
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: local-mesh-external-service
@@ -65,6 +67,7 @@ spec:
         kuma.io/origin: zone
   template: "{% raw %}{{ .DisplayName }}.extsvc.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 
 ### Synced MeshService from Kubernetes zone
@@ -74,6 +77,7 @@ The following resources are automatically created on a global control plane and 
 The first creates a hostname for each `MeshService` synced from another Kubernetes zone.
 For example, for a `MeshService` named `redis` with the namespace `redis-system` from zone `east`, {{site.mesh_product_name}} creates a `redis.redis-system.svc.east.mesh.local` hostname.
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: synced-kube-mesh-service
@@ -86,10 +90,12 @@ spec:
         kuma.io/env: kubernetes
   template: "{% raw %}{{ .DisplayName }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 The second creates a hostname for each `MeshService` synced from another Kubernetes zone that were created from a headless `Service`.
 For example, for a Pod `redis-0` with `MeshService` named `redis`, with the namespace `redis-system` from zone `east`, {{site.mesh_product_name}} creates a `redis-0.redis.redis-system.svc.east.mesh.local` hostname.
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: synced-headless-kube-mesh-service
@@ -102,6 +108,7 @@ spec:
         kuma.io/env: kubernetes
   template: "{% raw %}{{ label 'statefulset.kubernetes.io/pod-name' }}.{{ label 'k8s.kuma.io/service-name' }}.{{ .Namespace }}.svc.{{ .Zone }}.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 ### Synced MeshService from Universal zone
 
@@ -109,6 +116,7 @@ The following policy is automatically created on a global control plane and sync
 It creates a hostname for each `MeshService` synced from another Universal zone.
 For example, for a `MeshService` named `redis` from zone `west`, {{site.mesh_product_name}} creates a `redis.svc.west.mesh.local` hostname.
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: synced-universal-mesh-service
@@ -120,6 +128,7 @@ spec:
         kuma.io/env: universal
   template: "{% raw %}{{ .DisplayName }}.svc.{{ .Zone }}.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 ### Synced MeshMultiZoneService from a global control plane
 
@@ -127,6 +136,7 @@ The following policy is automatically created on a global control plane and sync
 It creates a hostname for each `MeshMultiZoneService` synced from a global control plane.
 For example, for a `MeshMultiZoneService` named `redis`, {{site.mesh_product_name}} creates a `redis.mzsvc.mesh.local` hostname:
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: synced-mesh-multi-zone-service
@@ -137,6 +147,7 @@ spec:
         kuma.io/origin: global
   template: "{% raw %}{{ .DisplayName }}.mzsvc.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 ### Synced MeshExternalService from a global control plane
 
@@ -144,6 +155,7 @@ The following policy is automatically created on a global control plane and sync
 It creates a hostname for each `MeshExternalService` synced from a global control plane.
 For example, for a `MeshExternalService` named `aurora`, {{site.mesh_product_name}} creates a `aurora.extsvc.mesh.local`
 
+{% policy_yaml %}
 ```yaml
 type: HostnameGenerator
 name: synced-mesh-external-service
@@ -154,6 +166,7 @@ spec:
         kuma.io/origin: global
   template: "{% raw %}{{ .DisplayName }}.extsvc.mesh.local{% endraw %}"
 ```
+{% endpolicy_yaml %}
 
 
 ## Template
@@ -168,6 +181,7 @@ as well as the following attributes:
 
 For example, with the following `MeshService`:
 
+{% policy_yaml %}
 ```yaml
 kind: MeshService
 metadata:
@@ -179,6 +193,7 @@ metadata:
     k8s.kuma.io/service-name: redis
     k8s.kuma.io/namespace: kuma-demo
 ```
+{% endpolicy_yaml %}
 
 If you use the template `"{% raw %}{{ .DisplayName }}.{{ .Namespace }}.{{ .Mesh }}.{{ label "team" }}.mesh.local{% endraw %}"`, you would get the hostname `redis.kuma-demo.products.backend.mesh.local`.
 
@@ -188,6 +203,7 @@ The generated hostname points to the first VIP known for the `MeshService`.
 
 Every generated hostname is recorded under the `MeshService` resource's status, in the `addresses` field:
 
+{% policy_yaml %}
 ```yaml
 status:
   addresses:
@@ -196,3 +212,4 @@ status:
       hostnameGeneratorRef:
         coreName: synced-kube-mesh-service
 ```
+{% endpolicy_yaml %}
