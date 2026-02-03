@@ -17,7 +17,7 @@ works_on:
   - konnect
 tldr:
   q: How do I see the real client IP in Kong logs?
-  a: Configure `externalTrafficPolicy: Local` in your `GatewayConfiguration`.
+  a: Configure `externalTrafficPolicy: Local in your GatewayConfiguration.
 ---
 
 ## Overview
@@ -90,6 +90,6 @@ spec:
     ```bash
     kubectl get service -n kong -l gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].spec.externalTrafficPolicy}'
     ```
-    
+
     The output should be `Local`.
 
