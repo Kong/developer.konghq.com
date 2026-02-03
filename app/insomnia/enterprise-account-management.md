@@ -35,9 +35,7 @@ faqs:
 
       Insomnia enforces Domain Lock in the following cases:
       - Existing users with a verified email domain who are not already part of the Enterprise organization must still be explicitly invited.
-      - When no license seats are available, Insomnia blocks new sign-ups with that domain unless an administrator invites the user.
-
-      In short, Domain Capture allows new users to join automatically when seats are available, while Domain Lock prevents access in all other cases.
+      - When no license seats are available, Insomnia blocks new sign-ups with that domain unless an administrator invites the user.     
 
 ---
 
