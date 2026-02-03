@@ -267,3 +267,4 @@ In multi-zone mode, users execute a majority of actions on the global control pl
 However, some actions such as generating data plane tokens, are available on the zone control plane.
 The global control plane doesn't propagate authentication credentials to the zone control plane.
 You can set up consistent user tokens across the whole environment by manually copying signing keys from the global control plane to zone control planes. 
+
