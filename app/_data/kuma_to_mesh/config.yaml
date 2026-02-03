@@ -89,20 +89,6 @@ pages:
       - text: Service discovery
         url: /mesh/service-discovery/
   -
-    path: app/_src/networking/hostnamegenerator.md
-    title: 'HostnameGenerator'
-    description: 'Customize hostnames for MeshService resources using templated HostnameGenerator policies.'
-    url: '/mesh/hostnamegenerator/'
-    related_resources:
-      - text: MeshMultiZoneService
-        url: '/mesh/meshmultizoneservice/'
-      - text: MeshService
-        url: '/mesh/meshservice/'
-      - text: MeshExternalService
-        url: '/mesh/meshexternalservice/'
-    min_version:
-      mesh: '2.8'
-  -
     path: app/_src/networking/meshexternalservice.md
     title: 'MeshExternalService'
     description: 'Declare external resources that services in the mesh can consume, enabling TLS, routing, and hostname customization.'
