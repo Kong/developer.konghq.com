@@ -19,7 +19,7 @@ rows:
       - blocks:
           - type: text
             config: |
-              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs) resources, {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
+              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs, {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
               in a declarative way.
 
   - header:
