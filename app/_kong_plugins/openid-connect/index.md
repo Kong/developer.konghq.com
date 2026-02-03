@@ -593,8 +593,10 @@ Or by its index value (starting with 1):
 curl -X GET "http://localhost:8000?client_id=2"
 ```
 
-If you don't specify a client ID in the request, the plugin will attempt to authenticate using the first client ID and client secret pair, or using the client specified in 
-[`config.client_arg`](./reference/#schema--config-client-arg).
+{{site.base_gateway}} will look for the client ID in the following locations, in order of precedence:
+1. If [`config.client_arg`](./reference/#schema--config-client-arg) is set, {{site.base_gateway}} looks for that value in the request header, URI argument, and body (in that order).
+2. If `config.client_arg` is not set, {{site.base_gateway}} looks for a `client_id` in the request header, URI argument, and body (in that order).
+2. If no client is found in either of those places, {{site.base_gateway}} uses the first client ID and client secret pair.
 
 {:.info}
 > **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
