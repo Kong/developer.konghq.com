@@ -224,33 +224,6 @@ Support for {{ provider.name }} basic text generation capabilities including cha
 {% if provider.embeddings.note.content %}<sup>{{ embeddings_note_num }}</sup> {{ provider.embeddings.note.content }}
 
 {% endif %}
-{% if include.provider_name == "Amazon Bedrock" %}
-{:.info}
-> {% new_in 3.9 %} With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) configuration in the request:
->
-> ```json
-> {
->     "messages": [
->         {
->             "role": "system",
->             "content": "You are a scientist."
->         },
->         {
->             "role": "user",
->             "content": "What is the Boltzmann equation?"
->         }
->     ],
->     "guardrailConfig": {
->         "guardrailIdentifier": "$GUARDRAIL-IDENTIFIER",
->         "guardrailVersion": "1",
->         "trace": "enabled"
->     }
-> }
-> ```
-> For more details see [Guardrails and content safety](/ai-gateway/#guardrails-and-content-safety).
-
-
-{% endif %}
 {% endif %}
 
 {% if has_advanced_text %}
