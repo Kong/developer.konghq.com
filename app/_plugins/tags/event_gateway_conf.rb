@@ -38,7 +38,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/event_gateway_conf.html'))
+      @template ||= if @page['output_format'] == 'markdown'
+                      File.read(File.expand_path('app/_includes/components/event_gateway_conf.md'))
+                    else
+                      File.read(File.expand_path('app/_includes/components/event_gateway_conf.html'))
+                    end
     end
   end
 end
