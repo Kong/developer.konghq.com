@@ -21,7 +21,10 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
-
+  - text: "How-to: Configure SNI routing with {{site.event_gateway_short}}"
+    url: /event-gateway/configure-sni-routing/
+  - text: "How-to: Get started with {{site.event_gateway_short}}"
+    url: /event-gateway/get-started/
 api_specs:
   - konnect/event-gateway
 
@@ -46,10 +49,10 @@ rows:
     description: Forward to virtual clusters using port mapping.
   - use_case: "[Example: SNI routing](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing/)"
     description: Forward to virtual clusters using SNI routing.
-  - use_case: "[Tutorial: Get started with {{site.event_gateway_short}}](/event-gateway/get-started/)"
+  - use_case: "[How-to: Get started with {{site.event_gateway_short}}](/event-gateway/get-started/)"
     description: |
       Use port mapping for testing and demo environments.
-  - use_case: "[Tutorial: SNI routing with TLS](/event-gateway/configure-sni-routing/)"
+  - use_case: "[How-to: SNI routing with TLS](/event-gateway/configure-sni-routing/)"
     description: |
       Set up SNI routing to send traffic to multiple virtual clusters in the same {{site.event_gateway_short}} control plane without opening more ports on the data plane.
 

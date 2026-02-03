@@ -29,8 +29,10 @@ related_resources:
     url: /event-gateway/entities/virtual-cluster/
   - text: Policies
     url: /event-gateway/entities/policy/
-  - text: Set up Kong Event Gateway with Kong Identity OAuth
+  - text: "How-to: Set up Kong Event Gateway with Kong Identity OAuth"
     url: /how-to/event-gateway/kong-identity-oauth/
+  - text: "How-to: Productize Kafka topics with namespaces and ACLs"
+    url: /event-gateway/productize-kafka-topics/
 ---
 
 The ACL (Access Control List) policy manages authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/) by defining which actions principals can perform on specific resources.
@@ -53,10 +55,10 @@ rows:
     description: Allow the principal to consume messages for a specific topic.
   - use_case: "[Example: Allow consumer group management](./examples/manage-consumer-groups/)"
     description: Allow the principal to create and delete consumer groups.
-  - use_case: "[Tutorial: Productize Kafka topics with namespaces and ACLs](/event-gateway/productize-kafka-topics/)"
+  - use_case: "[How-to: Productize Kafka topics with namespaces and ACLs](/event-gateway/productize-kafka-topics/)"
     description: |
       If your Kafka topics follow a naming convention with prefixes, you can easily organize them into categories with {{site.event_gateway}} by using a combination of namespaces, forwarding policies, and ACL policies.
-  - use_case: "[Tutorial: Secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
+  - use_case: "[How-to: Secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
     description: |
       Using [Kong Identity](/kong-identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
 {% endtable %}
