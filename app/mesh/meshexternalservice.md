@@ -149,7 +149,7 @@ spec:
   routing:
     defaultForbidMeshExternalServiceAccess: true
 ```
-{% endtab %}
+{% endnavtab %}
 {% navtab "Universal" %}
 ```yaml
 type: Mesh
