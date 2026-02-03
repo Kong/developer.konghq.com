@@ -102,7 +102,7 @@ tls:
       secret: "456"
 ```
 
-When TLS is enabled but `caCert` is not set, the sidecar uses the [autodetected OS-specific CA](https://github.com/kumahq/kuma/blob/aba6518fca65bc7ab52e5328eb686a51a6f98a53/app/kuma-dp/pkg/dataplane/certificate/cert.go#L12).
+When TLS is enabled but `caCert` is not set, the sidecar uses the [auto-detected OS-specific CA](https://github.com/kumahq/kuma/blob/aba6518fca65bc7ab52e5328eb686a51a6f98a53/app/kuma-dp/pkg/dataplane/certificate/cert.go#L12).
 You can override the default CA by setting the path in the environment variable `KUMA_DATAPLANE_RUNTIME_DYNAMIC_SYSTEM_CA_PATH` for the sidecar.
 
 ### DNS setup
