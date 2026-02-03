@@ -109,7 +109,7 @@ spec:
 The `KongPluginBinding` resource is used when managing entities in **Konnect** or when using the **Hybrid Gateway** mode. It allows you to bind a plugin to one or more entities without modifying those entities.
 
 > [!NOTE]
-> This method is currently not supported for standard self-managed deployments using the Ingress Controller.
+> This method is not supported for standard self-managed deployments.
 
 For more details on how `KongPluginBinding` works and advanced usage scenarios, see the [Understanding KongPluginBinding](/operator/konnect/key-concepts/kongpluginbinding/) reference.
 

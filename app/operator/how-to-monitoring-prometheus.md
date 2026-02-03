@@ -48,9 +48,6 @@ config:
   status_code_metrics: true
 ```
 
-> [!NOTE]
-> The Prometheus plugin in Kong typically doesn't require much configuration to start collecting basic metrics.
-
 ### 2. Apply the Plugin Globally
 
 - **Konnect-Managed**: Use `KongPluginBinding` with `scope: GlobalInControlPlane`.
@@ -176,19 +173,10 @@ spec:
 
 ### 3. Scrape from the Operator
 
-Once attached, the Operator will begin re-exposing these metrics on its own metrics service (default port 8443 with RBAC).
+Once attached, the Operator will begin re-exposing these metrics on its own metrics service (default port 8443).
 
 Enriched metrics will have a `k8s_` prefix or additional labels identifying the source Kubernetes resources.
 
----
-
-## Visualization with Grafana
-
-You can use the official [Kong Grafana Dashboard](https://grafana.com/grafana/dashboards/7413) to visualize these metrics. 
-
-1.  Add your Prometheus server as a data source in Grafana.
-2.  Import dashboard ID `7413`.
-3.  Ensure your Prometheus configuration includes a `serviceMonitor` or `podMonitor` targeting your Data Planes or the Operator.
 
 ### Example ServiceMonitor for Data Planes
 

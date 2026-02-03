@@ -8,9 +8,6 @@ breadcrumbs:
   - /operator/
   - index: operator
     group: Konnect
-  - index: operator
-    group: Konnect
-    section: "How-To"
 
 products:
   - operator
@@ -31,7 +28,7 @@ In complex Kubernetes environments, you may want to centralize resources like au
 
 By default, {{ site.operator_product_name }} restricts references to resources within the same namespace for security. To enable cross-namespace references, you must use one of the following resources in the **target** namespace (where the resource being referenced is located):
 
-*   **ReferenceGrant**: Standard [Kubernetes Gateway API resource](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1beta1.ReferenceGrant) used for authorizing references from Gateway API resources (like `Gateway`) to other resources (like `Secret`).
+*   **ReferenceGrant**: Standard [Kubernetes Gateway API resource](https://gateway-api.sigs.k8s.io/api-types/referencegrant/) used for authorizing references from Gateway API resources (like `Gateway`) to other resources (like `Secret`).
 *   **KongReferenceGrant**: Kong-specific resource used for authorizing references from Kong resources (like `KonnectGatewayControlPlane` or `KongCertificate`) to other resources.
 
 ## Example: Konnect authentication across namespaces
