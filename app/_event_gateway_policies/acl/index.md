@@ -77,11 +77,11 @@ sequenceDiagram
   client->>egw: message
   egw->>egw: check action against ACL
   
-  alt allowed action
+  alt If action allowed
 
   egw->>broker: send message
 
-  else blocked action
+  else If action blocked
   egw -x client: forbidden
   end
 
