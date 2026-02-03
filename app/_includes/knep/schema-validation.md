@@ -12,13 +12,13 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Validate messages against a Confluent Schema Registry](/event-gateway/policies/{{include.slug}}/examples/validate-all-confluent/)"
+  - use_case: "[Example: Validate messages against a Confluent Schema Registry](/event-gateway/policies/{{include.slug}}/examples/validate-all-confluent/)"
     description: |
       Ensure that all messages produced to any topic are validated against a Confluent Schema Registry, and mark messages that don't conform.
-  - use_case: "[Validate messages for subset of topics against JSON](/event-gateway/policies/{{include.slug}}/examples/validate-subset-json/)"
+  - use_case: "[Example: Validate messages for subset of topics against JSON](/event-gateway/policies/{{include.slug}}/examples/validate-subset-json/)"
     description: |
       Ensure that all messages produced to topics with a specific prefix are valid JSONs, and reject messages that don't conform.
-  - use_case: "[Validate messages for a topic](/event-gateway/policies/{{include.slug}}/examples/validate-a-topic/)"
+  - use_case: "[Example: Validate messages for a topic](/event-gateway/policies/{{include.slug}}/examples/validate-a-topic/)"
     description: |
       Ensure that all messages produced to a topic are validated against a schema, and reject messages that don't conform.
 {% endtable %}

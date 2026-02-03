@@ -46,7 +46,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Skip records with a specific name pattern](/event-gateway/policies/skip-record/examples/skip-based-on-name/)"
+  - use_case: "[Example: Skip records with a specific name pattern](/event-gateway/policies/skip-record/examples/skip-based-on-name/)"
     description: Identify records with a specific suffix and skip forwarding them.
 {% endtable %}
 <!--vale on-->

@@ -49,11 +49,16 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Allow read-only access to a topic](./examples/read-only-topic/)"
+  - use_case: "[Example: Allow read-only access to a topic](./examples/read-only-topic/)"
     description: Allow the principal to consume messages for a specific topic.
-  - use_case: "[Allow consumer group management](./examples/manage-consumer-groups/)"
+  - use_case: "[Example: Allow consumer group management](./examples/manage-consumer-groups/)"
     description: Allow the principal to create and delete consumer groups.
-
+  - use_case: "[Tutorial: Productize Kafka topics with namespaces and ACLs](/event-gateway/productize-kafka-topics/)"
+    description: |
+      If your Kafka topics follow a naming convention with prefixes, you can easily organize them into categories with {{site.event_gateway}} by using a combination of namespaces, forwarding policies, and ACL policies.
+  - use_case: "[Tutorial: Secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity and ACLs](/how-to/event-gateway/kong-identity-oauth/)"
+    description: |
+      Using [Kong Identity](/kong-identity/) as an auth server, verify client OAuth tokens through a virtual cluster, and apply an ACL policy to restrict access to a specific client.
 {% endtable %}
 <!--vale on-->
 
