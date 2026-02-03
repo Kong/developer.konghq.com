@@ -8,9 +8,6 @@ breadcrumbs:
   - /operator/
   - index: operator
     group: Konnect
-  - index: operator
-    group: Konnect
-    section: "How-To"
 
 products:
   - operator

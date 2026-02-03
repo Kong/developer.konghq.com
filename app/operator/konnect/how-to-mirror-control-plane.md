@@ -8,9 +8,6 @@ breadcrumbs:
   - /operator/
   - index: operator
     group: Konnect
-  - index: operator
-    group: Konnect
-    section: "How-To"
 
 products:
   - operator
@@ -26,9 +23,9 @@ tldr:
 
 ## Overview
 
-By default, {{ site.operator_product_name }} creates and manages the lifecycle of Control Planes in {{ site.konnect_short_name }}. However, in some scenarios, you may want to manage your Control Plane configuration outside of the operator (e.g., via the Konnect UI or API) but still use the operator to manage the deployment of the Data Planes.
+By default, {{ site.operator_product_name }} creates and manages the lifecycle of Control Planes in {{ site.konnect_short_name }}. However, in some scenarios, you may want to manage your Control Plane configuration outside of the operator (via the {{ site.konnect_short_name }} UI or {{ site.konnect_short_name }} API API) but still use the operator to manage the deployment of the Data Planes.
 
-Using the `Mirror` source type in a `GatewayConfiguration` allows the operator to connect to an existing Konnect Control Plane by its unique ID.
+Using the `Mirror` source type in a `GatewayConfiguration` allows the operator to connect to an existing {{ site.konnect_short_name }} Control Plane by its unique ID.
 
 ## Prerequisites
 
@@ -41,7 +38,7 @@ The following example demonstrates how to configure the operator to mirror an ex
 
 ### 1. Create Authentication Credentials
 
-Create a `KonnectAPIAuthConfiguration` resource containing your Konnect API token. Ensure the `serverURL` matches your Konnect region.
+Create a `KonnectAPIAuthConfiguration` resource containing your {{ site.konnect_short_name }} API token. Ensure the `serverURL` matches your {{ site.konnect_short_name }} region.
 
 ```yaml
 kind: KonnectAPIAuthConfiguration
@@ -51,15 +48,15 @@ metadata:
   namespace: kong
 spec:
   type: token
-  # Replace with your actual Konnect API token
+  # Replace with your actual {{ site.konnect_short_name }} API token
   token: kpat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  # Update with your Konnect region: us.api.konghq.tech, eu.api.konghq.tech, au.api.konghq.tech, etc.
+  # Update with your {{ site.konnect_short_name }} region: us.api.konghq.tech, eu.api.konghq.tech, au.api.konghq.tech, etc.
   serverURL: us.api.konghq.tech
 ```
 
 ### 2. Configure the Gateway to Mirror the Control Plane
 
-In your `GatewayConfiguration`, set `spec.konnect.source` to `Mirror` and provide the ID of the existing Konnect Control Plane.
+In your `GatewayConfiguration`, set `spec.konnect.source` to `Mirror` and provide the ID of the existing {{ site.konnect_short_name }} Control Plane.
 
 ```yaml
 kind: GatewayConfiguration
@@ -71,13 +68,11 @@ spec:
   konnect:
     authRef:
       name: konnect-api-auth
-    # Source type Mirror means the operator will connect to an existing
-    # Konnect Control Plane instead of creating a new one
     source: Mirror
     mirror:
       konnect:
-        # Replace with your actual Konnect Control Plane ID
-        id: b1dfc0e8-4995-4369-b9ad-ac5e19fb0c3c
+        # Replace with your actual {{ site.konnect_short_name }} Control Plane ID
+        id: xxx-xxx-xxx-xxx
   dataPlaneOptions:
     deployment:
       podTemplateSpec:

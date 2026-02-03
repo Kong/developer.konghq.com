@@ -34,8 +34,6 @@ Configuring TLS termination at the Gateway level allows {{ site.operator_product
 - A Kubernetes cluster with {{ site.operator_product_name }} installed.
 - A TLS certificate and private key stored in a Kubernetes `Secret`.
 
-{% include /k8s/create-certificate.md namespace='kong' hostname='demo.example.com' cert_required=true %}
-
 ## Configuration
 
 To enable TLS termination, you must configure a `Gateway` with an `HTTPS` listener and reference the TLS `Secret`.
@@ -103,6 +101,11 @@ The {{ site.operator_product_name }} requires a specific label on secrets to rec
 kubectl label secret demo.example.com -n kong konghq.com/secret="true"
 ```
 
+{% tip %}
+For more information on how the Operator handles secrets, please refer to [Secrets and Credentials Reference](/operator/reference/secrets-and-credentials)
+{% endtip %}
+
+
 ### 3. Deploy a Route
 
 Create an `HTTPRoute` to forward traffic to your service.
@@ -129,7 +132,7 @@ spec:
           port: 1027
 ```
 
-Deploy the standard echo service to test the setup:
+Deploy an echo service to test the communication with a service:
 
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong

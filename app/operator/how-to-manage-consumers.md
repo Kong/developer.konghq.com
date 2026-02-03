@@ -124,9 +124,18 @@ credentials:
 - test-user-apikey
 ```
 
+{% tip %}
+NOTE: To guarantee a consistent name for the ```konnectNamespacedRef```, use [Static naming for Konnect Control Planes](/operator/konnect/how-to-static-naming)
+{% endtip %}
+
 ## 4. Provision a Credential
 
 Create a Kubernetes `Secret` to store the API key. You must label the secret with `konghq.com/credential: key-auth` so the Operator knows to associate it with the consumer.
+
+{% tip %}
+For more information on how the Operator handles secrets, please refer to [Secrets and Credentials Reference](/operator/reference/secrets-and-credentials)
+{% endtip %}
+
 
 ```bash
 echo '

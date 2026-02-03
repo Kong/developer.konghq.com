@@ -1,8 +1,35 @@
+---
+title: How to split traffic 
+description: "Learn how to configure HTTPS listeners and TLS termination for {{ site.operator_product_name }}."
+content_type: how_to
+
+permalink: /operator/dataplanes/how-to/how-to-traffic-splitting/
+breadcrumbs:
+  - /operator/
+  - index: operator
+    group: Gateway Deployment
+  - index: operator
+    group: Gateway Deployment
+    section: "How-To"
+
+products:
+  - operator
+
+works_on:
+  - on-prem
+  - konnect
+
+tldr:
+  q: How do I configure TLS termination for {{ site.operator_product_name }}?
+  a: Add an `HTTPS` protocol listener to your `Gateway` resource and reference a Kubernetes `Secret` containing your TLS certificate and key.
+
+---
+
 # Traffic Splitting with HTTPRoute
 
-Traffic splitting, also known as canary releases or blue-green deployments, allows you to shift traffic between multiple versions of your service. 
+Traffic splitting, also known as canary releases or blue/green deployments, allows you to shift traffic between multiple versions of your service. 
 
-With the Kong Operator and the Kubernetes Gateway API, traffic splitting is managed natively using `HTTPRoute` weights.
+With the {{ site.operator_product_name }} and Gateway API, traffic splitting is managed natively using `HTTPRoute` weights.
 
 ## Prerequisites
 
@@ -86,8 +113,9 @@ spec:
 
 Define an `HTTPRoute` that references both services in the `backendRefs` section. Each reference includes a `weight`.
 
-> [!NOTE]
-> Weights are relative. If you have two backends with weights 50 and 50, traffic is split 50/50. If weights are 90 and 10, traffic is split 90/10.
+{% tip %}
+Weights are relative. If you have two backends with weights 50 and 50, traffic is split 50/50. If weights are 90 and 10, traffic is split 90/10.
+{% endtip %}
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -121,25 +149,3 @@ for i in {1..10}; do curl -s http://<GATEWAY_IP>/echo; done
 
 You should see an approximate 50/50 split between "node v1" and "node v2" responses.
 
-## Advanced: Cross-Namespace Splitting
-
-If your services are in different namespaces than the `HTTPRoute`, you must:
-1.  Specify the `namespace` in the `backendRefs`.
-2.  Ensure a `ReferenceGrant` exists in the target namespace(s) to allow the Operator to reach the services.
-
-```yaml
-# In the echo-v2 namespace
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: ReferenceGrant
-metadata:
-  name: allow-kgo
-  namespace: service-v2-ns
-spec:
-  from:
-  - group: gateway.networking.k8s.io
-    kind: HTTPRoute
-    namespace: kong
-  to:
-  - group: ""
-    kind: Service
-```
