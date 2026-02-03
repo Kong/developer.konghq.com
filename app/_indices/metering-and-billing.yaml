@@ -1,4 +1,5 @@
 title: "{{site.metering_and_billing}} Documentation Index"
+description: "Index containing all documentation for {{site.metering_and_billing}}."
 sections:
   - title: Reference
     items:
