@@ -181,7 +181,6 @@ as well as the following attributes:
 
 For example, with the following `MeshService`:
 
-{% policy_yaml %}
 ```yaml
 kind: MeshService
 metadata:
@@ -193,7 +192,6 @@ metadata:
     k8s.kuma.io/service-name: redis
     k8s.kuma.io/namespace: kuma-demo
 ```
-{% endpolicy_yaml %}
 
 If you use the template `"{% raw %}{{ .DisplayName }}.{{ .Namespace }}.{{ .Mesh }}.{{ label "team" }}.mesh.local{% endraw %}"`, you would get the hostname `redis.kuma-demo.products.backend.mesh.local`.
 
@@ -203,7 +201,6 @@ The generated hostname points to the first VIP known for the `MeshService`.
 
 Every generated hostname is recorded under the `MeshService` resource's status, in the `addresses` field:
 
-{% policy_yaml %}
 ```yaml
 status:
   addresses:
@@ -212,5 +209,4 @@ status:
       hostnameGeneratorRef:
         coreName: synced-kube-mesh-service
 ```
-{% endpolicy_yaml %}
 
