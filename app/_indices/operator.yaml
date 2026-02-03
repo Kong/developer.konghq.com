@@ -87,6 +87,7 @@ groups:
       - title: Get Started
         items:
           - path: /operator/konnect/get-started/**/*
+          - path: /operator/konnect/crd/adoption/gateway
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/
