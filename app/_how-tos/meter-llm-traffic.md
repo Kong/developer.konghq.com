@@ -164,7 +164,10 @@ In this section, you'll create a Premium plan that charges customers based on th
 1. From the **Feature** dropdown menu, select "ai-token".
 1. Click **Next Step**.
 1. From the **Pricing model** dropdown menu, select "Usage Based".
-1. In the **Price per unit** field, enter `0.00002`.
+1. In the **Price per unit** field, enter `1`.
+
+   {:.info}
+   > We're using $1 here to make it easy to see the cost changes in the customer invoice. Be sure to change this price in a production instance to match your own pricing model.
 1. Click **Next Step**. 
 1. Select **Boolean**.
 1. Click **Save Rate Card**.
