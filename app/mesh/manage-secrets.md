@@ -31,7 +31,7 @@ Secrets belong to a specific `Mesh` resource, and can't be shared across differe
 
 ## Store secrets
 
-How you store secrets in the `Secrets` resource depends on if you're using Kubernetes or Universal for your envrionment.
+How you store secrets in the `Secrets` resource depends on if you're using Kubernetes or Universal for your environment.
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
@@ -133,7 +133,7 @@ data: dGVzdAo=
 ### Global secrets
 
 Global secrets are not bound to a given mesh and can't be used in mesh policies.
-Global secrets are used for internal purposes.
+Global secrets are used for internal purposes, to store [zone tokens](/mesh/zone-proxy-auth/#zone-token) or [user token](/mesh/authentication-with-the-api-server/#user-token) signing keys for example.
 
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
