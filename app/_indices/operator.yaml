@@ -38,7 +38,7 @@ groups:
           - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the Gateway API"
             description: Deploy and configure {{ site.base_gateway }} in Kubernetes using the standard Gateway API resources.
             url: /operator/get-started/gateway-api/install/
-          - title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and the Konnect CRDs"
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the {{site.konnect_short_name}} CRDs"
             description: Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs) provided by {{ site.operator_product_name }}.
             url: /operator/get-started/konnect-crds/install/
       - title: Key Concepts
