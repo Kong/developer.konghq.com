@@ -35,7 +35,7 @@ groups:
       - title: Get Started
         allow_duplicates: true
         items:
-          - title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and Gateway API"
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the Gateway API"
             description: Deploy and configure {{ site.base_gateway }} in Kubernetes using the standard Gateway API resources.
             url: /operator/get-started/gateway-api/install/
           - title: "Manage {{ site.base_gateway }} in Kubernetes through the {{ site.operator_product_name }} and the Konnect CRDs"
