@@ -110,7 +110,6 @@ groups:
       - title: How-To
         items:
           - path: /operator/konnect/how-to/resource-references/
-          - path: /operator/konnect/how-to/mirror-control-plane/
           - path: /operator/konnect/how-to/static-naming/
       - title: Troubleshooting
         items:
