@@ -71,6 +71,8 @@ rows:
     description: Make requests to multiple APIs and combine their responses into one response.
   - usecase: "[Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)"
     description: Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+  - usecase: "[Clear headers](/plugins/datakit/examples/clear-headers/)"
+    description: Use the Datakit plugin to dynamically clear headers before passing them to an input, causing the header to be ignored.
   - usecase: "[Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)"
     description: Authenticate to a third-party service using Vault secrets.
   - usecase: "[Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)"
