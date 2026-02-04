@@ -8,8 +8,9 @@ module Jekyll
     class HttpRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
 
-      def initialize(yaml:) # rubocop:disable Lint/MissingSuper
+      def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
+        @format = format
 
         validate_yaml!
       end
@@ -28,7 +29,11 @@ module Jekyll
       end
 
       def template_file
-        @template_file ||= 'app/_includes/http_request.html'
+        @template_file ||= if @format == 'markdown'
+                             'app/_includes/http_request.md'
+                           else
+                             'app/_includes/http_request.html'
+                           end
       end
 
       def method
