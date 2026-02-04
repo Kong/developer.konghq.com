@@ -1,10 +1,9 @@
-{% assign count = include.count %}
-{% unless count %}{% assign count = 1 %}{% endunless %}
-
-{% assign is_https = false %}
-{% if include.mtls %}{% assign is_https = true %}{% endif %}
-{% if include.insecure %}{% assign is_https = true %}{% endif %}
-{% if include.url contains 'https://' %}{% assign is_https = false %}{% endif %}
+{%- assign count = include.count -%}
+{%- unless count %}{% assign count = 1 %}{% endunless -%}
+{%- assign is_https = false -%}
+{%- if include.mtls %}{% assign is_https = true %}{% endif -%}
+{%- if include.insecure %}{% assign is_https = true %}{% endif -%}
+{%- if include.url contains 'https://' %}{% assign is_https = false %}{% endif -%}
 
 ```bash
 {% if include.capture -%}
