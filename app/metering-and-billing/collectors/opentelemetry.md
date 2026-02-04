@@ -19,15 +19,15 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-Non-sampled logs (e.g., access logs) are excellent sources of usage information. Combined with [OpenTelemetry](https://opentelemetry.io) open standard for log forwarding, you can easily extract usage information from your logs and forward them to {{site.metering_and_billing}}.
+Non-sampled logs (for example, access logs) are excellent sources of usage information. Combined with the [OpenTelemetry](https://opentelemetry.io) open standard for log forwarding, you can extract usage information from your logs and forward them to {{site.metering_and_billing}}.
 
 ## Prerequisites
 
-You will need an OpenTelemetry-compatible log-forwarding solution. The easiest way to get started is to use the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/).
+You will need an OpenTelemetry-compatible log-forwarding solution. You can get started with the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/).
 
 ## Configuration
 
-First, create a new YAML file for the collector configuration. You will use the `otel_log` Redpanda Connect input:
+First, create a new YAML file for the collector configuration. Use the `otel_log` Redpanda Connect input:
 
 ```yaml
 input:
@@ -79,7 +79,7 @@ output:
       url: '${OPENMETER_URL:https://us.api.konghq.com}/v3/openmeter/events'
       verb: POST
       headers:
-        Authorization: 'Bearer ${OPENMETER_TOKEN:}'
+        Authorization: 'Bearer $KONNECT_SYSTEM_ACCESS_TOKEN'
         Content-Type: 'application/json'
       timeout: 30s
       retry_period: 15s
@@ -102,10 +102,12 @@ output:
       dump_request_log_level: DEBUG
 ```
 
+Replace `$KONNECT_SYSTEM_ACCESS_TOKEN` with your own [system access token](/konnect-api/#system-accounts-and-access-tokens).
+
 ## Example use case
 
 A fully working example is available on [GitHub](https://github.com/openmeterio/openmeter/tree/main/examples/collectors/otel-log).
 
 ## Installation
 
-Check out the [Collectors overview](/metering-and-billing/collectors/) for installation instructions.
+{% include /konnect/metering-and-billing/collector-install.md %}

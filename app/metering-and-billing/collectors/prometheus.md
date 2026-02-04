@@ -19,7 +19,7 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-The OpenMeter Collector can query Prometheus to collect metrics for billing and invoicing. 
+The {{site.metering_and_billing}} Collector can query Prometheus to collect metrics for billing and invoicing. 
 This is useful for companies using Prometheus to monitor their infrastructure and want to bill and invoice their customers based on already collected metrics.
 
 ## How it works
@@ -38,10 +38,10 @@ For example, if you already have Prometheus metrics about the number of API requ
 
 {:.warning}
 > Prometheus metrics and queries are not designed for billing and can lead to inaccuracies due to:
-> * Metrics can be lost when the app restarts and the metrics wasn't collected by the Prometheus scraper.
-> * Metrics are not deduplicated, so you can get multiple metrics for the same event.
+> * Metrics can be lost when the app restarts and the metric wasn't collected by the Prometheus scraper.
+> * Metrics duplicates aren't removed, so you can get multiple metrics for the same event.
 >
-> We only recommend monetizing Prometheus metrics for long running workloads, where the impact of inaccuracies is neglicteble.
+> We only recommend monetizing Prometheus metrics for long running workloads, where the impact of inaccuracies is negligible.
 
 ## Get started
 
@@ -142,7 +142,7 @@ output:
       url: '${OPENMETER_URL:https://us.api.konghq.com}/v3/openmeter/events'
       verb: POST
       headers:
-        Authorization: 'Bearer ${OPENMETER_TOKEN:}'
+        Authorization: 'Bearer $KONNECT_SYSTEM_ACCESS_TOKEN'
         Content-Type: 'application/json'
       timeout: 30s
       retry_period: 15s
@@ -165,17 +165,19 @@ output:
       dump_request_log_level: DEBUG
 ```
 
+Replace `$KONNECT_SYSTEM_ACCESS_TOKEN` with your own [system access token](/konnect-api/#system-accounts-and-access-tokens).
+
 ## Scheduling
 
 The collector runs on a schedule defined by the `schedule` parameter using cron syntax. It supports:
 
-* Standard cron expressions (e.g., `0 * * * * *` for once per minute)
-* Duration syntax with the `@every` prefix (e.g., `@every 1m`)
+* Standard cron expressions (for example, `0 * * * * *` for once per minute)
+* Duration syntax with the `@every` prefix (for example, `@every 1m`)
 
 ## Query offset
 
-The `query_offset` parameter allows you to query for data from a point in the past, which is useful when metrics have a delay before they're available in Prometheus. For example, setting `query_offset: "1m"` means each query will be executed against data from 1 minute ago.
+The `query_offset` parameter allows you to query for data from a point in the past, which is useful when metrics have a delay before they're available in Prometheus. For example, setting `query_offset: "1m"` means each query will be executed against data from one minute ago.
 
 ## Installation
 
-Check out the [Collectors overview](/metering-and-billing/collectors/) for installation instructions.
+{% include /konnect/metering-and-billing/collector-install.md %}

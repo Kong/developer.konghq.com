@@ -19,8 +19,8 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-The OpenMeter Collector can integrate with Nvidia's Run:ai to collect allocated and utilized resources for your AI/ML workloads, including GPUs, CPUs, and memory. 
-This is useful for companies using Run:ai to run GPU workloads and want to bill and invoice their customers based on consumption of allocated and utilized resources.
+The {{site.metering_and_billing}} Collector can integrate with Nvidia's Run:ai to collect allocated and used resources for your AI/ML workloads, including GPUs, CPUs, and memory. 
+This is useful for companies using Run:ai to run GPU workloads that want to bill and invoice their customers based on consumption of allocated and used resources.
 
 ## How it works
 
@@ -64,7 +64,7 @@ Let's say you want to charge your customers $0.2 per GPU minute and $0.05 per CP
 ```
 
 {:.info}
-> **Note:** The collector normalizes the collected metrics to a minute (configurable), making it easy to set per second, minute, or hour pricing similar to how AWS EC2 pricing works.
+> **Note:** The collector normalizes the collected metrics to a minute, which is configurable, so you can set per second, minute, or hour pricing similar to how AWS EC2 pricing works.
 
 ## Run:ai metrics
 
@@ -99,7 +99,7 @@ rows:
   - metric_name: "`GPU_SM_OCCUPANCY_PER_GPU`"
     description: "SM occupancy percentage per GPU"
   - metric_name: "`GPU_TENSOR_ACTIVITY_PER_GPU`"
-    description: "Tensor core utilization percentage per GPU"
+    description: "Tensor core usage percentage per GPU"
   - metric_name: "`GPU_FP64_ENGINE_ACTIVITY_PER_GPU`"
     description: "FP64 (double precision) engine activity percentage per GPU"
   - metric_name: "`GPU_FP32_ENGINE_ACTIVITY_PER_GPU`"
@@ -107,7 +107,7 @@ rows:
   - metric_name: "`GPU_FP16_ENGINE_ACTIVITY_PER_GPU`"
     description: "FP16 (half precision) engine activity percentage per GPU"
   - metric_name: "`GPU_MEMORY_BANDWIDTH_UTILIZATION_PER_GPU`"
-    description: "Memory bandwidth utilization percentage per GPU"
+    description: "Memory bandwidth usage percentage per GPU"
   - metric_name: "`GPU_NVLINK_TRANSMITTED_BANDWIDTH_PER_GPU`"
     description: "NVLink transmitted bandwidth per GPU"
   - metric_name: "`GPU_NVLINK_RECEIVED_BANDWIDTH_PER_GPU`"
@@ -132,7 +132,7 @@ columns:
     key: description
 rows:
   - metric_name: "`GPU_UTILIZATION`"
-    description: "Overall GPU utilization percentage across all GPUs in the workload"
+    description: "Overall GPU usage percentage across all GPUs in the workload"
   - metric_name: "`GPU_MEMORY_USAGE_BYTES`"
     description: "Total GPU memory usage in bytes across all GPUs"
   - metric_name: "`GPU_MEMORY_REQUEST_BYTES`"
@@ -160,7 +160,7 @@ rows:
 
 ## Get started
 
-First, create a new YAML file for the collector configuration. You will use the `run_ai` Redpanda Connect input:
+First, create a new YAML file for the collector configuration. Use the `run_ai` Redpanda Connect input:
 
 ```yaml
 input:
@@ -284,7 +284,7 @@ output:
       url: '${OPENMETER_URL:https://us.api.konghq.com}/v3/openmeter/events'
       verb: POST
       headers:
-        Authorization: 'Bearer ${OPENMETER_TOKEN:}'
+        Authorization: 'Bearer $KONNECT_SYSTEM_ACCESS_TOKEN'
         Content-Type: 'application/json'
       timeout: 30s
       retry_period: 15s
@@ -307,20 +307,22 @@ output:
       dump_request_log_level: DEBUG
 ```
 
+Replace `$KONNECT_SYSTEM_ACCESS_TOKEN` with your own [system access token](/konnect-api/#system-accounts-and-access-tokens).
+
 ## Scheduling
 
 The collector runs on a schedule defined by the `schedule` parameter using cron syntax. It supports:
 
-- Standard cron expressions (e.g., `*/30 * * * * *` for every 30 seconds)
-- Duration syntax with the `@every` prefix (e.g., `@every 30s`)
+- Standard cron expressions (for example, `*/30 * * * * *` for every 30 seconds)
+- Duration syntax with the `@every` prefix (for example, `@every 30s`)
 
 ## Resource types
 
 The collector can collect metrics from two different resource types:
 
-- `workload` - Collects metrics at the workload level, which represents a group of pods
-- `pod` - Collects metrics at the individual pod level
+- `workload`: Collects metrics at the workload level, which represents a group of pods
+- `pod`: Collects metrics at the individual pod level
 
 ## Installation
 
-Check out the [Collectors overview](/metering-and-billing/collectors/) for installation instructions.
+{% include /konnect/metering-and-billing/collector-install.md %}

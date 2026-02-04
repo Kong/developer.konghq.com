@@ -18,42 +18,52 @@ related_resources:
     url: /metering-and-billing/metering/
 ---
 
-The OpenMeter Collector is an open-source software you can run in your own infrastructure to meter external systems like Kubernetes, GPUs, and import usage from datasources into {{site.metering_and_billing}}.
+The {{site.metering_and_billing}} Collector is an open-source software you can run in your own infrastructure to meter external systems, like Kubernetes and GPUs, and import usage from these data sources into {{site.metering_and_billing}}.
 While collectors provide a higher abstraction than the API, you can always use the API to integrate new data sources.
 
 ## Available collectors
 
 The following collectors are available:
 
-<!--vale off-->
-{% table %}
-columns:
-  - title: Collector
-    key: collector
-  - title: Description
-    key: description
-rows:
-  - collector: "[Kubernetes](/metering-and-billing/collectors/kubernetes/)"
-    description: "Monetize Kubernetes pod runtime per-second including CPU, memory, and GPU allocation."
-  - collector: "[Run:ai](/metering-and-billing/collectors/run-ai/)"
-    description: "Monetize GPU and compute metrics from Nvidia Run:ai workloads."
-  - collector: "[OpenTelemetry](/metering-and-billing/collectors/opentelemetry/)"
-    description: "Monetize OpenTelemetry logs."
-  - collector: "[Prometheus](/metering-and-billing/collectors/prometheus/)"
-    description: "Query Prometheus metrics and convert them to billing events."
-  - collector: "[S3](/metering-and-billing/collectors/s3/)"
-    description: "Ingest usage data from S3-compatible object storage."
-{% endtable %}
-<!--vale on-->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
+  {% include icon_card_no_heading.html 
+    icon="/assets/icons/kubernetes.svg" 
+    title="Kubernetes" 
+    cta_url="/metering-and-billing/collectors/kubernetes/" 
+  %}
+  
+  {% include icon_card_no_heading.html 
+    icon="/assets/icons/runai.svg" 
+    title="Run:ai" 
+    cta_url="/metering-and-billing/collectors/run-ai/" 
+  %}
+  
+  {% include icon_card_no_heading.html 
+    icon="/assets/icons/opentelemetry.svg" 
+    title="OpenTelemetry" 
+    cta_url="/metering-and-billing/collectors/opentelemetry/" 
+  %}
+  
+  {% include icon_card_no_heading.html 
+    icon="/assets/icons/prometheus.svg" 
+    title="Prometheus" 
+    cta_url="/metering-and-billing/collectors/prometheus/" 
+  %}
+  
+  {% include icon_card_no_heading.html 
+    icon="/assets/icons/s3.svg" 
+    title="S3" 
+    cta_url="/metering-and-billing/collectors/s3/" 
+  %}
+</div>
 
 ## How it works
 
-The OpenMeter Collector is built on top of Redpanda Connect (previously Benthos), a robust in-proces stream processing tool that can connect to a wide range of data sources. 
-The tool's strong delivery guarantees and capability to retry failed messages make it an excellent choice as a collector for {{site.metering_and_billing}}.
+The {{site.metering_and_billing}} Collector is built on top of [Redpanda Connect](https://docs.redpanda.com/redpanda-connect/get-started/about/), a robust in-process stream processing tool that can connect to a wide range of data sources. The {{site.metering_and_billing}} Collector uses Redpanda Connect because of its strong delivery guarantees and it's ability to retry failed messages.
 
 ### Architecture
 
-The Collector connects data sources to sinks through a pipeline comprising various processing steps. It reads messages from a streaming source, processes them (validation, transformation, enrichment, etc.), and then sends them to {{site.metering_and_billing}}. 
+The Collector connects data sources to sinks through a pipeline comprising various processing steps. It reads messages from a streaming source, processes them (for example, validation, transformation, and enrichment), and then sends them to {{site.metering_and_billing}}. 
 It does so with strong delivery guarantees, ensuring that messages are recovered and will be retried until they are successfully delivered to their destination.
 
 The three major components of the Collector pipeline:
@@ -70,10 +80,12 @@ When using the collector, the output of the pipeline is always a {{site.metering
 output:
   openmeter:
     url: https://us.api.konghq.com/v3/openmeter # default
-    token: '<YOUR TOKEN>' # required
+    token: 'YOUR KONNECT SYSTEM ACCESS TOKEN' # required
 ```
 
-As of today, {{site.metering_and_billing}} requires ingested data to be in the [CloudEvents](https://cloudevents.io/) format. Redpanda Connect offers a range of processors that can transform, validate, and enrich messages. The most commonly used processor is known as mapping, which utilizes Redpanda Connect's mapping language, [bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang/about).
+Replace `YOUR KONNECT SYSTEM ACCESS TOKEN` with your own [system access token](/konnect-api/#system-accounts-and-access-tokens).
+
+As of today, {{site.metering_and_billing}} requires ingested data to be in the [CloudEvents](https://cloudevents.io/) format. Redpanda Connect offers a range of processors that can transform, validate, and enrich messages. The most commonly used processor is known as mapping, which uses Redpanda Connect's mapping language, [bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang/about).
 
 Let's assume you have access logs are in the following format:
 
@@ -106,43 +118,22 @@ pipeline:
         }
 ```
 
-### Installation
+### Install the Collector
 
-The OpenMeter Collector (custom Redpanda Connect distribution) is available via the following distribution strategies:
-
-- Binaries can be downloaded from the [GitHub Releases](https://github.com/openmeterio/openmeter/releases) page
-- Container images are available on [ghcr.io](https://github.com/openmeterio/openmeter/pkgs/container/benthos-collector)
-- A Helm chart is also available on [GitHub Packages](https://github.com/openmeterio/openmeter/tree/main/deploy/charts/benthos-collector)
+{% include /konnect/metering-and-billing/collector-install.md %}
 
 ## High availability
 
-The OpenMeter Collector is designed with strong delivery guarantees and capability to retry failed messages.
-Using the event buffering you can handle network outages without loosing any data.
+The {{site.metering_and_billing}} Collector is designed with strong delivery guarantees and capability to retry failed messages. You can handle network outages without loosing any data by using event buffering.
 
 ### Event buffering
 
-The OpenMeter Collector uses a persistent queue to buffer events. This allows the collector to store events on a persistent disk and retry them later in case of network failures or other issues. 
-Based on the load and disk size, the collector can buffer events for extended periods of time like hours or days and safely replay them to {{site.metering_and_billing}} when the network is restored.
+The {{site.metering_and_billing}} Collector uses a persistent queue to buffer events. This allows the collector to store events on a persistent disk and retry them later in case of network failures or other issues. 
+Based on the load and disk size, the collector can buffer events for extended periods of time, such as hours or days, and safely replay them to {{site.metering_and_billing}} when the network is restored.
 
-### Retries
+#### How does event buffering work?
 
-The OpenMeter Collector will retry failed messages up to 3 times (configurable). If the message still fails after 3 retries, it will be dropped.
-
-### Event deduplication
-
-{{site.metering_and_billing}} will deduplicate events based on the `id` and `source` fields. If a message with the same `id` and `source` is received multiple times, only the first occurrence will be processed.
-
-### API and SDK passthrough
-
-API can be pointed to the OpenMeter Collector endpoint to enrich events with additional metadata or increase the reliability of event delivery by leveraging the collector's buffer and retry capabilities.
-
-## Event buffering
-
-The OpenMeter Collector can operate in a passthrough mode where it buffers events on a local disk. This allows the collector to continue operating even if the network is down for an extended period of time. When the network is restored, the collector will replay the buffered events to {{site.metering_and_billing}}.
-
-### How does event buffering work?
-
-Installing the OpenMeter Collector with buffer enabled lets you send your usage events to the Collector instead of sending events directly to {{site.metering_and_billing}}. 
+Installing the {{site.metering_and_billing}} Collector with the buffer enabled lets you send your usage events to the Collector instead of sending events directly to {{site.metering_and_billing}}. 
 In this configuration, your app will first send the event to the Collector, which will forward the events to {{site.metering_and_billing}} and buffer them, retrying in the case of network failure.
 
 To increase the resilience of your metering pipeline, the Collector comes with:
@@ -152,65 +143,76 @@ To increase the resilience of your metering pipeline, the Collector comes with:
 - Deduplication
 - OpenTelemetry metrics and logging
 
-When buffering is enabled, in the case of connectivity issues, the Collector stores events on an attached persistent volume until the network recovers. 
+When buffering is enabled and there are connectivity issues, the Collector stores events on an attached persistent volume until the network recovers. 
 The available space on the attached disk determines the size of the buffer.
 
 The Collector also provides visibility into the buffer and processing states by exposing Prometheus metrics. 
 
-### Get started with buffering
+#### Get started with buffering
 
-You can enable buffering with the Collector in two simple steps:
+You can enable buffering with the Collector by doing the following:
 
-**1. Install the Collector:**
+1. Install the Collector:
 
-```bash
-# Set your token
-export OPENMETER_TOKEN=om_...
+   ```bash
+   # Set your token
+   export OPENMETER_TOKEN=om_...
 
-# Get the latest version
-export LATEST_VERSION=$(curl -s https://api.github.com/repos/openmeterio/openmeter/releases/latest | jq -r '.tag_name' | cut -c2-)
+   # Get the latest version
+   export LATEST_VERSION=$(curl -s https://api.github.com/repos/openmeterio/openmeter/releases/ latest | jq -r '.tag_name' | cut -c2-)
 
-# Install the collector in the openmeter-collector namespace
-helm upgrade openmeter-collector oci://ghcr.io/openmeterio/helm-charts/benthos-collector \
-  --version=${LATEST_VERSION} \
-  --install --wait --create-namespace \
-  --namespace openmeter-collector \
-  --set fullnameOverride=openmeter-collector \
-  --set openmeter.token=${OPENMETER_TOKEN} \
-  --set service.enabled=true \
-  --set storage.enabled=true \
-  --set preset=http-server
-```
+   # Install the collector in the openmeter-collector namespace
+   helm upgrade openmeter-collector oci://ghcr.io/openmeterio/helm-charts/benthos-collector \
+     --version=${LATEST_VERSION} \
+     --install --wait --create-namespace \
+     --namespace openmeter-collector \
+     --set fullnameOverride=openmeter-collector \
+     --set openmeter.token=${OPENMETER_TOKEN} \
+     --set service.enabled=true \
+     --set storage.enabled=true \
+     --set preset=http-server
+   ```
 
-**2. Point your API to the installed collector:**
+2. Point your API to the installed collector:
+   Send events to the collector's URL in your infrastructure, for example `http://openmeter-collector.svc`.
 
-Send events to the collector's URL in your infrastructure, e.g. `http://openmeter-collector.svc`.
+   ```sh
+   curl -X POST http://openmeter-collector.svc \
+     -H 'Content-Type: application/cloudevents+json' \
+     -H 'Authorization: Bearer <API_TOKEN>' \
+     --data '
+     {
+       "specversion" : "1.0",
+       "type": "prompt",
+       "id": "e4bacd05-5abd-4e1c-be6f-daf6b8e9dd92",
+       "time": "2026-02-01T16:41:37.188Z",
+       "source": "my-app",
+       "subject": "customer-1",
+       "data": {
+         "tokens": "12345",
+         "provider": "openai",
+         "model": "gpt-5-nano",
+         "type": "output"
+       }
+     }
+     '
+   ```
 
-```sh
-curl -X POST http://openmeter-collector.svc \
-  -H 'Content-Type: application/cloudevents+json' \
-  -H 'Authorization: Bearer <API_TOKEN>' \
-  --data '
-  {
-    "specversion" : "1.0",
-    "type": "prompt",
-    "id": "e4bacd05-5abd-4e1c-be6f-daf6b8e9dd92",
-    "time": "2026-02-01T16:41:37.188Z",
-    "source": "my-app",
-    "subject": "customer-1",
-    "data": {
-      "tokens": "12345",
-      "provider": "openai",
-      "model": "gpt-5-nano",
-      "type": "output"
-    }
-  }
-  '
-```
+### Retries
+
+The {{site.metering_and_billing}} Collector will retry failed messages up to three times by default, but you can configure this setting. If the message still fails after three retries, it will be dropped.
+
+### Event duplication processing
+
+{{site.metering_and_billing}} will process duplicate events based on the `id` and `source` fields. If a message with the same `id` and `source` is received multiple times, only the first occurrence will be processed.
+
+### API and SDK passthrough
+
+The API can be pointed to the {{site.metering_and_billing}} Collector endpoint to enrich events with additional metadata or increase the reliability of event delivery by leveraging the collector's buffer and retry capabilities.
 
 ## Observability
 
-The OpenMeter Collector exports OpenTelemetry metrics and logs for observability. The metrics are available on the `GET /metrics` endpoint if you want to scrape them with OpenTelemetry-compatible tools like Prometheus.
+The {{site.metering_and_billing}} Collector exports OpenTelemetry metrics and logs for observability. The metrics are available on the `GET /metrics` endpoint if you want to scrape them with OpenTelemetry-compatible tools like Prometheus.
 
 ### Observability metrics
 

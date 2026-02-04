@@ -91,7 +91,7 @@ rows:
             config:
               title: Collectors
               description: |
-                Meter external systems and data sources like Kubernetes, GPUs, and databases with the OpenMeter Collector.
+                Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
               icon: /assets/icons/logs.svg
               cta:
                 text: Learn more

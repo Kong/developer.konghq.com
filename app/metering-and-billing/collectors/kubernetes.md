@@ -19,7 +19,7 @@ related_resources:
     url: /metering-and-billing/collectors/
 ---
 
-The OpenMeter Kubernetes Collector is a standalone application you can install in your Kubernetes cluster to meter resource usage, such as Pod runtime CPU, memory, and storage allocation. 
+The {{site.metering_and_billing}} Kubernetes Collector is a standalone application you can install in your Kubernetes cluster to meter resource usage, such as Pod runtime CPU, memory, and storage allocation. 
 This is useful if you want to monetize customer workloads with usage-based billing and invoicing.
 
 ## How it works
@@ -29,9 +29,9 @@ This allows you to track usage and monetize your Kubernetes workloads.
 
 Once you have the usage data ingested into {{site.metering_and_billing}}, you can use it to set up prices and billing for your customers based on their usage.
 
-### Example
+### Example: Billing per CPU-core minute
 
-Let's say you want to charge your customers $0.05 per CPU-core minute. The Collector will emit the following events every 10 seconds (configurable) from your Kubernetes Pods:
+Let's say you want to charge your customers $0.05 per CPU-core minute. The Collector will emit the following events every 10 seconds from your Kubernetes Pods:
 
 ```json
 {
@@ -57,7 +57,7 @@ Let's say you want to charge your customers $0.05 per CPU-core minute. The Colle
 ```
 
 {:.info}
-> **Note:** The collector normalizes the collected metrics to a second (configurable), making it easy to set per second, minute, or hour pricing similar to how AWS EC2 pricing works.
+> **Note:** The collector normalizes the collected metrics to a second, which is configurable, making it easy to set per second, minute, or hour pricing similar to how AWS EC2 pricing works.
 
 ## Kubernetes metrics
 
@@ -119,9 +119,11 @@ helm upgrade openmeter-collector oci://ghcr.io/openmeterio/helm-charts/benthos-c
   --install --wait --create-namespace \
   --namespace openmeter-collector \
   --set fullnameOverride=openmeter-collector \
-  --set openmeter.token=${OPENMETER_TOKEN} \
+  --set openmeter.token=$KONNECT_SYSTEM_ACCESS_TOKEN \
   --set preset=kubernetes-pod-exec-time
 ```
+
+Replace `$KONNECT_SYSTEM_ACCESS_TOKEN` with your own [system access token](/konnect-api/#system-accounts-and-access-tokens).
 
 With the default settings, the collector will report on pods running in the `default` namespace every 15 seconds.
 
@@ -217,7 +219,7 @@ The collector maps information from each pod to CloudEvents according to the fol
 
 * **Event type** is set as `kube-pod-exec-time`.
 * **Event source** is set as `kubernetes-api`.
-* The subject name is mapped from the value of the `openmeter.io/subject` annotation. It falls back to the pod name if the annotation is not present.
+* The subject name is mapped from the value of the `openmeter.io/subject` annotation. It falls back to the pod name if the annotation isn't present.
 * Pod execution time is mapped to `duration_seconds` in the `data` section.
 * Pod name and namespace are mapped to `pod_name` and `pod_namespace` in the `data` section.
 * Annotations labeled `data.openmeter.io/KEY` are mapped to `KEY` in the `data` section.
@@ -234,7 +236,7 @@ The primary factors influencing performance that you can adjust are `SCRAPE_INTE
 
 ### Advanced configuration
 
-The Kubernetes collector utilizes [Redpanda Connect](https://benthos.dev) to gather pod information, convert it to CloudEvents, and reliably transmit it to {{site.metering_and_billing}}.
+The Kubernetes collector uses [Redpanda Connect](https://benthos.dev) to gather pod information, convert it to CloudEvents, and reliably transmit it to {{site.metering_and_billing}}.
 
 The configuration file for the collector is available on [GitHub](https://github.com/openmeterio/openmeter/blob/main/collector/benthos/presets/kubernetes-pod-exec-time/config.yaml).
 
