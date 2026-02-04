@@ -1,6 +1,5 @@
 ---
-# @TODO KO 2.1
-title: Handle Kubernetes Ingress
+title: Route traffic with a Kubernetes Ingress resource
 description: "Configure {{ site.operator_product_name }} to manage traditional Kubernetes Ingress resources."
 content_type: how_to
 
@@ -21,37 +20,17 @@ works_on:
 
 tldr:
   q: How do I configure {{ site.operator_product_name }} to handle Kubernetes Ingress resources?
-  a: Set the `ingressClass` field in the `ControlPlane` resource to match your `Ingress` resource's `ingressClassName`.
+  a: Set the `spec.ingressClass` field in the `ControlPlane` resource to match your `Ingress` resource's `spec.ingressClassName`.
 
 ---
 
-## Overview
+While the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) is the preferred mechanism for configuring inbound routing, {{ site.operator_product_name }} also supports the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
-While the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) is the preferred mechanism for configuring inbound routing, {{ site.operator_product_name }} continues to support the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/).
+{% include /k8s/kong-namespace.md %}
 
-When you use {{ site.operator_product_name }} to manage your Ingress traffic, it creates a `ControlPlane` (serving as the controller) and a `DataPlane` (serving as the {{ site.base_gateway }}). The `ControlPlane` is configured to listen for `Ingress` resources with a specific `IngressClass`.
+## Create the GatewayConfiguration
 
-## Prerequisites
-
-- Access to a Kubernetes cluster.
-- `kubectl` installed.
-- `helm` installed.
-
-## Install the Kong Operator
-
-Install {{ site.operator_product_name }} using Helm:
-
-```bash
-helm upgrade --install kong-operator kong/kong-operator -n kong-system --create-namespace
-```
-
-## Configure Ingress Handling
-
-To handle `Ingress` resources, you need to create a `GatewayConfiguration`, a `DataPlane`, and a `ControlPlane`.
-
-### Create the GatewayConfiguration
-
-The `GatewayConfiguration` allows you to customize the deployment options for your `DataPlane` and `ControlPlane`.
+Create a `GatewayConfiguration` resource to customize the deployment options for your data plane and control plane:
 
 ```yaml
 echo '
@@ -67,9 +46,9 @@ spec:
 ' | kubectl apply -f -
 ```
 
-### Create the DataPlane
+## Create the DataPlane
 
-The `DataPlane` resource defines the {{ site.base_gateway }} deployment.
+Create a `DataPlane` resource to define the {{ site.base_gateway }} deployment:
 
 ```yaml
 echo '
@@ -84,13 +63,14 @@ spec:
       spec:
         containers:
         - name: proxy
-          image: kong:3.9
+          image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 ' | kubectl apply -f -
 ```
 
-### Create the ControlPlane
+## Create the ControlPlane
 
-The `ControlPlane` resource defines the controller that will manage the `DataPlane`. To enable Ingress support, you must specify the `ingressClass` field.
+Create a `ControlPlane` resource to define the controller that will manage the `DataPlane`. 
+To enable `Ingress` support, you must specify the `spec.ingressClass` field:
 
 ```yaml
 echo '
@@ -108,19 +88,16 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Deploy a Sample Application
+## Create the echo Service
 
-To test the Ingress setup, deploy the standard Kong echo service and an `Ingress` resource.
-
-### Create the Echo Service
-
+Run the following command to create a sample echo Service:
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
 
-### Create the Ingress resource
+## Create the Ingress
 
-Create an `Ingress` resource that uses the `ingressClassName` matching the one configured in the `ControlPlane`, pointing to the `echo` service.
+Create an `Ingress` resource that points to the echo service and specify the `spec.ingressClass` configured in the [`ControlPlane` resource](#create-the-controlplane) in the `spec;ingressClassName` field:
 
 ```yaml
 echo '
@@ -144,23 +121,22 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Verify the Setup
+## Validate
 
-1. Check the status of the `ControlPlane` and `DataPlane`:
-
-   ```bash
-   kubectl get controlplane,dataplane -n kong
-   ```
-
-2. Check the Ingress resource:
+1. Check that the resources have been created:
 
    ```bash
-   kubectl get ingress echo-ingress -n kong
+   kubectl get controlplane,dataplane,ingress -n kong
    ```
 
-3. (Optional) If your cluster supports LoadBalancers, you can find the external IP of the `DataPlane` service and test the routing:
+1. Get the external IP of the `DataPlane` service:
 
    ```bash
    export PROXY_IP=$(kubectl get svc -n kong -l app=kong-ingress-dp,gateway-operator.konghq.com/dataplane-service-type=ingress -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}')
+   ```
+
+1. Send a request to the Ingress:
+
+   ```sh
    curl -i http://$PROXY_IP/
    ```
