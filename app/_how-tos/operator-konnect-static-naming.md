@@ -18,7 +18,8 @@ works_on:
 
 tldr:
   q: How do I give my Konnect Control Plane a predictable name?
-  a: Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` resource.
+  a: |
+    Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` resource.
 
 ---
 

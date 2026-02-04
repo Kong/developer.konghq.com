@@ -103,7 +103,7 @@ kubectl label secret demo.example.com -n kong konghq.com/secret="true"
 ```
 
 {% tip %}
-For more information on how the Operator handles secrets, please refer to [Secrets and Credentials Reference](/operator/reference/secrets-and-credentials)
+For more information on how the Operator handles secrets, please refer to [Secrets reference](/operator/reference/secrets)
 {% endtip %}
 
 

@@ -1,7 +1,7 @@
 ---
 # @TODO KO 2.1
 title: Manage Consumers and Credentials
-description: "Learn how to create Kong Consumers and manage credentials for authentication with the Kong Gateway Operator."
+description: "Learn how to create Kong Consumers and manage credentials for authentication with {{site.operator_product_name}}."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/manage-consumers/
 breadcrumbs:
@@ -134,7 +134,7 @@ NOTE: To guarantee a consistent name for the ```konnectNamespacedRef```, use [St
 Create a Kubernetes `Secret` to store the API key. You must label the secret with `konghq.com/credential: key-auth` so the Operator knows to associate it with the consumer.
 
 {% tip %}
-For more information on how the Operator handles secrets, please refer to [Secrets and Credentials Reference](/operator/reference/secrets-and-credentials)
+For more information on how the Operator handles secrets, please refer to [Secrets reference](/operator/reference/secrets)
 {% endtip %}
 
 

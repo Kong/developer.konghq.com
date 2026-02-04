@@ -1,7 +1,7 @@
 ---
 # @TODO KO 2.1
 title: Preserve Client IP Addresses
-description: "Learn how to configure the Kong Gateway Operator to preserve the original client IP address using externalTrafficPolicy."
+description: "Learn how to configure {{site.operator_product_name}} to preserve the original client IP address using externalTrafficPolicy."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/preserve-client-ip/
 breadcrumbs:
@@ -18,7 +18,7 @@ works_on:
   - konnect
 tldr:
   q: How do I see the real client IP in Kong logs?
-  a: Configure `externalTrafficPolicy: Local in your GatewayConfiguration.
+  a: "Configure `externalTrafficPolicy: Local in your GatewayConfiguration."
 ---
 
 ## Overview

@@ -13,6 +13,11 @@ breadcrumbs:
     section: "How-To"
 products:
   - operator
+
+tldr:
+  q: TODO
+  a: |
+    TODO
 ---
 
 Monitoring your Gateway is critical for understanding traffic patterns, latency, and system health. {{ site.operator_product_name }} provides two ways to collect metrics with Prometheus:
