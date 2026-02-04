@@ -73,11 +73,11 @@ sequenceDiagram
   broker->>egw: consume message
   egw->>egw: check message validity
   
-  alt message matches name pattern
+  alt If message matches <br> name pattern
 
   egw--xclient: skip passing to client
 
-  else message doesn't match name pattern
+  else If message doesn't match <br> name pattern
   egw ->> egw: apply other policies
   egw->>client: pass to client
 
