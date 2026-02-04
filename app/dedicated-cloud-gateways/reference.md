@@ -78,7 +78,9 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 tags:
   - dedicated-cloud-gateways
 ---
