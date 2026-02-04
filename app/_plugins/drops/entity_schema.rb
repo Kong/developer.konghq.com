@@ -17,6 +17,11 @@ module Jekyll
         }
       end
 
+      def json_schema
+        @json_schema ||= YAML.load(File.read(api_file))
+                             .dig('components', *@schema['path'].split('/').reject(&:empty?))
+      end
+
       def path
         @path ||= @schema.fetch('path')
       end
@@ -46,6 +51,17 @@ module Jekyll
 
       def product
         @product ||= @site.data['konnect_oas_data'].detect { |p| p['id'] == product_id }
+      end
+
+      def api_file
+        @api_file ||= [
+          File.expand_path('../', @site.source),
+          'api-specs',
+          'gateway',
+          'admin-ee',
+          @release.number,
+          'openapi.yaml'
+        ].join('/')
       end
     end
   end
