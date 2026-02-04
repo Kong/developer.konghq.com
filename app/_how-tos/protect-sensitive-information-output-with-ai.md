@@ -27,6 +27,7 @@ plugins:
 tags:
   - ai
   - security
+  - mistral
 
 tldr:
   q: How can I anonymize sensitive information in API responses using AI?

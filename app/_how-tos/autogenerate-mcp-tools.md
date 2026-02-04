@@ -34,7 +34,6 @@ entities:
 
 tags:
   - ai
-  - openai
   - mcp
 
 tldr:
