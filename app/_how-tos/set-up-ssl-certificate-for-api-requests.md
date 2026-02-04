@@ -15,8 +15,6 @@ entities:
   - certificate
   - sni
 
-tags:
-  - certificates
 
 related_resources:
   - text: Certificate object reference

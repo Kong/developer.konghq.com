@@ -17,10 +17,6 @@ entities:
   - admin
   - rbac
 
-tags:
-  - admin-api
-  - rbac
-  - authentication
 
 related_resources:
   - text: RBAC reference
