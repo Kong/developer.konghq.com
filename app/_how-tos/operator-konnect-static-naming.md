@@ -1,5 +1,4 @@
 ---
-# @TODO KO 2.1
 title: Enable static naming for {{site.konnect_short_name}} control planes with {{site.operator_product_name}}
 description: "Ensure your {{site.konnect_short_name}} control planes use predictable names to support references from other resources."
 content_type: how_to
