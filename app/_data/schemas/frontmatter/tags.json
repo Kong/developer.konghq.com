@@ -53,6 +53,7 @@
     "data-plane-nodes",
     "data-streaming",
     "database",
+    "dashscope",
     "datadog",
     "debugger",
     "declarative-config",
