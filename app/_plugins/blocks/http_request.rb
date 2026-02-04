@@ -13,12 +13,12 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
 
-
       config = YAML.load(contents)
-      drop = Drops::HttpRequest.new(yaml: config)
+      drop = Drops::HttpRequest.new(yaml: config, format: @format)
 
       context.stack do
         context['config'] = drop
