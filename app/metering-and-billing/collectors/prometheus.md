@@ -27,7 +27,7 @@ This is useful for companies using Prometheus to monitor their infrastructure an
 The collector periodically queries your Prometheus instance using PromQL queries and emits the results as [CloudEvents](https://cloudevents.io/) to {{site.metering_and_billing}}. 
 This allows you to track usage and billing for your Prometheus workloads.
 
-Sending Prometheus metrics into {{site.metering_and_billing}} as billing events also helps to have an auditable record of the billing events. 
+Sending Prometheus metrics into {{site.metering_and_billing}} as billing events also helps to have a record of the billing events that you can audit. 
 Most Prometheus instances keep metrics only for a short period of time, while {{site.metering_and_billing}} can keep the billing events for a long time, providing a record of the usage and billing for auditing and accounting purposes.
 
 ## Example use cases

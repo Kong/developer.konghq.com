@@ -100,7 +100,7 @@ rows:
   - header:
       type: h2
       text: "Product Catalog"
-      sub_text: "Define your your pricing and packaging."
+      sub_text: "Define your pricing and packaging."
     columns:
       - blocks:
           - type: card
