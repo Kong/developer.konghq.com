@@ -1,0 +1,1 @@
+{% include how-tos/validations/request-check/snippet.md url=config.url headers=config.headers body=config.body capture=config.capture method=config.method insecure=config.insecure capture=config.capture jq=config.jq %}
