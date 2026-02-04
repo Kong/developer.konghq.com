@@ -28,6 +28,7 @@ entities:
 
 tags:
     - ai
+    - openai
 
 tldr:
     q: How can I use AI to transform a client request before proxying it?

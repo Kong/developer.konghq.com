@@ -15,6 +15,7 @@ breadcrumbs:
 tags:
   - ai
   - streaming
+  - ai-proxy
 
 plugins:
   - ai-proxy

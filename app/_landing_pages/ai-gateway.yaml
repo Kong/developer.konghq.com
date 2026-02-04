@@ -82,16 +82,50 @@ rows:
             cta:
               url: /plugins/?category=ai
               align: end
-      - blocks:
-        - type: card
+
+  - header:
+    type: h2
+  - columns:
+    - blocks:
+        - type: structured_text
           config:
-            title: AI providers
-            description: Learn about the various providers supported by AI Gateway.
-            icon: /assets/icons/ai.svg
+            header:
+              text: "AI Gateway providers"
+            blocks:
+              - type: text
+                text: |
+                  Kong AI Gatewy routes AI requests to various providers through a [provider-agnostic API](./#universal-api). This normalized API layer provides multiple benefits: client applications stay decoupled from provider-specific APIs, credentials are managed centrally, and request routing can be dynamic to optimize for cost, latency, or availability.
+
+  - column_count: 4
+    columns:
+      - blocks:
+        - type: icon_card
+          config:
+            title: OpenAI
+            icon: /assets/icons/openai.svg
+            cta:
+              url: /ai-gateway/ai-providers/openai/
+      - blocks:
+        - type:  icon_card
+          config:
+            title: Anthropic
+            icon: /assets/icons/anthropic.svg
+            cta:
+              url: /ai-gateway/ai-providers/anthropic/
+      - blocks:
+        - type:  icon_card
+          config:
+            title: Azure AI
+            icon: /assets/icons/azure.svg
+            cta:
+              url: /ai-gateway/ai-providers/azure/
+      - blocks:
+        - type: icon_card
+          config:
+            title: More...
+            icon: /assets/icons/dots.svg
             cta:
               url: /ai-gateway/ai-providers/
-              align: end
-
   - columns:
       - blocks:
           - type: structured_text
@@ -331,6 +365,7 @@ rows:
             cta:
               url: /ai-gateway/ai-clis/
               align: end
+
 
 
   - header:
