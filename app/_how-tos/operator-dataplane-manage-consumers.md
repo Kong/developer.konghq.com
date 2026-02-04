@@ -1,7 +1,6 @@
 ---
-# @TODO KO 2.1
-title: Manage Consumers and Credentials
-description: "Learn how to create Kong Consumers and manage credentials for authentication with {{site.operator_product_name}}."
+title: Manage Consumers and credentials with {{site.operator_product_name}}
+description: "Learn how to create Consumers and manage credentials for authentication with {{site.operator_product_name}}."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/manage-consumers/
 breadcrumbs:
@@ -17,27 +16,79 @@ works_on:
   - on-prem
   - konnect
 tldr:
-  q: How do I manage authentication credentials for my clients?
+  q: How do I manage authentication credentials for my Consumers?
   a: Create a `KongConsumer` resource and link it to a Kubernetes `Secret` containing the credentials.
+
+prereqs:
+  operator:
+    konnect:
+      auth: true
+      control_plane: true
+
+related_resources:
+  - text: Consumer entity
+    url: /gateway/entities/consumer/
+  - text: Key Authentication plugin
+    url: /plugins/key-auth/
 ---
 
-## Overview
+{% include /k8s/kong-namespace.md %}
 
-In {{ site.base_gateway }}, a **Consumer** represents a user or a service that consumes an API. Consumers allows you to:
-- Issue credentials (like API keys) to specific users.
-- Group users for authorization (ACLs).
-- Rate limit specific users or tiers.
+## Create a Gateway
 
-This guide shows how to create a `KongConsumer`, provision an API key, and secure an `HTTPRoute` using the Key Authentication plugin.
+Create the `GatewayConfiguration`, `GatewayClass`, and `Gateway` resources with basic configuration:
 
-## Prerequisites
+```sh
+echo '
+apiVersion: gateway-operator.konghq.com/v2beta1
+kind: GatewayConfiguration
+metadata:
+  name: gateway-configuration
+  namespace: kong
+spec:
+  dataPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        spec:
+          containers:
+            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+              name: proxy
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: gateway-class
+spec:
+  controllerName: konghq.com/gateway-operator
+  parametersRef:
+    group: gateway-operator.konghq.com
+    kind: GatewayConfiguration
+    name: gateway-configuration
+    namespace: kong
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong
+  namespace: kong
+spec:
+  gatewayClassName: gateway-class
+  listeners:
+    - name: http
+      port: 80
+      protocol: HTTP' | kubectl apply -f -
+```
 
-- Access to a Kubernetes cluster with {{ site.operator_product_name }} installed.
-- A functional `Gateway` and `HTTPRoute`.
+## Create the echo Service
 
-## 1. Configure the Key Authentication Plugin
+Run the following command to create a sample echo Service:
+```bash
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+```
 
-First, create a `KongPlugin` resource to enable key authentication. This plugin will enforce that requests must include a valid API key.
+## Configure the Key Authentication plugin
+
+First, create a `KongPlugin` resource to enable [key authentication](/plugins/key-auth/):
 
 ```bash
 echo '
@@ -53,11 +104,12 @@ config:
 ' | kubectl apply -f -
 ```
 
-## 2. Attach the Plugin to an HTTPRoute
+## Create the HTTPRoute
 
-Apply the plugin to your `HTTPRoute` using an `ExtensionRef` filter. This ensures that any traffic matching the route requires authentication.
+Create an `HTTPRoute` resource and add the plugin using an `ExtensionRef` filter:
 
-```yaml
+```sh
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -79,64 +131,12 @@ spec:
             name: key-auth
       backendRefs:
         - name: echo
-          port: 1027
+          port: 1027' | kubectl apply -f -
 ```
 
-## 3. Create a Consumer
+## Create a Secret
 
-Create a `KongConsumer` resource to represent the user.
-
-### Standard / Standalone
-
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1
-kind: KongConsumer
-metadata:
-  name: test-user
-  namespace: kong
-  annotations:
-    kubernetes.io/ingress.class: kong
-username: test-user
-credentials:
-- test-user-apikey
-' | kubectl apply -f -
-```
-
-### Konnect / Hybrid
-
-If you are using Konnect, you must refer to the Control Plane using `controlPlaneRef`.
-
-```yaml
-apiVersion: configuration.konghq.com/v1
-kind: KongConsumer
-metadata:
-  name: test-user
-  namespace: kong
-  annotations:
-    kubernetes.io/ingress.class: kong
-username: test-user
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: <your-control-plane-name>
-credentials:
-- test-user-apikey
-```
-
-{% tip %}
-NOTE: To guarantee a consistent name for the ```konnectNamespacedRef```, use [Static naming for Konnect Control Planes](/operator/konnect/how-to-static-naming)
-{% endtip %}
-
-## 4. Provision a Credential
-
-Create a Kubernetes `Secret` to store the API key. You must label the secret with `konghq.com/credential: key-auth` so the Operator knows to associate it with the consumer.
-
-{% tip %}
-For more information on how the Operator handles secrets, please refer to [Secrets reference](/operator/reference/secrets)
-{% endtip %}
-
+Create a Kubernetes `Secret` to store the API key and label the secret with `konghq.com/credential: key-auth`:
 
 ```bash
 echo '
@@ -153,18 +153,74 @@ stringData:
 ' | kubectl apply -f -
 ```
 
-## Verify Access
+For more information on how {{site.operator_product_name}} handles Secrets, please refer to the [Secrets reference](/operator/reference/secrets)
 
-1.  **Unauthorized Request**: Try to access the route without a key. You should receive a `401 Unauthorized` response.
+## Create a Consumer
 
-    ```bash
-    curl -i http://$GATEWAY_IP/echo
-    ```
+Create a `KongConsumer` resource to represent the user, and reference the `test-user-apikey` Secret we created:
 
-2.  **Authorized Request**: Access the route with the API key in the `apikey` header.
+```bash
+echo '
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: test-user
+  namespace: kong
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: test-user
+credentials:
+- test-user-apikey
+' | kubectl apply -f -
+```
+{:.data-deployment-topology="on-prem"}
 
-    ```bash
-    curl -i -H "apikey: secret-api-key" http://$GATEWAY_IP/echo
-    ```
+```bash
+echo '
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: test-user
+  namespace: kong
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: test-user
+spec:
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: gateway-control-plane
+credentials:
+- test-user-apikey
+' | kubectl apply -f -
+```
+{:.data-deployment-topology="konnect"}
 
-    You should receive a `200 OK` response from the echo service.
+{:.info}
+> To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
+{:.data-deployment-topology="konnect"}
+
+
+## Validate
+
+1. Get the Gateway's external IP:
+   
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+
+1. Try to access the Route without a key:
+
+   ```bash
+   curl -i http://$PROXY_IP/echo
+   ```
+
+   You should receive a `401 Unauthorized` response.
+
+2. Access the route with the API key in the `apikey` header:
+
+   ```bash
+   curl -i -H "apikey: secret-api-key" http://$PROXY_IP/echo
+   ```
+
+   You should receive a `200 OK` response from the echo service.
