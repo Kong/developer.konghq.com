@@ -36,10 +36,7 @@ related_resources:
 {:.warning}
 > **Note**: Serverless Gateways V1 are currently available for {{site.konnect_short_name}} organizations running in US regions only.
 
-Serverless Gateways V1 bring the following improvements to Serverless Gateways:
-
-* Terraform support
-* 99.9% SLA
+Serverless Gateways V1 bring updates to the API, increased data plane provisioning speeds, and Terraform support.
 
 You can upgrade to Serverless Gateways V1 using [decK](/deck/).
 
