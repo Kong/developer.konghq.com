@@ -13,17 +13,17 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
 
-      unless @page.fetch('works_on', []).any? { |w| ['konnect', 'konnect-platform'].include?(w) }
+      unless @page.fetch('works_on', []).any? { |w| %w[konnect konnect-platform].include?(w) }
         raise ArgumentError,
               'Page does not contain works_on: konnect or konnect-platform, but uses {% konnect_api_request %}'
       end
-      
 
       config = YAML.load(contents)
-      drop = Drops::KonnectApiRequest.new(yaml: config)
+      drop = Drops::KonnectApiRequest.new(yaml: config, format: @format)
 
       output = context.stack do
         context['config'] = drop
