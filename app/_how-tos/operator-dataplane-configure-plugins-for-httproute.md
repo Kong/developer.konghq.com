@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Configure Plugins for HTTPRoute
 description: "Learn how to attach Kong Plugins to Gateway API HTTPRoute resources using KongPluginBinding, ExtensionRef, or annotations."
 content_type: how_to

@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: "{{ site.operator_product_name }} metrics"
 description: "See which metrics {{ site.operator_product_name }} exposes and learn how to authenticate using a ServiceAccount to scrape the values"
 content_type: reference

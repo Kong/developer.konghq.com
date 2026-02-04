@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Mirror an existing Konnect Control Plane
 description: "Configure {{ site.operator_product_name }} to connect to an existing Konnect Control Plane by ID."
 content_type: how_to

@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Secrets and Credentials Reference
 description: "Reference guide for configuring Kubernetes Secrets and Credentials with the Kong Gateway Operator."
 content_type: reference

@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Monitor Kong Gateway with Prometheus
 description: "Learn how to enable and scrape Prometheus metrics from your Data Plane using the Prometheus plugin and DataPlaneMetricsExtension."
 content_type: how_to

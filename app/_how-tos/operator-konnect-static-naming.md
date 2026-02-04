@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Static naming for Konnect Control Planes
 description: "Ensure your Konnect Control Planes use predictable names to support references from other Kong resources."
 content_type: how_to

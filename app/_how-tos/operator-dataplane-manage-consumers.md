@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Manage Consumers and Credentials
 description: "Learn how to create Kong Consumers and manage credentials for authentication with the Kong Gateway Operator."
 content_type: how_to

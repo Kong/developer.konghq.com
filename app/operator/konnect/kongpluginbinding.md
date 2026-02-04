@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: "Understanding KongPluginBinding"
 description: "What is KongPluginBinding, and how does it interact with the konghq.com/plugins annotation?"
 content_type: reference

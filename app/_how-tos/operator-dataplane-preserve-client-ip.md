@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Preserve Client IP Addresses
 description: "Learn how to configure the Kong Gateway Operator to preserve the original client IP address using externalTrafficPolicy."
 content_type: how_to

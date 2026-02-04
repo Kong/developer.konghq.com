@@ -1,4 +1,5 @@
 ---
+# @TODO KO 2.1
 title: Cross-namespace resource references
 description: "Learn how to use Gateway API ReferenceGrant and KongReferenceGrant to authorize cross-namespace resource references in {{ site.operator_product_name }}."
 content_type: how_to
