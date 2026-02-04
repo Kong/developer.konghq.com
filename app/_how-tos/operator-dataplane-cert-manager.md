@@ -16,6 +16,9 @@ breadcrumbs:
 products:
   - operator
 
+prereqs:
+  skip_product: true
+
 works_on:
   - on-prem
   - konnect
@@ -26,41 +29,73 @@ tldr:
 
 ---
 
-## Overview
-
 Integrating {{ site.operator_product_name }} with [cert-manager](https://cert-manager.io/) allows you to automatically provision and rotate TLS certificates for your Gateway listeners. This integration follows the standard Kubernetes Gateway API pattern.
 
 When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager automatically creates a `Certificate` and a corresponding `Secret` containing the TLS key pair. The Operator then configures the managed Data Planes to use this secret for TLS termination.
 
-## Prerequisites
+## Install {{site.operator_product_name}} with cert-manager enabled
 
-- [cert-manager installed](https://cert-manager.io/docs/installation/) in your cluster. If using annotations on the `Gateway` for automatic provisioning, ensure the `gateway-shim` controller is enabled.
-- A configured cert-manager `Issuer` or `ClusterIssuer`.
+1. Add the Kong Helm charts:
 
-## Configuration
+   ```sh
+   helm repo add kong https://charts.konghq.com
+   helm repo update
+   ```
 
-The following example demonstrates how to set up `cert-manager` to issue certificates for a `Gateway`.
+1. Install [cert-manager](https://cert-manager.io/) on your cluster:
 
-### 1. Create a cert-manager Issuer
+   ```sh
+   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.2/cert-manager.yaml
+   ```
 
-For this example, we'll use a simple self-signed issuer. In a production environment, you would typically use an ACME issuer (like Let's Encrypt) or a CA issuer.
+1. Install {{ site.operator_product_name }} using Helm:
+
+   ```bash
+   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+     --create-namespace \
+     --set image.tag={{ site.data.operator_latest.release }} \
+     --set global.webhooks.options.certManager.enabled=true
+   ```
+   {:.data-deployment-topology="on-prem"}
+
+
+   ```bash
+   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+     --create-namespace \
+     --set image.tag={{ site.data.operator_latest.release }} \
+     --set global.webhooks.options.certManager.enabled=true \
+     --set env.ENABLE_CONTROLLER_KONNECT=true
+   ```
+   {:.data-deployment-topology="konnect"}
+
+1. Create the `kong` namespace:
+   ```sh
+   kubectl create namespace kong
+
+## Create a cert-manager issuer
+
+The cert-manager `Issuer` resource represents a certificate authority. For more information, see the [cert-manager documentation](https://cert-manager.io/docs/configuration/).
 
 ```yaml
+echo '
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: selfsigned-issuer
   namespace: kong
 spec:
-  selfSigned: {}
+  selfSigned: {}' | kubectl apply -f -
 ```
 
-### 2. Configure the Gateway with cert-manager
+{:.info}
+> In this example, we're using a simple self-signed issuer. In a production environment, you would typically use an ACME issuer like Let's Encrypt, or a CA issuer.
 
-Annotate the `Gateway` resource with `cert-manager.io/issuer` and specify the `tls.certificateRefs` pointing to the secret name you want cert-manager to manage.
+## Configure the Gateway with cert-manager
+
+Create a `Gateway` resource with the `cert-manager.io/issuer` annotation and specify the `tls.certificateRefs` pointing to the secret name you want cert-manager to manage.
 
 ```yaml
----
+echo '
 apiVersion: gateway-operator.konghq.com/v2beta1
 kind: GatewayConfiguration
 metadata:
@@ -72,7 +107,7 @@ spec:
       podTemplateSpec:
         spec:
           containers:
-            - image: kong:3.9
+            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
               name: proxy
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -93,7 +128,6 @@ metadata:
   name: kong-gateway
   namespace: kong
   annotations:
-    # Point to the issuer created in step 1
     cert-manager.io/issuer: "selfsigned-issuer"
 spec:
   gatewayClassName: kong-cert-manager
@@ -121,10 +155,9 @@ spec:
     kind: Issuer
   dnsNames:
     - example.localdomain.dev
-  # The Kong Operator requires this label to identify secrets it should manage
   secretTemplate:
     labels:
-      konghq.com/secret: "true"
+      konghq.com/secret: "true"' | kubectl apply -f -
 ```
 
 ### 3. Deploy a Route
@@ -132,6 +165,7 @@ spec:
 Deploy a sample `HTTPRoute` to verify that TLS termination is working.
 
 ```yaml
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -148,7 +182,7 @@ spec:
       backendRefs:
         - name: echo
           kind: Service
-          port: 80
+          port: 80' | kubectl apply -f -
 ```
 
 Deploy the standard echo service to test the route:
