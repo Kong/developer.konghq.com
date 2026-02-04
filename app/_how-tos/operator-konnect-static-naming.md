@@ -1,7 +1,7 @@
 ---
 # @TODO KO 2.1
-title: Static naming for Konnect Control Planes
-description: "Ensure your Konnect Control Planes use predictable names to support references from other Kong resources."
+title: Enable static naming for {{site.konnect_short_name}} control planes with {{site.operator_product_name}}
+description: "Ensure your {{site.konnect_short_name}} control planes use predictable names to support references from other resources."
 content_type: how_to
 
 permalink: /operator/konnect/how-to/static-naming/
@@ -17,37 +17,34 @@ works_on:
   - konnect
 
 tldr:
-  q: How do I give my Konnect Control Plane a predictable name?
+  q: How do I give my {{site.konnect_short_name}} control plane a predictable name?
   a: |
-    Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` resource.
+    Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` resource. 
 
+min_version:
+  operator: '2.1'
+
+prereqs:
+  operator:
+    konnect:
+      auth: true
 ---
 
-## Overview
+By default, {{ site.operator_product_name }} generates unique, dynamic names for `KonnectGatewayControlPlane` resources created from a `Gateway`. 
 
-By default, {{ site.operator_product_name }} generates unique, dynamic names for `KonnectGatewayControlPlane` resources created from a `Gateway` (for example, `default-hybrid-<hash>`). While this prevents naming collisions, it makes it difficult to reference the Control Plane in other resources, such as `KongConsumer`, before it is actually created.
+The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs {{site.operator_product_name}} to use a static, predictable name for the generated control plane based on the Gateway's namespace and name (for example, `default-hybrid`). This enables you to configure references before the control plane is created.
 
-The `gateway-operator.konghq.com/static-naming: "true"` annotation instructs the operator to use a static, predictable name for the generated Control Plane based on the Gateway's namespace and name (for example, `default-hybrid`). This enables you to configure references in advance.
+When static naming is enabled, {{site.operator_product_name}} derives the name for the `KonnectGatewayControlPlane` using the following logic:
 
-## Configuration
+* If the Gateway is in the same namespace as {{site.operator_product_name}}, the name will be the same as the Gateway name.
+* If the Gateway is in a different namespace, the name will be the Gateway name prefixed with the namespace.
 
-The following example demonstrates how to use the static naming annotation to allow a `KongConsumer` to reference a Control Plane.
+## Create the GatewayConfiguration and GatewayClass resources
 
-### 1. Configure the Gateway with Static Naming
+Configure the `GatewayConfiguration` resources with your {{site.konnect_short_name}} authentication and configure the `GatewayClass` resource to reference the `GatewayConfiguration`:
 
-Add the `gateway-operator.konghq.com/static-naming: "true"` annotation to your `Gateway` resource.
-
-```yaml
----
-kind: KonnectAPIAuthConfiguration
-apiVersion: konnect.konghq.com/v1alpha1
-metadata:
-  name: konnect-api-auth
-spec:
-  type: token
-  token: kpat_XXXXXXXXXXXXXXXXXXX
-  serverURL: us.api.konghq.tech
----
+```sh
+echo '
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/v2beta1
 metadata:
@@ -63,7 +60,7 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong/kong-gateway:3.12
+            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 ---
 kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1
@@ -76,28 +73,47 @@ spec:
     kind: GatewayConfiguration
     name: hybrid
     namespace: kong
----
+```
+
+## Configure the Gateway with static naming
+
+Configure the `Gateway` resource to reference the `GatewayClass` resource and add the `gateway-operator.konghq.com/static-naming: "true"` annotation:
+
+```sh
+echo '
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
   name: hybrid
   namespace: kong
   annotations:
-    # This annotation enables static naming
     gateway-operator.konghq.com/static-naming: "true"
 spec:
   gatewayClassName: hybrid
   listeners:
   - name: http
     protocol: HTTP
-    port: 80
+    port: 80' | kubectl apply -f -
 ```
 
-### 2. Reference the Static Name in a KongConsumer
+## Validate
 
-With static naming enabled, the generated `KonnectGatewayControlPlane` will be named `kong-hybrid` (following the pattern `{namespace}-{name}`). You can now reference this name in a `KongConsumer`.
+To validate, fetch a list of control planes in {{site.konnect_short_name}}:
 
-```yaml
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
+
+You should see a control plane named `kong-hybrid`.
+
+You can now reference the control plane in other resources using its static name. For example, here's how to reference it in a `KongConsumer` resource:
+
+```sh
+echo '
 kind: KongConsumer
 apiVersion: configuration.konghq.com/v1
 metadata:
@@ -108,62 +124,5 @@ spec:
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
-      # This matches the static name generated by the Gateway
-      name: hybrid
-credentials:
-- consumer1-acl-1
----
-kind: Secret
-apiVersion: v1
-metadata:
-  name: consumer1-acl-1
-  namespace: kong
-  labels:
-    konghq.com/credential: acl
-    konghq.com/secret: "true"
-stringData:
-  group: "acl-group"
-```
-
-## Naming Pattern
-
-When static naming is enabled, the Operator derives the name for the `KonnectGatewayControlPlane` using the following logic:
-
-1.  If the Gateway resides in the same namespace as the Operator, the name will be the same as the Gateway name (for example, `hybrid`).
-2.  If the Gateway resides in a different namespace, the name will be prefixed with the namespace (for example, `kong-hybrid`).
-
-This ensures that the name remains predictable while still avoiding collisions across different namespaces.
-
-## Verify the Setup
-
-To verify that the `KongConsumer` is correctly provisioned using the predictable Control Plane name, you can deploy the standard Kong echo service and an `HTTPRoute` that uses the consumer.
-
-### 1. Deploy the standard echo service
-
-```bash
-kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
-```
-
-### 2. Create an HTTPRoute
-
-Create an `HTTPRoute` that references the `Gateway` and the `echo` service.
-
-```yaml
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: echo-consumer-route
-  namespace: kong
-spec:
-  parentRefs:
-    - name: hybrid
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /echo
-      backendRefs:
-        - name: echo
-          kind: Service
-          port: 80
+      name: hybrid' | kubectl apply -f -
 ```
