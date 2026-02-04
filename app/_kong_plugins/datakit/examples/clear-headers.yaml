@@ -17,7 +17,7 @@ config:
   - name: HEADERS
     type: static
     values:
-      X-Ignored: ~
+      X-Ignored: null
       X-Add-Me: "added"
 
   - name: API
