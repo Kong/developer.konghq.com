@@ -1,7 +1,7 @@
 metadata:
   title: Load balancing with {{site.base_gateway}}
   content_type: landing_page
-  description: Learn how to load balancing traffic with {{site.base_gateway}}
+  description: Learn about how {{site.base_gateway}} load balances traffic, and what the options are to adjust it.
   breadcrumbs:
     - /gateway/
   products:

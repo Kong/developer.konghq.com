@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@87c5bf8554e31de72ddc11897dcb5054f55f49ec
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/87c5bf8554e31de72ddc11897dcb5054f55f49ec'
+  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -1697,6 +1697,22 @@ components:
             type: string
           example:
             - apikey
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       required:
         - id
         - name
@@ -2222,6 +2238,18 @@ components:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
         - type
@@ -2269,6 +2297,18 @@ components:
         credential:
           description: The API key value (only returned on creation)
           type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
         - type
@@ -2968,6 +3008,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id

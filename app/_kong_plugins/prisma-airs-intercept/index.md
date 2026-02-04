@@ -110,18 +110,18 @@ autonumber
     Plugin->>Prisma: Send prompt for scanning
     Prisma-->>Plugin: Scan result
     
-    alt Prompt is malicious
+    alt If prompt is malicious
         Plugin->>Client: Return 403 Forbidden
-    else Prompt is benign
+    else If prompt is benign
         Plugin->>LLM: Forward request
         LLM-->>Plugin: Return completion
         Plugin->>Plugin: Buffer and extract response text
         Plugin->>Prisma: Send response for scanning
         Prisma-->>Plugin: Scan result
         
-        alt Response is malicious
+        alt If response is malicious
             Plugin->>Client: Return 403 Forbidden
-        else Response is benign
+        else If response is benign
             Plugin->>Client: Return LLM response
         end
     end
