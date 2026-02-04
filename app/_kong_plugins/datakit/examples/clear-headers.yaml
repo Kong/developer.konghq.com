@@ -29,7 +29,7 @@ config:
   - name: EXIT
     type: exit
     inputs:
-     headers: HEADERS
+      headers: HEADERS
     status: 200
 
 tools:
