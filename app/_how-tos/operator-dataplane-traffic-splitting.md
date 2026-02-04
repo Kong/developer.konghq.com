@@ -1,10 +1,9 @@
 ---
-# @TODO KO 2.1
-title: How to split traffic 
-description: "Learn how to configure HTTPS listeners and TLS termination for {{ site.operator_product_name }}."
+title: Split traffic between versions of a Service
+description: Learn how to use the HTTPRoute resource to split traffic between multiples versions of the same Service.
 content_type: how_to
 
-permalink: /operator/dataplanes/how-to/how-to-traffic-splitting/
+permalink: /operator/dataplanes/how-to/split-traffic/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -20,29 +19,28 @@ works_on:
   - on-prem
   - konnect
 
+prereqs:
+  inline:
+    - title: Create Gateway resources
+      include_content: /prereqs/operator/gateway
+
 tldr:
-  q: How do I configure TLS termination for {{ site.operator_product_name }}?
-  a: Add an `HTTPS` protocol listener to your `Gateway` resource and reference a Kubernetes `Secret` containing your TLS certificate and key.
+  q: How can I split traffic between multiple versions of a Service?
+  a: |
+    Configure your `HTTPRoute` with one entry in `backendRefs` for each Service version, and assign a weight to each version to define how to split the traffic.
 
 ---
 
-# Traffic Splitting with HTTPRoute
-
 Traffic splitting, also known as canary releases or blue/green deployments, allows you to shift traffic between multiple versions of your service. 
 
-With the {{ site.operator_product_name }} and Gateway API, traffic splitting is managed natively using `HTTPRoute` weights.
+With {{ site.operator_product_name }} and the Gateway API, traffic splitting is managed natively using `HTTPRoute` weights.
 
-## Prerequisites
+## Deploy sample Services
 
-*   {{ site.operator_product_name }} installed.
-*   A `Gateway` resource configured and programmed.
-*   Two versions of your service deployed (e.g., `echo-v1` and `echo-v2`).
+Deploy two versions of the same Service:
 
-## Step 1: Deploy Sample Services
-
-First, ensure you have two separate deployments and services representing your service versions.
-
-```yaml
+```sh
+echo '
 apiVersion: v1
 kind: Service
 metadata:
@@ -108,24 +106,24 @@ spec:
         env:
         - name: NODE_NAME
           value: "v2"
+' | kubectl apply -f - -n kong
 ```
 
-## Step 2: Create a Weighted HTTPRoute
+## Create a weighted HTTPRoute
 
-Define an `HTTPRoute` that references both services in the `backendRefs` section. Each reference includes a `weight`.
+Define an `HTTPRoute` resource that references both Services in the `backendRefs` section. Each reference includes a `weight`.
+In this example, we'll configure a 50/50 split between the Services:
 
-{% tip %}
-Weights are relative. If you have two backends with weights 50 and 50, traffic is split 50/50. If weights are 90 and 10, traffic is split 90/10.
-{% endtip %}
-
-```yaml
+```sh
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: canary-route
+  namespace: kong
 spec:
   parentRefs:
-  - name: kong-gateway
+  - name: kong
   rules:
   - matches:
     - path:
@@ -137,16 +135,49 @@ spec:
       weight: 50
     - name: echo-v2
       port: 80
-      weight: 50
+      weight: 50' | kubectl apply -f -
 ```
 
-## Step 3: Verify Traffic Distribution
+{:.info}
+> Weights are relative. If you have two backends with weights 50 and 50, traffic is split 50/50. If weights are 90 and 10, traffic is split 90/10.
 
-Once the `HTTPRoute` is applied, you can verify the distribution by sending multiple requests to the route.
+## Validate
 
-```bash
-for i in {1..10}; do curl -s http://<GATEWAY_IP>/echo; done
-```
+1. Get the Gateway's external IP:
+   
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
 
-You should see an approximate 50/50 split between "node v1" and "node v2" responses.
+
+1. Send multiple requests to the Route:
+
+   ```bash
+   for i in {1..10}; do curl -s http://$PROXY_IP/echo; done
+   ```
+
+   You should an even split between v1 and v2:
+
+   ```sh
+   Welcome, you are connected to node v1.
+
+   Welcome, you are connected to node v2.
+
+   Welcome, you are connected to node v1.
+
+   Welcome, you are connected to node v1.
+
+   Welcome, you are connected to node v2.
+
+   Welcome, you are connected to node v1.
+
+   Welcome, you are connected to node v2.
+
+   Welcome, you are connected to node v1.
+
+   Welcome, you are connected to node v2.
+
+   Welcome, you are connected to node v2.
+   ```
+   {:.no-copy-code}
 
