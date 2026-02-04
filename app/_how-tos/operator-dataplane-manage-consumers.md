@@ -24,6 +24,9 @@ prereqs:
     konnect:
       auth: true
       control_plane: true
+  inline:
+    - title: Create Gateway resources
+      include_content: /prereqs/operator/gateway
 
 related_resources:
   - text: Consumer entity
@@ -31,53 +34,6 @@ related_resources:
   - text: Key Authentication plugin
     url: /plugins/key-auth/
 ---
-
-{% include /k8s/kong-namespace.md %}
-
-## Create a Gateway
-
-Create the `GatewayConfiguration`, `GatewayClass`, and `Gateway` resources with basic configuration:
-
-```sh
-echo '
-apiVersion: gateway-operator.konghq.com/v2beta1
-kind: GatewayConfiguration
-metadata:
-  name: gateway-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-              name: proxy
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: gateway-class
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
-    name: gateway-configuration
-    namespace: kong
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: kong
-  namespace: kong
-spec:
-  gatewayClassName: gateway-class
-  listeners:
-    - name: http
-      port: 80
-      protocol: HTTP' | kubectl apply -f -
-```
 
 ## Create the echo Service
 
