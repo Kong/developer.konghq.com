@@ -23,7 +23,8 @@ config:
   - name: API
     type: call
     url: https://example.com/
-    input: HEADERS
+    inputs:
+      headers: HEADERS
 
   - name: EXIT
     type: exit
