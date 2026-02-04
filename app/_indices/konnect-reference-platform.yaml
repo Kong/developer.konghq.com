@@ -1,4 +1,5 @@
 title: "{{site.konnect_short_name}} Reference Platform Documentation"
+description: Index containing all documentation for the {{site.konnect_short_name}} Reference Platform.
 sections:
   - title: Overview
     items:

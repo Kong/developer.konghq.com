@@ -192,12 +192,12 @@ sequenceDiagram
     activate KongAICompressor
     KongAICompressor->>KongAICompressor: Check for LLMLINGUA tags
 
-    alt Tagged content found
+    alt If tagged content found
         KongAICompressor->>LLMLingua2: Compress tagged sections
         activate LLMLingua2
         LLMLingua2-->>KongAICompressor: Return compressed sections
         deactivate LLMLingua2
-    else No LLMlingua tags
+    else If no LLMlingua tags
         KongAICompressor->>LLMLingua2: Compress entire prompt
         activate LLMLingua2
         LLMLingua2-->>KongAICompressor: Return compressed prompt

@@ -368,9 +368,9 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate scoped default ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong-->>Client: Filtered tool list
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end
@@ -383,11 +383,11 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate per-tool ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong->>Up: Forward request
       Up-->>Kong: Response
       Kong-->>Client: Response
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end
