@@ -1,5 +1,4 @@
 ---
-# @TODO KO 2.1
 title: "Understanding KongPluginBinding"
 description: "What is KongPluginBinding, and how does it interact with the konghq.com/plugins annotation?"
 content_type: reference
@@ -101,7 +100,7 @@ Then the plugin will be successfully attached to the Service in {{ site.konnect_
 
 ### Binding to an HTTPRoute
 
-You can also bind a plugin to a specific `HTTPRoute` resource. This is useful when you want to apply a plugin to a specific path or rule within your Gateway configuration.
+You can also bind a plugin to a specific `HTTPRoute` resource. This is useful when you want to apply a plugin to a specific path or rule within your Gateway configuration:
 
 ```shell
 echo '
