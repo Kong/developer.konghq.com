@@ -33,6 +33,8 @@ Integrating {{ site.operator_product_name }} with [cert-manager](https://cert-ma
 
 When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager automatically creates a `Certificate` and a corresponding `Secret` containing the TLS key pair. The Operator then configures the managed Data Planes to use this secret for TLS termination.
 
+{% include /k8s/kong-namespace.md %}
+
 ## Install {{site.operator_product_name}} with cert-manager enabled
 
 1. Add the Kong Helm charts:
@@ -45,7 +47,7 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
 1. Install [cert-manager](https://cert-manager.io/) on your cluster:
 
    ```sh
-   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.19.2/cert-manager.yaml
+   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
    ```
 
 1. Install {{ site.operator_product_name }} using Helm:
@@ -67,10 +69,6 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
      --set env.ENABLE_CONTROLLER_KONNECT=true
    ```
    {:.data-deployment-topology="konnect"}
-
-1. Create the `kong` namespace:
-   ```sh
-   kubectl create namespace kong
 
 ## Create a cert-manager issuer
 
@@ -191,22 +189,24 @@ Deploy the standard echo service to test the route:
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
 
-## Verify the Setup
+## Validate
 
-1.  Check that cert-manager has created the `Certificate` resource:
+
+1. Get the Gateway's external IP:
+   
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+
+1.  Check that cert-manager has created the `Certificate` resource and that the `Secret` has been provisioned:
 
     ```bash
     kubectl get certificate -n kong
-    ```
-
-2.  Verify that the `Secret` has been provisioned:
-
-    ```bash
     kubectl get secret example-tls-secret -n kong
     ```
 
-3.  Test the connection (assuming you have access to the Gateway's external IP and have configured DNS or hosts for `example.localdomain.dev`):
+1.  Test the connection (assuming you have access to the Gateway's external IP and have configured DNS or hosts for `example.localdomain.dev`):
 
     ```bash
-    curl -ivk --resolve example.localdomain.dev:443:$GATEWAY_IP https://example.localdomain.dev/echo
+    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
     ```
