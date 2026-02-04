@@ -2,6 +2,7 @@
 title: Kubernetes Secrets with {{site.operator_product_name}}
 description: "Reference guide for configuring Kubernetes Secrets with {{site.operator_product_name}}."
 content_type: reference
+layout: reference
 breadcrumbs:
   - /operator/
   - index: operator
