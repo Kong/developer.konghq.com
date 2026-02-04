@@ -158,7 +158,7 @@ spec:
 
    You should an even split between v1 and v2:
 
-   ```sh
+   ```
    Welcome, you are connected to node v1.
 
    Welcome, you are connected to node v2.
