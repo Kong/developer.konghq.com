@@ -46,9 +46,9 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Remove and replace a header](/event-gateway/policies/modify-headers/examples/remove-and-replace-header/)"
+  - use_case: "[Example: Remove and replace a header](/event-gateway/policies/modify-headers/examples/remove-and-replace-header/)"
     description: Remove a specific header and replace it with a custom header of your choice.
-  - use_case: "[Add a header based on a condition](/event-gateway/policies/modify-headers/examples/add-header-based-on-condition/)"
+  - use_case: "[Example: Add a header based on a condition](/event-gateway/policies/modify-headers/examples/add-header-based-on-condition/)"
     description: If a record fits a specific condition, add a custom header of your choice.
 {% endtable %}
 <!--vale on-->

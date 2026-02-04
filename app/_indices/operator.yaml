@@ -1,4 +1,5 @@
 title: Operator Documentation
+description: Index containing all documentation for {{site.operator_product_name}}.
 groups:
   - title: Hidden
     hidden: true

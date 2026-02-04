@@ -86,6 +86,13 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where GCP tokens would not be proactively refreshed before expiration.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added latency and cost observability to realtime API.",
