@@ -94,7 +94,7 @@ variables:
 
 ## Add authentication
 
-To secure the access to your Route, let's create a Consumer and set up a [Key Auth](plugins/key-auth/) plugin.
+To secure the access to your Route, let's create a Consumer and set up a [Key Auth](/plugins/key-auth/) plugin.
 
 {:.info}
 > Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`.
