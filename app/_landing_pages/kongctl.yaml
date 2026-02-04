@@ -1,7 +1,7 @@
 metadata:
   title: kongctl
   content_type: landing_page
-  description: This page is an introduction to kongctl, Kong's command-line tool for managing Kong Konnect resources and infrastructure as code.
+  description: This page is an introduction to kongctl, Kong's command-line tool for managing {{site.konnect_short_name}} resources and infrastructure as code.
   tools:
     - kongctl
   tags:
@@ -14,7 +14,7 @@ rows:
   - header:
       type: h1
       text: "kongctl"
-      sub_text: Kong's command-line tool for managing Konnect resources
+      sub_text: Kong's command-line tool for managing and interacting with {{site.konnect_product_name}}
 
   - header:
     columns:
@@ -24,12 +24,17 @@ rows:
         blocks:
         - type: text
           config: |
-            kongctl is a command-line interface that enables you to manage {{site.konnect_short_name}} resources programmatically.
-            It provides a comprehensive toolkit for defining your API infrastructure as code using declarative configuration,
-            integrating {{site.konnect_short_name}} into CI/CD pipelines, and automating API lifecycle management.
+            kongctl is a command line tool that enables you to manage {{site.konnect_short_name}} resources programmatically.
+            The tool provides both declarative and imperative style {{site.konnect_short_name}} resource management along with
+            other developer friendly features. 
 
-            kongctl is one of the many tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
+            The declarative configuration feature allows you to define API Platform infrastructure as code using a simple `yaml` 
+            based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} 
+            resource types including Developer Portals, Control Planes, APIs, and more.
+
+            kongctl is one multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, review our [tools page](/tools/).
+
       - header:
           type: h2
           text: When should I use kongctl?
@@ -37,11 +42,11 @@ rows:
         - type: text
           config: |
             You should use kongctl if one or more of the following is true:
-            - You want to manage {{site.konnect_short_name}} resources with declarative, file-based, GitOps-style configuration and automation
-            - You need interactive command-line access to {{site.konnect_short_name}} for ad-hoc resource management
-            - You're building CI/CD pipelines for API lifecycle automation
-            - You want to explore {{site.konnect_short_name}} resources with an interactive terminal UI
-            - You need to interact with Kai AI capabilities from the command line
+            - You are a developer or platform engineer looking to manage your {{site.konnect_short_name}} resources
+            - You're building CI/CD pipelines for full _API Platform_ lifecycle automation
+            - You want to manage {{site.konnect_short_name}} resources with declarative, file-based configuration and automation
+            - You want to avoid Terraform for declarative management due to syntax or state management concerns
+            - You want command-line friendly access to {{site.konnect_short_name}} for ad-hoc resource queries
 
   - header:
       type: h2
@@ -70,14 +75,14 @@ rows:
           config: |
             kongctl provides multiple interfaces for managing {{site.konnect_short_name}}:
 
-            **Declarative Configuration**: Define your infrastructure in YAML files and use plan-based workflows
+            **Declarative Configuration**: Define your infrastructure in YAML files and use _plan-based_ workflows
             to preview and apply changes. The declarative engine is stateless and calculates differences by querying
             live {{site.konnect_short_name}} resources.
 
-            **Imperative Commands**: Execute ad-hoc operations to get, create, update, and delete resources directly
+            **Imperative Commands**: Execute ad-hoc operations to get or list resources directly
             from the command line with human-friendly or machine-readable output formats.
 
-            **Interactive TUI**: Explore your {{site.konnect_short_name}} resources using a terminal-based interface
+            **Interactive TUI**: Explore your {{site.konnect_short_name}} resources using a terminal-based user interface
             with keyboard navigation and helpful features.
         - type: text
           config: |
@@ -98,6 +103,35 @@ rows:
                     - "**[KIC](/kubernetes-ingress-controller/)**: Manage ingress traffic and routing rules for Kubernetes services"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
                     - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API"
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Get started
+          description: Learn how to quickly get started kongctl and use it to manage {{site.konnect_short_name}} resources.
+          cta:
+            text: Get started
+            url: /kongctl/get-started/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Declarative configuration
+          description: Learn how to manage {{site.konnect_short_name}} infrastructure as code with declarative YAML.
+          cta:
+            text: Manage resources declaratively
+            url: /kongctl/declarative/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Changelog
+          description: Running list of release notes for kongctl.
+          cta:
+            text: kongctl changelog
+            url: https://github.com/kong/kongctl/releases/
+            align: end
 
   - header:
       text: "What can kongctl do?"
@@ -280,36 +314,6 @@ rows:
          config: |
           [Learn more about declarative configuration &rarr;](/kongctl/declarative/)
 
-  - columns:
-    - blocks:
-      - type: card
-        config:
-          title: Get started
-          description: Learn how to install kongctl and use it to manage {{site.konnect_short_name}} resources.
-          cta:
-            text: Get started
-            url: /kongctl/get-started/
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Declarative configuration
-          description: Learn how to manage {{site.konnect_short_name}} infrastructure as code with declarative YAML.
-          cta:
-            text: Manage resources declaratively
-            url: /kongctl/declarative/
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Changelog
-          description: Running list of release notes for kongctl.
-          cta:
-            text: kongctl changelog
-            url: https://github.com/kong/kongctl/releases/
-            align: end
-
-
   - header:
       text: "Frequently asked questions"
       type: h2
@@ -367,7 +371,6 @@ rows:
                 kongctl provides:
                 * A command-line interface with human-friendly output formats
                 * Declarative configuration with plan-based workflows
-                * Built-in jq filtering for resource queries
                 * Interactive terminal UI for resource exploration
                 * Kai AI assistant integration
                 * Support for managing platform resources beyond gateway entities
