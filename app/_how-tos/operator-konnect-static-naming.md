@@ -109,7 +109,7 @@ method: GET
 
 You should see a control plane named `kong-hybrid`.
 
-You can now reference the control plane in other resources using its static name. For example, here's how to reference it in a `KongConsumer` resource:
+You can now reference the control plane in other resources using the Gateway name. For example, here's how to reference it in a `KongConsumer` resource:
 
 ```sh
 echo '
