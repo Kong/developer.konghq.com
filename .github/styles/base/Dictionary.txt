@@ -158,6 +158,7 @@ CrowdStrike
 cryptocurrency
 Curity
 curity
+cutover
 DAO
 DAO
 dao
@@ -266,6 +267,7 @@ firstTimestamp
 flamegraph
 Flatpak
 foogineer
+FQDNs
 full_name
 Gateway
 GatewayClass
@@ -557,6 +559,7 @@ multimodal
 multitenant
 multitenancy
 mutex
+NACLs
 nameserver
 nameservers
 namespace

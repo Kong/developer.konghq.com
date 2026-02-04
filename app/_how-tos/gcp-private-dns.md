@@ -62,7 +62,9 @@ prereqs:
         export GCP_PROJECT_ID='my-gcp-vpc-project'
         export GCP_VPC_NAME='my-gcp-vpc-name'
         ```
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 ---
 
 ## Configure a private DNS in {{site.konnect_short_name}}
