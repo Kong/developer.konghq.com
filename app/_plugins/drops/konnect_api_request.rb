@@ -8,8 +8,9 @@ module Jekyll
     class KonnectApiRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
 
-      def initialize(yaml:) # rubocop:disable Lint/MissingSuper
+      def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
+        @format = format
 
         validate_yaml!
       end
@@ -46,7 +47,11 @@ module Jekyll
       end
 
       def template_file
-        @template_file ||= 'app/_includes/konnect_api_request.html'
+        @template_file ||= if @format == 'markdown'
+                             'app/_includes/konnect_api_request.md'
+                           else
+                             'app/_includes/konnect_api_request.html'
+                           end
       end
 
       def method
