@@ -62,6 +62,7 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
+## Create a `GatewayClass` resource
 Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
 
 <!-- vale off -->
