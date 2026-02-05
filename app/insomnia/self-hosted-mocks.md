@@ -23,13 +23,25 @@ related_resources:
     url: /insomnia/ai-in-insomnia/#Use-ai-to-auto-generate-a-mock-server
 ---
 
-Insomnia allows Enterprise users to create self-hosted mock servers.
+Enterprise users can utilize Insomnia to create self-hosted mock servers that let you run mock API endpoints in your own environment, outside of Insomnia's cloud.
 
-Find [Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted) and a [Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions) on GitHub.
+Our self-hosted mock servers use the [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin) service which allows you to simulate API behaviour during development, testing, or integration work without depending on external mock hosting. 
 
-To run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation), use NodeJS, Docker, or Kubernetes.
+Self-hosted mocks give you full control over availability, traffic limits, and infrastructure.
+
+## Prerequisites
+Before you deploy a self-hosted mock server, you must have the following:
+- **[Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions)**: The container image that runs the self-hosted mock server.
+- **[Redis instance](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#requirements)**: The Redis service that the mock server connects to at runtime.
+
+For more information, navigate to [Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
+
+{:.info}
+> To run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation), use NodeJS, Docker, or Kubernetes.
 
 ## Create a self-hosted mock server with Kubernetes
+
+To run mock endpoints in your own infrastructure using standard Kubernetes resources, deploy a self-hosted mock server to Kubernetes. This approach lets you manage availability, scaling, and networking using the same deployment and operational practices you already use for other services.
 
 ### Configure the deployment
 
@@ -146,7 +158,7 @@ You can generate a mock server from any of the following:
 - **Text**: Generate by providing a description of the API endpoints.
                     
 {:.info}
-> **Note**: AI-generated mock servers are only supported with self-hosted mocks.
+> AI-generated mock servers are only supported with self-hosted mocks.
 
 **To create an AI-generated mock server:**
 1. In your Insomnia project, click **Create**.  
