@@ -117,6 +117,7 @@ chatwise
 cidr
 cidrs
 cleartext
+cli
 client_credentials
 client_payload
 client_status
