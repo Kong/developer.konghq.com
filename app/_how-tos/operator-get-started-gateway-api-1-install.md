@@ -52,7 +52,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% tip %}
 {% include k8s/cert-manager.md raw=true %}
-{% endtip }
+{% endtip %}
 
 ## Validate
 
