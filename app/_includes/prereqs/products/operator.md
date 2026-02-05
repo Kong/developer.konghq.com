@@ -5,7 +5,7 @@
 {% endif %}
 {% capture details_content %}
 
-1. Install {{ site.operator_product_name }} using Helm:
+Install {{ site.operator_product_name }} using Helm:
 
 {% if include.v_maj == 1 %}
 
@@ -18,12 +18,19 @@
    ```
 
 {% else %}
-
+{: data-deployment-topology="konnect" }
    ```bash
    helm upgrade --install kong-operator ./charts/kong-operator -n kong-system \
      --create-namespace \
      --set image.tag=2.1.0{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
-     --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+     --set env.ENABLE_CONTROLLER_KONNECT=true
+   ```
+
+{: data-deployment-topology="on-prem" } 
+   ```bash
+   helm upgrade --install kong-operator ./charts/kong-operator -n kong-system \
+     --create-namespace \
+     --set image.tag=2.1.0
    ```
 
 {% endif %}
