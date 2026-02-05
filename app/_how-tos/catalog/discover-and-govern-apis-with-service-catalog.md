@@ -3,7 +3,6 @@ title: Discover and govern APIs with Catalog
 content_type: how_to
 description: Learn how to discover APIs in AWS API Gateway, SwaggerHub, and GitHub with {{site.konnect_catalog}} and govern them with scorecards.
 products:
-  - gateway
   - catalog
 works_on:
   - konnect
