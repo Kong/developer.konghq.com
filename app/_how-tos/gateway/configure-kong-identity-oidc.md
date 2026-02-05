@@ -1,5 +1,6 @@
 ---
 title: Configure the OIDC plugin with Kong Identity
+permalink: /how-to/configure-kong-identity-oidc/
 content_type: how_to
 breadcrumbs:
   - /kong-identity/

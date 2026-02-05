@@ -1,5 +1,6 @@
 ---
 title: Automatically create and manage Dev Portal applications in Azure AD with Dynamic Client Registration
+permalink: /how-to/azure-ad-dcr/
 description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Azure AD.
 content_type: how_to
 

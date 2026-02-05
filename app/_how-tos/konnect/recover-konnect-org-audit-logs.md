@@ -1,5 +1,6 @@
 ---
 title: "Recover {{site.konnect_short_name}} audit logs"
+permalink: /how-to/recover-konnect-org-audit-logs/
 description: "Learn how to recover {{site.konnect_short_name}} org audit logs using replay jobs."
 content_type: how_to
 related_resources:

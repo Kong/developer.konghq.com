@@ -1,5 +1,6 @@
 ---
 title: Use Agno with AI Proxy in {{site.ai_gateway}}
+permalink: /how-to/use-agno-with-ai-proxy/
 content_type: how_to
 
 description: Connect Agno’s research agents to {{site.ai_gateway}} with no code changes, enabling OpenAI-compatible inference through a proxy.

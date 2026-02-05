@@ -1,5 +1,6 @@
 ---
 title: Configure HashiCorp Vault as a vault backend with OAuth2
+permalink: /how-to/configure-hashicorp-vault-with-oauth2/
 content_type: how_to
 description: "Learn how to configure HashiCorp Vault with OAuth2 and reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:

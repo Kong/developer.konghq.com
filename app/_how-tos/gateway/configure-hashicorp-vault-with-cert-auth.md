@@ -1,5 +1,6 @@
 ---
 title: Configure HashiCorp Vault as a vault backend with certificate authentication
+permalink: /how-to/configure-hashicorp-vault-with-cert-auth/
 content_type: how_to
 description: "Learn how to configure HashiCorp Vault with certificate authentication and reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:

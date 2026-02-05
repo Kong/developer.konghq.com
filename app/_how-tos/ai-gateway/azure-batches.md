@@ -1,5 +1,6 @@
 ---
 title: Send batch requests to Azure OpenAI LLMs
+permalink: /how-to/azure-batches/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

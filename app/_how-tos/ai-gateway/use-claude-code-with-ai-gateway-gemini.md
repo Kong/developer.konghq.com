@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and Gemini
+permalink: /how-to/use-claude-code-with-ai-gateway-gemini/
 content_type: how_to
 
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with client credentials
+permalink: /how-to/configure-oidc-with-client-credentials/
 content_type: how_to
 
 related_resources:

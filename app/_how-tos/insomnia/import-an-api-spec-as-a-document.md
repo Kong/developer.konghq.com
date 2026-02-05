@@ -1,5 +1,6 @@
 ---
 title: Import an API specification as a design document in Insomnia
+permalink: /how-to/import-an-api-spec-as-a-document/
 content_type: how_to
 
 products:

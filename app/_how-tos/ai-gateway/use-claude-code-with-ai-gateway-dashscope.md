@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and DashScope
+permalink: /how-to/use-claude-code-with-ai-gateway-dashscope/
 content_type: how_to
 
 related_resources:

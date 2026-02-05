@@ -1,5 +1,6 @@
 ---
 title: Get started with Datakit
+permalink: /how-to/get-started-with-datakit/
 content_type: how_to
 description: Learn how to configure the Datakit plugin.
 products:

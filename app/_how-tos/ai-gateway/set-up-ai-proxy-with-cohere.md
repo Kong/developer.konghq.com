@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy with Cohere in {{site.base_gateway}}
+permalink: /how-to/set-up-ai-proxy-with-cohere/
 
 content_type: how_to
 

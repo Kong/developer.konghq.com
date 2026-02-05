@@ -1,5 +1,6 @@
 ---
 title: Use AI Prompt Guard plugin to govern your LLM traffic
+permalink: /how-to/use-ai-prompt-guard-plugin/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

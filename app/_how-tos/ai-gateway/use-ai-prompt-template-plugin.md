@@ -1,5 +1,6 @@
 ---
 title: Provide AI prompt templates for end users with the AI Prompt Template plugin and Mistral
+permalink: /how-to/use-ai-prompt-template-plugin/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

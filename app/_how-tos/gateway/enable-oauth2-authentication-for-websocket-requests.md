@@ -1,5 +1,6 @@
 ---
 title: Enable OAuth 2.0 authentication for WebSocket requests
+permalink: /how-to/enable-oauth2-authentication-for-websocket-requests/
 content_type: how_to
 
 description: Create an OAuth 2.0 Client Credentials flow for a WebSocket Gateway Service.

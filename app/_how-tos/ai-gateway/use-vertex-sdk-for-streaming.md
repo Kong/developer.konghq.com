@@ -1,5 +1,6 @@
 ---
 title: Stream responses from Vertex AI through {{site.ai_gateway}} using Google Generative AI SDK
+permalink: /how-to/use-vertex-sdk-for-streaming/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

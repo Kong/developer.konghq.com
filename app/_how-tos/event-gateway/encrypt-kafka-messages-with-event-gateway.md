@@ -1,5 +1,6 @@
 ---
 title: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
+permalink: /how-to/encrypt-kafka-messages-with-event-gateway/
 content_type: how_to
 breadcrumbs:
   - /event-gateway/

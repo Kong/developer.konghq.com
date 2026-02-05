@@ -1,5 +1,6 @@
 ---
 title: Configure the OAuth 2.0 Introspection plugin with Kong Identity
+permalink: /how-to/configure-kong-identity-oauth-introspection/
 content_type: how_to
 breadcrumbs:
   - /kong-identity/

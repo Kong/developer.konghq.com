@@ -1,5 +1,6 @@
 ---
 title: Enforce responsible AI behavior using the AI Prompt Decorator plugin
+permalink: /how-to/use-ai-prompt-decorator-plugin/
 content_type: how_to
 description: Use the AI Prompt Decorator plugin to inject ethical and safety guidelines before proxying requests to Cohere via {{site.ai_gateway}}.
 

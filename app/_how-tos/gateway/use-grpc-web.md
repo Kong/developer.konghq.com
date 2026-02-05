@@ -1,5 +1,6 @@
 ---
 title: Use the gRPC-Web plugin to proxy HTTP requests to a gRPC service
+permalink: /how-to/use-grpc-web/
 content_type: how_to
 
 description: Set up the gRPC-Web plugin to proxy requests using a Protobuf definition.

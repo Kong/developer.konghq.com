@@ -1,5 +1,6 @@
 ---
 title: Guide survey classification behavior using the AI Prompt Decorator plugin
+permalink: /how-to/create-a-complex-ai-chat-history/
 content_type: how_to
 description: Use the AI Prompt Decorator plugin to enforce privacy-aware classification behavior when routing chat requests to Cohere via {{site.ai_gateway}}.
 related_resources:

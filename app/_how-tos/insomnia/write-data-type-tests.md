@@ -1,5 +1,6 @@
 ---
 title: Write tests for data types in Insomnia
+permalink: /how-to/write-data-type-tests/
 content_type: how_to
 description: Learn how to write data type tests in Insomnia.
 related_resources:

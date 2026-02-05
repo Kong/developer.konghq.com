@@ -1,5 +1,6 @@
 ---
 title: Enable key authentication on a Gateway Service with {{site.base_gateway}}
+permalink: /how-to/enable-key-authentication-on-a-service-with-kong-gateway/
 content_type: how_to
 
 description: Enable the Key Authentication plugin on a Gateway Service to require Consumers to authenticate with an API key.

@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy with OpenAI in {{site.base_gateway}}
+permalink: /how-to/set-up-ai-proxy-with-openai/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

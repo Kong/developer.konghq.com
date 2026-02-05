@@ -1,5 +1,6 @@
 ---
 title: Transform a request body using OpenAI in {{site.base_gateway}}
+permalink: /how-to/transform-a-client-request-with-ai/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

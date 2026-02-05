@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy with Ollama
+permalink: /how-to/set-up-ai-proxy-with-ollama/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

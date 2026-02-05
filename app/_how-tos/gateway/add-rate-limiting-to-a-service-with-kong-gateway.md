@@ -1,5 +1,6 @@
 ---
 title: Rate limit a Gateway Service with {{site.base_gateway}}
+permalink: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
 content_type: how_to
 description: Learn how to configure rate limiting for a Gateway Service.
 related_resources:

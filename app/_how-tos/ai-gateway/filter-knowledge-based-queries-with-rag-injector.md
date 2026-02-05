@@ -1,5 +1,6 @@
 ---
 title: Filter knowledge base queries with the AI RAG Injector plugin
+permalink: /how-to/filter-knowledge-based-queries-with-rag-injector/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

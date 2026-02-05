@@ -1,5 +1,6 @@
 ---
 title: Enable self-managed OIDC auth with Okta in Dev Portal
+permalink: /how-to/enable-oidc-auth-for-dev-portal/
 description: Learn how to allow Dev Portal developers to self-manage OIDC apps in Okta.
 content_type: how_to
 

@@ -1,5 +1,6 @@
 ---
 title: Collect metrics with Datadog and the Prometheus plugin
+permalink: /how-to/collect-metrics-with-datadog-and-prometheus-plugin/
 content_type: how_to
 description: "Learn how to collect metrics from {{site.base_gateway}} with Datadog and the Prometheus plugin."
 products:

@@ -1,5 +1,6 @@
 ---
 title: Install Insomnia on Windows
+permalink: /how-to/download-insomnia-for-windows/
 content_type: how_to
 products:
 - insomnia

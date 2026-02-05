@@ -1,5 +1,6 @@
 ---
 title: Verify build provenance for signed {{site.base_gateway}} images
+permalink: /how-to/verify-build-provenance-for-signed-images/
 description: Use Cosign and regctl to verify build provenance for signed {{site.base_gateway}} images.
 content_type: how_to
 related_resources:

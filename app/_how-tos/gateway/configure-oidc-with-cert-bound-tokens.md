@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with cert-bound access tokens
+permalink: /how-to/configure-oidc-with-cert-bound-tokens/
 content_type: how_to
 
 related_resources:

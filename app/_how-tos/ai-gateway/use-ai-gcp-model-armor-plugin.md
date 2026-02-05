@@ -1,5 +1,6 @@
 ---
 title: Use the AI GCP Model Armor plugin
+permalink: /how-to/use-ai-gcp-model-armor-plugin/
 content_type: how_to
 
 related_resources:

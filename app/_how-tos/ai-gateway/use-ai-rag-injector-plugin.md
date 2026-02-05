@@ -1,5 +1,6 @@
 ---
 title: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
+permalink: /how-to/use-ai-rag-injector-plugin/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

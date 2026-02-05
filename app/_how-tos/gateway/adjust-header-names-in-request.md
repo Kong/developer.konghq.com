@@ -1,5 +1,6 @@
 ---
 title: Adjust header names in a request
+permalink: /how-to/adjust-header-names-in-request/
 content_type: how_to
 
 description: Change the names of headers sent in a request using the Post-Function plugin.

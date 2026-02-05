@@ -1,5 +1,6 @@
 ---
 title: Throttle APIs with different rate limits for Services and Consumers
+permalink: /how-to/throttle-apis-with-services-and-consumers/
 content_type: how_to
 description: Use the Rate Limiting and Service Protection plugins to set different rate limits for Services and Consumers.
 related_resources:

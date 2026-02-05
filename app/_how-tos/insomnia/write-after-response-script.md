@@ -1,5 +1,6 @@
 ---
 title: Write an after-response script to test a response in Insomnia
+permalink: /how-to/write-after-response-script/
 content_type: how_to
 description: Write an after-response script to check that the response body contains the expected value.
 related_resources:

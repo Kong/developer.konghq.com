@@ -1,5 +1,6 @@
 ---
 title: Configure CyberArk Conjur as a vault backend
+permalink: /how-to/configure-cyberark-as-a-vault-backend/
 content_type: how_to
 description: "Learn how to reference CyberArk Conjur secrets from {{site.base_gateway}}."
 products:

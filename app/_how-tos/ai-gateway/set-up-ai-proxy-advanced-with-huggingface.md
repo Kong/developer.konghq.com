@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy Advanced with HuggingFace in {{site.base_gateway}}
+permalink: /how-to/set-up-ai-proxy-advanced-with-huggingface/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

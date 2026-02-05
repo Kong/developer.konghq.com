@@ -1,5 +1,6 @@
 ---
 title: Enable SAML authentication using Microsoft Entra
+permalink: /how-to/enable-saml-authentication-with-microsoft-entra/
 description: Use the SAML plugin to enable SAML authentication for users configured in Microsoft Entra.
 content_type: how_to
 related_resources:

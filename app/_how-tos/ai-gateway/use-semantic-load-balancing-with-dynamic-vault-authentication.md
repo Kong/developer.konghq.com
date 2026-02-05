@@ -1,5 +1,6 @@
 ---
 title: Route OpenAI chat traffic using semantic balancing and Vault-stored keys
+permalink: /how-to/use-semantic-load-balancing-with-dynamic-vault-authentication/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

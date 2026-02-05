@@ -1,5 +1,6 @@
 ---
 title: Automate your API catalog with the Konnect API
+permalink: /how-to/automate-api-catalog/
 description: Learn how to automate your API catalog in Dev Portal using Konnect APIs.
 content_type: how_to
 automated_tests: false

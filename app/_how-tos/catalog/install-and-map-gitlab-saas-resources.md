@@ -1,5 +1,6 @@
 ---
 title: Install and map SaaS GitLab resources in Catalog
+permalink: /how-to/install-and-map-gitlab-saas-resources/
 content_type: how_to
 description: Learn how to connect a SaaS GitLab project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

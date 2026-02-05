@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with the password grant
+permalink: /how-to/configure-oidc-with-password-grant/
 content_type: how_to
 
 related_resources:

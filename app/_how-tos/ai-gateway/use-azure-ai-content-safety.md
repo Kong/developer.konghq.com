@@ -1,5 +1,6 @@
 ---
 title: Use Azure Content Safety plugin
+permalink: /how-to/use-azure-ai-content-safety/
 content_type: how_to
 
 related_resources:

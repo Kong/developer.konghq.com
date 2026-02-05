@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy for image generation with Grok
+permalink: /how-to/set-up-ai-proxy-for-image-generation-with-grok/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

@@ -1,5 +1,6 @@
 ---
 title: Install and map GitHub resources in Catalog
+permalink: /how-to/install-and-map-github-resources/
 content_type: how_to
 description: Learn how to connect a GitHub repository to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

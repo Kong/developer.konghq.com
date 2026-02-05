@@ -1,5 +1,6 @@
 ---
 title: Store a Mistral API key as a secret in {{site.konnect_short_name}} Config Store
+permalink: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
 description: Learn how to set up {{site.konnect_short_name}} Config Store as a Vault backend and store a Mistral API key.
 content_type: how_to
 related_resources:

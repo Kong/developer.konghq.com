@@ -1,5 +1,6 @@
 ---
 title: Synchronize an Insomnia project with Git
+permalink: /how-to/synchronize-with-git/
 content_type: how_to
 
 description: Create a new Insomnia project and enable Git Sync.

@@ -1,5 +1,6 @@
 ---
 title: Configure SCIM for Insomnia with Azure
+permalink: /how-to/configure-scim-for-insomnia-with-azure/
 description: Learn how to set up SCIM to manage Insomnia users and teams with Azure.
 content_type: how_to
 automated_tests: false

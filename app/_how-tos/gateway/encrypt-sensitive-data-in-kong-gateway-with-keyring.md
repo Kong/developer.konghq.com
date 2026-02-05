@@ -1,5 +1,6 @@
 ---
 title: Encrypt sensitive data in {{site.base_gateway}} with a Keyring
+permalink: /how-to/encrypt-sensitive-data-in-kong-gateway-with-keyring/
 content_type: how_to
 related_resources:
   - text: Keyring

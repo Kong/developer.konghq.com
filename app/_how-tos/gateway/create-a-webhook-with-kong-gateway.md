@@ -1,5 +1,6 @@
 ---
 title: Create a webhook with {{site.base_gateway}}
+permalink: /how-to/create-a-webhook-with-kong-gateway/
 content_type: how_to
 
 description: Configure the Event Hook entity as a webhook to listen for events and push information to the configured URL.

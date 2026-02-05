@@ -1,5 +1,6 @@
 ---
 title: Transform a response using OpenAI in {{site.base_gateway}}
+permalink: /how-to/transform-a-response-with-ai/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

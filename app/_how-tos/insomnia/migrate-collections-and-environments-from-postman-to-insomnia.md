@@ -1,5 +1,6 @@
 ---
 title: Migrate collections and environments from Postman to Insomnia
+permalink: /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 
 content_type: how_to
 description: Migrate Postman collections and environments to Insomnia.

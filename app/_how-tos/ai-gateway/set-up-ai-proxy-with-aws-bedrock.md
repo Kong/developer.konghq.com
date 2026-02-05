@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy with AWS Bedrock in {{site.base_gateway}}.
+permalink: /how-to/set-up-ai-proxy-with-aws-bedrock/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

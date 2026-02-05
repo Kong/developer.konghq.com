@@ -1,5 +1,6 @@
 ---
 title: Configure a fallback Route
+permalink: /how-to/configure-fallback-route/
 content_type: how_to
 description: Learn how to configure a fallback Route to redirect 404s to a specific upstream service.
 related_resources:

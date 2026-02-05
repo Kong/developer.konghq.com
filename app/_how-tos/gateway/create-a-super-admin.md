@@ -1,5 +1,6 @@
 ---
 title: Create a Super Admin with the Admin API
+permalink: /how-to/create-a-super-admin/
 content_type: how_to
 description: Learn how to create a Super Admin for {{site.base_gateway}}.
 products:

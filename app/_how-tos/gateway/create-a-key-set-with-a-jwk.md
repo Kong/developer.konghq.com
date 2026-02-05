@@ -1,5 +1,6 @@
 ---
 title: Create a Key Set with a JSON Web Key
+permalink: /how-to/create-a-key-set-with-a-jwk/
 content_type: how_to
 
 description: Create a JSON Web Key and add it to a Key Set using the /key-sets API endpoint.

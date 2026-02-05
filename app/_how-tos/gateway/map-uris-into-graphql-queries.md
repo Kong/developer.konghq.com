@@ -1,5 +1,6 @@
 ---
 title: Map URIs into GraphQL queries with DeGraphQL
+permalink: /how-to/map-uris-into-graphql-queries/
 content_type: how_to
 description: Learn how to use the DeGraphQL plugin to map URIs into GraphQL queries.
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: Apply multiple rate limits and window sizes
+permalink: /how-to/multiple-rate-limits-window-sizes/
 content_type: how_to
 description: Learn how to configure the Rate Limiting Advanced plugin to apply multiple rate limits and window sizes.
 related_resources:

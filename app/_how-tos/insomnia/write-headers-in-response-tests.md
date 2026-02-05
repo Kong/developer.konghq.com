@@ -1,5 +1,6 @@
 ---
 title: Write tests for headers in the response in Insomnia
+permalink: /how-to/write-headers-in-response-tests/
 content_type: how_to
 description: Learn how to write header tests in Insomnia.
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: Automate your API catalog with Terraform
+permalink: /how-to/automate-api-catalog-with-terraform/
 description: Learn how to automate your Dev Portal API catalog with Terraform.
 content_type: how_to
 tags:

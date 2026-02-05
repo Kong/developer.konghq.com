@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with the user info auth flow
+permalink: /how-to/configure-oidc-with-user-info-auth/
 content_type: how_to
 
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: Install and map self-hosted GitLab resources in Catalog
+permalink: /how-to/install-and-map-gitlab-resources/
 content_type: how_to
 description: Learn how to connect a GitLab project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

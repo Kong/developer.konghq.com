@@ -1,5 +1,6 @@
 ---
 title: Use the ACL plugin with Consumer Groups in {{site.base_gateway}}
+permalink: /how-to/use-acl-with-consumer-groups/
 content_type: how_to
 description: Restrict access to your resources based on Consumer Groups with the ACL plugins.   
 products:

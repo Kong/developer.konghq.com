@@ -1,5 +1,6 @@
 ---
 title: Push Event Hook information to Slack with {{site.base_gateway}}
+permalink: /how-to/create-a-custom-webhook-slack-with-kong-gateway/
 content_type: how_to
 works_on:
     - on-prem

@@ -1,5 +1,6 @@
 ---
 title: Validate Gen AI tool calls with Jaeger and OpenTelemetry
+permalink: /how-to/set-up-jaeger-with-gen-ai-otel-for-tool-calls/
 content_type: how_to
 related_resources:
   - text: Set up Jaeger with Gen AI OpenTelemetry

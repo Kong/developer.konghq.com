@@ -1,5 +1,6 @@
 ---
 title: Add custom linting rules in Insomnia
+permalink: /how-to/add-custom-linting-rules/
 
 content_type: how_to
 description: Learn how to add custom linting rules to your APIs in Insomnia.

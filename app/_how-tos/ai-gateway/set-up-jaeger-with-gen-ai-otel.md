@@ -1,5 +1,6 @@
 ---
 title: Set up Jaeger with Gen AI OpenTelemetry
+permalink: /how-to/set-up-jaeger-with-gen-ai-otel/
 content_type: how_to
 related_resources:
   - text: Set up Dynatrace with OpenTelemetry

@@ -1,5 +1,6 @@
 ---
 title: Control prompt size with the AI Compressor plugin
+permalink: /how-to/compress-llm-prompts/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

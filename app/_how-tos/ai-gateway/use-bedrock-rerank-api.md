@@ -1,5 +1,6 @@
 ---
 title: Use AWS Bedrock rerank API with AI Proxy
+permalink: /how-to/use-bedrock-rerank-api/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

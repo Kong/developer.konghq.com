@@ -1,5 +1,6 @@
 ---
 title: "Discover Azure API Management APIs in Catalog with the {{site.konnect_short_name}} UI"
+permalink: /how-to/discover-azure-apis-with-konnect-ui/
 content_type: how_to
 description: Learn how to connect an Azure API Management API to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:

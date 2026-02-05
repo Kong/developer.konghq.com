@@ -1,5 +1,6 @@
 ---
 title: Set up AI Proxy Advanced with Anthropic in {{site.base_gateway}}
+permalink: /how-to/set-up-ai-proxy-advanced-with-anthropic/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

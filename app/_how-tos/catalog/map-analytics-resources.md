@@ -1,5 +1,6 @@
 ---
 title: Map Konnect Analytics reports in Catalog
+permalink: /how-to/map-analytics-resources/
 content_type: how_to
 description: Learn how to map {{site.konnect_short_name}} Analytics resources in {{site.konnect_catalog}} to visualize Analytics Reports.
 products:

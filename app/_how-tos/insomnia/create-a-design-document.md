@@ -1,5 +1,6 @@
 ---
 title: Create a design document in Insomnia
+permalink: /how-to/create-a-design-document/
 content_type: how_to
 description: Create a design document in the Insomnia app by going to Create > Design document.
 products:

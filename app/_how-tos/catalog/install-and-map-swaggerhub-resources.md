@@ -1,5 +1,6 @@
 ---
 title: Import and map SwaggerHub resources in Catalog
+permalink: /how-to/install-and-map-swaggerhub-resources/
 content_type: how_to
 description: Learn how to connect SwaggerHub API versions to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

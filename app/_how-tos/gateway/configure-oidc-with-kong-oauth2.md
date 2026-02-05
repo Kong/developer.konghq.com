@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with Kong Oauth2 token authentication
+permalink: /how-to/configure-oidc-with-kong-oauth2/
 content_type: how_to
 
 related_resources:

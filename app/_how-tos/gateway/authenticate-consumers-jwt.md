@@ -1,5 +1,6 @@
 ---
 title: Authenticate Consumers with the JWT plugin
+permalink: /how-to/authenticate-consumers-jwt/
 content_type: how_to
 related_resources:
   - text: Authentication

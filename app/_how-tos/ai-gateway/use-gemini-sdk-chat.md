@@ -1,5 +1,6 @@
 ---
 title: Use Google Generative AI SDK for Gemini AI service chats with {{site.ai_gateway}}
+permalink: /how-to/use-gemini-sdk-chat/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

@@ -1,5 +1,6 @@
 ---
 title: Control access to knowledge base collections with the AI RAG Injector plugin
+permalink: /how-to/use-ai-rag-injector-acls/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

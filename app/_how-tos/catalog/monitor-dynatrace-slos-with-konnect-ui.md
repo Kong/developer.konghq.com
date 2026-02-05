@@ -1,5 +1,6 @@
 ---
 title: Monitor Dynatrace classic SLOs in Catalog with the Konnect UI
+permalink: /how-to/monitor-dynatrace-slos-with-konnect-ui/
 content_type: how_to
 description: Learn how to connect a Dynatrace classic SLO to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the UI.
 products:

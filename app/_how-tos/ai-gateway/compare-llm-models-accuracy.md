@@ -1,5 +1,6 @@
 ---
 title: Control accuracy of LLM models using the AI LLM as judge plugin
+permalink: /how-to/compare-llm-models-accuracy/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

@@ -1,5 +1,6 @@
 ---
 title: Enforce AI rate limits with a custom function
+permalink: /how-to/use-custom-function-for-ai-rate-limiting/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

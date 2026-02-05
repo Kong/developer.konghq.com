@@ -1,5 +1,6 @@
 ---
 title: Create a centrally-managed Consumer in {{site.konnect_short_name}}
+permalink: /how-to/create-centrally-managed-consumer/
 
 description: Learn how to create a realm and authenticate a centrally-managed Consumer with key authentication.
 

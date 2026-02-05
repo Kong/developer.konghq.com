@@ -1,5 +1,6 @@
 ---
 title: Use Gemini's imageConfig with AI Proxy in {{site.ai_gateway}}
+permalink: /how-to/use-gemini-3-image-config/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

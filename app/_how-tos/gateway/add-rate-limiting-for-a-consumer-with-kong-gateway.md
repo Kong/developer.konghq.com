@@ -1,5 +1,6 @@
 ---
 title: Rate limit a Consumer with {{site.base_gateway}}
+permalink: /how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/
 content_type: how_to
 related_resources:
   - text: Rate Limiting

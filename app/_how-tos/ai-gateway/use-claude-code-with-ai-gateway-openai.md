@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
+permalink: /how-to/use-claude-code-with-ai-gateway-openai/
 content_type: how_to
 
 related_resources:

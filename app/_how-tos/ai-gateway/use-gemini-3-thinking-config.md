@@ -1,5 +1,6 @@
 ---
 title: Use Gemini's thinkingConfig with AI Proxy Advanced in {{site.ai_gateway}}
+permalink: /how-to/use-gemini-3-thinking-config/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

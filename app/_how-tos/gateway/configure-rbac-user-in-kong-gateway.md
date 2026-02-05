@@ -1,5 +1,6 @@
 ---
 title: Configure a {{site.base_gateway}} RBAC user with custom permissions
+permalink: /how-to/configure-rbac-user-in-kong-gateway/
 content_type: how_to
 description: Learn how to create a {{site.base_gateway}} RBAC user and configure it with roles and permissions.
 products:

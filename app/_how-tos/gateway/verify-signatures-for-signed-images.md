@@ -1,5 +1,6 @@
 ---
 title: Verify signatures for signed {{site.base_gateway}} images
+permalink: /how-to/verify-signatures-for-signed-images/
 content_type: how_to
 description: Use Cosign and regctl to verify signatures for signed {{site.base_gateway}} images.
 related_resources:

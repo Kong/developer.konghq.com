@@ -1,5 +1,6 @@
 ---
 title: Store the {{site.base_gateway}} database credentials with AWS Secrets Manager
+permalink: /how-to/store-the-gateway-database-credentials-with-aws-secrets-manager/
 content_type: how_to
 related_resources:
   - text: Secrets management

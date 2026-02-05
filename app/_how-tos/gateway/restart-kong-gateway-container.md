@@ -1,5 +1,6 @@
 ---
 title: How to restart {{site.base_gateway}} in a Docker container
+permalink: /how-to/restart-kong-gateway-container/
 description: Restart the {{site.base_gateway}} container without killing it.
 content_type: how_to
 

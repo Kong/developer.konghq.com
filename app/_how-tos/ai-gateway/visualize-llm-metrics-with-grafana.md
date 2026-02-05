@@ -1,5 +1,6 @@
 ---
 title: "Visualize LLM traffic with Prometheus and Grafana"
+permalink: /how-to/visualize-llm-metrics-with-grafana/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

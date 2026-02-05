@@ -1,5 +1,6 @@
 ---
 title: Test certificate generation locally with ngrok and the ACME plugin
+permalink: /how-to/test-certificate-generation-locally-with-ngrok-and-acme/
 description: Use ngrok and the ACME plugin to test certificate generation locally.
 content_type: how_to
 related_resources:

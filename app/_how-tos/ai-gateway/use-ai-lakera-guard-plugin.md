@@ -1,5 +1,6 @@
 ---
 title: Use the AI Lakera Guard plugin
+permalink: /how-to/use-ai-lakera-guard-plugin/
 content_type: how_to
 
 related_resources:
