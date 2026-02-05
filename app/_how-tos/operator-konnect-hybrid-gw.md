@@ -35,7 +35,7 @@ prereqs:
 
 ---
 
-## Create a `GatewayClass` for a Hybrid Gateway
+## Create a `GatewayConfiguration` resource
 
 Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid Gateways. `GatewayConfiguration` is for Hybrid Gateways when field `spec.konnect.authRef` is set.
 
