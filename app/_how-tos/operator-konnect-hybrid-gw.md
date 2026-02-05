@@ -110,4 +110,3 @@ kind: Gateway
 name: hybrid-gateway
 {% endvalidation %}
 
-The respective `DataPlane` and `KonnectGatewayControlPlane` are created automatically by the Gateway Operator.
