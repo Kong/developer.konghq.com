@@ -15,7 +15,7 @@
      namespace: kong
    spec:
      parentRefs:
-       - name: kong-gateway
+       - name: kong
      rules:
        - matches:
            - path:
