@@ -101,6 +101,8 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
+{{site.operator_product_name}} automatically creates the `DataPlane` and `KonnectGatewayControlPlane` resources.
+
 ## Validation
 
 {% validation kubernetes-resource %}
