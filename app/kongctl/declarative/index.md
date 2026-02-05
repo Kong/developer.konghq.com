@@ -1,7 +1,7 @@
 ---
 title: Declarative configuration with kongctl
 content_type: concept
-description: Learn how to manage Kong Konnect infrastructure as code using declarative YAML configuration.
+description: Learn how to manage {{site.konnect_product_name}} infrastructure as code using declarative YAML configuration.
 products:
   - konnect
 tools:
@@ -273,7 +273,7 @@ This means:
 * Can run from anywhere with same config
 * Multiple people can use same config
 
-{:.note}
+{:.info}
 > **Note**: Because kongctl is stateless, be careful when running concurrent operations on the same resources. Use namespace isolation or separate configurations to avoid conflicts.
 
 ## Best practices

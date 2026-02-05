@@ -1,7 +1,7 @@
 ---
 title: Supported resources
 content_type: reference
-description: Resources that kongctl can manage declaratively in Kong Konnect.
+description: Resources that kongctl can manage declaratively in {{site.konnect_product_name}}.
 products:
   - konnect
 tools:
@@ -17,7 +17,7 @@ breadcrumbs:
 
 kongctl currently supports declarative management of these {{site.konnect_short_name}} resource types.
 
-{:.note}
+{:.info}
 > **Note**: kongctl is in Tech Preview. Resource support is actively expanding. Check the [GitHub releases](https://github.com/kong/kongctl/releases/) for the latest supported resources.
 
 ## APIs

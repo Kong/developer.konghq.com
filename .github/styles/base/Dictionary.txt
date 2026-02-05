@@ -455,6 +455,7 @@ Knatives
 knep
 kong
 kongair
+kongctl
 kong_konnect_api_request
 kong_name
 kong-ip

@@ -1,7 +1,7 @@
 ---
 title: Authentication with kongctl
 content_type: concept
-description: Learn how to authenticate kongctl to Kong Konnect using device flow or personal access tokens.
+description: Learn how to authenticate kongctl to {{site.konnect_product_name}} using device flow or personal access tokens.
 products:
   - konnect
 tools:

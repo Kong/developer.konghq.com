@@ -1,7 +1,7 @@
 ---
 title: CI/CD integration with kongctl
 content_type: how_to
-description: Integrate kongctl into CI/CD pipelines for automated Kong Konnect deployments.
+description: Integrate kongctl into CI/CD pipelines for automated {{site.konnect_product_name}} deployments.
 tldr:
   q: What CI/CD platforms are supported?
   a: Use kongctl with GitHub Actions, GitLab CI, Jenkins, and CircleCI to automate Konnect deployments.

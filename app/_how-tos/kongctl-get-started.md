@@ -1,6 +1,6 @@
 ---
 title: Get started with kongctl
-description: Learn how to use kongctl to manage Kong Konnect resources
+description: Learn how to use kongctl to manage {{site.konnect_product_name}} resources
 content_type: how_to
 permalink: /kongctl/get-started/
 breadcrumbs:
