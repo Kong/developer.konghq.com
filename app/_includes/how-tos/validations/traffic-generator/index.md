@@ -1,0 +1,5 @@
+{%- capture konnect_snippet -%}{% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers inline_sleep=config.inline_sleep %}{%- endcapture -%}
+
+{%- capture on_prem_snippet -%}{% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers body=config.body body_cmd=config.body_cmd method=config.method user=config.user sleep=config.sleep display_headers=config.display_headers cookie_jar=config.cookie_jar cookie=config.cookie message=config.message mtls=config.mtls count=config.iterations insecure=config.insecure expected_headers=config.expected_headers inline_sleep=config.inline_sleep %}{%- endcapture -%}
+
+{% include works_on_wrapper.md on_prem_content=on_prem_snippet konnect_content=konnect_snippet %}
