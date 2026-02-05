@@ -53,9 +53,9 @@ rows:
       type: h2
       text: "Configure your Gateways declaratively"
       sub_text: |
-        The Kong Gateway can be configured using Kubernetes-native resources.
+        Kong Gateway can be configured using Kubernetes-native resources, (Cluster Resources)
       
-        Here is the two recommended ways to configure your Gateways using {{ site.operator_product_name }}:
+        By adopting Kubernetes’ declarative, desired-state approach to configuration, {{ site.operator_product_name }} is able to support:
     columns:
       - blocks:
         - type: structured_text
@@ -66,7 +66,7 @@ rows:
             - type: text
               text: |
                 The de facto standard for configuring networking in Kubernetes, Gateway API allows you to configure 
-                your Gateways, no matter if they are self-managed or Hybrid {{ site.base_gateway }}.
+                your Gateways, regardless of whether they are self-managed or a {{ site.konnect_short_name }} based Control Plane.
 
                 Kong has been at the forefront of Gateway API development, contributing features and enhancements to the project since its inception.
         - type: text
