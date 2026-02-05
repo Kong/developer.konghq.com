@@ -71,6 +71,8 @@ input:
 
 ### Configuration options
 
+See the following table for supported configuration options:
+
 <!--vale off-->
 {% table %}
 columns:

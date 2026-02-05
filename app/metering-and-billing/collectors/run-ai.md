@@ -72,6 +72,8 @@ The Collector supports the following Run:ai metrics:
 
 ### Pod metrics
 
+See the following table for supported pod metrics:
+
 <!--vale off-->
 {% table %}
 columns:
@@ -122,6 +124,8 @@ rows:
 <!--vale on-->
 
 ### Workload metrics
+
+See the following table for supported workload metrics:
 
 <!--vale off-->
 {% table %}
@@ -192,6 +196,9 @@ input:
 ```
 
 ### Configuration options
+
+See the following table for supported configuration options:
+
 
 <!--vale off-->
 {% table %}
