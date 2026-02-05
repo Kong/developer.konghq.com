@@ -34,8 +34,8 @@ tags:
     - openai
 
 tldr:
-    q: How can I use my LangGraph workflows with AI Gateway?
-    a: Configure LangGraph to use your AI Gateway Route by replacing the `base_url` parameter in the LangChain model instantiation with your proxy URL. LangGraph uses LangChain models for LLM calls.
+    q: How can I use my LangGraph workflows with {{site.ai_gateway}}?
+    a: Configure LangGraph to use your {{site.ai_gateway}} Route by replacing the `base_url` parameter in the LangChain model instantiation with your proxy URL. LangGraph uses LangChain models for LLM calls.
 
 tools:
     - deck

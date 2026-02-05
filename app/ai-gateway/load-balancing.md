@@ -139,7 +139,7 @@ flowchart LR
     Decision2 ------>|Yes| Client
 {% endmermaid %}
 <!-- vale on -->
-> _Figure 1:_ A simplified diagram of fallback and retry processing in AI Gateway's load balancer.
+> _Figure 1:_ A simplified diagram of fallback and retry processing in {{site.ai_gateway}}'s load balancer.
 
 #### Retry and fallback configuration
 
@@ -180,7 +180,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-You can customize AI Gateway load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}

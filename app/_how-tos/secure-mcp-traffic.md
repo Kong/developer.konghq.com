@@ -1,5 +1,5 @@
 ---
-title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and AI Gateway"
+title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and {{site.ai_gateway}}"
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

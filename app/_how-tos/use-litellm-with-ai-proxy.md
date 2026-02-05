@@ -32,8 +32,8 @@ tags:
     - openai
 
 tldr:
-    q: How can I use LiteLLM integrations with AI Gateway?
-    a: You can configure LiteLLM to to use your AI Gateway Route by replacing the `base_url` parameter in the [LiteLLM API call](https://docs.litellm.ai/docs/completion/#basic-usage) with your {{site.base_gateway}} proxy URL.
+    q: How can I use LiteLLM integrations with {{site.ai_gateway}}?
+    a: You can configure LiteLLM to to use your {{site.ai_gateway}} Route by replacing the `base_url` parameter in the [LiteLLM API call](https://docs.litellm.ai/docs/completion/#basic-usage) with your {{site.base_gateway}} proxy URL.
 
 tools:
     - deck

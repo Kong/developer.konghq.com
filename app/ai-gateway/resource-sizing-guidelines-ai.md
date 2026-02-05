@@ -21,7 +21,7 @@ tags:
 breadcrumbs:
     - /ai-gateway/
 
-description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns."
+description: "Review Kong's {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns."
 
 related_resources:
   - text: Performance benchmarks
@@ -73,7 +73,7 @@ rows:
 
 ## Deployment guidance
 
-AI Gateway scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput** as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
+{{site.ai_gateway}} scales primarily through **horizontal worker expansion**, not vertical tuning. Treat **token throughput** as the core capacity metric, and validate performance against real LLM latency profiles. Synthetic or low-latency backends will overstate capacity.
 
 ### Scale horizontally for token throughput
 
@@ -204,7 +204,7 @@ rows:
 
 ## Instance recommendations
 
-AI Gateway benefits from high clock speed, dedicated CPU, and non-burstable compute classes. Select instance families optimized for consistent CPU throughput and avoid throttled instance types.
+{{site.ai_gateway}} benefits from high clock speed, dedicated CPU, and non-burstable compute classes. Select instance families optimized for consistent CPU throughput and avoid throttled instance types.
 
 <!-- vale off -->
 {% table %}

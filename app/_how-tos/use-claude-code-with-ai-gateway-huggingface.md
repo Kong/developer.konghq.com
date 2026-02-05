@@ -12,7 +12,7 @@ related_resources:
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic using HuggingFace Inference API models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using HuggingFace Inference API models
 
 products:
   - gateway
@@ -41,7 +41,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}} with HuggingFace?
-  a: Install Claude CLI, configure a pre-function plugin to remove the model field from requests, attach the AI Proxy plugin to forward requests to HuggingFace, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
+  a: Install Claude CLI, configure a pre-function plugin to remove the model field from requests, attach the AI Proxy plugin to forward requests to HuggingFace, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
 
 tools:
   - deck
@@ -126,7 +126,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -138,7 +138,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Start a Claude Code session that points to the local AI Gateway endpoint:
+Start a Claude Code session that points to the local {{site.ai_gateway}} endpoint:
 
 {:.warning}
 > The `ANTHROPIC_MODEL` value can be any string since the pre-function plugin removes it. The actual model used is `meta-llama/Llama-3.3-70B-Instruct` as configured in the AI Proxy plugin.

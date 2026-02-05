@@ -44,7 +44,7 @@ search_aliases:
   - semantic
 
 related_resources:
-  - text: Get started with AI Gateway
+  - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
@@ -59,7 +59,7 @@ related_resources:
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
-    a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by AI Gateway (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
+    a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by {{site.ai_gateway}} (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
   - q: |
       How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
     a: |

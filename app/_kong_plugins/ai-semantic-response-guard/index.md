@@ -30,7 +30,7 @@ topologies:
     - serverless
 
 related_resources:
-  - text: Get started with AI Gateway
+  - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/

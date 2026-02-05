@@ -10,7 +10,7 @@ related_resources:
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
 products:
   - gateway
@@ -38,7 +38,7 @@ tags:
 
 tldr:
   q: How do I run Claude CLI through {{site.ai_gateway}}?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
+  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
 
 tools:
   - deck
@@ -104,7 +104,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -116,7 +116,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
+Now, we can start a Claude Code session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \

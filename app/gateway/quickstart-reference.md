@@ -88,7 +88,7 @@ rows:
 {% endtable %}
 
 
-## AI Gateway quickstart {% new_in 3.6 %}
+## {{site.ai_gateway}} quickstart {% new_in 3.6 %}
 Kong also provides an interactive AI quickstart script that launches a demo instance of {{site.base_gateway}} running [AI Proxy](/plugins/ai-proxy/):
 
 ```sh

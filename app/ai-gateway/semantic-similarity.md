@@ -62,7 +62,7 @@ Vector embeddings power a range of LLM workflows, including semantic search, doc
 
 ## Semantic similarity in {{site.ai_gateway}}
 
-In Kong’s AI Gateway, several plugins leverage embedding-based similarity:
+In {{site.ai_gateway}}, several plugins leverage embedding-based similarity:
 
 {% table %}
 columns:
@@ -86,11 +86,11 @@ rows:
 
 ### Vector databases
 
-To compare embeddings efficiently, Kong's AI Gateway semantic plugins rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
+To compare embeddings efficiently, {{site.ai_gateway}} semantic plugins rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
 
 When a plugin needs to find semantically similar content—whether it’s a past prompt, an upstream description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the plugin to make decisions like caching, routing, injecting, or blocking.
 
-Currently, Kong's AI Gateway supports the following vector backends:
+Currently, {{site.ai_gateway}} supports the following vector backends:
 
 * Using `redis` as the VectorDB strategy:
   * **[Redis](https://redis.io/docs/latest/stack/search/reference/vectors/)** with Vector Similarity Search (VSS)

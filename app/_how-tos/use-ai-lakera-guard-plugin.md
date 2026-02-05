@@ -18,7 +18,7 @@ related_resources:
   - text: Use the AI AWS Guardrails plugin
     url: /how-to/use-ai-aws-guardrails-plugin/
 
-description: Learn how to use the AI Lakera Guard plugin to protect your AI Gateway from prompt injection attacks, harmful content, data leakage, and malicious links using Lakera's threat detection service.
+description: Learn how to use the AI Lakera Guard plugin to protect your {{site.ai_gateway}} from prompt injection attacks, harmful content, data leakage, and malicious links using Lakera's threat detection service.
 
 products:
   - gateway
@@ -45,7 +45,7 @@ tags:
   - anthropic
 
 tldr:
-  q: How can I use the AI Lakera Guard plugin with AI Gateway?
+  q: How can I use the AI Lakera Guard plugin with {{site.ai_gateway}}?
   a: Configure the AI Proxy Advanced plugin to route requests to any LLM upstream, then apply the AI Lakera Guard plugin to inspect prompts and responses for unsafe content using Lakera's threat detection service.
 
 tools:

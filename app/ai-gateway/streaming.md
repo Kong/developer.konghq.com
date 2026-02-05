@@ -1,5 +1,5 @@
 ---
-title: "Streaming with AI Gateway"
+title: "Streaming with {{site.ai_gateway}}"
 content_type: reference
 layout: reference
 
@@ -118,7 +118,7 @@ It also estimates tokens for LLM services that decided to not stream back the to
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the AI Gateway plugin:
+Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}} plugin:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
 * You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.

@@ -13,7 +13,7 @@ description: |
   Configure the AI Proxy plugin to route requests to a model provider like Mistral, then define reusable templates with the AI Prompt Template plugin to enforce consistent prompt formatting for tasks like summarization, code explanation, and Q&A.
 
 tldr:
-  q: How do I use prompt templates with AI Gateway?
+  q: How do I use prompt templates with {{site.ai_gateway}}?
   a: Configure the [AI Proxy](/plugins/ai-proxy/) plugin to route traffic, then use the [AI Prompt Template](/plugins/ai-prompt-template/) plugin to define and enforce reusable prompt formats.
 
 products:

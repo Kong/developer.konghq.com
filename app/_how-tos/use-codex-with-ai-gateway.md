@@ -11,7 +11,7 @@ related_resources:
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
+description: Configure {{site.ai_gateway}} to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
 
 products:
   - gateway
@@ -173,7 +173,7 @@ export OPENAI_BASE_URL=$KONNECT_PROXY_URL/codex
 
 ## Configure the File Log plugin
 
-Finally, to see the exact payloads traveling between Codex and the AI Gateway, let's attach a File Log plugin to the service. This gives us a local log file so we can inspect requests and responses as Codex runs through Kong.
+Finally, to see the exact payloads traveling between Codex and the {{site.ai_gateway}}, let's attach a File Log plugin to the service. This gives us a local log file so we can inspect requests and responses as Codex runs through Kong.
 
 {% entity_examples %}
 entities:

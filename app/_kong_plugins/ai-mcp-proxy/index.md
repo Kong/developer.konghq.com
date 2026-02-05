@@ -41,11 +41,11 @@ tags:
   - mcp
 
 related_resources:
-  - text: About AI Gateway
+  - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: Autogenerate serverless MCP
     url: /mcp/autogenerate-mcp-tools/
-  - text: All AI Gateway plugins
+  - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
     url: /mcp/

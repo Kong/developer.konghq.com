@@ -186,9 +186,9 @@ Restart {{site.base_gateway}} to apply changes with the `kong restart` command.
 
 Now, any request made with an email address in it will no longer be logged.
 
-## AI Gateway logs
+## {{site.ai_gateway}} logs
 
-{{site.base_gateway}} collects logs for the [AI Gateway plugins](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers.
+{{site.base_gateway}} collects logs for the [{{site.ai_gateway}} plugins](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers.
 
 Each log entry includes the following details:
 
