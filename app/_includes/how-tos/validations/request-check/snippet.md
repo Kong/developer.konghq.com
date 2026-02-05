@@ -31,10 +31,7 @@ You should see the following response:
 ```
 {:.no-copy-code}
 {% endif %}
-
-
-{% if include.expected_headers %}
-{% assign header_count = include.expected_headers | size %}
+{% if include.expected_headers %}{% assign header_count = include.expected_headers | size %}
 You should see the following header{% if header_count > 1 %}s{% endif %}:
 
 ```text{% for header in include.expected_headers %}
