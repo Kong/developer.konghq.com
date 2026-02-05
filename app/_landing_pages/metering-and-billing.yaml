@@ -87,7 +87,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/metering/#example-meter-use-cases
-
+      - blocks:
+          - type: card
+            config:
+              title: Collectors
+              description: |
+                Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/collectors/
   - header:
       type: h2
       text: "Product Catalog"
