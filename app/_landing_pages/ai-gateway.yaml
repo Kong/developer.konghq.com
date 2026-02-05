@@ -318,7 +318,7 @@ rows:
             description: Meter LLM usage with {{site.konnect_short_name}}.
             icon: /assets/icons/monitor.svg
             cta:
-              url: /metering-and-billing/meter-llm-traffic/
+              url: /how-to/meter-llm-traffic/
               align: end
       - blocks:
         - type: card
