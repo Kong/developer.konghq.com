@@ -9,7 +9,7 @@ breadcrumbs:
     group: Konnect
   - index: operator
     group: Konnect
-    section: "Konnect CRDs: Hybrid Gateway"
+    section: "Konnect CRDs: Gateway"
 
 
 products:
