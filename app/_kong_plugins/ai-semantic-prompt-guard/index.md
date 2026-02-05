@@ -54,7 +54,7 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
-  - text: Embedding-based similarity matching in Kong AI Gateway plugins
+  - text: Embedding-based similarity matching in {{site.ai_gateway}} plugins
     url: /ai-gateway/semantic-similarity/
 
 faqs:
@@ -79,7 +79,7 @@ next_steps:
 
 The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
 
-You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using Kong AI Gateway.
+You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using {{site.ai_gateway}}.
 
 ## How it works
 

@@ -1,5 +1,5 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway and OpenAI
+title: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
 content_type: how_to
 
 related_resources:
@@ -37,7 +37,7 @@ tags:
   - openai
 
 tldr:
-  q: How do I run Claude CLI through Kong AI Gateway?
+  q: How do I run Claude CLI through {{site.ai_gateway}}?
   a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
 
 tools:
@@ -73,7 +73,7 @@ First, configure the AI Proxy plugin for the [OpenAI provider](/ai-gateway/ai-pr
  * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
  * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
-The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the OpenAI endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the OpenAI endpoint.
 
 {% entity_examples %}
 entities:
@@ -138,7 +138,7 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach Kong AI Gateway.
+Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
 
 ```text
@@ -159,7 +159,7 @@ key figures of the time.
 ```
 {:.no-copy-code}
 
-Next, inspect the Kong AI Gateway logs to verify that the traffic was proxied through it:
+Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
 
 ```sh
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
@@ -208,4 +208,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `gpt-5-mini` model we selected while starting the Claude Code session.
+This output confirms that Claude Code routed the request through {{site.ai_gateway}} using the `gpt-5-mini` model we selected while starting the Claude Code session.

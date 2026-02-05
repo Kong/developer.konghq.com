@@ -48,7 +48,7 @@ notes: |
 related_resources:
   - text: Enforce AI rate limits in with a custom function
     url: /how-to/use-custom-function-for-ai-rate-limiting/
-  - text: Use Kong AI Gateway to govern GitHub MCP traffic
+  - text: Use {{site.ai_gateway}} to govern GitHub MCP traffic
     url: /mcp/govern-mcp-traffic/
 
 ---

@@ -1,11 +1,11 @@
 ---
-title: Use LiteLLM with AI Proxy with Kong AI Gateway
+title: Use LiteLLM with AI Proxy with {{site.ai_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
 
-description: Connect your LiteLLM integrations with Kong AI Gateway with no code changes.
+description: Connect your LiteLLM integrations with {{site.ai_gateway}} with no code changes.
 
 products:
     - gateway
@@ -63,7 +63,7 @@ published: false
 
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route LiteLLM OpenAI-compatible requests through Kong AI Gateway. In this example, we'll use the `gpt-4.1` model from OpenAI:
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route LiteLLM OpenAI-compatible requests through {{site.ai_gateway}}. In this example, we'll use the `gpt-4.1` model from OpenAI:
 
 {% entity_examples %}
 entities:

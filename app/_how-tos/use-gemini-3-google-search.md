@@ -1,5 +1,5 @@
 ---
-title: Use Gemini's googleSearch tool with AI Proxy Advanced in Kong AI Gateway
+title: Use Gemini's googleSearch tool with AI Proxy Advanced in {{site.ai_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -127,7 +127,7 @@ Create a Python script to test the `googleSearch` tool:
 ```py
 cat << 'EOF' > google-search.py
 #!/usr/bin/env python3
-"""Test Gemini 3 googleSearch tool via Kong AI Gateway"""
+"""Test Gemini 3 googleSearch tool via {{site.ai_gateway}}"""
 from openai import OpenAI
 import json
 client = OpenAI(
@@ -198,7 +198,7 @@ This script goes through three scenarios:
 2. **Structured output with search**: Requests conference information formatted as JSON. Combines search with structured output.
 3. **Query without search need**: Asks a simple math question. Gemini answers directly without using search.
 
-The OpenAI SDK sends requests to Kong AI Gateway using the OpenAI chat completions format. The `tools` array declares available capabilities. Kong AI Gateway transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
+The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `tools` array declares available capabilities. {{site.ai_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format. Search results appear directly in the response content, not as separate `tool_calls` objects.
 
 Run the script:
 

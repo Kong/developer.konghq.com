@@ -42,7 +42,7 @@ tags:
   - mcp
 
 tldr:
-  q: How do I observe MCP tool usage with Kong AI Gateway?
+  q: How do I observe MCP tool usage with {{site.ai_gateway}}?
   a: |
     Use the File Log plugin to write MCP tool activity to a local file. Inspect the entries to see which tools each Consumer or Consumer Group accessed. Confirm the RPC calls that Chatwise sends to your MCP server.
 

@@ -34,7 +34,7 @@ tags:
   - cohere
 
 tldr:
-  q: How do I use Cohere `/rerank` API with Kong AI Gateway?
+  q: How do I use Cohere `/rerank` API with {{site.ai_gateway}}?
   a: Configure the AI Proxy plugin with the Cohere provider and a chat model, then send queries with documents to get generated answers that automatically filter for relevance and include citations.
 
 tools:

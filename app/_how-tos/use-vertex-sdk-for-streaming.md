@@ -1,5 +1,5 @@
 ---
-title: Stream responses from Vertex AI through Kong AI Gateway using Google Generative AI SDK
+title: Stream responses from Vertex AI through {{site.ai_gateway}} using Google Generative AI SDK
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -35,7 +35,7 @@ tags:
   - streaming
 
 tldr:
-  q: How do I stream responses from Vertex AI through Kong AI Gateway?
+  q: How do I stream responses from Vertex AI through {{site.ai_gateway}}?
   a: Configure the AI Proxy Advanced plugin with `llm_format` set to `gemini`, then send requests to the `:streamGenerateContent` endpoint. The response returns as a JSON array containing incremental text chunks.
 
 tools:

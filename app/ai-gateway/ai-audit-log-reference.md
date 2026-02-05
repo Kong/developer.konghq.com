@@ -15,12 +15,12 @@ min_version:
   gateway: '3.6'
 breadcrumbs:
   - /ai-gateway/
-description: "Kong AI Gateway provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
+description: "{{site.ai_gateway}} provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
@@ -30,7 +30,7 @@ works_on:
   - konnect
 ---
 
-Kong AI Gateway emits structured analytics logs for [AI plugins](/plugins/?category=ai) through the standard [{{site.base_gateway}} logging infrastructure](/gateway/logs/). This means AI-specific logs are written to [the same locations](/gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment.
+{{site.ai_gateway}} emits structured analytics logs for [AI plugins](/plugins/?category=ai) through the standard [{{site.base_gateway}} logging infrastructure](/gateway/logs/). This means AI-specific logs are written to [the same locations](/gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment.
 
 Like other Kong logs, AI Gateway logs are subject to the [global log level](/gateway/logs/#configure-log-levels) configured via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
@@ -181,8 +181,8 @@ rows:
       The Lakera project identifier used for the inspection.
   - property: "`ai.proxy.lakera-guard.input_block_detail`"
     description: |
-      An array of violation objects present when Lakera blocks a request.  
-      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,  
+      An array of violation objects present when Lakera blocks a request.
+      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,
       `detected` (boolean), and `detector_type`, such as `moderated_content/hate`.
   - property: "`ai.proxy.lakera-guard.input_block_reason`"
     description: |
@@ -195,7 +195,7 @@ rows:
       The unique identifier assigned by Lakera for the inspected response.
   - property: "`ai.proxy.lakera-guard.output_block_detail`"
     description: |
-      An array of violation objects present when Lakera blocks a response.  
+      An array of violation objects present when Lakera blocks a response.
       The structure matches `input_block_detail`.
   - property: "`ai.proxy.lakera-guard.output_block_reason`"
     description: |

@@ -35,11 +35,11 @@ min_version:
   gateway: '3.8'
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Gemini tutorials
     url: /how-to/?tags=gemini
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: AI Providers
     url: /ai-gateway/ai-providers/
@@ -74,7 +74,7 @@ how_to_list:
 
 ## Configure {{ provider.name }} with AI Proxy
 
-To use {{ provider.name }} with Kong AI Gateway, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
+To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/).
 
 Here's a minimal configuration for chat completions:
 

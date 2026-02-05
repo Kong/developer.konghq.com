@@ -1,5 +1,5 @@
 ---
-title: "Kong AI Gateway resource sizing guidelines"
+title: "{{site.ai_gateway}} resource sizing guidelines"
 content_type: reference
 layout: reference
 
@@ -21,7 +21,7 @@ tags:
 breadcrumbs:
     - /ai-gateway/
 
-description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns."
+description: "Review Kong's AI Gateway recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns."
 
 related_resources:
   - text: Performance benchmarks
@@ -29,7 +29,7 @@ related_resources:
   - text: Cluster reference
     url: /gateway/traditional-mode/#about-kong-gateway-clusters
 ---
-The Kong AI Gateway is designed to handle high‑volume inference workloads and forward requests to large language model (LLM) providers with predictable latency. This guide explains performance dimensions, capacity planning methodology, and baseline sizing guidance for AI inference traffic.
+The {{site.ai_gateway}} is designed to handle high‑volume inference workloads and forward requests to large language model (LLM) providers with predictable latency. This guide explains performance dimensions, capacity planning methodology, and baseline sizing guidance for AI inference traffic.
 
 ## Scaling dimensions
 
@@ -77,7 +77,7 @@ AI Gateway scales primarily through **horizontal worker expansion**, not vertica
 
 ### Scale horizontally for token throughput
 
-Kong AI Gateway performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
+{{site.ai_gateway}} performance is CPU-bound on token processing. Adding workers increases sustained throughput **only when concurrency and streaming behavior scale correctly**.
 
 - Add workers and nodes to increase throughput
 - Validate scaling efficiency as concurrency grows

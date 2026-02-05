@@ -61,7 +61,7 @@ next_steps:
     url: /how-to/use-ai-prompt-guard-plugin/
 ---
 
-The AI Semantic Response Guard plugin extends the AI Prompt Guard plugin by filtering LLM responses based on semantic similarity to predefined rules. It helps prevent unwanted or unsafe responses when serving `llm/v1/chat`, `llm/v1/completions`, or `llm/v1/embeddings` requests through Kong AI Gateway.
+The AI Semantic Response Guard plugin extends the AI Prompt Guard plugin by filtering LLM responses based on semantic similarity to predefined rules. It helps prevent unwanted or unsafe responses when serving `llm/v1/chat`, `llm/v1/completions`, or `llm/v1/embeddings` requests through {{site.ai_gateway}}.
 
 You can use a combination of `allow` and `deny` response rules to maintain integrity and compliance when returning responses from an LLM service.
 

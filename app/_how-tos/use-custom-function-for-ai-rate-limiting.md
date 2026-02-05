@@ -12,7 +12,7 @@ related_resources:
 description: Configure the AI Proxy plugin to create a chat route using Cohere, and apply usage-based rate limiting with the AI Rate Limiting Advanced plugin.
 
 tldr:
-  q: How do I limit Cohere usage through Kong AI Gateway?
+  q: How do I limit Cohere usage through {{site.ai_gateway}}?
   a: Set up AI Proxy to route requests to Cohere, use a custom Lua function to count tokens via the `x-prompt-count` header, and enforce usage limits with Redis-based rate limiting.
 
 products:

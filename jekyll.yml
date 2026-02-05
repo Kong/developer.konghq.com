@@ -94,6 +94,7 @@ insomnia_run: https://insomnia.rest/run/
 
 # product name vars
 base_gateway: Kong Gateway
+ai_gateway: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect

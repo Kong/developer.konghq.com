@@ -41,7 +41,7 @@ tags:
   - mcp
 
 tldr:
-  q: How do I enforce control access to MCP tools using Kong AI Gateway?
+  q: How do I enforce control access to MCP tools using {{site.ai_gateway}}?
   a: |
     Use the AI MCP Proxy plugin to control access to MCP tools with global and
     per-tool ACLs based on Consumers and Consumer Groups. Use Insomnia’s MCP

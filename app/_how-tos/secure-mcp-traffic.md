@@ -44,7 +44,7 @@ tags:
 tldr:
   q: How can I secure my MCP traffic using {{ site.base_gateway }}?
   a: |
-    Enable the Key Authentication plugin on your MCP service and require API keys from Consumers. Kong AI Gateway then enforces these keys on all incoming MCP requests, ensuring secure, authorized access.
+    Enable the Key Authentication plugin on your MCP service and require API keys from Consumers. {{site.ai_gateway}} then enforces these keys on all incoming MCP requests, ensuring secure, authorized access.
 
     {:.info}
     > For further authentication of your MCP traffic you can also use [The OpenID Connect](/plugins/openid-connect/) (OIDC) plugin lets you integrate {{ site.base_gateway }} with an identity provider (IdP), or you can extend plugins to support fine-grained Authorization models via JWT claims or declarative [Access Control Lists](/plugins/acl/) (ACLs)
@@ -87,7 +87,7 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-To enable model-driven access to remote tools, we’ll route MCP traffic through OpenAI using the AI Proxy Advanced plugin. In this tutorial, we’ll use the [OpenAI `/responses` API](https://cookbook.openai.com/examples/mcp/mcp_tool_guide) endpoint via the `llm/v1/responses` route type in the AI Proxy Advanced plugin to communicate with a GitHub-hosted remote MCP server. This approach simplifies integration: instead of routing each tool invocation through your backend, Kong AI Gateway forwards model-generated requests directly to the MCP server. That server exposes standardized tools, giving you conversational control over your GitHub repositories—secured and governed by Kong’s built-in capabilities. No custom glue code is required to enable this integration.
+To enable model-driven access to remote tools, we’ll route MCP traffic through OpenAI using the AI Proxy Advanced plugin. In this tutorial, we’ll use the [OpenAI `/responses` API](https://cookbook.openai.com/examples/mcp/mcp_tool_guide) endpoint via the `llm/v1/responses` route type in the AI Proxy Advanced plugin to communicate with a GitHub-hosted remote MCP server. This approach simplifies integration: instead of routing each tool invocation through your backend, {{site.ai_gateway}} forwards model-generated requests directly to the MCP server. That server exposes standardized tools, giving you conversational control over your GitHub repositories—secured and governed by Kong’s built-in capabilities. No custom glue code is required to enable this integration.
 
 
 {% entity_examples %}

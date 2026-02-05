@@ -1,5 +1,5 @@
 ---
-title: Use LangChain with AI Proxy in {{site.base_gateway}}
+title: Use LangChain with AI Proxy in {{site.ai_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Proxy

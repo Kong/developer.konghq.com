@@ -1,5 +1,5 @@
 ---
-title: "Use Kong AI Gateway to govern GitHub MCP traffic"
+title: "Use {{site.ai_gateway}} to govern GitHub MCP traffic"
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -44,7 +44,7 @@ tags:
   - mcp
 
 tldr:
-  q: How can I govern my MCP traffic using Kong AI Gateway?
+  q: How can I govern my MCP traffic using {{site.ai_gateway}}?
   a: |
     Use Kong’s AI Proxy Advanced plugin to load balance MCP requests across multiple OpenAI models, and secure the traffic with the AI Prompt Guard plugin. The guard plugin filters prompts based on allow and deny patterns, ensuring only safe, relevant requests reach your GitHub MCP server, while blocking potentially harmful or unauthorized commands.
 

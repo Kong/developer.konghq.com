@@ -1,5 +1,5 @@
 ---
-title: Use Google Generative AI SDK for Vertex AI service chats with Kong AI Gateway
+title: Use Google Generative AI SDK for Vertex AI service chats with {{site.ai_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -34,7 +34,7 @@ tags:
   - ai
 
 tldr:
-  q: How do I use Vertex AI's native format with Kong AI Gateway?
+  q: How do I use Vertex AI's native format with {{site.ai_gateway}}?
   a: Configure the AI Proxy Advanced plugin with `llm_format` set to `gemini`, then send requests using Vertex AI's native API format with the contents array structure.
 
 tools:
@@ -75,7 +75,7 @@ automated_tests: false
 
 ## Configure the AI Proxy Advanced plugin
 
-The AI Proxy Advanced plugin supports Google's Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through Kong AI Gateway. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the Gemini-specific request structure.
+The AI Proxy Advanced plugin supports Google's Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through {{site.ai_gateway}}. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the Gemini-specific request structure.
 
 Apply the plugin configuration with your GCP service account credentials:
 

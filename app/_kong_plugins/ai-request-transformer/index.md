@@ -64,7 +64,7 @@ AI Proxy plugin, allowing it to also transform requests before sending them to a
 >
 > Chaining AI Request Transformer with AI Proxy or AI Proxy Advanced may fail for some providers, even though the same setup works with others.
 >
-> The reason is that the AI Request Transformer plugin forwards raw model output, and if the model does not produce strict JSON, the proxy chain cannot function correctly. This is not a bug in Kong AI Gateway but a limitation of LLM behavior.
+> The reason is that the AI Request Transformer plugin forwards raw model output, and if the model does not produce strict JSON, the proxy chain cannot function correctly. This is not a bug in {{site.ai_gateway}} but a limitation of LLM behavior.
 
 ## How it works
 
