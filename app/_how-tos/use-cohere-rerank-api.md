@@ -31,6 +31,7 @@ entities:
 
 tags:
   - ai
+  - cohere
 
 tldr:
   q: How do I use Cohere `/rerank` API with Kong AI Gateway?

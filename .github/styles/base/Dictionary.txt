@@ -106,6 +106,7 @@ callout
 callouts
 camelCase
 cef
+Cerebras
 certificate_admin
 Cerebras
 cerebras
@@ -170,6 +171,7 @@ DAOs
 DAOs
 daos
 dashboarding
+Dashscope
 Datadog
 Datadog
 datadog

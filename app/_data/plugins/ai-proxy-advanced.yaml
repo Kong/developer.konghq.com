@@ -1,6 +1,6 @@
 parameters:
-  provider: 'config.targets.model.provider'
-  route_type: 'config.targets.route_type'
-  options: 'config.targets.model.options'
-  upstream_url: 'config.targets.model.options.upstream_url'
-  model_name: 'config.targets.model.name'
+  provider: 'config.targets[].model.provider'
+  route_type: 'config.targets[].route_type'
+  options: 'config.targets.model[].options'
+  upstream_url: 'config.targets[].model.options.upstream_url'
+  model_name: 'config.targets[].model.name'

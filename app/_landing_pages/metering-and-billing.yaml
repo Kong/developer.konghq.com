@@ -25,10 +25,6 @@ rows:
                     * Flexible pricing models, including free, flat fee, usage-based, and tiered
                     * Subscription management to govern access and automate billing
                     * Automated invoicing and integration with payment providers and ERPs
-          - type: button
-            config:
-              text: "Start metering {{site.base_gateway}} API requests &rarr;"
-              url: /metering-and-billing/get-started/
 
       - blocks:
           - type: image
@@ -39,24 +35,29 @@ rows:
 
   - header:
       type: h2
-      text: "Getting Started"
+      text: "Get started"
       sub_text: "Start monetizing your usage with {{site.metering_and_billing}}."
+    column_count: 3
     columns:
       - blocks:
-          - type: button
+          - type: card
             config:
-              text: "Start Monetizing API Traffic"
-              url: /metering-and-billing/get-started/
+              title: Start monetizing API traffic
+              description: |
+                Learn how to meter and bill {{site.base_gateway}} API requests.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /metering-and-billing/get-started/
 
   - header:
       type: h2
-      text: "Usage Metering"
+      text: "Usage metering"
       sub_text: "Learn how to meter AI, API, and external usage."
     columns:
       - blocks:
           - type: card
             config:
-              title: API Gateway Metering
+              title: API gateway metering
               description: |
                 Real-time usage metering for {{site.base_gateway}} API requests.
                 Monetize API traffic with flexible pricing models.
@@ -68,7 +69,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Generic Metering
+              title: Generic metering
               description: |
                 Meter any billable usage, like compute, storage, or application layer.
                 Learn how to ingest usage events.
@@ -79,7 +80,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Common Metering Examples
+              title: Common metering examples
               description: |
                 Examples to meter AI, API, compute, GPUs, and storage usage.
               icon: /assets/icons/graduation.svg
@@ -96,7 +97,6 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/collectors/
-
   - header:
       type: h2
       text: "Product Catalog"
@@ -117,7 +117,7 @@ rows:
             config:
               title: Plans
               description: |
-                Plans are a collection of rate cards  that can be assigned to customers by starting a subscription.
+                Plans are a collection of rate cards that can be assigned to customers by starting a subscription.
               icon: /assets/icons/service-hub.svg
               cta:
                 text: Learn more
@@ -126,9 +126,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Pricing Models
+              title: Pricing models
               description: |
-                Pricing models describe how to price a feature. e.g. free, flat fee, usage-based, tiered
+                Pricing models describe how to price a feature, for example, free, flat fee, usage-based, or tiered.
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
@@ -138,7 +138,7 @@ rows:
             config:
               title: Entitlements
               description: |
-                Entitlements describe customer access, usage-limits and configuration to features.
+                Entitlements describe customer access, usage-limits, and configuration to features.
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
@@ -172,7 +172,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Billing Profiles
+              title: Billing profiles
               description: |
                 Billing profiles handle invoicing, payment, and tax settings for a customer.
               icon: /assets/icons/organization.svg
@@ -211,7 +211,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Custom Invoicing
+              title: Custom invoicing
               description: |
                 Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg

@@ -106,13 +106,13 @@ sequenceDiagram
     AS-->>K: Valid / invalid
     deactivate AS
 
-    alt Token valid
+    alt If token valid
         K->>U: Forward request with claims as headers
         activate U
         U-->>K: MCP server response
         deactivate U
         K-->>C: MCP response
-    else Token invalid
+    else If token invalid
         K-->>C: 401 Unauthorized
     end
     deactivate K

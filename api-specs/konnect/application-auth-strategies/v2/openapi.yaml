@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.3
+  version: 2.0.4
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
+  x-oas-source: kong/platform-api@8d361aa9e068e3bf7fcd14d2119c5984bf448137
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8d361aa9e068e3bf7fcd14d2119c5984bf448137'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1044,6 +1044,22 @@ components:
             maxLength: 256
           maxItems: 10
           minItems: 1
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       title: AppAuthStrategyConfigKeyAuth
     PartialAppAuthStrategyConfigOpenIDConnect:

@@ -72,10 +72,10 @@ sequenceDiagram
     participant Server
     Client->>Server: Requests a protected resource
     Server->>Client: Requests username and password
-    alt Correct credentials sent
+    alt If correct credentials sent
         Client->>Server: Sends username and password
         Server->>Client: Returns requested resource
-    else Wrong credentials sent
+    else If wrong credentials sent
         Client->>Server: Sends wrong username and password
         Server->>Client: Returns 401 Unauthorized status code
     end
