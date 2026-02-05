@@ -142,6 +142,8 @@ Besides metrics exposed by {{ site.operator_product_name }} itself, you can also
 
 Each data plane Pod exposes its own metrics on port `8100` if the [Prometheus plugin](/plugins/prometheus/) is enabled. You can scrape these metrics directly by targeting the data plane Pods or Services.
 
+For a step-by-step guide on setting up monitoring with direct scraping, see [Monitor {{site.base_gateway}} with Prometheus using direct scraping](/operator/how-to/observability/prometheus-direct-scraping/).
+
 ### Enriched metrics
 
 {{ site.operator_product_name }} provides a [`DataPlaneMetricsExtension`](/operator/reference/custom-resources/#gateway-operator-konghq-com-v1alpha1-dataplanemetricsextension) resource that enables {{ site.operator_product_name }} to scrape data plane instances, enrich the metrics with Kubernetes metadata (such as Pod name and namespace), and re-expose them on {{ site.operator_product_name }}'s `/metrics` endpoint.
@@ -150,7 +152,7 @@ This is particularly useful for:
 - Autoscaling: Using enriched metrics with the [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/).
 - Simplified scraping: Scraping a single endpoint to get aggregated metrics from multiple data planes.
 
-For a step-by-step guide on setting up monitoring, see [Monitor Kong Gateway with Prometheus](/operator/how-to/observability/prometheus/).
+For a step-by-step guide on setting up monitoring with enriched metrics, see [Monitor {{site.base_gateway}} with Prometheus using enriched metrics](/operator/how-to/observability/prometheus-enriched-metrics/).
 
 ## Example metrics dump
 
