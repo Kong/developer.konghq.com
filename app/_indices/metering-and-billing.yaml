@@ -56,8 +56,3 @@ sections:
       - title: Invoicing
         description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
         url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
-  - title: How-tos
-    items:
-      - type: how-to
-        products:
-          - metering-and-billing
