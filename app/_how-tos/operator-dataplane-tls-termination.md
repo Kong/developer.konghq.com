@@ -1,5 +1,4 @@
 ---
-# @TODO KO 2.1
 title: Proxy HTTPS traffic with TLS termination
 description: "Learn how to configure HTTPS listeners and TLS termination for {{ site.operator_product_name }}."
 content_type: how_to
@@ -24,27 +23,48 @@ tldr:
   q: How do I configure TLS termination for {{ site.operator_product_name }}?
   a: Add an `HTTPS` protocol listener to your `Gateway` resource and reference a Kubernetes `Secret` containing your TLS certificate and key.
 
----
+prereqs:
+  operator:
+    konnect:
+      auth: true
+      control_plane: true
 
-## Overview
+---
 
 Configuring TLS termination at the Gateway level allows {{ site.operator_product_name }} to manage SSL/TLS certificates and decrypt incoming traffic before it reaches your services. This guide shows how to set up an HTTPS listener using the standard Kubernetes Gateway API.
 
-## Prerequisites
+{% include k8s/kong-namespace.md %}
+{: data-depoloyment-topology="on-prem"}
 
-- A Kubernetes cluster with {{ site.operator_product_name }} installed.
-- A TLS certificate and private key stored in a Kubernetes `Secret`.
+## Create a certificate
 
-## Configuration
+1. Create a self-signed certificate:
+   ```sh
+   openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=demo.example.com"
+   ```
 
-To enable TLS termination, you must configure a `Gateway` with an `HTTPS` listener and reference the TLS `Secret`.
+1. Create a Kubernetes secret containing the certificate and key:   
+   ```sh
+   echo "apiVersion: v1
+   kind: Secret
+   metadata:
+     name: my-certificate
+     namespace: kong
+   type: kubernetes.io/tls
+   data:
+     tls.crt: "$(cat tls.crt | base64)"
+     tls.key: "$(cat tls.key | base64)"" | kubectl apply -f - 
+   ```
 
-### 1. Configure the Gateway with an HTTPS Listener
+## Configure the Gateway
 
-Create or update your `Gateway` resource to include a listener on port 443 with the `HTTPS` protocol.
+Create the following resources:
 
-```yaml
----
+* A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
+* A `Gateway` with a listener on port 443 with the `HTTPS` protocol and a reference to the Secret we created.
+
+```sh
+echo '
 apiVersion: gateway-operator.konghq.com/v2beta1
 kind: GatewayConfiguration
 metadata:
@@ -56,7 +76,7 @@ spec:
       podTemplateSpec:
         spec:
           containers:
-            - image: kong/kong-gateway:3.12
+            - image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
               name: proxy
 ---
 apiVersion: gateway.networking.k8s.io/v1
@@ -91,27 +111,34 @@ spec:
         certificateRefs:
           - group: ""
             kind: Secret
-            name: demo.example.com
+            name: my-certificate' | kubectl apply -f - 
 ```
 
-### 2. Label the Secret
+## Label the Secret
 
-The {{ site.operator_product_name }} requires a specific label on secrets to recognize them for use in Gateways. Label the secret created in the step above:
+{{ site.operator_product_name }} requires a specific label on Secrets to recognize them for use in gateways:
 
 ```bash
-kubectl label secret demo.example.com -n kong konghq.com/secret="true"
+kubectl label secret my-certificate -n kong konghq.com/secret="true"
 ```
 
-{% tip %}
-For more information on how the Operator handles secrets, please refer to [Secrets reference](/operator/reference/secrets)
-{% endtip %}
+For more information about how {{ site.operator_product_name }} handles secrets, see the [Secrets reference](/operator/reference/secrets).
 
 
-### 3. Deploy a Route
+## Create an echo Service
 
-Create an `HTTPRoute` to forward traffic to your service.
+Run the following command to create a sample echo Service:
 
-```yaml
+```bash
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+```
+
+## Create a Route
+
+Deploy a sample `HTTPRoute` to verify that TLS termination is working:
+
+```sh
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -130,29 +157,27 @@ spec:
       backendRefs:
         - name: echo
           kind: Service
-          port: 1027
+          port: 1027' | kubectl apply -f - 
 ```
 
-Deploy an echo service to test the communication with a service:
+## Validate
 
-```bash
-kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
-```
-
-## Verify the Setup
-
-1.  Check the status of the `Gateway` to ensure the listeners are programmed:
+1.  Check the status of the gateway to ensure the listeners are programmed:
 
     ```bash
-    kubectl get gateway kong-tls-gateway -n kong -o yaml
+    kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.listeners}'
     ```
 
-2.  Test the HTTPS endpoint (assuming you have access to the Gateway's external IP):
+1. Get the Gateway's external IP:
+   
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+
+1.  Test the connection:
 
     ```bash
-    # Get the Gateway IP
-    GATEWAY_IP=$(kubectl get gateway kong-tls-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-
-    # Test the connection
-    curl -ivk --resolve demo.example.com:443:$GATEWAY_IP https://demo.example.com/echo
+    curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
     ```
+
+    You should get TLS handshake and a 200 response.
