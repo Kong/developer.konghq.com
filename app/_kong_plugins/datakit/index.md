@@ -758,7 +758,7 @@ See [Third-party auth](/plugins/datakit/examples/authenticate-third-party/) for 
 
 #### Limitations
 
-In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a
+In {{site.base_gateway}} 3.12 and earlier, the `call` node couldn't be executed after proxying a
 request, so attempting to configure the node using outputs from the upstream service
 response would yield an error:
 

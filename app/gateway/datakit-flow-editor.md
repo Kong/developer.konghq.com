@@ -27,7 +27,7 @@ related_resources:
 faqs:
   - q: I've configured a call node in the response section, why is it throwing an error?
     a: |
-      In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a request, and you would see the following error:
+      In {{site.base_gateway}} 3.12 and earlier, the `call` node couldn't be executed after proxying a request, and you would see the following error:
 
       ```
       invalid dependency (node #1 (CALL) -> node service_response): circular dependency
