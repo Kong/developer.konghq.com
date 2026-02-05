@@ -1,0 +1,1 @@
+{% include how-tos/validations/custom-command/snippet.md config=config %}
