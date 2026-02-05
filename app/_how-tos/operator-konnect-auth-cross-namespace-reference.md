@@ -1,6 +1,6 @@
 ---
 title: Reference {{site.konnect_short_name}} authentication across multiple namespaces with {{ site.operator_product_name }}
-description: "Learn how to use KongReferenceGrant to use {{site.konnect_short_name}} authentication configuration across namespaces."
+description: "Learn how to use the KongReferenceGrant resource to use {{site.konnect_short_name}} authentication configuration across namespaces."
 content_type: how_to
 
 permalink: /operator/konnect/how-to/auth-cross-namespace-reference/
@@ -22,6 +22,9 @@ tldr:
 related_resources:
   - text: Reference Secrets across multiple namespaces
     url: /operator/konnect/how-to/secret-cross-namespace-reference/
+
+min_version:
+  operator: '2.1'
 ---
 
 {% include /operator/cross-namespace-ref.md %}
