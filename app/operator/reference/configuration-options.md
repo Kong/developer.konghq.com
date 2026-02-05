@@ -57,7 +57,7 @@ rows:
     description: "Send anonymized usage data to help improve Kong."
     default: '`true`'
   - flag: '`--apiserver-burst`'
-    type: '`string`'
+    type: '`int`'
     description: "The Kubernetes API RateLimiter maximum burst queries per second."
     default: '`300`'
   - flag: '`--apiserver-host`'
@@ -65,11 +65,11 @@ rows:
     description: "The Kubernetes API server URL. If not set, the operator will use cluster config discovery."
     default: ""
   - flag: '`--apiserver-qps`'
-    type: '`string`'
+    type: '`int`'
     description: "The Kubernetes API RateLimiter maximum queries per second."
     default: '`100`'
   - flag: '`--cache-sync-period`'
-    type: '`string`'
+    type: '`duration`'
     description: "Sets the minimum frequency for reconciling watched resources. Defaults to the controller-runtime value if unspecified or set to 0s."
     default: '`0s`'
   - flag: '`--cache-sync-timeout`'
@@ -77,13 +77,13 @@ rows:
     description: "Sets the time limit for syncing controller caches. Defaults to the controller-runtime value if set to `0`."
     default: '`0s`'
   - flag: '`--cluster-ca-key-size`'
-    type: '`string`'
-    description: "Size (in bits) of the key used for the cluster CA certificate. Only used for RSA keys."
+    type: '`int`'
+    description: "WARN: DEPRECATED (it has no effect): Size (in bits) of the key used for the cluster CA certificate. Only used for RSA keys."
     default: '`4096`'
   - flag: '`--cluster-ca-key-type`'
     type: '`string`'
-    description: "Type of the key used for the cluster CA certificate (possible values: ecdsa, rsa). Default: ecdsa."
-    default: '`ecdsa`'
+    description: "WARN: DEPRECATED (it has no effect): Type of the key used for the cluster CA certificate (possible values: ecdsa, rsa). Default: ecdsa."
+    default: ""
   - flag: '`--cluster-ca-secret`'
     type: '`string`'
     description: "Specifies the Secret name that contains the cluster CA certificate."
@@ -152,6 +152,10 @@ rows:
     type: '`bool`'
     description: "Enable the conversion webhook."
     default: '`true`'
+  - flag: '`--enable-fqdn-mode`'
+    type: '`bool`'
+    description: "Enable FQDN mode for the operator. FQDNMode indicates whether to use FQDN endpoints for service discovery."
+    default: '`false`'
   - flag: '`--enable-gateway-api-experimental`'
     type: '`bool`'
     description: "Enable the Gateway API experimental features."
@@ -169,11 +173,11 @@ rows:
     description: "The address the probe endpoint binds to."
     default: '`:8081`'
   - flag: '`--konnect-controller-max-concurrent-reconciles`'
-    type: '`string`'
-    description: "Maximum number of concurrent reconciles for Konnect entities."
+    type: '`uint`'
+    description: "Deprecated: Please use '--max-concurrent-reconciles-konnect-controller' instead."
     default: '`8`'
   - flag: '`--konnect-sync-period`'
-    type: '`string`'
+    type: '`duration`'
     description: "Sync period for Konnect entities. After a successful reconciliation of Konnect entities the controller will wait this duration before enforcing configuration on Konnect once again."
     default: '`1m0s`'
   - flag: '`--kubeconfig`'
@@ -184,6 +188,22 @@ rows:
     type: '`string`'
     description: "Logging mode to use. Possible values: production, development."
     default: '`"production"`'
+  - flag: '`--max-concurrent-reconciles-controlplane-controller`'
+    type: '`uint`'
+    description: "Maximum number of concurrent reconciles for ControlPlane controllers."
+    default: '`1`'
+  - flag: '`--max-concurrent-reconciles-dataplane-controller`'
+    type: '`uint`'
+    description: "Maximum number of concurrent reconciles for DataPlane controllers."
+    default: '`1`'
+  - flag: '`--max-concurrent-reconciles-gateway-controller`'
+    type: '`uint`'
+    description: "Maximum number of concurrent reconciles for Gateway controllers."
+    default: '`1`'
+  - flag: '`--max-concurrent-reconciles-konnect-controller`'
+    type: '`uint`'
+    description: "Maximum number of concurrent reconciles for Konnect controllers."
+    default: '`8`'
   - flag: '`--metrics-access-filter`'
     type: '`string`'
     description: "Specifies the filter access function to be used for accessing the metrics endpoint (possible values: off, rbac). Default is off."
