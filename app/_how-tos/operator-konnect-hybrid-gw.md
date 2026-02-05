@@ -58,7 +58,7 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong/kong-gateway:3.12
+            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 {% endkonnect_crd %}
 <!-- vale on -->
 
