@@ -2,7 +2,7 @@
 title: Stream responses from Vertex AI through {{site.ai_gateway}} using Google Generative AI SDK
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/

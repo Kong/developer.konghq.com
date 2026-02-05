@@ -2,7 +2,7 @@
 title: Use Cohere rerank API for document-grounded chat with AI Proxy in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/

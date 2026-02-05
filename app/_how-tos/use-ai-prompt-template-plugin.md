@@ -2,7 +2,7 @@
 title: Provide AI prompt templates for end users with the AI Prompt Template plugin and Mistral
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/

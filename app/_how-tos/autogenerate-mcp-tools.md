@@ -2,7 +2,7 @@
 title: Autogenerate MCP tools from a RESTful API
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/

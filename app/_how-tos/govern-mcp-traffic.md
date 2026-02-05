@@ -2,7 +2,7 @@
 title: "Use {{site.ai_gateway}} to govern GitHub MCP traffic"
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advance/

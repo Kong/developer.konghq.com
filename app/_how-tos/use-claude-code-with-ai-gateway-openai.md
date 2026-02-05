@@ -3,7 +3,7 @@ title: Route Claude CLI traffic through {{site.ai_gateway}} and OpenAI
 content_type: how_to
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/

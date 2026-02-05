@@ -2,7 +2,7 @@
 title: "Secure GitHub MCP Server traffic with {{ site.base_gateway }} and AI Gateway"
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advance/

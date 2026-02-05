@@ -7,7 +7,7 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: AI Lakera Guard
     url: /plugins/ai-lakera-guard/
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Use the AI GCP Model Armor plugin
     url: /how-to/use-ai-gcp-model-armor-plugin/

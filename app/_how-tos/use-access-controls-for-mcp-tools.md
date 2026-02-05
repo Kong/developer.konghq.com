@@ -2,7 +2,7 @@
 title: Control MCP tool access with Consumer and Consumer Group ACLs
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/

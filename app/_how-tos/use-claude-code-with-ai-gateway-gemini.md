@@ -3,7 +3,7 @@ title: Route Claude CLI traffic through {{site.ai_gateway}} and Gemini
 content_type: how_to
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/

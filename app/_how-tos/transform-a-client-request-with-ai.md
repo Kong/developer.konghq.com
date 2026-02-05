@@ -2,7 +2,7 @@
 title: Transform a request body using OpenAI in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Use the AI Request Transformer plugin with OpenAI to transform a client request body before proxying it.

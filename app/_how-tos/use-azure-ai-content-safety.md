@@ -7,7 +7,7 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: Azure AI Content Safety
     url: /plugins/ai-azure-content-safety/
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Learn how to use the Azure AI Content Safety plugin.

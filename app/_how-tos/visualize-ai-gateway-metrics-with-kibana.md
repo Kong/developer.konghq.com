@@ -57,7 +57,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Get started with AI Gateway
     url: /ai-gateway/get-started/
