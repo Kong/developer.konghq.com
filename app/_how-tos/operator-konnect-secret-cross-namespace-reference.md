@@ -105,11 +105,17 @@ spec:
 
 
 Create the following resources:
+* A `kong` namespace.
 * A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
 * A `Gateway` that references the `Secret` in the `secret-ns` namespace.
 
 ```sh
 echo '
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kong
+---
 apiVersion: gateway-operator.konghq.com/v2beta1
 kind: GatewayConfiguration
 metadata:
