@@ -77,6 +77,16 @@ faqs:
       > **Tip:** Before converting, make sure that you pull the latest project updates, as any changes that aren't pulled beforehand aren't included in the Local Vault project.
   - q: What happens if my Git repository contains legacy Insomnia content when I create a Git Sync project?
     a: If the Git repository you connect contains legacy Insomnia content, Insomnia automatically converts that content to the current project format during project creation. This ensures that the content is compatible with modern Insomnia workflows. If the repository already contains Insomnia content, whether legacy or current, Insomnia prompts you to import that content into the new Git Sync project before continuing.
+  - q: Can I choose which email address Insomnia uses for Git commits?
+    a: |
+      Yes. If your OAuth provider account has more than one verified email address, then Insomnia lets you pick which email address to use for Git commits when you're using Git Sync. You can select only from the email addresses returned by your OAuth provider.  
+
+      Choose the commit email when you first set up a project or when you configure Git Sync. Insomnia uses the selected email for all commit metadata in that project.
+
+      If your OAuth provider account has only one verified email address, then Insomnia uses that email and doesn't show an email selection option in the UI.
+
+      {:.warning}
+      > From inside Insomnia, you can't create or edit email addresses. To manage email addresses, use your OAuth provider.
 ---
 Insomnia offers various storage options to cater to different user needs and preferences.
 
@@ -224,6 +234,8 @@ Configure the credentials for your Git repository using one of the following opt
 * Add the credentials here, in the Git Sync config
 * Add the credentials to your local `git.config` file
 * Configure the credentials in **Preferences** > **Credentials** {% new_in 12.3 %}
+
+
 
 ### Git Sync data flow
 
