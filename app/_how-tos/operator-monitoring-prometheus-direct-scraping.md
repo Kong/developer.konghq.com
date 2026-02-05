@@ -111,7 +111,7 @@ You can verify that metrics are being collected by port-forwarding to the data p
 
 1. Get the data plane Pod name:
    ```bash
-   POD_NAME=$(kubectl get pods -n kong -o jsonpath='{.items[0].metadata.name}' | grep ^dataplane-kong)
+   POD_NAME=$(kubectl get pods -n kong -o jsonpath='{.items[0].metadata.name}')
    ```
 
 1. Port forward the metrics port:
