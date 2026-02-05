@@ -24,38 +24,26 @@ While collectors provide a higher abstraction than the API, you can always use t
 ## Available collectors
 
 The following collectors are available:
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8">
-  {% include icon_card_no_heading.html 
-    icon="/assets/icons/kubernetes.svg" 
-    title="Kubernetes" 
-    cta_url="/metering-and-billing/collectors/kubernetes/" 
-  %}
-  
-  {% include icon_card_no_heading.html 
-    icon="/assets/icons/runai.svg" 
-    title="Run:ai" 
-    cta_url="/metering-and-billing/collectors/run-ai/" 
-  %}
-  
-  {% include icon_card_no_heading.html 
-    icon="/assets/icons/opentelemetry.svg" 
-    title="OpenTelemetry" 
-    cta_url="/metering-and-billing/collectors/opentelemetry/" 
-  %}
-  
-  {% include icon_card_no_heading.html 
-    icon="/assets/icons/prometheus.svg" 
-    title="Prometheus" 
-    cta_url="/metering-and-billing/collectors/prometheus/" 
-  %}
-  
-  {% include icon_card_no_heading.html 
-    icon="/assets/icons/s3.svg" 
-    title="S3" 
-    cta_url="/metering-and-billing/collectors/s3/" 
-  %}
-</div>
+<!--vale off-->
+{% table %}
+columns:
+  - title: Collector
+    key: collector
+  - title: Description
+    key: description
+rows:
+  - collector: "[Kubernetes](/metering-and-billing/collectors/kubernetes/)"
+    description: "Collect resource usage from Kubernetes pods including CPU, memory, and GPU allocation."
+  - collector: "[Run:ai](/metering-and-billing/collectors/run-ai/)"
+    description: "Collect GPU and compute metrics from Nvidia Run:ai workloads."
+  - collector: "[OpenTelemetry](/metering-and-billing/collectors/opentelemetry/)"
+    description: "Collect usage data from OpenTelemetry logs and metrics."
+  - collector: "[Prometheus](/metering-and-billing/collectors/prometheus/)"
+    description: "Query Prometheus metrics and convert them to billing events."
+  - collector: "[S3](/metering-and-billing/collectors/s3/)"
+    description: "Ingest usage data from S3-compatible object storage."
+{% endtable %}
+<!--vale on-->
 
 ## How it works
 
