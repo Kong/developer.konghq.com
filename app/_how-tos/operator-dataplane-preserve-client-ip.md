@@ -15,6 +15,13 @@ products:
 works_on:
   - on-prem
   - konnect
+
+prereqs:
+  operator:
+    konnect:
+      auth: true
+      control_plane: true
+
 tldr:
   q: How do I see the real client IP in Kong logs?
   a: "Configure `externalTrafficPolicy: Local` in your `GatewayConfiguration`."
