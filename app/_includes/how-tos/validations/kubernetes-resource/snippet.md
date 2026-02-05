@@ -1,10 +1,9 @@
-{% assign name = include.config.name %}
-{% assign kind = include.config.kind %}
-{% assign conditionType = include.config.conditionType | default: "Programmed" %}
-{% assign reason = include.config.reason | default: "Programmed" %}
-{% assign generation = include.config.generation | default: 1 %}
-
-{% unless include.config.disableDescription %}
+{%- assign name = include.config.name -%}
+{%- assign kind = include.config.kind -%}
+{%- assign conditionType = include.config.conditionType | default: "Programmed" -%}
+{%- assign reason = include.config.reason | default: "Programmed" -%}
+{%- assign generation = include.config.generation | default: 1 -%}
+{%- unless include.config.disableDescription %}
 You can verify the `{{ kind }}` was reconciled successfully by checking its `{{ conditionType }}` condition.
 {% endunless %}
 
