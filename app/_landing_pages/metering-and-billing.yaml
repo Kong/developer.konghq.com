@@ -31,8 +31,8 @@ rows:
             config:
               url: /assets/images/konnect/metering.png
               alt_text: "{{site.metering_and_billing}} Overview"
-
-
+      
+  
   - header:
       type: h2
       text: "Get started"
@@ -48,6 +48,15 @@ rows:
               icon: /assets/icons/graduation.svg
               cta:
                 url: /metering-and-billing/get-started/
+      - blocks:
+          - type: card
+            config:
+              title: "Monetize LLM traffic"
+              description: |
+                Learn how to meter and bill AI Gateway LLM tokens.
+              icon: /assets/icons/ai.svg
+              cta:
+                url: /how-to/meter-llm-traffic/
 
   - header:
       type: h2
@@ -76,7 +85,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/metering
+                url: /metering-and-billing/metering/?tab=generic-meters#create-a-meter
       - blocks:
           - type: card
             config:

@@ -314,6 +314,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: 'Metering & Billing'
+            description: Meter LLM usage with {{site.konnect_short_name}}.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /how-to/meter-llm-traffic/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Streaming
             description: Stream user requests with AI Gateway
             icon: /assets/icons/network.svg

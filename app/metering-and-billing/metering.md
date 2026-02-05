@@ -138,7 +138,7 @@ To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Serv
 
 {% endnavtab %}
 {% navtab "Kong AI Gateway LLM tokens" %}
-To meter Kong AI Gateway LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
+To meter Kong AI Gateway LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured with `config.logging.log_payloads` and `config.logging.log_statistics` enabled.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. Enable **AI Gateway Tokens**.
