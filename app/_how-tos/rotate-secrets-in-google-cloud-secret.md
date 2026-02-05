@@ -37,6 +37,7 @@ entities:
 tags:
     - security
     - secrets-management
+    - mistral
 
 tldr:
     q: How do I rotate secrets in Google Cloud Secret with {{site.base_gateway}}?

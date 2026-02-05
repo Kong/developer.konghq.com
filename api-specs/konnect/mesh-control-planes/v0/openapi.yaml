@@ -6244,6 +6244,10 @@ components:
                       this port.
                     type: integer
                     x-speakeasy-param-computed: false
+                  protocol:
+                    description: 'Protocol of the service (tcp, http, grpc, etc).'
+                    type: string
+                    x-speakeasy-param-computed: false
                   serviceAddress:
                     description: |-
                       Address of the service that requests will be forwarded to.
@@ -16186,6 +16190,10 @@ components:
                           this port.
                         type: integer
                         x-speakeasy-param-computed: false
+                      protocol:
+                        description: 'Protocol of the service (tcp, http, grpc, etc).'
+                        type: string
+                        x-speakeasy-param-computed: false
                       serviceAddress:
                         description: |-
                           Address of the service that requests will be forwarded to.
@@ -17925,6 +17933,15 @@ components:
             selector:
               type: object
               properties:
+                dataplaneLabels:
+                  type: object
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      x-speakeasy-param-computed: false
+                  x-speakeasy-param-computed: false
                 dataplaneRef:
                   type: object
                   properties:

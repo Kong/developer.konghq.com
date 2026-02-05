@@ -1,4 +1,5 @@
 title: AI Gateway Documentation
+description: Index containing all documentation for Kong AI Gateway.
 sections:
   - title: Overview
     items:
@@ -69,6 +70,9 @@ sections:
       - path: /plugins/ai-aws-guardrails/
       - path: /plugins/ai-mcp-proxy/
       - path: /plugins/ai-llm-as-judge/
+  - title: AI Gateway providers
+    items:
+      - path: /ai-gateway/ai-providers/**/*
   - title: MCP traffic gateway
     items:
       - path: /mcp/

@@ -30,6 +30,7 @@ tags:
     - security
     - secrets-management
     - ai
+    - mistral
 
 tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
@@ -132,7 +133,7 @@ variables:
 1. In the **Vault Configuration** dropdown, select "Konnect".
 1. Enter `mysecretvault` in the **Prefix** field.
 1. Enter `Storing secrets in {{site.konnect_short_name}}` in the **Description** field.
-1. Click **Save**. 
+1. Click **Save**.
 {% endnavtab %}
 {% endnavtabs %}
 

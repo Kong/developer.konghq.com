@@ -1,4 +1,5 @@
 title: Konnect Platform Documentation
+description: Index containing all documentation for the {{site.konnect_short_name}} platform.
 sections:
   - title: About Konnect
     items:
