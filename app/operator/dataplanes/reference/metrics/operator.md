@@ -152,8 +152,6 @@ This is particularly useful for:
 - Autoscaling: Using enriched metrics with the [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/).
 - Simplified scraping: Scraping a single endpoint to get aggregated metrics from multiple data planes.
 
-For a step-by-step guide on setting up monitoring with enriched metrics, see [Monitor {{site.base_gateway}} with Prometheus using enriched metrics](/operator/how-to/observability/prometheus-enriched-metrics/).
-
 ## Example metrics dump
 
 Here's an example of what is available:

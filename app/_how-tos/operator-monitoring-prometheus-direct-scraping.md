@@ -30,15 +30,11 @@ prereqs:
   inline:
     - title: Create Gateway resources
       include_content: /prereqs/operator/gateway
-
-related_resources:
-  - text: Monitor {{site.base_gateway}} with Prometheus using enriched metrics
-    url: /operator/how-to/observability/prometheus-enriched-metrics/
 ---
 
 {% include /operator/prometheus.md %}
 
-In this example, we'll use direct scraping. For an example with enriched metrics, see [Monitor {{site.base_gateway}} with Prometheus using enriched metrics](/operator/how-to/observability/prometheus-enriched-metrics/).
+In this example, we'll use direct scraping.
 
 ## Enable the Prometheus plugin
 
