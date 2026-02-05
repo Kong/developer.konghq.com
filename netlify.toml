@@ -1,10 +1,7 @@
 [build]
   publish = "dist"
   command = "exe/build"
-  environment = { JEKYLL_ENV = "development", NODE_OPTIONS = "--max_old_space_size=8192" }
-
-[build.environment]
-RUBY_VERSION = "3.4.4"
+  environment = { JEKYLL_ENV = "development", NODE_OPTIONS = "--max_old_space_size=8192", RUBY_VERSION = "3.4.4" }
 
 [context.production.environment]
   JEKYLL_ENV = "production"
