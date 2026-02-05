@@ -39,6 +39,8 @@ prereqs:
 
 Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid Gateways. `GatewayConfiguration` is for Hybrid Gateways when field `spec.konnect.authRef` is set.
 
+First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
+
 <!-- vale off -->
 {% konnect_crd %}
 kind: GatewayConfiguration
