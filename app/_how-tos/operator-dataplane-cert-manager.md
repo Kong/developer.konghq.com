@@ -1,5 +1,4 @@
 ---
-# @TODO KO 2.1
 title: Automate TLS certificates with cert-manager
 description: "Learn how to use cert-manager to automatically provision and rotate TLS certificates for {{ site.operator_product_name }}."
 content_type: how_to
@@ -90,9 +89,13 @@ spec:
 
 ## Configure the Gateway with cert-manager
 
-Create a `Gateway` resource with the `cert-manager.io/issuer` annotation and specify the `tls.certificateRefs` pointing to the secret name you want cert-manager to manage.
+Create the following resources:
 
-```yaml
+* A `GatewayConfiguration` and a `GatewayClass` to configure your gateway with the latest {{site.base_gateway}} version and {{site.operator_product_name}} as the controller.
+* A `Gateway` with the `cert-manager.io/issuer: "selfsigned-issuer"` annotation and the `tls.certificateRefs` pointing to the name of the Secret to provision.
+* A `Certificate` that references the cert-manager issuer and the provisioned Secret.
+
+```sh
 echo '
 apiVersion: gateway-operator.konghq.com/v2beta1
 kind: GatewayConfiguration
@@ -158,11 +161,19 @@ spec:
       konghq.com/secret: "true"' | kubectl apply -f -
 ```
 
-### 3. Deploy a Route
+## Create an echo Service
 
-Deploy a sample `HTTPRoute` to verify that TLS termination is working.
+Run the following command to create a sample echo Service:
 
-```yaml
+```bash
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+```
+
+## Create a Route
+
+Deploy a sample `HTTPRoute` to verify that TLS termination is working:
+
+```sh
 echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -180,23 +191,10 @@ spec:
       backendRefs:
         - name: echo
           kind: Service
-          port: 80' | kubectl apply -f -
-```
-
-Deploy the standard echo service to test the route:
-
-```bash
-kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+          port: 1027' | kubectl apply -f -
 ```
 
 ## Validate
-
-
-1. Get the Gateway's external IP:
-   
-   ```bash
-   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
-   ```
 
 1.  Check that cert-manager has created the `Certificate` resource and that the `Secret` has been provisioned:
 
@@ -205,8 +203,16 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
     kubectl get secret example-tls-secret -n kong
     ```
 
-1.  Test the connection (assuming you have access to the Gateway's external IP and have configured DNS or hosts for `example.localdomain.dev`):
+1. Get the Gateway's external IP:
+   
+   ```bash
+   export PROXY_IP=$(kubectl get gateway kong-gateway -n kong -o jsonpath='{.status.addresses[0].value}')
+   ```
+
+1.  Test the connection:
 
     ```bash
     curl -ivk --resolve example.localdomain.dev:443:$PROXY_IP https://example.localdomain.dev/echo
     ```
+
+    You should get TLS handshake and a 200 response.
