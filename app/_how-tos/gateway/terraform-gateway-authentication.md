@@ -8,6 +8,7 @@ breadcrumbs:
 
 tools:
   - terraform
+  - gateway
 
 works_on:
   - konnect
