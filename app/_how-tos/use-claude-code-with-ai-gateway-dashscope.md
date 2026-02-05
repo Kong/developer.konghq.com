@@ -34,6 +34,7 @@ entities:
 
 tags:
   - ai
+  - dashscope
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway with DashScope?
