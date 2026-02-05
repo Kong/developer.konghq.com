@@ -61,11 +61,11 @@ related_resources:
 
 In this guide, you'll learn how to classify Kafka records at produce time and filter them at consume time based on user identity.
 
-We'll use a logging scenario where an `app_logs` topic contains log entries with different severity levels. Debug and trace logs are verbose and only useful for SREs troubleshooting issues, while regular developers only need info, warn, and error logs.
+We'll use a logging scenario where an `app_logs` topic contains log entries with different severity levels. Debug and trace logs are verbose and only useful for the SRE team troubleshooting issues, while regular developers only need info, warn, and error logs.
 
 The approach uses two policies:
 1. **Produce phase**: A Schema Validation policy parses JSON records, and a nested Modify Headers policy adds an `x-internal: true` header to debug and trace logs.
-2. **Consume phase**: A Skip Records policy filters out internal logs for users who aren't SREs.
+2. **Consume phase**: A Skip Records policy filters out internal logs for users who aren't on the SRE team.
 
 Here's how the data flows through the system:
 
@@ -91,7 +91,7 @@ flowchart LR
     C --> CO[Consumer]
 {% endmermaid %}
 
-{:.note}
+{:.info}
 > **Performance tip**: Classifying records at produce time is more efficient than at consume time. Parsing JSON once during production avoids repeated deserialization for each consumer group.
 
 ## Create a Kafka topic
