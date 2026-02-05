@@ -10,7 +10,8 @@ breadcrumbs:
   - index: operator
     group: Konnect
     section: "Konnect CRDs: Gateway"
-
+min_version:
+  operator: '2.1'
 
 products:
   - operator
