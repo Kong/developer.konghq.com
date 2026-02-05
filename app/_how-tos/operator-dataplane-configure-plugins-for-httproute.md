@@ -1,7 +1,7 @@
 ---
 # @TODO KO 2.1
-title: Configure Plugins for HTTPRoute
-description: "Learn how to attach Kong Plugins to Gateway API HTTPRoute resources using KongPluginBinding, ExtensionRef, or annotations."
+title: Configure a plugin for a specific HTTPRoute
+description: "Learn how to attach plugins to HTTPRoute resources using KongPluginBinding, ExtensionRef, or annotations."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/configure-plugins-for-httproute/
 breadcrumbs:
@@ -16,6 +16,18 @@ products:
 works_on:
   - on-prem
   - konnect
+
+prereqs:
+  operator:
+    konnect:
+      auth: true
+      control_plane: true
+  inline:
+    - title: Create Gateway resources
+      include_content: /prereqs/operator/gateway
+    - title: Create a Service and a Route
+      include_content: /prereqs/operator/echo-service-route
+
 tldr:
   q: How do I attach a plugin to an HTTPRoute with {{ site.operator_product_name }}?
   a: Use the `KongPluginBinding` CRD (recommended), an `ExtensionRef` filter in the `HTTPRoute` spec, or the legacy `konghq.com/plugins` annotation.
@@ -23,7 +35,7 @@ tldr:
 
 ## Overview
 
-In the Kong Operator, you can apply plugins to specific routes to control behavior like rate limiting, authentication, or request transformation. When using the [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute` resource, the available methods depend on your deployment topology:
+In {{ site.operator_product_name }}, you can apply plugins to specific routes to control behavior like rate limiting, authentication, or request transformation. When using the [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute` resource, the available methods depend on your deployment topology:
 
 - **Self-managed Control Plane (KIC)**: Use `ExtensionRef` filters or `konghq.com/plugins` annotations.
 - **Konnect/Hybrid Mode**: Use the `KongPluginBinding` CRD.
@@ -51,11 +63,16 @@ config:
 ' | kubectl apply -f -
 ```
 
-## Method 1: ExtensionRef Filter (Gateway API Standard)
+{: data-deployment-topology="on-prem" }
+## Apply the plugin to the HTTPRoute
+{% navtabs "Methods" %}
+
+{% navtab "ExtensionRef" %}
 
 The Gateway API supports extending route rules using `filters`. {{ site.operator_product_name }} supports the `ExtensionRef` filter type to attach Kong plugins directly within the `HTTPRoute` specification. This is the preferred method for standard Gateway API deployments.
 
-```yaml
+```sh
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -77,14 +94,16 @@ spec:
             name: rate-limit-example
       backendRefs:
         - name: echo
-          port: 1027
+          port: 1027' | kubectl apply -f -
 ```
+{% endnavtab %}
 
-## Method 2: Annotations (Legacy)
+{% navtab "Annnotation (legacy)" %}
 
 You can use the `konghq.com/plugins` annotation on the `HTTPRoute` resource. This is consistent with the behavior of the Kong Ingress Controller.
 
-```yaml
+```sh
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -102,10 +121,13 @@ spec:
             value: /echo
       backendRefs:
         - name: echo
-          port: 1027
+          port: 1027' | kubectl apply -f -
 ```
+{% endnavtab %}
+{% endnavtabs %}
 
-## Method 3: KongPluginBinding (Konnect/Hybrid only)
+{: data-deployment-topology="konnect" }
+## Create a KongPluginBinding
 
 The `KongPluginBinding` resource is used when managing entities in **Konnect** or when using the **Hybrid Gateway** mode. It allows you to bind a plugin to one or more entities without modifying those entities.
 
