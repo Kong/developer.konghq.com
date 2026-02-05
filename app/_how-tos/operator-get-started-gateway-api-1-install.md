@@ -39,17 +39,20 @@ tags:
 
 ## Install CRDs
 
+{{ site.operator_product_name }} will automatically install the Cluster Resource Definitions as part of the initial deployment.  If you are upgrading the CRDs as part of an existing {{ site.operator_product_name }} installation, you should deply them manually: 
+
 ```shell
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version }}/standard-install.yaml --server-side
 ```
 
-## Cert-Manager integration
-
-{% include k8s/cert-manager.md raw=true %}
 
 ## Install {{ site.operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
+
+{% tip %}
+{% include k8s/cert-manager.md raw=true %}
+{% endtip }
 
 ## Validate
 

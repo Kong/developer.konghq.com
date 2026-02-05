@@ -18,14 +18,11 @@
    ```
 
 {% else %}
-<!-- TODO: install from regular chart repo once KO v2.1.0 is out -->
 
    ```bash
-   git clone https://github.com/kong/kong-operator && cd kong-operator
-   git checkout v2.1.0-beta.0
    helm upgrade --install kong-operator ./charts/kong-operator -n kong-system \
      --create-namespace \
-     --set image.tag=2.1.0-beta.0{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
+     --set image.tag=2.1.0{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
 
