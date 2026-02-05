@@ -23,6 +23,13 @@ related_resources:
     url: /gateway/datakit/
   - text: Datakit plugin reference
     url: /plugins/datakit/
+
+faqs:
+  - q: Why can't I drag call nodes into the response section?
+    a: |
+      In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a request. 
+      If you can't add call nodes to the response section, this means that your data planes are running {{site.base_gateway}} 3.12 or earlier. 
+      Upgrade your data planes to 3.13 to use this functionality.
 ---
 
 In addition to the standard [{{site.base_gateway}} configuration tools](/tools/),

@@ -631,7 +631,10 @@ For a complete example, see:
 
 ### Call node
 
-Send an HTTP request and retrieve the response.
+Send an HTTP request and retrieve the response. 
+
+{% new_in 3.13 %} The `call` node can be executed before or after proxying a request.
+For versions of {{site.base_gateway}} 3.12 or earlier, call nodes could only be executed before proxying; see [limitations](#limitations) for details.
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `call` from the node object dropdown to see all node attributes.
 
@@ -755,9 +758,9 @@ See [Third-party auth](/plugins/datakit/examples/authenticate-third-party/) for 
 
 #### Limitations
 
-Due to platform limitations, the `call` node can't be executed after proxying a
+In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a
 request, so attempting to configure the node using outputs from the upstream service
-response will yield an error:
+response would yield an error:
 
 ```yaml
 - name: CALL
