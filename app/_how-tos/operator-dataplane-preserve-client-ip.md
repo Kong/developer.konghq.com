@@ -1,6 +1,5 @@
 ---
-# @TODO KO 2.1
-title: Preserve Client IP Addresses
+title: Preserve client IP addresses
 description: "Learn how to configure {{site.operator_product_name}} to preserve the original client IP address using externalTrafficPolicy."
 content_type: how_to
 permalink: /operator/dataplanes/how-to/preserve-client-ip/
@@ -18,24 +17,21 @@ works_on:
   - konnect
 tldr:
   q: How do I see the real client IP in Kong logs?
-  a: "Configure `externalTrafficPolicy: Local in your GatewayConfiguration."
+  a: "Configure `externalTrafficPolicy: Local` in your `GatewayConfiguration`."
 ---
-
-## Overview
 
 By default, when traffic enters a Kubernetes cluster through a Service of type `LoadBalancer`, the source IP is often replaced with the IP of the node (SNAT). This means your applications and access logs see the node's IP instead of the client's IP.
 
 To preserve the client IP, you can configure the underlying Service to use `externalTrafficPolicy: Local`.
 
-## Configuration
+{% include /k8s/kong-namespace.md %}
 
-You can configure the generated `Service` for the Data Plane using `GatewayConfiguration`.
+## Create a GatewayConfiguration
 
-### 1. Create a GatewayConfiguration
-
-Create a `GatewayConfiguration` that sets the `externalTrafficPolicy` to `Local` in the `dataPlaneOptions`.
+Create a `GatewayConfiguration` that sets the `externalTrafficPolicy` to `Local` in the `dataPlaneOptions`:
 
 ```yaml
+echo '
 apiVersion: gateway-operator.konghq.com/v2beta1
 kind: GatewayConfiguration
 metadata:
@@ -46,19 +42,16 @@ spec:
     network:
       services:
         ingress:
-          # Set the externalTrafficPolicy to Local to preserve the client IP
           externalTrafficPolicy: Local
-          type: LoadBalancer
-          annotations:
-            # Example annotation for cloud providers (optional)
-            # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+          type: LoadBalancer' | kubectl apply -f -
 ```
 
-### 2. Configure the Gateway
+### Configure the Gateway
 
-Update your `Gateway` to reference the `GatewayConfiguration`.
+Create a `GatewayClass` resource that references the `GatewayConfiguration`, and a `Gateway` that references the `GatewayClass`:
 
 ```yaml
+echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
@@ -81,10 +74,10 @@ spec:
   listeners:
   - name: http
     protocol: HTTP
-    port: 80
+    port: 80' | kubectl apply -f -
 ```
 
-## Verify the Configuration
+## Validate
 
 1.  Check the generated Service for the `externalTrafficPolicy` setting:
 
