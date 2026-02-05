@@ -83,7 +83,7 @@ spec:
 
 ## Create a `Gateway` Resource
 
-Now create a `Gateway` resource that references the `GatewayClass` you just created.
+Finally, create a `Gateway` resource that references the `GatewayClass` we just created:
 
 <!-- vale off -->
 {% konnect_crd %}
