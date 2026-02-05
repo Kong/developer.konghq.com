@@ -1,5 +1,4 @@
 ---
-# @TODO KO 2.1
 title: Configure a plugin for a specific HTTPRoute
 description: "Learn how to attach plugins to HTTPRoute resources using KongPluginBinding, ExtensionRef, or annotations."
 content_type: how_to
@@ -30,20 +29,9 @@ prereqs:
 
 tldr:
   q: How do I attach a plugin to an HTTPRoute with {{ site.operator_product_name }}?
-  a: Use the `KongPluginBinding` CRD (recommended), an `ExtensionRef` filter in the `HTTPRoute` spec, or the legacy `konghq.com/plugins` annotation.
+  a: |
+    Use an `ExtensionRef`, the legacy `konghq.com/plugins` annotation, or the `KongPluginBinding` resource ({{site.konnect_short_name}} only).
 ---
-
-## Overview
-
-In {{ site.operator_product_name }}, you can apply plugins to specific routes to control behavior like rate limiting, authentication, or request transformation. When using the [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute` resource, the available methods depend on your deployment topology:
-
-- **Self-managed Control Plane (KIC)**: Use `ExtensionRef` filters or `konghq.com/plugins` annotations.
-- **Konnect/Hybrid Mode**: Use the `KongPluginBinding` CRD.
-
-## Prerequisites
-
-- Access to a Kubernetes cluster with {{ site.operator_product_name }} installed.
-- A functional `Gateway` and `HTTPRoute`. You can follow the [Create a Route](/operator/dataplanes/get-started/kic/create-route/) guide to set one up.
 
 ## Create a KongPlugin
 
@@ -63,20 +51,52 @@ config:
 ' | kubectl apply -f -
 ```
 
-{: data-deployment-topology="on-prem" }
 ## Apply the plugin to the HTTPRoute
+
 {% navtabs "Methods" %}
+
+{% navtab "KongPluginBinding (Konnect only)" %}
+
+The `KongPluginBinding` resource can be used when managing entities in {{site.konnect_short_name}} or when using the Hybrid mode. 
+It allows you to bind a plugin to one or more entities without modifying those entities.
+
+For more details about the `KongPluginBinding` resources, see [Understanding KongPluginBinding](/operator/konnect/kongpluginbinding/).
+
+Use this method if you need to reuse the same plugin configuration across multiple Routes without editing each Route resource, or if you do not have permission to modify the Route.
+
+```bash
+echo '
+apiVersion: configuration.konghq.com/v1alpha1
+kind: KongPluginBinding
+metadata:
+  name: bind-rate-limit-to-route
+  namespace: kong
+spec:
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: gateway-control-plane
+  pluginRef:
+    name: rate-limit-example
+  targets:
+    routeRef:
+      group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: echo-route
+' | kubectl apply -f -
+```
+{% endnavtab %}
 
 {% navtab "ExtensionRef" %}
 
-The Gateway API supports extending route rules using `filters`. {{ site.operator_product_name }} supports the `ExtensionRef` filter type to attach Kong plugins directly within the `HTTPRoute` specification. This is the preferred method for standard Gateway API deployments.
+The Gateway API supports extending Route rules using `filters`. {{ site.operator_product_name }} supports the `ExtensionRef` filter type to attach plugins directly to the `HTTPRoute` specification. This is the preferred method for standard Gateway API deployments.
 
 ```sh
 echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: echo
+  name: echo-route
   namespace: kong
 spec:
   parentRefs:
@@ -100,14 +120,14 @@ spec:
 
 {% navtab "Annnotation (legacy)" %}
 
-You can use the `konghq.com/plugins` annotation on the `HTTPRoute` resource. This is consistent with the behavior of the Kong Ingress Controller.
+You can use the `konghq.com/plugins` annotation on the `HTTPRoute` resource:
 
 ```sh
 echo '
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: echo
+  name: echo-route
   namespace: kong
   annotations:
     konghq.com/plugins: rate-limit-example
@@ -123,64 +143,22 @@ spec:
         - name: echo
           port: 1027' | kubectl apply -f -
 ```
+
+This method is consistent with the [{{site.kic_product_name}}](/kubernetes-ingress-controller/) behavior.
+
 {% endnavtab %}
 {% endnavtabs %}
 
-{: data-deployment-topology="konnect" }
-## Create a KongPluginBinding
-
-The `KongPluginBinding` resource is used when managing entities in **Konnect** or when using the **Hybrid Gateway** mode. It allows you to bind a plugin to one or more entities without modifying those entities.
-
-> [!NOTE]
-> This method is not supported for standard self-managed deployments.
-
-For more details on how `KongPluginBinding` works and advanced usage scenarios, see the [Understanding KongPluginBinding](/operator/konnect/key-concepts/kongpluginbinding/) reference.
-
-Use this method if you need to reuse the same plugin configuration across multiple routes without editing each Route resource, or if you do not have permission to modify the Route.
-
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongPluginBinding
-metadata:
-  name: bind-rate-limit-to-route
-  namespace: kong
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: my-konnect-control-plane
-  pluginRef:
-    name: rate-limit-example
-  targets:
-    routeRef:
-      group: configuration.konghq.com
-      kind: KongRoute
-      name: echo
-' | kubectl apply -f -
-```
-
-## Verify the Plugin
-
-Once the plugin is attached, you can verify it by making requests to your proxy and checking the response headers.
+## Validate
 
 1.  Get the proxy IP address:
     ```bash
     export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
 
-2.  Make multiple requests to the `/echo` endpoint:
+1.  Send multiple requests to the `/echo` endpoint:
     ```bash
-    curl -i http://$PROXY_IP/echo
+    for i in {1..6}; do curl -s http://$PROXY_IP/echo; done
     ```
 
-3.  Check the response for rate-limiting headers:
-    ```text
-    HTTP/1.1 200 OK
-    ...
-    X-RateLimit-Limit-Minute: 5
-    X-RateLimit-Remaining-Minute: 4
-    ...
-    ```
-
-If you exceed the limit (5 requests per minute in this example), you should receive a `429 Too Many Requests` status code.
+   You should receive a `429 Too Many Requests` status code with the last request.
