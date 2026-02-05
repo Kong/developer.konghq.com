@@ -1,7 +1,7 @@
 metadata:
-  title: "Kong {{site.ai_gateway}}"
+  title: "{{site.ai_gateway}}"
   content_type: landing_page
-  description: This page is an introduction to Kong {{site.ai_gateway}}.
+  description: This page is an introduction to {{site.ai_gateway}}.
   products:
     - ai-gateway
     - gateway
@@ -14,14 +14,14 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong {{site.ai_gateway}}"
+      text: "{{site.ai_gateway}}"
       sub_text: Connectivity and governance layer for modern AI-native applications built on top of {{site.base_gateway}}
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Introducing Kong {{site.ai_gateway}}"
+                text: "Introducing {{site.ai_gateway}}"
               blocks:
                 - type: text
                   text: |
@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    Kong {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, Kong {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
 
 
       - blocks:
@@ -162,7 +162,7 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[Kong {{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for Kong {{site.ai_gateway}}."
+                    - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
                     - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
       - header:
@@ -174,8 +174,8 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your Kong {{site.ai_gateway}} resources in one place."
-                    - "[decK](/deck/): Manage Kong {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
+                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}."
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services."
                     - "[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/): Manage on-prem {{site.base_gateway}} entities via an API."
@@ -359,8 +359,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Proxy AI CLI tools through Kong {{site.ai_gateway}}
-            description: Configure Kong {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers
+            title: Proxy AI CLI tools through {{site.ai_gateway}}
+            description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers
             icon: /assets/icons/terminal.svg
             cta:
               url: /ai-gateway/ai-clis/
@@ -426,7 +426,7 @@ rows:
                 - type: text
                   text: |
                     <p/><p/>
-                    Kong {{site.ai_gateway}} helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
+                    {{site.ai_gateway}} helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
 
                     - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
                     - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
@@ -471,7 +471,7 @@ rows:
                   text: |
                     AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
                     Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
-                    Kong {{site.ai_gateway}} supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
+                    {{site.ai_gateway}} supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
   - columns:
       - blocks:
         - type: plugin
@@ -492,7 +492,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. Kong {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
+                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
   - column_count: 3
     columns:
       - blocks:
@@ -542,7 +542,7 @@ rows:
                   text: |
                     {{site.ai_gateway}} allows you to use AI technology to augment other API traffic.
                     One example is routing API responses through an AI language translation prompt before returning it to the client.
-                    Kong {{site.ai_gateway}} provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
+                    {{site.ai_gateway}} provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
                     These plugins can be configured independently of the AI Proxy plugin.
   - columns:
       - blocks:

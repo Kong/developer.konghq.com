@@ -116,7 +116,7 @@ rows:
             config:
               title: {{site.ai_gateway}}
               description: |
-                Kong {{site.ai_gateway}} is a powerful set of AI features built on top of {{ site.base_gateway }},
+                {{site.ai_gateway}} is a powerful set of AI features built on top of {{ site.base_gateway }},
                 designed to help developers and organizations effectively adopt AI quickly and securely.
               icon: /assets/icons/ai.svg
               ctas:

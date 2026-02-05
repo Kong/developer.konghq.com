@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.ai_gateway}} providers"
   content_type: landing_page
-  description: This page is an introduction to the AI providers available in Kong {{site.ai_gateway}}.
+  description: This page is an introduction to the AI providers available in {{site.ai_gateway}}.
   products:
     - ai-gateway
   works_on:

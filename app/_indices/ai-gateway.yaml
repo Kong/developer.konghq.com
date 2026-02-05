@@ -1,5 +1,5 @@
 title: {{site.ai_gateway}} Documentation
-description: Index containing all documentation for Kong {{site.ai_gateway}}.
+description: Index containing all documentation for {{site.ai_gateway}}.
 sections:
   - title: Overview
     items:
@@ -43,13 +43,13 @@ sections:
         description: Access advanced analytics features in {{site.ai_gateway}}.
         url: /observability/
       - title: {{site.ai_gateway}} resource sizing guidelines
-        description: Review Kong's {{site.ai_gateway}} recommended resource allocation sizing guidelines for Kong {{site.ai_gateway}} based on configuration and traffic patterns.
+        description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
-      - title: Proxy AI CLI tools through Kong {{site.ai_gateway}}"
-        description: onfigure Kong {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
+      - title: Proxy AI CLI tools through {{site.ai_gateway}}"
+        description: onfigure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/
       - title: Gen AI OpenTelemetry attributes reference
-        description: Reference for OpenTelemetry span attributes emitted by Kong {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        description: Reference for OpenTelemetry span attributes emitted by {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
         url: /ai-gateway/llm-open-telemetry/
   - title: {{site.ai_gateway}} plugins
     items:
@@ -77,19 +77,19 @@ sections:
     items:
       - path: /mcp/
       - title: Secure MCP traffic
-        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong {{site.ai_gateway}}
+        description: Secure GitHub MCP Server traffic with Kong Gateway and {{site.ai_gateway}}
         url: /mcp/secure-mcp-traffic/
       - title: Govern MCP traffic
-        description: Use Kong {{site.ai_gateway}} to govern GitHub MCP traffic
+        description: Use {{site.ai_gateway}} to govern GitHub MCP traffic
         url: /mcp/govern-mcp-traffic
       - title: Observe MCP traffic
-        description: Observe GitHub MCP traffic with Kong {{site.ai_gateway}}
+        description: Observe GitHub MCP traffic with {{site.ai_gateway}}
         url: /mcp/observe-mcp-traffic
       - title: MCP logs
-        description: Learn about logs available for MCP traffic via Kong {{site.ai_gateway}}
+        description: Learn about logs available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
       - title: MCP traffic metrics
-        description: Learn about metrics available for MCP traffic via Kong {{site.ai_gateway}}
+        description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
   - title: AI load balancing
     items:
