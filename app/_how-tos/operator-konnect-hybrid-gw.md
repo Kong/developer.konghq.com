@@ -19,7 +19,6 @@ products:
 works_on:
   - konnect
 
-entities: []
 search_aliases:
   - kgo gateway
   - kgo hybrid gateway
