@@ -14,7 +14,9 @@ rows:
   - header:
       type: h1
       text: "kongctl"
-      sub_text: Kong's command-line tool for managing and interacting with {{site.konnect_product_name}}
+      sub_text: |
+        Kong's swiss-army knife command line tool for managing and 
+        interacting with {{site.konnect_product_name}}
 
   - header:
     columns:
@@ -32,7 +34,7 @@ rows:
             based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} 
             resource types including Developer Portals, Control Planes, APIs, and more.
 
-            kongctl is one multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
+            kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, review our [tools page](/tools/).
 
       - header:
@@ -69,24 +71,22 @@ rows:
     columns:
       - header:
           type: h2
-          text: "How does kongctl work?"
+          text: "What can kongctl do?"
         blocks:
         - type: text
           config: |
-            kongctl provides multiple interfaces for managing {{site.konnect_short_name}}:
+            kongctl is a multi-purpose tool providing {{site.konnect_short_name}} resource management capabilities
+            as well as other developer focused features.
 
             **Declarative Configuration**: Define your infrastructure in YAML files and use _plan-based_ workflows
             to preview and apply changes. The declarative engine is stateless and calculates differences by querying
             live {{site.konnect_short_name}} resources.
 
-            **Imperative Commands**: Execute ad-hoc operations to get or list resources directly
-            from the command line with human-friendly or machine-readable output formats.
+            **Resource Viewing**: Get or list resources directly
+            from the command line with human-friendly or machine-readable output formats as well as a terminal-based
+            user interface with keyboard navigation.
 
-            **Interactive TUI**: Explore your {{site.konnect_short_name}} resources using a terminal-based user interface
-            with keyboard navigation and helpful features.
-        - type: text
-          config: |
-            kongctl communicates with {{site.konnect_short_name}} via its APIs and supports authentication
+            **Flexible Authorization**: kongctl communicates with {{site.konnect_short_name}} via its APIs and supports authentication
             through browser-based device flow or personal access tokens.
 
       - header:
@@ -98,11 +98,11 @@ rows:
               blocks:
               - type: unordered_list
                 items:
-                    - "**[decK](/deck/)**: Manage {{site.base_gateway}} configuration with declarative, file-based automation"
+                    - "**[decK](/deck/)**: Manage _{{site.base_gateway}}_ configuration with declarative, file-based automation"
                     - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments"
                     - "**[KIC](/kubernetes-ingress-controller/)**: Manage ingress traffic and routing rules for Kubernetes services"
+                    - "**[APIs](/api/)**: Manage {{site.konnect_short_name}} programatically via direct API calls"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
-                    - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API"
 
   - columns:
     - blocks:
@@ -134,7 +134,7 @@ rows:
             align: end
 
   - header:
-      text: "What can kongctl do?"
+      text: "Example commands"
       type: h2
     columns:
       - blocks:
@@ -142,10 +142,15 @@ rows:
           config:
               border: true
               type: h2
-              headers:
-                - Commonly used kongctl resource commands
-
               items:
+                - text: |
+                    View all kongctl commands and options
+                  action:
+                    type: command
+                    config:
+                      cmd: kongctl
+                      args:
+                        - --help
                 - text: |
                     Authenticate to {{site.konnect_short_name}} with browser-based device flow
                   action:
@@ -179,20 +184,6 @@ rows:
                         - json
 
                 - text: |
-                    Filter resources using built-in jq expressions
-                  action:
-                    type: command
-                    config:
-                      cmd: kongctl
-                      args:
-                        - get
-                        - apis
-                        - --output
-                        - json
-                        - --jq
-                        - '.[] | select(.slug == "/getting-started")'
-
-                - text: |
                     Call {{site.konnect_short_name}} APIs directly using current authentication
                   action:
                     type: command
@@ -212,34 +203,7 @@ rows:
                         - view
 
                 - text: |
-                    Interact with Kai AI assistant
-                  action:
-                    type: command
-                    config:
-                      cmd: kongctl
-                      args:
-                        - kai
-                        - --ask
-                        - "What is the status of my control planes?"
-
-  - columns:
-    - blocks:
-       - type: text
-         config: |
-          [View all kongctl commands and options &rarr;](/index/kongctl/)
-
-  - columns:
-      - blocks:
-        - type: x_with_y
-          config:
-              border: true
-              type: h2
-              headers:
-                - Commonly used kongctl declarative commands
-
-              items:
-                - text: |
-                    Generate a plan to preview changes without applying them
+                    Generate a plan from input configuration without invoking changes
                   action:
                     type: command
                     config:
@@ -252,7 +216,7 @@ rows:
                         - plan.json
 
                 - text: |
-                    Apply changes from configuration files (create and update only)
+                    Apply (create and update only) changes from input configuration
                   action:
                     type: command
                     config:
@@ -265,7 +229,7 @@ rows:
                         - my-apis.yaml
 
                 - text: |
-                    Sync to match exact state (includes deletions)
+                    Sync (create, update and delete) changes from input configuration
                   action:
                     type: command
                     config:
@@ -276,7 +240,7 @@ rows:
                         - konnect.yaml
 
                 - text: |
-                    Preview changes from a generated plan
+                    Preview proposed changes from a generated plan
                   action:
                     type: command
                     config:
@@ -285,34 +249,6 @@ rows:
                         - diff
                         - --plan
                         - plan.json
-
-                - text: |
-                    Dump current {{site.konnect_short_name}} state to YAML
-                  action:
-                    type: command
-                    config:
-                      cmd: kongctl
-                      args:
-                        - dump
-                        - --output-file
-                        - current-state.yaml
-
-                - text: |
-                    Adopt existing resources for declarative management
-                  action:
-                    type: command
-                    config:
-                      cmd: kongctl
-                      args:
-                        - adopt
-                        - -f
-                        - existing-resources.yaml
-
-  - columns:
-    - blocks:
-       - type: text
-         config: |
-          [Learn more about declarative configuration &rarr;](/kongctl/declarative/)
 
   - header:
       text: "Frequently asked questions"
@@ -323,26 +259,32 @@ rows:
           config:
             - q: I use decK to configure {{site.base_gateway}}, why should I care about kongctl?
               a: |
-                decK and kongctl serve different purposes and are complementary tools:
+                Currently decK and kongctl are complementary but serve different purposes:
 
-                * decK is designed for managing {{site.base_gateway}} configuration (services, routes, plugins, consumers) both on-premises and in {{site.konnect_short_name}}.
-                * kongctl is designed for managing {{site.konnect_short_name}} platform resources (APIs, portals, application auth strategies, control planes).
+                * decK was designed to manage {{site.base_gateway}} configuration (services, routes, plugins, consumers), both on-premises and in {{site.konnect_short_name}}.
+                * kongctl is designed for managing {{site.konnect_short_name}} _API platform_ resources (APIs, portals, application auth strategies, control planes)
 
-                If you're using {{site.konnect_short_name}}, you might use both tools: kongctl for platform-level resources and decK for gateway configuration within control planes.
+                decK works with {{site.konnect_short_name}} but targets a single control plane. kongctl operates at a higher level and allows you to manage 
+                the full set of API Platform resources.
+
+                If you're using {{site.konnect_short_name}} and {{site.base_gateway}}, you might use both tools: kongctl for platform-level resources and 
+                decK for gateway configuration within control planes. 
+
+                kongctl supports integrating the tools together by coordinating execution of deck commands in proper sequence of kongctl resource management. See [kongctl and deck](/kongctl/kongctl-and-deck) for details on using the tools together.
+
             - q: Can I run multiple kongctl processes at the same time?
               a: |
                 Yes, but with caution. Since kongctl's declarative engine is stateless and calculates changes by querying live {{site.konnect_short_name}} resources, concurrent processes operating on the same resources could conflict. Use namespace isolation to separate resources managed by different processes or teams.
             - q: Is kongctl production-ready?
               a: |
-                kongctl is currently in Tech Preview. This means it's provided without warranty and interfaces may change. It's designed for evaluation and testing, with production-readiness coming in future releases. Check the [GitHub releases page](https://github.com/kong/kongctl/releases/) for current status.
+                kongctl is currently in Beta release stage. This means it's provided without warranty and interfaces may change. It's designed for evaluation and testing, with production-readiness coming in future releases. 
+                Check the [GitHub releases page](https://github.com/kong/kongctl/releases/) for current status.
             - q: What resources can kongctl manage declaratively?
               a: |
-                kongctl currently supports declarative management of:
+                The list of {{site.konnect_short_name}} resources supported is growing. The current list includes (but not limited to):
                 * **APIs**: Including versions, publications, implementations, and documents
-                * **Portals**: Including pages, snippets, customizations, and custom domains
-                * **Application Auth Strategies**: For application authentication configuration
-                * **Control Planes**: For {{site.base_gateway}} control plane management
-                * **Gateway Services**: For gateway service configuration
+                * **Portals**: Including pages, teams, snippets, customizations, authenticiation strategies, and custom domains
+                * **Control Planes**: For {{site.base_gateway}} control plane management _and_ decK integration
 
                 Support for additional resource types is planned for future releases.
             - q: How does kongctl authentication work?
@@ -352,7 +294,7 @@ rows:
                 * **Device Flow (Recommended)**: Run `kongctl login` to authenticate via your browser. Tokens are stored locally and refreshed automatically.
                 * **Personal Access Token**: Use the `--pat` flag or `KONGCTL_DEFAULT_KONNECT_PAT` environment variable for automation scenarios like CI/CD pipelines.
 
-                Authentication credentials are stored in `$XDG_CONFIG_HOME/kongctl/config.yaml` (typically `~/.config/kongctl/config.yaml`).
+                Configuration and device flow authentication credentials are stored in `$XDG_CONFIG_HOME/kongctl/` (typically `~/.config/kongctl/`).
             - q: Can I use kongctl in CI/CD pipelines?
               a: |
                 Yes. kongctl is designed for CI/CD integration:
@@ -363,19 +305,14 @@ rows:
                 * Use namespace isolation to separate environments
                 * Implement approval gates for production deployments
 
-                See the [CI/CD integration guide](/kongctl/ci-cd/) for detailed examples.
-            - q: How is kongctl different from the {{site.konnect_short_name}} Control Plane Config API?
+            - q: How is kongctl different from the {{site.konnect_short_name}} APIs?
               a: |
-                The Control Plane Config API is a REST API for managing {{site.base_gateway}} entities within {{site.konnect_short_name}} control planes.
+                The {{site.konnect_short_name}} REST APIs are imperative style direct APIs requiring you to coordinate your changes appropriately. 
 
                 kongctl provides:
                 * A command-line interface with human-friendly output formats
                 * Declarative configuration with plan-based workflows
                 * Interactive terminal UI for resource exploration
-                * Kai AI assistant integration
-                * Support for managing platform resources beyond gateway entities
-
-                You can use both: the Config API for programmatic integration and kongctl for CLI-based workflows and automation.
 
   - header:
       type: h2

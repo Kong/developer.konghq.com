@@ -182,11 +182,11 @@ kongctl apply -f config/
 
 | Command | Description | Deletions? |
 |---------|-------------|------------|
-| [`plan`](/kongctl/commands/plan/) | Preview changes without applying | Shows only |
-| [`apply`](/kongctl/commands/apply/) | Create and update resources | No |
-| [`sync`](/kongctl/commands/sync/) | Match exact state | Yes ⚠️ |
-| [`diff`](/kongctl/commands/diff/) | Show differences | Shows only |
-| [`dump`](/kongctl/commands/dump/) | Export current state | N/A |
+| `plan` | Preview changes without applying | Shows only |
+| `apply` | Create and update resources | No |
+| `sync` | Match exact state | Yes ⚠️ |
+| `diff` | Show differences | Shows only |
+| `dump` | Export current state | N/A |
 
 ## Supported resources
 
@@ -372,6 +372,5 @@ spec:
 ## Next steps
 
 * Learn about [CI/CD integration](/kongctl/declarative/ci-cd/)
-* Explore [command reference](/kongctl/commands/)
 * Review [supported resources](/kongctl/reference/supported-resources/)
 * See [example configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative)

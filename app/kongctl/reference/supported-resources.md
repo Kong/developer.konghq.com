@@ -316,6 +316,5 @@ kongctl delete control-plane production-cp
 ## Related resources
 
 * [Declarative configuration guide](/kongctl/declarative/)
-* [Command reference](/kongctl/commands/)
 * [Get started with kongctl](/kongctl/get-started/)
 * [{{site.konnect_short_name}} API reference](/konnect-api/)

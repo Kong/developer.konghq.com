@@ -23,7 +23,6 @@ Reference documentation for kongctl.
 
 ## Additional resources
 
-* [Commands reference](/kongctl/commands/) - Command-line reference
 * [Declarative configuration](/kongctl/declarative/) - Infrastructure as code guide
 * [Authentication](/kongctl/authentication/) - Authentication methods
 * [Troubleshooting](/kongctl/troubleshooting/) - Common issues and solutions

@@ -9,8 +9,6 @@ breadcrumbs:
 related_resources:
   - text: Declarative configuration guide
     url: /kongctl/declarative/
-  - text: kongctl commands
-    url: /kongctl/commands/
 
 products:
   - konnect
@@ -245,7 +243,6 @@ You've now learned the basics of kongctl! Here's what to explore next:
 
 * [Declarative configuration guide](/kongctl/declarative/) - Learn infrastructure as code in depth
 * [CI/CD integration](/kongctl/declarative/ci-cd/) - Automate deployments with GitHub Actions, GitLab CI, and more
-* [Command reference](/kongctl/commands/) - Explore all available commands
 * [Authentication guide](/kongctl/authentication/) - Set up personal access tokens for automation
 
 Congratulations! You just went from zero to managing {{site.konnect_short_name}} resources with kongctl.

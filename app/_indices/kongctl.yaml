@@ -21,23 +21,10 @@ sections:
         description: Use mise package manager
         url: /kongctl/?tab=mise#install-kongctl
       - path: /kongctl/authentication/
-  - title: Commands
-    items:
-      - path: /kongctl/commands/
-      - path: /kongctl/commands/login/
-      - path: /kongctl/commands/get/
-      - path: /kongctl/commands/view/
-      - path: /kongctl/commands/api/
   - title: Declarative Configuration
     items:
       - path: /kongctl/declarative/
       - path: /kongctl/declarative/ci-cd/
-      - path: /kongctl/commands/plan/
-      - path: /kongctl/commands/apply/
-      - path: /kongctl/commands/sync/
-      - path: /kongctl/commands/diff/
-      - path: /kongctl/commands/dump/
-      - path: /kongctl/commands/adopt/
   - title: Reference
     items:
       - path: /kongctl/reference/**/*

@@ -28,16 +28,12 @@ jobs:
           private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
           owner: Kong
 
-      - name: Setup kongctl
-        uses: Kong/setup-kongctl@v1
-
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: Extract help and fetch versions
+      - name: Fetch versions
         run: |
           cd tools/kongctl-versions
           npm ci
-          node extract-help.js
           node fetch-versions.js
 
       - name: Create pull request

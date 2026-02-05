@@ -14,8 +14,6 @@ tags:
 breadcrumbs:
   - /kongctl/
 related_resources:
-  - text: kongctl login command
-    url: /kongctl/commands/login/
   - text: Environment variables reference
     url: /kongctl/reference/environment-variables/
 ---
@@ -300,6 +298,5 @@ Edit `~/.config/kongctl/config.yaml` and change `currentProfile`.
 
 ## Related resources
 
-* [kongctl login command](/kongctl/commands/login/)
 * [CI/CD integration guide](/kongctl/declarative/ci-cd/)
 * [Environment variables reference](/kongctl/reference/environment-variables/)
