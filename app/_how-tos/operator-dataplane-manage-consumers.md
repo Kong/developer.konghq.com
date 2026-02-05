@@ -35,7 +35,6 @@ related_resources:
     url: /plugins/key-auth/
 ---
 
-{: data-deployment-topology="on-prem"}
 ## Create the echo Service
 
 Run the following command to create a sample echo Service:
