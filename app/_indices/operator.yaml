@@ -109,7 +109,8 @@ groups:
           - path: /operator/konnect/crd/cloud-gateways/**/*
       - title: How-To
         items:
-          - path: /operator/konnect/how-to/resource-references/
+          - path: /operator/konnect/how-to/auth-cross-namespace-reference/
+          - path: /operator/konnect/how-to/secret-cross-namespace-reference/
           - path: /operator/konnect/how-to/static-naming/
       - title: Troubleshooting
         items:
