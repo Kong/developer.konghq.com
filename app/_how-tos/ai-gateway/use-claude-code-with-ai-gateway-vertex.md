@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through Kong AI Gateway and Vertex AI
+permalink: /how-to/use-claude-code-with-ai-gateway-vertex/
 content_type: how_to
 
 related_resources:

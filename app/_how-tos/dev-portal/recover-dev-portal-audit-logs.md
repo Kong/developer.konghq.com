@@ -1,5 +1,6 @@
 ---
 title: "Recover Dev Portal audit logs"
+permalink: /how-to/recover-dev-portal-audit-logs/
 description: "Learn how to recover {{site.konnect_short_name}} Dev Portal audit logs using replay jobs."
 content_type: how_to
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: Store Keyring data in a HashiCorp Vault
+permalink: /how-to/store-keyring-in-hashicorp-vault/
 content_type: how_to
 related_resources:
   - text: Keyring

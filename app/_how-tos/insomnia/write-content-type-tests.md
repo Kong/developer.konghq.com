@@ -1,5 +1,6 @@
 ---
 title: Write tests for content types in Insomnia
+permalink: /how-to/write-content-type-tests/
 content_type: how_to
 description: Learn how to write content type tests in Insomnia.
 related_resources:

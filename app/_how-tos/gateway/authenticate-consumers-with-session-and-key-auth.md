@@ -1,5 +1,6 @@
 ---
 title: Authenticate Consumers with the Key Auth and Sessions plugins
+permalink: /how-to/authenticate-consumers-with-session-and-key-auth/
 content_type: how_to
 description: Authenticate Consumers with key authentication and session cookies.
 related_resources:

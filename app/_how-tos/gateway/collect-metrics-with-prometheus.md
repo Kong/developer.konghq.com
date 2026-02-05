@@ -1,5 +1,6 @@
 ---
 title: Collect {{site.base_gateway}} metrics with the Prometheus plugin
+permalink: /how-to/collect-metrics-with-prometheus/
 content_type: how_to
 description: "Learn how to collect metrics from {{site.base_gateway}} with the Prometheus plugin."
 products:

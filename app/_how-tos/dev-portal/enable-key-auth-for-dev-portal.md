@@ -1,5 +1,6 @@
 ---
 title: Enable key authentication for Dev Portal apps
+permalink: /how-to/enable-key-auth-for-dev-portal/
 description: Learn how to allow Dev Portal developers to authenticate with apps using key auth.
 content_type: how_to
 

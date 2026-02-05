@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with refresh token
+permalink: /how-to/configure-oidc-with-refresh-token/
 content_type: how_to
 
 related_resources:

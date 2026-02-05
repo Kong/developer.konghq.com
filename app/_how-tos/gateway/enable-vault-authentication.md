@@ -1,5 +1,6 @@
 ---
 title: Enable authentication with Vault in {{site.base_gateway}}
+permalink: /how-to/enable-vault-authentication/
 description: Use the Vault Authentication plugin to secure access to your {{site.base_gateway}} resources.
 content_type: how_to
 related_resources:

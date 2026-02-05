@@ -1,5 +1,6 @@
 ---
 title: Create a cloud-hosted mock server in Insomnia
+permalink: /how-to/create-a-cloud-hosted-mock-server/
 
 content_type: how_to
 

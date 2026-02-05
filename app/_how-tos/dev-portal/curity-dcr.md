@@ -1,5 +1,6 @@
 ---
 title: Automatically create and manage Dev Portal applications in Curity with Dynamic Client Registration
+permalink: /how-to/curity-dcr/
 description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Curity.
 content_type: how_to
 

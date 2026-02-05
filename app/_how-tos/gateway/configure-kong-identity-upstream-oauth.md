@@ -1,5 +1,6 @@
 ---
 title: Configure the Upstream OAuth plugin with Kong Identity
+permalink: /how-to/configure-kong-identity-upstream-oauth/
 content_type: how_to
 breadcrumbs:
   - /kong-identity/

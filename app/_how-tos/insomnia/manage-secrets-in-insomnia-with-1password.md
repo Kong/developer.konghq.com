@@ -1,5 +1,6 @@
 ---
 title: Manage secrets in Insomnia with 1Password
+permalink: /how-to/manage-secrets-in-insomnia-with-1password/
 content_type: how_to
 
 description: Use the Insomnia 1Password plugin to retrieve secrets from a 1Password vault and use them in your requests.

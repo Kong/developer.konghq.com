@@ -1,5 +1,6 @@
 ---
 title: Route Claude CLI traffic through Kong AI Gateway and HuggingFace
+permalink: /how-to/use-claude-code-with-ai-gateway-huggingface/
 content_type: how_to
 
 related_resources:

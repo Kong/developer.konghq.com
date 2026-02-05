@@ -1,5 +1,6 @@
 ---
 title: Route requests to different Upstreams based on headers
+permalink: /how-to/route-requests-to-different-upstreams-based-on-headers/
 content_type: how_to
 
 description: Use the Route by Header plugin to route requests based on a header value.

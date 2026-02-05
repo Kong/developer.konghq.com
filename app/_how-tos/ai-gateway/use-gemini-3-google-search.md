@@ -1,5 +1,6 @@
 ---
 title: Use Gemini's googleSearch tool with AI Proxy Advanced in Kong AI Gateway
+permalink: /how-to/use-gemini-3-google-search/
 content_type: how_to
 related_resources:
   - text: AI Gateway

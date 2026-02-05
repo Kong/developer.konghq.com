@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with Consumer authorization
+permalink: /how-to/configure-oidc-with-consumers/
 content_type: how_to
 
 related_resources:

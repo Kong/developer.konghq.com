@@ -1,5 +1,6 @@
 ---
 title: Send OpenTelemetry data to Grafana Cloud
+permalink: /how-to/send-otel-data-to-grafana-cloud/
 content_type: how_to
 description: Use the OpenTelemetry plugin to send metrics, logs, and traces to Grafana Cloud and visualize them in a dashboard.
 

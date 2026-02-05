@@ -1,5 +1,6 @@
 ---
 title: Visualize AI Gateway metrics 
+permalink: /how-to/visualize-ai-gateway-metrics-with-kibana/
 content_type: how_to
 
 description: Use a sample Elasticsearch, Logstash, and Kibana stack to visualize data from the AI Proxy plugin.

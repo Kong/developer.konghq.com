@@ -1,5 +1,6 @@
 ---
 title: 'Customize a 404 error message'
+permalink: /how-to/transform-a-404-response-message/
 content_type: how_to
 
 

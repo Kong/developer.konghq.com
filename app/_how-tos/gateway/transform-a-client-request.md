@@ -1,5 +1,6 @@
 ---
 title: Transform a client request in {{site.base_gateway}}
+permalink: /how-to/transform-a-client-request/
 content_type: how_to
 
 description: Use the Request Transformer Advanced plugin to transform a client request before proxying it.

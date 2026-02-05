@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with introspection
+permalink: /how-to/configure-oidc-with-introspection/
 content_type: how_to
 
 related_resources:

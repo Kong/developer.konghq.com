@@ -1,5 +1,6 @@
 ---
 title: Use the AI AWS Guardrails plugin
+permalink: /how-to/use-ai-aws-guardrails-plugin/
 content_type: how_to
 
 related_resources:

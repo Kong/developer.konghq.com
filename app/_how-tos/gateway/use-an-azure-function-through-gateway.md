@@ -1,5 +1,6 @@
 ---
 title: Use an Azure Function through {{site.base_gateway}}
+permalink: /how-to/use-an-azure-function-through-gateway/
 content_type: how_to
 description: Learn how to configure the Azure Functions plugin to invoke an Azure Function in a Route.
 products:

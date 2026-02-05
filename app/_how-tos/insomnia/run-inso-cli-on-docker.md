@@ -1,5 +1,6 @@
 ---
 title: Run Inso CLI on Docker
+permalink: /how-to/run-inso-cli-on-docker/
 
 description: "Inso CLI is available as a Docker image."
 

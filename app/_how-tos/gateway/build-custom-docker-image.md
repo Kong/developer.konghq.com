@@ -1,5 +1,6 @@
 ---
 title: Build a custom Docker image
+permalink: /how-to/build-custom-docker-image/
 description: "Learn how to build a custom Docker image"
 
 products:

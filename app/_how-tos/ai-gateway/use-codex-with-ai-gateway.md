@@ -1,5 +1,6 @@
 ---
 title: Route OpenAI Codex CLI traffic through Kong AI Gateway
+permalink: /how-to/use-codex-with-ai-gateway/
 content_type: how_to
 related_resources:
   - text: AI Gateway

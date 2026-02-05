@@ -1,5 +1,6 @@
 ---
 title: Import and map Traceable resources in Catalog
+permalink: /how-to/install-and-map-traceable-resources/
 content_type: how_to
 description: Learn how to connect Traceable services to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

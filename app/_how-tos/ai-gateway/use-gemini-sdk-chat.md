@@ -1,5 +1,6 @@
 ---
 title: Use Google Generative AI SDK for Gemini AI service chats with Kong AI Gateway
+permalink: /how-to/use-gemini-sdk-chat/
 content_type: how_to
 related_resources:
   - text: AI Gateway

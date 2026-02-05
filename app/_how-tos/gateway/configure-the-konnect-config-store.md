@@ -1,5 +1,6 @@
 ---
 title: Configure the {{site.konnect_short_name}} Config Store vault
+permalink: /how-to/configure-the-konnect-config-store/
 description: Learn how to use the {{site.konnect_short_name}} Config Store vault.
 content_type: how_to
 related_resources:

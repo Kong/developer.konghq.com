@@ -1,5 +1,6 @@
 ---
 title: Use Insomnia MCP clients to test aggregated MCP tools
+permalink: /how-to/use-insomnia-mcp-clients-to-test-aggregated-mcp-tools/
 content_type: how_to
 description: Learn how to use Insomnia 12.1 MCP clients to test MCP tools exposed by AI MCP Proxy in listener mode after they have been aggregated from multiple upstream APIs.
 

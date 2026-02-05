@@ -1,5 +1,6 @@
 ---
 title: Configure Okta OpenID Connect SSO in Insomnia
+permalink: /how-to/okta-oidc-sso-insomnia/
 description: Learn how to secure Insomnia by setting up OIDC single sign-on (SSO) with Okta.
 content_type: how_to
 

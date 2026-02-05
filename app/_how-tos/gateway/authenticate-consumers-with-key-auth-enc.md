@@ -1,5 +1,6 @@
 ---
 title: Enable key authentication on a Gateway Service with {{site.base_gateway}}
+permalink: /how-to/authenticate-consumers-with-key-auth-enc/
 content_type: how_to
 description: Secure a Gateway Service with the Key Auth Encrypted plugin.
 related_resources:

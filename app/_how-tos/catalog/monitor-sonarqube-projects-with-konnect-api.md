@@ -1,5 +1,6 @@
 ---
 title: Monitor SonarQube projects in Catalog with the Konnect API
+permalink: /how-to/monitor-sonarqube-projects-with-konnect-api/
 content_type: how_to
 description: Learn how to connect a SonarQube project to your {{site.konnect_catalog}} service in {{site.konnect_short_name}} using the API.
 products:

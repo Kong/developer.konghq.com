@@ -1,5 +1,6 @@
 ---
 title: Authenticate Consumers with basic authentication
+permalink: /how-to/authenticate-consumers-with-basic-authentication/
 content_type: how_to
 related_resources:
   - text: Authentication

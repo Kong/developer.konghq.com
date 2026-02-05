@@ -1,5 +1,6 @@
 ---
 title: Create an Event Hook that can run custom code with {{site.base_gateway}}
+permalink: /how-to/create-a-lambda-event-hook-with-kong-gateway/
 content_type: how_to
 
 description: Execute custom Lua code on an event by configuring an Event Hook entity with the lambda handler, 

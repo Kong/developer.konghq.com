@@ -1,5 +1,6 @@
 ---
 title: Enable RBAC with the Admin API
+permalink: /how-to/enable-rbac-with-admin-api/
 content_type: how_to
 description: Learn how to enable Role-Based Access Control for {{site.base_gateway}} using the Admin API.
 products:

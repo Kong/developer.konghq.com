@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with Consumer Group authorization
+permalink: /how-to/configure-oidc-with-consumer-groups/
 content_type: how_to
 
 related_resources:

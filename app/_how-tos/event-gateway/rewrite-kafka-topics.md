@@ -35,7 +35,7 @@ related_resources:
   - text: Event Gateway
     url: /event-gateway/
 
-published: false 
+published: false
 # placeholder; remove when how-to is written
 ---
 To do

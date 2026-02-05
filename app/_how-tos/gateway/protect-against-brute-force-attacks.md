@@ -1,5 +1,6 @@
 ---
 title: Protect against brute force attacks with basic authentication
+permalink: /how-to/protect-against-brute-force-attacks/
 content_type: how_to
 related_resources:
   - text: Authentication

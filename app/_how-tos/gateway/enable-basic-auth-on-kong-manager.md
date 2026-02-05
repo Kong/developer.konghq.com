@@ -1,5 +1,6 @@
 ---
 title: Enable Basic Auth for Kong Manager
+permalink: /how-to/enable-basic-auth-on-kong-manager/
 content_type: how_to
 related_resources:
   - text: Authentication

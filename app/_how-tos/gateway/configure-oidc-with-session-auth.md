@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with session authentication
+permalink: /how-to/configure-oidc-with-session-auth/
 content_type: how_to
 
 related_resources:

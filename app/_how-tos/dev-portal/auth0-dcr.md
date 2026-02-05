@@ -1,5 +1,6 @@
 ---
 title: Automatically create and manage Dev Portal applications in Auth0 with Dynamic Client Registration
+permalink: /how-to/auth0-dcr/
 description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Auth0.
 content_type: how_to
 

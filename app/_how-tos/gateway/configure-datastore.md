@@ -1,5 +1,6 @@
 ---
 title: Configure the {{site.base_gateway}} datastore on Linux
+permalink: /how-to/configure-datastore/
 content_type: how_to
 products:
     - gateway

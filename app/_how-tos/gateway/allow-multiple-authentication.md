@@ -1,5 +1,6 @@
 ---
 title: Allow clients to choose their authentication methods and prevent unauthorized access
+permalink: /how-to/allow-multiple-authentication/
 content_type: how_to
 related_resources:
   - text: Authentication

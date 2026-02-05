@@ -1,5 +1,6 @@
 ---
 title: Validate incoming JSON request bodies with JSON Threat Protection
+permalink: /how-to/validate-incoming-json-request-bodies/
 description: Use the JSON Threat Protection plugin to enforce a JSON threat protection policy. 
 content_type: how_to
 related_resources:

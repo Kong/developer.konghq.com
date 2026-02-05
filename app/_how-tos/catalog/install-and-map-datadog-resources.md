@@ -1,5 +1,6 @@
 ---
 title: Install and map Datadog resources in Catalog
+permalink: /how-to/install-and-map-datadog-resources/
 content_type: how_to
 description: Learn how to connect Datadog monitors and dashboards to your {{site.konnect_catalog}} service in {{site.konnect_short_name}}.
 products:

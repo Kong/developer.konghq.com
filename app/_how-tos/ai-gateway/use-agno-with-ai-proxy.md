@@ -1,5 +1,6 @@
 ---
 title: Use Agno with AI Proxy in Kong AI Gateway
+permalink: /how-to/use-agno-with-ai-proxy/
 content_type: how_to
 
 description: Connect Agno’s research agents to Kong AI Gateway with no code changes, enabling OpenAI-compatible inference through a proxy.

@@ -1,5 +1,6 @@
 ---
 title: Manage analytics dashboards with Terraform
+permalink: /how-to/automate-dashboard-terraform/
 description: Learn how to manage a dashboard in {{site.konnect_short_name}} Analytics with Terraform
 content_type: how_to
 automated_tests: false

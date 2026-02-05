@@ -1,5 +1,6 @@
 ---
 title: Configure SCIM for Insomnia with Okta
+permalink: /how-to/configure-scim-for-insomnia-with-okta/
 description: Learn how to set up SCIM to manage Insomnia users and teams with Okta.
 content_type: how_to
 automated_tests: false

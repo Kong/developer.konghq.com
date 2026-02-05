@@ -1,5 +1,6 @@
 ---
 title: Configure an Event Hook to log events with {{site.base_gateway}}
+permalink: /how-to/create-a-log-event-hook-with-kong-gateway/
 content_type: how_to
 
 description: Configure an Event Hook to write to the log file every time a CRUD event happens on the Consumer entity.

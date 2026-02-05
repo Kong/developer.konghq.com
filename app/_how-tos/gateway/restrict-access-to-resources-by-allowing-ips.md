@@ -1,5 +1,6 @@
 ---
 title: Restrict access to {{site.base_gateway}} resources by allowing specific IPs
+permalink: /how-to/restrict-access-to-resources-by-allowing-ips/
 content_type: how_to
 
 products:

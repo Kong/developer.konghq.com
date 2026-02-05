@@ -1,5 +1,6 @@
 ---
 title: Connect Azure DevOps repositories to Catalog with the {{site.konnect_short_name}} UI
+permalink: /how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/
 content_type: how_to
 description: Learn how to connect Azure DevOps repositories to your {{site.konnect_catalog}} services in {{site.konnect_short_name}} using the UI.
 products:

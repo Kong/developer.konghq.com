@@ -1,5 +1,6 @@
 ---
 title: "Package APIs with Dev Portal"
+permalink: /how-to/package-apis-with-dev-portal/
 description: "Learn how to compose existing APIs in Dev Portal into API packages."
 content_type: how_to
 related_resources:

@@ -1,5 +1,6 @@
 ---
 title: "Collect Dev Portal audit logs"
+permalink: /how-to/collect-dev-portal-audit-logs/
 description: "Learn how to configure your SIEM provider to collect {{site.konnect_short_name}} Dev Portal logs and configure a Dev Portal audit log webhook."
 content_type: how_to
 related_resources:

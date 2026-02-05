@@ -1,5 +1,6 @@
 ---
 title: Set up Dynatrace with OpenTelemetry
+permalink: /how-to/set-up-dynatrace-with-otel/
 content_type: how_to
 related_resources:
   - text: Kong Premium Partners

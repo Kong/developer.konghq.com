@@ -1,5 +1,6 @@
 ---
 title: Generate a collection from a design document
+permalink: /how-to/generate-a-collection-from-a-design-document/
 content_type: how_to
 description: Learn how to generate a request collection from an existing design document.
 products:

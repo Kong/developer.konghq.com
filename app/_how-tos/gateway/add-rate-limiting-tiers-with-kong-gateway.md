@@ -1,5 +1,6 @@
 ---
 title: Create rate limiting tiers with {{site.base_gateway}}
+permalink: /how-to/add-rate-limiting-tiers-with-kong-gateway/
 content_type: how_to
 related_resources:
   - text: Rate Limiting

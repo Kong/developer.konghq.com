@@ -1,5 +1,6 @@
 ---
 title: Store and rotate Mistral API keys as secrets in Google Cloud
+permalink: /how-to/rotate-secrets-in-google-cloud-secret/
 content_type: how_to
 related_resources:
   - text: Configure Google Cloud Secret as a vault backend

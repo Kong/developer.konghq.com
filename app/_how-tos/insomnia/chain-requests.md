@@ -1,5 +1,6 @@
 ---
 title: Chain requests in Insomnia
+permalink: /how-to/chain-requests/
 content_type: how_to
 
 description: Reuse content from a response in another request through Insomnia.

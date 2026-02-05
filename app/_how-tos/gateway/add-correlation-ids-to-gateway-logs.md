@@ -1,5 +1,6 @@
 ---
 title: Add Correlation IDs to {{site.base_gateway}} logs
+permalink: /how-to/add-correlation-ids-to-gateway-logs/
 content_type: how_to
 description: Learn how to add correlation IDs to logs with the Correlation ID plugin.
 tools:

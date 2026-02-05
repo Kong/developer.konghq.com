@@ -1,5 +1,6 @@
 ---
 title: Collect metrics, logs, and traces with the OpenTelemetry plugin
+permalink: /how-to/collect-metrics-logs-and-traces-with-opentelemetry/
 content_type: how_to
 
 description: Use the OpenTelemetry plugin to send {{site.base_gateway}} metrics, logs, and traces to OpenTelemetry Collector.

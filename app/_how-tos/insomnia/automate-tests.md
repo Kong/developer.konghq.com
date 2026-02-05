@@ -1,5 +1,6 @@
 ---
 title: Automate tests in Insomnia
+permalink: /how-to/automate-tests/
 content_type: how_to
 
 description: Automate tests written in Insomnia using the Inso CLI.

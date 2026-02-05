@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with claims-based authorization
+permalink: /how-to/configure-oidc-with-claims-based-auth/
 content_type: how_to
 
 related_resources:

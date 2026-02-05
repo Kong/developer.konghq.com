@@ -1,5 +1,6 @@
 ---
 title: Import content from Postman to multiple Insomnia projects
+permalink: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
 
 content_type: how_to
 description: Use the Postman Exporter tool to export, organize, and import your Postman content to multiple Insomnia projects.

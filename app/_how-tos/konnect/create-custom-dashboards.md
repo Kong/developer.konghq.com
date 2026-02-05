@@ -1,5 +1,6 @@
 ---
 title: Create a dashboard from a template
+permalink: /how-to/create-custom-dashboards/
 description: Learn how to create a dashboard from a template in {{site.konnect_short_name}} Analytics.
 content_type: how_to
 automated_tests: false

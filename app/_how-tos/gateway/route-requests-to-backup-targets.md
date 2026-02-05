@@ -1,5 +1,6 @@
 ---
 title: Route requests to backup Targets during failures
+permalink: /how-to/route-requests-to-backup-targets/
 content_type: how_to
 
 description: Use the Route by Header plugin to route requests based on a header value.

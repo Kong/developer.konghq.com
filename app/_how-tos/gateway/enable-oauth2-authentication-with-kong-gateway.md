@@ -1,5 +1,6 @@
 ---
 title: Enable OAuth 2.0 authentication with {{site.base_gateway}}
+permalink: /how-to/enable-oauth2-authentication-with-kong-gateway/
 content_type: how_to
 
 description: Create an OAuth 2.0 Client Credentials flow for a Gateway Service.

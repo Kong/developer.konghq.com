@@ -1,5 +1,6 @@
 ---
 title: Write tests for HTTP status codes in Insomnia
+permalink: /how-to/write-http-status-tests/
 content_type: how_to
 description: Learn how to write HTTP status code tests in Insomnia.
 

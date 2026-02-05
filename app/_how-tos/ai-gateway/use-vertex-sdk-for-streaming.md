@@ -1,5 +1,6 @@
 ---
 title: Stream responses from Vertex AI through Kong AI Gateway using Google Generative AI SDK
+permalink: /how-to/use-vertex-sdk-for-streaming/
 content_type: how_to
 related_resources:
   - text: AI Gateway

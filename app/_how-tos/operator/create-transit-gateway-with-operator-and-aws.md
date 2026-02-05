@@ -1,5 +1,6 @@
 ---
 title: Create a Transit Gateway with {{ site.operator_product_name }} and AWS
+permalink: /how-to/create-transit-gateway-with-operator-and-aws/
 description: "Create a KonnectCloudGatewayTransitGateway resource with {{ site.operator_product_name }} and AWS."
 content_type: how_to
 

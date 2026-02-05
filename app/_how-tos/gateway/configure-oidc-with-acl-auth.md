@@ -1,5 +1,6 @@
 ---
 title: Configure OpenID Connect with ACL authorization
+permalink: /how-to/configure-oidc-with-acl-auth/
 content_type: how_to
 
 related_resources:

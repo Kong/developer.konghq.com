@@ -1,5 +1,6 @@
 ---
 title: Use Gemini's imageConfig with AI Proxy in Kong AI Gateway
+permalink: /how-to/use-gemini-3-image-config/
 content_type: how_to
 related_resources:
   - text: AI Gateway

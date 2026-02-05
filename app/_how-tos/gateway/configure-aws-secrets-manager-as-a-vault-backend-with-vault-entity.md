@@ -1,5 +1,6 @@
 ---
 title: Configure AWS Secrets Manager as a vault backend
+permalink: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
 content_type: how_to
 related_resources:
   - text: Secrets management
