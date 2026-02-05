@@ -57,7 +57,7 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
      --set image.tag={{ site.data.operator_latest.release }} \
      --set global.webhooks.options.certManager.enabled=true
    ```
-   {: data-deployment-topology="on-prem"}
+   {: data-deployment-topology="on-prem" }
 
 
    ```bash
@@ -67,7 +67,7 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
      --set global.webhooks.options.certManager.enabled=true \
      --set env.ENABLE_CONTROLLER_KONNECT=true
    ```
-   {: data-deployment-topology="konnect"}
+   {: data-deployment-topology="konnect" }
 
 ## Create a cert-manager issuer
 

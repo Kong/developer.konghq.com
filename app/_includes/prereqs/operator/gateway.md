@@ -1,8 +1,10 @@
 Create the `kong` namespace:
+{: data-deployment-topology="on-prem" }
+
 ```sh
 kubectl create namespace kong
 ```
-{: data-deployment-topology="on-prem"}
+{: data-deployment-topology="on-prem" }
 
 Create the `GatewayConfiguration`, `GatewayClass`, and `Gateway` resources with basic configuration:
 

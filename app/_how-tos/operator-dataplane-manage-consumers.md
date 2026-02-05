@@ -129,7 +129,7 @@ credentials:
 - test-user-apikey
 ' | kubectl apply -f -
 ```
-{: data-deployment-topology="on-prem"}
+{: data-deployment-topology="on-prem" }
 
 ```bash
 echo '
@@ -150,11 +150,11 @@ credentials:
 - test-user-apikey
 ' | kubectl apply -f -
 ```
-{: data-deployment-topology="konnect"}
+{: data-deployment-topology="konnect" }
 
 {:.info}
 > To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
-{: data-deployment-topology="konnect"}
+{: data-deployment-topology="konnect" }
 
 
 ## Validate
