@@ -85,7 +85,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/metering
+                url: /metering-and-billing/metering/?tab=generic-meters#create-a-meter
       - blocks:
           - type: card
             config:
