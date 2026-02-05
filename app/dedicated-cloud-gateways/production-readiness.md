@@ -1,5 +1,5 @@
 ---
-title: "Dedicated Cloud Gateways production readiness checklist"
+title: "Dedicated Cloud Gateways production readiness guide"
 content_type: reference
 layout: reference
 description: "Learn how to verify that your Dedicated Cloud Gateway configuration is secure and production-ready."
@@ -212,7 +212,7 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 ### VNet peering and private DNS configuration
 
 **Action:**
-* Verify the VNet peering status is connected in both Azure and {{site.konnect_short_name}}. <!--how do I see the VNet peering status in the UI?-->
+* Verify the VNet peering status is connected in both Azure and {{site.konnect_short_name}}. 
 * Verify that your [Azure network security group](https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview) and [route table configuration](https://learn.microsoft.com/azure/virtual-network/manage-route-table) on your network side allows traffic to and from the Dedicated Cloud Gateway CIDR. Check for blocked ports or IP ranges.
 * Verify the connectivity is working as expected by sending a request to the upstream. Perform an end-to-end HTTP test to an internal service.
 * Verify the private DNS configuration (for example, [private DNS zones linked to VNet](https://learn.microsoft.com/azure/dns/private-dns-virtual-network-links)) to ensure private DNS is resolvable from your Dedicated Cloud Gateway. Test that the internal Azure hostnames resolve.
