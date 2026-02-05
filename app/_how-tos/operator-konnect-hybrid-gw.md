@@ -26,7 +26,7 @@ search_aliases:
 
 tldr:
   q: How do I configure a Hybrid Gateway in {{site.konnect_short_name}}?
-  a: Fill Konnect related fields in `GatewayConfiguration` for `GatewayClass` that will be used for Hybrid Gateways.
+  a: Create a `GatewayConfiguration` resource that includes your {{site.konnect_short_name}} authentication and data plane options. Then create a `GatewayClass` resource that references the `GatewayConfiguration`, and a `Gateway` resource that references the `GatewayClass`.
 
 prereqs:
   operator:
