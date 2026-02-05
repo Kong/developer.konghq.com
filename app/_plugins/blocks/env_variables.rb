@@ -13,11 +13,11 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
       config = YAML.load(contents)
-      drop = Drops::Validations::Base.make_for(id: 'env-variables', yaml: config)
-
+      drop = Drops::Validations::Base.make_for(id: 'env-variables', yaml: config, format: @format)
       context.stack do
         context['config'] = drop
         Liquid::Template.parse(File.read(drop.template_file)).render(context)
