@@ -25,10 +25,15 @@ related_resources:
     url: /plugins/datakit/
 
 faqs:
-  - q: Why can't I drag call nodes into the response section?
+  - q: I've configured a call node in the response section, why is it throwing an error?
     a: |
-      In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a request. 
-      If you can't add call nodes to the response section, this means that your data planes are running {{site.base_gateway}} 3.12 or earlier. 
+      In {{site.base_gateway}} 3.12 and earlier versions, the `call` node couldn't be executed after proxying a request, and you would see the following error:
+
+      ```
+      invalid dependency (node #1 (CALL) -> node service_response): circular dependency
+      ```
+
+      This means that your data planes are running {{site.base_gateway}} 3.12 or earlier. 
       Upgrade your data planes to 3.13 to use this functionality.
 ---
 
