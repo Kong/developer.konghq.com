@@ -6,7 +6,7 @@ extended_description: |
 
   This example contains the following nodes:
   1. The node `HEADERS` adds a header and clears another header. 
-  2. The node `API` sends the updated request headers to an external API. The node input contains `{ "X-Add-Me": "added" }` only, since `X-Ignoered` was cleared.
+  2. The node `API` sends the updated request headers to an external API. The node input contains `{ "X-Add-Me": "added" }` only, since `X-Ignored` was cleared.
   3. The node `EXIT` sends a response to the client with the API headers and body. As with the API node, the input only contains `{ "X-Add-Me": "added" }`.
   
 title: Clear request headers
