@@ -27,13 +27,6 @@ prereqs:
     konnect:
       auth: true
 
-prereqs:
-  show_works_on: true
-  skip_product: true
-  operator:
-    konnect:
-      auth: true
-
 products:
   - operator
 
