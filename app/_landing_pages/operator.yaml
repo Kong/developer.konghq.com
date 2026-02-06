@@ -19,7 +19,7 @@ rows:
       - blocks:
           - type: text
             config: |
-              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs, {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
+              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
               in a declarative way.
 
   - header:
@@ -41,12 +41,12 @@ rows:
         - type: card
           config:
             icon: /assets/logos/konglogo-gradient-secondary.svg
-            title: "Manage {{ site.base_gateway }} in Kubernetes through the Konnect CRDs"
+            title: "Manage {{ site.base_gateway }} in Kubernetes through the {{site.konnect_short_name}} CRDs"
             description: |
               Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs)
               provided by {{ site.operator_product_name }}.
             cta:
-              text: Deploy {{ site.base_gateway }} in Kubernetes using Konnect CRDs
+              text: Deploy {{ site.base_gateway }} in Kubernetes using {{site.konnect_short_name}} CRDs
               url: /operator/get-started/konnect-crds/install/
 
   - header:
@@ -97,7 +97,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: Konnect configuration CRDs
+              text: "{{site.konnect_short_name}} configuration CRDs"
             blocks:
             - type: text
               text: |
@@ -114,7 +114,7 @@ rows:
               name: echo
               namespace: default
             spec:
-              # reference the Konnect/Gateway control plane defined in Konnect
+              # reference the {{site.konnect_short_name}}/Gateway control plane defined in {{site.konnect_short_name}}
               controlPlaneRef:
                 type: konnectNamespacedRef
                 konnectNamespacedRef:
@@ -156,7 +156,7 @@ rows:
             blocks:
             - type: text
               text: |
-                We built Konnect CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
+                We built {{site.konnect_short_name}} CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
                 enforcement engines running in their clusters, and well defined review processes for CRD changes.
 
                 Now we need your help. We're expanding CRD support to new products, and need you to tell us which APIs you want us to build first.

@@ -50,9 +50,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-{% tip %}
 {% include k8s/cert-manager.md raw=true %}
-{% endtip %}
 
 ## Validate
 
