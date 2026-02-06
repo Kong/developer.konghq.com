@@ -206,7 +206,7 @@ EOF
 
 This script defines a two-node state graph. The first node (`gather`) queries the LLM and appends the response to the messages list. The second node (`summarize`) generates a summary from those messages. LangGraph maintains the `State` object across node transitions and executes nodes in the order defined by the graph edges.
 
-The `base_url` parameter replaces the default OpenAI API endpoint (`https://api.openai.com/v1`) with your Kong Gateway Route URL. Requests from the LangChain client now route through Kong Gateway, where configured plugins (AI Proxy, Key Auth) process them before forwarding to OpenAI.
+The `base_url` parameter replaces the default OpenAI API endpoint (`https://api.openai.com/v1`) with your {{site.base_gateway}} Route URL. Requests from the LangChain client now route through {{site.base_gateway}}, where configured plugins (AI Proxy, Key Auth) process them before forwarding to OpenAI.
 
 ## Validate
 
