@@ -27,6 +27,13 @@ prereqs:
     konnect:
       auth: true
 
+prereqs:
+  show_works_on: true
+  skip_product: true
+  operator:
+    konnect:
+      auth: true
+
 products:
   - operator
 
@@ -41,7 +48,7 @@ related_resources:
 
 ## Create a `KonnectGatewayControlPlane`
 
-Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} Control Plane that your CRDs will target. This enables your cluster to send configuration to {{site.konnect_short_name}}.
+Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} control plane that your CRDs will target. This enables your cluster to send configuration to {{site.konnect_short_name}}.
 
 Apply the following configuration to define a Control Plane named `gateway-control-plane`:
 

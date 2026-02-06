@@ -66,7 +66,7 @@ rawLicenseString: '$(cat ./license.json)'
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
    {:data-deployment-topology='on-prem'}
-   
+
 {% endif %}
 
 {{cert | indent: 3}}
