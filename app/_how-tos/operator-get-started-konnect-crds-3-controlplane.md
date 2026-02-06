@@ -35,7 +35,7 @@ works_on:
 
 related_resources:
   - text: Deploy a data plane
-    url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+    url: /operator/konnect/crd/dataplane/hybrid/
 
 ---
 
