@@ -23,6 +23,18 @@ related_resources:
     url: /gateway/datakit/
   - text: Datakit plugin reference
     url: /plugins/datakit/
+
+faqs:
+  - q: I've configured a call node in the response section, why is it throwing an error?
+    a: |
+      In {{site.base_gateway}} 3.12 and earlier, the `call` node couldn't be executed after proxying a request, and you would see the following error:
+
+      ```
+      invalid dependency (node #1 (CALL) -> node service_response): circular dependency
+      ```
+
+      This means that your data planes are running {{site.base_gateway}} 3.12 or earlier. 
+      Upgrade your data planes to 3.13 to use this functionality.
 ---
 
 In addition to the standard [{{site.base_gateway}} configuration tools](/tools/),
