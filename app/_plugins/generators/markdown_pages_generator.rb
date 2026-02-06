@@ -33,7 +33,7 @@ module Jekyll
       process("#{File.basename(@page.url)}.md")
 
       @data = { 'output_format' => 'markdown', 'layout' => 'llm' }
-      @content = page.content
+      @content = page.respond_to?(:markdown_content) ? page.markdown_content : @page.content
       @dir = File.dirname(@page.url)
     end
 
