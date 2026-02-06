@@ -66,9 +66,9 @@ prereqs:
 
   entities:
     services:
-      - qwen-service
+      - example-service
     routes:
-      - qwen-route
+      - example-route
 
 cleanup:
   inline:
@@ -95,7 +95,6 @@ CLI tools installed across multiple developer machines typically require distrib
 entities:
   plugins:
     - name: ai-proxy
-      service: qwen-service
       config:
         max_request_body_size: 4194304
         route_type: llm/v1/chat
@@ -121,14 +120,14 @@ variables:
 Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
 
 ```sh
-export OPENAI_BASE_URL="http://localhost:8000/qwen"
+export OPENAI_BASE_URL="http://localhost:8000/anything"
 export OPENAI_API_KEY=<your_openai_api_key>
 export OPENAI_MODEL="gpt-5"
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-export OPENAI_BASE_URL="$KONNECT_PROXY_URL/qwen"
+export OPENAI_BASE_URL="$KONNECT_PROXY_URL/anything"
 export OPENAI_API_KEY=<your_openai_api_key>
 export OPENAI_MODEL="gpt-5"
 ```
