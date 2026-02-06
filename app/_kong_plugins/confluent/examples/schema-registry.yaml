@@ -45,6 +45,8 @@ config:
         schema_version: latest
   cluster_api_key: ${cluster_api_key}
   cluster_api_secret: ${cluster_api_secret}
+  message_by_lua_functions:
+    - "return function(message) return message.body end"
 
 tools:
   - deck
