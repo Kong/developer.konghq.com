@@ -49,7 +49,7 @@ prereqs:
     - title: Gemini CLI
       icon_url: /assets/icons/gcp.svg
       content: |
-        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install and launch the Gemini CLI:
+        This tutorial uses the Google Gemini CLI. Install Node.js 18+ if needed (verify with `node --version`), then install and launch the Gemini CLI.
 
         1. Run the following command in your terminal to install the Gemini CLI:
 
@@ -113,7 +113,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's configure the [File Log](/plugins/file-log/)  plugin to inspect the traffic between Gemini CLI and AI Gateway, attach a File Log plugin to the service. This creates a local log file for examining requests and responses as Gemini CLI runs through Kong.
+Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Gemini CLI and AI Gateway by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as Gemini CLI runs through {{site.base_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -143,7 +143,7 @@ If you're using a different {{site.konnect_short_name}} proxy URL, be sure to re
 
 ## Validate the configuration
 
-Test the Gemini CLI setup:
+Now you can test the Gemini CLI setup.
 
 1. In the terminal where you exported your Gemini environment variables, run:
 
@@ -153,7 +153,7 @@ Test the Gemini CLI setup:
 
    You should see the Gemini CLI interface start up.
 
-2. Run a test command to test the connection:
+2. Run a command to test the connection:
 
    ```text
    Tell me about prisoner's dilemma.
@@ -169,7 +169,7 @@ Test the Gemini CLI setup:
 
    Look for entries similar to:
 
-```json
+   ```json
    {
      ...
      "ai": {
@@ -192,5 +192,5 @@ Test the Gemini CLI setup:
      }
      ...
    }
-```
+   ```
 {:.no-copy-code}
