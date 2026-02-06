@@ -71,7 +71,7 @@ spec:
     group: gateway-operator.konghq.com
     kind: GatewayConfiguration
     name: hybrid
-    namespace: kong
+    namespace: kong ' | kubectl apply -f -
 ```
 
 ## Configure the Gateway with static naming
