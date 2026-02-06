@@ -73,7 +73,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details. In this example, we'll use the GPT-4o model. The AI Proxy plugin stores your OpenAI API key and forwards client requests to OpenAI.
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details. In this example, we'll use the GPT-4o model. The AI Proxy plugin authenticates with OpenAI using your API key and proxies client requests to the specified model endpoint.
 
 {% entity_examples %}
 entities:
@@ -97,7 +97,7 @@ variables:
 To secure the access to your Route, let's create a Consumer and set up a [Key Auth](/plugins/key-auth/) plugin.
 
 {:.info}
-> Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`.
+> LangChain's OpenAI client expects authentication in the `Authorization` header with the format `Bearer <token>`.
 You can use plugins like [OAuth 2.0 Authentication](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/) to generate Bearer tokens.
 In this example, for testing purposes, we'll recreate this pattern using the [Key Authentication](/plugins/key-auth/) plugin.
 
@@ -204,9 +204,9 @@ EOF
 ```
 {: data-deployment-topology="konnect" data-test-step="block" }
 
-This script creates a two-node workflow: the first node queries the LLM for information, and the second node summarizes the response. LangGraph manages the state between nodes and controls the execution flow.
+This script defines a two-node state graph. The first node (`gather`) queries the LLM and appends the response to the messages list. The second node (`summarize`) generates a summary from those messages. LangGraph maintains the `State` object across node transitions and executes nodes in the order defined by the graph edges.
 
-The `base_url` parameter overrides the default OpenAI URL with your {{site.base_gateway}} Route. This allows you to proxy requests and apply {{site.base_gateway}} plugins while using LangGraph for workflow orchestration.
+The `base_url` parameter replaces the default OpenAI API endpoint (`https://api.openai.com/v1`) with your Kong Gateway Route URL. Requests from the LangChain client now route through Kong Gateway, where configured plugins (AI Proxy, Key Auth) process them before forwarding to OpenAI.
 
 ## Validate
 
