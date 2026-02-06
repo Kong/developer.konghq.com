@@ -10,6 +10,7 @@ metadata:
     - konnect
   breadcrumbs:
     - /tools/
+  beta: true
 rows:
   - header:
       type: h1
@@ -27,7 +28,7 @@ rows:
         - type: text
           config: |
             kongctl is a command line tool that enables you to manage {{site.konnect_short_name}} resources programmatically.
-            The tool provides both declarative and imperative style {{site.konnect_short_name}} resource management along with
+            The tool provides both declarative and imperative style resource management capabilities along with
             other developer friendly features. 
 
             The declarative configuration feature allows you to define API Platform infrastructure as code using a simple `yaml` 

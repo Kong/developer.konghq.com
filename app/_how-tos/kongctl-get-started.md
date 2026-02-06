@@ -3,6 +3,7 @@ title: Get started with kongctl
 description: Learn how to use kongctl to manage {{site.konnect_product_name}} resources
 content_type: how_to
 permalink: /kongctl/get-started/
+beta: true
 breadcrumbs:
   - /kongctl/
 
@@ -31,6 +32,16 @@ tools:
   - kongctl
 
 automated_tests: false
+
+prereqs:
+  skip_product: false
+  show_works_on: false
+  inline:
+    - title: Kong Konnect 
+      content: |
+        This tutorial requires a {{site.konnect_short_name}} account. If you don't have an account, 
+        you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
+      icon_url: /assets/icons/gateway.svg
 ---
 
 ## Authenticate to {{site.konnect_short_name}}
@@ -41,201 +52,168 @@ Before you can manage resources, authenticate to {{site.konnect_short_name}} usi
 kongctl login
 ```
 
-This opens your browser and prompts you to authorize kongctl. After successful authorization, verify your authentication:
+This command will provide you a URL to open in your browser and activate kongctl as authorized to your organization. 
+
+After completing the authorization, you can verify access by invoking the `get me` command which retrieves information 
+for the account authorized.
 
 ```bash
 kongctl get me
 ```
 
-You should see your {{site.konnect_short_name}} user information displayed.
+The above example shows the common structure of a kongctl command. The CLI uses a natural language structure to the commands
+following a pattern loosely defined as:
+
+```bash
+kongctl <verb> <product/resource> <flags> <arguments>
+```
 
 ## View existing resources
 
-List all developer portals in your organization:
+The `get` verb is commonly used to view resources defined in your organization. 
+
+For example, list all developer portals in your organization:
 
 ```bash
 kongctl get portals
 ```
 
-List all APIs:
+If you are using a new account you should see an empty response, otherwise the portals you have access to
+will be displayed. 
 
-```bash
-kongctl get apis
-```
-
-Get details about a specific resource with JSON output:
+kongctl commands support different output formats, including `json`, `yaml`, or `text`.  The same command
+ran as the following will output the data in `json` format:
 
 ```bash
 kongctl get portals --output json
 ```
 
-## Use the interactive terminal UI
+In a new account will produce an empty JSON array (`[]`).
 
-Launch the interactive terminal UI to explore resources visually:
+## Create resources declaratively
 
-```bash
-kongctl view
-```
+The kongctl declarative management system operates by taking resource configurations as input, planning
+changes to authorized {{site.konnect_short_name}} organizations, and then applying those changes automatically
+in the proper order to satisfy resource parent / child and other resource relationships.
 
-Navigate using arrow keys, press Enter to view details, and press `q` to quit.
+### Preview changes with diff
 
-## Manage resources declaratively
-
-kongctl supports infrastructure as code using declarative YAML files. Create a file named `my-portal.yaml`:
-
-```yaml
-apiVersion: v1
-kind: Portal
-metadata:
-  name: developer-portal
-spec:
-  displayName: "Developer Portal"
-  description: "API documentation for developers"
-  isPublic: true
-```
-
-### Preview changes with plan
-
-Before applying changes, preview what will happen:
+Input configuration is typically stored in files and loaded into kongctl with the `--filename` flag, 
+but for quick demonstrations we can pass the configuration directly to the commands on `STDIN`. The following
+command calculates a plan for your oganization with a basic portal declartion and displays a human-friendly
+printout showing what changes _will be_ applied. 
 
 ```bash
-kongctl plan -f my-portal.yaml
+echo 'portals:
+  - ref: getting-started-portal
+    name: "My First Portal"
+    display_name: "The Getting Started Portal"
+    description: "My first declaratively managed portal"' | kongctl diff -f -
 ```
 
-You'll see output showing what resources will be created:
+The results of the diff should look like the following:
 
-```
-Plan: 1 to create, 0 to update, 0 to delete
+```text
+Plan: 1 to add, 0 to change
 
-+ Portal: developer-portal
-  └─ Will be created
+=== Namespace: default ===
++ [1:c:portal:getting-started-portal] portal "getting-started-portal" will be created
+  authentication_enabled: true
+  rbac_enabled: false
+  auto_approve_developers: false
+  auto_approve_applications: false
+  name: "My First Portal"
+  display_name: "The Getting Started Portal"
+  description: "My first declaratively managed portal"
+  protection: disabled
 ```
+
+No resources in your organization have been created or modified, this is simply showing you a human readable
+form of the plan that would be enacted if you applied the configuration.
 
 ### Apply the configuration
 
-Apply the configuration to create the portal:
+The `apply` command executes planned changes (create and update operations _only_) against the authorized organization. 
+If we pass the same configuration to the `apply` command, kongctl will present you with the planned changes 
+and prompt you for confirmation before executing them.
 
 ```bash
-kongctl apply -f my-portal.yaml
+echo 'portals:
+  - ref: getting-started-portal
+    name: "My First Portal"
+    display_name: "The Getting Started Portal"
+    description: "My first declaratively managed portal"' | kongctl apply -f -
 ```
 
-Verify the portal was created:
+The confirmation and prompt will look like the following:
 
 ```bash
-kongctl get portal developer-portal
+RESOURCE CHANGES
+----------------------------------------------------------------------
+Namespace: default (1 changes: 1 create)
+  portal (1 resources):
+    + getting-started-portal
+
+SUMMARY
+----------------------------------------------------------------------
+  Total changes: 1
+  Namespaces affected: 1
+  Resources to create: 1
+
+  Resource breakdown:
+    portal: 1
+
+CONFIRM?
+----------------------------------------------------------------------
+Do you want to continue? Type 'yes' to confirm:
 ```
 
-### View differences
-
-Edit your `my-portal.yaml` file and change the description to something new. Then view the differences:
+If you type `yes` and Enter the resources will be created:
 
 ```bash
-kongctl diff -f my-portal.yaml
+Executing changes:
+[1/1] [namespace: default] Creating portal: getting-started-portal... ✓
+
+Complete.
+Executed 1 changes.
 ```
 
-You'll see the changes highlighted:
+## View applied changes
 
-```
-~ Portal: developer-portal
-  ~ spec.description
-    - "API documentation for developers"
-    + "Your new description"
-```
-
-Apply the update:
+Now that you have a created a developer portal, running the `get` operations again should yield results:
 
 ```bash
-kongctl apply -f my-portal.yaml
+kongctl get portals --output json
 ```
 
-## Export current state
+And your results should look similar to the following:
 
-At any point, you can export your entire {{site.konnect_short_name}} configuration to a file:
-
-```bash
-kongctl dump --output-file current-state.yaml
+```json
+[
+  {
+    "authentication_enabled": true,
+    "auto_approve_applications": false,
+    "auto_approve_developers": false,
+    "canonical_domain": "d6a3e6b6bc64.us.kongportals.com",
+    "created_at": "2026-02-06T18:06:12.924Z",
+    "default_api_visibility": "private",
+    "default_application_auth_strategy_id": null,
+    "default_domain": "d6a3e6b6bc64.us.kongportals.com",
+    "default_page_visibility": "private",
+    "description": "My first declaratively managed portal",
+    "display_name": "The Getting Started Portal",
+    "id": "ca9e25a5-67ed-4b3e-b94a-3f8977557780",
+    "labels": {
+      "KONGCTL-namespace": "default"
+    },
+    "name": "My First Portal",
+    "rbac_enabled": false,
+    "updated_at": "2026-02-06T18:06:12.924Z"
+  }
+]
 ```
 
-This creates a snapshot of all your resources that you can:
-- Use as a backup
-- Edit and re-apply
-- Commit to version control
-
-## Manage multiple resources
-
-Create a file named `infrastructure.yaml` with multiple resources:
-
-```yaml
-apiVersion: v1
-kind: Portal
-metadata:
-  name: developer-portal
-spec:
-  displayName: "Developer Portal"
-  description: "External API documentation"
-  isPublic: true
----
-apiVersion: v1
-kind: API
-metadata:
-  name: users-api
-spec:
-  displayName: "Users API"
-  description: "User management REST API"
-  version: "1.0.0"
-  labels:
-    team: platform
-    environment: production
-```
-
-Apply all resources at once:
-
-```bash
-kongctl apply -f infrastructure.yaml
-```
-
-## Use sync for exact state matching
-
-The `apply` command creates and updates resources but doesn't delete anything. To make {{site.konnect_short_name}} match your configuration exactly (including deletions), use `sync`:
-
-{:.warning}
-> **Warning**: `sync` will delete resources in {{site.konnect_short_name}} that are not in your configuration files.
-
-Preview what sync will do:
-
-```bash
-kongctl plan -f infrastructure.yaml --mode sync
-```
-
-Then sync to the exact state:
-
-```bash
-kongctl sync -f infrastructure.yaml
-```
-
-## Filter and query resources
-
-Use the built-in jq filtering to query resources:
-
-```bash
-kongctl get apis --output json --jq '.[] | select(.labels.team == "platform")'
-```
-
-Get just the names of all portals:
-
-```bash
-kongctl get portals --output json --jq '.[].name'
-```
-
-## Call APIs directly
-
-For advanced use cases, call {{site.konnect_short_name}} APIs directly:
-
-```bash
-kongctl api /v3/portals
-```
-
-This uses your authenticated session and outputs the raw API response.
+Congratulations! You just went from zero to managing {{site.konnect_short_name}} resources with kongctl.
 
 ## Next steps
 
@@ -244,5 +222,3 @@ You've now learned the basics of kongctl! Here's what to explore next:
 * [Declarative configuration guide](/kongctl/declarative/) - Learn infrastructure as code in depth
 * [CI/CD integration](/kongctl/declarative/ci-cd/) - Automate deployments with GitHub Actions, GitLab CI, and more
 * [Authentication guide](/kongctl/authentication/) - Set up personal access tokens for automation
-
-Congratulations! You just went from zero to managing {{site.konnect_short_name}} resources with kongctl.
