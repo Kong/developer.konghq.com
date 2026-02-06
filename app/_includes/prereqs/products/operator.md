@@ -43,10 +43,6 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='konnect'}
 
-   {% endif %}
-   
-   {% if page.works_on contains "on-prem"%}
-
    ```bash
    helm upgrade --install kgo kong/gateway-operator -n kong-system \
      --create-namespace{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
@@ -54,11 +50,7 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='on-prem'}
 
-   {% endif %}
-
 {% else %}
-
-   {% if page.works_on contains "konnect"%}
    
    ```bash
    helm upgrade --install kong-operator kong/kong-operator -n kong-system \
@@ -68,6 +60,14 @@ rawLicenseString: '$(cat ./license.json)'
      --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
    ```
    {:data-deployment-topology='konnect'}
+
+   ```bash
+   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+     --create-namespace \
+     --set image.tag={{ site.data.operator_latest.release }}{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
+     --set env.ENABLE_CONTROLLER_{{ controller | upcase }}=true{% unless forloop.last %} \{% endunless %}{% endfor %}{% endif %}
+   ```
+   {:data-deployment-topology='on-prem'}
 
    {% endif %}
 
