@@ -65,6 +65,9 @@ function fileToUrl(file) {
 
   if (rawFile) {
     frontmatter = matter(rawFile);
+    if (frontmatter.data.published === false) {
+      return null;
+    }
     if (frontmatter.data.permalink) {
       return frontmatter.data.permalink;
     }
