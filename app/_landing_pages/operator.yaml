@@ -2,7 +2,7 @@ metadata:
   title: Kong Operator
   content_type: landing_page
   description: |
-    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }}, and more.
+    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy data planes, configure {{ site.konnect_short_name }}, and more.
   products:
     - operator
 
@@ -51,121 +51,59 @@ rows:
 
   - header:
       type: h2
-      text: "Configure your Gateways declaratively"
-      sub_text: |
-        Kong Gateway can be configured using Kubernetes-native resources, (Cluster Resources)
-      
-        By adopting Kubernetes’ declarative, desired-state approach to configuration, {{ site.operator_product_name }} is able to support:
+      text: "{{site.konnect_short_name}} features"
+      sub_text: Which {{ site.konnect_short_name }} features are available in {{site.operator_product_name}}?
     columns:
       - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: Gateway API
-            blocks:
-            - type: text
-              text: |
-                The de facto standard for configuring networking in Kubernetes, Gateway API allows you to configure 
-                your Gateways, regardless of whether they are self-managed or a {{ site.konnect_short_name }} based Control Plane.
-
-                Kong has been at the forefront of Gateway API development, contributing features and enhancements to the project since its inception.
         - type: text
           config: |
-            ```yaml
-            # Create a new HTTPRoute to route traffic to an echo service
-            apiVersion: gateway.networking.k8s.io/v1
-            kind: HTTPRoute
-            metadata:
-              name: httproute-echo
-              namespace: default
-                annotations:
-                  konghq.com/strip-path: "true"
-            spec:
-              parentRefs:
-              - name: hybrid-kong
-              rules:
-              - matches:
-                - path:
-                    type: PathPrefix
-                    value: /echo
-                backendRefs:
-                - name: echo
-                  kind: Service
-                  port: 80
-            ```
+
+            As we continue moving support for Kubernetes Gateway API from self-managed control planes, as well as {{site.konnect_short_name}} managed control 
+            planes, we will will open up support for other {{site.konnect_short_name}} products when hosting your Gateway on Kubernetes.
+
+            Providing Gateway API configuration for Kong Gateway, as well as full integration with the {{site.konnect_short_name}} platform opens up the entire
+            API ecosystem.
+
       - blocks:
-        - type: structured_text
+        - type: table
           config:
-            header:
-              text: "{{site.konnect_short_name}} configuration CRDs"
-            blocks:
-            - type: text
-              text: |
-                Kong-specific Custom Resource Definitions allow you to configure your Gateways and {{ site.konnect_short_name }} resources directly from Kubernetes.
+            columns:
+              - title: Product
+                key: product
+              - title: Gateway API
+                key: supported_gwapi
+              - title: Kong entities
+                key: supported_kong
+            rows:
+              - product: Analytics
+                supported_gwapi: true
+                supported_kong: true
+              - product: Application Registration
+                supported_gwapi: Coming soon
+                supported_kong: true
+              - product: Debugger
+                supported_gwapi: Coming soon
+                supported_kong: true
 
-                These CRDs are designed and maintained by Kong, providing the same powerful capabilities as Gateway API with Kong-native resource definitions.
-        - type: text
-          config: |
-            ```yaml
-            # Create a new KongService
-            apiVersion: configuration.konghq.com/v1alpha1
-            kind: KongService
-            metadata:
-              name: echo
-              namespace: default
-            spec:
-              # reference the {{site.konnect_short_name}}/Gateway control plane defined in {{site.konnect_short_name}}
-              controlPlaneRef:
-                type: konnectNamespacedRef
-                konnectNamespacedRef:
-                  name: <CONTROLPLANE_NAME>
-              name: echo
-              host: echo.default.svc.cluster.local
-              port: 80
-              protocol: http
-
-            ---
-
-            # Create a new KongRoute
-            apiVersion: configuration.konghq.com/v1alpha1
-            kind: KongRoute
-            metadata:
-              name: httproute-echo
-              namespace: default
-            spec:
-              name: httproute-echo
-              protocols:
-                - http
-              paths:
-                - /echo
-              strip_path: true
-              serviceRef:
-                type: namespacedRef
-                namespacedRef:
-                  name: echo
-            ```
   - header:
-    type: h2
-    text: "Help us to help you!"     
+      type: h2
+      text: "{{site.konnect_short_name}} CRDs"
+      sub_text: Manage {{ site.konnect_short_name }} declaratively with first-class CRD support
     columns:
       - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: Help us to help you!
-            blocks:
-            - type: text
-              text: |
-                We built {{site.konnect_short_name}} CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
-                enforcement engines running in their clusters, and well defined review processes for CRD changes.
+        - type: text
+          config: |
+            We built {{site.konnect_short_name}} CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
+            enforcement engines running in their clusters, and well defined review processes for CRD changes.
 
-                Now we need your help. We're expanding CRD support to new products, and need you to tell us which APIs you want us to build first.
+            Now we need your help. We're expanding CRD support to new products, and need you to tell us which APIs you want us to build first.
 
-                Join the conversation and tell us how you're using {{ site.konnect_short_name }} CRDs today and what you'd like to see next.
+            Join the conversation and tell us how you're using {{ site.konnect_short_name }} CRDs today and what you'd like to see next.
         - type: button
           config:
             text: Open a GitHub issue
             url: https://github.com/kong/gateway-operator/issues/new
+      - blocks:
         - type: table
           config:
             columns:
@@ -179,7 +117,7 @@ rows:
               - product: Gateway Configuration
                 supported: true
               - product: Dedicated Cloud Gateways
-                supported: Partial Support
+                supported: Partially
               - product: Kong Mesh
                 supported: Planned
               - product: Developer Portal
