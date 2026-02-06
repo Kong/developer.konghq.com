@@ -123,6 +123,10 @@ faqs:
 
       * **Cloud sync** – Data is stored in Postgres databases hosted in the Google Cloud Platform (GCP) `us-central1` region.
       * **Git sync** – Data is stored in the underlying storage of your connected source control system (e.g., GitHub, GitLab) and is not managed by Insomnia.
+  - q: Does Insomnia sanitize or redact data before sending it to the AI model?
+    a: |
+      No. Insomnia doesn't inspect, sanitize, redact, or transform AI prompts or responses.
+      The data is sent directly to the configured AI model provider. Any data protection, filtering, or handling controls must be handled by the selected model provider or in your own environment.
 
 ---
 
@@ -209,3 +213,22 @@ rows:
 {% endtable %}
 
 **Note**: `SYM_Link` and `SYM_ResourceGroup` are essentially the same thing, but are defined separately for the purpose of discussion. This will become clear later on.
+
+## Data handling
+
+Insomnia’s AI features are designed so that Kong doesn't collect, store, or process customer data.
+
+When you use an AI feature, Insomnia sends the data for AI processing only to the AI model provider you configured. Insomnia doesn't proxy, inspect, or retain AI prompts, responses, or intermediate data.
+
+Depending on your configuration, AI processing can occur in one of the following locations:
+- **Locally**: A local large language model that runs entirely on your machine
+- **In your environment**: A self-hosted model endpoint
+- **With a third-party AI provider**: In accordance with that provider’s data handling policies
+
+Insomnia doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
+
+Enterprise administrators can enable or disable AI features in Insomnia Admin settings. This lets your organization either:
+- Disable AI features entirely
+- Allow AI features only in approved environments
+
+For more information, navigate to [AI in Insomnia](/insomnia/ai-in-insomnia/#get-started).

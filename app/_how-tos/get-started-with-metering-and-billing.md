@@ -44,7 +44,19 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-
+related_resources:
+  - text: "{{site.base_gateway}}"
+    url: /gateway/
+  - text: Product Catalog reference
+    url: /metering-and-billing/product-catalog/
+  - text: Metering reference
+    url: /metering-and-billing/metering/
+  - text: Customers and usage attribution
+    url: /metering-and-billing/customer/
+  - text: Billing, invoicing, and subscriptions
+    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Meter and bill AI Gateway LLM tokens
+    url: /how-to/meter-llm-traffic/
 min_version:
     gateway: '3.4'
 next_steps:
