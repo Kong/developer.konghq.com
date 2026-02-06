@@ -184,7 +184,7 @@
 /operator/dataplanes/get-started/hybrid/deploy-dataplane/ /operator/konnect/crd/dataplane/hybrid/
 /operator/dataplanes/get-started/hybrid/create-route/ /operator/get-started/gateway-api/create-route/
 /operator/dataplanes/get-started/hybrid/install/ /operator/get-started/gateway-api/install/
-/operator/dataplanes/get-started/kic/create-gateway/ /operator/get-started/gateway-api/create-gateway/
+/operator/dataplanes/get-started/kic/create-gateway/ /operator/get-started/gateway-api/deploy-gateway/
 /operator/dataplanes/get-started/kic/create-route/ /operator/get-started/gateway-api/create-route/
 /operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
 /operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
