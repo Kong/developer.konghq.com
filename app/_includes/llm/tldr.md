@@ -1,4 +1,6 @@
 {% if page.tldr %}
 ## TL;DR
-{{ page.tldr.a | liquify | markdownify }}
+
+**{{page.tldr.q | liquify }}**
+{{ page.tldr.a | liquify }}
 {% endif %}
