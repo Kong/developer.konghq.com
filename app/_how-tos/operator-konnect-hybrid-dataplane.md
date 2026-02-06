@@ -3,10 +3,7 @@ title: Deploy a DataPlane
 description: "Deploy a DataPlane using {{ site.operator_product_name }}."
 content_type: how_to
 
-permalink: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
-series:
-  id: operator-get-started-hybrid
-  position: 2
+permalink: /operator/konnect/crd/dataplane/hybrid
 
 breadcrumbs:
   - /operator/
@@ -36,10 +33,10 @@ prereqs:
       auth: true
       control_plane: true
       konnectextension: true
-
 ---
 
 {:data-deployment-topology='konnect'}
+
 ## Create the DataPlane
 
 Configure a Kong `DataPlane` by using your `KonnectExtension` reference:

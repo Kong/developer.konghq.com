@@ -1,8 +1,13 @@
 ---
-title: Provision a Hybrid Gateway
-description: "Provision a Hybrid Gateway in {{site.konnect_short_name}} using the Gateway API CRDs."
+title: Provision a Gateway
+description: "Provision a Hybrid Gateway in {{site.konnect_short_name}} using the Gateway API."
 content_type: how_to
-permalink: /operator/konnect/crd/gateway/hybrid
+
+permalink: /operator/get-started/gateway-api/deploy-gateway/
+series:
+  id: operator-get-started-gateway-api
+  position: 2
+  
 breadcrumbs:
   - /operator/
   - index: operator
@@ -18,6 +23,7 @@ products:
 
 works_on:
   - konnect
+  - on-prem
 
 search_aliases:
   - kgo gateway
@@ -29,6 +35,7 @@ tldr:
   a: Create a `GatewayConfiguration` resource that includes your {{site.konnect_short_name}} authentication and data plane options. Then create a `GatewayClass` resource that references the `GatewayConfiguration`, and a `Gateway` resource that references the `GatewayClass`.
 
 prereqs:
+  skip_product: false
   operator:
     konnect:
       auth: true
@@ -37,6 +44,7 @@ prereqs:
 
 ## Create a `GatewayConfiguration` resource
 
+{: data-deployment-topology="konnect" }
 Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid Gateways. `GatewayConfiguration` is for Hybrid Gateways when field `spec.konnect.authRef` is set.
 
 First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
@@ -44,9 +52,9 @@ First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gate
 <!-- vale off -->
 {% konnect_crd %}
 kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v2beta1
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
-  name: hybrid-configuration
+  name: kong-configuration
   namespace: kong
 spec:
   konnect:
@@ -66,40 +74,61 @@ spec:
 Next, configure a `GatewayClass` resource to use the `GatewayConfiguration` we just created:
 
 <!-- vale off -->
-{% konnect_crd %}
-kind: GatewayClass
+{% on_prem_crd %}
+kind: GatewayConfiguration
+apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+metadata:
+  name: kong-configuration
+  namespace: kong
+spec:
+  dataPlaneOptions:
+    deployment:
+      podTemplateSpec:
+        spec:
+          containers:
+          - name: proxy
+            image: kong/kong-gateway:3.12
+{% endon_prem_crd %}
+<!-- vale on -->
+
+## Create a `GatewayClass`
+
+Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
+
+```bash
+echo 'kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
-  name: hybrid-class
+  name: kong
 spec:
   controllerName: konghq.com/gateway-operator
   parametersRef:
     group: gateway-operator.konghq.com
     kind: GatewayConfiguration
-    name: hybrid-configuration
+    name: kong-configuration
     namespace: kong
-{% endkonnect_crd %}
-<!-- vale on -->
+' | kubectl apply -f -
+```
 
 ## Create a `Gateway` Resource
 
 Finally, create a `Gateway` resource that references the `GatewayClass` we just created:
 
-<!-- vale off -->
-{% konnect_crd %}
+```bash
+echo '
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
 metadata:
-  name: hybrid-gateway
+  name: kong
   namespace: kong
 spec:
-  gatewayClassName: hybrid-class
+  gatewayClassName: kong
   listeners:
   - name: http
     protocol: HTTP
     port: 80
-{% endkonnect_crd %}
-<!-- vale on -->
+' | kubectl apply -f -
+```
 
 {{site.operator_product_name}} automatically creates the `DataPlane` and `KonnectGatewayControlPlane` resources.
 
@@ -107,6 +136,12 @@ spec:
 
 {% validation kubernetes-resource %}
 kind: Gateway
-name: hybrid-gateway
+name: kong
+namespace: kong
 {% endvalidation %}
 
+The `DataPlane`, `KonnectExtension`, and `KonnectGatewayControlPlane` resources are created automatically by {{site.operator_product_name}}.
+{: data-deployment-topology="konnect" }
+
+The `DataPlane` and `ControlPlane` resources are created automatically by {{site.operator_product_name}}.
+{: data-deployment-topology="on-prem" }
