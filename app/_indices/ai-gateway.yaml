@@ -45,7 +45,7 @@ sections:
       - title: "{{site.ai_gateway}} resource sizing guidelines"
         description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
-      - title: Proxy AI CLI tools through {{site.ai_gateway}}"
+      - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
         description: onfigure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
         url: /ai-gateway/ai-clis/
       - title: Gen AI OpenTelemetry attributes reference
