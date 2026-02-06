@@ -24,7 +24,6 @@ min_version:
 
 plugins:
   - ai-proxy
-  - request-transformer
   - file-log
 
 entities:
@@ -68,9 +67,9 @@ prereqs:
 
   entities:
     services:
-      - gemini-service
+      - example-service
     routes:
-      - gemini-route
+      - example-route
 
 cleanup:
   inline:
@@ -93,8 +92,8 @@ Routing CLI tools through Kong AI Gateway removes this requirement. Developers a
 entities:
   plugins:
     - name: ai-proxy
-      service: gemini-service
       config:
+        max_request_body_size: 4194304
         logging:
           log_statistics: true
           log_payloads: true
@@ -120,7 +119,6 @@ Now, let's configure the [File Log](/plugins/file-log/)  plugin to inspect the t
 entities:
   plugins:
     - name: file-log
-      service: gemini-service
       config:
         path: "/tmp/gemini.json"
 {% endentity_examples %}
@@ -130,13 +128,13 @@ entities:
 Open a new terminal window and export the variables that the Gemini CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from Gemini CLI will route:
 
 ```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
+export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
 export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/gemini"
+export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
 export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
 ```
 If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
