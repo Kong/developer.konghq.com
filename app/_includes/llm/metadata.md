@@ -1,4 +1,4 @@
-**Metadata**:
+## Metadata
 {%- if page.products %}
 - Products: {{page.llm_metadata.products | join: ', '}}
 {%- endif -%}
