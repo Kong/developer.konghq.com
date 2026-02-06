@@ -42,19 +42,19 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Start monetizing API traffic
+              title: Start monetizing {{site.base_gateway}} API traffic
               description: |
                 Learn how to meter and bill {{site.base_gateway}} API requests.
-              icon: /assets/icons/graduation.svg
+              icon: /assets/icons/KogoBlue.svg
               cta:
                 url: /metering-and-billing/get-started/
       - blocks:
           - type: card
             config:
-              title: "Monetize LLM traffic"
+              title: "Monetize Kong AI Gateway LLM traffic"
               description: |
                 Learn how to meter and bill AI Gateway LLM tokens.
-              icon: /assets/icons/ai.svg
+              icon: /assets/icons/KogoBlue.svg
               cta:
                 url: /how-to/meter-llm-traffic/
 
