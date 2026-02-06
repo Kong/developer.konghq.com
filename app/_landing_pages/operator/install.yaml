@@ -77,7 +77,7 @@ rows:
               Gateway API resources such as `Gateway` and `HTTPRoute`
             cta:
               text: Deploy self-managed Control Plane
-              url: /operator/dataplanes/get-started/kic/create-gateway/
+              url: /operator/get-started/gateway-api/create-gateway/
 
       - blocks:
         - type: card

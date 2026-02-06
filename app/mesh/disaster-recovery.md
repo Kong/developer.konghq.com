@@ -109,7 +109,7 @@ kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n
 
 ### Deploy Kong Operator
 
-For each zone, follow the instructions to deploy [Kong Operator](/operator/dataplanes/get-started/kic/create-gateway/) into each zone.
+For each zone, follow the instructions to deploy [Kong Operator](/operator/get-started/gateway-api/create-gateway/) into each zone.
 
 The Gateway will need to be part of the Mesh, so make sure your Dataplanes are deployed into the `kong` namespace that has been marked as being part of the Mesh.
 

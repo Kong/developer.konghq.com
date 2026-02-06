@@ -174,7 +174,7 @@
 ## Kong Operator
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
-/operator/konnect/crd/gateway/hybrid /operator/get-started/gateway-api/deploy-gateway/
+/operator/konnect/crd/gateway/hybrid/ /operator/get-started/gateway-api/deploy-gateway/
 /operator/konnect/get-started/install/ /operator/get-started/konnect-crds/install/
 /operator/konnect/get-started/authentication/ /operator/get-started/konnect-crds/authentication/
 /operator/konnect/get-started/control-plane/ /operator/get-started/konnect-crds/controlplane/
