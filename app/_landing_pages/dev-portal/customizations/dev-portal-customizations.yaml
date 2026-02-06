@@ -199,6 +199,8 @@ rows:
                     * App registration approved
                     * App registration rejected
                     * App registration revoked
+                    * [API key expired](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
+                    * [API key expiring soon](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
                     * Confirm email address
                     * Reset password
                     * Account access rejected
@@ -226,6 +228,10 @@ rows:
                   description: The version of the API.
                 - variable: "<code>&#123;&#123;application_name&#125;&#125;</code>"
                   description: The name of the developer's application.
+                - variable: "<code>&#123;&#123;credential_name&#125;&#125;</code>"
+                  description: The name of the key auth credential.
+                - variable: "<code>&#123;&#123;credential_expires_at&#125;&#125;</code>"
+                  description: "The date when the [key auth credential expires](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)."
                 - variable: "<code>&#123;&#123;dev_portal_reply_to&#125;&#125;</code>"
                   description: The Dev Portal reply-to email address.
                 - variable: "<code>&#123;&#123;developer_email&#125;&#125;</code>"

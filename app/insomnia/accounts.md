@@ -117,7 +117,7 @@ If needed, you can click **Upgrade** from the Insomnia dashboard to upgrade to a
 Owners and admins can invite users to collaborate on projects by adding them to organizations.
 
 1. Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select the organization in which you want to invite users, and go to **Collaborators** tab to invite them.
-1. {% new_in 10.1 %} In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
+1. In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
 
 Invited users will receive an email. They will need to log in to Insomnia and accept the invite.
 

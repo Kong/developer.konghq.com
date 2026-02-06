@@ -19,7 +19,10 @@ function processSchema(obj) {
 
   const processed = { ...obj };
 
-  if (processed["x-referenceable"]) {
+  if (
+    processed["x-referenceable"] ||
+    processed["additionalProperties"]?.["x-referenceable"]
+  ) {
     const referenceableText =
       "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).";
 
@@ -44,6 +47,18 @@ function processSchema(obj) {
     }
   }
 
+  if (processed.deprecation) {
+    const deprecationText = `\nDeprecation notice: ${processed.deprecation.message}. It will be removed in ${processed.deprecation.removal_in_version}`;
+
+    if (processed.description) {
+      if (!processed.description.includes(deprecationText)) {
+        processed.description = `${processed.description} ${deprecationText}`;
+      }
+    } else {
+      processed.description = deprecationText;
+    }
+  }
+
   for (const [key, value] of Object.entries(processed)) {
     processed[key] = processSchema(value);
   }
@@ -62,14 +77,14 @@ function processSchema(obj) {
   ) {
     console.error("Usage: node run.js <schemasPath> <version>");
     console.error(
-      "       node run.js --schemas-path <path> --version <version>"
+      "       node run.js --schemas-path <path> --version <version>",
     );
     console.error("       node run.js -s <path> -v <version>");
     console.error("");
     console.error("Examples:");
     console.error("  node run.js ./input-schemas 3.12");
     console.error(
-      "  node run.js --schemas-path ./input-schemas --version 3.12"
+      "  node run.js --schemas-path ./input-schemas --version 3.12",
     );
     console.error("  node run.js -s ./input-schemas -v 3.12");
     process.exit(1);
@@ -87,7 +102,7 @@ function processSchema(obj) {
     const outputDir = path.resolve(
       __dirname,
       "../../app/_schemas/gateway/plugins",
-      version
+      version,
     );
 
     if (!fs.existsSync(outputDir)) {
@@ -119,7 +134,7 @@ function processSchema(obj) {
 
         fs.writeFileSync(
           outputFilePath,
-          JSON.stringify(processedSchema, null, 2)
+          JSON.stringify(processedSchema, null, 2),
         );
 
         console.log(`Processed and saved: ${file} ✓`);

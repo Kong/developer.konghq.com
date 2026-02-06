@@ -119,6 +119,23 @@ rows:
 
   - header:
       type: h2
+      text: "MCP catalog registry (tech preview)"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}. 
+                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
+          - type: button
+            config:
+              text: "Enable MCP catalog in {{site.konnect_short_name}} Labs"
+              url: https://cloud.konghq.com/global/organization/labs
+  
+  - header:
+      type: h2
       text: "MCP traffic observability"
     columns:
       - blocks:

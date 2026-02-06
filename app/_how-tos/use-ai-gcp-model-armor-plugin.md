@@ -34,6 +34,7 @@ entities:
 
 tags:
   - ai
+  - openai
 
 tldr:
   q: How can I use the AI GCP Model Armor plugin with AI Gateway?

@@ -256,7 +256,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: "Kong Identity (Beta)"
+            title: "Kong Identity"
             description: |
               Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}. 
               It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth. 

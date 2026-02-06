@@ -42,6 +42,7 @@ entities:
 
 tags:
   - ai
+  - anthropic
 
 tldr:
   q: How can I use the AI Lakera Guard plugin with AI Gateway?

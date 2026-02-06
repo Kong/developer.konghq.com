@@ -21,7 +21,7 @@ sequenceDiagram
         Broker->>Kong: Broker message
         Kong->>Client: Stream JSON text frame
 
-        opt client-acks
+        opt If client-acks
             Client->>Kong: Acknowledge message/batch
         end
     end

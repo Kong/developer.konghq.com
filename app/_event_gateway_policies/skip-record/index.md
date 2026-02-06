@@ -46,7 +46,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Skip records with a specific name pattern](/event-gateway/policies/skip-record/examples/skip-based-on-name/)"
+  - use_case: "[Example: Skip records with a specific name pattern](/event-gateway/policies/skip-record/examples/skip-based-on-name/)"
     description: Identify records with a specific suffix and skip forwarding them.
 {% endtable %}
 <!--vale on-->
@@ -73,11 +73,11 @@ sequenceDiagram
   broker->>egw: consume message
   egw->>egw: check message validity
   
-  alt message matches name pattern
+  alt If message matches <br> name pattern
 
   egw--xclient: skip passing to client
 
-  else message doesn't match name pattern
+  else If message doesn't match <br> name pattern
   egw ->> egw: apply other policies
   egw->>client: pass to client
 

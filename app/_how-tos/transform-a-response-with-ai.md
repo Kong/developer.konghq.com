@@ -29,6 +29,7 @@ entities:
 tags:
     - ai
     - transformations
+    - openai
 
 tldr:
     q: How can I use AI to transform a response before returning it to the client?
@@ -105,6 +106,7 @@ variables:
 
 To check that the response transformation is working, send a request:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /anything
 status_code: 201
@@ -114,3 +116,4 @@ display_headers: true
 expected_headers:
   - "new-header: header-value"
 {% endvalidation %}
+<!-- vale on -->

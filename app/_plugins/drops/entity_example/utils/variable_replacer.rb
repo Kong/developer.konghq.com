@@ -38,23 +38,59 @@ module Jekyll
               when Array
                 data.map { |item| run(item) }
               when String
+                # First handle literal blocks (which need line-level replacement)
+                data = handle_literal_blocks(data)
+
                 data.gsub(regex) do |match|
-                  replace_variable(Regexp.last_match(1)) || match
+                  variable = Regexp.last_match(1)
+                  # Skip literal blocks - they're already handled
+                  next match if variables.dig(variable, 'literal_block')
+
+                  replace_variable(data, variable) || match
                 end
               else
                 data
               end
             end
 
-            def replace_variable(variable)
+            def handle_literal_blocks(data)
+              data
+            end
+
+            def replace_variable(_data, variable)
               variables.dig(variable, 'value')
             end
           end
 
           class DeckData < Data
-            def replace_variable(variable)
-              value = super
+            def handle_literal_blocks(data)
+              literal_vars = variables.select { |_, v| v && v['literal_block'] }.keys
+              return data if literal_vars.empty?
 
+              literal_pattern = literal_vars.map { |key| Regexp.escape("${#{key}}") }.join('|')
+
+              # Match entire line: key: value_with_variable
+              line_regex = /^( *)(\S+):\s*(["']?)(?:#{literal_pattern})\3\s*$/
+
+              data.gsub(line_regex) do
+                indentation = Regexp.last_match(1)
+                key = Regexp.last_match(2)
+
+                # Extract variable name from the matched line
+                variable = variables.keys.find { |var| Regexp.last_match(0).include?("${#{var}}") }
+
+                if variable
+                  env_variable = variables.dig(variable, 'value').gsub('$', 'DECK_')
+                  value_indentation = indentation.length + 2
+                  "#{indentation}#{key}: |-\n#{' ' * value_indentation}${{ env \"#{env_variable}\" }}"
+                else
+                  Regexp.last_match(0)
+                end
+              end
+            end
+
+            def replace_variable(_data, variable)
+              value = variables.dig(variable, 'value')
               return nil unless value
 
               env_variable = value.gsub('$', 'DECK_')
@@ -63,7 +99,7 @@ module Jekyll
           end
 
           class TerraformData < Data
-            def replace_variable(variable)
+            def replace_variable(_data, variable)
               value = super
 
               return nil unless value
@@ -72,7 +108,6 @@ module Jekyll
               "var.#{env_variable}"
             end
           end
-
         end
       end
     end

@@ -32,6 +32,7 @@ entities:
 
 tags:
   - ai
+  - gemini
 
 tldr:
   q: How do I use Gemini's googleSearch tool with the AI Proxy Advanced plugin?

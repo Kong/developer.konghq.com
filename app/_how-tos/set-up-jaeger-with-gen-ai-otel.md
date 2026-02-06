@@ -34,6 +34,7 @@ tags:
     - analytics
     - monitoring
     - dynatrace
+    - openai
 
 tech_preview: true
 

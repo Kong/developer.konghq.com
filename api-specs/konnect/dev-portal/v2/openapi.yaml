@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
+  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -960,10 +960,11 @@ components:
       name: credentialId
       in: path
       required: true
-      description: Id of the targeted credential
+      description: |
+        Id of the targeted credential.
+        Use the list-credentials endpoint to obtain the `id` field for each credential.
       schema:
         type: string
-        format: uuid
     DocumentId:
       schema:
         type: string
@@ -1696,6 +1697,22 @@ components:
             type: string
           example:
             - apikey
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       required:
         - id
         - name
@@ -2208,17 +2225,42 @@ components:
         - client_id
         - client_secret
       title: Refresh token response
-    CredentialListItem:
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
+        - type
         - id
         - display_name
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -2239,20 +2281,46 @@ components:
           type: string
           maxLength: 255
       additionalProperties: false
-    CredentialCreationResponse:
+    ApiKeyCredentialCreationResponse:
+      description: Response when creating an API key credential.
       type: object
       properties:
-        credential:
+        type:
           type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        credential:
+          description: The API key value (only returned on creation)
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
-        - credential
+        - type
         - id
         - display_name
+        - credential
+    CredentialCreationResponse:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:
@@ -2940,6 +3008,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id

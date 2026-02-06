@@ -1,4 +1,5 @@
 title: Mesh Documentation
+description: Index containing all documentation for {{site.mesh_product_name}}.
 sections:
   - title: Overview
     items:
@@ -42,7 +43,7 @@ sections:
       - path: /mesh/mesh-multi-tenancy/
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
-      - path: /mesh/kuma-user-interface-gui/
+      - path: /mesh/interact-with-control-plane/
       - path: /mesh/use-mesh-cli/
       - path: /mesh/annotations/
       - path: /mesh/data-plane-proxy/
