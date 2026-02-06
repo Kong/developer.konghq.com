@@ -20,10 +20,8 @@
 
 2. Install the Gateway API CRDs before installing {{ site.kic_product_name }}.
 
-   <!-- kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml -->
-
    ```bash
-   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ site.gwapi_version}}/standard-install.yaml
    ```
 
    {% endif %}
