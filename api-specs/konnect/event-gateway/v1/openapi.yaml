@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c4f42a96171a712c12ab83ae6d9ad022c8abcdf4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c4f42a96171a712c12ab83ae6d9ad022c8abcdf4'
+  x-oas-source: kong/platform-api@7e26d6e4d023b6aed068061cdcf7bb282246aced
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7e26d6e4d023b6aed068061cdcf7bb282246aced'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2398,6 +2398,7 @@ components:
             - certificate
             - key
           x-min-runtime-version: '1.1'
+          x-speakeasy-param-computed: false
       required:
         - enabled
     BackendMetadataUpdateIntervalSeconds:
