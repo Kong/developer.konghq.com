@@ -1,9 +1,9 @@
 ## {{include.title | liquify }}
 
 {% if page.example.extended_description %}
-{{ page.example.extended_description | liquify | markdownify }}
+{{ page.example.extended_description | liquify  }}
 {% else %}
-{{ page.example.description | liquify | markdownify }}
+{{ page.example.description | liquify }}
 {% endif %}
 
 {% unless page.example.requirements == empty %}
