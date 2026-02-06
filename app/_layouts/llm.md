@@ -5,8 +5,8 @@ layout: null
 # {{page.llm_title | liquify }}
 
 {% include llm/metadata.md %}
-
 {% include llm/tldr.md %}
+{% include llm/series.md %}
 
 {{ content }}
 
