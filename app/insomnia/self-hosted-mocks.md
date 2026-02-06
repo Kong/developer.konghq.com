@@ -30,14 +30,64 @@ Our self-hosted mock servers use the [Insomnia Mockbin](https://github.com/kong/
 Self-hosted mocks give you full control over availability, traffic limits, and infrastructure.
 
 ## Prerequisites
-Before you deploy a self-hosted mock server, you must have the following:
-- **[Docker image](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions)**: The container image that runs the self-hosted mock server.
-- **[Redis instance](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#requirements)**: The Redis service that the mock server connects to at runtime.
+Before you deploy a self-hosted mock server, you need the following:
 
-For more information, navigate to [Configuration details](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
+- Pull the Docker image
+- Install the Redis instance
+
+### Pull the Docker image
+
+The self-hosted mock server runs on a Docker image. You can either install it using the command line or a base image in a Dockerfile.
+
+{% navtabs "docker-pull" %}
+{% navtab "Command line" %}
+Install from the command line:
+```sh
+docker pull ghcr.io/kong/insomnia-mockbin-self-hosted:latest
+```
+{% endnavtab %}
+{% navtab "Dockerfile" %}
+Use as base image in Dockerfile:
+```sh
+FROM ghcr.io/kong/insomnia-mockbin-self-hosted:latest
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+These will pull the latest image. You can see all available versions in the [self-hosted mock server repository](https://github.com/Kong/insomnia-mockbin/pkgs/container/insomnia-mockbin-self-hosted/versions).
+
+### Install the Redis instance
+
+1. Install Redis:
+   
+   ```sh
+   brew install redis
+   ```
+1. Start Redis:
+   
+   ```sh
+   brew services start redis
+   ```
+   Redis should be now running on `localhost:6379`. 
+
+1. Clone the mockbin repository:
+   ```sh
+   git clone https://github.com/Kong/mockbin.git ./mockbin
+   cd mockbin
+   cp .env.sample .env
+   brew install fnm
+   fnm use
+   npm install
+   ```
+
+   {:.info}
+   > **Note:** You can use `nvm`, `n` or `volta` instead of `fnm`.
+
+
+For more information about how to verify the container signature and proviance, see the [Insomnia mockbin README](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
 
 {:.info}
-> To run it [locally](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#installation), use NodeJS, Docker, or Kubernetes.
+> To run a self-hosted mock server locally, use [NodeJS](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node), [Docker](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-docker-compose), or Kubernetes.
 
 ## Create a self-hosted mock server with Kubernetes
 
