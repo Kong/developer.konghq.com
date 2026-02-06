@@ -95,7 +95,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{{site.konnect_short_name}} retains audit logs for 7 days.
+{{site.konnect_short_name}} retains audit logs for 7 days. After the 7 days, they are permanently deleted and can't be recovered.
 
 {:.info}
 > Dev Portal audit logs don't collect authorization and access events by design. You can view Dev Portal entity creation, edits, and approved state changes from the {{site.konnect_short_name}} audit logs. 
