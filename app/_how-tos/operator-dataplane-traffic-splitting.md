@@ -156,7 +156,7 @@ spec:
    for i in {1..10}; do curl -s http://$PROXY_IP/echo; done
    ```
 
-   You should an even split between v1 and v2:
+   You should see an even split between v1 and v2:
 
    ```
    Welcome, you are connected to node v1.
