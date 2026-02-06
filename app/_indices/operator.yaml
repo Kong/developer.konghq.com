@@ -52,8 +52,12 @@ groups:
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
           - path: /operator/dataplanes/how-to/deploy-sidecars/
+          - path: /operator/dataplanes/how-to/cert-manager/
+          - path: /operator/dataplanes/how-to/tls-termination/
           - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
+          - path: /operator/dataplanes/how-to/handle-ingress/
+          - path: /operator/dataplanes/how-to/configure-plugins-for-httproute/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/
@@ -102,6 +106,11 @@ groups:
       - title: "Konnect CRDs: Cloud Gateways"
         items:
           - path: /operator/konnect/crd/cloud-gateways/**/*
+      - title: How-To
+        items:
+          - path: /operator/konnect/how-to/auth-cross-namespace-reference/
+          - path: /operator/konnect/how-to/secret-cross-namespace-reference/
+          - path: /operator/konnect/how-to/static-naming/
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/
