@@ -47,6 +47,11 @@ prereqs:
       icon_url: /assets/icons/openai.svg
       content: |
         This tutorial requires an OpenAI API key with access to GPT models. You can obtain an API key from the [OpenAI Platform](https://platform.openai.com/api-keys).
+        
+        Export the OpenAI API key as an environment variable:
+        ```sh
+        export DECK_OPENAI_API_KEY='YOUR OPENAI API KEY'
+        ```
     - title: Qwen Code CLI
       icon_url: /assets/icons/qwen.svg
       content: |
@@ -115,27 +120,6 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Export environment variables
-
-Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
-
-```sh
-export OPENAI_BASE_URL="http://localhost:8000/anything"
-export OPENAI_API_KEY=<your_openai_api_key>
-export OPENAI_MODEL="gpt-5"
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-export OPENAI_BASE_URL="$KONNECT_PROXY_URL/anything"
-export OPENAI_API_KEY=<your_openai_api_key>
-export OPENAI_MODEL="gpt-5"
-```
-{: data-deployment-topology="konnect" }
-
-{:.info}
-> Make sure that `OPENAI_MODEL` variable points to the same model configured for the AI Proxy plugin.
-
 ## Configure the File Log plugin
 
 Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and AI Gateway. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
@@ -144,14 +128,37 @@ Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic
 entities:
   plugins:
     - name: file-log
-      service: qwen-service
+      service: example-service
       config:
         path: "/tmp/qwen.json"
 {% endentity_examples %}
 
+## Export environment variables
+
+Open a new terminal window and export the variables that Qwen Code CLI will use. Point `OPENAI_BASE_URL` to the local proxy endpoint where LLM traffic from Qwen Code CLI will route:
+
+```sh
+export OPENAI_BASE_URL="http://localhost:8000/anything"
+export OPENAI_API_KEY="YOUR OPENAI API KEY"
+export OPENAI_MODEL="gpt-5"
+```
+{: data-deployment-topology="on-prem" }
+
+```sh
+export OPENAI_BASE_URL="http://localhost:8000/anything"
+export OPENAI_API_KEY="YOUR OPENAI API KEY"
+export OPENAI_MODEL="gpt-5"
+```
+If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
+{: data-deployment-topology="konnect" }
+
+{:.info}
+> Make sure that `OPENAI_MODEL` variable points to the same model configured for the AI Proxy plugin.
+
+
 ## Validate the configuration
 
-Test the Qwen Code CLI setup:
+Now you can test the Qwen Code CLI setup.
 
 1. In the terminal where you exported your environment variables, run:
 
@@ -161,7 +168,7 @@ Test the Qwen Code CLI setup:
 
    You should see the Qwen Code CLI interface start up.
 
-2. Run a test command to test the connection:
+2. Run a command to test the connection:
 
    ```text
    Explain the singleton pattern in Python.
@@ -177,7 +184,7 @@ Test the Qwen Code CLI setup:
 
    Look for entries similar to:
 
-```json
+   ```json
    {
      ...
      "request": {
@@ -204,5 +211,5 @@ Test the Qwen Code CLI setup:
      }
      ...
    }
-```
+   ```
 {:.no-copy-code}
