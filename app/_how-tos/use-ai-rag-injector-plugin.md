@@ -146,6 +146,7 @@ are structured data other than plain texts.
 
 The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the {{site.ai_gateway}}. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID.
 
+<!-- vale off -->
 {% validation custom-command %}
 command: |
   cat <<EOF > inject_policy.py
@@ -237,6 +238,7 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!-- vale on -->
 
 {:.info}
 > You can replace `print(response.json())` with `print(response.text)` to view the raw HTTP response body as a plain string instead of a parsed JSON object. This is useful for debugging cases where:
