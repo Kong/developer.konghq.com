@@ -149,6 +149,7 @@ export OPENAI_BASE_URL="http://localhost:8000/anything"
 export OPENAI_API_KEY="YOUR OPENAI API KEY"
 export OPENAI_MODEL="gpt-5"
 ```
+{: data-deployment-topology="konnect" }
 If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
 {: data-deployment-topology="konnect" }
 
