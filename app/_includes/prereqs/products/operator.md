@@ -14,6 +14,7 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
+{:data-deployment-topology='on-prem'}
 {% endcapture %}
 
 {% capture cert %}
@@ -75,10 +76,12 @@ rawLicenseString: '$(cat ./license.json)'
 
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
+{:data-deployment-topology='on-prem'}
 {{license | indent: 3}}
 
 {% else %}
 This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
+{:data-deployment-topology='on-prem'}
 {{license}}
 
 {% endif %}
