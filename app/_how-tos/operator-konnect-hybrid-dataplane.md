@@ -31,6 +31,8 @@ prereqs:
   operator:
     konnect:
       auth: true
+      control_plane: true
+      konnectextension: true
 ---
 
 {:data-deployment-topology='konnect'}
