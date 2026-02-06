@@ -4,9 +4,6 @@ description: "Deploy a data plane using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/konnect/get-started/data-plane/
-series:
-  id: operator-konnectcrds-get-started
-  position: 4
 
 breadcrumbs:
   - /operator/
