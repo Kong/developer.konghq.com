@@ -694,6 +694,7 @@ Qdrant
 qubit
 querystring
 qux
+Qwen
 ratelimit
 rbac
 reachability
