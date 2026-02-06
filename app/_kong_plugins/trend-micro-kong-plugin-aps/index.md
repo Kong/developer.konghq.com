@@ -5,7 +5,7 @@ name: 'TrendAI API Security'
 content_type: plugin
 
 publisher: trendai
-description: 'Risk visibility for your Kong Gateways and protection ofr their cloud-hosted infrastructure through TrendAI Vision One Cloud Risk Management and Container Security'
+description: 'Strengthen your overall API Security with TrendAI Vision One'
 
 products:
     - gateway
@@ -36,58 +36,75 @@ related_resources:
     url: https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-apis
 ---
 
-Strengthen your overall API Security with TrendAI Vision One.
-The TrendAI API Security plugin delivers risk visibility for your Kong Gateways and protects their cloud-hosted infrastructure through TrendAI Vision One Cloud Risk Management and Container Security. 
+The TrendAI API Security plugin delivers risk visibility for your {{site.base_gateway}}s and protects their cloud-hosted infrastructure through TrendAI Vision One [Cloud Risk Management](https://www.trendmicro.com/en_us/business/products/hybrid-cloud/cloud-risk-management.html) and [Container Security](https://www.trendmicro.com/en_us/business/products/hybrid-cloud/cloud-one-container-image-security.html).
 
-This plugin connects your Kong environment to the TrendAI Vision One platform, and is intended for TrendAI Vision One customers.
+This plugin connects your Kong environment to the [TrendAI Vision One]() platform, and is intended for TrendAI Vision One customers.
 
 Key benefits include:
-* Discovery and risk assessment of Kong Gateways and their associated APIs, including checks for misconfiguration, authentication status, zombie APIs, and internet exposure.
-* Kong Gateway mapping within your cloud infrastructure to show its location and surrounding context. This visibility helps you understand the cloud environment around Kong Gateway and protect the underlying cloud infrastructure. Requires TrendAI Vision One Cloud Risk Management and Container Security licenses.
+* Discovery and risk assessment of {{site.base_gateway}}s and their associated APIs, including checks for misconfiguration, authentication status, zombie APIs, and internet exposure.
+* {{site.base_gateway}} mapping within your cloud infrastructure to show its location and surrounding context. 
+This visibility helps you understand the cloud environment around {{site.base_gateway}} and protect the underlying cloud infrastructure. 
+Requires TrendAI Vision One Cloud Risk Management and Container Security licenses.
 
 ## How it works
 
-When enabled, the plugin periodically collects Kong Gateway configuration data from Routes, Services, Upstreams, Targets, and Plugins, and sends it to the TrendAI Vision One backend for analysis and cloud infrastructure mapping. 
-TrendAI Vision One then generates an API Inventory, detects API Gateway misconfigurations, and correlates the Kong data plane node’s compute instance with your cloud infrastructure through TrendAI Vision One Cloud Risk Management.
+When enabled, the TrendAI API Security plugin periodically collects {{site.base_gateway}} configuration data from Routes, Services, Upstreams, Targets, and Plugins, and sends it to the TrendAI Vision One backend for analysis and cloud infrastructure mapping.
+TrendAI Vision One then generates an API Inventory, detects API Gateway misconfigurations, and correlates the {{site.base_gateway}} data plane node’s compute instance with your cloud infrastructure through TrendAI Vision One Cloud Risk Management.
 
 ## Install the TrendAI API Security plugin
 
+You can install the TrendAI API Security plugin by downloading and mounting its files on {{site.base_gateway}}’s system.
+
 ### Prerequisites
+
 - A TrendAI Vision one account
+- Add [Kong Gateway as a Third Party Integration in TrendAI Vision One](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway).
+Download the plugin gzip file and retrieve the required FQDN and token values. These values will be configured in the plugin to ensure data is sent back to the correct TrendAI Vision One account.
 
 ### Installation steps
 
-You can install the TrendAI API Security plugin by downloading and mounting its file on Kong Gateway’s system.
-
-Add [Kong Gateway as a Third Party Integration in TrendAI Vision One](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway).
-Follow the linked documentation to download the plugin gzip file and retrieve the required FQDN and token values. These values are configured in the plugin to ensure data is sent back to the correct TrendAI Vision One account.
-
-
-## Installation
-
 The following instructions use LuaRocks to install the plugin from a source archive. For other installation methods, please refer to the documentation from [Kong](https://docs.konghq.com/gateway/latest/plugin-development/distribution/#install-the-plugin).
 
-1. Download the plugin code from this repository as a zip file.
-2. Transfer the plugin source code to your Kong Gateway node.
-3. Ensure [LuaRocks](https://luarocks.org/) is installed in your Kong Gateway node.
-4. Unzip the plugin contents and change your terminal's current directory to the extracted archive where the `.rockspec` file is located.
+1. Transfer the plugin source code to your {{site.base_gateway}} node.
+1. Ensure [LuaRocks](https://luarocks.org/) is installed in your {{site.base_gateway}} node.
+1. Unzip the plugin contents and change your terminal's current directory to the extracted archive where the `.rockspec` file is located:
 
-```bash
-cd trend-micro-kong-plugin-aps-main
-```
+    ```bash
+    cd trend-micro-kong-plugin-aps-main
+    ```
 
-5. Run the following command to install the plugin
+5. Run the following command to install the plugin:
 
-```bash
-luarocks make
-```
+    ```bash
+    luarocks make
+    ```
 
-Please refer to the section based on your Kong Deployment Type:
+Next, refer to the installation instructions based on your deployment type.
 
-### DockerFile/Kubernetes
+{% navtabs 'install-options' %}
+{% navtab "Konnect" %}
 
-If you are running Kong Gateway on Docker or Kubernetes, the plugin needs to be installed inside the Kong Gateway container.
-Copy or mount the plugin’s source code into the container. Here’s an example Dockerfile that shows how to mount your plugin in the Kong Gateway image:
+{{site.konnect_short_name}} requires the custom plugin’s `schema.lua` file to create a plugin entry in the plugin catalog for your control plane.
+Upload the `schema.lua` file from the downloaded zip file to create a configurable entity in {{site.konnect_short_name}}:
+
+1. In the {{site.konnect_short_name}} menu, click **API Gateway**.
+1. Click a control plane.
+1. From the control plane's menu, click **Plugins**.
+1. Click **New Plugin**.
+1. Click **Custom Plugin**.
+1. Upload the `schema.lua` file for your plugin.
+1. Check that your file displays correctly in the preview, then click **Save**.
+1. After uploading a schema to {{site.konnect_short_name}}, upload the `schema.lua` and `handler.lua` files from the downloaded zip archive to each {{site.base_gateway}} data plane node. 
+   If a data plane node doesn’t have these files, the plugin won’t be able to run on that node.
+1. Follow the Dockerfile installation instructions on this page (switch tabs) to get your plugin set up on each node. 
+
+You can now configure this custom plugin like any other plugin in {{site.konnect_short_name}}.
+
+{% endnavtab %}
+{% navtab "Docker/Kubernetes" %}
+
+If you are running {{site.base_gateway}}  on Docker or Kubernetes, the plugin needs to be installed inside the {{site.base_gateway}} container.
+Copy or mount the plugin’s source code into the container. Here’s an example Dockerfile that shows how to mount your plugin in the {{site.base_gateway}} image:
 
 ```yaml
 FROM kong/kong-gateway:latest
@@ -106,35 +123,9 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
 CMD ["kong", "docker-start"]
 ```
 
-### Kong Konnect™
+{% endnavtab %}
+{% endnavtabs %}
 
-:warning: Custom plugins are [not supported](https://docs.konghq.com/konnect/gateway-manager/plugins/add-custom-plugin/) in [Dedicated Cloud Gateways](https://docs.konghq.com/konnect/gateway-manager/dedicated-cloud-gateways/). Dedicated Cloud Gateways are data plane nodes that are fully managed by Kong in Konnect.
+## Configuring the plugin
 
-#### Add plugin to a control plane
-
-Kong Konnect™ requires the custom plugin’s schema.lua file to create a plugin entry in the plugin catalog for your control plane.
-Upload the `schema.lua` file from the downloaded zip file to create a configurable entity in Konnect:
-
-1. From the Gateway Manager, open a control plane.
-2. Open Plugins from the side navigation, then click Add Plugin.
-3. Open the Custom Plugins tab, then click Create on the Custom Plugin tile.
-4. Upload the schema.lua file for your plugin.
-5. Check that your file displays correctly in the preview, then click Save.
-
-#### Upload files to data plane nodes
-
-After uploading a schema to Konnect, upload the `schema.lua` and `handler.lua` file from the downloaded zip archive to each Kong Gateway data plane node.
-If a data plane node doesn’t have these files, the plugin won’t be able to run on that node.
-Follow the [DockerFile](#dockerfilekubernetes) installation instructions to get your plugin set up on each node. You can now configure this custom plugin like any other plugin in Konnect.
-
-## Configuration
-
-### Setup the Trend API Key and Endpoint URL
-
-The Trend Vision One for Kong Gateway plugin relies on a Trend Vison One API key and Endpoint URL. Ensure you have copied these parameters from the Kong Gateway Third-Party Integrations page in Trend Vision One.
-It is recommended that you store and manage this key in a vault. See [Secrets Management](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/) for more details. The configuration examples presented below use the Environment [Variables Vault](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/backends/env/), however this is not recommended for a production environment.
-The API key is stored as an environment variable on the Kong Gateway node:
-
-```bash
-export TREND_API_KEY={api_key}
-```
+To enable and configure the plugin, see the [plugin setup example](/plugins/trend-micro-kong-plugin-aps/examples/enable-trendai-plugin/).
