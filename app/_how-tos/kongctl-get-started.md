@@ -100,7 +100,7 @@ in the proper order to satisfy resource parent / child and other resource relati
 
 Input configuration is typically stored in files and loaded into kongctl with the `--filename` flag, 
 but for quick demonstrations we can pass the configuration directly to the commands on `STDIN`. The following
-command calculates a plan for your oganization with a basic portal declartion and displays a human-friendly
+command calculates a plan for your organization with a basic portal declaration and displays a human-friendly
 printout showing what changes _will be_ applied. 
 
 ```bash

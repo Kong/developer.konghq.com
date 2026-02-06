@@ -3,7 +3,7 @@ kongctl
 {% endcapture %}
 
 {% capture details_content %}
-  kongctl is a CLI tool for managing {{site.konnect_short_name}} resources programatically. To complete this tutorial, 
+  kongctl is a CLI tool for managing {{site.konnect_short_name}} resources programmatically. To complete this tutorial, 
   install [kongctl](/kongctl/).
 {% endcapture %}
 
