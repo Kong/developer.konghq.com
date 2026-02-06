@@ -1,5 +1,6 @@
 ---
 title: Route Google Gemini CLI traffic through Kong AI Gateway
+permalink: /how-to/use-gemini-cli-with-ai-gateway
 content_type: how_to
 related_resources:
   - text: AI Gateway
