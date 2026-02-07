@@ -199,14 +199,14 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Gateway Manager
-              description: "Map Gateway Services from {{site.konnect_short_name}} Gateway Manager to visualize services across multiple Control Planes."
+              title: API Gateway
+              description: "Map Gateway Services from {{site.konnect_short_name}} to visualize services across multiple Control Planes."
               icon: /assets/icons/gateway.svg
               ctas:
                 - text: Reference
-                  url: "/catalog/integrations/gateway-manager/"
+                  url: "/catalog/integrations/api-gateway/"
                 - text: Tutorial
-                  url: "/how-to/map-gateway-manager-resources/"
+                  url: "/how-to/map-api-gateway-resources/"
       - blocks:
           - type: card
             config:
