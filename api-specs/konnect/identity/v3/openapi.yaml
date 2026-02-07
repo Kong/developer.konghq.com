@@ -657,18 +657,18 @@ paths:
       tags:
         - Users
   '/users/{userId}':
-    parameters:
-      - name: userId
-        in: path
-        description: The ID of the user being deleted.
-        required: true
-        schema:
-          type: string
-          format: uuid
-          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
     get:
       operationId: get-user
       summary: Get a User
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user being retrived.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: d32d905a-ed33-46a3-a093-d8f536af9a8a
       description: Returns the user object for the user ID specified as a path parameter.
       responses:
         '200':
@@ -682,6 +682,15 @@ paths:
     patch:
       operationId: update-user
       summary: Update User
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user being updated.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: d32d905a-ed33-46a3-a093-d8f536af9a8a
       description: Update an individual user.
       requestBody:
         $ref: '#/components/requestBodies/UpdateUser'
@@ -699,6 +708,15 @@ paths:
     delete:
       operationId: delete-user
       summary: Delete User
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user being deleted.
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: d32d905a-ed33-46a3-a093-d8f536af9a8a
       description: Deletes an individual user. Returns 404 if the requested user was not found.
       responses:
         '204':
