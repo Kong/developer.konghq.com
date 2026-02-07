@@ -1,0 +1,321 @@
+metadata:
+  title: Git Sync
+  content_type: landing_page
+  description: Store and manage Insomnia projects using your own Git repository. 
+  products:
+    - insomnia
+  tags:
+    - design-apis
+    - test-apis
+rows:
+  - header:
+      type: h1
+      text: "Git Sync"
+      sub_text: Store and manage Insomnia projects using your own Git repository.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Git Sync is designed for teams that want Git-native workflows, full data ownership, and direct control over where their data lives.
+
+  - header:
+      type: h2
+      text: Why Git Sync exists
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Git Sync exists to let you use Git as the source of truth for your Insomnia projects.
+                    
+                    With Git Sync:
+                      - Your data lives in your Git repository
+                      - Insomnia does not host or manage your project data
+                      - Collaboration follows standard Git workflows
+                  
+                      This model is intentionally different from cloud-hosted API clients.
+  - header:
+      type: h2
+      text: What Git Sync is
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Git Sync is a storage mode that uses a third-party Git repository to store Insomnia project data.
+                    
+                    It is intended for users who want:
+                      - Version control
+                      - Peer review
+                      - Auditable change history
+                      - Local ownership of data
+                    
+                    Supported Git providers include:
+                      - GitHub
+                      - GitLab
+                      - Bitbucket
+  - header:
+      type: h3
+      text: What Git Sync isn't
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Git Sync isn't:
+                    - Insomnia Cloud storage
+                    - Automatically shared across Insomnia organisations
+                    - Managed or hosted by Insomnia
+                    
+                    If you want automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync]() instead.
+
+  - header:
+      type: h2
+      text: How Git Sync works    
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    **Direct-to-Git architecture**
+                    
+                    Insomnia syncs directly between your device and your Git provider.
+                    - Your project data does not pass through Insomnia servers
+                    - This architecture is a core reason teams choose Git Sync
+
+                    **Known limitations**
+                    
+                    Current limitations include:
+                    - No UI support for reverting commits
+                    - No pre-request or post-request scripts for gRPC
+                    - No persistent execution history for gRPC requests
+                - type: text
+                  text: |
+                    {% mermaid %}
+                    flowchart LR
+                        subgraph userDesktop [User desktop]
+                            A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+                            B(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
+                        end 
+
+                        subgraph unsure [ ]
+                            C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+                            D(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
+                        end
+
+                        subgraph insomniaCloud [Insomnia Cloud]
+                            E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;" />Database)
+                            F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;" />Google Cloud)
+                        end
+
+                        subgraph Git-based source code management provider
+                          subgraph .
+                            G(<img src="/assets/icons/bitbucket.svg" style="max-width:25px; display:block; margin:0 auto;"/>Bitbucket)
+                            H(<img src="/assets/icons/gitlab.svg" style="max-width:25px; display:block; margin:0 auto;" />GitLab)
+                            I(<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" />GitHub)
+                            end
+                        end
+                        
+                        J(<b>Insomnia resources</b><br>RBAC<br>License)
+
+
+                        E <--> J
+                        F <--> J <--> A <--> C
+                        B <--> D
+                        C <--> G & H & I
+                        D <--> G & H & I
+
+                        style . stroke:none
+                    {% endmermaid %}
+
+
+  - header:
+      type: h2
+      text: Storage
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Local vault
+            description: Store your Insomnia data locally on your device.
+            icon: /assets/icons/laptop.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#local-vault
+      - blocks:
+        - type: card
+          config:
+            title: Cloud sync
+            description: Store your Insomnia data securely in the cloud.
+            icon: /assets/icons/cloud.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#cloud-sync
+      - blocks:
+        - type: card
+          config:
+            title: Git sync
+            description: Store your Insomnia data on a Git repository.
+            icon: /assets/icons/git.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage/#git-sync
+
+  - header:
+      type: h2
+      text: Security
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: RBAC
+            description: Use Role-based access control (RBAC) for fine-grain control over who can access which Insomnia resources.
+            icon: /assets/icons/rbac.svg
+            cta:
+              text: Learn more
+              url: /insomnia/rbac/
+      - blocks:
+        - type: card
+          config:
+            title: SSO
+            description: Set up Single Sign-On (SSO) to allow your users to log in using your preferred Identity Provider.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn more
+              url: /insomnia/sso/
+      - blocks:
+        - type: card
+          config:
+            title: SCIM
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning to manage users and teams from your Identity Provider.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scim/
+
+  - header:
+      type: h2
+      text: "Capabilities"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Essentials
+                  key: essentials
+                - title: Pro
+                  key: pro
+                - title: Enterprise
+                  key: ee
+              features:
+                - title: |
+                    [Local storage](/insomnia/storage/#local-vault)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [API testing](/insomnia/test/)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Cloud-hosted mock server](/insomnia/mock-servers/)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Automated API testing](/inso-cli/)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [End-to-End Encryption](/insomnia/end-to-end-encryption/)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Cloud Sync](/insomnia/storage/#cloud-sync)
+                  essentials: true
+                  pro: true
+                  ee: true
+                - title: |
+                    [Git Sync](/insomnia/storage/#git-sync)
+                  essentials: false
+                  individual: false
+                  pro: true
+                  ee: true
+                - title: |
+                    [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
+                  essentials: false
+                  individual: false
+                  pro: false
+                  ee: true
+                - title: |
+                    [Enterprise support](/insomnia/enterprise/)
+                  essentials: false
+                  individual: false
+                  pro: false
+                  ee: true
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    For more details about Enterprise capabilities, see [Insomnia Enterprise](/insomnia/enterprise/).
+                    
+                    See the full feature comparison on our [pricing page](https://insomnia.rest/pricing).
+
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - insomnia
+              quantity: 5
+              allow_empty: true
+
+  - header:
+      type: h2
+      text: References & tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                - insomnia
+              quantity: 5
+              allow_empty: true
+
+
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Where can I find the Insomnia changelog?
+              a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
+            - q: How often does Insomnia release updates?
+              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
+            - q: Does Insomnia automatically update to the latest version?
+              a: |
+                On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
+
+                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia doesn't own or maintain all Linux distribution mechanisms, automatic updates aren't guaranteed on Linux.
+            
