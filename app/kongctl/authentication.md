@@ -59,7 +59,7 @@ Logging your CLI into Kong Konnect with the browser...
 After following the instructions in the browser and successfully authenticating,
 you will see the message `User successfully authorized`.
 
-This indicates that kongctl has negioated with {{site.konnect_short_name}} and 
+This indicates that kongctl has negotiated with {{site.konnect_short_name}} and 
 stored an access and refresh token pair for subsequent commands. 
 
 You can verify authentication by running:
@@ -112,7 +112,7 @@ set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable:
 
 {:.info}
 > See the [environment variable configuration reference](/kongctl/config#environment-variables) 
-> for full details on environment variables and the kongctl configuraiton system 
+> for full details on environment variables and the kongctl configuration system 
 
 ```bash
 export KONGCTL_DEFAULT_KONNECT_PAT="kpat_your-token-here"
@@ -135,7 +135,7 @@ default:
 
 {:.info}
 > See the [configuration file reference](/kongctl/config#configuration-file) 
-> for full details on the kongctl configuraiton file
+> for full details on the kongctl configuration file
 
 Then run commands normally:
 ```bash

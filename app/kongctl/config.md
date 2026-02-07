@@ -94,7 +94,7 @@ region configuration value is shown in the help text as:
                           - Config path: [ konnect.region ]
 ```
 
-This shows that you can specifiy a region with the `--region` flag, 
+This shows that you can specify a region with the `--region` flag, 
 but you can also set it in the configuration file or via environment variables based on the config path.
 
 In the configuration file, this value would be set under the profile name following YAML syntax:
