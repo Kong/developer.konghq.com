@@ -92,7 +92,7 @@ spec:
 
 The `KonnectExtension` resource handles automatic certificate generation and establishes secure communication between your cluster and {{site.konnect_short_name}}.
 
-## Deplay a Dataplane
+## Deploy a Dataplane
 
 The Dataplane is the listener that will accept requests, and route traffic to your Kubernetes services.
 
