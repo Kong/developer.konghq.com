@@ -2,7 +2,7 @@
 title: Create a control plane
 description: Define a {{site.konnect_short_name}} Gateway control plane and bind it to your cluster using a `KonnectExtension`.
 content_type: how_to
-permalink: /operator/konnect/get-started/control-plane/
+permalink: /operator/get-started/konnect-crds/controlplane/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,13 +12,20 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
-  position: 3
+  id: operator-get-started-konnect-crds
+  position: 3 
 
 tldr:
   q: How do I create a control plane?
   a: |
     Define a `KonnectGatewayControlPlane` to point to your {{site.konnect_short_name}} instance, and a `KonnectExtension` to bind your Data Plane or Gateway to it.
+
+prereqs:
+  show_works_on: true
+  skip_product: true
+  operator:
+    konnect:
+      auth: true
 
 products:
   - operator
@@ -28,18 +35,15 @@ works_on:
 
 related_resources:
   - text: Deploy a data plane
-    url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+    url: /operator/konnect/crd/dataplane/hybrid/
 
 ---
 
 ## Create a `KonnectGatewayControlPlane`
 
-Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} Control Plane that your CRDs will target. This enables your cluster to send configuration to {{site.konnect_short_name}}.
+Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} control plane that your CRDs will target. This enables your cluster to send configuration to {{site.konnect_short_name}}.
 
-A `KonnectAPIAuthConfiguration` must already exist to authenticate with the {{site.konnect_short_name}} API. If you haven’t created one yet, see [Create API Authentication](/operator/konnect/get-started/authentication/).
-
-Apply the following configuration to define a control plane named `gateway-control-plane`:
-
+Apply the following configuration to define a Control Plane named `gateway-control-plane`:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -87,6 +91,33 @@ spec:
 <!-- vale on -->
 
 The `KonnectExtension` resource handles automatic certificate generation and establishes secure communication between your cluster and {{site.konnect_short_name}}.
+
+## Deploy a Dataplane
+
+The Dataplane is the listener that will accept requests, and route traffic to your Kubernetes services.
+
+```sh
+echo '
+apiVersion: gateway-operator.konghq.com/v1beta1
+kind: DataPlane
+metadata:
+  name: dataplane
+  namespace: kong
+spec:
+  extensions:
+  - kind: KonnectExtension
+    name: my-konnect-config
+    group: konnect.konghq.com
+  deployment:
+    podTemplateSpec:
+      spec:
+        containers:
+        - name: proxy
+          image: kong/kong-gateway:3.13
+          readinessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 1' | kubectl apply -f - 
+```
 
 ## Validation
 

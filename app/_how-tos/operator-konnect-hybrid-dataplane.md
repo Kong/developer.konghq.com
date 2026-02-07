@@ -3,10 +3,7 @@ title: Deploy a data plane
 description: "Deploy a data plane using {{ site.operator_product_name }}."
 content_type: how_to
 
-permalink: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
-series:
-  id: operator-get-started-hybrid
-  position: 3
+permalink: /operator/konnect/crd/dataplane/hybrid
 
 breadcrumbs:
   - /operator/
@@ -33,7 +30,6 @@ prereqs:
   operator:
     konnect:
       konnectextension: true
-
 ---
 
 {% include /how-tos/steps/operator-hybrid-data-plane.md %}

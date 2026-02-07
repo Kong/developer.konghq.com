@@ -12,10 +12,6 @@ breadcrumbs:
     group: Konnect
     section: "Konnect CRDs: Control Planes"
 
-series:
-  id: operator-get-started-hybrid
-  position: 2
-
 products:
   - operator
 

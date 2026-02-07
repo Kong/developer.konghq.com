@@ -8,31 +8,25 @@
 
 {% capture details_content %}
 
-{% assign gw_api_crd_version = "v1.3.0" %}
-
 {% if include.config.gateway_api == "experimental" %}
 
 1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}:
 
    ```bash
-   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/experimental-install.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ site.gwapi_version}}/experimental-install.yaml
    ```
 
    {% else %}
 
-1. Install the Gateway API CRDs before installing {{ site.kic_product_name }}.
-
-   <!-- kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml -->
+2. Install the Gateway API CRDs before installing {{ site.kic_product_name }}.
 
    ```bash
-   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ site.gwapi_version}}/standard-install.yaml
    ```
 
    {% endif %}
 
-1. Create a `Gateway` and `GatewayClass` instance to use.
-
-{% assign gwapi_version = "v1" %}
+3. Create a `Gateway` and `GatewayClass` instance to use.
 
 {% assign allowedRoutes = "All" %}
 {% if include.config.gateway_api.allowed_routes %}
@@ -58,7 +52,7 @@ kind: Namespace
 metadata:
   name: kong
 ---
-apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
+apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
 metadata:
   name: kong
@@ -67,7 +61,7 @@ metadata:
 spec:
   controllerName: {{ controllerName }}
 ---
-apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: kong

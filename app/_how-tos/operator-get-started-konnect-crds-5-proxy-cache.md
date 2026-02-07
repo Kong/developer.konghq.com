@@ -2,7 +2,7 @@
 title: Enable Proxy Caching
 description: Use the `KongPlugin` CRD to configure proxy caching for a route or service.
 content_type: how_to
-permalink: /operator/konnect/get-started/proxy-caching/
+permalink: /operator/get-started/konnect-crds/proxy-caching/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,8 +12,8 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
-  position: 7
+  id: operator-get-started-konnect-crds
+  position: 5 
 
 tldr:
   q: How do I enable response caching with {{site.konnect_short_name}} CRDs?

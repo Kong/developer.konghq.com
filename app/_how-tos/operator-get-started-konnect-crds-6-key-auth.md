@@ -2,7 +2,7 @@
 title: Enable Key Authentication
 description: Secure an API using the `key-auth` plugin and credentials from a `KongConsumer`.
 content_type: how_to
-permalink: /operator/konnect/get-started/key-authentication/
+permalink: /operator/get-started/konnect-crds/key-authentication/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,8 +12,8 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
-  position: 8
+  id: operator-get-started-konnect-crds
+  position: 6 
 
 tldr:
   q: How do I secure an API with key authentication using {{site.konnect_short_name}} CRDs?
