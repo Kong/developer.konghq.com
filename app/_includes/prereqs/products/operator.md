@@ -17,9 +17,14 @@ rawLicenseString: '$(cat ./license.json)'
 {:data-deployment-topology='on-prem'}
 {% endcapture %}
 
-{% capture cert %}
+{% capture cert-manager %}
 {% include k8s/cert-manager.md %}
 {% endcapture %}
+
+{% capture cert %}
+{% include k8s/ca-cert.md %}
+{% endcapture %}
+
 
 {% capture details_content %}
 
@@ -70,10 +75,10 @@ rawLicenseString: '$(cat ./license.json)'
 
 {% endif %}
 
+{{cert-manager | indent: 3}}
+
 {{cert | indent: 3}}
-
-{% include k8s/ca-cert.md %}
-
+   
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
 {:data-deployment-topology='on-prem'}

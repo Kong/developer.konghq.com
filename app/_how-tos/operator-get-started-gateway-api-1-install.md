@@ -11,9 +11,9 @@ series:
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Gateway Deployment
+    group: Gateway API
   - index: operator
-    group: Gateway Deployment
+    group: Gateway API
     section: "Get Started"
 
 products:
@@ -39,18 +39,26 @@ tags:
 
 ## Install CRDs
 
-{{ site.operator_product_name }} will automatically install the Cluster Resource Definitions as part of the initial deployment.  If you are upgrading the CRDs as part of an existing {{ site.operator_product_name }} installation, you should deploy them manually: 
+{{ site.operator_product_name }} will automatically install the Cluster Resource Definitions as part of the Helm deployment.  If you are upgrading the CRDs as part of an existing {{ site.operator_product_name }} installation, you should deploy them manually: 
 
 ```shell
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version }}/standard-install.yaml --server-side
 ```
 
+{% warning %}
+{{ site.operator_product_name }} 2.1 enables [Combine HTTP routes](/kubernetes-ingress-controller/faq/combining-httproutes/) by default.  This will automatically reduce the number of services with the same backendRef.  During an upgrade from {{ site.operator_product_name }} 2.0 to 2.1, this will mean a couple of seconds of downtime for your services as they are automatically merged. To disable this, set the following:
+
+```
+spec.controlPlaneOptions.translation.combinedServicesFromDifferentHTTPRoutes: disabled
+```
+
+in your ```GatewayConfiguration```
+{% endwarning %}
 
 ## Install {{ site.operator_product_name }}
 
 {% include prereqs/products/operator.md raw=true v_maj=2 %}
 
-{% include k8s/cert-manager.md raw=true %}
 
 ## Validate
 

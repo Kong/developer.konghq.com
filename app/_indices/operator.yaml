@@ -15,7 +15,7 @@ groups:
     sections:
       - items:
           - path: /operator/
-          - path: /operator/install/
+          - path: /operator/get-started/gateway-api/install/
           - path: /operator/support-policy/
           - path: /operator/changelog/
   - title: Reference

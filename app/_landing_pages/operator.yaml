@@ -32,7 +32,7 @@ rows:
             icon: /assets/icons/kubernetes.svg
             title: "Manage {{ site.base_gateway }} in Kubernetes through the Gateway API"
             description: |
-              Deploy and configure {{ site.base_gateway }} in Kubernetes using the standard Gateway API resources.
+              Deploy and configure {{ site.base_gateway }} in Kubernetes using Gateway API resources.
             cta:
               text: Deploy {{ site.base_gateway }} in Kubernetes using Gateway API
               url: /operator/get-started/gateway-api/install/ 
@@ -58,11 +58,8 @@ rows:
         - type: text
           config: |
 
-            As we continue moving support for Kubernetes Gateway API from self-managed control planes, as well as {{site.konnect_short_name}} managed control 
-            planes, we will will open up support for other {{site.konnect_short_name}} products when hosting your Gateway on Kubernetes.
-
-            Providing Gateway API configuration for Kong Gateway, as well as full integration with the {{site.konnect_short_name}} platform opens up the entire
-            API ecosystem.
+            Regardless of whether you use Gateway API or Kong entities with a {{site.konnect_short_name}} managed control 
+            plane, we support the features that will enhance your API ecosystem.
 
       - blocks:
         - type: table
@@ -79,10 +76,10 @@ rows:
                 supported_gwapi: true
                 supported_kong: true
               - product: Application Registration
-                supported_gwapi: Coming soon
+                supported_gwapi: true
                 supported_kong: true
               - product: Debugger
-                supported_gwapi: Coming soon
+                supported_gwapi: true
                 supported_kong: true
 
   - header:

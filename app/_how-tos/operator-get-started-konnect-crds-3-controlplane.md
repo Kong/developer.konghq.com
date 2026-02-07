@@ -92,6 +92,33 @@ spec:
 
 The `KonnectExtension` resource handles automatic certificate generation and establishes secure communication between your cluster and {{site.konnect_short_name}}.
 
+## Deplay a Dataplane
+
+The Dataplane is the listener that will accept requests, and route traffic to your Kubernetes services.
+
+```sh
+echo '
+apiVersion: gateway-operator.konghq.com/v1beta1
+kind: DataPlane
+metadata:
+  name: dataplane
+  namespace: kong
+spec:
+  extensions:
+  - kind: KonnectExtension
+    name: my-konnect-config
+    group: konnect.konghq.com
+  deployment:
+    podTemplateSpec:
+      spec:
+        containers:
+        - name: proxy
+          image: kong/kong-gateway:3.13
+          readinessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 1' | kubectl apply -f - 
+```
+
 ## Validation
 
 <!-- vale off -->

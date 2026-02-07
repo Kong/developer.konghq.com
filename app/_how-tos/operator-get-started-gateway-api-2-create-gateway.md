@@ -11,10 +11,11 @@ series:
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Konnect
+    group: Gateway API
   - index: operator
-    group: Konnect
-    section: "Konnect CRDs: Gateway"
+    group: Gateway API
+    section: "Get Started"
+    
 min_version:
   operator: '2.1'
 
@@ -31,11 +32,12 @@ search_aliases:
   - konnect hybrid gateway
 
 tldr:
-  q: How do I configure a Hybrid Gateway in {{site.konnect_short_name}}?
-  a: Create a `GatewayConfiguration` resource that includes your {{site.konnect_short_name}} authentication and data plane options. Then create a `GatewayClass` resource that references the `GatewayConfiguration`, and a `Gateway` resource that references the `GatewayClass`.
+  q: How do I deploy Kong Gateway using Kubernetes Gateway API?
+  a: Use Gateway API constructs `GatewayConfiguration`,  `GatewayClass` and `Gateway` to provision a Kong Gateway on Kubernetes.
 
 prereqs:
-  skip_product: false
+  show_works_on: true
+  skip_product: true
   operator:
     konnect:
       auth: true
@@ -44,13 +46,14 @@ prereqs:
 
 ## Create a `GatewayConfiguration` resource
 
-{: data-deployment-topology="konnect" }
-Use the `GatewayConfiguration` resource to configure a `GatewayClass` for Hybrid Gateways. `GatewayConfiguration` is for Hybrid Gateways when field `spec.konnect.authRef` is set.
-
 First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
+{:data-deployment-topology='konnect'}
 
-<!-- vale off -->
-{% konnect_crd %}
+First, let's create a `GatewayConfiguration` resource to specify our Gateway parameters:
+{:data-deployment-topology='on-prem'}
+
+```bash
+echo '
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
@@ -66,15 +69,17 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
-{% endkonnect_crd %}
-<!-- vale on -->
+            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
+```
+{:data-deployment-topology='konnect'}
 
-## Create a `GatewayClass` resource
-Next, configure a `GatewayClass` resource to use the `GatewayConfiguration` we just created:
+```bash
+kubectl create namespace kong 
+```
+{:data-deployment-topology='on-prem'}
 
-<!-- vale off -->
-{% on_prem_crd %}
+```bash
+echo '
 kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
 metadata:
@@ -87,13 +92,13 @@ spec:
         spec:
           containers:
           - name: proxy
-            image: kong/kong-gateway:3.12
-{% endon_prem_crd %}
-<!-- vale on -->
+            image: kong/kong-gateway:3.9' | kubectl apply -f -
+```
+{:data-deployment-topology='on-prem'}
 
 ## Create a `GatewayClass`
 
-Next configure respective `GatewayClass` to use the above `GatewayConfiguration`.
+Next, configure a `GatewayClass` resource to use the `GatewayConfiguration` we just created:
 
 ```bash
 echo 'kind: GatewayClass
@@ -130,7 +135,11 @@ spec:
 ' | kubectl apply -f -
 ```
 
-{{site.operator_product_name}} automatically creates the `DataPlane` and `KonnectGatewayControlPlane` resources.
+{{site.operator_product_name}} will automatically create the `DataPlane` and `KonnectGatewayControlPlane` resources.
+{:data-deployment-topology='konnect'}
+
+{{site.operator_product_name}} will automatically create the `DataPlane` and `ControlPlane` resources.
+{:data-deployment-topology='on-prem'}
 
 ## Validation
 
@@ -140,8 +149,3 @@ name: kong
 namespace: kong
 {% endvalidation %}
 
-The `DataPlane`, `KonnectExtension`, and `KonnectGatewayControlPlane` resources are created automatically by {{site.operator_product_name}}.
-{: data-deployment-topology="konnect" }
-
-The `DataPlane` and `ControlPlane` resources are created automatically by {{site.operator_product_name}}.
-{: data-deployment-topology="on-prem" }

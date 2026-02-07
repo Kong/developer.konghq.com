@@ -71,6 +71,14 @@ flowchart LR
 {% endmermaid %}
 <!--vale on-->
 
+
+## Deploy a Service to Kubernetes
+Let's go ahead and deploy an ```echo``` service to the Kubernetes cluster and setup the ```KongService``` and ```KongRoute```:
+
+```bash
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+```
+
 ## Create a `KongService` 
 
 The `KongService` resource is used to define an upstream service that {{site.konnect_short_name}} will route traffic to. This must include a reference to a `KonnectGatewayControlPlane` to associate the service with your Konnect environment.
@@ -83,7 +91,8 @@ metadata:
   name: service
 spec:
   name: service
-  host: httpbin.konghq.com
+  host: echo.kong.svc.cluster.local
+  port: 1027
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
@@ -106,7 +115,7 @@ spec:
   protocols:
   - http
   paths:
-  - /
+  - /echo
   serviceRef:
     type: namespacedRef
     namespacedRef:

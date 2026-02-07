@@ -12,9 +12,9 @@ series:
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Gateway Deployment
+    group: Gateway API
   - index: operator
-    group: Gateway Deployment
+    group: Gateway API
     section: "Get Started"
 
 products:
