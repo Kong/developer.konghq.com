@@ -127,11 +127,11 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Changelog
-          description: Running list of release notes for kongctl.
+          title: Configuration 
+          description: Configuring the CLI, authentication, and other features.
           cta:
-            text: kongctl changelog
-            url: https://github.com/kong/kongctl/releases/
+            text: kongctl configuration 
+            url: /kongctl/config/
             align: end
 
   - header:

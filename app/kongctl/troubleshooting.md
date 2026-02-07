@@ -1,15 +1,19 @@
 ---
 title: Troubleshooting kongctl
 content_type: reference
+layout: reference
+
 description: Common issues and solutions when using kongctl.
-products:
-  - konnect
+
 tools:
   - kongctl
+  
 works_on:
   - konnect
+
 tags:
   - troubleshooting
+
 breadcrumbs:
   - /kongctl/
 ---
