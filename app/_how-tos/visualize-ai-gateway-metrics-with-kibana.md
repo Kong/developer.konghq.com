@@ -1,5 +1,5 @@
 ---
-title: Visualize AI Gateway metrics 
+title: Visualize {{site.ai_gateway}} metrics
 content_type: how_to
 
 description: Use a sample Elasticsearch, Logstash, and Kibana stack to visualize data from the AI Proxy plugin.
@@ -19,7 +19,7 @@ plugins:
   - key-auth
   - http-log
 
-entities: 
+entities:
   - service
   - route
   - plugin
@@ -31,10 +31,10 @@ tags:
 tldr:
     q: How can I visualize AI Proxy logs?
     a: |
-        You can use any [logging plugin](/plugins/?category=logging) to send your AI Gateway metrics and logs to your dashboarding tool. 
+        You can use any [logging plugin](/plugins/?category=logging) to send your {{site.ai_gateway}} metrics and logs to your dashboarding tool.
         For testing purposes, you can start our [sample observability stack](https://github.com/KongHQ-CX/kong-ai-gateway-observability), send requests to `/gpt4o`, and visualize the results at `http://localhost:5601/app/dashboards#/view/aa8e4cb0-9566-11ef-beb2-c361d8db17a8`.
 
-        If you're using {{site.konnect_short_name}}, you can visualize AI Gateway metrics with [{{site.observability}}](/observability/).
+        If you're using {{site.konnect_short_name}}, you can visualize {{site.ai_gateway}} metrics with [{{site.observability}}](/observability/).
 
 prereqs:
   skip_product: true
@@ -43,7 +43,7 @@ prereqs:
     content: |
         This tutorial uses OpenAI:
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
-        1. [Get an API key](https://platform.openai.com/api-keys). 
+        1. [Get an API key](https://platform.openai.com/api-keys).
         1. Create a decK variable with the API key:
         ```sh
         export OPENAI_AUTH_HEADER='Bearer {api-key}'
@@ -57,9 +57,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Get started with AI Gateway
+  - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
   - text: Use LangChain with AI Proxy
     url: /how-to/use-langchain-with-ai-proxy/
@@ -69,7 +69,7 @@ automated_tests: false
 
 ## Clone the sample repository
 
-Kong provides a sample stack using Elasticsearch, Logstash, and Kibana to visualize AI Gateway metrics.
+Kong provides a sample stack using Elasticsearch, Logstash, and Kibana to visualize {{site.ai_gateway}} metrics.
 
 The [kong-ai-gateway-observability](https://github.com/KongHQ-CX/kong-ai-gateway-observability) GitHub repository comes with a configured {{site.base_gateway}} instance. You can see the sample {{site.base_gateway}} configuration in [`kong.yaml`](https://github.com/KongHQ-CX/kong-ai-gateway-observability/blob/main/kong.yaml). It includes:
 * A [Gateway Service](/gateway/entities/service/)

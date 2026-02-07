@@ -46,13 +46,13 @@ search_aliases:
   - model
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Gateway providers
+  - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
-  - text: Get started with AI Gateway
+  - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
 
 examples_groups:

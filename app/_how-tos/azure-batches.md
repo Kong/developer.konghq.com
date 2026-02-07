@@ -2,7 +2,7 @@
 title: Send batch requests to Azure OpenAI LLMs
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/

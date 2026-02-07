@@ -2,7 +2,7 @@
 title: Save LLM usage costs with AI Proxy Advanced semantic load balancing
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/

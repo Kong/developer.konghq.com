@@ -64,7 +64,7 @@ next_steps:
     url: /how-to/use-ai-gcp-model-armor-plugin/
 ---
 
-The **GCP Model Armor** plugin integrates Kong AI Gateway with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
+The **GCP Model Armor** plugin integrates {{site.ai_gateway}} with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
 It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features

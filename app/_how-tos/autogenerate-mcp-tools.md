@@ -2,7 +2,7 @@
 title: Autogenerate MCP tools from a RESTful API
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
@@ -39,7 +39,7 @@ tags:
 tldr:
   q: How do I automatically generate an MCP API from an existing REST API?
   a: |
-    Use the AI MCP Proxy to map your REST API endpoints into MCP capabilities, allowing you to integrate them directly with AI Gateway.
+    Use the AI MCP Proxy to map your REST API endpoints into MCP capabilities, allowing you to integrate them directly with {{site.ai_gateway}}.
 tools:
   - deck
 

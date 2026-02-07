@@ -28,7 +28,7 @@ rows:
       Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
   - action: "[Use the Azure deployment relevant to a specific model name](./examples/sdk-azure-deployment/)"
     description: |
-      Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
+      Configure a header capture to insert the requested model name directly into the plugin configuration for {{site.ai_gateway}} deployment with Azure OpenAI, as a string substitution.
   - action: "[Proxy multiple models deployed in the same Azure instance](./examples/sdk-multiple-providers/)"
     description: |
       Configure one route to proxy multiple models deployed in the same Azure instance.

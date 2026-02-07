@@ -25,12 +25,12 @@ min_version:
 
 tech_preview: true
 
-description: "Reference for OpenTelemetry Gen AI span attributes emitted by Kong AI Gateway for generative AI requests."
+description: "Reference for OpenTelemetry Gen AI span attributes emitted by {{site.ai_gateway}} for generative AI requests."
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: OpenTelemetry plugin
     url: /plugins/opentelemetry/
@@ -48,7 +48,7 @@ works_on:
   - konnect
 ---
 
-{% new_in 3.13 %} Kong AI Gateway supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in Kong AI Gateway, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions.
+{% new_in 3.13 %} {{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions.
 
 You can export these attributes via a supported backend such as [Jaeger](/how-to/set-up-jaeger-with-otel/) configured through Kong's [OpenTelemetry plugin](/plugins/opentelemetry) or the [Zipkin plugin](/plugins/zipkin) to:
 

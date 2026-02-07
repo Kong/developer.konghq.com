@@ -55,7 +55,7 @@ faqs:
       Since the [Proxy Caching Advanced](/plugins/proxy-cache-advanced/) plugin runs before the OpenTelemetry plugin, when a response results in a cache hit, the process ends before the OpenTelemetry plugin can run. This means that no traces are produced for that request.
 
       If needed, you can use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to run the OpenTelemetry plugin first, but be aware that this could impact performance.
-      
+
 ---
 
 The OpenTelemetry plugin provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
@@ -190,7 +190,7 @@ For more information, see the [Tracing reference](/gateway/tracing/).
 
 ### Gen AI tracing attributes {% new_in 3.13 %}
 
-When processing generative AI traffic through Kong AI Gateway, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
+When processing generative AI traffic through {{site.ai_gateway}}, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
 
 For the complete attribute reference, see [Gen AI OpenTelemetry attributes](/ai-gateway/llm-open-telemetry/).
 
@@ -351,4 +351,4 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
   We recommend setting the sampling rate (`tracing_sampling_rate`)
   via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
 - Doesn't support `custom_fields_by_lua`.
-- Doesn't support AI Gateway and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.
+- Doesn't support {{site.ai_gateway}} and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.

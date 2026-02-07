@@ -1,7 +1,7 @@
 metadata:
-  title: "Proxy AI CLI tools through Kong AI Gateway"
+  title: "Proxy AI CLI tools through {{site.ai_gateway}}"
   content_type: landing_page
-  description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
+  description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
   products:
     - ai-gateway
   works_on:
@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Proxy AI CLI tools through Kong AI Gateway"
+      text: "Proxy AI CLI tools through {{site.ai_gateway}}"
     columns:
       - blocks:
           - type: structured_text
@@ -22,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong AI Gateway can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic: log all requests, track costs across teams, enforce rate limits, or apply security policies and guardrails.
+                    {{site.ai_gateway}} can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic: log all requests, track costs across teams, enforce rate limits, or apply security policies and guardrails.
 
                       Supported AI CLI tools:
 
@@ -47,7 +47,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team.
+                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through {{site.ai_gateway}} to monitor usage, control costs, and enforce rate limits across your development team.
   - column_count: 4
     columns:
       - blocks:
@@ -132,7 +132,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
+                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management.
 
   - column_count: 4
     columns:

@@ -2,7 +2,7 @@
 title: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI RAG Injector
     url: /plugins/ai-rag-injector/
@@ -139,13 +139,14 @@ variables:
 
 ## Split input data before ingestion
 
-Before sending data to the AI Gateway, split your input into manageable chunks using a text splitting tool like `langchain_text_splitters`. This helps optimize downstream processing and improves semantic retrieval performance.
+Before sending data to the {{site.ai_gateway}}, split your input into manageable chunks using a text splitting tool like `langchain_text_splitters`. This helps optimize downstream processing and improves semantic retrieval performance.
 
 Refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
 are structured data other than plain texts.
 
-The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID.
+The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the {{site.ai_gateway}}. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID.
 
+<!-- vale off -->
 {% validation custom-command %}
 command: |
   cat <<EOF > inject_policy.py
@@ -237,6 +238,7 @@ expected:
   return_code: 0
 render_output: false
 {% endvalidation %}
+<!-- vale on -->
 
 {:.info}
 > You can replace `print(response.json())` with `print(response.text)` to view the raw HTTP response body as a plain string instead of a parsed JSON object. This is useful for debugging cases where:
@@ -270,7 +272,7 @@ Injecting 4 chunks...
 
 ### Ingest content to the vector database
 
-Now, you can feed the split chunks into AI Gateway using the Kong Admin API.
+Now, you can feed the split chunks into {{site.ai_gateway}} using the Kong Admin API.
 
 The following example shows how to ingest content to the vector database for building the knowledge base. The AI RAG Injector plugin uses the OpenAI `text-embedding-3-large` model to generate embeddings for the content and stores them in Redis.
 

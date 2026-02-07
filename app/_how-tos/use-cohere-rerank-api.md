@@ -2,7 +2,7 @@
 title: Use Cohere rerank API for document-grounded chat with AI Proxy in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
@@ -34,7 +34,7 @@ tags:
   - cohere
 
 tldr:
-  q: How do I use Cohere `/rerank` API with Kong AI Gateway?
+  q: How do I use Cohere `/rerank` API with {{site.ai_gateway}}?
   a: Configure the AI Proxy plugin with the Cohere provider and a chat model, then send queries with documents to get generated answers that automatically filter for relevance and include citations.
 
 tools:

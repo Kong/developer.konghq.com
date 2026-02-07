@@ -18,7 +18,7 @@ gateway-k8s-on-prem-install:
   breadcrumb_title: On-Prem Kubernetes
   url: /gateway/install/kubernetes/on-prem/
 mcp-traffic:
-  title: Secure, govern and observe MCP traffic with Kong AI Gateway
+  title: Secure, govern and observe MCP traffic with {{site.ai_gateway}}
   url: /mcp/secure-mcp-traffic/
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers

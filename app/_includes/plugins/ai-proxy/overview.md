@@ -23,7 +23,7 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
   {:.warning}
   > OpenAI has marked this endpoint as [legacy](https://platform.openai.com/docs/api-reference/completions) and recommends using the [Chat Completions API](https://platform.openai.com/docs/guides/text?api-mode=responses) for developing new applications.
 
-See the following table for capabilities supported in Kong AI Gateway:
+See the following table for capabilities supported in {{site.ai_gateway}}:
 
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
@@ -240,7 +240,7 @@ features:
 
 ## Supported AI providers
 
-Kong AI Gateway supports proxying requests to the following AI providers. Each provider page documents supported capabilities, configuration requirements, and provider-specific details.
+{{site.ai_gateway}} supports proxying requests to the following AI providers. Each provider page documents supported capabilities, configuration requirements, and provider-specific details.
 
 {:.info}
 > For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).

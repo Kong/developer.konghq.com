@@ -1,8 +1,8 @@
 ---
-title: "Observe GitHub MCP traffic with Kong AI Gateway"
+title: "Observe GitHub MCP traffic with {{site.ai_gateway}}"
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -44,9 +44,9 @@ tags:
   - mcp
 
 tldr:
-  q: How can I observe my MCP traffic using Kong AI Gateway?
+  q: How can I observe my MCP traffic using {{site.ai_gateway}}?
   a: |
-    Use the AI Proxy Advanced plugin to enable detailed logging of request payloads and statistics for all AI models. Then enable and configure the Prometheus plugin on Kong AI Gateway to scrape these metrics. This setup allows you to monitor MCP traffic in real time and analyze model usage and performance with Prometheus.
+    Use the AI Proxy Advanced plugin to enable detailed logging of request payloads and statistics for all AI models. Then enable and configure the Prometheus plugin on {{site.ai_gateway}} to scrape these metrics. This setup allows you to monitor MCP traffic in real time and analyze model usage and performance with Prometheus.
 
 tools:
   - deck

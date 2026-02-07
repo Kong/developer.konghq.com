@@ -1,7 +1,7 @@
 metadata:
-  title: "AI Gateway providers"
+  title: "{{site.ai_gateway}} providers"
   content_type: landing_page
-  description: This page is an introduction to the AI providers available in Kong AI Gateway.
+  description: This page is an introduction to the AI providers available in {{site.ai_gateway}}.
   products:
     - ai-gateway
   works_on:
@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "AI Gateway providers"
+      text: "{{site.ai_gateway}} providers"
 
     columns:
       - blocks:
@@ -23,13 +23,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The core of [AI Gateway](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
 
                 - type: unordered_list
                   items:
                     - Client applications are shielded from AI provider API specifics, promoting code reusability
                     - Centralized AI provider credential management
-                    - The AI Gateway gives developers and organizations a central point of governance and observability over AI data and usage
+                    - The {{site.ai_gateway}} gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
                     - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
   - column_count: 3

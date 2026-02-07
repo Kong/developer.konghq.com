@@ -2,7 +2,7 @@
 title: Transform a response using OpenAI in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Use the AI Response Transformer plugin with OpenAI to transform a response before returning it to the client.

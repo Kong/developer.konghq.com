@@ -1,7 +1,7 @@
 ---
 title: Guide survey classification behavior using the AI Prompt Decorator plugin
 content_type: how_to
-description: Use the AI Prompt Decorator plugin to enforce privacy-aware classification behavior when routing chat requests to Cohere via Kong AI Gateway.
+description: Use the AI Prompt Decorator plugin to enforce privacy-aware classification behavior when routing chat requests to Cohere via {{site.ai_gateway}}.
 related_resources:
     - text: AI Proxy plugin
       url: /plugins/ai-proxy/

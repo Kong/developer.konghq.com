@@ -2,7 +2,7 @@
 title: "Embedding-based similarity matching in Kong AI gateway plugins"
 layout: reference
 content_type: reference
-description: This reference explains how Kong AI Gateway plugins use embedding-based similarity to compare prompts with various inputs—such as cached entries, upstream targets, document chunks, or allow/deny lists.
+description: This reference explains how {{site.ai_gateway}} plugins use embedding-based similarity to compare prompts with various inputs—such as cached entries, upstream targets, document chunks, or allow/deny lists.
 breadcrumbs:
   - /ai-gateway/
 
@@ -29,9 +29,9 @@ min_version:
   gateway: '3.10'
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
@@ -60,9 +60,9 @@ For example, in the image, "king" and "emperor" are semantically more similar th
 
 Vector embeddings power a range of LLM workflows, including semantic search, document clustering, recommendation systems, anomaly detection, content similarity analysis, and classification via auto-labeling.
 
-## Semantic similarity in Kong AI Gateway
+## Semantic similarity in {{site.ai_gateway}}
 
-In Kong’s AI Gateway, several plugins leverage embedding-based similarity:
+In {{site.ai_gateway}}, several plugins leverage embedding-based similarity:
 
 {% table %}
 columns:
@@ -86,11 +86,11 @@ rows:
 
 ### Vector databases
 
-To compare embeddings efficiently, Kong's AI Gateway semantic plugins rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
+To compare embeddings efficiently, {{site.ai_gateway}} semantic plugins rely on vector databases. These specialized data stores index high-dimensional embeddings and enable **fast similarity search** based on distance metrics like cosine similarity or Euclidean distance.
 
 When a plugin needs to find semantically similar content—whether it’s a past prompt, an upstream description, or a document chunk—it sends a query to a vector database. The database returns the closest matches, allowing the plugin to make decisions like caching, routing, injecting, or blocking.
 
-Currently, Kong's AI Gateway supports the following vector backends:
+Currently, {{site.ai_gateway}} supports the following vector backends:
 
 * Using `redis` as the VectorDB strategy:
   * **[Redis](https://redis.io/docs/latest/stack/search/reference/vectors/)** with Vector Similarity Search (VSS)
@@ -133,7 +133,7 @@ Embedding models work by converting text into high-dimensional floating-point ar
 
 Dimensionality determines how many numerical features represent each piece of content—similar to how a detailed profile might have dimensions for age, interests, location, and preferences. Higher dimensions create more detailed "fingerprints" that capture nuanced relationships, with smaller distances between vectors indicating stronger conceptual similarity and larger distances showing weaker associations.
 
-For example, this request to the OpenAI [/embeddings API](/plugins/ai-proxy/examples/embeddings-route-type/) via Kong AI Gateway:
+For example, this request to the OpenAI [/embeddings API](/plugins/ai-proxy/examples/embeddings-route-type/) via {{site.ai_gateway}}:
 
 ```json
 {
@@ -225,7 +225,7 @@ rows:
 
 ### Cosine and Euclidean similarity
 
-Kong AI Gateway supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective plugin.
+{{site.ai_gateway}} supports both cosine similarity and Euclidean distance for vector comparisons, allowing you to choose the method best suited for your use case. You can configure the method using `config.vectordb.distance_metric` setting in the respective plugin.
 
 * Use `cosine` for nuanced semantic similarity (for example, document comparison, text clustering), especially when content length varies or dataset diversity is high.
 * Use `euclidean` when magnitude matters (for example, images, sensor data) or you're working with dense, well-aligned feature sets.

@@ -23,9 +23,9 @@ min_version:
 description: "This guide walks you through collecting AI metrics and sending them to Prometheus."
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: Status API
     url: /api/gateway/status/
@@ -39,14 +39,14 @@ works_on:
   - konnect
 ---
 
-Kong AI Gateway calls LLM-based services according to the settings of the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
+{{site.ai_gateway}} calls LLM-based services according to the settings of the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
 You can aggregate the LLM provider responses to count the number of tokens used by the AI plugins.
 If you have defined input and output costs in the models, you can also calculate cost aggregation.
 The metrics details also expose whether the requests have been cached by {{site.base_gateway}}, saving the cost of contacting the LLM providers, which improves performance.
 
-{% new_in 3.12 %} In addition to LLM usage, Kong AI Gateway also tracks MCP server traffic. MCP metrics provide visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
+{% new_in 3.12 %} In addition to LLM usage, {{site.ai_gateway}} also tracks MCP server traffic. MCP metrics provide visibility into latency, response sizes, and error rates when AI plugins invoke external MCP tools and servers.
 
-Kong AI Gateway exposes metrics related to Kong and proxied upstream services in
+{{site.ai_gateway}} exposes metrics related to Kong and proxied upstream services in
 [Prometheus](https://prometheus.io/docs/introduction/overview/)
 exposition format, which can be scraped by a Prometheus server.
 
@@ -59,7 +59,7 @@ The [Prometheus plugin](/plugins/prometheus/) records and exposes metrics at the
 server will need to discover all Kong nodes via a service discovery mechanism,
 and consume data from each node's configured `/metrics` endpoint.
 
-AI metrics exported by the plugin can be graphed in Grafana using [Kong AI Gateway Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
+AI metrics exported by the plugin can be graphed in Grafana using [{{site.ai_gateway}} Dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 
 ## Available metrics
 

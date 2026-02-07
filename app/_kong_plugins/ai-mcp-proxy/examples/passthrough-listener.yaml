@@ -1,9 +1,9 @@
-description: 'Configure AI Gateway passthrough for existing MCP Servers'
+description: 'Configure {{site.ai_gateway}} passthrough for existing MCP Servers'
 
-title: 'Configure AI Gateway passthrough for existing MCP Servers'
+title: 'Configure {{site.ai_gateway}} passthrough for existing MCP Servers'
 
 extended_description: |
-  Configure AI Gateway passthrough for existing MCP Servers to enable proxying and observability.
+  Configure {{site.ai_gateway}} passthrough for existing MCP Servers to enable proxying and observability.
 
   {:.warning}
   > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:

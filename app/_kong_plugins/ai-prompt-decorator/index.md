@@ -58,4 +58,4 @@ You can use this plugin to pre-set a system prompt, set up specific prompt histo
 control over how an LLM service is used when called via {{site.base_gateway}}.
 
 {:.info}
-> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires AI Proxy to be configured first. To set up AI Proxy quickly, see [Get started with AI Gateway](/ai-gateway/get-started/).
+> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires AI Proxy to be configured first. To set up AI Proxy quickly, see [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/).
