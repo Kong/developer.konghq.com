@@ -1,43 +1,40 @@
 ---
 title: CI/CD integration with kongctl
-content_type: how_to
-description: Integrate kongctl into CI/CD pipelines for automated {{site.konnect_product_name}} deployments.
-tldr:
-  q: What CI/CD platforms are supported?
-  a: Use kongctl with GitHub Actions, GitLab CI, Jenkins, and CircleCI to automate Konnect deployments.
-products:
-  - konnect
-tools:
-  - kongctl
+description: Integrate kongctl into CI/CD pipelines for automated {{site.konnect_product_name}} deployments
+
+content_type: reference
+layout: reference
+
+beta: true
+
 works_on:
   - konnect
+
+tools:
+  - kongctl
+
+breadcrumbs:
+  - /kongctl/
+
+products:
+  - konnect
+
 tags:
   - ci/cd
   - declarative-config
   - automation
   - github
-breadcrumbs:
-  - /kongctl/
-  - /kongctl/declarative/
+
 related_resources:
   - text: Declarative configuration guide
     url: /kongctl/declarative/
-  - text: Authentication guide
-    url: /kongctl/authentication/
 ---
 
 kongctl is designed for CI/CD integration, enabling automated deployments of {{site.konnect_short_name}} infrastructure as code.
 
 ## Authentication in CI/CD
 
-Use personal access tokens (PATs) for non-interactive authentication in pipelines.
-
-### Create a personal access token
-
-1. Log in to {{site.konnect_short_name}}
-2. Navigate to **Personal Access Tokens**
-3. Click **Generate Token**
-4. Copy the token (it's shown only once)
+Use [access tokens (personal or system)](/konnect-api/#personal-access-tokens) for non-interactive authentication in pipelines.
 
 ### Configure in CI/CD
 
@@ -146,163 +143,6 @@ Add `KONNECT_PAT` to GitHub repository secrets:
 4. Value: Your personal access token
 5. Click **Add secret**
 
-## GitLab CI/CD
-
-Create `.gitlab-ci.yml`:
-
-```yaml
-stages:
-  - plan
-  - deploy
-
-variables:
-  KONGCTL_VERSION: "0.3.8"
-
-.install_kongctl: &install_kongctl
-  - curl -sL https://github.com/Kong/kongctl/releases/download/v${KONGCTL_VERSION}/kongctl_${KONGCTL_VERSION}_linux_amd64.tar.gz -o kongctl.tar.gz
-  - tar -xzf kongctl.tar.gz
-  - mv kongctl /usr/local/bin/
-  - kongctl version
-
-plan:
-  stage: plan
-  image: ubuntu:22.04
-  before_script:
-    - apt-get update && apt-get install -y curl
-    - *install_kongctl
-  script:
-    - kongctl plan -f config/ --output-file plan.json
-  artifacts:
-    paths:
-      - plan.json
-    expire_in: 1 week
-  only:
-    - merge_requests
-    - main
-
-deploy:
-  stage: deploy
-  image: ubuntu:22.04
-  before_script:
-    - apt-get update && apt-get install -y curl
-    - *install_kongctl
-  script:
-    - kongctl apply --plan plan.json
-  dependencies:
-    - plan
-  only:
-    - main
-  when: manual
-```
-
-Add `KONGCTL_DEFAULT_KONNECT_PAT` as a CI/CD variable in project settings.
-
-## Jenkins
-
-Create `Jenkinsfile`:
-
-```bash
-pipeline {
-    agent any
-
-    environment {
-        KONGCTL_DEFAULT_KONNECT_PAT = credentials('konnect-pat')
-        KONGCTL_VERSION = '0.3.8'
-    }
-
-    stages {
-        stage('Install kongctl') {
-            steps {
-                sh '''
-                    curl -sL https://github.com/Kong/kongctl/releases/download/v${KONGCTL_VERSION}/kongctl_${KONGCTL_VERSION}_linux_amd64.tar.gz -o kongctl.tar.gz
-                    tar -xzf kongctl.tar.gz
-                    chmod +x kongctl
-                '''
-            }
-        }
-
-        stage('Plan') {
-            steps {
-                sh './kongctl plan -f config/ --output-file plan.json'
-                archiveArtifacts artifacts: 'plan.json'
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                branch 'main'
-            }
-            steps {
-                input message: 'Deploy to Konnect?', ok: 'Deploy'
-                sh './kongctl apply --plan plan.json'
-            }
-        }
-    }
-}
-```
-
-## CircleCI
-
-Create `.circleci/config.yml`:
-
-```yaml
-version: 2.1
-
-executors:
-  kongctl:
-    docker:
-      - image: cimg/base:2024.01
-
-commands:
-  install-kongctl:
-    steps:
-      - run:
-          name: Install kongctl
-          command: |
-            curl -sL https://github.com/Kong/kongctl/releases/download/v0.3.8/kongctl_0.3.8_linux_amd64.tar.gz -o kongctl.tar.gz
-            tar -xzf kongctl.tar.gz
-            sudo mv kongctl /usr/local/bin/
-            kongctl version
-
-jobs:
-  plan:
-    executor: kongctl
-    steps:
-      - checkout
-      - install-kongctl
-      - run:
-          name: Generate plan
-          command: kongctl plan -f config/ --output-file plan.json
-      - persist_to_workspace:
-          root: .
-          paths:
-            - plan.json
-      - store_artifacts:
-          path: plan.json
-
-  deploy:
-    executor: kongctl
-    steps:
-      - checkout
-      - install-kongctl
-      - attach_workspace:
-          at: .
-      - run:
-          name: Apply plan
-          command: kongctl apply --plan plan.json
-
-workflows:
-  deploy-konnect:
-    jobs:
-      - plan
-      - deploy:
-          requires:
-            - plan
-          filters:
-            branches:
-              only: main
-```
-
 ## Best practices
 
 ### Use plan artifacts
@@ -315,25 +155,6 @@ kongctl plan -f config/ --output-file plan.json
 
 # After review and merge
 kongctl apply --plan plan.json
-```
-
-### Separate environments
-
-Use different configurations or namespaces per environment:
-
-```
-config/
-├── dev/
-│   └── resources.yaml
-├── staging/
-│   └── resources.yaml
-└── production/
-    └── resources.yaml
-```
-
-Deploy with:
-```bash
-kongctl apply -f config/production/
 ```
 
 ### Add approval gates
@@ -393,28 +214,6 @@ konnect-config/
     └── overrides.yaml
 ```
 
-### GitHub Actions with environments
-
-```yaml
-jobs:
-  deploy-dev:
-    environment: dev
-    steps:
-      - run: kongctl apply -f config/dev/
-
-  deploy-staging:
-    environment: staging
-    needs: deploy-dev
-    steps:
-      - run: kongctl apply -f config/staging/
-
-  deploy-production:
-    environment: production
-    needs: deploy-staging
-    steps:
-      - run: kongctl apply -f config/production/
-```
-
 ## Troubleshooting
 
 ### Authentication failures
@@ -444,6 +243,6 @@ Avoid running multiple deployments simultaneously. Use pipeline locks or queues.
 ## Related resources
 
 * [Declarative configuration guide](/kongctl/declarative/)
-* [Authentication guide](/kongctl/authentication/)
+* [Configuration guide](/kongctl/config/)
 * [Environment variables reference](/kongctl/reference/environment-variables/)
 * [GitHub Actions example](https://github.com/Kong/kongctl/tree/main/docs/examples)

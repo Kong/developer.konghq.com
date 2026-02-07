@@ -1,15 +1,21 @@
 ---
 title: Environment variables
-content_type: reference
 description: Environment variables used by kongctl for configuration and authentication.
-products:
-  - konnect
-tools:
-  - kongctl
+
+beta: true
+
+content_type: reference
+layout: reference
+
 works_on:
   - konnect
+
+tools:
+  - kongctl
+
 tags:
   - cli
+
 breadcrumbs:
   - /kongctl/
   - /kongctl/reference/
