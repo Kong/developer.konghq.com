@@ -1,6 +1,6 @@
 ---
 title: Set up an AWS resource endpoint connection
-description: 'placeholder'
+description: 'Learn how to configure AWS resource endpoints for Dedicated Cloud Gateway.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/aws-resource-endpoints/
 breadcrumbs:
@@ -65,6 +65,9 @@ faqs:
   - q: Which Availability Zones (AZs) does AWS resource endpoints support for Dedicated Cloud Gateway?
     a: |
       Dedicated Cloud Gateways supports [specific Availability Zones (AZs)](/konnect-platform/geos/#dedicated-cloud-gateways) in the supported AWS regions.
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 ---
 
 AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 

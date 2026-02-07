@@ -35,6 +35,9 @@ prereqs:
         * `compute.networks.updatePeering`
         * `compute.networks.removePeering`
         * `compute.networks.listPeeringRoutes`
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 ---
 
 ## Initiate the VPC peering connection
