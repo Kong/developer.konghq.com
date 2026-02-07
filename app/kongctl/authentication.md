@@ -25,7 +25,8 @@ related_resources:
 ---
 
 kongctl communications with {{site.konnect_short_name}} via the public [APIs](/api/), which
-support token-based authentication. A valid token can be obtained using the following methods.
+support token-based authentication. A valid token can be obtained and configured in the CLI
+using the following methods.
 
 ## Browser-based login (recommended)
 
@@ -58,8 +59,8 @@ Logging your CLI into Kong Konnect with the browser...
 After following the instructions in the browser and successfully authenticating,
 you will see the message `User successfully authorized`.
 
-kongctl has negioated with {{site.konnect_short_name}} and stored an access and refresh
-token pair for subsequent commands. 
+This indicates that kongctl has negioated with {{site.konnect_short_name}} and 
+stored an access and refresh token pair for subsequent commands. 
 
 You can verify authentication by running:
 
@@ -72,31 +73,46 @@ You should see your {{site.konnect_short_name}} user information.
 Now you can execute kongctl commands and you will be granted access based on the permissions
 of the user account you logged in with.
 
-## Access token authentication
+{:.info}
+> **Info:** The tokens obtained using the browser-based method will expire. When they do you can
+> simply re-exeucte the `kongctl login` procedure to obtain new tokens.
 
-Access tokens come in two forms: Personal Access Tokens (PAts) 
-or System Access Tokens (sPAT).
-
-### Create a token
-
-1. Log in to {{site.konnect_short_name}}
-2. Navigate to **Personal Access Tokens**
-3. Click **Generate Token**
-4. Give it a descriptive name (e.g., "CI/CD Pipeline")
-5. Set expiration and permissions
-6. Copy the token (shown only once)
-
-### Logout
-
-Clear stored credentials:
+If you want to invalidate the token received from the browser-based method, 
+execute the `logout` command to clear stored credentials:
 
 ```bash
 kongctl logout
 ```
 
-### Use via environment variable
+## Configured access token
 
-Set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable:
+{{site.konnect_short_name}} access tokens come in two forms; Personal Access Tokens (PAT) or 
+System Access Tokens (sPAT). PATs grant access to APIs as your personal user account, while 
+sPATs grant access based on the permissions of system account, which may be more 
+limited than a user account. 
+
+Use the {{site.konnect_short_name}} web console to create the token type of your choice, and 
+retain the secret value for use with kongctl:
+- Create a PAT in the [personal access token page](https://cloud.konghq.com/global/account/tokens)
+- Create a sPAT in the [system accounts page](https://cloud.konghq.com/global/account/system-tokens)
+  or with the [System Accounts API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
+
+### Configure authentication via flag
+
+You can pass the token with each command using the `--pat` flag:
+
+```bash
+kongctl get apis --pat "kpat_your-token-here"
+```
+
+### Configure access token in environment variable
+
+Store the token in an environment variable to avoid passing it with every command. For the `default` profile,
+set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable:
+
+{:.info}
+> See the [environment variable configuration reference](/kongctl/config#environment-variables) 
+> for full details on environment variables and the kongctl configuraiton system 
 
 ```bash
 export KONGCTL_DEFAULT_KONNECT_PAT="kpat_your-token-here"
@@ -107,15 +123,31 @@ Then run commands normally:
 kongctl get apis
 ```
 
-### Use via flag
+### Store the token in configuration file
 
-Pass the token with `--pat`:
+You can also store the token in the kongctl configuration file under the desired profile:
 
+```yaml
+default:
+    konnect:
+        pat: "kpat_your-token-here"
+``` 
+
+{:.info}
+> See the [configuration file reference](/kongctl/config#configuration-file) 
+> for full details on the kongctl configuraiton file
+
+Then run commands normally:
 ```bash
-kongctl get apis --pat "kpat_your-token-here"
+kongctl get apis
 ```
 
-### Use in CI/CD
+{:.warning}
+> **Warning**: When storing tokens in configuration files, ensure the file is 
+> protected and **not** committed to version control. 
+> Use this method only for local development or secure environments.
+
+### Configure tokens in CI/CD
 
 Store the token as a secret in your CI/CD platform:
 

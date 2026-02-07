@@ -570,7 +570,6 @@ kongctl apply -f config.yaml --log-level debug
 
 ## Next steps
 
-* Learn about [CI/CD integration](/kongctl/cicd/)
-* Review [supported resources](/kongctl/supported-resources/)
-* See [example configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative)
+* Learn about [kongctl CLI configuration](/kongctl/config/)
+* See [example declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative)
 * Read the [{{site.konnect_short_name}} API reference](/konnect-api/)

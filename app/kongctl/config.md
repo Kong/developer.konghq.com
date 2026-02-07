@@ -1,5 +1,5 @@
 ---
-title: kongctl configuration
+title: Configuration of kongctl
 description: Learn how to configure kongctl using configuration files, environment variables, and command-line flags.
 
 beta: true
@@ -44,7 +44,7 @@ You can use profiles to separate configurations for any purpose you need. Common
 includes different organizations, regions, or machines.
 
 {:.info}
-> Using profiles is not required and there is a built in profile named 
+> Using profiles is optional and there is a built in profile named 
 > `default` that is implied if no profile is specified.
 
 **Sample configuration snippet**:
@@ -79,7 +79,7 @@ kongctl get apis
 kongcll apply -f config.yaml
 ```
 
-## Loading configuration values and precedence
+## Configuration values  
 
 All kongctl configuration values can be loaded via flags, environment variables, 
 or the configuration file. This allows you to set defaults in files while 
@@ -105,6 +105,8 @@ default:
     region: eu
 ```
 
+## Environment variables
+
 When values are loaded via environment variables, the variable names 
 must start with the `KONGCTL_` prefix, then the desired profile, 
 and finally the config path in uppercase with underscores instead of dots. 
@@ -116,14 +118,6 @@ set the following environment variable:
 KONGCTL_DEFAULT_KONNECT_REGION=eu
 ```
 
-### Precedence
-
-kongctl configuration values are loaded in the following precedence (highest to lowest):
-
-1. **Command-line flags**: Explicit flags like `--pat`, `--region`, `--output`
-2. **Environment variables**: `KONGCTL_<PROFILE>_<CONFIG_PATH>` variables
-3. **Configuration file**: Values in `config.yaml`
-4. **Default values**: Built-in defaults
 
 ## Configuration file
 
@@ -138,9 +132,17 @@ You can specify a different configuration file via the `--config-file flag`:
                              - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
 ```
 
+### Precedence
+
+kongctl configuration values are loaded in the following precedence (highest to lowest):
+
+1. **Command-line flags**: Explicit flags like `--pat`, `--region`, `--output`
+2. **Environment variables**: `KONGCTL_<PROFILE>_<CONFIG_PATH>` variables
+3. **Configuration file**: Values in `config.yaml`
+4. **Default values**: Built-in defaults
+
 ## Related resources
 
 * [Get started with kongctl](/kongctl/get-started/)
 * [Authentication guide](/kongctl/authentication/)
 * [Declarative configuration guide](/kongctl/declarative/)
-* [CI/CD integration](/kongctl/cicd/)
