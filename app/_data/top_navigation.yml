@@ -12,6 +12,9 @@ platform:
     - text: decK
       url: /deck/
       icon: /assets/icons/codeblock.svg
+    - text: kongctl
+      url: /kongctl/
+      icon: /assets/icons/code.svg
     - text: Inso CLI
       url: /inso-cli/
       icon: /assets/icons/code.svg

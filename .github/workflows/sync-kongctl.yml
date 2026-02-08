@@ -1,0 +1,45 @@
+name: Sync kongctl
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [KONGCTL_UPDATED]
+
+permissions:
+  contents: read
+
+jobs:
+  kongctl-versions:
+    name: Fetch kongctl Versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - name: Fetch versions
+        run: |
+          cd tools/kongctl-versions
+          npm ci
+          node fetch-versions.js
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8
+        with:
+          title: Sync kongctl Releases
+          commit-message: Sync kongctl Releases
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}

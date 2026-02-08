@@ -1,0 +1,13 @@
+{
+  "name": "kongctl-versions",
+  "version": "1.0.0",
+  "description": "Automation to sync kongctl versions and help text",
+  "type": "module",
+  "scripts": {
+    "extract-help": "node extract-help.js",
+    "fetch-versions": "node fetch-versions.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

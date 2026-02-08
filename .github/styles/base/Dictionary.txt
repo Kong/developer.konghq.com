@@ -117,6 +117,7 @@ chatwise
 cidr
 cidrs
 cleartext
+cli
 client_credentials
 client_payload
 client_status
@@ -455,6 +456,7 @@ Knatives
 knep
 kong
 kongair
+kongctl
 kong_konnect_api_request
 kong_name
 kong-ip
