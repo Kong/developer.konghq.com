@@ -1,6 +1,6 @@
 ---
 title: Get started with kongctl
-description: Learn how to use kongctl to manage Kong Konnect resources
+description: "Learn how to use kongctl to manage {{site.konnect_product_name}} resources"
 content_type: how_to
 permalink: /kongctl/get-started/
 beta: true
@@ -37,7 +37,7 @@ prereqs:
   skip_product: false
   show_works_on: false
   inline:
-    - title: {{site.konnect_product_name}}
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial requires a {{site.konnect_short_name}} account. If you don't have an account, 
         you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
