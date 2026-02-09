@@ -73,7 +73,7 @@ flowchart LR
 
 
 ## Deploy a Service to Kubernetes
-Let's go ahead and deploy an ```echo``` service to the Kubernetes cluster and setup the ```KongService``` and ```KongRoute```:
+Let's deploy an `echo` service to the Kubernetes cluster and setup the `KongService` and `KongRoute`:
 
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
