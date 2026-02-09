@@ -1,4 +1,5 @@
 title: Operator Documentation
+description: Index containing all documentation for {{site.operator_product_name}}.
 groups:
   - title: Hidden
     hidden: true
@@ -14,7 +15,7 @@ groups:
     sections:
       - items:
           - path: /operator/
-          - path: /operator/install/
+          - path: /operator/get-started/gateway-api/install/
           - path: /operator/support-policy/
           - path: /operator/changelog/
   - title: Reference
@@ -35,12 +36,12 @@ groups:
       - title: Get Started
         allow_duplicates: true
         items:
-          - title: Deploy Hybrid DataPlanes
-            url: /operator/dataplanes/get-started/hybrid/install/
-            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
-          - title: Deploy self-managed Control Plane
-            url: /operator/dataplanes/get-started/kic/install/
-            description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the Gateway API"
+            description: Deploy and configure {{ site.base_gateway }} in Kubernetes using the standard Gateway API resources.
+            url: /operator/get-started/gateway-api/install/
+          - title: "Manage {{ site.base_gateway }} in Kubernetes through {{ site.operator_product_name }} and the {{site.konnect_short_name}} CRDs"
+            description: Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs) provided by {{ site.operator_product_name }}.
+            url: /operator/get-started/konnect-crds/install/
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
@@ -51,8 +52,12 @@ groups:
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
           - path: /operator/dataplanes/how-to/deploy-sidecars/
+          - path: /operator/dataplanes/how-to/cert-manager/
+          - path: /operator/dataplanes/how-to/tls-termination/
           - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
+          - path: /operator/dataplanes/how-to/handle-ingress/
+          - path: /operator/dataplanes/how-to/configure-plugins-for-httproute/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/
@@ -85,12 +90,13 @@ groups:
     sections:
       - title: Get Started
         items:
-          - path: /operator/konnect/get-started/**/*
+          - path: /operator/get-started/konnect-crds/**/*
       - title: Key Concepts
         items:
           - path: /operator/konnect/reconciliation-loop/
           - path: /operator/konnect/labelling/
           - path: /operator/konnect/kongpluginbinding/
+          - path: /operator/konnect/cross-namespace-references/
       - title: "Konnect CRDs: Control Planes"
         items:
           - path: /operator/konnect/crd/control-planes/**/*
@@ -100,6 +106,11 @@ groups:
       - title: "Konnect CRDs: Cloud Gateways"
         items:
           - path: /operator/konnect/crd/cloud-gateways/**/*
+      - title: How-To
+        items:
+          - path: /operator/konnect/how-to/auth-cross-namespace-reference/
+          - path: /operator/konnect/how-to/secret-cross-namespace-reference/
+          - path: /operator/konnect/how-to/static-naming/
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/

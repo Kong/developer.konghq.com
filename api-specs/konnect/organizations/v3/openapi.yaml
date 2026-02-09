@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@cc1cf0cbab829ef3fd6fdd3470407154e5d36962
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cc1cf0cbab829ef3fd6fdd3470407154e5d36962'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -102,6 +102,63 @@ paths:
         - konnectAccessToken: []
       tags:
         - Personal Access Tokens
+  '/organizations/{organizationId}/ip-allow-list':
+    parameters:
+      - $ref: '#/components/parameters/OrganizationIdParameter'
+    put:
+      operationId: put-ip-allow-list
+      summary: Set the ip allow list for organization
+      description: |
+        Sets the ip allow list for an organization.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateOrganizationSourceIPRestriction'
+      responses:
+        '201':
+          $ref: '#/components/responses/OrganizationSourceIPRestriction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Organizations
+    patch:
+      operationId: patch-ip-allow-list
+      summary: Update the ip allow list for organization
+      description: |
+        Updates the ip allow list configuration for an organization.
+      requestBody:
+        $ref: '#/components/requestBodies/PatchOrganizationSourceIPRestriction'
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationSourceIPRestriction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Organizations
+    get:
+      operationId: get-ip-allow-list
+      summary: Get the ip allow list for organization
+      description: |
+        Gets the ip allow list configuration for an organization.
+      responses:
+        '200':
+          $ref: '#/components/responses/OrganizationSourceIPRestriction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Organizations
 components:
   parameters:
     OrganizationIdParameter:
@@ -557,6 +614,63 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
+    SourceIPEnabled:
+      description: Whether ip allow list is enabled for the organization.
+      type: boolean
+      example: true
+    AllowedIPs:
+      description: The list of allowed ips for the organization.
+      type: array
+      items:
+        type: string
+      example:
+        - 192.168.1.1
+        - 192.168.1.0/22
+      maxItems: 1000
+      minItems: 1
+      uniqueItems: true
+    OrganizationSourceIPRestriction:
+      type: object
+      properties:
+        enabled:
+          $ref: '#/components/schemas/SourceIPEnabled'
+        allowed_ips:
+          $ref: '#/components/schemas/AllowedIPs'
+      additionalProperties: false
+      required:
+        - enabled
+        - allowed_ips
+      title: Organization Source IP Restriction
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
   examples:
     PersonalAccessTokenSettingsResponse:
       value:
@@ -596,6 +710,12 @@ components:
         title: Forbidden
         instance: 'kong:trace:2723154947768991354'
         detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
   requestBodies:
     PersonalAccessTokenSettingsUpdateRequest:
       description: Request body schema for updating personal access token settings.
@@ -612,6 +732,39 @@ components:
           examples:
             Example Request Body:
               $ref: '#/components/examples/PersonalAccessTokenSettingsResponse'
+    CreateOrganizationSourceIPRestriction:
+      description: The request schema to set an organization's ip allow list configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationSourceIPRestriction'
+          examples:
+            Example Request Body:
+              value:
+                enabled: true
+                allowed_ips:
+                  - 192.168.1.1
+                  - 192.168.1.0/22
+    PatchOrganizationSourceIPRestriction:
+      description: The request schema to update an organization's ip allow list configuration.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              enabled:
+                $ref: '#/components/schemas/SourceIPEnabled'
+              allowed_ips:
+                $ref: '#/components/schemas/AllowedIPs'
+            additionalProperties: false
+            minProperties: 1
+          examples:
+            Example Request Body:
+              value:
+                enabled: true
+                allowed_ips:
+                  - 192.168.1.1
+                  - 192.168.1.0/22
   responses:
     PersonalAccessTokenSettingsResponse:
       description: Response containing personal access token settings.
@@ -676,6 +829,34 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/ForbiddenExample'
+    OrganizationSourceIPRestriction:
+      description: The organization's ip allow list configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationSourceIPRestriction'
+          examples:
+            Example:
+              value:
+                enabled: true
+                allowed_ips:
+                  - 192.168.1.1
+                  - 192.168.1.0/22
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
   securitySchemes:
     personalAccessToken:
       type: http
@@ -698,6 +879,8 @@ components:
       bearerFormat: JWT
       description: |
         The Service access token is meant to be used between internal services.
-tags: []
+tags:
+  - name: Organizations
+    description: API related to the management of Konnect Organizations
 security:
   - serviceAccessToken: []

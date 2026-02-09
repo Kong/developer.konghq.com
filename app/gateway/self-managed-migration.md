@@ -61,8 +61,8 @@ B & C --> F["Migrate to Konnect
 (use this guide)"]
 E --> H["Migrate to hybrid mode
 (reach out to support for help)"] --> F
-D --> G[<a href="https://cloud.konghq.com/gateway-manager/create-control-plane">Link your {{site.kic_product_name}} deployment to a
-{{site.kic_product_name}}-based Control Plane</a>]
+D --> G[<a href="https://cloud.konghq.com/gateway-manager/create-gateway">Link your {{site.kic_product_name}} deployment to a
+{{site.kic_product_name}}-based control plane</a>]
 {% endmermaid %}
 <!--vale on-->
 

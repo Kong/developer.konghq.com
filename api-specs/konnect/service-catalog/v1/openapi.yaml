@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@f7a8c13581576ef13ea05e4049d04ec6eca91cb6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f7a8c13581576ef13ea05e4049d04ec6eca91cb6'
+  x-oas-source: kong/platform-api@2e5e3b7f405ca10a77055d92e8c9cde201927cb2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2e5e3b7f405ca10a77055d92e8c9cde201927cb2'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1918,6 +1918,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1948,6 +1950,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1966,6 +1970,8 @@ components:
             - $ref: '#/components/schemas/StringFieldFilter'
         authorized:
           $ref: '#/components/schemas/BooleanFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
         created_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
         updated_at:
@@ -2006,6 +2012,8 @@ components:
           type: boolean
           example: true
           readOnly: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
         created_at:
@@ -5107,6 +5115,8 @@ components:
                   definition:
                     control_plane_id: string
                     gateway_service_id: string
+                integration_data_schema: null
+                resource_id_template: '{{control_plane_id}}:{{gateway_service_id}}'
             discovery:
               resource_integration_data_examples:
                 gateway_svc:
@@ -5166,6 +5176,8 @@ components:
                   type: simple
                   definition:
                     report_id: string
+                integration_data_schema: null
+                resource_id_template: '{{report_id}}'
             discovery:
               resource_integration_data_examples:
                 report:
@@ -5194,6 +5206,8 @@ components:
                     mesh_name: string
                     mesh_service_name: string
                     global_control_plane_id: string
+                integration_data_schema: null
+                resource_id_template: '{{global_control_plane_id}}:{{mesh_name}}'
             discovery:
               resource_integration_data_examples:
                 service_insight:
@@ -5487,13 +5501,6 @@ components:
           id: f0f2725e-051d-48fd-a63f-e1e76d5fec34
           name: sonarqube
           display_name: SonarQube
-    AzureApiManagementAuthConfigPayload:
-      value:
-        type: oauth
-        config:
-          grant_type: authorization_code
-          code: Yzk5ZDczMzRlNDEwY
-          redirect_uri: 'https://cloud.konghq.com/us/servicehub/integrations/azure-api-management/oauth'
     AzureApiManagementAuthConfigResponse:
       value:
         id: 2b7e1516-28ae-4d6c-8c2f-1e2b3c4d5e6f
@@ -6377,7 +6384,7 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
             SonarQube:
               $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/SampleInstanceCreateAzureApiManagementPayload'
             AzureDevops:
               $ref: '#/components/examples/SampleInstanceCreateAzureDevopsPayload'
@@ -6409,8 +6416,6 @@ components:
               $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthPayload'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthPayload'
-            azureApiManagement:
-              $ref: '#/components/examples/AzureApiManagementAuthConfigPayload'
             azureDevops:
               $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
@@ -6583,7 +6588,7 @@ components:
               $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/AzureApiManagementAuthConfigResponse'
             azureDevops:
               $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthResponse'

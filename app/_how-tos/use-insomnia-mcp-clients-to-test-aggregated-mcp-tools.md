@@ -51,6 +51,8 @@ tldr:
   q: How do I test aggregated MCP tools using Insomnia?
   a: |
     Connect an Insomnia MCP client to the listener-mode AI MCP Proxy endpoint that the aggregation setup creates. Then test each tool and validate behaviour using Insomnia’s Params, Headers, Events, and Console panels.
+
+automated_tests: false
 ---
 
 Use Insomnia to connect to an MCP server exposed through the AI MCP Proxy plugin in listener mode. 

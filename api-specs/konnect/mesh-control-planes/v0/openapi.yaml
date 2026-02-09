@@ -4346,7 +4346,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/workloads/{name}':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: Workload#get
+        terraform-resource: MeshWorkload#get
         terraform-datasource: null
       operationId: getWorkload
       summary: Returns Workload entity
@@ -4372,7 +4372,7 @@ paths:
         - Workload
     put:
       x-speakeasy-entity-operation:
-        terraform-resource: 'Workload#create,update'
+        terraform-resource: 'MeshWorkload#create,update'
         terraform-datasource: null
       operationId: putWorkload
       summary: Creates or Updates Workload entity
@@ -4405,7 +4405,7 @@ paths:
         - Workload
     delete:
       x-speakeasy-entity-operation:
-        terraform-resource: Workload#delete
+        terraform-resource: MeshWorkload#delete
         terraform-datasource: null
       operationId: deleteWorkload
       summary: Deletes Workload entity
@@ -4797,6 +4797,18 @@ paths:
           $ref: '#/components/responses/MeshControlPlaneForbiddenError'
       tags:
         - Mesh
+      x-speakeasy-pagination:
+        type: offsetLimit
+        inputs:
+          - name: 'page[number]'
+            in: parameters
+            type: page
+          - name: 'page[size]'
+            in: parameters
+            type: limit
+        outputs:
+          results: $.data
+          numPages: $.meta.page.total
     post:
       x-speakeasy-entity-operation:
         terraform-resource: MeshControlPlane#create
@@ -4960,6 +4972,7 @@ components:
       schema:
         type: integer
         example: 1
+      x-speakeasy-terraform-ignore: true
     PageSize:
       name: 'page[size]'
       description: The maximum number of items to include per page. The last page of a collection may include fewer items.
@@ -4969,6 +4982,7 @@ components:
       schema:
         type: integer
         example: 10
+      x-speakeasy-terraform-ignore: true
   schemas:
     Index:
       description: Some metadata about the service
@@ -6229,6 +6243,10 @@ components:
                       listening to. When transparent proxying is not used, Envoy will bind to
                       this port.
                     type: integer
+                    x-speakeasy-param-computed: false
+                  protocol:
+                    description: 'Protocol of the service (tcp, http, grpc, etc).'
+                    type: string
                     x-speakeasy-param-computed: false
                   serviceAddress:
                     description: |-
@@ -16172,6 +16190,10 @@ components:
                           this port.
                         type: integer
                         x-speakeasy-param-computed: false
+                      protocol:
+                        description: 'Protocol of the service (tcp, http, grpc, etc).'
+                        type: string
+                        x-speakeasy-param-computed: false
                       serviceAddress:
                         description: |-
                           Address of the service that requests will be forwarded to.
@@ -17911,6 +17933,15 @@ components:
             selector:
               type: object
               properties:
+                dataplaneLabels:
+                  type: object
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      x-speakeasy-param-computed: false
+                  x-speakeasy-param-computed: false
                 dataplaneRef:
                   type: object
                   properties:

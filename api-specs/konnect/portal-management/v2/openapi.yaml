@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@769ecd6fed907f69ed12f1662784f0cfd9495809
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/769ecd6fed907f69ed12f1662784f0cfd9495809'
+  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -5046,6 +5046,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id

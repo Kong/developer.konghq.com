@@ -8,5 +8,7 @@
     {% include how-tos/controls.html works_on=page.works_on mobile=include.mobile  %}
   </div>
 </div>
+{% else %}
+<div class="hidden" data-works-on="{{page.works_on}}"></div>
 {% endif %}
 {% endif %}

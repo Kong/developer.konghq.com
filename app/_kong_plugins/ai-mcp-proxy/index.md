@@ -56,6 +56,10 @@ related_resources:
     url: /mcp/weather-mcp-api/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/
+  - text: Enforce ACLs on aggregated MCP servers
+    url: /mcp/enforce-acls-on-aggregated-mcp-servers/
+  - text: MCP catalog in {{site.konnect_short_name}} (tech preview)
+    url: https://cloud.konghq.com/global/organization/labs
 
 examples_groups:
   - slug: basic
@@ -93,6 +97,8 @@ next_steps:
     url: /mcp/autogenerate-mcp-tools-for-weather-api/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/
+  - text: Enforce ACLs on aggregated MCP servers
+    url: /mcp/enforce-acls-on-aggregated-mcp-servers/
 ---
 The AI MCP Proxy plugin lets you connect any Kong-managed Service to the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can either call existing APIs or interact with upstream MCP servers through Kong.
 
@@ -239,14 +245,16 @@ When exposing MCP servers through {{site.base_gateway}}, you may need granular c
 This way, consumers only interact with tools appropriate to their role, while maintaining a complete audit trail of all access attempts. Authentication is handled by standard Kong AuthN plugins (for example, [Key Auth](/plugins/key-auth/) or OIDC flows), and the resulting Consumer identity is used for ACL checks.
 
 {:.info}
-> **ACL in `listener` Mode**
+> **ACL in `listener` mode**
 >
 > Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged conversion-listener or conversion-only plugins.
 >
-> To use ACLs with [`listener`](/gateway/entities/partial/) mode:
-> 1. Configure conversion-listener or conversion-only plugins with ACL rules and tags
-> 2. Configure listener mode to aggregate tools by matching tags
-> 3. Listener mode enforces ACL rules from the conversion plugins.
+> To use ACLs with `listener` mode:
+> 1. Configure conversion-listener or conversion-only plugins with ACL rules and tags.
+> 2. Configure listener mode to aggregate tools by matching tags.
+> 3. Set `include_consumer_groups: true` on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
+>
+> See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
 
 ### Supported identifier types
 
@@ -362,9 +370,9 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate scoped default ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong-->>Client: Filtered tool list
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end
@@ -377,11 +385,11 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate per-tool ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong->>Up: Forward request
       Up-->>Kong: Response
       Kong-->>Client: Response
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end

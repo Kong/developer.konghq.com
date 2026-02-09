@@ -32,7 +32,6 @@ rows:
               Learn how to:
               - [Autogenerate and secure MCP tools from any API](#autogenerate-mcp-servers-using-ai-mcp-proxy)
               - [Apply security, governance, and observability controls to MCP servers](#apply-security-governance-and-observability-controls-to-mcp-servers)
-              - [Use Kong's {{site.konnect_product_name}} built-in MCP server](#kong-konnect-built-in-mcp-server)
               - [Observe MCP traffic logs and metrics](#mcp-traffic-observability)
               - [Leverage {{site.base_gateway}} for MCP traffic using how-to guides](#mcp-how-to-guides)
       - blocks:
@@ -119,45 +118,22 @@ rows:
                 url: "/mcp/use-access-controls-for-mcp-tools/"
 
   - header:
-      type: h3
-      text: "{{site.konnect_product_name}} built-in MCP server"
-  - columns:
+      type: h2
+      text: "MCP catalog registry (tech preview)"
+    columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    Kong also provides a built-in MCP server that connects directly to your {{site.konnect_product_name}} Control Planes. It offers read-only tools for analytics, configuration inspection, and Control Plane metadata. This is ideal for AI-driven workflows with Claude or other compatible assistants.
-
-                    With {{site.konnect_product_name}} MCP server, you can use natural language to:
-                      - Query API traffic across gateways with filters and time windows.
-                      - List and inspect Services, Routes, Consumers, and plugins.
-                      - Explore Control Plane hierarchies and group relationships.
-                      - Build and test workflows without a production setup.
-  - column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Get started with GitHub
-            description: "Connect Kong's MCP server to your GitHub projects and explore workflow automation with AI assistants."
-            cta:
-              url: /mcp/kong-mcp/get-started
-      - blocks:
-        - type: card
-          config:
-            title: Get started with Docker
-            description: "Run Kong's MCP server in Docker to quickly test and deploy MCP tools in isolated environments."
-            cta:
-              url: https://hub.docker.com/r/mcp/kong
-      - blocks:
-        - type: card
-          config:
-            title: See Kong's MCP server tools
-            description: "Browse the built-in MCP server tools for analytics, inspection, and AI-driven workflow testing."
-            cta:
-              url: /mcp/kong-mcp/tools
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}. 
+                    This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
+          - type: button
+            config:
+              text: "Enable MCP catalog in {{site.konnect_short_name}} Labs"
+              url: https://cloud.konghq.com/global/organization/labs
+  
   - header:
       type: h2
       text: "MCP traffic observability"

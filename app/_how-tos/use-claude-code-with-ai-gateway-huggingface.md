@@ -37,6 +37,7 @@ entities:
 
 tags:
   - ai
+  - huggingface
 
 tldr:
   q: How do I run Claude CLI through Kong AI Gateway with HuggingFace?

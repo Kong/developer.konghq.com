@@ -39,6 +39,8 @@ tags:
     - secrets-management
     - security
     - hashicorp-vault
+    - openai
+    - mistral
 
 tldr:
   q: How can I access HashiCorp Vault secrets in {{site.base_gateway}}?
@@ -72,6 +74,11 @@ cleanup:
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
+faqs:
+  - q: |
+      {% include /gateway/vaults-format-faq.md type='question' %}
+    a: |
+      {% include /gateway/vaults-format-faq.md type='answer' %}
 ---
 
 ## Create secrets in HashiCorp Vault

@@ -1,0 +1,12 @@
+tier:
+  enterprise: Available for Kong Gateway Enterprise, Konnect Plus, and Konnect Enterprise.
+  ai_gateway_enterprise: Only available with an AI license.
+deployment_topology:
+  on-prem: Available in Kong Gateway on-prem deployments.
+  konnect: Available in Konnect.
+support_by:
+  kong-inc: This plugin is developed, maintained, and supported by Kong Inc.
+  third-party: This plugin is developed, maintained, and supported by a third-party.
+trusted_content:
+  premium-partner: Plugins developed by tech partners and fully validated by Kong.
+

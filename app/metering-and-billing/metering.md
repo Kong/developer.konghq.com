@@ -84,7 +84,7 @@ rows:
 
 {{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion. 
 
-As CloudEvents is generic, here are some best practices for defining events in OpenMeter:
+As CloudEvents is generic, here are some best practices for defining events in {{site.metering_and_billing}}:
 <!--vale off -->
 {% table %}
 columns:
@@ -96,7 +96,7 @@ columns:
     key: examples
 rows:
   - name: "Subject (API Property: `event.subject`)"
-    description: "Subjects in OpenMeter are entities that consume resources you wish to meter. These can range from users, servers, and services to devices. The design of subjects is intentionally generic, enabling flexible application across various metering scenarios. Typically, a subject acts as a unique identifier within your system for a user or customer."
+    description: "Subjects in {{site.metering_and_billing}} are entities that consume resources you wish to meter. These can range from users, servers, and services to devices. The design of subjects is intentionally generic, enabling flexible application across various metering scenarios. Typically, a subject acts as a unique identifier within your system for a user or customer."
     examples: |
       - Customer ID or User ID
       - Hostname or IP address
@@ -108,14 +108,14 @@ rows:
       - `my-service-name`
       - `my-application-name`
   - name: "Choosing Event ID"
-    description: "Events are unique by `id` and `source` properties for idempotency. OpenMeter deduplicates events by uniqueness. Therefore, picking an ID that makes the event unique and resilient to retries is important. For example, in the case of a metering API call, this can be the request ID. You can generate a new UUID if your application doesn't have a unique identifier."
+    description: "Events are unique by `id` and `source` properties for idempotency. {{site.metering_and_billing}} deduplicates events by uniqueness. Therefore, picking an ID that makes the event unique and resilient to retries is important. For example, in the case of a metering API call, this can be the request ID. You can generate a new UUID if your application doesn't have a unique identifier."
     examples: |
       - HTTP Request ID, typically in headers: `Request-ID`, `X-Request-ID`
       - LLM Chat Completion ID: `id` field in ChatGPT response
       - Workflow ID: like activity ID in Temporal
       - Generate UUID: Node.js, Python, Go
   - name: "Data Property (API Property: `event.data`)"
-    description: "OpenMeter uses CloudEvents format's data property to ingest values and group bys. Be sure to always include in this data property what the meter requires, like value property and group bys."
+    description: "{{site.metering_and_billing}} uses CloudEvents format's data property to ingest values and group bys. Be sure to always include in this data property what the meter requires, like value property and group bys."
     examples: |
         - Always include value property for non-`COUNT` aggregations.
         - Always include group by properties.
@@ -138,7 +138,7 @@ To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Serv
 
 {% endnavtab %}
 {% navtab "Kong AI Gateway LLM tokens" %}
-To meter Kong AI Gateway LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
+To meter Kong AI Gateway LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured with `config.logging.log_payloads` and `config.logging.log_statistics` enabled.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. Enable **AI Gateway Tokens**.
@@ -396,7 +396,7 @@ meters:
 
 ### Moving multiple meters with one event
 
-In OpenMeter, a single event can move multiple meters if the event type matches. Let's see an example of tracking an API request's occurrence, execution duration, and network usage.
+In {{site.metering_and_billing}}, a single event can move multiple meters if the event type matches. Let's see an example of tracking an API request's occurrence, execution duration, and network usage.
 
 {% navtabs "moving-meters" %}
 {% navtab "Meter example" %}

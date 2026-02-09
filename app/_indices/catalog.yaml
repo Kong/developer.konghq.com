@@ -1,4 +1,5 @@
 title: "Catalog Documentation"
+description: Index containing all documentation for {{site.konnect_catalog}}.
 sections:
   - title: Overview
     items:
@@ -6,9 +7,11 @@ sections:
   - title: APIs
     items:
       - path: /service-catalog/apis/
+      - path: /catalog/api-packaging/
       - path: /how-to/automate-api-catalog/
       - path: /how-to/automate-api-catalog-with-terraform/
       - path: /how-to/discover-and-govern-apis-with-service-catalog/
+      - path: /how-to/package-apis-with-dev-portal/
   - title: Services and scorecards
     items:
       - path: /catalog/scorecards/
