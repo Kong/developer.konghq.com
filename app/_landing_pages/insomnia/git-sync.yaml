@@ -22,62 +22,17 @@ rows:
                   text: | 
                     Git Sync is designed for teams that want Git-native workflows, full data ownership, and direct control over where their data lives.
 
-  - header:
-      type: h2
-      text: Why Git Sync exists
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: | 
-                    Git Sync exists to let you use Git as the source of truth for your Insomnia projects.
-                    
                     With Git Sync:
-                      - Your data lives in your Git repository
-                      - Insomnia does not host or manage your project data
-                      - Collaboration follows standard Git workflows
-                  
-                      This model is intentionally different from cloud-hosted API clients.
-  - header:
-      type: h2
-      text: What Git Sync is
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: | 
-                    Git Sync is a storage mode that uses a third-party Git repository to store Insomnia project data.
-                    
-                    It is intended for users who want:
-                      - Version control
-                      - Peer review
-                      - Auditable change history
-                      - Local ownership of data
-                    
-                    Supported Git providers include:
-                      - GitHub
-                      - GitLab
-                      - Bitbucket
-  - header:
-      type: h3
-      text: What Git Sync isn't
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: | 
-                    Git Sync isn't:
-                    - Insomnia Cloud storage
-                    - Automatically shared across Insomnia organisations
-                    - Managed or hosted by Insomnia
-                    
-                    If you want automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync]() instead.
+                    - Your data lives in your Git repository.
+                    - Insomnia does not host or manage your project data.
+                    - Collaboration follows standard Git workflows.
+                    - You can use Git features such as version control, peer review, and auditable change history.
+                    - You retain local ownership of your data.
+
+                    Git Sync uses a third-party Git repository to store Insomnia project data. Supported Git providers include GitHub, GitLab, and Bitbucket.
+
+                    {:.info}
+                    > Git Sync is not Insomnia Cloud storage. Git Sync projects are not automatically shared across Insomnia organizations, and they are not managed or hosted by Insomnia. If you require automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync](/insomnia/cloud-sync/) instead.
 
   - header:
       type: h2
@@ -89,219 +44,333 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    **Direct-to-Git architecture**
+                    **Direct-to-Git architecture**: 
+                      - Insomnia syncs directly between your device and your Git provider. This means that your project data never passes through Insomnia servers.
+                      - All storage, access control, retention, and auditability are handled by your Git provider and your existing Git governance practices.
                     
-                    Insomnia syncs directly between your device and your Git provider.
-                    - Your project data does not pass through Insomnia servers
-                    - This architecture is a core reason teams choose Git Sync
+                      {:.decorative}
+                      > This architecture is a core reason teams choose Git Sync.
 
-                    **Known limitations**
+                    **Known limitations**:
+                    - No UI support for reverting commits.
+                    - No pre-request or post-request scripts for gRPC.
+                    - No persistent execution history for gRPC requests.
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                {% mermaid %}
+                flowchart LR
+                    subgraph userDesktop [User desktop]
+                        A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+                        B(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
+                    end 
+
+                    subgraph unsure [ ]
+                        C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
+                        D(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
+                    end
+
+                    subgraph insomniaCloud [Insomnia Cloud]
+                        E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;" />Database)
+                        F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;" />Google Cloud)
+                    end
+
+                    subgraph Git-based source code management provider
+                      subgraph .
+                        G(<img src="/assets/icons/bitbucket.svg" style="max-width:25px; display:block; margin:0 auto;"/>Bitbucket)
+                        H(<img src="/assets/icons/gitlab.svg" style="max-width:25px; display:block; margin:0 auto;" />GitLab)
+                        I(<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" />GitHub)
+                        end
+                    end
                     
-                    Current limitations include:
-                    - No UI support for reverting commits
-                    - No pre-request or post-request scripts for gRPC
-                    - No persistent execution history for gRPC requests
-                - type: text
-                  text: |
-                    {% mermaid %}
-                    flowchart LR
-                        subgraph userDesktop [User desktop]
-                            A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
-                            B(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
-                        end 
-
-                        subgraph unsure [ ]
-                            C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
-                            D(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
-                        end
-
-                        subgraph insomniaCloud [Insomnia Cloud]
-                            E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;" />Database)
-                            F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;" />Google Cloud)
-                        end
-
-                        subgraph Git-based source code management provider
-                          subgraph .
-                            G(<img src="/assets/icons/bitbucket.svg" style="max-width:25px; display:block; margin:0 auto;"/>Bitbucket)
-                            H(<img src="/assets/icons/gitlab.svg" style="max-width:25px; display:block; margin:0 auto;" />GitLab)
-                            I(<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" />GitHub)
-                            end
-                        end
-                        
-                        J(<b>Insomnia resources</b><br>RBAC<br>License)
+                    J(<b>Insomnia resources</b><br>RBAC<br>License)
 
 
-                        E <--> J
-                        F <--> J <--> A <--> C
-                        B <--> D
-                        C <--> G & H & I
-                        D <--> G & H & I
+                    E <--> J
+                    F <--> J <--> A <--> C
+                    B <--> D
+                    C <--> G & H & I
+                    D <--> G & H & I
 
-                        style . stroke:none
-                    {% endmermaid %}
-
+                    style . stroke:none
+                {% endmermaid %}      
 
   - header:
       type: h2
-      text: Storage
+      text: System changes
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Expect occasional system changes in Git Sync projects. System changes exist because Git Sync communicates directly with Git, which means that Insomnia must store some Insomnia-specific metadata in the repository.
+                - These updates may appear as system changes
+                - They support internal features such as tracking and access-related metadata
+
+              {:.warning}
+              > System changes are intentional and required for Git Sync to work correctly. You may see system changes even when you did not edit a request. Insomnia is improving how system changes are labelled and displayed, starting in Insomnia 12.4.
+
+  - header:
+      type: h2
+      text: Collaboration model
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync uses Git as the collaboration layer instead of Insomnia Cloud sharing. Git Sync projects are: 
+                - Visible only to the person who creates them 
+                - Not automatically shared through Insomnia organisations
+
+               Collaboration happens through standard Git workflows, including branches, commits, and merges. Each collaborator: 
+                - Works in their own Insomnia project
+                - Connects that project to the same Git repository
+
+  - header:
+      type: h2
+      text: Version control
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              {:.info}
+              > Git Sync respects standard Git rules and protections.
+
+              Git Sync provides version control features directly in the Insomnia UI. These features let you manage changes using familiar Git workflows without leaving the application.
+
+              **Supported Git actions**
+
+              From the Git Sync interface, you can:
+              - Create and check out branches
+              - Commit changes
+              - Commit and push changes
+              - Pull changes from the repository
+              - Merge branches
+              - Resolve conflicts
+
+              **Branch behaviour and protections**
+
+              Git Sync follows standard Git branch behaviour:
+              - Branches are object-specific
+              - Branches are not shared across different objects
+              - Repository branch protections are respected
+              - Protected branches cannot be pushed to from Insomnia
+
+              **Commit history and revert behaviour**
+
+              Git Sync does not currently provide a way to revert commits from the UI. If you need to revert a change, use your Git provider’s tools. Support for reverting commits in the Git Sync UI is planned for a future release.
+              
+  - header:
+      type: h2
+      text: Conflict resolution
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync resolves conflicts only when manual input is required. The merge UI appears when:
+                - local changes exist
+                - Remote changes exist 
+                - Both changes affect the same content
+                - You perform a pull or push action
+
+              Git Sync uses a three-way merge to resolve conflicts. When a conflict occurs, the following flow applies:
+              1. A pull or push action triggers a conflict.
+              2. The merge UI opens.
+              3. You select which changes to keep.
+              4. You commit the merged result.
+              5. You push the merge to the repository.
+
+              Not every sync requires conflict resolution. For more information about Insomnia's three-way merge and conflict resolution, navigate to [3-way merge](/insomnia/three-way-merge/).
+  - header:
+        type: h2
+        text: Git Sync data
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  All Git Sync data is stored in the connected Git repository using the provider’s native storage. Git Sync can store the following types of data:     
+  - column_count: 5 
     columns:
       - blocks:
         - type: card
           config:
-            title: Local vault
-            description: Store your Insomnia data locally on your device.
-            icon: /assets/icons/laptop.svg
+            title: Documents
+            description: Store and version OpenAPI specifications and related design documents in Git, enabling review, collaboration, and change tracking through standard Git workflows.
+            icon:  /assets/icons/file.svg
             cta:
               text: Learn more
-              url: /insomnia/storage/#local-vault
+              url: /insomnia/documents/
       - blocks:
         - type: card
           config:
-            title: Cloud sync
-            description: Store your Insomnia data securely in the cloud.
-            icon: /assets/icons/cloud.svg
+            title: Collections
+            description: Store API request collections and test definitions in Git so teams can collaborate, review changes, and keep API workflows in sync across environments.
+            icon: /assets/icons/bars.svg
             cta:
               text: Learn more
-              url: /insomnia/storage/#cloud-sync
+              url: /insomnia/collections/
       - blocks:
         - type: card
           config:
-            title: Git sync
-            description: Store your Insomnia data on a Git repository.
-            icon: /assets/icons/git.svg
+            title: MCP Clients
+            description: Store MCP client configurations in Git to version and share how Insomnia connects to Konnect for mocking, validation, and request protection.
+            icon: /assets/icons/network.svg
             cta:
               text: Learn more
-              url: /insomnia/storage/#git-sync
+              url: /insomnia/mcp-clients-in-insomnia/       
+      - blocks:
+        - type: card
+          config:
+            title: Mock servers
+            description: Store mock server configurations in Git to version API simulations and share consistent mock behavior across teams and environments.
+            icon: /assets/icons/server.svg
+            cta:
+              text: Learn more
+              url: /insomnia/mock-servers/
+      - blocks:
+        - type: card
+          config:
+            title: Environments
+            description: Store environment variables and configuration values in Git to ensure consistent, auditable configuration across projects and collaborators.
+            icon: /assets/icons/code.svg
+            cta:
+              text: Learn more
+              url: /insomnia/environments/
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  {:.decorative}
+                  > Insomnia does not control or manage the data that you store with Git Sync.
 
   - header:
       type: h2
-      text: Security
+      text: Authentication, credentials, and secrets
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync supports multiple ways to configure Git credentials. You can configure credentials include:
+                - Git Sync settings
+                - Local `git.config`
+                - Insomnia Preferences
+
+              Git Sync requires a passphrase to decrypt account keys. This requirement applies to both Git Sync and Cloud Sync users. For more information about passphrases, navigate to [Passphrase](/insomnia/accounts/#passphrase)
+
+              Insomnia doesn't enforce secret prevention in Git repositories. To reduce the risk of committing sensitive data:
+                - Use Private Environments for secrets
+                - Integrate with an external vault
+                - Apply external Git controls like hooks or scanners
+  - header:
+      type: h2
+      text: Storage choices and governance
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync projects can be converted to other storage types, including Cloud Sync and Local Vault. Before you convert a project, pull the latest changes to ensure your local state is up to date. 
+              
+              {:.info}
+              > Converting a project doesn't modify or delete the connected Git repository.
+
+              Enterprise administrators can control which storage types are available to users. From [Enterprise Controls > Storage](https://app.insomnia.rest/app/enterprise/storage), administrators can also allow or restrict Cloud Sync, Local Vault, and Git Sync.
+                
+  - header:
+      type: h2
+      text: AI-assisted workflows in Git Sync
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync includes AI-assisted commit grouping to help you review and organise changes before you commit them. This feature: 
+                - Analyzes staged Git changes
+                - Suggests commit groupings
+                - Suggests commit messages
+
+              To use AI commit suggestions:
+                1.  open the Git Sync interface
+                1. Enable AI commit suggestions
+                1. Review and edit the suggested results
+                1. Adjust groupings if needed
+                5. Commit the changes or commit and push them to the repository
+
+  - header:
+      type: h2
+      text: Automation and local tooling
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              You can use the Inso CLI with Git Sync projects to automate workflows and integrate with local tooling. The Inso CLI works with data that is available on your local machine.
+
+              When you use Git Sync, Insomnia creates an `.insomnia` directory in the project. The Inso CLI can use this directory as a data source.
+
+              Key points to be aware of:
+              - Inso CLI is available for Git Sync projects.
+              - Inso CLI works only with locally available data.
+
+  - header:
+      type: h2
+      text: Get started with Git Sync
     columns:
       - blocks:
         - type: card
           config:
-            title: RBAC
-            description: Use Role-based access control (RBAC) for fine-grain control over who can access which Insomnia resources.
-            icon: /assets/icons/rbac.svg
+            title: 1. Confirm repository authentication
+            description: |
+                      Confirm that you can authenticate to the Git repository.
+                      Configure Git credentials using one of the supported methods:
+                      - Git Sync settings
+                      - Local `git.config``
+                      - Preferences > Credentials
+            icon: /assets/icons/
             cta:
-              text: Learn more
+              text: Authenticate Git repository
               url: /insomnia/rbac/
       - blocks:
         - type: card
           config:
-            title: SSO
-            description: Set up Single Sign-On (SSO) to allow your users to log in using your preferred Identity Provider.
+            title: 2. Set your passphrase
+            description: |
+                      Set a passphrase to avoid being locked out of synced storage workflows later.
+                      
+                      Insomnia requires a passphrase for users who use Git Sync to decrypt account keys.
             icon: /assets/icons/key.svg
             cta:
-              text: Learn more
-              url: /insomnia/sso/
+              text: Set passphrase
+              url: /insomnia/accounts/#passphrase
       - blocks:
         - type: card
           config:
-            title: SCIM
-            description: Set up System for Cross-domain Identity Management (SCIM) provisioning to manage users and teams from your Identity Provider.
+            title: 3. Pull to establish a clean baseline
+            description: |
+                       Align your local workspace with the current remote state before making changes.
+                        - Pull first to avoid working against stale content
+                        - If conflicts exist, Insomnia opens the merge UI only when manual input is required
+                        - If no conflicts exist, the pull completes without interruption
+            icon: "/assets/icons/"
+            cta:
+              text: Pull from remote
+              url: /insomnia/scim/
+      - blocks:
+        - type: card
+          config:
+            title: 4. Verify that you can push changes
+            description: |
+                       Confirm that end-to-end Git Sync works before real work begins.
+                        - Make a small, reversible change. For example, rename a folder or update a description.
+                        - Commit and push from the version control panel
             icon: /assets/icons/domain.svg
             cta:
-              text: Learn more
-              url: /insomnia/scim/
-
-  - header:
-      type: h2
-      text: "Capabilities"
-    columns:
-      - blocks:
-          - type: feature_table
-            config:
-              columns:
-                - title: Essentials
-                  key: essentials
-                - title: Pro
-                  key: pro
-                - title: Enterprise
-                  key: ee
-              features:
-                - title: |
-                    [Local storage](/insomnia/storage/#local-vault)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [API testing](/insomnia/test/)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [Cloud-hosted mock server](/insomnia/mock-servers/)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [Automated API testing](/inso-cli/)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [End-to-End Encryption](/insomnia/end-to-end-encryption/)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [Cloud Sync](/insomnia/storage/#cloud-sync)
-                  essentials: true
-                  pro: true
-                  ee: true
-                - title: |
-                    [Git Sync](/insomnia/storage/#git-sync)
-                  essentials: false
-                  individual: false
-                  pro: true
-                  ee: true
-                - title: |
-                    [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
-                  essentials: false
-                  individual: false
-                  pro: false
-                  ee: true
-                - title: |
-                    [Enterprise support](/insomnia/enterprise/)
-                  essentials: false
-                  individual: false
-                  pro: false
-                  ee: true
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    For more details about Enterprise capabilities, see [Insomnia Enterprise](/insomnia/enterprise/).
-                    
-                    See the full feature comparison on our [pricing page](https://insomnia.rest/pricing).
-
-  - header:
-      type: h2
-      text: How-to guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                  - insomnia
-              quantity: 5
-              allow_empty: true
-
-  - header:
-      type: h2
-      text: References & tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                - insomnia
-              quantity: 5
-              allow_empty: true
-
-
+              text: Push changes
+              url: /insomnia/scim/              
+ 
   - header:
       text: "Frequently asked questions"
       type: h2
@@ -309,13 +378,36 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Where can I find the Insomnia changelog?
-              a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
-            - q: How often does Insomnia release updates?
-              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
-            - q: Does Insomnia automatically update to the latest version?
+            - q: Should I use Git Sync or Cloud Sync?
+              a: Both allow you to use version control and collaborate with your team. You should use Git Sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
+            - q: I'm using Git Sync, does Insomnia uphold the branch protections we have in our repository?
+              a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
+            - q: With Git Sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
+              a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
+            - q: What are the user and Git Sync limits for the Essentials plan?  
               a: |
-                On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
+                On the **Essentials** plan, you can choose one of two configurations:
+                - Activate **Git Sync** with a limit of up to **3 users** per organization.
+                - Deactivate **Git Sync** and allow **unlimited users**.
 
-                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia doesn't own or maintain all Linux distribution mechanisms, automatic updates aren't guaranteed on Linux.
-            
+                You can switch between configurations at any time.  
+                When you reach the limit, Insomnia automatically flags it in the application. For example, if you try to add a fourth user while Git Sync is activated, or activate Git Sync when more than three users are already active.  
+                In either case, you can reduce users or disable Git Sync to continue
+            - q: What happens if I change a Git Sync project into a Cloud Sync project?
+              a: |
+                When you change a Git Sync storage type project to a Cloud Sync storage type, the project is no longer connected to your Git repository. Any new changes made after the conversion are stored in Insomnia Cloud and are not reflected in the original repository. Your existing files in the Git repository are not deleted or modified by this change. 
+                
+                To update the storage type, go to the project’s **Project Settings**, select **Change** from the **Type** dropdown, choose **Cloud Sync**, and then click **Update**. 
+                
+                {:.decorative}
+                > **Tip:** Before converting, make sure that you pull the latest updates from the repository, as any changes that aren't pulled beforehand aren't included in the Cloud Sync project. If needed, switch the project back to a local or Git-based workflow later.    
+            - q: Can I change a Git Sync project into a Local Vault project?
+              a: |
+                Yes. You can convert a Git Sync storage type project to Local Vault storage type at any time. Go to the project’s **Project Settings**, select **Change** from the **Type** dropdown, choose **Local Vault**, and then click **Update**. 
+                
+                After conversion, the project is stored entirely on your local device and is no longer synchronized with Git. Changes made to the project will not be reflected in your local or remote repository. This action does not delete or modify the remote repository. 
+                
+                {:.decorative}
+                > **Tip:** Before converting, make sure that you pull the latest project updates, as any changes that aren't pulled beforehand aren't included in the Local Vault project.
+            - q: What happens if my Git repository contains legacy Insomnia content when I create a Git Sync project?
+              a: If the Git repository you connect contains legacy Insomnia content, Insomnia automatically converts that content to the current project format during project creation. This ensures that the content is compatible with modern Insomnia workflows. If the repository already contains Insomnia content, whether legacy or current, Insomnia prompts you to import that content into the new Git Sync project before continuing.                
