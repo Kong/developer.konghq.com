@@ -1,0 +1,84 @@
+metadata:
+  title: "Kong Developer Sitemap"
+  content_type: landing_page
+  description: Sitemap for Kong Developer documentation.
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Developer Sitemap"
+      sub_text: "Documentation index and search pages"
+  - header:
+      type: h2
+      text: "Index pages"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[{{site.base_gateway}}](/index/gateway/)"
+                  - "[Kong AI Gateway](/index/ai-gateway/)"
+                  - "[{{site.mesh_product_name}}](/index/mesh/)"
+                  - "[{{site.kic_product_name}}](/index/kic/)"
+                  - "[{{site.operator_product_name}}](/index/operator/)"
+                  - "[{{site.event_gateway}}](/index/event-gateway/)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[{{site.konnect_product_name}}](/index/konnect/)"
+                  - "[Kong Dev Portal](/index/dev-portal/)"
+                  - "[Kong {{site.metering_and_billing}}](/index/metering-and-billing/)"
+                  - "[Kong {{site.konnect_catalog}}](/index/catalog/)"
+                  - "[Kong {{site.observability}}](/index/observability/)"
+                  - "[Konnect Reference Platform](/index/konnect-reference-platform/)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[decK](/index/deck/)"
+                  - "[Insomnia](/index/insomnia/)"
+                  
+  - header:
+      type: h2
+      text: "Additional reference pages"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[{{site.base_gateway}} plugins](/plugins/)"
+                  - "[{{site.mesh_product_name}} policies](/mesh/policies/)"
+                  - "[{{site.event_gateway}} policies](/event-gateway/policies/)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[API references](/api/)"
+                  - "[Terraform](/terraform/)"
+
+  - column_count: 3
+    header:
+      type: h2
+      text: "Search pages"
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Search all documentation](/search/)"
+                  - "[Search how-to guides](/how-to/)"
