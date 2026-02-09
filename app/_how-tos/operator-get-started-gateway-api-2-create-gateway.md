@@ -32,8 +32,8 @@ search_aliases:
   - konnect hybrid gateway
 
 tldr:
-  q: How do I deploy Kong Gateway using Kubernetes Gateway API?
-  a: Use Gateway API constructs `GatewayConfiguration`,  `GatewayClass` and `Gateway` to provision a Kong Gateway on Kubernetes.
+  q: How do I deploy {{site.base_gateway}} using Kubernetes Gateway API?
+  a: Use Gateway API constructs `GatewayConfiguration`,  `GatewayClass` and `Gateway` to provision a {{site.base_gateway}} on Kubernetes.
 
 prereqs:
   show_works_on: true
