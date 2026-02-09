@@ -25,6 +25,7 @@ module Jekyll
         @page.data['llm_metadata']['products'] = products
         @page.data['llm_metadata']['tier'] = tier
         @page.data['llm_metadata']['tools'] = tools
+        @page.data['skip_llm_metadata'] = true if @page.path.start_with?('_api/')
       end
 
       def products

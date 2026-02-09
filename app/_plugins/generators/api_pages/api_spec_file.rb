@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 module Jekyll
   module APIPages
     class APISpecFile
@@ -23,6 +25,12 @@ module Jekyll
                            .gsub('_api', 'api-specs')
                            .gsub('_index.md', "#{@version}/")
                            .concat('openapi.yaml')
+      end
+
+      def raw_api_spec
+        return unless exist?
+
+        @raw_api_spec ||= YAML.load(File.read(path))
       end
     end
   end

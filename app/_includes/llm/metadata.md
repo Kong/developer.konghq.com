@@ -1,3 +1,4 @@
+{%- unless page.skip_llm_metadata -%}
 ## Metadata
 {%- if page.products %}
 - Products: {{page.llm_metadata.products | join: ', '}}
@@ -39,3 +40,4 @@
 - **AI Gateway Enterprise:** This plugin is only available as part of our AI Gateway Enterprise offering.
 {%- endif -%}
 {%- endif -%}
+{%- endunless -%}
