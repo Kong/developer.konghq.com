@@ -171,5 +171,5 @@ render_banner: false
 
 # Copy
 llm_copy:
-  on_prem_snippet: 'For on-prem deployments:'
-  konnect_snippet: 'For Konnect deployments:'
+  on_prem_snippet: 'On-prem deployments'
+  konnect_snippet: 'Konnect deployments'
