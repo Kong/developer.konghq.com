@@ -233,13 +233,12 @@ Support for {{ provider.name }} function calling to allow {{ provider.name }} mo
 
 <div class="w-full overflow-x-auto">
 <table class="w-full">
-  {{ table_header_with_streaming }}
+  {{ table_header_no_streaming }}
   <tbody>
     {% if provider.function_calling.supported %}
     <tr>
       <td>Function calling{% if function_calling_note_num != 0 %}<sup>{{ function_calling_note_num }}</sup>{% endif %}</td>
       <td><code>{{ provider.function_calling.route_type }}</code></td>
-      <td>{{ provider.function_calling.streaming | to_check }}</td>
       <td>{{ provider.function_calling.model_example }}</td>
       <td>{{ provider.function_calling.min_version }}</td>
     </tr>
