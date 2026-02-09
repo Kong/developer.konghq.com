@@ -2,14 +2,14 @@
 title: Route Qwen Code CLI traffic through {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Qwen Code CLI traffic using AI Proxy with OpenAI-compatible endpoints
+description: Configure {{site.ai_gateway}} to proxy Qwen Code CLI traffic using AI Proxy with OpenAI-compatible endpoints
 
 products:
   - gateway
@@ -122,7 +122,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and AI Gateway. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
+Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and {{site.ai_gateway}}. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
 
 {% entity_examples %}
 entities:

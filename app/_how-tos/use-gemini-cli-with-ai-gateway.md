@@ -2,14 +2,14 @@
 title: Route Google Gemini CLI traffic through {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Google Gemini CLI traffic using AI Proxy
+description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic using AI Proxy
 
 products:
   - gateway
@@ -113,7 +113,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Gemini CLI and AI Gateway by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as Gemini CLI runs through {{site.base_gateway}}.
+Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Gemini CLI and {{site.ai_gateway}} by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as Gemini CLI runs through {{site.base_gateway}}.
 
 {% entity_examples %}
 entities:

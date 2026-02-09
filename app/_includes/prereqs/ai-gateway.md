@@ -1,4 +1,4 @@
-1. To complete this tutorial, make sure you have an [AI Gateway](/ai-gateway/) instance running in {{site.konnect_short_name}}. If you don't have one set up yet, follow the steps below to configure it using decK:
+1. To complete this tutorial, make sure you have an [{{site.ai_gateway}}](/ai-gateway/) instance running in {{site.konnect_short_name}}. If you don't have one set up yet, follow the steps below to configure it using decK:
 
 {% capture entities %}
 {% entity_examples %}
