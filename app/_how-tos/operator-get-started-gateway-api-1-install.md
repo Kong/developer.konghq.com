@@ -13,7 +13,7 @@ breadcrumbs:
   - index: operator
     group: Gateway Deployment
   - index: operator
-    group: Gateway API
+    group: Gateway Deployment
     section: "Get Started"
 
 products:
