@@ -38,19 +38,22 @@ module Jekyll
           keys = @tab_group.split('.')
           group = keys.reduce(context) { |c, key| c[key] } || @tab_group
         end
+        context.stack do
+          context['tab_group'] = group
+          context['environment'] = environment
+          context['navtabs_id'] = navtabs_id
+          Liquid::Template
+            .parse(template)
+            .render(context)
+        end
+      end
 
-        Liquid::Template
-          .parse(File.read(File.join(@site.source, '_includes/components/tabs.html')))
-          .render(
-            {
-              'site' => @site.config,
-              'page' => context['page'],
-              'tab_group' => group,
-              'environment' => environment,
-              'navtabs_id' => navtabs_id
-            },
-            { registers: context.registers, context: context }
-          )
+      def template
+        if @page['output_format'] == 'markdown'
+          File.read(File.join(@site.source, '_includes/components/tabs.md'))
+        else
+          File.read(File.join(@site.source, '_includes/components/tabs.html'))
+        end
       end
     end
 
@@ -91,17 +94,25 @@ module Jekyll
 
         # Set a default slug if not provided
         evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
-
-        site = context.registers[:site]
-        converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
         environment = context.environments.first
 
         navtabs_id = environment['navtabs-stack'].last
         environment["navtabs-#{navtabs_id}"][evaluated_title] = {
-          'content' => converter.convert(render_block(context)),
+          'content' => block_content(context),
           'attributes' => evaluated_attributes
         }
         ''
+      end
+
+      def block_content(context)
+        page = context.environments.first['page']
+        if page['output_format'] == 'markdown'
+          render_block(context)
+        else
+          site = context.registers[:site]
+          converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
+          converter.convert(render_block(context))
+        end
       end
     end
   end
