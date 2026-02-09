@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.ai_gateway}}"
+  title: "{{site.ai_gateway_name}}"
   content_type: landing_page
   description: This page is an introduction to {{site.ai_gateway}}.
   products:
