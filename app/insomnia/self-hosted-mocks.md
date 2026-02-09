@@ -125,6 +125,10 @@ echo "
 " | kubectl apply -f -
 ```
 
+{.info}
+> When you run a self-hosted mock server in Kubernetes, Redis connectivity depends on both the mock server configuration and the Redis image that you deploy. If your mock server can't connect to Redis even though Redis appears healthy and reachable with port-forwarding, use a different [Redis base image]https://hub.docker.com/r/bitnami/redis).
+
+
 ### Configure the service
 
 To create a service that exposes the Mockbin internally to the cluster, run the following command:
