@@ -46,7 +46,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 ```
 
 {% warning %}
-{{ site.operator_product_name }} 2.1 enables [Combine HTTP routes](/kubernetes-ingress-controller/faq/combining-httproutes/) by default.  This will automatically reduce the number of services with the same ```backendRef```.  During an upgrade from {{ site.operator_product_name }} 2.0 to 2.1, this will mean a couple of seconds of downtime for your services as they are automatically merged. To disable this, set the following:
+> {{ site.operator_product_name }} 2.1 enables [Combine HTTP routes](/kubernetes-ingress-controller/faq/combining-httproutes/) by default.  This will automatically reduce the number of Services with the same `backendRef`.  During an upgrade from {{ site.operator_product_name }} 2.0 to 2.1, this will mean a couple of seconds of downtime for your Services as they are automatically merged. To disable this, set the`spec.controlPlaneOptions.translation.combinedServicesFromDifferentHTTPRoutes` parameter to `disabled` in your `GatewayConfiguration`. 
 
 ```
 spec.controlPlaneOptions.translation.combinedServicesFromDifferentHTTPRoutes: disabled
