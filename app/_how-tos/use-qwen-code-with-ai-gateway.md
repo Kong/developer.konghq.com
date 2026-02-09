@@ -1,8 +1,8 @@
 ---
-title: Route Qwen Code CLI traffic through {{site.ai_gateway}}
+title: "Route Qwen Code CLI traffic through {{site.ai_gateway}}"
 content_type: how_to
 related_resources:
-  - text: "{{site.ai_gateway}}
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
