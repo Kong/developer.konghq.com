@@ -2,10 +2,13 @@ name: Kong Operator
 icon: /_assets/icons/products/operator.svg
 
 releases:
+  - release: "2.1.0"
+    releaseDate: "2026-02-05"
+    endOfLifeDate: "2027-02-05"
+    latest: true
   - release: "2.0.5"
     releaseDate: "2025-10-17"
     endOfLifeDate: "2026-10-17"
-    latest: true
   - release: "2.0.4"
     releaseDate: "2025-10-07"
     endOfLifeDate: "2026-10-07"
