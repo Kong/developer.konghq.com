@@ -2,7 +2,7 @@
 title: Create a Service and Route
 description: Provision a service and route in Konnect using Kubernetes CRDs.
 content_type: how_to
-permalink: /operator/konnect/get-started/service-and-route/
+permalink: /operator/get-started/konnect-crds/service-and-route/
 breadcrumbs:
   - /operator/
   - index: operator
@@ -12,8 +12,8 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: operator-konnectcrds-get-started
-  position: 5
+  id: operator-get-started-konnect-crds
+  position: 4
 
 tldr:
   q: How do I expose an upstream service using Konnect CRDs?
@@ -71,6 +71,14 @@ flowchart LR
 {% endmermaid %}
 <!--vale on-->
 
+
+## Deploy a Service to Kubernetes
+Let's deploy an `echo` service to the Kubernetes cluster and setup the `KongService` and `KongRoute`:
+
+```bash
+kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
+```
+
 ## Create a `KongService` 
 
 The `KongService` resource is used to define an upstream service that {{site.konnect_short_name}} will route traffic to. This must include a reference to a `KonnectGatewayControlPlane` to associate the service with your Konnect environment.
@@ -83,7 +91,8 @@ metadata:
   name: service
 spec:
   name: service
-  host: httpbin.konghq.com
+  host: echo.kong.svc.cluster.local
+  port: 1027
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
@@ -106,7 +115,7 @@ spec:
   protocols:
   - http
   paths:
-  - /
+  - /echo
   serviceRef:
     type: namespacedRef
     namespacedRef:
