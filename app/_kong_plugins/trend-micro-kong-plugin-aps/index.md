@@ -58,7 +58,7 @@ You can install the TrendAI API Security plugin by downloading and mounting its 
 ### Prerequisites
 
 - A TrendAI Vision one account
-- Add [Kong Gateway as a Third Party Integration in TrendAI Vision One](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway).
+- Add [{{site.base_gateway}} as a Third Party Integration in TrendAI Vision One](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway).
 Download the plugin gzip file and retrieve the required FQDN and token values. These values will be configured in the plugin to ensure data is sent back to the correct TrendAI Vision One account.
 
 ### Installation steps
