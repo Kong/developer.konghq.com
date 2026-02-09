@@ -59,7 +59,6 @@ rows:
           - type: mermaid
             config:
               diagram: |
-                {% mermaid %}
                 flowchart LR
                     subgraph userDesktop [User desktop]
                         A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
@@ -93,8 +92,7 @@ rows:
                     C <--> G & H & I
                     D <--> G & H & I
 
-                    style . stroke:none
-                {% endmermaid %}      
+                    style . stroke:none      
 
   - header:
       type: h2
