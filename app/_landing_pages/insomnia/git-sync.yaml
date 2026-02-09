@@ -172,7 +172,7 @@ rows:
                 - Both changes affect the same content
                 - You perform a pull or push action
 
-              Git Sync uses a three-way merge to resolve conflicts. When a conflict occurs, the following flow applies:
+              Git Sync uses 3-way merge to resolve conflicts. When a conflict occurs, the following flow applies:
               1. A pull or push action triggers a conflict.
               2. The merge UI opens.
               3. You select which changes to keep.
@@ -215,7 +215,7 @@ rows:
         - type: card
           config:
             title: MCP Clients
-            description: Store MCP client configurations in Git to version and share how Insomnia connects to Konnect for mocking, validation, and request protection.
+            description: Store MCP client configurations in Git to version and share how Insomnia connects for mocking, validation, and request protection.
             icon: /assets/icons/network.svg
             cta:
               text: Learn more
@@ -261,7 +261,7 @@ rows:
                 - Local `git.config`
                 - Insomnia Preferences
 
-              Git Sync requires a passphrase to decrypt account keys. This requirement applies to both Git Sync and Cloud Sync users. For more information about passphrases, navigate to [Passphrase](/insomnia/accounts/#passphrase)
+              Git Sync requires a passphrase to decrypt account keys. This requirement applies to both Git Sync and Cloud Sync users. For more information about passphrases, navigate to [Passphrase](/insomnia/accounts/#passphrase).
 
               Insomnia doesn't enforce secret prevention in Git repositories. To reduce the risk of committing sensitive data:
                 - Use Private Environments for secrets
@@ -294,11 +294,11 @@ rows:
                 - Suggests commit messages
 
               To use AI commit suggestions:
-                1.  open the Git Sync interface
-                1. Enable AI commit suggestions
-                1. Review and edit the suggested results
-                1. Adjust groupings if needed
-                5. Commit the changes or commit and push them to the repository
+                1. Open the Git Sync interface.
+                1. Enable AI commit suggestions.
+                1. Review and edit the suggested results.
+                1. Adjust groupings if needed.
+                1. Commit the changes or commit and push them to the repository.
 
   - header:
       type: h2
