@@ -210,7 +210,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: {{site.ai_gateway}}
+            title: "{{site.ai_gateway}}"
             description: |
               {{site.ai_gateway}} is a powerful set of AI features built on top of {{ site.base_gateway }},
               designed to help developers and organizations effectively adopt AI quickly and securely.
