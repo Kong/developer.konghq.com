@@ -349,7 +349,7 @@ If you get the `Error: deck command not found` message, ensure decK is installed
    ```sh
    deck version
    ```
-1. [Install decK](/deck/latest/installation/) if needed.
+1. [Install decK](/deck/#install-deck) if needed.
 
 ### Authentication errors from decK
 
