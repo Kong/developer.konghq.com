@@ -33,7 +33,7 @@ Self-hosted mocks give you full control over availability, traffic limits, and i
 Before you deploy a self-hosted mock server, you need the following:
 
 - Pull the Docker image
-- Install the Redis instance
+- Install and run the Redis instance
 
 ### Pull the Docker image
 
@@ -95,6 +95,14 @@ To run mock endpoints in your own infrastructure using standard Kubernetes resou
 
 ### Configure the deployment
 
+Self-hosted mock servers require Redis to store mock data at runtime. When you deploy the mock server to Kubernetes, you must configure the Redis connection using environment variables. At a minimum, you must provide the **Redis host** so that the container can connect to your Redis service.
+
+Set the following environment variable in the container spec:
+
+- `MOCKBIN_REDIS`: The Redis connection URL. For example, `redis://redis.mock.svc:6379`.
+
+For a full list of supported environment variables in the mock server, review the [Docker Compose configuration](https://github.com/Kong/insomnia-mockbin/blob/self-hosted/docker-compose.yml).
+
 Run the following command to create a deployment for your mock server:
 
 ```sh
@@ -122,12 +130,13 @@ echo "
           env:
             - name: MOCKBIN_PORT
               value: '9080'
+            - name: MOCKBIN_REDIS
+              value: "redis://redis:6379"  
 " | kubectl apply -f -
 ```
 
 {:.info}
 > When you run a self-hosted mock server in Kubernetes, Redis connectivity depends on both the mock server configuration and the Redis image that you deploy. If your mock server can't connect to Redis even though Redis appears healthy and reachable with port-forwarding, use a different [Redis base image](https://hub.docker.com/r/bitnami/redis).
-
 
 ### Configure the service
 
