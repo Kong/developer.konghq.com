@@ -20,10 +20,10 @@ class MeshServiceSwitcher {
           // the $bits we need
           const $checkbox = $item.querySelector('input[type="checkbox"]');
           const $legacy = $item.parentNode.querySelector(
-            ".meshservice ~ .language-yaml:nth-child(2)"
+            ".meshservice ~ .custom-code-block:nth-child(2)"
           );
           const $meshService = $item.parentNode.querySelector(
-            ".meshservice ~ .language-yaml:nth-child(3)"
+            ".meshservice ~ .custom-code-block:nth-child(3)"
           );
 
           // get the changed value and update the view
