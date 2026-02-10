@@ -25,8 +25,6 @@ tldr:
   q: How do I create an admin using the API instead of Kong Manager?
   a: Temporarily disable RBAC, create an RBAC user with the super-admin role, re-enable RBAC, then use that user to create and register the new admin.
 
-tools:
-  - admin-api
 
 ---
 
