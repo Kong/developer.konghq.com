@@ -11,7 +11,7 @@
 
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
-Kong AI Gateway transforms requests and responses according to the configured [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), using the OpenAI format by default. {% new_in 3.10 %} To use a provider's native format instead, set [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`. The plugin then passes requests upstream without transformation. See [Supported native LLM formats](#supported-native-llm-formats) for available options.
+{{site.ai_gateway}} transforms requests and responses according to the configured [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), using the OpenAI format by default. {% new_in 3.10 %} To use a provider's native format instead, set [`config.llm_format`](./reference/#schema--config-llm-format) to a value other than `openai`. The plugin then passes requests upstream without transformation. See [Supported native LLM formats](#supported-native-llm-formats) for available options.
 
 The following table maps each route type to its [OpenAI API](https://platform.openai.com/docs/api-reference) reference and generative AI category. See the [AI provider reference pages](/ai-gateway/ai-providers/) for provider-specific details.
 
@@ -156,9 +156,9 @@ rows:
 
 ## Supported native LLM formats {% new_in 3.10 %}
 
-If you use a [provider’s](/ai-gateway/ai-providers/) native SDK, Kong AI Gateway {% new_in 3.10 %} can proxy the request and return the upstream response without payload format conversion. Set `config.llm_format` to a value other than `openai` to preserve the provider’s native request and response formats.
+If you use a [provider’s](/ai-gateway/ai-providers/) native SDK, {{site.ai_gateway}} {% new_in 3.10 %} can proxy the request and return the upstream response without payload format conversion. Set `config.llm_format` to a value other than `openai` to preserve the provider’s native request and response formats.
 
-In this mode, Kong AI Gateway will still provide analytics, logging, and cost calculation.
+In this mode, {{site.ai_gateway}} will still provide analytics, logging, and cost calculation.
 When `config.llm_format` is set to a native format, only the corresponding provider is supported with its specific APIs.
 
 <!-- vale off -->

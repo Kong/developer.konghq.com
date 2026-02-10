@@ -15,7 +15,7 @@ operator-get-started-konnect-crds:
   title: Get started with {{ site.operator_product_name }} and Konnect CRDs
   url: /operator/get-started/konnect-crds/install/
 mcp-traffic:
-  title: Secure, govern and observe MCP traffic with Kong AI Gateway
+  title: Secure, govern and observe MCP traffic with {{site.ai_gateway}}
   url: /mcp/secure-mcp-traffic/
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers

@@ -1,15 +1,15 @@
 ---
-title: Route Qwen Code CLI traffic through Kong AI Gateway
+title: "Route Qwen Code CLI traffic through {{site.ai_gateway}}"
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Qwen Code CLI traffic using AI Proxy with OpenAI-compatible endpoints
+description: Configure {{site.ai_gateway}} to proxy Qwen Code CLI traffic using AI Proxy with OpenAI-compatible endpoints
 
 products:
   - gateway
@@ -35,7 +35,7 @@ tags:
   - ai
 
 tldr:
-  q: How do I run Qwen Code CLI through Kong AI Gateway?
+  q: How do I run Qwen Code CLI through {{site.ai_gateway}}?
   a: Configure AI Proxy to forward requests to OpenAI, enable the File Log plugin to inspect traffic, and point Qwen Code CLI to the local proxy endpoint so all requests go through the Gateway for monitoring and control.
 
 tools:
@@ -47,7 +47,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
       content: |
         This tutorial requires an OpenAI API key with access to GPT models. You can obtain an API key from the [OpenAI Platform](https://platform.openai.com/api-keys).
-        
+
         Export the OpenAI API key as an environment variable:
         ```sh
         export DECK_OPENAI_API_KEY='YOUR OPENAI API KEY'
@@ -90,7 +90,7 @@ automated_tests: false
 
 First, configure the [AI Proxy](/plugins/ai-proxy/) plugin. The [Qwen Code CLI](https://qwenlm.github.io/qwen-code-docs/en/users/configuration/auth/) uses OpenAI-compatible endpoints for LLM communication. The plugin handles authentication using a bearer token header and forwards requests to the specified model.
 
-CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult. Routing CLI tools through Kong AI Gateway removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
+CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult. Routing CLI tools through {{site.ai_gateway}} removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
 
 {:.info}
 > The `max_request_body_size` parameter is set to 4194304 bytes (4MB) to accommodate large code files and extended context windows that Qwen Code CLI sends during code analysis tasks.
@@ -122,7 +122,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and AI Gateway. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
+Let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Qwen Code CLI and {{site.ai_gateway}}. This plugin will create a local log file for examining requests and responses as Qwen Code CLI runs through Kong.
 
 {% entity_examples %}
 entities:
@@ -177,7 +177,7 @@ Now you can test the Qwen Code CLI setup.
 
    Expected output will show the model's response to your prompt.
 
-3. Check that LLM traffic went through Kong AI Gateway:
+3. Check that LLM traffic went through {{site.ai_gateway}}:
 
    ```sh
    docker exec kong-quickstart-gateway cat /tmp/qwen.json | jq

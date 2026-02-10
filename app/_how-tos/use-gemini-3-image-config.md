@@ -1,8 +1,8 @@
 ---
-title: Use Gemini's imageConfig with AI Proxy in Kong AI Gateway
+title: Use Gemini's imageConfig with AI Proxy in {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
@@ -132,7 +132,7 @@ Create a Python script to generate images with different configurations:
 ```py
 cat << 'EOF' > generate-images.py
 #!/usr/bin/env python3
-"""Generate images with Gemini 3 via Kong AI Gateway using imageConfig"""
+"""Generate images with Gemini 3 via {{site.ai_gateway}} using imageConfig"""
 import requests
 import base64
 BASE_URL = "http://localhost:8000/anything"
@@ -251,7 +251,7 @@ This script demonstrates three different image generation configurations:
 2. **16:9 aspect ratio with 2k resolution**: Produces a widescreen landscape with higher resolution.
 3. **1:1 aspect ratio with 4k resolution**: Creates a square image with maximum resolution.
 
-The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass Gemini-specific configuration. Kong AI Gateway forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
+The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass Gemini-specific configuration. {{site.ai_gateway}} forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
 
 Run the script:
 ```sh

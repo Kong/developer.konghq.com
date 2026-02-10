@@ -117,15 +117,15 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} lets you catalog, connect to, and monitor 
+                    {{site.konnect_short_name}} lets you catalog, connect to, and monitor
                     the status of all API Gateway control planes (CPs) and data plane nodes (DPs) in one place.
-                    
+
                     Key features include:
                     - Manage control planes and their configurations
                     - Deploy and monitor data plane nodes
                     - Use fully-managed cloud gateways or self-hosted infrastructure
                     - Ensure high availability, security, and scalability for your API traffic
-                    
+
       - blocks:
           - type: image
             config:
@@ -210,13 +210,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Gateway
+            title: "{{site.ai_gateway}}"
             description: |
-              Kong AI Gateway is a powerful set of AI features built on top of {{ site.base_gateway }},
+              {{site.ai_gateway}} is a powerful set of AI features built on top of {{ site.base_gateway }},
               designed to help developers and organizations effectively adopt AI quickly and securely.
             icon: /assets/icons/ai.svg
             cta:
-              text: Start using Kong AI Gateway
+              text: Start using {{site.ai_gateway}}
               url: /ai-gateway/
               align: end
       - blocks:

@@ -1,8 +1,8 @@
 ---
-title: Route OpenAI Codex CLI traffic through Kong AI Gateway
+title: Route OpenAI Codex CLI traffic through {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -11,7 +11,7 @@ related_resources:
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
+description: Configure {{site.ai_gateway}} to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
 
 products:
   - gateway
@@ -39,7 +39,7 @@ tags:
   - openai
 
 tldr:
-  q: How do I run OpenAI Codex CLI through Kong AI Gateway?
+  q: How do I run OpenAI Codex CLI through {{site.ai_gateway}}?
   a: Create a Gateway Service and Route, attach AI Proxy Advanced to forward requests to OpenAI, add a Request Transformer plugin to normalize upstream paths, enable file-log to inspect traffic, and point Codex CLI to the local proxy endpoint so all LLM requests go through the Gateway for monitoring and control.
 
 tools:
@@ -173,7 +173,7 @@ export OPENAI_BASE_URL=$KONNECT_PROXY_URL/codex
 
 ## Configure the File Log plugin
 
-Finally, to see the exact payloads traveling between Codex and the AI Gateway, let's attach a File Log plugin to the service. This gives us a local log file so we can inspect requests and responses as Codex runs through Kong.
+Finally, to see the exact payloads traveling between Codex and the {{site.ai_gateway}}, let's attach a File Log plugin to the service. This gives us a local log file so we can inspect requests and responses as Codex runs through Kong.
 
 {% entity_examples %}
 entities:
@@ -214,7 +214,7 @@ Let's test our Codex CLI set up now:
      /review - review any changes and find issues
    ```
    {:.no-copy-code}
-   
+
 1. Run a simple command to call Codex using the gpt-4o model:
 
    ```sh
@@ -235,7 +235,7 @@ Let's test our Codex CLI set up now:
      3. No, and tell Codex what to do differently
    ```
    {:.no-copy-code}
-   
+
    Select **Yes, proceed** and press <kbd>Enter</kbd>.
 
    Expected output:
@@ -253,8 +253,8 @@ Let's test our Codex CLI set up now:
    • codex exec --model gpt-4o "Hello" returned: “Hi there! How can I assist you today?”
    ```
    {:.no-copy-code}
-   
-1. Check that LLM traffic went through Kong AI Gateway:
+
+1. Check that LLM traffic went through {{site.ai_gateway}}:
 
    ```sh
    docker exec kong-quickstart-gateway cat /tmp/file.json | jq

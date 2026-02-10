@@ -2,7 +2,7 @@
 title: Set up AI Proxy with Anthropic in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/

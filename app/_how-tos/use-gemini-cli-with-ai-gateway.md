@@ -1,15 +1,15 @@
 ---
-title: Route Google Gemini CLI traffic through Kong AI Gateway
+title: Route Google Gemini CLI traffic through {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Google Gemini CLI traffic using AI Proxy
+description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic using AI Proxy
 
 products:
   - gateway
@@ -35,7 +35,7 @@ tags:
   - ai
 
 tldr:
-  q: How do I run Google Gemini CLI through Kong AI Gateway?
+  q: How do I run Google Gemini CLI through {{site.ai_gateway}}?
   a: Configure the AI Proxy plugin to forward requests to Google Gemini, then enable the File Log plugin to inspect traffic, and point Gemini CLI to the local proxy endpoint so all LLM requests go through the Gateway for monitoring and control.
 
 tools:
@@ -86,7 +86,7 @@ automated_tests: false
 
 First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
 
-Routing CLI tools through Kong AI Gateway removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
+Routing CLI tools through {{site.ai_gateway}} removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
 
 {% entity_examples %}
 entities:
@@ -113,7 +113,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Gemini CLI and AI Gateway by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as Gemini CLI runs through {{site.base_gateway}}.
+Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between Gemini CLI and {{site.ai_gateway}} by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as Gemini CLI runs through {{site.base_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -161,7 +161,7 @@ Now you can test the Gemini CLI setup.
 
    Expected output will show the model's response to your prompt.
 
-3. In your other terminal window, check that LLM traffic went through Kong AI Gateway:
+3. In your other terminal window, check that LLM traffic went through {{site.ai_gateway}}:
 
     ```sh
    docker exec kong-quickstart-gateway cat /tmp/gemini.json | jq

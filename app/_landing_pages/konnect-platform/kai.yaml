@@ -156,7 +156,7 @@ rows:
                 features: Services, Routes, Vaults, Consumers, Debugger
               - product: Event Gateways
                 supported: Planned
-              - product: AI Gateway
+              - product: "{{site.ai_gateway}}"
                 support: Planned
               - product: Dedicated Cloud Gateways
                 supported: Planned

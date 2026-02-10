@@ -1,8 +1,8 @@
 ---
-title: Get started with AI Gateway
+title: Get started with {{site.ai_gateway}}
 content_type: how_to
 permalink: /ai-gateway/get-started/
-description: Learn how to quickly get started with AI Gateway
+description: Learn how to quickly get started with {{site.ai_gateway}}
 products:
     - ai-gateway
     - gateway
@@ -25,13 +25,13 @@ tags:
     - openai
 
 tldr:
-  q: What is AI Gateway, and how can I get started with it?
+  q: What is {{site.ai_gateway}}, and how can I get started with it?
   a: |
-    With Kong's AI Gateway, you can deploy AI infrastructure for traffic
+    With {{site.ai_gateway}}, you can deploy AI infrastructure for traffic
     that is sent to one or more LLMs. This lets you semantically route, secure, observe, accelerate,
     and govern traffic using a special set of AI plugins that are bundled with {{site.base_gateway}} distributions.
 
-    This tutorial will help you get started with AI Gateway by setting up the AI Proxy plugin with OpenAI.
+    This tutorial will help you get started with {{site.ai_gateway}} by setting up the AI Proxy plugin with OpenAI.
 
     {:.info}
     > **Note:**

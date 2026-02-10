@@ -17,8 +17,8 @@ tags:
     - get-started
 
 tools:
-    - deck 
-  
+    - deck
+
 prereqs:
   inline:
     - title: OpenAI
@@ -35,12 +35,12 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-tldr: 
+tldr:
   q: How can I meter LLM traffic in {{site.konnect_short_name}}, and what does the {{site.metering_and_billing}} provide?
   a: |
     To meter LLM traffic in {{site.konnect_short_name}}, you can use the {{site.metering_and_billing}} to track and invoice usage based on defined products, plans, and features. This guide walks you through setting up a Consumer, creating a meter for LLM tokens, defining a feature, creating a Plan with Rate Cards, and starting a subscription for billing.
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway_name}}"
     url: /ai-gateway/
   - text: Product Catalog reference
     url: /metering-and-billing/product-catalog/
@@ -111,12 +111,12 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Enable Metering  
+## Enable Metering
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. For AI Gateway Tokens, click **Enable Related API Gateways**.
+1. For {{site.ai_gateway}} Tokens, click **Enable Related API Gateways**.
 1. Select the `quickstart` control plane.
 1. Click **Enable 1 Gateway**.
 
@@ -124,7 +124,7 @@ You will see `quickstart` in the list of available meters.
 
 ## Create a feature
 
-Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage, you need to label that as something you want to price or govern. 
+Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering LLM token usage, you need to label that as something you want to price or govern.
 
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
@@ -133,21 +133,21 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `ai-token`.
-1. From the **Meter** dropdown menu, select "AI Gateway Tokens". 
-1. Click **Add group by filter**. 
+1. From the **Meter** dropdown menu, select "{{site.ai_gateway}} Tokens".
+1. Click **Add group by filter**.
    The group by filter ensures you only bill for LLM tokens from a specific provider.
 1. From the **Group by** dropdown menu, select "Provider".
 1. From the **Operator** dropdown menu, select "Equals".
 1. In the **Value** dropdown menu, enter `openai`.
-1. Click **Add group by filter**. 
+1. Click **Add group by filter**.
 1. From the **Group by** dropdown menu, select "type".
 1. From the **Operator** dropdown menu, select "Equals".
 1. In the **Value** dropdown menu, enter `request`.
-1. Click **Save**. 
+1. Click **Save**.
 
 ## Create a Plan and Rate Card
 
-Plans are the core building blocks of your product catalog. They are a collection of rate cards that define the price and access of a feature. 
+Plans are the core building blocks of your product catalog. They are a collection of rate cards that define the price and access of a feature.
 
 A rate card describes price and usage limits or access control for a feature or item. Rate cards are made up of the associated feature, price, and optional usage limits or access control for the feature, called entitlements.
 
@@ -168,7 +168,7 @@ In this section, you'll create a Premium plan that charges customers based on th
 
    {:.info}
    > We're using $1 here to make it easy to see the cost changes in the customer invoice. Be sure to change this price in a production instance to match your own pricing model.
-1. Click **Next Step**. 
+1. Click **Next Step**.
 1. Select **Boolean**.
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
@@ -182,7 +182,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
-1. In the **Include usage from** dropdown, select "kong-air". 
+1. In the **Include usage from** dropdown, select "kong-air".
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
