@@ -325,11 +325,17 @@
   }
 
   /* Konami theme: recolor hardcoded #428CDC icons to Electric Lime */
-  .konami svg path[fill="#428CDC"],
-  .konami svg rect[fill="#428CDC"],
-  .konami svg circle[fill="#428CDC"],
-  .konami svg polygon[fill="#428CDC"] {
+  .konami svg path[fill="#428CDC" i],
+  .konami svg rect[fill="#428CDC" i],
+  .konami svg circle[fill="#428CDC" i],
+  .konami svg polygon[fill="#428CDC" i],
+  .konami svg g[fill="#428CDC" i] path {
     fill: rgb(204, 255, 0) !important;
+  }
+
+  /* Konami theme: recolor header logo text */
+  .konami svg path[fill="#052f5c" i] {
+    fill: rgb(255, 255, 255) !important;
   }
 
   .konami img[src$=".svg"][src*="/icons/"] {
