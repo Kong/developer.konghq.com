@@ -90,7 +90,7 @@ To create a sub-environment:
 1. Define only the variables that differ from the base environment.
 
 {:.decorative}
-> You can color-code your sub-environments to make it easier to navigate them. From the sub-environment variables view, click **Color** and select a color to apply to your sub-environment icon.
+> You can color-code your sub-environments to make it easier to navigate them. From the sub-environment variables view, click **Color**, and then select a color to apply to your sub-environment icon.
 
 ## Referencing environment variables
 
