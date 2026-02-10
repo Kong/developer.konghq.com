@@ -41,6 +41,51 @@ Global and collection environments contain:
 
 You can also define variables dynamically in the Collection Runner and in pre-request and after-response [scripts](/insomnia/scripts/). For more details, see [Dynamic variables](/insomnia/dynamic-variables/).
 
+## Create an environment
+
+Use environments to define variables that Insomnia applies across your requests. For example, base URLs, tokens, or credentials. If your API specification or requests contain variables, you can use an environment to replace those variables with real values.
+
+To create an environment:
+1. In your Insomnia project, click **Environments**.
+1. From the **Create a new Environment** window, in the **Name** field, enter a name for your environment. For example, "My environment".
+1. Save your changes.
+
+{:.note}
+> If you create an environment in a project that uses Git Sync, you must choose where the folder is going to be stored in your linked repository.
+
+Insomnia applies the active environment to all requests in the collection.
+
+## Manage environments
+
+After you create an environment, you can edit its variables and create sub-environments.
+
+### Edit environment variables
+
+To add or update variables in an environment:
+1. In the Environments list, click the environment that you want to edit.
+1. Define variables as key-value pairs in JSON format.
+
+Changes apply immediately to requests that reference the active environment.
+
+### Create a sub-environment
+
+Use sub-environments to override values from the base environment. For example, different URLs or credentials for development, staging, or production.
+
+{:.info}
+> A sub-environment inherits all variables from its parent environment. You only need to define the values that are different.
+
+To create a sub-environment:
+1. Open the environment that you want to extend.
+1. In the left panel, beside **Base Environment**, click the plus.
+1. Select the type of environment that you want to create.
+1. In the left panel, select your new environment.
+1. Enter a name. For example, "Staging" or "Production".
+1. Click **Add**
+1. Define only the variables that differ from the base environment.
+
+{:.decorative}
+> You can color-code your sub-environments to make it easier to navigate them. Click **Color** and select a color to apply to your sub-environment icon.
+
 ## Referencing environment variables
 
 Environment variables can be referenced in any text input within the Insomnia application. There are two ways to do this:
