@@ -35,11 +35,12 @@ entities:
 tags:
   - ai
   - bedrock
+  - native-apis
 
 tldr:
   q: How do I use AWS Bedrock function calling with the AI Proxy Advanced plugin?
   a: |
-    Configure AI Proxy Advanced with the `bedrock` provider, `llm_format: bedrock`, and `llm/v1/chat` route type. Point a Boto3 client at the Kong Gateway endpoint. The model can request tool calls, and the client sends results back through the same gateway.
+    Configure AI Proxy Advanced with the `bedrock` provider, `llm_format: bedrock`, and `llm/v1/chat` route type. Point a Boto3 client at the {{site.ai_gateway}} route. The model can request tool calls, and the client sends results back through the same route.
 
 tools:
   - deck
