@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 description: Common issues and solutions when using kongctl.
-
+beta: true
 tools:
   - kongctl
   
