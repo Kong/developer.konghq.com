@@ -48,7 +48,7 @@ Use environments to define variables that Insomnia applies across your requests.
 To create an environment:
 1. In your Insomnia project, click **Environments**.
 1. From the **Create a new Environment** window, in the **Name** field, enter a name for your environment. For example, "My environment".
-1. Save your changes.
+1. Click **Create**.
 
 {:.info}
 > If you create an environment in a project that uses Git Sync, you must choose where the folder is going to be stored in your linked repository.
