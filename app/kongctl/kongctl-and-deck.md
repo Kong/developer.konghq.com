@@ -22,26 +22,35 @@ breadcrumbs:
 related_resources:
   - text: kongctl declarative configuration reference
     url: /kongctl/declarative/
+next_steps:
+  - text: Guide for managing {{site.konnect_short_name}} resources declaratively
+    url: /kongctl/declarative/
+  - text: Learn kongctl authorization options
+    url: /kongctl/authentication/
+  - text: kongctl configuration reference guide
+    url: /kongctl/config/
+  - text: kongctl troubleshooting guide
+    url: /kongctl/troubleshooting/
+  - text: decK documentation
+    url: /deck/
 ---
 
-kongctl integrates with [decK](/deck/) to provide comprehensive declarative management of your entire {{site.konnect_short_name}} API platform. While kongctl manages {{site.konnect_short_name}} platform resources like control planes, portals, and APIs, decK manages Gateway configuration resources such as services, routes, and plugins. By combining both tools in a single declarative workflow, you can manage your complete infrastructure as code.
-
-## Overview
+kongctl integrates with [decK](/deck/) to provide comprehensive declarative management of your entire {{site.konnect_short_name}} API platform. While kongctl manages {{site.konnect_short_name}} platform resources like control planes, Dev Portals, and APIs, decK manages Gateway configuration resources such as Services, Routes, and plugins. By combining both tools in a single declarative workflow, you can manage your complete infrastructure as code.
 
 The integration allows kongctl to orchestrate decK operations as part of its plan-based workflow. When you declare Gateway configuration managed by decK in your kongctl configuration files, kongctl automatically invokes decK at the appropriate time during plan generation and execution.
 
-**Key benefits**:
+Key benefits:
 
-* **Unified workflow**: Manage platform and Gateway resources together in a single plan
-* **Consistent interface**: Use familiar kongctl commands (`plan`, `diff`, `apply`, `sync`)
-* **Dependency resolution**: kongctl resolves control plane identifiers and Gateway service references before invoking decK
-* **Audit trail**: decK operations are included in kongctl plan artifacts
+* **Unified workflow**: Manage platform and Gateway resources together in a single plan.
+* **Consistent interface**: Use familiar kongctl commands (`plan`, `diff`, `apply`, `sync`).
+* **Dependency resolution**: kongctl resolves control plane identifiers and Gateway entity references before invoking decK.
+* **Audit trail**: decK operations are included in kongctl plan artifacts.
 
 ## Configuration
 
-decK integration is configured on control planes using the `_deck` pseudo-resource. kongctl runs decK once per control plane that declares `_deck`, then resolves external Gateway services by selector name.
+decK integration is configured on control planes using the `_deck` pseudo-resource. kongctl runs decK once per control plane that declares `_deck`, then resolves external Gateway entities by selector name.
 
-### Basic example
+Basic example:
 
 ```yaml
 control_planes:
@@ -62,15 +71,15 @@ control_planes:
 ```
 
 In this example:
-* The `prod-cp` control plane has decK configuration defined
-* decK will apply the `kong.yaml` state file with the `--select-tag=kongctl` flag
-* The `billing-gw` Gateway service is resolved externally by finding a service with `name: "billing-service"`
+* The `prod-cp` control plane has decK configuration defined.
+* decK will apply the `kong.yaml` state file with the `--select-tag=kongctl` flag.
+* The `billing-gw` Gateway Service is resolved externally by finding a Service with `name: "billing-service"`.
 
 ### Configuration fields
 
 #### `_deck`
 
-The `_deck` field configures decK integration for a control plane:
+The `_deck` field configures the decK integration for a control plane:
 
 * **Placement**: Only allowed on control planes
 * **Cardinality**: Only one `_deck` configuration per control plane
@@ -105,11 +114,11 @@ _deck:
 ```
 
 {:.warning}
-> **Important**: Do not include Konnect authentication flags (`--konnect-token`, `--konnect-control-plane-name`, `--konnect-addr`) or output flags (`--json-output`, `--no-color`). kongctl injects these automatically.
+> **Important**: Do not include {{site.konnect_short_name}} authentication flags (`--konnect-token`, `--konnect-control-plane-name`, `--konnect-addr`) or output flags (`--json-output`, `--no-color`). kongctl injects these automatically.
 
-### External Gateway service resolution
-
-When Gateway services are managed by decK, reference them as external resources in your kongctl configuration:
+### External Gateway Service resolution
+	
+When Gateway Services are managed by decK, reference them as external resources in your kongctl configuration:
 
 ```yaml
 gateway_services:
@@ -120,23 +129,45 @@ gateway_services:
           name: "billing-service"
 ```
 
-* `_external.selector.matchFields.name` is required for external Gateway services
-* The `name` field must be the only selector field
-* kongctl resolves the Gateway service after decK applies the configuration
-* External Gateway services cannot use `_external.requires.deck` - resolution happens automatically
+Keep the following in mind:
+* `_external.selector.matchFields.name` is required for external Gateway services.
+* The `name` field must be the only selector field.
+* kongctl resolves the Gateway Service after decK applies the configuration.
+* External Gateway Services can't use `_external.requires.deck`, resolution happens automatically
 
 ## Behavior and workflow
+
+The following sections describe how decK and kongctl behave when used together.
 
 ### Command behavior
 
 kongctl integrates decK differently depending on the command:
 
-| Command | decK Operation | Behavior |
-|---------|---------------|----------|
-| `kongctl plan` | `deck gateway diff` | Determines if changes are needed |
-| `kongctl diff` | `deck gateway diff` | Shows proposed Gateway configuration changes |
-| `kongctl apply` | `deck gateway apply` | Creates/updates Gateway configuration (no deletions) |
-| `kongctl sync` | `deck gateway sync` | Creates/updates/deletes Gateway configuration |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: decK Operation
+    key: deck
+  - title: Behavior
+    key: behavior
+rows:
+  - command: "`kongctl plan`"
+    deck: "`deck gateway diff`"
+    behavior: "Determines if changes are needed"
+  - command: "`kongctl diff`"
+    deck: "`deck gateway diff`"
+    behavior: "Shows proposed Gateway configuration changes"
+  - command: "`kongctl apply`"
+    deck: "`deck gateway apply`"
+    behavior: "Creates/updates Gateway configuration (no deletions)"
+  - command: "`kongctl sync`"
+    deck: "`deck gateway sync`"
+    behavior: "Creates/updates/deletes Gateway configuration"
+{% endtable %}
+<!--vale on-->
+
 
 {:.info}
 > **Note**: For `apply` mode, deletions reported by `deck diff` are ignored. Only `sync` mode performs deletions.
@@ -147,30 +178,30 @@ During plan execution, kongctl orchestrates operations in this order:
 
 1. Creates or updates the control plane (if needed)
 2. Runs `deck gateway apply` or `deck gateway sync` on the control plane
-3. Resolves external Gateway services by selector
+3. Resolves external Gateway Services by selector
 4. Continues with dependent resources
 
 ### Plan artifacts and portability
 
-Plans store decK configuration and base directories for later execution:
+kongctl plans store decK configuration and base directories for later execution:
 
 * **Base directory storage**: Relative to plan file location
 * **stdout plans**: Base directory is relative to current working directory
 * **Portable plans**: Use `--output-file` to create portable plan files
 * **Plan application**: Resolves paths from plan file directory (or current directory with `--plan -`)
-* **Resolution targets**: Plans include `post_resolution_targets` on `_deck` change entries with control plane IDs and Gateway service selectors
+* **Resolution targets**: Plans include `post_resolution_targets` on `_deck` change entries with control plane IDs and Gateway Service selectors
 
 ### Control plane creation
 
-If a control plane is being created in the same plan:
+If a control plane created in the same plan:
 
-* kongctl cannot run `deck gateway diff` (control plane ID not yet available)
+* kongctl can't run `deck gateway diff` (because the control plane ID isn't available yet)
 * kongctl automatically includes the external tool step in the plan
 * decK runs after the control plane is created during `apply`
 
 ### Authentication and output
 
-kongctl automatically injects required flags when invoking decK:
+kongctl automatically injects required flags when invoking decK.
 
 **Authentication flags**:
 * `--konnect-token`: Current kongctl session token
@@ -182,7 +213,7 @@ kongctl automatically injects required flags when invoking decK:
 * `--no-color`: Removes ANSI color codes
 
 {:.warning}
-> **Do not specify these flags yourself** - kongctl will add them automatically and duplicate flags may cause errors.
+> **Do not specify these flags yourself**. kongctl will add them automatically and duplicate flags may cause errors.
 
 ## Select tags and resource ownership
 
@@ -225,13 +256,13 @@ All decK file paths follow kongctl's path resolution rules:
 * **Absolute paths**: Blocked for security
 
 ```yaml
-# ✅ Allowed (within base directory)
+# Allowed (within base directory)
 _deck:
   files:
     - "gateway/kong.yaml"
     - "../shared/common.yaml"  # If within base directory
 
-# ❌ Blocked (absolute path)
+# Blocked (absolute path)
 _deck:
   files:
     - "/etc/kong/config.yaml"
@@ -265,7 +296,7 @@ control_planes:
             matchFields:
               name: "api-gateway"
 
-# API product version published to the Gateway service
+# API product version associated with the Gateway Service
 api_product_versions:
   - ref: users-api-v1-prod
     api_product: users-api
@@ -302,6 +333,7 @@ services:
 
 ## Limitations
 
+Keep the following limitations in mind:
 * `_external.requires.deck` is not supported for Gateway service resolution
 * decK configuration is only allowed on control planes, not on other resource types
 * Only one `_deck` configuration per control plane
@@ -311,24 +343,17 @@ services:
 
 ### decK command not found
 
-```
-Error: deck command not found
-```
-
-Ensure decK is installed and available in your PATH:
-
-```bash
-# Verify decK installation
-deck version
-
-# Install decK if needed (see https://docs.konghq.com/deck/latest/installation/)
-```
+If you get the `Error: deck command not found` message, ensure decK is installed and available in your PATH.
+	
+1. Verify decK installation:
+   ```sh
+   deck version
+   ```
+1. [Install decK](/deck/latest/installation/) if needed.
 
 ### Authentication errors from decK
 
-```
-Error: failed to authenticate with Konnect
-```
+If you get the `Error: failed to authenticate with Konnect` error message, do the following:
 
 * Verify kongctl authentication: `kongctl get me`
 * Re-authenticate if needed: `kongctl login`
@@ -336,32 +361,21 @@ Error: failed to authenticate with Konnect
 
 ### Unexpected deletions during sync
 
-```
-deleting service api-gateway (created by another team)
-```
+If you get the `deleting service api-gateway (created by another team)` message while syncing, do the following:
 
 * Ensure `_info.select_tags` is defined in decK state files
 * Add matching `tags` to all entities
-* Include corresponding `--select-tag` flag in `_deck.flags`
+* Include the corresponding `--select-tag` flag in `_deck.flags`
 
 ### File path errors
 
-```
-Error: failed to load deck file: file not found
-```
+If you get the `Error: failed to load deck file: file not found` message, do the following:
 
-* Verify file path is correct and relative to config file
-* Check file exists within base directory boundary
-* Use `--base-dir` flag if needed
+* Verify that the file path is correct and relative to the config file.
+* Check that the file exists in base directory boundary.
+* Use the `--base-dir` flag if needed.
 
 ### Control plane ID not available
 
 This is expected when creating a new control plane in the same plan. kongctl automatically includes the decK step and runs it after control plane creation.
 
-## Next steps
-
-* [Guide for managing {{site.konnect_short_name}} resources declaratively](/kongctl/declarative/)
-* [Learn kongctl authorization options](/kongctl/authentication/)
-* [kongctl configuration reference guide](/kongctl/config/)
-* [kongctl troubleshooting guide](/kongctl/troubleshooting/)
-* [decK documentation](/deck/)

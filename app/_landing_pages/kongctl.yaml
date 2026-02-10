@@ -31,12 +31,10 @@ rows:
             The tool provides both declarative and imperative style resource management capabilities along with
             other developer friendly features. 
 
-            The declarative configuration feature allows you to define API Platform infrastructure as code using a simple `yaml` 
-            based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} 
-            resource types including Developer Portals, Control Planes, APIs, and more.
-
+            The declarative configuration feature allows you to define API Platform infrastructure as code using a YAML based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} resource types including Dev Portals, control planes, APIs, and more.
+            
             kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
-            To learn about other tools, review our [tools page](/tools/).
+            To learn about other tools, see the [tools page](/tools/).
 
       - header:
           type: h2
@@ -110,7 +108,7 @@ rows:
       - type: card
         config:
           title: Get started
-          description: Learn how to quickly get started kongctl and use it to manage {{site.konnect_short_name}} resources.
+          description: Learn how to get started with kongctl and use it to manage {{site.konnect_short_name}} resources.
           cta:
             text: Get started
             url: /kongctl/get-started/
@@ -128,7 +126,7 @@ rows:
       - type: card
         config:
           title: Configuration 
-          description: Configuring the CLI, authentication, and other features.
+          description: Learn how to configure the CLI, authentication, and other features.
           cta:
             text: kongctl configuration 
             url: /kongctl/config/
@@ -204,7 +202,7 @@ rows:
                         - view
 
                 - text: |
-                    Generate a plan from input configuration without invoking changes
+                    Generate a [plan](/kongctl/declarative/#plan-based-approach) from input configuration without invoking changes
                   action:
                     type: command
                     config:
@@ -260,13 +258,12 @@ rows:
           config:
             - q: I use decK to configure {{site.base_gateway}}, why should I care about kongctl?
               a: |
-                Currently decK and kongctl are complementary but serve different purposes:
+                Currently decK and kongctl are complementary, but serve different purposes:
 
-                * decK was designed to manage {{site.base_gateway}} configuration (services, routes, plugins, consumers), both on-premises and in {{site.konnect_short_name}}.
-                * kongctl is designed for managing {{site.konnect_short_name}} _API platform_ resources (APIs, portals, application auth strategies, control planes)
-
-                decK works with {{site.konnect_short_name}} but targets a single control plane. kongctl operates at a higher level and allows you to manage 
-                the full set of API Platform resources.
+                * decK was designed to manage {{site.base_gateway}} configuration (Services, Routes, plugins, and Consumers), both on-premises and in {{site.konnect_short_name}}.
+                * kongctl is designed for managing {{site.konnect_short_name}} _API platform_ resources (APIs, Dev Portals, application auth strategies, control planes)
+                
+                decK works with {{site.konnect_short_name}} but targets a single control plane. kongctl operates at a higher level and allows you to manage the full set of API Platform resources.
 
                 If you're using {{site.konnect_short_name}} and {{site.base_gateway}}, you might use both tools: kongctl for platform-level resources and 
                 decK for gateway configuration within control planes. 
@@ -279,13 +276,13 @@ rows:
             - q: Is kongctl production-ready?
               a: |
                 kongctl is currently in Beta release stage. This means it's provided without warranty and interfaces may change. It's designed for evaluation and testing, with production-readiness coming in future releases. 
-                Check the [GitHub releases page](https://github.com/kong/kongctl/releases/) for current status.
+                See the [GitHub releases page](https://github.com/kong/kongctl/releases/) for current status.
             - q: What resources can kongctl manage declaratively?
               a: |
                 The list of {{site.konnect_short_name}} resources supported is growing. The current list includes (but not limited to):
                 * **APIs**: Including versions, publications, implementations, and documents
-                * **Portals**: Including pages, teams, snippets, customizations, authenticiation strategies, and custom domains
-                * **Control Planes**: For {{site.base_gateway}} control plane management _and_ decK integration
+                * **Dev Portals**: Including pages, teams, snippets, customizations, authentication strategies, and custom domains
+                * **Control planes**: For {{site.base_gateway}} control plane management _and_ decK integration
 
                 Support for additional resource types is planned for future releases.
             - q: How does kongctl authentication work?

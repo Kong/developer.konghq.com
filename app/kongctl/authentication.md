@@ -1,6 +1,6 @@
 ---
 title: Authentication with kongctl
-description: Learn how to authenticate kongctl to {{site.konnect_product_name}} using device flow or personal access tokens.
+description: Learn how to authenticate kongctl to {{site.konnect_product_name}} using the device flow or personal access tokens.
 
 beta: true
 
@@ -22,11 +22,22 @@ breadcrumbs:
 related_resources:
   - text: kongctl configuration reference 
     url: /kongctl/config/
+  - text: Manage {{site.konnect_short_name}} resources declaratively
+    url: /kongctl/declarative/
+  - text: kongctl configuration reference guide
+    url: /kongctl/config/
+  - text: kongctl troubleshooting guide
+    url: /kongctl/troubleshooting/
+  - text: Use kongctl and deck for full API platform management
+    url: /kongctl/kongctl-and-deck/
 ---
 
 kongctl communications with {{site.konnect_short_name}} via the public [APIs](/api/), which
-support token-based authentication. A valid token can be obtained and configured in the CLI
-using the following methods.
+support token-based authentication. kongctl supports two authentication methods:
+* **Device Flow (recommended)**: Authenticate via your browser. Tokens are stored locally and refreshed automatically.
+* **Personal Access Token**: Use the `--pat` flag or `KONGCTL_DEFAULT_KONNECT_PAT` environment variable for automation scenarios like CI/CD pipelines.
+                
+Configuration and device flow authentication credentials are stored in `$XDG_CONFIG_HOME/kongctl/` (typically `~/.config/kongctl/`).
 
 ## Browser-based login (recommended)
 
@@ -38,7 +49,7 @@ kongctl login
 ```
 
 The command will output information similar to the following, 
-prompting you to open a URL in your browser providing the one-time code to authenticate.
+prompting you to open a URL in your browser with the one-time code to authenticate.
 
 ```text
 Logging your CLI into Kong Konnect with the browser...
@@ -55,6 +66,7 @@ Logging your CLI into Kong Konnect with the browser...
 
  Waiting for user to Login...
 ```
+{:.no-copy-code}
 
 After following the instructions in the browser and successfully authenticating,
 you will see the message `User successfully authorized`.
@@ -86,13 +98,13 @@ kongctl logout
 
 ## Configured access token
 
-{{site.konnect_short_name}} access tokens come in two forms; Personal Access Tokens (PAT) or 
-System Access Tokens (sPAT). PATs grant access to APIs as your personal user account, while 
+[{{site.konnect_short_name}} access tokens](/konnect-api/#personal-access-tokens) come in two forms: Personal Access Tokens (PAT) or 
+System Access Tokens (sPAT). PATs grant access to APIs as your personal user account, while
 sPATs grant access based on the permissions of system account, which may be more 
 limited than a user account. 
 
-Use the {{site.konnect_short_name}} web console to create the token type of your choice, and 
-retain the secret value for use with kongctl:
+Use the {{site.konnect_short_name}} UI to create the token type of your choice, and 
+copy the secret value:
 - Create a PAT in the [personal access token page](https://cloud.konghq.com/global/account/tokens)
 - Create a sPAT in the [system accounts page](https://cloud.konghq.com/global/account/system-tokens)
   or with the [System Accounts API](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens)
@@ -102,7 +114,7 @@ retain the secret value for use with kongctl:
 You can pass the token with each command using the `--pat` flag:
 
 ```bash
-kongctl get apis --pat "kpat_your-token-here"
+kongctl get apis --pat "YOUR PAT HERE"
 ```
 
 ### Configure access token in environment variable
@@ -115,7 +127,7 @@ set the `KONGCTL_DEFAULT_KONNECT_PAT` environment variable:
 > for full details on environment variables and the kongctl configuration system 
 
 ```bash
-export KONGCTL_DEFAULT_KONNECT_PAT="kpat_your-token-here"
+export KONGCTL_DEFAULT_KONNECT_PAT="YOUR PAT HERE"
 ```
 
 Then run commands normally:
@@ -123,19 +135,19 @@ Then run commands normally:
 kongctl get apis
 ```
 
-### Store the token in configuration file
+### Store the token in a configuration file
 
 You can also store the token in the kongctl configuration file under the desired profile:
 
 ```yaml
 default:
     konnect:
-        pat: "kpat_your-token-here"
+        pat: "YOUR PAT HERE"
 ``` 
 
 {:.info}
 > See the [configuration file reference](/kongctl/config#configuration-file) 
-> for full details on the kongctl configuration file
+> for full details on the kongctl configuration file.
 
 Then run commands normally:
 ```bash
@@ -149,9 +161,9 @@ kongctl get apis
 
 ### Configure tokens in CI/CD
 
-Store the token as a secret in your CI/CD platform:
+Store the token as a secret in your CI/CD platform.
 
-**GitHub Actions:**
+For example, to store it as a secret in GitHub Actions:
 
 ```yaml
 - name: Deploy to Konnect
@@ -162,10 +174,3 @@ Store the token as a secret in your CI/CD platform:
 
 {:.warning}
 > **Security**: Never commit tokens to version control. Always use secrets management.
-
-## Related resources
-
-* [Guide for managing {{site.konnect_short_name}} resources declaratively](/kongctl/declarative/)
-* [kongctl configuration reference guide](/kongctl/config/) 
-* [kongctl troubleshooting guide](/kongctl/troubleshooting/)
-* [Using kongctl and deck for full API platform management](/kongctl/kongctl-and-deck/)

@@ -94,7 +94,7 @@ rows:
               features:
                 - title: "[kongctl](/kongctl/)"
                   description: |
-                    - You want to manage {{site.konnect_short_name}} platform resources (APIs, portals, control planes) with declarative configuration and automation
+                    - You want to manage {{site.konnect_short_name}} platform resources (APIs, Dev Portals, control planes) with declarative configuration and automation
                     - You need interactive command-line access to {{site.konnect_short_name}}
                     - You're building CI/CD pipelines for {{site.konnect_short_name}} infrastructure
                   konnect: true

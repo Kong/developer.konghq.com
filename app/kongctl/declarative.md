@@ -24,6 +24,19 @@ related_resources:
     url: /kongctl/get-started/
   - text: Supported resources
     url: /kongctl/supported-resources/
+next_steps:
+  - text: Example declarative configurations
+    url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
+  - text: Learn about kongctl authorization options
+    url: /kongctl/authentication/
+  - text: kongctl configuration reference guide
+    url: /kongctl/config/
+  - text: kongctl troubleshooting guide
+    url: /kongctl/troubleshooting/
+  - text: Using kongctl and deck for full API platform management
+    url: /kongctl/kongctl-and-deck/
+  - text: View the {{site.konnect_short_name}} API reference
+    url: /konnect-api/
 ---
 
 {:.success}
@@ -66,8 +79,6 @@ apis:
     name: "Users API"
 ```
 
-#### Multiple files
-
 Different resources and resource types can be defined in a single file, or split across multiple files:
 
 ```
@@ -92,7 +103,7 @@ application_auth_strategies:
                                      # 'id' fields are assigned by {{site.konnect_short_name}} but not stored in configuration
 ```
 
-### Plan based approach
+### Plan-based approach
 
 A plan is a JSON object that defines the steps needed to move resources from their current state to the desired state and are central to the 
 kongctl approach to declarative configuration. Planning happens either implicitly or explicitly when using the 
@@ -240,7 +251,7 @@ apis:
 
 When a resource is marked `protected: true`, the kongctl declarative planner will not allow planning of
 updates or deletes to those resources. To update or delete these resources, change the
-resource from `protected: true` to `protected: false`. Once you update this, then you are allowed allowed to make subsequent changes.
+resource from `protected: true` to `protected: false`. Once you update this, then you are allowed to make subsequent changes.
 
 ```yaml
 portals:
@@ -277,6 +288,7 @@ portals:
 
 The following table describes which namespace metadata takes precedence:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: File Default
@@ -305,10 +317,12 @@ rows:
     result: "`team-a`"
     notes: Resource overrides
 {% endtable %}
+<!--vale on-->
 
 
 The following table describes which protected field metadata takes precedence:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: File Default
@@ -337,9 +351,7 @@ rows:
     result: "`false`"
     notes: Resource overrides
 {% endtable %}
-
-
-**Child resources** automatically inherit the namespace from their parent.
+<!--vale on-->
 
 ### namespace enforcement flags
 
@@ -497,12 +509,6 @@ portals:
           name: "Shared Developer Portal"
 ```
 
-### Key characteristics
-
-* **Cannot declare kongctl metadata**: External resources don't support `kongctl.namespace` or `kongctl.protected`
-* **Not included in sync planning**: External namespaces don't affect deletion calculations
-* **Used for references**: Child resources can reference external parents
-
 ### API Publication and shared portal example
 
 The following example shows how you can use external resources to manage an API that is published to a Dev Portal that is owned by the platform team:
@@ -584,25 +590,24 @@ If authentication fails, do the following:
 
 ### Plan generation failures
 
+If plan generation fails, do the following:
 * Validate YAML syntax
-* Check file paths are correct and within base directory
+* Check that file paths are correct and in the base directory
 * Verify network connectivity to {{site.konnect_short_name}}
 
 ### Apply failures
 
+If the configuration fails while you are applying it, do the following:
 * Review the plan for conflicts
 * Check for protected resources blocking deletion
 * Verify all referenced resources exist
 
 ### File loading errors
 
-```
-Error: failed to process file tag: file not found
-```
-
-* Verify file path is correct and relative to config file
-* Check file exists and is within base directory
-* Ensure file size is under 10MB
+If you are loading a file and get the `Error: failed to process file tag: file not found`, do the following:
+* Verify that the file path is correct and relative to the config file.
+* Check that the file exists and is in the base directory.
+* Ensure the file size is under 10MB.
 
 ### Field validation errors
 
@@ -611,7 +616,7 @@ kongctl uses strict validation:
 ```yaml
 portals:
   - ref: my-portal
-    lables:  # ❌ ERROR: Unknown field. Did you mean 'labels'?
+    labels:
       team: platform
 ```
 
@@ -620,12 +625,3 @@ Enable debug logging:
 ```bash
 kongctl apply -f config.yaml --log-level debug
 ```
-
-## Next steps
-
-* [See example declarative configurations](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative)
-* [Learn kongctl authorization options](/kongctl/authentication/)
-* [kongctl configuration reference guide](/kongctl/config/) 
-* [kongctl troubleshooting guide](/kongctl/troubleshooting/)
-* [Using kongctl and deck for full API platform management](/kongctl/kongctl-and-deck/)
-* [View the {{site.konnect_short_name}} API reference](/konnect-api/)

@@ -25,9 +25,6 @@ sections:
     items:
       - path: /kongctl/declarative/
       - path: /kongctl/declarative/ci-cd/
-  - title: Reference
-    items:
-      - path: /kongctl/reference/**/*
   - title: Troubleshooting
     items:
       - path: /kongctl/troubleshooting/
