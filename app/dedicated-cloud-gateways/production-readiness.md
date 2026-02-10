@@ -52,7 +52,8 @@ These steps are broken down into specific details in the sections that follow.
 
 ## {{site.konnect_short_name}} configuration
 
-### Custom domains
+{% navtabs "konnect-config" %}
+{% navtab "Custom domains" %}
 
 **Action:** 
 If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dns) with your Dedicated Cloud Gateway, you'll need to do the following:
@@ -73,8 +74,8 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 1. The second CNAME value is the ACME domain you must use for automated certificate management. Make sure that this challenge path is accessible.
 
 </details>
-
-### Data planes
+{% endnavtab %}
+{% navtab "Data planes" %}
 
 **Action:**
 * Verify that the data planes are deployed correctly. Check the data plane registration and logs.
@@ -96,8 +97,8 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 1. Verify that the data plane logs don't report any deployment errors.
 
 </details>
-
-### Control planes
+{% endnavtab %}
+{% navtab "Control planes" %}
 
 **Action:**
 * Verify that all Services intended for production traffic have accurate configuration, including upstream URLs, health checks, and load balancing algorithms.
@@ -132,30 +133,38 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 1. Test all production Routes by sending a request and verifying that the response is as expected based on the Route and Service configurations and the applied plugins.
 
 </details>
+{% endnavtab %}
+{% endnavtabs %}
 
 ## CIDR size requirements
 
 {% include /konnect/cidr-minimum-requirements.md %}
 
-## AWS provider
+## Cloud provider configuration
 
-### Network
+See the section for your cloud provider for more information about how to configure your provider for a production instance of Dedicated Cloud Gateways.
+
+### AWS
+
+{% navtabs "AWS" %}
+{% navtab "Network" %}
 
 **Action:**
 * Verify the number of [available IPs in the subnet](https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html), considering your organization's peak scale and expected traffic. Ensure sufficient IP capacity for autoscaling.
 * Verify the [CIDR range](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html) to ensure there are no conflicts with your existing networks. Cross-reference this with your network topology.
 * Verify that [security group rules](https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html) allow necessary inbound/outbound traffic (Control Plane <-> Dataplane, Dataplane <-> Upstream). Strict security posture is required.
 
-### Private networking
-
-#### Transit gateways
+{% endnavtab %}
+{% navtab "Transit gateways" %}
 
 **Action:**
 * Verify the [transit gateway attachment](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-vpc-attachments.html), [route table configurations](https://docs.aws.amazon.com/vpc/latest/tgw/view-tgw-route-tables.html), and CIDR ranges on your network side. Ensure routes exist for the Dedicated Cloud Gateway CIDR.
 * Verify if the connectivity is working as expected by sending a test request from Dedicated Cloud Gateway to an internal upstream endpoint. Perform and end-to-end ping/HTTP test.
 * Verify that the transit gateway firewall and [network ACLs](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html) aren't blocking traffic.
 
-#### VPC peering
+
+{% endnavtab %}
+{% navtab "VPC peering" %}
 
 **Action:**
 * Since VPC Peering is non-transitive, confirm that all necessary [VPCs are peered](https://docs.aws.amazon.com/vpc/latest/peering/working-with-vpc-peering.html) or reachable via other means.
@@ -163,9 +172,8 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 * Verify that you've updated all the [child configurations for the endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/resource-configuration.html) you'll be routing traffic to. Check all services that use resource endpoints.
 * Verify if the connectivity is working as expected by sending a request to the respective upstream resource.
 
-### Private DNS
-
-#### Private hosted zones
+{% endnavtab %}
+{% navtab "Private hosted zones" %}
 
 **Action:**
 * Verify that the [private hosted zone is shared](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-associate-vpcs.html) with the Dedicated Cloud Gateway VPC correctly.
@@ -182,7 +190,8 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 
 </details>
 
-#### Outbound DNS resolver
+{% endnavtab %}
+{% navtab "Outbound DNS resolver" %}
 
 **Action:**
 * Verify if the outbound DNS resolver configuration is updated correctly in the Dedicated Cloud Gateway's VPC settings. Ensure that your provided DNS resolvers are targeted.
@@ -200,51 +209,62 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 1. Verify that the outbound DNS resolver configuration matches what's configured in AWS.
 
 </details>
+{% endnavtab %}
+{% endnavtabs %}
 
-## Azure provider
+### Azure
 
-### Network
+{% navtabs "Azure" %}
+{% navtab "Network" %}
 
 **Action:**
 * Verify the number of [available IPs in the subnet](https://learn.microsoft.com/azure/virtual-network/virtual-network-manage-subnet?tabs=azure-portal#change-subnet-settings), considering your organization's peak scale and expected traffic. Ensure you have sufficient IP capacity for autoscaling.
 * Verify that the [CIDR range](https://learn.microsoft.com/azure/virtual-network/virtual-networks-faq#what-address-ranges-can-i-use-in-my-virtual-networks) doesn't interfere with existing your VNet. Cross-reference this with your network topology.
 
-### VNet peering and private DNS configuration
+{% endnavtab %}
+{% navtab "VNet peering and private DNS" %}
 
 **Action:**
 * Verify the VNet peering status is connected in both Azure and {{site.konnect_short_name}}. 
 * Verify that your [Azure network security group](https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview) and [route table configuration](https://learn.microsoft.com/azure/virtual-network/manage-route-table) on your network side allows traffic to and from the Dedicated Cloud Gateway CIDR. Check for blocked ports or IP ranges.
 * Verify the connectivity is working as expected by sending a request to the upstream. Perform an end-to-end HTTP test to an internal service.
 * Verify the private DNS configuration (for example, [private DNS zones linked to VNet](https://learn.microsoft.com/azure/dns/private-dns-virtual-network-links)) to ensure private DNS is resolvable from your Dedicated Cloud Gateway. Test that the internal Azure hostnames resolve.
+{% endnavtab %}
+{% endnavtabs %}
 
-## GCP provider
+### GCP 
 
-### Network
+{% navtabs "GCP" %}
+{% navtab "Network" %}
 
 **Action:**
 * Verify the number of [available IPs in the subnet](https://docs.cloud.google.com/vpc/docs/subnets), considering your organization's peak scale and expected traffic. Ensure there's sufficient IP capacity for autoscaling.
 * Verify that the CIDR range doesn't conflict with your existing VPCs. Cross-reference this with your network topology.
 
+{% endnavtab %}
+{% navtab "VPC peering" %}
 
-### GCP VPC Peering
-
+**Action:**
 * Verify that your [peering connection status](https://docs.cloud.google.com/vpc/docs/about-peering-connections?hl=en#connection-status) and [route table configuration](https://docs.cloud.google.com/vpc/docs/routes) are configured correctly in Google Virtual Private Cloud. Ensure routes are exported and imported correctly.
 * Verify if the connectivity is working as expected by sending a request to an internal upstream endpoint. Perform an end-to-end HTTP test.
 * Verify that your firewall rules are configured to allow necessary traffic between the peered networks.
 
-### Private DNS
+{% endnavtab %}
+{% navtab "Private DNS" %}
 
 **Action:**
 * [Cloud DNS peering zones](https://docs.cloud.google.com/dns/docs/zones/zones-overview#peering_zones) are directional (for example, Dedicated Cloud Gateway to your organization's VPC) and must be configured accordingly. Confirm correct directionality.
 * Verify that the Cloud DNS peering zone is active and configured correctly in the your VPC to allow Dedicated Cloud Gateway to resolve your private domains. 
 * Verify if the DNS is resolvable from the {{site.konnect_short_name}} network by sending a request to the upstream using its private hostname. Perform a DNS lookup with `dig` or a connection test.
-
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Securing Dedicated Cloud Gateway upstreams
 
 While Kong manages the Dedicated Cloud Gateway infrastructure, you are responsible for securing your upstream environments and ensuring that traffic from Dedicated Cloud Gateway is appropriately restricted and authenticated. This shared responsibility model requires precise network and IAM configurations to maintain zero trust principles.
 
-### Ingress controls
+{% navtabs "securing" %}
+{% navtab "Ingress" %}
 
 **Action:** Protect the public gateway endpoint and your workloads
 
@@ -259,7 +279,8 @@ You can apply the following security controls to restrict and validate incoming 
 * Authentication and authorization: Enforce strong AuthN/AuthZ at all upstream services. We recommend [mTLS](/plugins/mtls-auth/), [JWT](/plugins/jwt/), [OIDC](/plugins/openid-connect/), and signed requests. TLS should be enabled end-to-end between Dedicated Cloud Gateway and the target service.
 * IP allowlisting at Firewalls or transit gateway attachments: Further isolate exposed components by subnet and port at the perimeter level.
 
-### Egress controls
+{% endnavtab %}
+{% navtab "Egress" %}
 
 **Action:** Limit what {{site.konnect_short_name}} can access
 
@@ -269,7 +290,8 @@ To ensure that Dedicated Cloud Gateway can only reach authorized workloads, do t
 * Restrictive security groups and NACLs: Even if routes exist, security groups and NACLs should deny undesired traffic by source CIDR or port.
 * Endpoint scope: Restrict service exposure to load balancers (for example, ALBs), blocking direct access to EC2s or backend databases.
 
-### Compromise response with rapid containment mechanisms
+{% endnavtab %}
+{% navtab "Compromise response" %}
 
 **Action:** Rapidly isolate traffic from Dedicated Cloud Gateway in the unlikely event of a compromise or misconfiguration.
 
@@ -281,14 +303,16 @@ In the unlikely event of a compromise or misconfiguration, you can rapidly isola
 * IAM policy revocation: If you're using cross-account IAM roles, revoke permissions to limit potential control plane misuse.
 * DNS firewall enforcement: Block Dedicated Cloud Gateway from resolving internal FQDNs using [Route 53 DNS firewall](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-configure-manage-firewall-rules.html) if necessary.
 
-### AWS transit gateway safeguards
+{% endnavtab %}
+{% navtab "AWS TGW safeguards" %}
 
 You retain full administrative control over your transit gateway and can apply the following safeguards:
 * Separate route tables per attachment: Maintain isolation between Dedicated Cloud Gateway and internal services.
 * Transit gateway resource policies: Limit which [principals can modify routes or propagate attachments](https://docs.aws.amazon.com/ram/latest/userguide/getting-started-sharing.html#getting-started-sharing-orgs).
 * Monitoring and logging: Enable [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) and [AWS CloudTrail](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-tutorial.html) on transit gateway attachments to audit usage and detect anomalies.
 
-### Infrastructure hardening (Kong-managed environment)
+{% endnavtab %}
+{% navtab "Kong infrastructure hardening" %}
 
 Each customer-dedicated AWS account and VPC provisioned by Kong follows strict security and operational controls:
 * IAM zero trust: Kong applies least-privilege IAM policies across all infrastructure components.
@@ -296,12 +320,16 @@ Each customer-dedicated AWS account and VPC provisioned by Kong follows strict s
 * Audit logging: AWS CloudTrail is enabled for all API activity.
 * Patching compliance: Instances are regularly updated to meet Kong’s security baselines and CSP-recommended hardening benchmarks.
 
-### (Optional) Restrict Kong to load-balanced entry points only
+{% endnavtab %}
+{% navtab "Restrict Kong with load balancing" %}
 
-You can choose to expose upstream services only via load balancers (for example, ALB). This can be enforced by the following:
+You can optionally choose to expose upstream services only via load balancers (for example, ALB). This can be enforced by the following:
 * Security group and NACL rules: Only permit ALB IP ranges, block access to internal subnets.
 * Transit gateway scoping: Only route ALB subnets through transit gateway.
 * FQDN and TLS enforcement: Use host-based routing and TLS hostname validation to prevent direct IP-based access.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## General pre-production final checks
 
