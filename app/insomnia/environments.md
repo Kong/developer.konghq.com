@@ -62,8 +62,14 @@ After you create an environment, you can edit its variables and create sub-envir
 ### Edit environment variables
 
 To add or update variables in an environment:
-1. In the Environments list, click the environment that you want to edit.
-1. Define variables as key-value pairs in JSON format.
+1. In the **Environments** list, select the environment that you want to edit.
+1. Define variables as key-value pairs in JSON format. For example:
+  ```json
+  {
+	"global-base": "4444",
+	"exampleString": "globalenv0",
+  }
+  ```
 
 Changes apply immediately to requests that reference the active environment.
 
@@ -80,11 +86,11 @@ To create a sub-environment:
 1. Select the type of environment that you want to create.
 1. In the left panel, select your new environment.
 1. Enter a name. For example, "Staging" or "Production".
-1. Click **Add**
+1. Click **Add**.
 1. Define only the variables that differ from the base environment.
 
 {:.decorative}
-> You can color-code your sub-environments to make it easier to navigate them. Click **Color** and select a color to apply to your sub-environment icon.
+> You can color-code your sub-environments to make it easier to navigate them. From the sub-environment variables view, click **Color** and select a color to apply to your sub-environment icon.
 
 ## Referencing environment variables
 
