@@ -571,6 +571,8 @@ For complete working examples, see the [kongctl examples directory](https://gith
 
 If authentication fails, do the following:
 
+If authentication fails, do the following:
+
 1. Verify authentication:
     ```sh
     kongctl get me
