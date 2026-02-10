@@ -11,8 +11,6 @@ works_on:
   - on-prem
   - konnect
 
-
-
 related_resources:
   - text: Certificate object reference
     url: /gateway/entities/certificate/
