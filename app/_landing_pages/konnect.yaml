@@ -139,7 +139,7 @@ rows:
                 url: /gateway/
                 align: end
               - text: Get started
-                url: /gateway/get-started/
+                url: /gateway/get-started/?deployment=konnect
                 align: end
 
     - blocks:
