@@ -48,6 +48,13 @@ faqs:
       To find all supported platforms and package types for {{site.base_gateway}}, see the [supported platforms and versions](/gateway/version-support-policy/#supported-versions) in the {{site.base_gateway}} version support policy.
       
       If you don't see your {{site.base_gateway}} version here, it has reached end of life and Kong no longer publishes any packages or images for it.
+  - q: How do I install a downloaded .deb package file?
+    a: |
+      If you have already downloaded a {{site.base_gateway}} `.deb` package file, you can install it using the package manager:
+
+      ```sh
+      sudo apt install --yes /path/to/kong-enterprise-edition_<version>_amd64.deb
+      ```
 
 no_wrap: true
 versioned: true
