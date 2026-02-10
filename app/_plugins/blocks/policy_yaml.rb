@@ -264,6 +264,9 @@ module Jekyll
       content = super
       return '' if content == ''
 
+      @site = context.registers[:site]
+      @page = context.environments.first['page']
+
       @params.each do |k, v|
         next unless %w[use_meshservice namespace].include?(k)
         next unless v.is_a?(String)
@@ -312,50 +315,23 @@ module Jekyll
 
       additional_classes = 'codeblock' unless use_meshservice
 
-      # Conditionally render tabs based on use_meshservice
-      htmlContent = "
-{% navtabs \"policy-yaml\" #{additional_classes} %}"
-
-      if use_meshservice
-        htmlContent += "
-{% navtab \"Kubernetes\" %}
-<div class=\"meshservice text-sm\">
-<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
-</div>
-#{contents[:kube_legacy]}
-#{contents[:kube]}
-{% endnavtab %}
-{% navtab \"Universal\" %}
-<div class=\"meshservice text-sm\">
-<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
-</div>
-#{contents[:uni_legacy]}
-#{contents[:uni]}
-{% endnavtab %}"
-      else
-        htmlContent += "
-{% navtab \"Kubernetes\" %}
-#{contents[:kube_legacy]}
-{% endnavtab %}
-{% navtab \"Universal\" %}
-#{contents[:uni_legacy]}
-{% endnavtab %}"
-      end
-
-      if show_tf
-        htmlContent += "
-{% navtab \"Terraform\" %}
-<div class=\"text-sm\">
-Please adjust <b>konnect_mesh_control_plane.my_meshcontrolplane.id</b> and <b>konnect_mesh.my_mesh.name</b> according to your current configuration.
-</div>
-#{terraform_content}
-{% endnavtab %}"
-      end
-
-      htmlContent += '{% endnavtabs %}'
-
       # Return the final HTML content
-      ::Liquid::Template.parse(htmlContent).render(context)
+      context.stack do
+        context['additional_classes'] = additional_classes
+        context['use_meshservice'] = use_meshservice
+        context['show_tf'] = show_tf
+        context['terraform_content'] = terraform_content
+        context['kube_legacy'] = contents[:kube_legacy]
+        context['kube'] = contents[:kube]
+        context['uni_legacy'] = contents[:uni_legacy]
+        context['uni'] = contents[:uni]
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, 'policy_yaml').level + 1
+        ::Liquid::Template.parse(template).render(context)
+      end
+    end
+
+    def template
+      File.read(File.join(@site.source, '_includes/components/policy_yaml.md'))
     end
   end
 end

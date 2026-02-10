@@ -9,6 +9,7 @@ module Jekyll
       def initialize(tag_name, markup, tokens)
         super
 
+        @has_heading_level = markup.include?('heading_level')
         @tab_group = markup.strip
       end
 
@@ -38,10 +39,12 @@ module Jekyll
           keys = @tab_group.split('.')
           group = keys.reduce(context) { |c, key| c[key] } || @tab_group
         end
+
         context.stack do
           context['tab_group'] = group
           context['environment'] = environment
           context['navtabs_id'] = navtabs_id
+          context['heading_level'] = parse_heading_level(context)
           Liquid::Template
             .parse(template)
             .render(context)
@@ -53,6 +56,14 @@ module Jekyll
           File.read(File.join(@site.source, '_includes/components/tabs.md'))
         else
           File.read(File.join(@site.source, '_includes/components/tabs.html'))
+        end
+      end
+
+      def parse_heading_level(context)
+        if @has_heading_level
+          Liquid::Template.parse('{{heading_level}}').render(context)
+        else
+          Jekyll::ClosestHeading.new(@page, 'navtabs').level + 1
         end
       end
     end
@@ -96,18 +107,21 @@ module Jekyll
         evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
         environment = context.environments.first
 
+        contents = super
+
         navtabs_id = environment['navtabs-stack'].last
         environment["navtabs-#{navtabs_id}"][evaluated_title] = {
-          'content' => block_content(context),
+          'content' => block_content(context, contents),
           'attributes' => evaluated_attributes
         }
         ''
       end
 
-      def block_content(context)
+      def block_content(context, contents)
         page = context.environments.first['page']
+
         if page['output_format'] == 'markdown'
-          render_block(context)
+          contents
         else
           site = context.registers[:site]
           converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
