@@ -83,6 +83,8 @@ entities:
         provider: dashscope
         name: qwen-plus
         options:
+          dashscope:
+            international: true
           max_tokens: 512
           temperature: 1.0
 variables:
