@@ -320,6 +320,30 @@
     @apply !bg-brand !text-white !border-transparent;
   }
 
+  .konami .button.button--primary {
+    color: rgb(0, 15, 6) !important;
+  }
+
+  /* Konami theme: recolor hardcoded #428CDC icons to Electric Lime */
+  .konami svg path[fill="#428CDC"],
+  .konami svg rect[fill="#428CDC"],
+  .konami svg circle[fill="#428CDC"],
+  .konami svg polygon[fill="#428CDC"] {
+    fill: rgb(204, 255, 0) !important;
+  }
+
+  .konami img[src$=".svg"][src*="/icons/"] {
+    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
+  }
+
+  .konami .card {
+    border: 1px solid rgb(204, 255, 0) !important;
+  }
+
+  .konami svg[viewBox="0 0 321 286"] {
+    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
+  }
+
   .button.button--secondary {
     @apply !border-brand !text-primary;
   }
