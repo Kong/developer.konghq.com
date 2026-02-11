@@ -153,7 +153,7 @@ spec:
 
 The following policy is automatically created on a global control plane and synced to all zones.
 It creates a hostname for each `MeshExternalService` synced from a global control plane.
-For example, for a `MeshExternalService` named `aurora`, {{site.mesh_product_name}} creates a `aurora.extsvc.mesh.local`
+For example, for a `MeshExternalService` named `aurora`, {{site.mesh_product_name}} creates a `aurora.extsvc.mesh.local` hostname.
 
 {% policy_yaml %}
 ```yaml
