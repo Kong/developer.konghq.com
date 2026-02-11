@@ -52,7 +52,7 @@ rows:
               icon: /assets/icons/debug.svg
               cta:
                 text: Troubleshoot with Debugger
-                url: /gateway/debugger/
+                url: /observability/debugger/
       - blocks:
           - type: card
             config:

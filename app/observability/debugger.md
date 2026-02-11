@@ -2,13 +2,14 @@
 title: "Troubleshooting with {{site.konnect_short_name}} Debugger"
 description: "The Debugger enables control plane administrators to initiate targeted deep session traces in specific data plane nodes."
 breadcrumbs:
-  - /gateway/
+  - /observability/
 content_type: reference
 layout: reference
 search_aliases: 
   - active tracing
   - debugger
 products:
+    - observability
     - konnect
 works_on:
     - konnect
@@ -24,7 +25,7 @@ tags:
   - debugger
 related_resources:
   - text: Debugger spans
-    url: /gateway/debugger-spans/
+    url: /observability/debugger-spans/
   - text: Configure CMEK in {{site.konnect_short_name}}
     url: /konnect-platform/cmek/
   - text: "{{site.base_gateway}} tracing reference"
@@ -34,7 +35,7 @@ related_resources:
 {{site.konnect_short_name}} Debugger provides a connected debugging experience and real-time trace-level visibility into API traffic, enabling you to:
 
 * **Troubleshoot issues:** Investigate and resolve problems during deployments or incidents with targeted, on-demand traces.
-* **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution. See [Debugger spans](/gateway/debugger-spans/) for a list of spans captured.
+* **Understand request lifecycle**: Visualize exactly what happened during a specific request, including order and duration plugin execution. See [Debugger spans](/observability/debugger-spans/) for a list of spans captured.
 * **Improve performance and reliability:** Use deep insights to fine-tune configurations and resolve bottlenecks.
 
 {{site.konnect_product_name}}'s Debugger provides exclusive, in-depth insights not available through third-party telemetry tools. The detailed traces captured during a live session are unique to Kong and offer unparalleled visibility into system behavior.
@@ -46,7 +47,7 @@ related_resources:
 ### Traces
 Traces provide a visual representation of the request and response lifecycle, offering a comprehensive overview of Kong's request processing pipeline. 
 
-The debugger helps capture OpenTelemetry-compatible traces for all requests matching the sampling criteria. The detailed spans are captured for the entire request/response lifecycle. These traces can be visualized with {{site.konnect_short_name}}'s built-in span viewer with no additional instrumentation or telemetry tools. For a complete list of available spans and their meanings, see [Debugger spans](/gateway/debugger-spans/).
+The debugger helps capture OpenTelemetry-compatible traces for all requests matching the sampling criteria. The detailed spans are captured for the entire request/response lifecycle. These traces can be visualized with {{site.konnect_short_name}}'s built-in span viewer with no additional instrumentation or telemetry tools. For a complete list of available spans and their meanings, see [Debugger spans](/observability/debugger-spans/).
 
 **Key Highlights**
 * Traces can be generated for a service or per route
@@ -76,7 +77,7 @@ The spans view gives you unparalleled visibility into {{site.base_gateway}}’s 
 * Plugin execution and performance
 * Request and response handling
 
-For detailed definitions of each span, see [Debugger spans](/gateway/debugger-spans/). 
+For detailed definitions of each span, see [Debugger spans](/observability/debugger-spans/). 
 
 Use the spans view to troubleshoot issues, optimize performance, and refine your configuration:
 ![Debugger Spans view](/assets/images/konnect/debugger-trace-span-view.png)

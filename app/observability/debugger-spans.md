@@ -2,14 +2,15 @@
 title: Debugger spans
 description: 'Spans represent a single unit of trace in {{site.base_gateway}} this page contains all available spans.'
 breadcrumbs:
-  - /gateway/
-  - /gateway/debugger/
+  - /observability/
+  - /observability/debugger/
 content_type: reference
 layout: reference
 search_aliases: 
   - active tracing
   - debugger
 products:
+    - observability
     - konnect
 works_on:
     - konnect
@@ -18,12 +19,12 @@ tags:
   - debugger
 related_resources:
   - text: The {{site.konnect_short_name}} Debugger
-    url: /gateway/debugger/
+    url: /observability/debugger/
 ---
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/gateway/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
 The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong

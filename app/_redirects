@@ -160,6 +160,8 @@
 
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
+/gateway/debugger/  /observability/debugger/
+/gateway/debugger-spans/  /observability/debugger-spans/
 
 
 ## Insomnia
