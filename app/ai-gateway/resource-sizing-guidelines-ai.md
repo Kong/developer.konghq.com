@@ -89,6 +89,7 @@ Compute sizing is dictated by **token processing**, not request count. Memory su
 
 - CPU determines maximum tokens per second
 - Memory must support configuration and in-memory stream buffers
+- A baseline ratio of 1 vCPU : 2 GB memory is sufficient for typical workloads
 
 ### Use dedicated compute instance classes
 
@@ -266,6 +267,8 @@ columns:
     key: entities
   - title: Token throughput guidance (input / output)
     key: throughput
+  - title: Recommended vCPUs
+    key: vcpus
   - title: Use cases
     key: use_cases
 rows:
@@ -275,6 +278,8 @@ rows:
       < 100 services/routes
     throughput: |
       < 10M input / < 2M output tokens/s
+    vcpus: |
+      18 vCPUs
     use_cases: |
       Team workloads, prototypes, low-volume inference
   - size: |
@@ -283,6 +288,8 @@ rows:
       100–500 services/routes
     throughput: |
       10M–60M input / 2M–10M output tokens/s
+    vcpus: |
+      100 vCPUs
     use_cases: |
       Production traffic for single business unit
   - size: |
@@ -291,6 +298,8 @@ rows:
       500–2,000 services/routes
     throughput: |
       60M–200M input / 10M–40M output tokens/s
+    vcpus: |
+      360 vCPUs
     use_cases: |
       Central platform, multi-team AI adoption
   - size: |
@@ -299,6 +308,8 @@ rows:
       > 2,000 services/routes
     throughput: |
       > 200M input / > 40M output tokens/s
+    vcpus: |
+      360+ vCPUs
     use_cases: |
       Enterprise AI platform, multi-tenant environments
 {% endtable %}
