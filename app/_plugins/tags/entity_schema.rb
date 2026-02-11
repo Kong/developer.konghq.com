@@ -22,11 +22,11 @@ module Jekyll
     private
 
     def template
-      @template ||= if @page['output_format'] == 'markdown'
-                      File.read(File.expand_path('app/_includes/components/entity_schema.md'))
-                    else
-                      File.read(File.expand_path('app/_includes/components/entity_schema.html'))
-                    end
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/entity_schema.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/entity_schema.html'))
+      end
     end
   end
 end
