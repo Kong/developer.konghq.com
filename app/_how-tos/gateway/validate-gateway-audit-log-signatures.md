@@ -1,5 +1,6 @@
 ---
 title: Validate {{site.base_gateway}} audit log signatures
+permalink: /how-to/validate-gateway-audit-log-signatures/
 
 description: Use OpenSSL to validate signatures in {{site.base_gateway}} audit logs.
 

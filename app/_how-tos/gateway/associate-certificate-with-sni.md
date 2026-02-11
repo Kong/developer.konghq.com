@@ -1,5 +1,6 @@
 ---
 title: Associate a Certificate with an SNI
+permalink: /how-to/associate-certificate-with-sni/
 content_type: how_to
 description: Learn how to associate a Certificate to an SNI.
 related_resources:
