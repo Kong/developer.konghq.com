@@ -11,6 +11,7 @@ rows:
   - header:
       type: h2
       text: Tools
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -20,6 +21,7 @@ rows:
               kongctl is a command-line interface for managing {{site.konnect_short_name}} resources programmatically.
               It provides a comprehensive toolkit for defining infrastructure as code, integrating into CI/CD pipelines,
               and automating API lifecycle management.
+            icon: /assets/icons/code.svg
             cta:
               text:
               url: /kongctl/
@@ -31,6 +33,7 @@ rows:
             description: |
               decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of
               commands designed to orchestrate and automate the entire process of API delivery.
+            icon: /assets/icons/code.svg
             cta:
               text:
               url: /deck/
@@ -41,6 +44,7 @@ rows:
             title: "{{site.konnect_short_name}} APIs"
             description: |
               {{site.konnect_short_name}} APIs allow you to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
+            icon: /assets/icons/api.svg
             cta:
               text: 
               url: /konnect-api/
@@ -52,6 +56,7 @@ rows:
             description: |
               {{site.base_gateway}} comes with an internal RESTful API for administration purposes. 
               This API comes in two options: open-source and Enterprise.
+            icon: /assets/icons/api.svg
             cta:
               text: 
               url: /admin-api/
@@ -62,6 +67,7 @@ rows:
             title: "{{site.kic_product_name}}"
             description: |
               {{site.kic_product_name}} allows you to run {{site.base_gateway}} as a Kubernetes Ingress to handle inbound requests for a Kubernetes cluster.
+            icon: /assets/icons/kubernetes.svg
             cta:
               text: 
               url: /kubernetes-ingress-controller/
@@ -72,6 +78,7 @@ rows:
             title: "Terraform providers for Kong"
             description: |
               Kong offers two Terraform providers: one for managing {{site.base_gateway}} in {{site.konnect_short_name}}, and one for managing {{site.base_gateway}} on-prem.
+            icon: /assets/icons/terraform.svg
             cta:
               text: 
               url: /terraform/
