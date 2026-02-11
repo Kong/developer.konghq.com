@@ -19732,17 +19732,17 @@
     "kong-ee": [
       {
         "message": "**aws-lambda**: added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-        "type": "feature",
+        "type": "bugfix",
         "scope": "Plugin"
       },
       {
         "message": "Added `lru_cache_size` to allow configuration of in-memory LRU cache size.",
-        "type": "feature",
+        "type": "bugfix",
         "scope": "Configuration"
       },
       {
         "message": "**request-validator**: Added support for specifying JSON schema draft versions.",
-        "type": "feature",
+        "type": "bugfix",
         "scope": "Plugin"
       },
       {
