@@ -1,0 +1,37 @@
+title: 'Meter a chat route with OpenAI'
+description: 'Meter a chat route using the OpenAI GPT-4 model using {{site.konnect_short_name}} {{site.metering_and_billing}}.'
+extended_description: |
+  Meter a chat route using the OpenAI GPT-4 model using {{site.konnect_short_name}} [{{site.metering_and_billing}}](/metering-and-billing/).
+
+  To meter traffic flowing through AI Proxy, you must enable logging with `config.logging.log_payloads` and `config.logging.log_statistics`.
+
+  For a complete guide to metering LLM tokens, see [Meter LLM traffic in {{site.konnect_short_name}}](/how-to/meter-llm-traffic/).
+
+weight: 900
+
+requirements:
+- OpenAI account
+
+config:
+  route_type: llm/v1/chat
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${openai_api_key}
+  model:
+    provider: openai
+    name: gpt-4o
+  logging:
+    log_payloads: true
+    log_statistics: true
+      
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

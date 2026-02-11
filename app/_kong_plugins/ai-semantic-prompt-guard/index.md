@@ -44,7 +44,7 @@ search_aliases:
   - semantic
 
 related_resources:
-  - text: Get started with AI Gateway
+  - text: Get started with {{site.ai_gateway}}
     url: /ai-gateway/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
@@ -54,12 +54,12 @@ related_resources:
     url: /plugins/ai-semantic-cache/
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic
     url: /how-to/use-ai-semantic-prompt-guard-plugin/
-  - text: Embedding-based similarity matching in Kong AI Gateway plugins
+  - text: Embedding-based similarity matching in {{site.ai_gateway}} plugins
     url: /ai-gateway/semantic-similarity/
 
 faqs:
   - q: Does the AI Semantic Prompt Guard plugin support multilingual input?
-    a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by AI Gateway (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
+    a: Yes, the AI Semantic Prompt Guard plugin supports multilingual input—depending on the capabilities of the configured [embedding model](/plugins/ai-semantic-prompt-guard/reference/#schema--config-embeddings-model-provider). The plugin sends raw UTF-8 text to the embedding provider supported by {{site.ai_gateway}} (such as Azure, Bedrock, Gemini, Hugging Face, Mistral, or OpenAI). As long as the model supports multiple languages, semantic comparisons and rule enforcement will work as expected without requiring additional plugin configuration.
   - q: |
       How do I resolve the MemoryDB error `Number of indexes exceeds the limit`?
     a: |
@@ -79,7 +79,7 @@ next_steps:
 
 The AI Semantic Prompt Guard plugin extends the [AI Prompt Guard](/plugins/ai-prompt-guard/) plugin by allowing you to permit or block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
 
-You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using Kong AI Gateway.
+You can use a combination of `allow` and `deny` rules to maintain integrity and compliance when serving an LLM service using {{site.ai_gateway}}.
 
 ## How it works
 

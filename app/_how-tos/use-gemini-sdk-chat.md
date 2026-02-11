@@ -1,8 +1,8 @@
 ---
-title: Use Google Generative AI SDK for Gemini AI service chats with Kong AI Gateway
+title: Use Google Generative AI SDK for Gemini AI service chats with {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -32,10 +32,11 @@ entities:
 
 tags:
   - ai
+  - gemini
 
 tldr:
-  q: How do I use the Google Generative AI SDK with Kong AI Gateway?
-  a: Configure the AI Proxy Advanced plugin with `llm_format` set to `gemini`, then use the Google Generative AI SDK to send requests through Kong AI Gateway.
+  q: How do I use the Google Generative AI SDK with {{site.ai_gateway}}?
+  a: Configure the AI Proxy Advanced plugin with `llm_format` set to `gemini`, then use the Google Generative AI SDK to send requests through {{site.ai_gateway}}.
 
 tools:
   - deck
@@ -99,7 +100,7 @@ variables:
 
 ## Test with Google Generative AI SDK
 
-Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because Kong AI Gateway handles authentication, then sends a generation request through the gateway:
+Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because {{site.ai_gateway}} handles authentication, then sends a generation request through the gateway:
 
 ```py
 cat << 'EOF' > gemini.py
@@ -137,7 +138,7 @@ def gemini_chat():
 
 if __name__ == "__main__":
     gemini_chat()
-EOF    
+EOF
 ```
 
 Run the script:

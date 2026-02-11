@@ -1,7 +1,7 @@
 metadata:
-  title: "Proxy AI CLI tools through Kong AI Gateway"
+  title: "Proxy AI CLI tools through {{site.ai_gateway}}"
   content_type: landing_page
-  description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
+  description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers for logging, cost tracking, and rate limiting.
   products:
     - ai-gateway
   works_on:
@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Proxy AI CLI tools through Kong AI Gateway"
+      text: "Proxy AI CLI tools through {{site.ai_gateway}}"
     columns:
       - blocks:
           - type: structured_text
@@ -22,12 +22,14 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong AI Gateway can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic: log all requests, track costs across teams, enforce rate limits, or apply security policies and guardrails.
+                    {{site.ai_gateway}} can proxy requests from AI command-line tools to LLM providers. This gives you centralized control over AI traffic: log all requests, track costs across teams, enforce rate limits, or apply security policies and guardrails.
 
                       Supported AI CLI tools:
 
                       - [**Claude Code**](#claude-code): Anthropic, OpenAI, Azure OpenAI, Google Gemini, Google Vertex, AWS Bedrock, and Alibaba Cloud (Dashscope)
                       - [**Codex CLI**](#codex-cli): OpenAI
+                      - [**Qwen Code CLI**](#qwen-code-cli): OpenAI
+                      - [**Gemini CLI**](#gemini-cli): Google Gemini
 
 
                       {:.info}
@@ -45,7 +47,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team.
+                    Claude Code is Anthropic's command-line tool that delegates coding tasks to Claude AI. Route Claude Code requests through {{site.ai_gateway}} to monitor usage, control costs, and enforce rate limits across your development team.
   - column_count: 4
     columns:
       - blocks:
@@ -130,7 +132,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
+                    Codex CLI is OpenAI's command-line tool for code generation and assistance. Proxy Codex CLI requests through {{site.ai_gateway}} to gain visibility into API usage, implement rate limiting, and centralize credential management.
 
   - column_count: 4
     columns:
@@ -142,4 +144,49 @@ rows:
               icon: /assets/icons/openai.svg
               cta:
                 url: /how-to/use-codex-with-ai-gateway/
+                align: end
+  - header:
+        type: h3
+        text: "Qwen Code CLI"
+    columns:
+        - blocks:
+            - type: structured_text
+              config:
+                blocks:
+                  - type: text
+                    text: |
+                      Qwen Code CLI is an AI-powered coding assistant that uses OpenAI-compatible endpoints. Proxy Qwen Code CLI requests through Kong AI Gateway to gain visibility into API usage, implement rate limiting, and centralize credential management.
+
+  - column_count: 4
+    columns:
+        - blocks:
+            - type: card
+              config:
+                title: Qwen Code CLI with OpenAI
+                description: Use Qwen Code CLI with OpenAI models
+                icon: /assets/icons/qwen.svg
+                cta:
+                  url: /how-to/use-qwen-code-with-ai-gateway/
+                  align: end
+  - header:
+      type: h3
+      text: "Gemini CLI"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Gemini CLI is Google's command-line tool for interacting with Gemini models. Route Gemini CLI requests through Kong AI Gateway to monitor usage, control costs, and enforce rate limits across your development team.
+  - column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Gemini CLI with Gemini
+              description: Use Gemini CLI with Gemini models
+              icon: /assets/icons/gcp.svg
+              cta:
+                url: /how-to/use-gemini-cli-with-ai-gateway/
                 align: end

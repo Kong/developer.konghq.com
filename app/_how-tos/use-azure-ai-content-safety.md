@@ -7,7 +7,7 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: Azure AI Content Safety
     url: /plugins/ai-azure-content-safety/
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Learn how to use the Azure AI Content Safety plugin.
@@ -38,7 +38,7 @@ tags:
   - azure
 
 tldr:
-  q: How can I use Azure Content Safety plugin with AI Gateway?
+  q: How can I use Azure Content Safety plugin with {{site.ai_gateway}}?
   a: To use the Azure Content Safety plugin, you must have [An Azure subscription and a Content Safety instance](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites). Then, you must configure an [AI proxy plugin](./#configure-this-ai-proxy-plugin) and then enable the [AI Azure Content Safety plugin](./#configure-the-ai-azure-content-safety-plugin).
 
 tools:
@@ -52,7 +52,7 @@ prereqs:
     - title: Azure Content Safety key
       content: |
           To complete this tutorial, you need an Azure subscription and a Content Safety key (static key from the Azure Portal). If you need to set this up, follow [Microsoft's Azure quickstart](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites).
-          
+
           Export them as decK environment variables:
           ```sh
           export DECK_AZURE_CONTENT_SAFETY_KEY='YOUR-CONTENT-SAFTEY-KEY'

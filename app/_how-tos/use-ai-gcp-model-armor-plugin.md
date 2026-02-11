@@ -7,7 +7,7 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: AI GCP Model Armor
     url: /plugins/ai-gcp-model-armor/
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Learn how to use the AI GCP Model Armor plugin.
@@ -34,9 +34,10 @@ entities:
 
 tags:
   - ai
+  - openai
 
 tldr:
-  q: How can I use the AI GCP Model Armor plugin with AI Gateway?
+  q: How can I use the AI GCP Model Armor plugin with {{site.ai_gateway}}?
   a: Configure the AI Proxy Advanced plugin to route requests to any LLM upstream, then apply the AI GCP Model Armor plugin to inspect prompts and responses for unsafe content using Google Cloud’s Model Armor service.
 
 tools:

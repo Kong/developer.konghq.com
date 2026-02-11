@@ -36,9 +36,9 @@ tags:
   - ai
 
 related_resources:
-  - text: About AI Gateway
+  - text: About {{site.ai_gateway}}
     url: /ai-gateway/
-  - text: All AI Gateway plugins
+  - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: AI RAG Injector
     url: /plugins/ai-rag-injector/
@@ -96,7 +96,7 @@ rows:
 
 ## AI Prompt Compression Service
 
-Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in AI Gateway.
+Kong provides a Docker image for the AI Prompt Compressor service, which compresses LLM prompts before sending them upstream. It uses [LLMLingua 2](https://github.com/microsoft/LLMLingua) to reduce prompt size, which helps you manage token limits and maintain context fidelity. The service supports both HTTP and JSON-RPC APIs and is designed to work with the AI Prompt Compressor plugin in {{site.ai_gateway}}.
 
 {% include prereqs/cloudsmith.md %}
 
@@ -192,12 +192,12 @@ sequenceDiagram
     activate KongAICompressor
     KongAICompressor->>KongAICompressor: Check for LLMLINGUA tags
 
-    alt Tagged content found
+    alt If tagged content found
         KongAICompressor->>LLMLingua2: Compress tagged sections
         activate LLMLingua2
         LLMLingua2-->>KongAICompressor: Return compressed sections
         deactivate LLMLingua2
-    else No LLMlingua tags
+    else If no LLMlingua tags
         KongAICompressor->>LLMLingua2: Compress entire prompt
         activate LLMLingua2
         LLMLingua2-->>KongAICompressor: Return compressed prompt

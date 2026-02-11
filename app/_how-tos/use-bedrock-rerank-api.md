@@ -2,7 +2,7 @@
 title: Use AWS Bedrock rerank API with AI Proxy
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
@@ -34,6 +34,7 @@ entities:
 
 tags:
   - ai
+  - bedrock
 
 tldr:
   q: How do I use AWS Bedrock Rerank with the AI Proxy plugin?

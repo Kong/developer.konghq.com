@@ -2,7 +2,7 @@
 title: Control prompt size with the AI Compressor plugin
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI RAG Injector
     url: /plugins/ai-rag-injector/

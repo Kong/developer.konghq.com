@@ -2,7 +2,7 @@
 title: "Visualize LLM traffic with Prometheus and Grafana"
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -38,9 +38,10 @@ tags:
   - observability
   - prometheus
   - grafana
+  - mistral
 
 tldr:
-  q: How can I visualize LLM traffic metrics in Kong AI Gateway?
+  q: How can I visualize LLM traffic metrics in {{site.ai_gateway}}?
   a: |
     Enable the AI Proxy Advanced plugin to collect detailed request and model statistics. Then configure the Prometheus plugin to expose these metrics for scraping. Finally, connect Grafana to visualize model performance, usage trends, and traffic distribution in real time.
 
@@ -199,7 +200,7 @@ docker run -d --name kong-quickstart-prometheus \
   prom/prometheus:latest
 ```
 
-Prometheus will begin to scrape metrics data from Kong AI Gateway.
+Prometheus will begin to scrape metrics data from {{site.ai_gateway}}.
 
 
 ## Configure Grafana dashboard

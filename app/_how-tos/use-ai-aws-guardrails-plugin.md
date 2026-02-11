@@ -7,7 +7,7 @@ related_resources:
     url: /plugins/ai-proxy/
   - text: Azure AI Content Safety
     url: /plugins/ai-azure-content-safety/
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 description: Learn how to use the AI AWS Guardrails plugin.
@@ -36,9 +36,10 @@ tags:
   - ai
   - openai
   - azure
+  - bedrock
 
 tldr:
-  q: How can I use the AI AWS Guardrails plugin with AI Gateway?
+  q: How can I use the AI AWS Guardrails plugin with {{site.ai_gateway}}?
   a: Configure the AI Proxy Advanced plugin to route requests to any LLM upstreams, then apply the AI AWS Guardrails plugin to block unsafe inputs and outputs based on a predefined Bedrock guardrail.
 
 tools:

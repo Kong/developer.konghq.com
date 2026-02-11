@@ -1,8 +1,8 @@
 ---
-title: Use Gemini's thinkingConfig with AI Proxy Advanced in Kong AI Gateway
+title: Use Gemini's thinkingConfig with AI Proxy Advanced in {{site.ai_gateway}}
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -32,6 +32,7 @@ entities:
 
 tags:
   - ai
+  - gemini
 
 tldr:
   q: How do I use Gemini's thinkingConfig with the AI Proxy Advanced plugin?
@@ -159,7 +160,7 @@ EOF
 
 This script sends a logic puzzle that requires multi-step reasoning. Complex queries like this are more likely to produce visible reasoning traces showing how the model analyzes the problem, deduces information from each response, and reaches its conclusion. The [`thinking_budget`](https://ai.google.dev/gemini-api/docs/thinking#set-budget) of 200 allows for detailed reasoning traces.
 
-The OpenAI SDK sends requests to Kong AI Gateway using the OpenAI chat completions format. The `extra_body` parameter passes Gemini-specific configuration through to the model. Kong AI Gateway transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
+The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `extra_body` parameter passes Gemini-specific configuration through to the model. {{site.ai_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
 
 
 Now, let's run the script:

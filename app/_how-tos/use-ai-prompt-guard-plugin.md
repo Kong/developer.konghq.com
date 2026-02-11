@@ -2,7 +2,7 @@
 title: Use AI Prompt Guard plugin to govern your LLM traffic
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
@@ -33,7 +33,7 @@ entities:
 
 tags:
   - ai
-  - openai
+  - mistral
 
 tldr:
   q: How do I allow only general IT-related prompts and block hacking content?

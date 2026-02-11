@@ -1,0 +1,10 @@
+name: kongctl
+
+releases:
+  - release: "0.3"
+    version: "0.3.8"
+    latest: true
+    released: 2026-01-28
+  - release: "0.2"
+    version: "0.2.0"
+    released: 2025-10-10

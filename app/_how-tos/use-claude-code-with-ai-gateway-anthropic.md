@@ -1,16 +1,16 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway and Anthropic
+title: Route Claude CLI traffic through {{site.ai_gateway}} and Anthropic
 content_type: how_to
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
 products:
   - gateway
@@ -37,8 +37,8 @@ tags:
   - anthropic
 
 tldr:
-  q: How do I run Claude CLI through Kong AI Gateway?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}}?
+  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable file-log to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
 
 tools:
   - deck
@@ -73,7 +73,7 @@ First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai
 * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
-Set `llm_format: anthropic` to tell Kong AI Gateway that requests and responses use Claude's native API format. This parameter controls schema validation and prevents format mismatches between Claude Code and the gateway.
+Set `llm_format: anthropic` to tell {{site.ai_gateway}} that requests and responses use Claude's native API format. This parameter controls schema validation and prevents format mismatches between Claude Code and the gateway.
 
 {% entity_examples %}
 entities:
@@ -104,7 +104,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -116,7 +116,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
+Now, we can start a Claude Code session that points it to the local {{site.ai_gateway}} endpoint:
 
 ```sh
 ANTHROPIC_BASE_URL=http://localhost:8000/anything \
@@ -142,7 +142,7 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach Kong AI Gateway.
+Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
 ```text
 Tell me about Madrid Skylitzes manuscript.
@@ -181,7 +181,7 @@ various backgrounds:
 ```
 {:.no-copy-code}
 
-Next, inspect the Kong AI Gateway logs to verify that the traffic was proxied through it:
+Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
 
 ```sh
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
@@ -227,4 +227,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `claude-sonnet-4-5-20250929` model we selected while starting the Claude Code session.
+This output confirms that Claude Code routed the request through {{site.ai_gateway}} using the `claude-sonnet-4-5-20250929` model we selected while starting the Claude Code session.

@@ -2,7 +2,7 @@
 title: Control accuracy of LLM models using the AI LLM as judge plugin
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
@@ -34,6 +34,7 @@ entities:
 tags:
   - ai
   - openai
+  - llama
 
 tldr:
   q: How do I control and measure the accuracy of LLM responses?

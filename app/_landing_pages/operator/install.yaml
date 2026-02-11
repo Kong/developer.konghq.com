@@ -65,7 +65,7 @@ rows:
               the `DataPlane` resource.
             cta:
               text: Deploy a DataPlane
-              url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+              url: /operator/konnect/crd/dataplane/hybrid/
 
       - blocks:
         - type: card
@@ -77,7 +77,7 @@ rows:
               Gateway API resources such as `Gateway` and `HTTPRoute`
             cta:
               text: Deploy self-managed Control Plane
-              url: /operator/dataplanes/get-started/kic/create-gateway/
+              url: /operator/get-started/gateway-api/deploy-gateway/
 
       - blocks:
         - type: card

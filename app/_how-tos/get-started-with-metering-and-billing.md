@@ -1,6 +1,6 @@
 ---
 title: Get started with {{site.metering_and_billing}} in {{site.konnect_short_name}}
-description: Learn how to meter and monetize API Gateway requests with {{site.konnect_short_name}} and {{site.metering_and_billing}}. 
+description: Learn how to meter and monetize API Gateway requests with {{site.konnect_short_name}} and {{site.metering_and_billing}}.
 content_type: how_to
 
 permalink: /metering-and-billing/get-started/
@@ -17,7 +17,7 @@ works_on:
 tags:
     - get-started
 
-tldr: 
+tldr:
   q: What is {{site.metering_and_billing}} in {{site.konnect_short_name}}, and how can I get started with it?
   a: |
     [{{site.metering_and_billing}}](/metering-and-billing/) provides flexible billing and metering for AI and DevTool companies. It also includes real-time insights and usage limit enforcement.
@@ -26,7 +26,7 @@ tldr:
 
 tools:
     - deck
-  
+
 prereqs:
   entities:
     services:
@@ -44,7 +44,19 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-
+related_resources:
+  - text: "{{site.base_gateway}}"
+    url: /gateway/
+  - text: Product Catalog reference
+    url: /metering-and-billing/product-catalog/
+  - text: Metering reference
+    url: /metering-and-billing/metering/
+  - text: Customers and usage attribution
+    url: /metering-and-billing/customer/
+  - text: Billing, invoicing, and subscriptions
+    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Meter and bill {{site.ai_gateway}} LLM tokens
+    url: /how-to/meter-llm-traffic/
 min_version:
     gateway: '3.4'
 next_steps:
@@ -59,7 +71,7 @@ next_steps:
 automated_tests: false
 ---
 
-This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with {{site.metering_and_billing}} in {{site.konnect_short_name}}. 
+This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
 
 In this guide, you'll:
 * Create a {{site.base_gateway}} Consumer that you'll map as a customer
@@ -148,9 +160,9 @@ In this guide, you'll enable API Gateway requests for metering. This will meter 
 
 ## Create a feature
 
-Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering API consumption, you need to associate traffic from the `example-service` Gateway Service with a feature as something you want to price or govern. 
+Meters collect raw usage data, but features make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering API consumption, you need to associate traffic from the `example-service` Gateway Service with a feature as something you want to price or govern.
 
-Features are customer-facing, and show up on the invoice for paid plans. Feature examples could include things like flight data requests, GPT-5 input tokens, or available LLM models. 
+Features are customer-facing, and show up on the invoice for paid plans. Feature examples could include things like flight data requests, GPT-5 input tokens, or available LLM models.
 
 In this guide, you'll create a feature for the `example-service` you created in the prerequisites.
 
@@ -158,13 +170,13 @@ In this guide, you'll create a feature for the `example-service` you created in 
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
 1. In the **Name** field, enter `example-service`.
-1. From the **Meter** dropdown menu, select "API Gateway Requests". 
-1. Click **Add group by filter**. 
+1. From the **Meter** dropdown menu, select "API Gateway Requests".
+1. Click **Add group by filter**.
    The group by filter ensures you only bill for traffic to `example-service`, not all {{site.base_gateway}} traffic. This lets you offer different pricing for different APIs.
 1. From the **Group by** dropdown menu, select "service_name".
 1. From the **Operator** dropdown menu, select "Equals".
 1. From the **Value** dropdown menu, select "example-service".
-1. Click **Save**. 
+1. Click **Save**.
 
 ## Create a Premium plan
 
@@ -186,7 +198,7 @@ In this section, you'll create a Premium plan that grants paying customers acces
 1. Click **Next Step**.
 1. From the **Pricing model** dropdown menu, select "Usage based".
 1. In the **Price per unit** field, enter `1`.
-1. Click **Next Step**. 
+1. Click **Next Step**.
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
 
@@ -198,7 +210,7 @@ Customers are the entities who pay for the consumption. In many cases, it's equa
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click **Create Customer**.
 1. In the **Name** field, enter `Kong Air`.
-1. In the **Include usage from** dropdown, select "kong-air". 
+1. In the **Include usage from** dropdown, select "kong-air".
 1. Click **Save**.
 1. Click the **Subscriptions** tab.
 1. Click **Create a Subscription**.
@@ -216,7 +228,7 @@ You can run the following command to test the that the Kong Air Consumer is invo
 ```sh
 for _ in {1..6}; do
   curl  -i $KONNECT_PROXY_URL/anything \
-       -H "apikey:air-key" 
+       -H "apikey:air-key"
   echo
 done
 ```
