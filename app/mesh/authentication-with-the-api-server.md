@@ -39,7 +39,7 @@ Groups in {{site.mesh_product_name}} allow you to manage API permissions for use
 ### Admin user token
 
 {{site.mesh_product_name}} creates an admin user token on the first start of the control plane.
-The admin user token is a user token issued for users in. the `mesh-system:admin` group.
+The admin user token is a user token issued for users in the `mesh-system:admin` group.
 This group is authorized by default to execute all administrative operations.
 
 #### Configure kumactl with an admin user token
@@ -118,7 +118,7 @@ curl localhost:5681/tokens/user \
 
 ### Revoke user tokens
 
-{{site.mesh_product_name}} doesn't keep a list of issued tokens. To invalidate a token, you must can add it to the revocation list.
+{{site.mesh_product_name}} doesn't keep a list of issued tokens. To invalidate a token, you must add it to the revocation list.
 
 Every token has its own ID under the `jti` key.
 You can extract the ID from the token using jwt.io or the [`jwt-cli`](https://www.npmjs.com/package/jwt-cli) tool.
@@ -209,7 +209,7 @@ data: {{ key }}" | kumactl apply --var key=$(kumactl generate signing-key) -f -
 {{ navtabbed_content | indent }}
 
 2. [Generate new tokens](#generate-user-tokens).
-   New tokens are generated with the signing key with the highest serial number.
+   New tokens are generated with the signing key that has the highest serial number.
    At this point, tokens signed by either the new or old signing key are valid.
 
 3. Remove the old signing key:
