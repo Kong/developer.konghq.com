@@ -483,18 +483,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/secure-deployment/api-server-auth.md
-    title: 'Authentication with the API server'
-    description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
-    url: '/mesh/authentication-with-the-api-server/'
-    related_resources:
-      - text: 'Manage secrets'
-        url: '/mesh/manage-secrets/'
-      - text: Mesh ports
-        url: /mesh/interact-with-control-plane/#control-plane-ports
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
-  -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
     description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
