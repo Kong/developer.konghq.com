@@ -53,7 +53,7 @@ To create an environment:
 1. Click **Create**.
 
 {:.info}
-> If you create an environment in a project that uses Git Sync, you must choose where the folder is going to be stored in your linked repository.
+> If you create an environment in a project that uses Git Sync, you must choose where to store the folder in your linked repository.
 
 Insomnia applies the active environment to all requests in the collection.
 
