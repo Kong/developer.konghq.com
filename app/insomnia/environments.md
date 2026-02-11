@@ -84,7 +84,7 @@ Use sub-environments to override values from the base environment. For example, 
 
 To create a sub-environment:
 1. Open the environment that you want to extend.
-1. In the left panel, beside **Base Environment**, click the plus.
+1. In the left panel, beside **Base Environment**, click the plus icon.
 1. Select the type of environment that you want to create.
 1. In the left panel, select your new environment.
 1. Enter a name. For example, "Staging" or "Production".
