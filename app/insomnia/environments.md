@@ -66,12 +66,12 @@ After you create an environment, you can edit its variables and create sub-envir
 To add or update variables in an environment:
 1. In the **Environments** list, select the environment that you want to edit.
 1. Define variables as key-value pairs in JSON format. For example:
-  ```json
-  {
-	"global-base": "4444",
-	"exampleString": "globalenv0",
-  }
-  ```
+    ```json
+    {
+	  "global-base": "4444",
+	  "exampleString": "globalenv0",
+    }
+    ```
 
 Changes apply immediately to requests that reference the active environment.
 
