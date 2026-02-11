@@ -9,7 +9,7 @@ module Jekyll
       def initialize(tag_name, markup, tokens)
         super
 
-        @has_heading_level = markup.include?('heading_level')
+        @has_heading_level = markup.match(/heading_level(?:=(\d+))?/)
         @tab_group = markup.strip
       end
 
@@ -61,7 +61,13 @@ module Jekyll
 
       def parse_heading_level(context)
         if @has_heading_level
-          Liquid::Template.parse('{{heading_level}}').render(context)
+          if @has_heading_level[1]
+            @has_heading_level[1].to_i
+          else
+            Liquid::Template.parse('{{heading_level}}').render(context)
+          end
+        elsif context['prereqs']
+          4
         else
           Jekyll::ClosestHeading.new(@page, 'navtabs').level + 1
         end
