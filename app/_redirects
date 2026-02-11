@@ -32,6 +32,7 @@
 /mesh/add-builtin-gateway/  /how-to/set-up-a-built-in-mesh-gateway/
 /mesh/gateway-api/  /how-to/set-up-a-built-in-kubernetes-gateway/
 /how-to/send-asychronous-llm-requests/ /how-to/send-asynchronous-llm-requests/
+/how-to/encrypt-kafka-messages-with-event-gateway/ /event-gateway/encrypt-kafka-messages-with-event-gateway/
 
 # Mesh redirects
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
