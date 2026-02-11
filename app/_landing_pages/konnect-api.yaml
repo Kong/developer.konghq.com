@@ -149,12 +149,12 @@ rows:
   
   - header:
       type: h3
-      text: Portal access tokens
+      text: Dev Portal access tokens for developers
     columns:
     - blocks:
         - type: text
           config: |
-            A `portalaccesstoken` is a cookie that gets generated when you authenticate to Dev Portal. 
+            A `portalaccesstoken` is a cookie that gets generated when a developer authenticates to Dev Portal. 
             It's used only by the [Dev Portal API](/api/konnect/dev-portal/).
 
             Unlike the {{site.konnect_short_name}} PAT, it can't be generated or managed manually, but it can expire.
