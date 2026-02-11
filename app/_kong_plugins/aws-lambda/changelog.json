@@ -53,6 +53,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.8": [
+    {
+      "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue in proxy integration mode that caused internal server error when the `multiValueHeaders` is null.",
