@@ -26,19 +26,19 @@ min_version:
   gateway: '3.10'
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 ---
 
-Kong AI Gateway provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
+{{site.ai_gateway}} provides load balancing capabilities to distribute requests across multiple LLM models. You can use these features to improve fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
 The [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin supports several load balancing algorithms similar to those used for Kong upstreams, extended for AI model routing. You configure load balancing through the [Upstream entity](/gateway/entities/upstream/), which lets you control how requests are routed to various AI providers and models.
 
 ### Load balancing algorithms
 
-Kong AI Gateway supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
+{{site.ai_gateway}} supports multiple load balancing strategies for distributing traffic across AI models. Each algorithm addresses different goals: balancing load, improving cache-hit ratios, reducing latency, or providing [failover reliability](#retry-and-fallback).
 
 The following table describes the available algorithms and considerations for selecting one.
 
@@ -139,11 +139,11 @@ flowchart LR
     Decision2 ------>|Yes| Client
 {% endmermaid %}
 <!-- vale on -->
-> _Figure 1:_ A simplified diagram of fallback and retry processing in AI Gateway's load balancer.
+> _Figure 1:_ A simplified diagram of fallback and retry processing in {{site.ai_gateway}}'s load balancer.
 
 #### Retry and fallback configuration
 
-Kong AI Gateway load balancer supports fine-grained control over failover behavior. Use [`failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to define when a request should retry on the next upstream target. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
+{{site.ai_gateway}} load balancer supports fine-grained control over failover behavior. Use [`failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to define when a request should retry on the next upstream target. By default, retries occur on `error` and `timeout`. An `error` means a failure occurred while connecting to the server, forwarding the request, or reading the response header. A `timeout` indicates that any of those stages exceeded the allowed time.
 
 You can add more criteria to adjust retry behavior as needed:
 
@@ -180,7 +180,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-You can customize AI Gateway load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize {{site.ai_gateway}} load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}

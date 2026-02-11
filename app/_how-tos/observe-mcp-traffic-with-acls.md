@@ -2,7 +2,7 @@
 title: Observe MCP Traffic with Access Control Enabled
 content_type: how_to
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
@@ -42,7 +42,7 @@ tags:
   - mcp
 
 tldr:
-  q: How do I observe MCP tool usage with Kong AI Gateway?
+  q: How do I observe MCP tool usage with {{site.ai_gateway}}?
   a: |
     Use the File Log plugin to write MCP tool activity to a local file. Inspect the entries to see which tools each Consumer or Consumer Group accessed. Confirm the RPC calls that Chatwise sends to your MCP server.
 

@@ -1,12 +1,12 @@
 ---
-title: Use Agno with AI Proxy in Kong AI Gateway
+title: Use Agno with AI Proxy in {{site.ai_gateway}}
 content_type: how_to
 
-description: Connect Agno’s research agents to Kong AI Gateway with no code changes, enabling OpenAI-compatible inference through a proxy.
+description: Connect Agno’s research agents to {{site.ai_gateway}} with no code changes, enabling OpenAI-compatible inference through a proxy.
 
 tldr:
-  q: How can I use Agno with Kong AI Gateway?
-  a: Configure the AI Proxy plugin on a Kong AI Gateway Route to forward OpenAI-compatible requests to OpenAI, and set Agno’s `base_url` to that Route. This lets you use Agno’s research agents with Kong plugins—such as logging, rate limiting, prompt decoration, and access control.
+  q: How can I use Agno with {{site.ai_gateway}}?
+  a: Configure the AI Proxy plugin on a {{site.ai_gateway}} Route to forward OpenAI-compatible requests to OpenAI, and set Agno’s `base_url` to that Route. This lets you use Agno’s research agents with Kong plugins—such as logging, rate limiting, prompt decoration, and access control.
 
 related_resources:
   - text: AI Proxy
@@ -67,7 +67,7 @@ cleanup:
 ---
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route Agno’s OpenAI-compatible requests through Kong AI Gateway. In this example, we'll use the `gpt-4.1` model from OpenAI.
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and model details to route Agno’s OpenAI-compatible requests through {{site.ai_gateway}}. In this example, we'll use the `gpt-4.1` model from OpenAI.
 
 {% entity_examples %}
 entities:

@@ -1,5 +1,5 @@
 ---
-title: Use LangChain with AI Proxy in {{site.base_gateway}}
+title: Use LangChain with AI Proxy in {{site.ai_gateway}}
 content_type: how_to
 related_resources:
   - text: AI Proxy
@@ -32,8 +32,8 @@ tags:
     - openai
 
 tldr:
-    q: How can use my LangChain integrations with AI Gateway?
-    a: You can configure LangChain scripts to use your AI Gateway Route by replacing the `base_url` parameter in the [LangChain model instantiation](https://python.langchain.com/docs/integrations/chat/openai/#instantiation) with your proxy URL.
+    q: How can use my LangChain integrations with {{site.ai_gateway}}?
+    a: You can configure LangChain scripts to use your {{site.ai_gateway}} Route by replacing the `base_url` parameter in the [LangChain model instantiation](https://python.langchain.com/docs/integrations/chat/openai/#instantiation) with your proxy URL.
 
 tools:
     - deck

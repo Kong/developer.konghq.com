@@ -1,16 +1,16 @@
 ---
-title: Route Claude CLI traffic through Kong AI Gateway and Gemini
+title: Route Claude CLI traffic through {{site.ai_gateway}} and Gemini
 content_type: how_to
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
   - text: File Log
     url: /plugins/file-log/
 
-description: Configure AI Gateway to proxy Claude CLI traffic using Gemini models
+description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic using Gemini models
 
 products:
   - gateway
@@ -37,8 +37,8 @@ tags:
   - gemini
 
 tldr:
-  q: How do I run Claude CLI through Kong AI Gateway?
-  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the AI Gateway for monitoring and control.
+  q: How do I run Claude CLI through {{site.ai_gateway}}?
+  a: Install Claude CLI, configure its API key helper, create a Gateway Service and Route, attach the AI Proxy plugin to forward requests to Claude, enable the File Log plugin to inspect traffic, and point Claude CLI to the local proxy endpoint so all LLM requests pass through the {{site.ai_gateway}} for monitoring and control.
 
 tools:
   - deck
@@ -90,7 +90,7 @@ First, configure the AI Proxy plugin for the [Gemini provider](/ai-gateway/ai-pr
 * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
-The `llm_format: anthropic` parameter tells Kong AI Gateway to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Gemini endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match Claude's native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the Gemini endpoint.
 
 {% entity_examples %}
 entities:
@@ -129,7 +129,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the AI Gateway. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the AI Gateway.
+Now, let's enable the [File Log](/plugins/file-log/) plugin on the Service, to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -139,9 +139,9 @@ entities:
         path: "/tmp/claude.json"
 {% endentity_examples %}
 
-## Verify traffic through AI Gateway
+## Verify traffic through {{site.ai_gateway}}
 
-Now, we can start a Claude Code session that points it to the local AI Gateway endpoint:
+Now, we can start a Claude Code session that points it to the local {{site.ai_gateway}} endpoint:
 
 {:.warning}
 > Ensure that `ANTHROPIC_MODEL` matches the model you deployed in Gemini.
@@ -170,7 +170,7 @@ Learn more ( https://docs.claude.com/s/claude-code-security )
 ```
 {:.no-copy-code}
 
-Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach Kong AI Gateway.
+Select **Yes, continue**. The session starts. Ask a simple question to confirm that requests reach {{site.ai_gateway}}.
 
 ```text
 Tell me about Anna Komnene's Alexiad.
@@ -187,7 +187,7 @@ understanding Byzantine history and the First Crusade.
 ```
 {:.no-copy-code}
 
-Next, inspect the Kong AI Gateway logs to verify that the traffic was proxied through it:
+Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxied through it:
 
 ```sh
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
@@ -243,4 +243,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through Kong AI Gateway using the `gemini-2.0-flash` model we selected while starting the Claude Code session.
+This output confirms that Claude Code routed the request through {{site.ai_gateway}} using the `gemini-2.0-flash` model we selected while starting the Claude Code session.

@@ -98,6 +98,33 @@ spec:
 
 Then the plugin will be successfully attached to the Service in {{ site.konnect_short_name }}.
 
+### Binding to an HTTPRoute
+
+You can also bind a plugin to a specific `HTTPRoute` resource. This is useful when you want to apply a plugin to a specific path or rule within your Gateway configuration:
+
+```shell
+echo '
+kind: KongPluginBinding
+apiVersion: configuration.konghq.com/v1alpha1
+metadata:
+  namespace: default
+  name: binding-route-example-rate-limiting
+spec:
+  pluginRef:
+    kind: KongPlugin
+    name: rate-limiting-minute-10
+  targets:
+    routeRef:
+      group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: my-route
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: cp
+' | kubectl apply -f -
+```
+
 ### Attaching plugins to multiple entities
 
 {{ site.operator_product_name }} also supports attaching plugins to a combination of entities by `KongPluginBinding`.

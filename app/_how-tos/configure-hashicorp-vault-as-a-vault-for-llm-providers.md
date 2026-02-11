@@ -1,6 +1,6 @@
 ---
 title: Configure dynamic authentication to LLM providers using HashiCorp vault
-description: "Use HashiCorp Vault to securely store and reference API keys for OpenAI, Mistral, and other LLM providers in Kong AI Gateway."
+description: "Use HashiCorp Vault to securely store and reference API keys for OpenAI, Mistral, and other LLM providers in {{site.ai_gateway}}."
 content_type: how_to
 products:
     - gateway

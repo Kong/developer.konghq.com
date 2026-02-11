@@ -1,13 +1,58 @@
 title: "{{site.metering_and_billing}} Documentation Index"
 description: "Index containing all documentation for {{site.metering_and_billing}}."
 sections:
-  - title: Reference
+  - title: Overview
     items:
       - path: /metering-and-billing/
-      - path: /metering-and-billing/**/*
-    auto_exclude: true
-  - title: How-Tos
+      - path: /metering-and-billing/metering/
+      - path: /metering-and-billing/product-catalog/
+      - path: /metering-and-billing/customer/
+      - path: /metering-and-billing/billing-invoicing-subscriptions/
+  - title: Usage metering
     items:
-      - type: how-to
-        products:
-          - metering-and-billing
+      - title: API gateway metering
+        description: Real-time usage metering for {{site.base_gateway}} API requests. Monetize API traffic with flexible pricing models.
+        url: /metering-and-billing/get-started/
+      - title: LLM token metering
+        description: Learn how to meter and bill AI Gateway LLM tokens.
+        url: /how-to/meter-llm-traffic/
+      - title: Generic metering
+        description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
+        url: /metering-and-billing/metering/?tab=generic-meters#create-a-meter
+      - title: Common metering examples
+        description: Examples to meter AI, API, compute, GPUs, and storage usage.
+        url: /metering-and-billing/metering/#example-meter-use-cases
+      - title: Collectors
+        description: Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
+        url: /metering-and-billing/collectors/
+  - title: Collectors
+    items:
+      - path: /metering-and-billing/collectors/**/*
+  - title: Usage metering
+    items:
+      - title: Features
+        description: Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
+        url: /metering-and-billing/product-catalog/#features
+      - title: Plans
+        description: Plans are a collection of rate cards that can be assigned to customers by starting a subscription.
+        url: /metering-and-billing/product-catalog/#plans
+      - title: Pricing models
+        description: Pricing models describe how to price a feature, for example, free, flat fee, usage-based, or tiered.
+        url: /metering-and-billing/product-catalog/#pricing-models
+      - title: Entitlements
+        description: Entitlements describe customer access, usage-limits, and configuration to features.
+        url: /metering-and-billing/product-catalog/#entitlements
+  - title: Billing
+    items:
+      - title: Customers
+        description: Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
+        url: /metering-and-billing/customer/
+      - title: Subscriptions
+        description: Subscriptions are a collection of active rate cards that can be assigned to customers.
+        url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+      - title: Billing profiles
+        description: Billing profiles handle invoicing, payment, and tax settings for a customer.
+        url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+      - title: Invoicing
+        description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+        url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing

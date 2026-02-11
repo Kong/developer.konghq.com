@@ -131,7 +131,7 @@ rows:
 
   - header:
       type: h2
-      text: "Load balancing algorithms for AI Gateway"
+      text: "Load balancing algorithms for {{site.ai_gateway}}"
     columns:
       - blocks:
           - type: structured_text

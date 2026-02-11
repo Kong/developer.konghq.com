@@ -4,7 +4,7 @@ title: Set up AI Proxy Advanced with Cohere in {{site.base_gateway}}
 content_type: how_to
 
 related_resources:
-  - text: AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/

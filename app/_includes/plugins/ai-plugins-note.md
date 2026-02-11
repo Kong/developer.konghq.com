@@ -1,2 +1,2 @@
 {:.info}
-> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires either AI Proxy or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to be configured first. To set up AI Proxy quickly, see [Get started with AI Gateway](/ai-gateway/get-started/).
+> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires either AI Proxy or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to be configured first. To set up AI Proxy quickly, see [Get started with {{site.ai_gateway}}](/ai-gateway/get-started/).

@@ -157,6 +157,7 @@
     {% endif %}
 
     {% include_cached footer.html %}
+    <div id="tooltip" class="fixed hidden bg-terciary text-white text-sm rounded p-2 border border-brand-saturated/40 max-w-64 z-50"></div>
   </div>
   <script>
     window.searchFilters = {{site.data.searchFilters | jsonify }}

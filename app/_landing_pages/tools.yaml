@@ -15,12 +15,24 @@ rows:
       - blocks:
         - type: card
           config:
+            title: kongctl
+            description: |
+              kongctl is a command-line interface for managing {{site.konnect_short_name}} resources programmatically.
+              It provides a comprehensive toolkit for defining infrastructure as code, integrating into CI/CD pipelines,
+              and automating API lifecycle management.
+            cta:
+              text:
+              url: /kongctl/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: decK
             description: |
-              decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of 
+              decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of
               commands designed to orchestrate and automate the entire process of API delivery.
             cta:
-              text: 
+              text:
               url: /deck/
               align: end
       - blocks:
@@ -80,6 +92,13 @@ rows:
                 - title: Self-managed
                   key: onprem
               features:
+                - title: "[kongctl](/kongctl/)"
+                  description: |
+                    - You want to manage {{site.konnect_short_name}} platform resources (APIs, Dev Portals, control planes) with declarative configuration and automation
+                    - You need interactive command-line access to {{site.konnect_short_name}}
+                    - You're building CI/CD pipelines for {{site.konnect_short_name}} infrastructure
+                  konnect: true
+                  onprem: false
                 - title: "[decK](/deck/)"
                   description: |
                     - You want to manage entity configuration with declarative, file-based, GitOps-style API configuration and automation
