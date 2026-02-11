@@ -1,6 +1,6 @@
 ---
 title: "Route Qwen Code CLI traffic through {{site.ai_gateway}}"
-permalink: /how-to/use-qwen-code-with-ai-gateway
+permalink: /how-to/use-qwen-code-with-ai-gateway/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

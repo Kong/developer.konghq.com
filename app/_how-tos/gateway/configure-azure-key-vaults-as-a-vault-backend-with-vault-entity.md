@@ -1,6 +1,7 @@
 ---
 title: Configure Azure Key Vaults as a vault backend
 content_type: how_to
+permalink: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
 related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/

@@ -1,6 +1,6 @@
 ---
 title: Monetize LLM traffic in {{site.konnect_short_name}}
-permalink: /how-to/meter-llm-traffic
+permalink: /how-to/meter-llm-traffic/
 description: Learn how to Meter LLM traffic using {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 

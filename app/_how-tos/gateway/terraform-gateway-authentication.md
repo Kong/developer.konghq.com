@@ -12,9 +12,16 @@ tools:
 works_on:
   - konnect
 
-products: []
+products:
+  - gateway
 
-entities: []
+entities:
+  - service
+  - route
+  - consumer
+
+plugins:
+  - basic-auth
 
 tldr:
   q: How to I secure a Service using {{ site.base_gateway }} and Terraform?
@@ -28,6 +35,7 @@ tldr:
     * konnect_gateway_consumer
 
 prereqs:
+  skip_product: true
   inline:
     - title: Terraform
       include_content: prereqs/terraform

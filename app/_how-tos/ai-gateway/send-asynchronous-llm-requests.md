@@ -1,6 +1,6 @@
 ---
 title: Send asynchronous requests to LLMs
-permalink: /how-to/send-asychronous-llm-requests/
+permalink: /how-to/send-asynchronous-llm-requests/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"

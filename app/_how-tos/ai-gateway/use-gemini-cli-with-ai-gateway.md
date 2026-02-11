@@ -1,6 +1,6 @@
 ---
 title: Route Google Gemini CLI traffic through {{site.ai_gateway}}
-permalink: /how-to/use-gemini-cli-with-ai-gateway
+permalink: /how-to/use-gemini-cli-with-ai-gateway/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
