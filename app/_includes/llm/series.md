@@ -1,4 +1,4 @@
-{%- if page.content_type == 'how_to' and page.navigation != empty -%}
+{%- if page.content_type == 'how_to' and page.series -%}
 ## In this Series
 
 * Name: {{page.series.items.first.title | liquify}}
