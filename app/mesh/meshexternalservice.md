@@ -47,7 +47,7 @@ The following sections describe the parameters you can configure in a `MeshExter
 
 ### Match
 
-Th `match` parameters specify the rules for matching traffic that will be routed to external resources defined in [`endpoints`](#endpoints).
+The `match` parameters specify the rules for matching traffic that will be routed to external resources defined in [`endpoints`](#endpoints).
 The only `type` supported is `HostnameGenerator` (this field is optional). This means that {{site.mesh_product_name}} will match traffic directed to a hostname created by the [`HostnameGenerator`](/mesh/hostnamegenerator/) resource.
 The `port` field is optional, when omitted, all traffic is matched.
 The protocols supported are: `tcp`, `grpc`, `http`, and `http2`.
