@@ -1,6 +1,7 @@
 ---
 title: Use LiteLLM with AI Proxy with {{site.ai_gateway}}
 content_type: how_to
+permalink: /how-to/use-litellm-with-ai-proxy/
 related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
