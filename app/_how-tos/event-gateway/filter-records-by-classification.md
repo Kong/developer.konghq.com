@@ -88,6 +88,9 @@ flowchart LR
     end
 
     H1 --> K[Kafka <br>Broker]
+    H2 --> K
+    K --> SR
+    C --> CO[Consumer]
 {% endmermaid %}
 
 {:.success}
