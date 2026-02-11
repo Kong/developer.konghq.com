@@ -44,6 +44,7 @@ rows:
               - type: unordered_list
                 items:
                   - "[decK](/index/deck/)"
+                  - "[kongctl](/index/kongctl/)"
                   - "[Insomnia](/index/insomnia/)"
                   
   - header:
