@@ -86,11 +86,11 @@ module Jekyll
         end
 
         def template_file
-          @template_file ||= if @format == 'markdown'
-                               "app/_includes/how-tos/validations/#{id}/index.md"
-                             else
-                               "app/_includes/how-tos/validations/#{id}/index.html"
-                             end
+          if @format == 'markdown'
+            "app/_includes/how-tos/validations/#{id}/index.md"
+          else
+            "app/_includes/how-tos/validations/#{id}/index.html"
+          end
         end
 
         def section

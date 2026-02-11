@@ -60,11 +60,11 @@ module Jekyll
     end
 
     def template_file
-      @template_file ||= if @page['output_format'] == 'markdown'
-                           'app/_includes/konnect_crd.md'
-                         else
-                           'app/_includes/konnect_crd.html'
-                         end
+      if @page['output_format'] == 'markdown'
+        'app/_includes/konnect_crd.md'
+      else
+        'app/_includes/konnect_crd.html'
+      end
     end
   end
 end

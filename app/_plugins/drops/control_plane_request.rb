@@ -55,11 +55,11 @@ module Jekyll
       end
 
       def template_file
-        @template_file ||= if @format == 'markdown'
-                             'app/_includes/control_plane_request.md'
-                           else
-                             'app/_includes/control_plane_request.html'
-                           end
+        if @format == 'markdown'
+          'app/_includes/control_plane_request.md'
+        else
+          'app/_includes/control_plane_request.html'
+        end
       end
 
       def method

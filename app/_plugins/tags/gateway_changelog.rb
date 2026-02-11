@@ -23,11 +23,11 @@ module Jekyll
     private
 
     def template
-      @template ||= if @page['output_format'] == 'markdown'
-                      File.read(File.expand_path('app/_includes/components/gateway_changelog.md'))
-                    else
-                      File.read(File.expand_path('app/_includes/components/gateway_changelog.html'))
-                    end
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/gateway_changelog.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/gateway_changelog.html'))
+      end
     end
   end
 end

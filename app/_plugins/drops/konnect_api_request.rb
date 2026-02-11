@@ -47,11 +47,11 @@ module Jekyll
       end
 
       def template_file
-        @template_file ||= if @format == 'markdown'
-                             'app/_includes/konnect_api_request.md'
-                           else
-                             'app/_includes/konnect_api_request.html'
-                           end
+        if @format == 'markdown'
+          'app/_includes/konnect_api_request.md'
+        else
+          'app/_includes/konnect_api_request.html'
+        end
       end
 
       def method

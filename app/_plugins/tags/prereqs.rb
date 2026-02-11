@@ -6,18 +6,22 @@ module Jekyll
       @context = context
       @page = context.environments.first['page']
 
-      if @page['prerequisites'].any?
-        context.stack do
-          context['prereqs'] = @page['prerequisites']
-          Liquid::Template.parse(template).render(context)
-        end
+      return unless @page['prerequisites'].any?
+
+      context.stack do
+        context['prereqs'] = @page['prerequisites']
+        Liquid::Template.parse(template).render(context)
       end
     end
 
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/prereqs.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/prereqs.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/prereqs.html'))
+      end
     end
   end
 end
