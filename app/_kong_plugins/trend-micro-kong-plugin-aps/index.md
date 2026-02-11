@@ -15,7 +15,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: '3.4'
+    gateway: '2.7'
 
 tags:
   - security
@@ -32,6 +32,8 @@ support_url: 'https://docs.trendmicro.com/en-us/documentation/'
 icon: trend-micro-kong-plugin-aps.svg
 
 related_resources:
+  - text: "{{site.base_gateway}} integration with Trend Vision One"
+    url: https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway
   - text: Trend Vision One API documentation
     url: https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-apis
 ---
