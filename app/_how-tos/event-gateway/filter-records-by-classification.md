@@ -61,11 +61,13 @@ related_resources:
 
 In this guide, you'll learn how to classify Kafka records at produce time and filter them at consume time based on user identity.
 
-We'll use a logging scenario where an `app_logs` topic contains log entries with different severity levels. Debug and trace logs are verbose and only useful for the SRE team troubleshooting issues, while regular developers only need info, warn, and error logs.
+We'll use a logging scenario where an `app_logs` topic contains log entries with different severity levels, aimed at two different groups of users:
+* The SRE team needs debug and trace logs, which are verbose and useful for troubleshooting issues.
+* Regular developers only need info, warn, and error logs.
 
 The approach uses two policies:
-1. **Produce phase**: A Schema Validation policy parses JSON records, and a nested Modify Headers policy adds an `x-internal: true` header to debug and trace logs.
-2. **Consume phase**: A Skip Records policy filters out internal logs for users who aren't on the SRE team.
+1. **Produce phase**: A [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) parses JSON records, and a nested [Modify Headers policy](/event-gateway/policies/modify-headers/) adds an `x-internal: true` header to debug and trace logs.
+2. **Consume phase**: A [Skip Records policy](/event-gateway/policies/skip-record/) filters out internal logs for users who aren't on the SRE team.
 
 Here's how the data flows through the system:
 
@@ -74,24 +76,21 @@ flowchart LR
     P[Producer] --> SV
 
     subgraph produce [Event Gateway Produce policy chain]
-        SV[Schema Validation<br/>Parse JSON] --> MH{Modify Headers<br/>level = debug/trace?}
-        MH -->|Yes| H1[Add x-internal: true]
-        MH -->|No| H2[No header added]
+        SV[Schema <br>Validation<br/>Parse JSON] --> MH{Modify Headers<br/>level <br>= debug/trace?}
+        MH -->|Yes| H1[Add <br>x-internal: true]
+        MH -->|No| H2[No header <br>added]
     end
 
     subgraph consume [Event Gateway Consume policy chain]
-        SR{Skip Records<br/>x-internal = true<br/>AND user ≠ sre_user?}
-        SR -->|Yes| DROP[Record skipped]
-        SR -->|No| C[Send to consumer]
+        SR{Skip Records<br/>x-internal = true<br/>AND<br> user ≠ sre_user?}
+        SR -->|Yes| DROP[Record <br>skipped]
+        SR -->|No| C[Send to <br>consumer]
     end
 
-    H1 --> K[Kafka Broker]
-    H2 --> K
-    K --> SR
-    C --> CO[Consumer]
+    H1 --> K[Kafka <br>Broker]
 {% endmermaid %}
 
-{:.info}
+{:.success}
 > **Performance tip**: Classifying records at produce time is more efficient than at consume time. Parsing JSON once during production avoids repeated deserialization for each consumer group.
 
 ## Create a Kafka topic
@@ -114,7 +113,7 @@ render_output: false
 
 ## Create a virtual cluster
 
-Create a virtual cluster with two users:
+Create a virtual cluster with two users (`principals`):
 - `sre_user`: Can see all logs including debug and trace
 - `dev_user`: Only sees info, warn, and error logs
 
@@ -280,7 +279,7 @@ render_output: false
 <!--vale on-->
 
 ## Validate
-
+Now, let's validate that you can produce and consume log records as the two different user profiles.
 ### Produce log records
 
 Produce log records with different severity levels:
