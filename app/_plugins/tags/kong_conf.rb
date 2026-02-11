@@ -14,11 +14,11 @@ module Jekyll
     private
 
     def template
-      @template ||= if @page['output_format'] == 'markdown'
-                      File.read(File.expand_path('app/_includes/components/kong_conf.md'))
-                    else
-                      File.read(File.expand_path('app/_includes/components/kong_conf.html'))
-                    end
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/kong_conf.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/kong_conf.html'))
+      end
     end
   end
 end
