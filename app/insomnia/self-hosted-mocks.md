@@ -84,7 +84,7 @@ These will pull the latest image. You can see all available versions in the [sel
    > **Note:** You can use `nvm`, `n` or `volta` instead of `fnm`.
 
 
-For more information about how to verify the container signature and proviance, see the [Insomnia mockbin README](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
+For more information about how to verify the container signature and provenance, see the [Insomnia mockbin README](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
 
 {:.info}
 > To run a self-hosted mock server locally, use [NodeJS](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node), [Docker](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-docker-compose), or Kubernetes.
