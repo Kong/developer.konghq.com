@@ -33,6 +33,7 @@ entities:
 tags:
   - ai
   - gemini
+  - ai-sdks
 
 tldr:
   q: How do I use Gemini's thinkingConfig with the AI Proxy Advanced plugin?

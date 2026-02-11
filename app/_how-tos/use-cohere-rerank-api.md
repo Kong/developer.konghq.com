@@ -32,6 +32,7 @@ entities:
 tags:
   - ai
   - cohere
+  - ai-sdks
 
 tldr:
   q: How do I use Cohere `/rerank` API with {{site.ai_gateway}}?

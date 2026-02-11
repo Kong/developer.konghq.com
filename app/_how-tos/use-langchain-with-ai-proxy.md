@@ -28,8 +28,9 @@ entities:
   - plugin
 
 tags:
-    - ai
-    - openai
+  - ai
+  - openai
+  - ai-sdks
 
 tldr:
     q: How can use my LangChain integrations with {{site.ai_gateway}}?

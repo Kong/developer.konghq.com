@@ -33,6 +33,8 @@ entities:
 tags:
   - ai
   - streaming
+  - vertex-ai
+  - ai-sdks
 
 tldr:
   q: How do I stream responses from Vertex AI through {{site.ai_gateway}}?
