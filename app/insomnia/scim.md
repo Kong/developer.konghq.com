@@ -124,7 +124,7 @@ SCIM tokens expire based on the configuration in your identity provider. When a 
 If the token expires and is not renewed:
 
 - New users are not provisioned from the identity provider.
-- Users deactivated in the identity provider are not removed from Insomnia.
+- Users that you deactivate in the identity provider are not removed from Insomnia.
 - SCIM provisioning stops until the token is refreshed.
 
 You must manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
