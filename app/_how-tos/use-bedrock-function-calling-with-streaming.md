@@ -92,15 +92,9 @@ faqs:
   - q: What is the difference between `converse` and `converse_stream`?
     a: |
       The `converse` method waits for the full model response before returning. The `converse_stream` method returns an event stream that delivers response chunks as they are generated. Streaming reduces perceived latency for the end user, since text appears incrementally rather than all at once. Both methods support function calling with the same tool configuration format.
-  - q: How does function calling work with streaming?
-    a: |
-      When the model decides to call a tool, the stream delivers the tool name and input arguments across multiple `contentBlockDelta` events. Your application reassembles the tool input from these chunks, executes the function locally, and sends the result back to the model in a follow-up `converse_stream` call. The model then streams its final response.
   - q: Which Bedrock models support streaming with function calling?
     a: |
       Cohere Command R and Command R+, Anthropic Claude 3 and later, and Amazon Titan models support streaming function calling through the ConverseStream API. Check the [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html) for the full compatibility matrix.
-  - q: Why does the script use dummy AWS credentials?
-    a: |
-      {{site.ai_gateway}} handles authentication with AWS Bedrock on behalf of the client (`auth.allow_override: false`). Boto3 requires credentials to sign HTTP requests, but {{site.ai_gateway}} replaces them before forwarding to Bedrock. The dummy credentials never reach AWS.
 
 automated_tests: false
 ---
