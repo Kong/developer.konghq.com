@@ -43,7 +43,9 @@ You can also define variables dynamically in the Collection Runner and in pre-re
 
 ## Create an environment
 
-Use environments to define variables that Insomnia applies across your requests. For example, base URLs, tokens, or credentials. If your API specification or requests contain variables, you can use an environment to replace those variables with real values.
+Use environments to define groups of variables that Insomnia applies across your requests. 
+For example, you could create variables for base URLs, tokens, or credentials. 
+If your API specifications or requests contain variables, you can use an environment to replace those variables with real values.
 
 To create an environment:
 1. In your Insomnia project, click **Environments**.
