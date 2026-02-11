@@ -9,8 +9,8 @@ search_aliases:
   - active tracing
   - debugger
 products:
-    - konnect
     - observability
+    - konnect
 works_on:
     - konnect
 
