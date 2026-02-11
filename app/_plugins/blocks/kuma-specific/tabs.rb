@@ -14,7 +14,8 @@ module Jekyll
 
       def render(context)
         tabs_id = SecureRandom.uuid
-        site = context.registers[:site]
+        @site = context.registers[:site]
+        @page = context.environments.first['page']
         environment = context.environments.first
         environment["navtabs-#{tabs_id}"] = {}
         environment['navtabs-stack'] ||= []
@@ -25,18 +26,27 @@ module Jekyll
         environment['navtabs-stack'].pop
         environment['additional_classes'] = @class
 
-        Liquid::Template
-          .parse(File.read(File.join(site.source, '_includes/components/tabs.html')))
-          .render(
-            {
-              'site' => site.config,
-              'page' => context['page'],
-              'tab_group' => tabs_id,
-              'environment' => environment,
-              'navtabs_id' => tabs_id
-            },
-            { registers: context.registers, context: context }
-          )
+        context.stack do
+          context['tab_group'] = tabs_id
+          context['environment'] = environment
+          context['navtabs_id'] = tabs_id
+          context['heading_level'] = parse_heading_level(context)
+          Liquid::Template
+            .parse(template)
+            .render(context)
+        end
+      end
+
+      def template
+        if @page['output_format'] == 'markdown'
+          File.read(File.join(@site.source, '_includes/components/tabs.md'))
+        else
+          File.read(File.join(@site.source, '_includes/components/tabs.html'))
+        end
+      end
+
+      def parse_heading_level(context)
+        Jekyll::ClosestHeading.new(@page, 'tabs').level + 1
       end
     end
 
@@ -61,16 +71,28 @@ module Jekyll
           @title = ref if ref
         end
 
-        site = context.registers[:site]
-        converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
+        contents = super
+
         environment = context.environments.first
 
         tabs_id = environment['navtabs-stack'].last
         environment["navtabs-#{tabs_id}"][@title] = {
-          'content' => converter.convert(render_block(context)),
+          'content' => block_content(context, contents),
           'attributes' => { 'slug' => Jekyll::Utils.slugify(@title) }
         }
         ''
+      end
+
+      def block_content(context, contents)
+        page = context.environments.first['page']
+
+        if page['output_format'] == 'markdown'
+          contents
+        else
+          site = context.registers[:site]
+          converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
+          converter.convert(render_block(context))
+        end
       end
     end
   end
