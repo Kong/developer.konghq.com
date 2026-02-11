@@ -6,7 +6,7 @@ extended_description: |
   In the following example, the TrendAI API Security plugin is configured with a TrendAI Vision One API Key to send configuration data to TrendAI Vision One every hour. 
   The TrendAI Vision One endpoint ensures data is routed to the appropriate data center based on the region of your TrendAI Vision One account.
 
-  The TrendAI Vision One for Kong Gateway plugin relies on a Trend Vision One API key and endpoint URL. 
+  The TrendAI Vision One for {{site.base_gateway}} plugin relies on a Trend Vision One API key and endpoint URL. 
   Ensure you have copied these parameters from the {{site.base_gateway}} Third-Party Integrations page in Trend Vision One.
   We recommend storing and managing this key in a Vault. See [Secrets Management](/gateway/entities/vault/) for more details. 
 

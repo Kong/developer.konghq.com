@@ -57,7 +57,7 @@ You can install the TrendAI API Security plugin by downloading and mounting its 
 
 ### Prerequisites
 
-- A TrendAI Vision one account
+- A TrendAI Vision one account.
 - Add [{{site.base_gateway}} as a Third Party Integration in TrendAI Vision One](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway).
 Download the plugin gzip file and retrieve the required FQDN and token values. These values will be configured in the plugin to ensure data is sent back to the correct TrendAI Vision One account.
 
@@ -103,7 +103,7 @@ You can now configure this custom plugin like any other plugin in {{site.konnect
 {% endnavtab %}
 {% navtab "Docker/Kubernetes" %}
 
-If you are running {{site.base_gateway}}  on Docker or Kubernetes, the plugin needs to be installed inside the {{site.base_gateway}} container.
+If you are running {{site.base_gateway}} on Docker or Kubernetes, the plugin needs to be installed inside the {{site.base_gateway}} container.
 Copy or mount the plugin’s source code into the container. Here’s an example Dockerfile that shows how to mount your plugin in the {{site.base_gateway}} image:
 
 ```yaml
