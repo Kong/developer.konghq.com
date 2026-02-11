@@ -31,6 +31,7 @@
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
 /mesh/add-builtin-gateway/  /how-to/set-up-a-built-in-mesh-gateway/
 /mesh/gateway-api/  /how-to/set-up-a-built-in-kubernetes-gateway/
+/how-to/send-asychronous-llm-requests/ /how-to/send-asynchronous-llm-requests/
 
 # Mesh redirects
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
