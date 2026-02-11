@@ -77,7 +77,7 @@ Changes apply immediately to requests that reference the active environment.
 
 ### Create a sub-environment
 
-Use sub-environments to override values from the base environment. For example, different URLs or credentials for development, staging, or production.
+Use sub-environments to override values from the base environment. For example, you can define different URLs or credentials for development, staging, or production.
 
 {:.info}
 > A sub-environment inherits all variables from its parent environment. You only need to define the values that are different.
