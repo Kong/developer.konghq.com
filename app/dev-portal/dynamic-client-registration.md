@@ -44,7 +44,7 @@ related_resources:
     url: /dev-portal/auth-strategies/#link-static-clients-with-self-managed-oidc
 faqs:
   - q: What should I do if my IdP is not natively supported for the DCR flow?
-    a: "{{site.konnect_short_name}} supports custom HTTP DCR bridge that can be used with any 3rd paty IdP that is not natively supported."
+    a: "{{site.konnect_short_name}} supports a custom HTTP DCR bridge that you can use with any third-party IdP that isn't natively supported."
   - q: What connections and protocols are involved between Dev Portal and our organization when DCR is enabled?
     a: "{{site.konnect_short_name}} will make HTTP requests to the IdP for DCR. The details of the request are IdP-specific."
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
@@ -211,7 +211,7 @@ After successfully authenticating using either client credentials or a bearer ac
 
 ## Configure a custom IdP for Dynamic Client Registration
 
-If your third-party IdP is not natively supported, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP, and add additional functionality such as making API calls to other systems as part of the DCR flow.
+If your third-party IdP isn't natively supported, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP, and add additional functionality such as making API calls to other systems as part of the DCR flow.
 
 {% mermaid %}
 sequenceDiagram
