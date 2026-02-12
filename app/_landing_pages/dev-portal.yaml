@@ -139,6 +139,8 @@ rows:
                 url: /dev-portal/customizations/dev-portal-customizations/
               - text: Pages and content
                 url: "/dev-portal/pages-and-content/"
+              - text: VScode extention (tech preview)
+                url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
               - text: Custom domains
                 url: "/dev-portal/custom-domains/"
               - text: Dev Portal settings
