@@ -49,7 +49,9 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.base_gateway}} running AI Proxy:
+                  [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}}.
+
+                  Or, launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.ai_gateway}} running on-prem:
                   ```sh
                   curl -Ls https://get.konghq.com/ai | bash
                   ```
