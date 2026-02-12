@@ -29,21 +29,15 @@ const KONAMI_OVERRIDES = {
 
   // Semantic colors — primary (borders/icons), secondary (backgrounds)
   "--color-semantic-red-primary": "255, 100, 100",
-  "--color-semantic-red-secondary": "40, 10, 10",
-  "--color-semantic-yellow-primary": "255, 210, 100",
-  "--color-semantic-yellow-secondary": "40, 30, 5",
-  "--color-semantic-blue-primary": "100, 170, 255",
-  "--color-semantic-blue-secondary": "5, 20, 40",
-  "--color-semantic-green-primary": "100, 230, 180",
-  "--color-semantic-green-secondary": "5, 35, 20",
-  "--color-semantic-grey-primary": "183, 189, 181",
-  "--color-semantic-grey-secondary": "25, 30, 25",
-  "--color-semantic-purple-primary": "190, 140, 255",
-  "--color-semantic-purple-secondary": "30, 15, 45",
-  "--color-semantic-orange-primary": "255, 160, 100",
-  "--color-semantic-orange-secondary": "40, 25, 10",
-  "--color-semantic-teal-primary": "100, 220, 245",
-  "--color-semantic-teal-secondary": "5, 30, 35",
+  "--color-semantic-red-secondary": "80, 20, 20",
+  "--color-semantic-yellow-secondary": "75, 55, 10",
+  "--color-semantic-blue-primary": "204, 255, 0",
+  "--color-semantic-blue-secondary": "30, 50, 0",
+  "--color-semantic-green-secondary": "10, 65, 35",
+  "--color-semantic-grey-secondary": "55, 65, 55",
+  "--color-semantic-purple-secondary": "60, 30, 90",
+  "--color-semantic-orange-secondary": "85, 50, 15",
+  "--color-semantic-teal-secondary": "15, 60, 70",
 };
 
 const STORAGE_KEY = "konami";
