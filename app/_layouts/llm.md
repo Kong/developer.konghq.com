@@ -7,6 +7,7 @@ layout: null
 {% include llm/metadata.md %}
 {% include llm/tldr.md %}
 {% include llm/series.md %}
+{% include llm/prereqs.md %}
 
 {{ content }}
 
