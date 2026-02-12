@@ -1,9 +1,9 @@
 metadata:
-  title: "Kong WAF capabilities"
+  title: "{{site.base_gateway}} Web Application Firewall"
   short_title: "WAF"
   content_type: landing_page
   description: |
-    Learn how Kong Gateway provides web application firewall style protections through plugins such as Injection Protection, Request Validator, JSON Threat Protection, XML Threat Protection, Bot Detection, IP Restriction, and rate limiting.
+    Learn how {{site.base_gateway}} provides web application firewall style protections through plugins such as Injection Protection, Request Validator, JSON Threat Protection, XML Threat Protection, Bot Detection, IP Restriction, and rate limiting.
   tags:
     - security
     - rate-limiting
@@ -18,115 +18,73 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong WAF capabilities"
-      sub_text: "Request filtering, validation, and abuse controls delivered through Kong Gateway plugins"
+      text: "{{site.base_gateway}} WAF capabilities"
+      sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}} plugins"
 
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Overview"
+                text: "WAF plugins"
               blocks:
                 - type: text
                   text: |
-                    Kong Gateway can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
+                    {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
 
-                    These protections are implemented through plugins and configuration patterns. They primarily focus on application layer controls and resource consumption safeguards, not full network layer DDoS mitigation.
+                    Common problems can be mapped to specific {{site.base_gateway}} plugins, and we provide examples for how to configure them for common use cases in the sections below.
 
-  - header:
-      type: h2
-      text: "Key protections"
-    column_count: 3
+  - column_count: 3
     columns:
       - blocks:
           - type: card
             config:
-              title: Injection and XSS style pattern blocking
+              title: Injection protection SQL
               description: |
-                Block SQL injection and other injection patterns using the Injection Protection plugin, with built-in injection types and configurable scan locations.
+                Detect and block SQL injection and other code injection patterns before they reach your upstream services.
               icon: /assets/icons/lock.svg
               ctas:
-                - text: Injection Protection plugin
-                  url: /plugins/injection-protection/
-                - text: Security overview
-                  url: /gateway/secure-the-admin-api/
+                - text: Configure SQL injection protection
+                  url: /plugins/injection-protection/examples/sql/
+
 
       - blocks:
           - type: card
             config:
-              title: Brute force and credential stuffing controls
+              title: Brute force protection
               description: |
-                Basic Authentication includes built-in brute force protection (v3.13+), limiting repeated failed login attempts and returning 429 when enabled.
+                Protect against credential stuffing, password spraying, and brute force attacks targeting Basic Authentication endpoints.
               icon: /assets/icons/key.svg
               ctas:
-                - text: Basic Auth plugin
-                  url: /plugins/basic-auth/
-                - text: Rate limiting plugins
-                  url: /plugins/?category=traffic-control
+                - text: Configure Basic Auth brute force protection
+                  url: /plugins/basic-auth/examples/brute-force-protection-memory/
+
 
       - blocks:
           - type: card
             config:
-              title: Rate limiting and request shaping
+              title: XSS and JavaScript injection protection
               description: |
-                Rate Limiting and Rate Limiting Advanced can constrain request volume per time window across Service, Route, Consumer, or globally.
-              icon: /assets/icons/load-balance.svg
+                Detect and block cross-site scripting (XSS) and JavaScript injection patterns in incoming requests.
+
+              icon: /assets/icons/code.svg
               ctas:
-                - text: Rate Limiting
-                  url: /plugins/rate-limiting/
-                - text: Rate Limiting Advanced
-                  url: /plugins/rate-limiting-advanced/
+                - text: Configure Javascript injection protection
+                  url: /plugins/injection-protection/examples/javascript/
 
   - column_count: 3
     columns:
       - blocks:
           - type: card
             config:
-              title: JSON and parameter validation
+              title: Form field manipulation protection 
               description: |
-                Use Request Validator to validate JSON request bodies and query parameters against schemas. Invalid inputs can be rejected with 400 responses.
-              icon: /assets/icons/service-document.svg
-              ctas:
-                - text: Request Validator
-                  url: /plugins/request-validator/
-                - text: Secure the Admin API
-                  url: /gateway/secure-the-admin-api/
+                The Request Validator plugin can validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators
 
-      - blocks:
-          - type: card
-            config:
-              title: JSON payload threat protection
-              description: |
-                Apply JSON Threat Protection constraints to guard against malformed JSON and overly complex payload structures.
-              icon: /assets/icons/codeblock.svg
-              ctas:
-                - text: JSON Threat Protection
-                  url: /plugins/json-threat-protection/
-
-      - blocks:
-          - type: card
-            config:
-              title: XML payload threat protection
-              description: |
-                XML Threat Protection can mitigate XXE and XML bomb attacks by enforcing limits on DTD usage, amplification, and structural complexity.
-              icon: /assets/icons/plug.svg
-              ctas:
-                - text: XML Threat Protection
-                  url: /plugins/xml-threat-protection/
-
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Bot and scraper controls
-              description: |
-                Bot Detection inspects User-Agent headers and can block common bots using built-in regexes, plus allow or deny custom patterns. 
               icon: /assets/icons/monitor.svg
               ctas:
-                - text: Bot Detection
-                  url: /plugins/bot-detection/
+                - text: Configure Bot Detection
+                  url: /plugins/request-validator/examples/validate-path-parameter/
 
       - blocks:
           - type: card
@@ -136,129 +94,22 @@ rows:
                 IP Restriction supports allow and deny lists of IPs and CIDR blocks, configurable at multiple scopes. 
               icon: /assets/icons/firewall.svg
               ctas:
-                - text: IP Restriction
+                - text: Configure IP Restriction
                   url: /plugins/ip-restriction/
 
       - blocks:
           - type: card
             config:
-              title: DoS style resource controls
+              title: XML and JSON threat protection
               description: |
-                Combine rate limiting, request size limits, and JSON/XML threat protection to reduce risk from large payloads and parsing bombs. 
+                Configure an XML Threat Protection policy to catch XML requests that exceed configured limits.
               icon: /assets/icons/api.svg
               ctas:
-                - text: Request Size Limiting
-                  url: /plugins/request-size-limiting/
-                - text: Monitoring
-                  url: /gateway/monitoring/
-
+                - text: Configure XML Threat Protection
+                  url: /plugins/xml-threat-protection/ 
   - header:
       type: h2
-      text: "Coverage map"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    The following table summarizes common web threats and the primary Kong controls typically used to mitigate them.
-
-                    {% table %}
-                    columns:
-                      - title: Threat category
-                        key: threat
-                      - title: Primary controls
-                        key: controls
-                      - title: Notes
-                        key: notes
-                    rows:
-                      - threat: "Injection attacks (SQLi, XPath, SSI, Java exception patterns)"
-                        controls: "Injection Protection"
-                        notes: "Built-in injection types and configurable scan locations."
-                      - threat: "XSS style JavaScript injection in requests"
-                        controls: "Injection Protection"
-                        notes: "Includes a JavaScript injection type for request components."
-                      - threat: "Credential brute force and stuffing on Basic Auth"
-                        controls: "Basic Auth brute force protection. Rate limiting"
-                        notes: "Basic Auth brute force protection limits repeated failed attempts."
-                      - threat: "Query string manipulation and malformed parameters"
-                        controls: "Request Validator. Injection Protection. Custom logic"
-                        notes: "Request Validator can validate query parameters via schema."
-                      - threat: "XML bombs and XXE"
-                        controls: "XML Threat Protection"
-                        notes: "Controls DTD, amplification, and structural complexity."
-                      - threat: "JSON bombs and excessive complexity"
-                        controls: "JSON Threat Protection. Request Size Limiting"
-                        notes: "Guards against malformed JSON and overly complex payloads."
-                      - threat: "Scraping and bot traffic"
-                        controls: "Bot Detection. Rate limiting. IP Restriction"
-                        notes: "Bot Detection blocks based on User-Agent patterns."
-                      - threat: "Application-layer DoS and resource exhaustion"
-                        controls: "Rate limiting. Request Size Limiting. JSON/XML Threat Protection"
-                        notes: "Focus is application layer controls and resource consumption limits."
-                    {% endtable %}
-
-  - header:
-      type: h2
-      text: "Administration and change controls"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    For administrative surfaces and configuration changes, Kong emphasizes RBAC for least-privilege access and audit logging for traceability.
-
-                    RBAC can restrict access to Admin API endpoints. Audit logging can capture Admin API requests and database row operations and tie actions back to the RBAC user via a request ID.
-
-      - blocks:
-          - type: card
-            config:
-              title: RBAC
-              description: "Least-privilege roles and permissions for Admin operations."
-              icon: /assets/icons/rbac.svg
-              cta:
-                text: Learn about RBAC
-                url: /gateway/entities/rbac/
-      - blocks:
-          - type: card
-            config:
-              title: Audit logs
-              description: "Track Admin API requests and database changes for forensics and compliance."
-              icon: /assets/icons/audit.svg
-              cta:
-                text: Configure audit logs
-                url: /gateway/audit-logs/
-
-  - header:
-      type: h2
-      text: "Known gaps and where to enforce upstream"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "What Kong does not claim to provide in this report"
-              blocks:
-                - type: text
-                  text: |
-                    Some web security controls are not explicitly covered by the documented Kong capabilities in this report. In these cases, enforcement typically belongs in your upstream applications, identity provider, or dedicated security tooling.
-
-                - type: unordered_list
-                  items:
-                    - "CSRF protection. No explicit CSRF token mechanisms are mentioned."
-                    - "CAPTCHA support or CAPTCHA bypass detection."
-                    - "IP reputation feeds or automatic anonymous IP detection."
-                    - "Dedicated protections for insecure object deserialization."
-                    - "Dedicated LFI/RFI protections."
-                    - "Dedicated OS command injection detection."
-                    - "Open redirect detection."
-
-  - header:
-      type: h2
-      text: "How-to guides"
+      text: "Other security-related resources"
     columns:
       - blocks:
           - type: how_to_list
