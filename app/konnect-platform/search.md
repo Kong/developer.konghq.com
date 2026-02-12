@@ -174,7 +174,14 @@ rows:
       `@{attribute_key}:{attribute_value}`
     function: "Searches for an exact match for an entity specific attribute."
     example: |
-      `@email:"admin@domain.com"`
+function: |
+  Searches for an exact match for an entity specific attribute.
+  <br><br>
+  If searching for a date, the value _must_ be in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format of `YYYY-MM-DD`.
+example: |
+`@email:"admin@domain.com"`
+<br>
+`@updated_at:2026-02-24`
 {% endtable %}
 <!--vale on-->
 
