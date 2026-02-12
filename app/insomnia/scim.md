@@ -117,21 +117,23 @@ Administrators can view the current SCIM token status in Insomnia:
 
 When a token is close to expiration and cannot be refreshed automatically, Insomnia displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
-### Automatic token refresh
+### SCIM token expiration and renewal
 
-Insomnia automatically attempts to refresh the SCIM connector token every 90 days, before it expires. This helps prevent provisioning interruptions that are caused by routine token expiration and reduces the need for manual maintenance. If the automatic refresh succeeds, SCIM provisioning continues without interruption.
+SCIM tokens expire based on the configuration in your identity provider. When a token approaches expiration or becomes invalid, Insomnia warns account owners and co-owners.
 
-{:.danger}
-> **Warning:** If the automatic refresh fails, SCIM effectively breaks. Account owners **must** manually refresh the token to continue SCIM provisioning. Insomnia will warn the account owner and co-owners that the refresh failed.
-> If the token isn't refreshed after it expires, then the following happen:
-> * New users aren't provisioned from the identity provider.
-> * Users deactivated in the identity provider aren't removed from Insomnia.
+If the token expires and is not renewed:
 
-If the token refresh fails, you must manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
+- New users aren't provisioned from the identity provider.
+- Users that you deactivate in the identity provider aren't removed from Insomnia.
+- SCIM provisioning stops until the token is refreshed.
+
+You must manually refresh the token from the [SCIM](https://app.insomnia.rest/app/enterprise/scim) settings:
 1. In the Insomnia web app, navigate to **Enterprise Controls > [SCIM](https://app.insomnia.rest/app/enterprise/scim)**.
 2. Select **Refresh Token**.
 3. Enter your passphrase to generate a new token.
 4. In your identity provider, update the token.
+
+After you update the token in your identity provider, SCIM provisioning resumes.
 
 ## Next steps
 
