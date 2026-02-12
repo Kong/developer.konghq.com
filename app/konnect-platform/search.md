@@ -121,6 +121,8 @@ Additional entities may be added in future releases. You can view a list of all 
 For each entity type, there is a list of entity specific attributes that are searchable. 
 These attributes are returned in the attributes object in the search response, while the schema of the searchable attributes can be found in the `/types` endpoint.
 
+To search by an attribute in the {{site.konnect_short_name}} UI, use syntax like `@{attribute_key}:{attribute_value}`. For example, to search by entities that were updated at a certain date, you'd use `@updated_at:2026-02-24`. 
+
 ### Selectors
 
 Selectors are used to define the criteria of the search. 
@@ -252,6 +254,12 @@ rows:
     description: |
       This query finds teams in the QA department. 
       It combines multiple selectors: `type:team` limits the search to the `teams` entity type and `name:*_qa` filters for teams that have a `_qa` suffix.
+  - type: Logical
+    query: |
+      `type:service AND @updated_at:2026-02-24`
+    description: |
+      This query finds services that were updated on 24 February 2026. 
+      It combines multiple selectors: `type:service` limits the search to the `service` entity type and `@updated_at:2026-02-24` filters for services that match that date. When you search by date, you _must_ use the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format of `YYYY-MM-DD`.
   - type: Logical
     query: |
       `name:*dev* OR name:*qa* OR name:*test`
