@@ -58,6 +58,16 @@ faqs:
       * [decK](/deck/)
       * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
       * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
+  - q: How can I check if my Dedicated Cloud Gateway data plane is running?
+    a: |
+      You can use the `___konnect/healthz` endpoint to check if the data plane is up and ready. 
+      For example: `https://dcgw-domain-here.aws-us-east-2.edge.gateways.konggateway.com/___konnect/healthz`
+
+      This endpoint returns a `200 OK` response when the gateway is running. 
+      
+      {:.info}
+      > **Note:** This is a basic health check and only confirms that the gateway process is up and running. 
+      It doesn't verify routing, plugins, upstreams, or networking configurations.
 
 related_resources:
   - text: Dedicated Cloud Gateways 

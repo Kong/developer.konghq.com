@@ -204,7 +204,7 @@ Renew your certificates to prevent any interruption in communication between
 {{site.konnect_short_name}} and any configured Data Plane nodes. The following happens if a certificate expires and isn't replaced: 
 * The Data Plane node stops receiving configuration updates from
 the Control Plane.
-* The Data Plane node stops sending [analytics](/advanced-analytics/) and usage data to the Control Plane.
+* The Data Plane node stops sending [analytics](/observability/) and usage data to the Control Plane.
 * Each disconnected Data Plane node uses cached configuration to continue
 proxying and routing traffic.
 
@@ -293,7 +293,7 @@ The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`]
     You may have an issue on the host network where the node resides.
     Diagnose and resolve the issue, then restart the node and check the sync status in {{site.konnect_short_name}}.
 
-If the logs show a license issue, or if you are unable to resolve sync issues using the above methods, contact [Kong Support](https://support.konghq.com/).
+If the logs show a license issue, or if you are unable to resolve sync issues using the above methods, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
 ### Missing functionality
 
@@ -314,7 +314,7 @@ This is the version that the {{site.konnect_short_name}} Control Plane is runnin
 1. Check the Data Plane node versions in the table. 
 If you see a node running an older version of {{site.base_gateway}}, your Data Plane node may need [upgrading](#upgrade-data-planes).
 
-If your version is up-to-date but the feature still isn't working, contact [Kong Support](https://support.konghq.com/).
+If your version is up-to-date but the feature still isn't working, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
 
 ### Kubernetes Data Plane node installation doesn't work
 

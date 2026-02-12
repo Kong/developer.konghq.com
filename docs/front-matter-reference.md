@@ -14,7 +14,7 @@ Applies to pages located under `/app/_how_tos/`.
 | `permalink` | (Optional) URL to override the default one for the page (default is the file path after `app`). | `permalink: /gateway/get-started/` to replace the default value of `/how-to/gateway-get-started/` |
 | `description` | (Required) Brief description of what the page covers. | `description: Learn how to add correlation IDs to logs with the Correlation ID plugin.` |
 | `tools` | (Required) Array of tools mentioned or used in the guide.  Can be one or more of:<br> - deck<br>- admin-api<br>- konnect-api<br>- kic<br>- terraform | <pre>tools:<br>  - deck</pre> |
-| `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `advanced-analytics`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
+| `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `observability`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
 | `works_on` | (Required) Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `plugins` | (Optional) Array of plugins referenced in the guide. | <pre>plugins:<br>  - correlation-id<br>  - rate-limiting</pre> | 
@@ -160,7 +160,7 @@ Can apply to any page under `/app/`. Usually contained in a subfolder, such as `
 | `breadcrumbs` | (Required) Array of URLs to use as breadcrumbs, in ascending order. Each item in the array renders as a different breadcrumb.| <pre>breadcrumbs:<br>  - /gateway/<br>  - /gateway/entities/</pre>|
 | `permalink` | (Optional) URL to override the default one for the page (default is the file path after `app`). | `permalink: /gateway/get-started/` to replace the default value of `/how-to/gateway-get-started/` |
 | `description` | (Required) Brief description of what the page covers. | `description: Reference for data planes in Konnect.` |
-| `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `advanced-analytics`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
+| `products` | (Required) Array of products that the guide applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `observability`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
 | `works_on` | (Required) Array of deployment environments where this applies. Can be `on_prem` or `konnect`. | <pre>works_on:<br>  - konnect<br>  - on-prem</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `related_resources` | (Optional) Array of links to related documentation. | <pre>related_resources:<br>  - text: "{{site.base_gateway}} logs"<br>    url: /gateway/logs/</pre> | 
@@ -183,7 +183,7 @@ The following content is nested under the `metadata` key:
 | `title` | (Required) The title of the page. Can be any string. | `title: decK` | 
 | `content_type` | (Required) Specifies the type of content. Must be `reference`. | `content_type: reference` |
 | `breadcrumbs` | (Required) Array of URLs to use as breadcrumbs, in ascending order. Each item in the array renders as a different breadcrumb.| <pre>breadcrumbs:<br>  - /gateway/<br>  - /gateway/entities/</pre>|
-| `products` | (Required) Array of products that the page applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `advanced-analytics`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
+| `products` | (Required) Array of products that the page applies to. The first item in the array determines which product index this page links to. Can be one or more of: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `observability`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`  | <pre>products:<br>  - gateway</pre> |
 | `search_aliases` | (Optional) Search aliases for the search bar and the plugins filter at `/plugins/`. | <pre>search_aliases:<br>  - ai<br>  - llm</pre> |
 | `tags` | (Optional) Array of tags for organizing content. | <pre>tags:<br>  - transformations<br>  - logging</pre> | 
 | `beta` | (Optional) Adds a beta label/banner to the page. | `beta: true` |

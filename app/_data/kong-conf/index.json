@@ -3,79 +3,79 @@
     {
       "title": "GENERAL",
       "start": 22,
-      "end": 275,
+      "end": 281,
       "description": ""
     },
     {
       "title": "HYBRID MODE",
-      "start": 276,
-      "end": 376,
+      "start": 282,
+      "end": 382,
       "description": ""
     },
     {
       "title": "HYBRID MODE DATA PLANE",
-      "start": 377,
-      "end": 421,
+      "start": 383,
+      "end": 427,
       "description": ""
     },
     {
       "title": "HYBRID MODE CONTROL PLANE",
-      "start": 422,
-      "end": 498,
+      "start": 428,
+      "end": 504,
       "description": ""
     },
     {
       "title": "NGINX",
-      "start": 499,
-      "end": 1151,
+      "start": 505,
+      "end": 1157,
       "description": ""
     },
     {
       "title": "NGINX injected directives",
-      "start": 1152,
-      "end": 1306,
+      "start": 1158,
+      "end": 1312,
       "description": "Nginx directives can be dynamically injected in the runtime nginx.conf file\nwithout requiring a custom Nginx configuration template.\n\nAll configuration properties following the naming scheme\n`nginx_<namespace>_<directive>` will result in `<directive>` being injected in\nthe Nginx configuration block corresponding to the property's `<namespace>`.\nExample:\n`nginx_proxy_large_client_header_buffers = 8 24k`\n\nWill inject the following directive in Kong's proxy `server {}` block:\n\n`large_client_header_buffers 8 24k;`\n\nThe following namespaces are supported:\n\n- `nginx_main_<directive>`: Injects `<directive>` in Kong's configuration\n`main` context.\n- `nginx_events_<directive>`: Injects `<directive>` in Kong's `events {}`\nblock.\n- `nginx_http_<directive>`: Injects `<directive>` in Kong's `http {}` block.\n- `nginx_proxy_<directive>`: Injects `<directive>` in Kong's proxy\n`server {}` block.\n- `nginx_location_<directive>`: Injects `<directive>` in Kong's proxy `/`\nlocation block (nested under Kong's proxy `server {}` block).\n- `nginx_upstream_<directive>`: Injects `<directive>` in Kong's proxy\n`upstream {}` block.\n- `nginx_admin_<directive>`: Injects `<directive>` in Kong's Admin API\n`server {}` block.\n- `nginx_status_<directive>`: Injects `<directive>` in Kong's Status API\n`server {}` block (only effective if `status_listen` is enabled).\n- `nginx_debug_<directive>`: Injects `<directive>` in Kong's Debug API\n`server{}` block (only effective if `debug_listen` or `debug_listen_local`\nis enabled).\n- `nginx_stream_<directive>`: Injects `<directive>` in Kong's stream module\n`stream {}` block (only effective if `stream_listen` is enabled).\n- `nginx_sproxy_<directive>`: Injects `<directive>` in Kong's stream module\n`server {}` block (only effective if `stream_listen` is enabled).\n- `nginx_supstream_<directive>`: Injects `<directive>` in Kong's stream\nmodule `upstream {}` block.\n\nAs with other configuration properties, Nginx directives can be injected via\nenvironment variables when capitalized and prefixed with `KONG_`.\nExample:\n`KONG_NGINX_HTTP_SSL_PROTOCOLS` -> `nginx_http_ssl_protocols`\n\nWill inject the following directive in Kong's `http {}` block:\n\n`ssl_protocols <value>;`\n\nIf different sets of protocols are desired between the proxy and Admin API\nserver, you may specify `nginx_proxy_ssl_protocols` and/or\n`nginx_admin_ssl_protocols`, both of which take precedence over the\n`http {}` block.\n"
     },
     {
       "title": "DATASTORE",
-      "start": 1307,
-      "end": 1626,
+      "start": 1313,
+      "end": 1649,
       "description": "Kong can run with a database to store coordinated data between Kong nodes in\na cluster, or without a database, where each node stores its information\nindependently in memory.\n\nWhen using a database, Kong will store data for all its entities (such as\nroutes, services, consumers, and plugins) in PostgreSQL,\nand all Kong nodes belonging to the same cluster must connect to the same database.\n\nKong supports PostgreSQL versions 9.5 and above.\n\nWhen not using a database, Kong is said to be in \"DB-less mode\": it will keep\nits entities in memory, and each node needs to have this data entered via a\ndeclarative configuration file, which can be specified through the\n`declarative_config` property, or via the Admin API using the `/config`\nendpoint.\n\nWhen using Postgres as the backend storage, you can optionally enable Kong\nto serve read queries from a separate database instance.\nWhen the number of proxies is large, this can greatly reduce the load\non the main Postgres instance and achieve better scalability. It may also\nreduce the latency jitter if the Kong proxy node's latency to the main\nPostgres instance is high.\n\nThe read-only Postgres instance only serves read queries, and write\nqueries still go to the main connection. The read-only Postgres instance\ncan be eventually consistent while replicating changes from the main\ninstance.\n\nAt least the `pg_ro_host` config is needed to enable this feature.\nBy default, all other database config for the read-only connection is\ninherited from the corresponding main connection config described above but\nmay be optionally overwritten explicitly using the `pg_ro_*` config below.\n"
     },
     {
       "title": "DATASTORE CACHE",
-      "start": 1627,
-      "end": 1702,
+      "start": 1650,
+      "end": 1725,
       "description": "In order to avoid unnecessary communication with the datastore, Kong caches\nentities (such as APIs, consumers, credentials...) for a configurable period\nof time. It also handles invalidations if such an entity is updated.\n\nThis section allows for configuring the behavior of Kong regarding the\ncaching of such configuration entities.\n"
     },
     {
       "title": "DNS RESOLVER",
-      "start": 1703,
-      "end": 1784,
+      "start": 1726,
+      "end": 1807,
       "description": "By default, the DNS resolver will use the standard configuration files\n`/etc/hosts` and `/etc/resolv.conf`. The settings in the latter file will be\noverridden by the environment variables `LOCALDOMAIN` and `RES_OPTIONS` if\nthey have been set.\n\nKong will resolve hostnames as either `SRV` or `A` records (in that order, and\n`CNAME` records will be dereferenced in the process).\nIn case a name is resolved as an `SRV` record, it will also override any given\nport number with the `port` field contents received from the DNS server.\n\nThe DNS options `SEARCH` and `NDOTS` (from the `/etc/resolv.conf` file) will\nbe used to expand short names to fully qualified ones. So it will first try\nthe entire `SEARCH` list for the `SRV` type, if that fails it will try the\n`SEARCH` list for `A`, etc.\n\nFor the duration of the `ttl`, the internal DNS resolver will load balance each\nrequest it gets over the entries in the DNS record. For `SRV` records, the\n`weight` fields will be honored, but it will only use the lowest `priority`\nfield entries in the record.\n\nFor DNS records returned with a TTL value of 0, Kong will default to caching\nthese records for 1 second. Strict adherence to the requirement of not caching\nTTL 0 records could generate excessive query frequency to upstream DNS servers,\nleading to unsustainable load and potential service degradation. As a result,\nmost DNS resolver implementations deviate from this requirement in practice.\n"
     },
     {
       "title": "VAULTS",
-      "start": 1884,
-      "end": 2119,
+      "start": 1907,
+      "end": 2154,
       "description": "A secret is any sensitive piece of information required for API gateway\noperations. Secrets may be part of the core Kong Gateway configuration,\nused in plugins, or part of the configuration associated with APIs serviced\nby the gateway.\n\nSome of the most common types of secrets used by Kong Gateway include:\n\n- Data store usernames and passwords, used with PostgreSQL and Redis\n- Private X.509 certificates\n- API keys\n\nSensitive plugin configuration fields are generally used for authentication,\nhashing, signing, or encryption. Kong Gateway lets you store certain values\nin a vault. Here are the vault specific configuration options.\n"
     },
     {
       "title": "TUNING & BEHAVIOR",
-      "start": 2120,
-      "end": 2256,
+      "start": 2161,
+      "end": 2312,
       "description": ""
     },
     {
       "title": "MISCELLANEOUS",
-      "start": 2257,
-      "end": 2378,
+      "start": 2313,
+      "end": 2434,
       "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\nhttps://github.com/openresty/lua-nginx-module\n"
     },
     {
       "title": "KONG MANAGER",
-      "start": 2379,
-      "end": 2654,
+      "start": 2435,
+      "end": 2710,
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
@@ -86,14 +86,14 @@
     },
     {
       "title": "Konnect",
-      "start": 2655,
-      "end": 2661,
+      "start": 2711,
+      "end": 2717,
       "description": ""
     },
     {
       "title": "Analytics for Konnect",
-      "start": 2662,
-      "end": 2682,
+      "start": 2718,
+      "end": 2738,
       "description": ""
     },
     {
@@ -116,20 +116,20 @@
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
-      "start": 2683,
-      "end": 2697,
+      "start": 2739,
+      "end": 2753,
       "description": ""
     },
     {
       "title": "GENERAL SMTP CONFIGURATION",
-      "start": 2698,
-      "end": 2748,
+      "start": 2754,
+      "end": 2804,
       "description": ""
     },
     {
       "title": "DATA & ADMIN AUDIT",
-      "start": 2749,
-      "end": 2794,
+      "start": 2805,
+      "end": 2850,
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP request via a unique identifier, providing built-in association of\nAdmin API and database traffic.\n\n"
     },
     {
@@ -140,33 +140,45 @@
     },
     {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
-      "start": 2795,
-      "end": 2842,
+      "start": 2851,
+      "end": 2898,
       "description": ""
     },
     {
       "title": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "start": 2843,
-      "end": 3071,
+      "start": 2899,
+      "end": 3127,
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmismanagement of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
+      "title": "WEBASSEMBLY (WASM)",
+      "start": 3031,
+      "end": 3093,
+      "description": ""
+    },
+    {
       "title": "REQUEST DEBUGGING",
-      "start": 3120,
-      "end": 3182,
+      "start": 3188,
+      "end": 3250,
       "description": "Request debugging is a mechanism that allows admins to collect the timing of\nproxy path requests in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain names tried during these processes.\n\n"
     },
     {
       "title": "CLUSTER FALLBACK CONFIGURATION",
-      "start": 3072,
-      "end": 3119,
+      "start": 3128,
+      "end": 3187,
       "description": ""
     },
     {
       "title": "New DNS RESOLVER",
-      "start": 1785,
-      "end": 1883,
+      "start": 1808,
+      "end": 1906,
       "description": "This DNS resolver introduces global caching for DNS records across workers,\nsignificantly reducing the query load on DNS servers.\n\nIt provides observable statistics, you can retrieve them through the Admin API\n`/status/dns`.\n"
+    },
+    {
+      "title": "AI",
+      "start": 2155,
+      "end": 2160,
+      "description": ""
     }
   ],
   "params": {
@@ -1092,7 +1104,7 @@
     },
     "vault_hcv_auth_method": {
       "defaultValue": "token",
-      "description": "Defines the authentication mechanism when\nconnecting to the Hashicorp Vault service.\nAccepted values are: `token`,\n`kubernetes` or `approle`.\n",
+      "description": "Defines the authentication mechanism when\nconnecting to the Hashicorp Vault service.\nAccepted values are: `token`,\n`kubernetes`, `approle`, `cert` or `jwt`.\n",
       "sectionTitle": "VAULTS"
     },
     "vault_hcv_kube_role": {
@@ -1906,7 +1918,7 @@
     },
     "cluster_fallback_config_import": {
       "defaultValue": "off",
-      "description": "Enable fallback configuration imports.\n\nThis should only be enabled for data planes.\n",
+      "description": "Enable fallback configuration imports.\n\nThis should only be enabled for data planes.\n\nWhen enabling this feature, make sure your data plane\nis running exactly the same version as the instance that\nexports the fallback configuration. When running on\nKubernetes or containers, use a full image tag like `3.11.0.3`\ninstead of the short tag `3.11` to prevent any implicit\nimage content change.\n\nWhen upgrading the Gateway version, make sure that the\nexporting instances and importing instances are upgraded\nto exactly the same new version. After upgrading,\nvalidate that fallback configuration is successfully re-exported.\n",
       "sectionTitle": "CLUSTER FALLBACK CONFIGURATION"
     },
     "cluster_fallback_config_storage": {
@@ -1923,6 +1935,22 @@
       "defaultValue": "60",
       "description": "The fallback configuration export interval.\n\nIf the interval is set to 60 and configuration A is exported\nand there are new configurations B, C, and D in the next 60 seconds,\nit will wait until 60 seconds passed and export D, skipping B and C.\n",
       "sectionTitle": "CLUSTER FALLBACK CONFIGURATION"
+    },
+    "wasm": {
+      "defaultValue": "off",
+      "description": "Enable/disable wasm support. This must be enabled in\norder to use wasm filters and filter chains.\n",
+      "sectionTitle": "WEBASSEMBLY (WASM)",
+      "removed_in": {
+        "gateway": "3.11"
+      }
+    },
+    "wasm_filters_path": {
+      "defaultValue": null,
+      "description": "Path to the directory containing wasm filter modules.\n\nAt startup, Kong discovers available wasm filters by\nscanning this directory for files with the `.wasm`\nfile extension.\n\nThe name of a wasm filter module is derived from the\nfilename itself, with the .wasm extension removed. So,\ngiven the following tree:\n\n```\n/path/to/wasm_filters\n├── my_module.wasm\n├── my_other_module.wasm\n└── not_a_wasm_module.txt\n```\n\nThe resulting filter modules available for use in Kong\nwill be:\n\n- `my_module`\n- `my_other_module`\n\nNotes:\n\n- No recursion is performed. Only .wasm files at the\n  top level are registered.\n- This path _may_ be a symlink to a directory.\n",
+      "sectionTitle": "WEBASSEMBLY (WASM)",
+      "removed_in": {
+        "gateway": "3.11"
+      }
     },
     "request_debug": {
       "defaultValue": "on",
@@ -1972,6 +2000,20 @@
       "sectionTitle": "CLUSTER FALLBACK CONFIGURATION",
       "min_version": {
         "gateway": "3.5"
+      }
+    },
+    "wasm_filters": {
+      "defaultValue": [
+        "bundled",
+        "user"
+      ],
+      "description": "Comma-separated list of Wasm filters to be made\navailable for use in filter chains.\n\nWhen the `off` keyword is specified as the\nonly value, no filters will be available for use.\n\nWhen the `bundled` keyword is specified, all filters\nbundled with Kong will be available.\n\nWhen the `user` keyword is specified, all filters\nwithin the `wasm_filters_path` will be available.\n\n**Examples:**\n\n- `wasm_filters = bundled,user` enables _all_ bundled\n  and user-supplied filters\n- `wasm_filters = user` enables _only_ user-supplied\n  filters\n- `wasm_filters = filter-a,filter-b` enables _only_\n  filters named `filter-a` or `filter-b` (whether\n  bundled _or_ user-supplied)\n\nIf a conflict occurs where a bundled filter and a\nuser-supplied filter share the same name, a warning\nwill be logged, and the user-supplied filter will\nbe used instead.\n",
+      "sectionTitle": "WEBASSEMBLY (WASM)",
+      "min_version": {
+        "gateway": "3.7"
+      },
+      "removed_in": {
+        "gateway": "3.11"
       }
     },
     "new_dns_client": {
@@ -2231,6 +2273,110 @@
       "sectionTitle": "REQUEST DEBUGGING",
       "min_version": {
         "gateway": "3.12"
+      }
+    },
+    "tls_certificate_verify": {
+      "defaultValue": "off",
+      "description": "Toggles enforcement of TLS server certificate\nverification. When enabled, plugins and\nservice entities cannot override or disable\ncertificate verification for upstream\nconnections.\n",
+      "sectionTitle": "GENERAL",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "pg_gcp_auth": {
+      "defaultValue": "off",
+      "description": "Enable or disable GCP authentication.\nSet to 'on' to use GCP service account\ncredentials for auth, 'off' to disable.\n\nWhen 'on', ignores `pg_password`, uses an\naccess token as password, and enforces TLS.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "pg_gcp_service_account_json": {
+      "defaultValue": null,
+      "description": "The GCP service account key for authentication.\nProvide the full JSON content of the service\naccount key.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "pg_ro_gcp_auth": {
+      "defaultValue": "<pg_gcp_auth>",
+      "description": "Same as `pg_gcp_auth`, but for the read-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "pg_ro_gcp_service_account_json": {
+      "defaultValue": "<pg_gcp_service_account_json>",
+      "description": "Same as `pg_gcp_service_account_json,\nbut for the read-only connection.\n",
+      "sectionTitle": "DATASTORE",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "vault_hcv_jwt_role": {
+      "defaultValue": null,
+      "description": "The configured role name in HashiCorp Vault\nfor JWT auth.\nWhen creating the role in HashiCorp Vault, make sure\nthat the `role_type` is `jwt` and the `token_policies`\nhave permissions to read the secrets.\n",
+      "sectionTitle": "VAULTS",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "vault_hcv_oauth2_token_endpoint": {
+      "defaultValue": null,
+      "description": "The OAuth2 token endpoint for Hashicorp Vault's JWT auth method.\n",
+      "sectionTitle": "VAULTS",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "vault_hcv_oauth2_client_id": {
+      "defaultValue": null,
+      "description": "The OAuth2 client ID.\n",
+      "sectionTitle": "VAULTS",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "vault_hcv_oauth2_client_secret": {
+      "defaultValue": null,
+      "description": "The OAuth2 client secret.\n",
+      "sectionTitle": "VAULTS",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "vault_hcv_oauth2_audiences": {
+      "defaultValue": null,
+      "description": "Comma-separated list of OAuth2 audiences.\n",
+      "sectionTitle": "VAULTS",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "ai_mcp_listener_enabled": {
+      "defaultValue": "on",
+      "description": "Enable or disable the MCP unix socket listener.\n",
+      "sectionTitle": "AI",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "pdk_response_exit_header_filter_early_exit": {
+      "defaultValue": "off",
+      "description": "A boolean value that controls whether the PDK\nfunction `kong.response.exit` can stop further\nplugin execution within the header_filter phase.\nIf 'on', it would interrupt the execution flow\nof plugins in header_filter phase.\n",
+      "sectionTitle": "TUNING & BEHAVIOR",
+      "min_version": {
+        "gateway": "3.13"
+      }
+    },
+    "via_header_comply_rfc": {
+      "defaultValue": "off",
+      "description": "When enabled, the `Via` header added by Kong\nto proxied requests and responses will not\ninclude the Kong version number (like `1.1 kong`).\nPreviously `Via` header includes dashes `-` in it\n(like `1.1 kong/3.13.0.0-enterprise-edition`),\nwhich is not allowed by RFC 9001 and may cause\nissues with some HTTP servers.\n",
+      "sectionTitle": "TUNING & BEHAVIOR",
+      "min_version": {
+        "gateway": "3.13"
       }
     }
   }

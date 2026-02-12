@@ -118,3 +118,5 @@ The headers are in the form of `X-RateLimit-Remaining-LIMIT_NAME`, for example:
 X-RateLimit-Remaining-Videos: 3
 X-RateLimit-Remaining-Images: 0
 ```
+
+{% include plugins/redis-cloud-auth.md %}

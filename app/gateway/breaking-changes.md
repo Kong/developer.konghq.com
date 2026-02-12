@@ -33,9 +33,48 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.13.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
+
+### 3.13.0.0
+
+Breaking changes in the 3.13.0.0 release.
+
+#### Admin API: empty value encoding
+
+Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects.
+They were previously incorrectly encoded as arrays.
+
+#### AI Semantic Prompt Guard: request body size parameter
+
+Replaced the parameter `config.rules.max_request_body_size` with `config.max_request_body_size`.
+
+`config.rules.max_request_body_size` is now deprecated and will be removed in a future version.
+
+#### Known issues in 3.13.0.0
+
+The following is a list of known issues in 3.13.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenTelemetry plugin: Incorrect attribute name for request count metric"
+    description: |
+      The `http.server.request.count` metric exposes the attribute `kong.response.status_code` instead of `http.response.status_code`.
+    status: Not fixed
+{% endtable %}
+
+
 ## 3.12.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31200) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-12-0-0) for all the changes in this release.
 
 ### 3.12.0.0
 
@@ -45,13 +84,13 @@ Breaking changes in the 3.12.0.0 release.
 
 The [Kafka Consume plugin](/plugins/kafka-consume/) can no longer be applied to a Service. This plugin doesn't proxy to a Service, so attaching it to one causes issues.
 
-If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect. 
+If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect.
 * If there is an Upstream configured in the Service, requests will be proxied to the Upstream.
 * If there is no Upstream configured in the Service, requests will not be proxied, and the plugin won't take effect.
 
 #### Konnect Application Auth (internal, {{site.konnect_short_name}}-only plugin): priority change
 
-The priority of the [internal `konnect-application-auth` plugin](/catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960. 
+The priority of the [internal `konnect-application-auth` plugin](/catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960.
 This plugin is used for authentication inside {{site.konnect_short_name}} and can't be configured directly.
 This change ensures that the execution sequences of the `konnect-application-auth` plugin and the ACL plugin are correct.
 
@@ -59,7 +98,7 @@ If you're using any custom plugins that have a dependency on the `konnect-applic
 
 #### AI semantic plugins: cache invalidation
 
-The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/), and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins have been updated to use a separate column to store the namespace instead of including it in the table name to avoid truncation. 
+The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/), and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins have been updated to use a separate column to store the namespace instead of including it in the table name to avoid truncation.
 
 This change invalidates previous caches created by these plugins. If you are using a very long cache TTL, cache warmup is required after this change.
 
@@ -87,7 +126,7 @@ rows:
 
 ## 3.11.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31100) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-11-0-0) for all the changes in this release.
 
 ### 3.11.0.0
 
@@ -123,9 +162,9 @@ columns:
   - title: Status
     key: status
 rows:
-  - issue: AI Gateway license migration
+  - issue: {{site.ai_gateway}} license migration
     description: |
-      If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
+      If any [{{site.ai_gateway}} plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week,
       upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
       <br><br>
       We recommend upgrading to 3.11.0.1 to fix this issue. If needed, you can use the following temporary workaround:
@@ -151,14 +190,14 @@ rows:
     status: Fixed in 3.11.0.1
   - issue: Incremental config sync doesn't work in stream mode
     description: |
-      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
-      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem.
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).
       <br><br>
       The HTTP subsystem is not affected.
       <br><br>
-      **Workaround**: 
+      **Workaround**:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
-      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`.
     status: Fixed in 3.11.0.3
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
@@ -174,7 +213,7 @@ rows:
 
 ## 3.10.x breaking changes
 
-Review the [changelog](/gateway/changelog/#31000) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-10-0-0) for all the changes in this release.
 
 ### 3.10.0.0
 
@@ -216,7 +255,8 @@ While the `+` character represents the correct encoding of space in query string
 
 #### Free mode
 
-Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
+At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
 
 #### Known issues in 3.10.0.0
 
@@ -233,15 +273,15 @@ columns:
 rows:
   - issue: Incremental config sync doesn't work in stream mode
     description: |
-      When running in incremental sync mode ([`incremental_sync=on](/gateway/configuration/#incremental-sync)`), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
-      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem.
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).
       <br><br>
       The HTTP subsystem is not affected.
       <br><br>
-      **Workaround**: 
+      **Workaround**:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
-      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
-    status: Not fixed
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`.
+    status: Fixed in 3.10.0.6
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
@@ -256,7 +296,7 @@ rows:
 
 ## 3.9.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3900) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-9-0-0) for all the changes in this release.
 
 ### 3.9.0.0
 
@@ -314,7 +354,7 @@ rows:
 
 ## 3.8.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3800) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-8-0-0) for all the changes in this release.
 
 ### 3.8.0.0
 
@@ -394,7 +434,7 @@ rows:
 
 ## 3.7.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3700) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-7-0-0) for all the changes in this release.
 
 ### 3.7.0.0
 
@@ -457,7 +497,7 @@ rows:
 
 ## 3.6.x breaking changes
 
-Review the [changelog](/gateway/changelog/#3600) for all the changes in this release.
+Review the [changelog](/gateway/changelog/#3-6-0-0) for all the changes in this release.
 
 ### 3.6.1.0
 
@@ -607,7 +647,7 @@ As of this release, the product component known as Kong Enterprise Portal is no 
 
 In addition, the product component known as Vitals is no longer included in {{site.ee_product_name}}.
 Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism.
-{{site.konnect_product_name}} users can take advantage of our [API Analytics](/advanced-analytics/) offering, which provides a superset of Vitals functionality.
+{{site.konnect_product_name}} users can take advantage of our [API Analytics](/observability/) offering, which provides a superset of Vitals functionality.
 
 If you have purchased Kong Enterprise Portal or Vitals in the past and would like to continue to use it with this release or a future release of {{site.ee_product_name}}, contact [Kong Support](https://support.konghq.com/support/s/) for more information.
 <!--vale on-->

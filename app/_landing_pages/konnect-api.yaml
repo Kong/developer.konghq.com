@@ -7,7 +7,7 @@ metadata:
     - gateway
     - dev-portal
     - mesh
-    - advanced-analytics
+    - observability
   tools: 
     - konnect-api
   works_on:
@@ -130,6 +130,7 @@ rows:
             * System accounts are not associated with an email address, so they aren't attached to any person's identity.
             * When you use a user account as part of an automation or integration and that user leaves the company, automation and integrations break. 
             If you use a system account instead, the automation and integrations wouldn't break.
+            * A system account access token (SPAT) has a maximum duration of 12 months.
 
             An access token created by a system account inherits the roles assigned to the system account, 
             and can be assigned roles directly or inherit the roles of a [team](/konnect-platform/teams-and-roles/).
@@ -145,7 +146,16 @@ rows:
             {{site.konnect_short_name}} automatically creates a managed system account that is only used to issue a token during the zone creation process. 
             This managed system account can't be edited or deleted manually. 
             Instead, it is deleted automatically by {{site.konnect_short_name}} when the zone is deleted.
-    
+  
+  - header:
+      type: h3
+      text: Dev Portal access tokens for developers
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            {% include_cached /dev-portal/portal-access-token.md %}
+
   - header:
         type: h3
         text: "Access token expiration"

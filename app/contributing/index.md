@@ -45,7 +45,7 @@ rows:
     examples: |
         * [{{site.base_gateway}} overview](/gateway/)<br>
         * [Load balancing with {{site.base_gateway}}](/gateway/load-balancing/)<br>
-        * [AI Gateway overview](/ai-gateway/)<br>
+        * [{{site.ai_gateway}} overview](/ai-gateway/)<br>
         * [Securing {{site.base_gateway}}](/gateway/security/)<br>
   - type: How-to
     description: |
@@ -77,7 +77,7 @@ You can use certain Liquid syntax blocks in how-to and reference pages to help r
 
 ### Entity examples
 
-The `entity_examples` block generates an [Gateway entity](/gateway/entities/) example, with support for multiple entities in a block. This renders in _one_ format based on the tool you've specified in the page metadata. 
+The `entity_examples` block generates an [Gateway entity](/gateway/entities/) example, with support for multiple entities in a block. This renders in _one_ format based on the tool you've specified in the page metadata.
 
 If you want an entity example rendered in multiple formats, use [`entity_example`](#entity-example).
 
@@ -120,7 +120,7 @@ formats:
 
 ### Entity example
 
-Generates a multi-tab example for an entity with one tab for each tool. For example, the [Set up a Consumer](/gateway/entities/consumer/#set-up-a-consumer ) section. 
+Generates a multi-tab example for an entity with one tab for each tool. For example, the [Set up a Consumer](/gateway/entities/consumer/#set-up-a-consumer ) section.
 
 If you want to only render an example with one tool, use [`entity_examples`](#entity-examples).
 
@@ -223,7 +223,7 @@ body:
 {% endnavtabs %}
 
 ### Tables
-All tables should use the `table` block and be written in `yaml`. 
+All tables should use the `table` block and be written in `yaml`.
 
 {% navtabs "tables" %}
 {% navtab "Code example" %}
@@ -275,7 +275,7 @@ If you want a table that shows which features are supported or not, use the `fea
 {% navtab "Code example" %}
 <!--vale off-->
 ```
-{% raw %}{% feature_table %} 
+{% raw %}{% feature_table %}
 item_title: Mesh RBAC Role
 columns:
   - title: Description
@@ -289,7 +289,7 @@ features:
     global_scope: true
   - title: "`AccessRoleBinding`"
     description: |
-      Assigns a set of `AccessRoles` to a set of objects (users and groups). 
+      Assigns a set of `AccessRoles` to a set of objects (users and groups).
     global_scope: true
 
 {% endfeature_table %}{% endraw %}
@@ -299,7 +299,7 @@ features:
 {% endnavtab %}
 {% navtab "Rendered output" %}
 <!--vale off-->
-{% feature_table %} 
+{% feature_table %}
 item_title: Mesh RBAC Role
 columns:
   - title: Description
@@ -313,7 +313,7 @@ features:
     global_scope: true
   - title: "`AccessRoleBinding`"
     description: |
-      Assigns a set of `AccessRoles` to a set of objects (users and groups). 
+      Assigns a set of `AccessRoles` to a set of objects (users and groups).
     global_scope: true
 
 {% endfeature_table %}
@@ -492,7 +492,7 @@ You can specify different types of notes and warnings.
 {:.danger}
 > red note
 
-{:.neutral} 
+{:.neutral}
 > grey note
 
 {:.decorative}
@@ -566,13 +566,13 @@ body:  # accepts any request body
 {% navtab "Rendered output" %}
 <!--vale off-->
 {% validation request-check %}
-url: '/anything' 
+url: '/anything'
 status_code: 200
-display_headers: true 
-headers: 
+display_headers: true
+headers:
   - "Kong-Admin-Token: $USER_TOKEN"
 method: GET
-body:  
+body:
   user:
     name: Kong User
     city: London
@@ -632,15 +632,15 @@ You can also specify a strict number of columns using `column_count`, forcing th
 
 ### Headers
 
-Any section can have a header. 
-* Use H1 headers only for page titles. 
-* Structure headers in sequential order. 
+Any section can have a header.
+* Use H1 headers only for page titles.
+* Structure headers in sequential order.
 For example, you can have H1 > H2 > H3 > H2 > H3, but not H1 > H3 > H2.
 
 ```yaml
   - header:
       type: h1
-      text: "Konnect Advanced Analytics"
+      text: "{{site.konnect_short_name}} {{site.observability}}"
       sub_text: A single location for context-rich, business-critical API and AI insights
 
   - header:
@@ -694,18 +694,18 @@ Displays a Mermaid.js diagram on a landing page.
       config:
         diagram: |
           flowchart TD
-          A(Hybrid 
+          A(Hybrid
           Control Plane)
-          B(Fully-managed 
+          B(Fully-managed
           Control Plane)
-          C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
-          Data Plane nodes 
+          C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed
+          Data Plane nodes
           #40;locally-hosted#41;)
-          D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
-          Data Plane nodes 
+          D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed
+          Data Plane nodes
           #40;hosted by you in cloud provider#41;)
-          E(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Fully-managed 
-          Data Plane nodes 
+          E(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Fully-managed
+          Data Plane nodes
           #40;hosted by Kong#41;)
 
           subgraph id1 [Konnect]
@@ -722,7 +722,7 @@ Displays a Mermaid.js diagram on a landing page.
 
 ### Card
 
-Displays a card/tile that a user can click on a landing page. 
+Displays a card/tile that a user can click on a landing page.
 
 <!--vale off-->
 ```yaml
@@ -731,7 +731,7 @@ Displays a card/tile that a user can click on a landing page.
       config:
         title: Create a Dev Portal
         description: |
-          {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
+          {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience.
           You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
         icon: /assets/icons/dev-portal.svg
         cta:

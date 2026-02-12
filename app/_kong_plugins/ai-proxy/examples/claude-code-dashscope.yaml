@@ -1,0 +1,43 @@
+title: 'Configure AI Proxy for Claude Code with DashScope (Alibaba Cloud)'
+description: 'Set up the AI Proxy plugin to work with Claude Code, using Alibaba Cloud DashScope as the LLM provider with Qwen models.'
+
+extended_description: |
+  {% new_in 3.13 %} Set up the AI Proxy plugin to work with Claude Code, using Alibaba Cloud DashScope as the LLM provider with Qwen models.
+  For a detailed guide on how to use DashScope with Claude Code see this [how to guide](/how-to/use-claude-code-with-ai-gateway-dashscope/)
+
+show_in_api: true
+weight: 900
+
+requirements:
+- DashScope subscription (Alibaba Cloud Model Studio)
+
+config:
+  llm_format: anthropic
+  route_type: llm/v1/chat
+  logging:
+    log_statistics: true
+    log_payloads: false
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${key}
+  max_request_body_size: 524288
+  model:
+    provider: dashscope
+    name: qwen-plus
+    options:
+      max_tokens: 8192
+      temperature: 1.0
+
+variables:
+  key:
+    value: $DASHSCOPE_API_KEY
+    description: The API key to use to connect to DashScope. Obtain this from the Alibaba Cloud DashScope platform.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code

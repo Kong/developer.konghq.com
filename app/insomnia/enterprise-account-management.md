@@ -21,6 +21,22 @@ related_resources:
     url: /insomnia/enterprise-user-management/
   - text: Get started with Insomnia Enterprise
     url: /insomnia/enterprise-onboarding/
+
+faqs:
+  - q: How do I know what type of user I am?
+    a: |
+      In [**Enterprise Controls**](https://app.insomnia.rest/app/home), from the user drop-down menu, view the badge below your name and email address. There are three badges:
+      - Owner: Owners have full administrative control. Owners manage organization settings, billing, authentication methods, user access, and security features. Each organization must have at least one owner.
+      - Co-owner: Co-owners have nearly the same administrative capabilities as owners and can help manage users and organization settings. Co-owners exist to ensure continuity if the owner becomes unavailable. For reliability and access recovery, we strongly recommend always having at least one co-owner.
+      - Member: Members access and work within projects assigned to them, based on the permissions granted by an owner or a co-owner. Members can't manage organization-wide settings, billing, or authentication configuration.
+  - q: What happens if I enable both Domain Lock and Domain Capture on my account?
+    a: |
+      If you enable both Domain Capture and Domain Lock, Domain Capture takes priority for new sign-ups. New users that sign up with a verified company email domain are automatically added to the Enterprise organization and assigned a license, as long as license seats are available.
+
+      Insomnia enforces Domain Lock in the following cases:
+      - Existing users with a verified email domain who are not already part of the Enterprise organization must still be explicitly invited.
+      - When no license seats are available, Insomnia blocks new sign-ups with that domain unless an administrator invites the user.     
+
 ---
 
 ## Enable Enterprise membership
@@ -83,3 +99,6 @@ The owner of an Insomnia Enterprise account can invite other users to be co-owne
 To add a co-owner:
 1. [Invite](/insomnia/organizations/#invite-users-to-your-organization) the user to your an organization in your Enterprise account.
 1. Once they have accepted the invitation, go to [**Enterprise Controls** > **Co-owners**](https://app.insomnia.rest/app/enterprise/co-owners), search for the user's email address and select a role, then click **Invite**.
+
+{:.decorative}
+> You must identify and add a co-owner to your account to ensure that the account is accessible and operational, even if an owner leaves.

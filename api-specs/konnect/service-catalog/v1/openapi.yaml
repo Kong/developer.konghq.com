@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@c7059d359d4a307e726eb84e42ef5607c77542d4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c7059d359d4a307e726eb84e42ef5607c77542d4'
+  x-oas-source: kong/platform-api@f5abe19d8ab80d6c690ce204d964dcfbd82baddc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f5abe19d8ab80d6c690ce204d964dcfbd82baddc'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -591,6 +591,308 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Catalog Service Resources
+  /criteria-templates:
+    get:
+      operationId: list-criteria-templates
+      summary: List Criteria Templates
+      description: Returns a paginated collection of criteria templates.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CriteriaTemplateFilter'
+        - $ref: '#/components/parameters/CriteriaTemplateSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCriteriaTemplatesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Criteria Templates
+  /scorecard-templates:
+    get:
+      operationId: list-scorecard-templates
+      summary: List Scorecard Templates
+      description: Returns a paginated collection of scorecard templates.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardTemplateFilter'
+        - $ref: '#/components/parameters/ScorecardTemplateSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListScorecardTemplatesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Scorecards
+  /scorecards:
+    post:
+      operationId: create-scorecard
+      summary: Create Scorecard
+      description: Creates a scorecard.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateScorecardRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/ScorecardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Scorecards
+    get:
+      operationId: list-scorecards
+      summary: List Scorecards
+      description: Returns a paginated collection of scorecards.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardFilter'
+        - $ref: '#/components/parameters/ScorecardSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListScorecardsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Scorecards
+  '/scorecards/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the scorecard.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+    get:
+      operationId: fetch-scorecard
+      summary: Get a Scorecard
+      description: Fetches a scorecard.
+      responses:
+        '200':
+          $ref: '#/components/responses/ScorecardResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+    put:
+      operationId: update-scorecard
+      summary: Update Scorecard
+      description: Updates a scorecard.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateScorecardRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ScorecardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+    delete:
+      operationId: delete-scorecard
+      summary: Delete Scorecard
+      description: Deletes a scorecard.
+      responses:
+        '204':
+          description: Scorecard was deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+  '/scorecards/{id}/catalog-services':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the scorecard.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+    get:
+      operationId: list-scorecard-services
+      summary: List Scorecard Services
+      description: Lists services targeted by a scorecard.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardServiceFilter'
+        - $ref: '#/components/parameters/ScorecardServiceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListScorecardServicesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+  '/scorecards/{id}/criteria':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the scorecard.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+    get:
+      operationId: list-scorecard-criteria
+      summary: List Scorecard Criteria
+      description: 'Lists criteria, including passing service counts, belonging to a scorecard.'
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardCriteriaFilter'
+        - $ref: '#/components/parameters/ScorecardCriteriaSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListScorecardCriteriaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+  '/scorecards/{scorecardId}/criteria/{criteriaId}/catalog-services':
+    parameters:
+      - name: scorecardId
+        in: path
+        description: The `id` of the scorecard.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+      - name: criteriaId
+        in: path
+        description: The `id` of the criteria.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 5c1121f9-3f3a-47c7-9bb6-c81a51128714
+    get:
+      operationId: list-scorecard-criteria-services
+      summary: List Scorecard Criteria Services
+      description: Lists services targeted by a scorecard criteria with evaluation results per-service.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardCriteriaServiceFilter'
+        - $ref: '#/components/parameters/ScorecardCriteriaServiceSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListScorecardCriteriaServicesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+  '/catalog-services/{id}/scorecards':
+    parameters:
+      - name: id
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    get:
+      operationId: list-catalog-service-scorecards
+      summary: List Catalog Service Scorecards
+      description: Returns a paginated collection of scorecards targeting the given service.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ScorecardFilter'
+        - $ref: '#/components/parameters/ScorecardSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServiceScorecardsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
+  '/catalog-services/{serviceId}/scorecards/{scorecardId}':
+    parameters:
+      - name: serviceId
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      - name: scorecardId
+        in: path
+        description: The `id` of the scorecard.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+    get:
+      operationId: fetch-catalog-service-scorecard
+      summary: Get a Catalog Service Scorecard
+      description: Fetches the given scorecard targeting the service.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogServiceScorecardResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Scorecards
 components:
   parameters:
     CatalogIntegrationFilter:
@@ -682,6 +984,26 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/SortQuery'
+    CriteriaTemplateFilter:
+      name: filter
+      description: Filters a collection of criteria templates.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/CriteriaTemplateFilterParameters'
+    CriteriaTemplateSort:
+      name: sort
+      description: |
+        Sorts a collection of criteria templates. Supported sort attributes are:
+          - `display_name`
+          - `name`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
     CursorPageQuery:
       name: page
       description: Determines which page of the collection to retrieve.
@@ -730,6 +1052,111 @@ components:
       schema:
         type: integer
         example: 10
+    ScorecardCriteriaFilter:
+      name: filter
+      description: Filters a collection of criteria belonging to a scorecard.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/ScorecardCriteriaFilterParameters'
+    ScorecardCriteriaServiceFilter:
+      name: filter
+      description: Filters a collection of services targeted by a scorecard criteria.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/ScorecardCriteriaServiceFilterParameters'
+    ScorecardCriteriaServiceSort:
+      name: sort
+      description: |
+        Sorts a collection of services targeted by a scorecard criteria. Supported sort attributes are:
+          - `display_name`
+          - `name`
+          - `evaluation.is_passing`
+          - `evaluation.successfully_evaluated_at`
+          - `evaluation.attempted_at`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ScorecardCriteriaSort:
+      name: sort
+      description: |
+        Sorts a collection of criteria belonging to a scorecard. Supported sort attributes are:
+          - `evaluation.passing_services_count`
+
+        By default, criteria will be returned in the order that they are configured in the scorecard.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ScorecardFilter:
+      name: filter
+      description: Filters a collection of scorecards.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/ScorecardFilterParameters'
+    ScorecardServiceFilter:
+      name: filter
+      description: Filters a collection of services targeted by a scorecard.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/ScorecardServiceFilterParameters'
+    ScorecardServiceSort:
+      name: sort
+      description: |
+        Sorts a collection of services targeted by a scorecard. Supported sort attributes are:
+          - `display_name`
+          - `name`
+          - `score.value`
+          - `score.raw_value`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ScorecardSort:
+      name: sort
+      description: |
+        Sorts a collection of scorecards. Supported sort attributes are:
+          - `name`
+          - `score.value`
+          - `score.raw_value`
+
+        Default sort is `name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ScorecardTemplateFilter:
+      name: filter
+      description: Filters a collection of scorecard templates.
+      required: false
+      in: query
+      style: deepObject
+      schema:
+        $ref: '#/components/schemas/ScorecardTemplateFilterParameters'
+    ScorecardTemplateSort:
+      name: sort
+      description: |
+        Sorts a collection of scorecard templates. Supported sort attributes are:
+          - `display_name`
+          - `name`
+
+        Default sort is `display_name` in ascending order.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
   schemas:
     CreateCatalogService:
       type: object
@@ -1491,6 +1918,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1521,6 +1950,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1539,6 +1970,8 @@ components:
             - $ref: '#/components/schemas/StringFieldFilter'
         authorized:
           $ref: '#/components/schemas/BooleanFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
         created_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
         updated_at:
@@ -1579,6 +2012,8 @@ components:
           type: boolean
           example: true
           readOnly: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
         created_at:
@@ -2366,6 +2801,1059 @@ components:
         - resource
         - service
         - created_at
+    CriteriaTemplateFilterParameters:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        installed:
+          $ref: '#/components/schemas/BooleanFieldFilter'
+        integration_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+    CriteriaTemplate:
+      description: Representation of a criteria template.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        display_name:
+          description: The human-readable display name of the template.
+          type: string
+        category:
+          description: Categorical tag for the functionality the template relates to.
+          type: string
+          example: Source Code Management
+          enum:
+            - Source Code Management
+            - Incident Management
+            - Observability
+            - Code Quality
+            - Issue Tracking
+            - Communications
+            - Feature Management
+            - Security / Vulnerability
+            - Documentation
+            - Catalog Management
+            - Gateway Configuration
+          nullable: true
+        template_string:
+          description: '[Liquid](https://shopify.github.io/liquid/) template string used to render the criteria interpolated by parameters.'
+          type: string
+          nullable: true
+        integration_name:
+          description: |
+            The catalog integration who registered the given criteria template.
+            This will be `null` when a template is always available independent of connected integrations.
+          type: string
+          nullable: true
+        installed:
+          description: |
+            Whether the template is available given the current state of the catalog.
+            For example, this will be `false` when the template is provided by an integrastion
+            that is not currently connected.
+          type: boolean
+        schema:
+          $ref: '#/components/schemas/CriteriaTemplateSchema'
+        required_integration_capability:
+          description: |
+            Required capability from connected integrations to use this criteria template.
+            Applicable for templates that are not provided by a given integration (functional
+            across integrations).
+          type: string
+          enum:
+            - null
+            - on_call_provider
+            - incident_provider
+            - pull_request_provider
+            - workflow_provider
+          nullable: true
+      required:
+        - name
+        - display_name
+        - category
+        - template_string
+        - integration_name
+        - installed
+        - schema
+        - required_integration_capability
+    CriteriaTemplateSchema:
+      anyOf:
+        - title: EmptySchema
+          type: object
+          nullable: true
+        - type: object
+          required:
+            - type
+            - definition
+          properties:
+            type:
+              type: string
+              enum:
+                - simple
+            definition:
+              type: object
+              additionalProperties:
+                type: string
+                enum:
+                  - string
+                  - number
+                  - boolean
+          title: CriteriaTemplateSimpleSchema
+          description: |
+            Defines the parameters required to evaluate the criteria using simple schema.
+            Set to `null` when the given criteria does not rely on parameterization.
+        - type: object
+          required:
+            - type
+            - definition
+          properties:
+            type:
+              type: string
+              enum:
+                - json_schema
+            definition:
+              type: object
+              additionalProperties: true
+          title: CriteriaTemplateJSONSchema
+          description: |
+            Defines the parameters required to evaluate the criteria using JSON schema.
+            Set to `null` when the given criteria does not rely on parameterization.
+      x-convert-oneOf: true
+    ScorecardTemplateFilterParameters:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+    ScorecardTemplate:
+      description: Representation of a scorecard template.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/ScorecardTemplateName'
+        display_name:
+          type: string
+          example: Kong Best Practices
+        description:
+          type: string
+          example: Best practices that we encourage users to follow when using other Konnect applications.
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScorecardTemplateCriteria'
+          example:
+            - template_name: gateway_manager_error_rate
+              template_parameters:
+                relative_window: 30d
+              integration: gateway_manager
+              section_name: Gateway Observability
+            - template_name: gateway_manager_response_latency
+              template_parameters:
+                metric: response_latency_p95
+                relative_window: 30d
+              integration: gateway_manager
+              section_name: Gateway Observability
+            - template_name: gateway_manager_has_plugin
+              template_parameters: {}
+              integration: gateway_manager
+              section_name: Plugin Management
+      required:
+        - name
+        - display_name
+        - description
+        - criteria
+    ScorecardTemplateName:
+      description: Well-known name of the template. Uniquely identifies the template.
+      type: string
+      example: kong_best_practices
+      enum:
+        - kong_best_practices
+        - service_documentation
+        - service_maturity
+        - security_and_compliance
+    ScorecardTemplateCriteria:
+      type: object
+      properties:
+        integration:
+          description: The integration `name` when it provides the criteria template. Otherwise `null`.
+          type: string
+          example: null
+          nullable: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section that the criteria belongs to within the scorecard template.
+          type: string
+          example: Source Code Management
+          nullable: true
+      required:
+        - integration
+        - template_name
+        - template_parameters
+        - section_name
+    CreateScorecard:
+      type: object
+      properties:
+        name:
+          description: The human-readable name of the scorecard.
+          type: string
+          example: Incident Response
+        description:
+          type: string
+          example: Governs key metrics pertaining to teams' incident response practices.
+          nullable: true
+        entity_selector:
+          $ref: '#/components/schemas/ScorecardEntitySelector'
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateScorecardCriteria'
+          minItems: 1
+        scorecard_template:
+          description: |
+            The name of the scorecard template used to create the scorecard.
+            Otherwise, `null`.
+          type: string
+          example: kong_best_practices
+          enum:
+            - kong_best_practices
+            - service_documentation
+            - service_maturity
+            - security_and_compliance
+          nullable: true
+      additionalProperties: false
+      required:
+        - name
+        - description
+        - entity_selector
+        - criteria
+        - scorecard_template
+    UpdateScorecard:
+      type: object
+      properties:
+        name:
+          description: The human-readable name of the scorecard.
+          type: string
+          example: Incident Response
+        description:
+          type: string
+          example: Governs key metrics pertaining to teams' incident response practices.
+          nullable: true
+        entity_selector:
+          $ref: '#/components/schemas/ScorecardEntitySelector'
+        criteria:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/UpdateScorecardCriteria'
+              - $ref: '#/components/schemas/CreateScorecardCriteria'
+          minItems: 1
+        scorecard_template:
+          description: |
+            The name of the scorecard template used to create the scorecard.
+            Otherwise, `null`.
+          type: string
+          example: kong_best_practices
+          enum:
+            - kong_best_practices
+            - service_documentation
+            - service_maturity
+            - security_and_compliance
+          nullable: true
+      additionalProperties: false
+      required:
+        - name
+        - description
+        - entity_selector
+        - criteria
+        - scorecard_template
+    ScorecardFilterParameters:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        score.value:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        score.raw_value:
+          oneOf:
+            - $ref: '#/components/schemas/NumericFieldFilter'
+    Scorecard:
+      description: Representation of a scorecard.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        name:
+          description: The human-readable name of the scorecard.
+          type: string
+          example: Incident Response
+        description:
+          type: string
+          example: Governs key metrics pertaining to teams' incident response practices.
+          nullable: true
+        score:
+          $ref: '#/components/schemas/ScorecardScore'
+        entity_selector:
+          $ref: '#/components/schemas/ScorecardEntitySelector'
+        scorecard_template:
+          description: |
+            The name of the scorecard template used to create the scorecard.
+            Otherwise, `null`.
+          type: string
+          example: kong_best_practices
+          enum:
+            - kong_best_practices
+            - service_documentation
+            - service_maturity
+            - security_and_compliance
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - description
+        - score
+        - entity_selector
+        - scorecard_template
+        - created_at
+        - updated_at
+    ScorecardWithCriteria:
+      description: Representation of a scorecard.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        name:
+          description: The human-readable name of the scorecard.
+          type: string
+          example: Incident Response
+        description:
+          type: string
+          example: Governs key metrics pertaining to teams' incident response practices.
+          nullable: true
+        score:
+          $ref: '#/components/schemas/ScorecardScore'
+        entity_selector:
+          $ref: '#/components/schemas/ScorecardEntitySelector'
+        scorecard_template:
+          description: |
+            The name of the scorecard template used to create the scorecard.
+            Otherwise, `null`.
+          type: string
+          example: kong_best_practices
+          enum:
+            - kong_best_practices
+            - service_documentation
+            - service_maturity
+            - security_and_compliance
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScorecardCriteria'
+      required:
+        - id
+        - name
+        - description
+        - score
+        - entity_selector
+        - scorecard_template
+        - created_at
+        - updated_at
+        - criteria
+    CatalogServiceScorecard:
+      description: Representation of a scorecard.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        name:
+          description: The human-readable name of the scorecard.
+          type: string
+          example: Incident Response
+        description:
+          type: string
+          example: Governs key metrics pertaining to teams' incident response practices.
+          nullable: true
+        score:
+          $ref: '#/components/schemas/ScorecardScore'
+        entity_selector:
+          $ref: '#/components/schemas/ScorecardEntitySelector'
+        scorecard_template:
+          description: |
+            The name of the scorecard template used to create the scorecard.
+            Otherwise, `null`.
+          type: string
+          example: kong_best_practices
+          enum:
+            - kong_best_practices
+            - service_documentation
+            - service_maturity
+            - security_and_compliance
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogServiceScorecardCriteria'
+      required:
+        - id
+        - name
+        - description
+        - score
+        - entity_selector
+        - scorecard_template
+        - created_at
+        - updated_at
+        - criteria
+    ScorecardEntitySelector:
+      description: |
+        Selector used to dynamically target catalog entities that will be
+        included in the given scorecard's evaluated score.
+      type: object
+      example:
+        selector: label
+        selector_parameters:
+          label_key: product_area
+          operator: eq
+          value: cloud_platform
+      nullable: true
+      oneOf:
+        - $ref: '#/components/schemas/ServiceSelector'
+      title: ScorecardEntitySelector
+    ScorecardScore:
+      description: |
+        The current score for the given Scorecard.
+        A `null` value indicates the scorecard has not yet been evaluated and therefore no score has been computed.
+      type: object
+      properties:
+        value:
+          description: The human-readable score value coverted to the Scorecard's assigned grading system.
+          type: string
+          example: 88%
+        raw_value:
+          description: |
+            The raw, numeric score calculated during evaluation of the scorecard.
+            Rounded to 3 decimal places.
+          type: number
+          example: 87.5
+          maximum: 100
+          minimum: 0
+      nullable: true
+      required:
+        - value
+        - raw_value
+    ScorecardServiceFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        custom_fields:
+          description: |
+            Filter by custom fields using dot-notation to specify the custom field.
+            Filter operators are dictated by the custom field type. For example:
+              - `filter[custom_fields.owner]`
+              - `filter[custom_fields.owner][neq]=kong`
+              - `filter[custom_fields.dashboard.link][contains]=https`
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+            - $ref: '#/components/schemas/BooleanFieldFilter'
+            - $ref: '#/components/schemas/NumericFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        score.value:
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+        score.raw_value:
+          oneOf:
+            - $ref: '#/components/schemas/NumericFieldFilter'
+    ScorecardService:
+      description: Service object that includes its score for the given scorecard.
+      type: object
+      properties:
+        id:
+          description: The service ID.
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          readOnly: true
+        name:
+          description: |
+            The machine name of the Service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the Service.
+          type: string
+          example: User Service
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the Service.
+          type: string
+          maxLength: 2048
+          nullable: true
+        custom_fields:
+          $ref: '#/components/schemas/CustomFields'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        score:
+          $ref: '#/components/schemas/ScorecardScore'
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - custom_fields
+        - labels
+        - created_at
+        - updated_at
+        - score
+      title: ScorecardService
+    ScorecardCriteriaFilterParameters:
+      type: object
+      properties:
+        evaluation.passing_services_count:
+          oneOf:
+            - $ref: '#/components/schemas/NumericFieldFilter'
+    ScorecardCriteriaServiceFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        display_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        custom_fields:
+          description: |
+            Filter by custom fields using dot-notation to specify the custom field.
+            Filter operators are dictated by the custom field type. For example:
+              - `filter[custom_fields.owner]`
+              - `filter[custom_fields.owner][neq]=kong`
+              - `filter[custom_fields.dashboard.link][contains]=https`
+          oneOf:
+            - $ref: '#/components/schemas/StringFieldFilter'
+            - $ref: '#/components/schemas/BooleanFieldFilter'
+            - $ref: '#/components/schemas/NumericFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        evaluation.is_passing:
+          oneOf:
+            - $ref: '#/components/schemas/BooleanFieldFilter'
+        evaluation.successfully_evaluated_at:
+          oneOf:
+            - $ref: '#/components/schemas/DateTimeFieldFilter'
+        evaluation.attempted_at:
+          oneOf:
+            - $ref: '#/components/schemas/DateTimeFieldFilter'
+    CreateScorecardCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Median time to merge opened PRs is less than 6 hours over the last 3 months.
+          maxLength: 2048
+          minLength: 1
+        enabled:
+          type: boolean
+          example: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section name for the criteria within the scorecard.
+          type: string
+          example: Source Code Management
+          maxLength: 120
+          minLength: 1
+          nullable: true
+      additionalProperties: false
+      required:
+        - enabled
+        - template_name
+        - template_parameters
+        - section_name
+    UpdateScorecardCriteria:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5c1121f9-3f3a-47c7-9bb6-c81a51128714
+        name:
+          type: string
+          example: Median time to merge opened PRs is less than 6 hours over the last 3 months.
+          maxLength: 2048
+          minLength: 1
+        enabled:
+          type: boolean
+          example: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section name for the criteria within the scorecard.
+          type: string
+          example: Source Code Management
+          maxLength: 120
+          minLength: 1
+          nullable: true
+      additionalProperties: false
+      required:
+        - id
+        - enabled
+        - template_name
+        - template_parameters
+        - section_name
+    ScorecardCriteria:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5c1121f9-3f3a-47c7-9bb6-c81a51128714
+        name:
+          description: 'Override display name for the criteria, for greater contextual clarity within a given scorecard.'
+          type: string
+          example: Time to restore service is less than 6 hours over the last 3 months.
+          nullable: true
+        scorecard_id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        integration:
+          description: The integration `name` when it provides the criteria template. Otherwise `null`.
+          type: string
+          example: null
+          nullable: true
+        enabled:
+          description: Whether the criteria is enabled for the given scorecard.
+          type: boolean
+          example: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section name for the criteria within the scorecard.
+          type: string
+          example: Documentation
+          maxLength: 120
+          minLength: 1
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - name
+        - scorecard_id
+        - integration
+        - enabled
+        - template_name
+        - template_parameters
+        - section_name
+        - created_at
+        - updated_at
+    CatalogServiceScorecardCriteria:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5c1121f9-3f3a-47c7-9bb6-c81a51128714
+        name:
+          description: 'Override display name for the criteria, for greater contextual clarity within a given scorecard.'
+          type: string
+          example: Time to restore service is less than 6 hours over the last 3 months.
+          nullable: true
+        scorecard_id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        integration:
+          description: The integration `name` when it provides the criteria template. Otherwise `null`.
+          type: string
+          example: null
+          nullable: true
+        enabled:
+          description: Whether the criteria is enabled for the given scorecard.
+          type: boolean
+          example: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section name for the criteria within the scorecard.
+          type: string
+          example: Documentation
+          maxLength: 120
+          minLength: 1
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        evaluation:
+          $ref: '#/components/schemas/ScorecardCriteriaServiceEvaluation'
+      required:
+        - id
+        - name
+        - scorecard_id
+        - integration
+        - enabled
+        - template_name
+        - template_parameters
+        - section_name
+        - created_at
+        - updated_at
+        - evaluation
+    ScorecardCriteriaWithEvaluation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5c1121f9-3f3a-47c7-9bb6-c81a51128714
+        name:
+          description: 'Override display name for the criteria, for greater contextual clarity within a given scorecard.'
+          type: string
+          example: Time to restore service is less than 6 hours over the last 3 months.
+          nullable: true
+        scorecard_id:
+          type: string
+          format: uuid
+          example: f3704e4c-104d-4f21-998a-20d4364c893f
+        integration:
+          description: The integration `name` when it provides the criteria template. Otherwise `null`.
+          type: string
+          example: null
+          nullable: true
+        enabled:
+          description: Whether the criteria is enabled for the given scorecard.
+          type: boolean
+          example: true
+        template_name:
+          $ref: '#/components/schemas/CriteriaTemplateName'
+        template_parameters:
+          $ref: '#/components/schemas/CriteriaParameters'
+        section_name:
+          description: Organizational section name for the criteria within the scorecard.
+          type: string
+          example: Documentation
+          maxLength: 120
+          minLength: 1
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        evaluation:
+          $ref: '#/components/schemas/ScorecardCriteriaEvaluation'
+      required:
+        - id
+        - name
+        - scorecard_id
+        - integration
+        - enabled
+        - template_name
+        - template_parameters
+        - section_name
+        - created_at
+        - updated_at
+        - evaluation
+    ScorecardCriteriaEvaluation:
+      type: object
+      properties:
+        passing_services_count:
+          description: Number of targeted Services passing the criteria.
+          type: number
+          example: 3
+      nullable: true
+      required:
+        - passing_services_count
+    CriteriaTemplateName:
+      description: Reference to the unique `name` of the criteria template.
+      type: string
+      example: time_to_merge
+    CriteriaParameters:
+      description: |
+        Input parameters for the given criteria template.
+        The available parameters, and its schema, are found on the criteria template definition via
+        the `schema` property. Criteria template definitions are determined by the `/v1/criteria-templates`
+        endpoint.
+      type: object
+      example:
+        measure: median
+        threshold:
+          unit: hours
+          value: 6
+        window:
+          unit: months
+          value: 3
+      additionalProperties: true
+      nullable: true
+    ScorecardCriteriaService:
+      description: Service object that includes its evaluation result for the given scorecard criteria.
+      type: object
+      properties:
+        id:
+          description: The service ID.
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          readOnly: true
+        name:
+          description: |
+            The machine name of the Service that uniquely identifies it within the catalog.
+          type: string
+          example: user-svc
+          maxLength: 120
+          minLength: 1
+          pattern: '^[0-9a-z.-]+$'
+        display_name:
+          description: The display name of the Service.
+          type: string
+          example: User Service
+          maxLength: 120
+          minLength: 1
+        description:
+          description: Optionally provide a description of the Service.
+          type: string
+          maxLength: 2048
+          nullable: true
+        custom_fields:
+          $ref: '#/components/schemas/CustomFields'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        score:
+          $ref: '#/components/schemas/ScorecardCriteriaServiceEvaluation'
+      required:
+        - id
+        - name
+        - display_name
+        - description
+        - custom_fields
+        - labels
+        - created_at
+        - updated_at
+        - evaluation
+      title: ScorecardService
+    ScorecardCriteriaServiceEvaluation:
+      description: |
+        Evaluation for a scorecard criteria relative to the given service service.
+        Has a `null` value when the criteria has not yet been evaluated for the service.
+      type: object
+      properties:
+        is_passing:
+          description: Whether or not the service has most recently passed the criteria check.
+          type: boolean
+        evaluation_context:
+          $ref: '#/components/schemas/CriteriaEvaluationResultDetails'
+        evaluation_error:
+          description: |
+            Details about an error that occurred during evaluation preventing computation of a pass/fail result.
+            Will be `null` when no error occurred.
+          type: object
+          example: null
+          nullable: true
+          properties:
+            type:
+              description: The type of error that occurred.
+              type: string
+              example: integration_unauthorized
+            details:
+              description: Human-readable error message about the error.
+              type: string
+              example: |
+                The GitHub integration is unauthorized. Please ensure that the
+                integration is re-authorized for the criteria to be successfully evaluated.
+          required:
+            - type
+            - details
+        attempted_at:
+          description: The timestamp denoting the last evaluation attempt of the criteria for the service.
+          type: string
+          format: date-time
+          example: '2023-02-15T07:20:50Z'
+        successfully_evaluated_at:
+          description: |
+            The timestamp denoting when the criteria was last successfully evaluated for the service.
+            Error states preventing the evaluation from being performed will not update this timestamp.
+          type: string
+          format: date-time
+          example: '2023-02-15T07:20:50Z'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+      nullable: true
+      required:
+        - is_passing
+        - evaluation_context
+        - evaluation_error
+        - successfully_evaluated_at
+        - attempted_at
+        - created_at
+    CriteriaEvaluationResultDetails:
+      description: Provides additional metadata about the criteria evaluation result.
+      type: object
+      properties:
+        raw_value:
+          description: |
+            Raw value of the criteria evaluation.
+
+            For example, a service may be failing the `time_to_acknowledge` criteria evaluation when
+            the the mean time-to-ack is greater than 15 minutes. This value represents the _actual_
+            mean time-to-ack value for the service which if not passing could be 25 minutes.
+          oneOf:
+            - type: number
+            - type: string
+            - type: boolean
+            - $ref: '#/components/schemas/TimeValue'
+            - $ref: '#/components/schemas/CriteriaEvaluationRelationMap'
+            - type: object
+              additionalProperties: true
+            - nullable: true
+        display_text:
+          description: Renderable text providing human-readable context about the evaluation value.
+          type: string
+          example: 25 minutes
+      example:
+        raw_value:
+          unit: minutes
+          value: 25
+        display_text: 25 minutes
+      nullable: true
+      required:
+        - raw_value
+        - display_text
+    CriteriaEvaluationRelationMap:
+      type: object
+      properties:
+        instance:
+          type: string
+          enum:
+            - criteria_result_relation_map
+        relation:
+          type: string
+          example: gateway_svc
+        map:
+          additionalProperties:
+            oneOf:
+              - $ref: '#/components/schemas/CriteriaEvaluationRelationResult'
+              - $ref: '#/components/schemas/CriteriaEvaluationErrorResult'
+      required:
+        - instance
+        - relation
+        - map
+    CriteriaEvaluationRelationResult:
+      type: object
+      properties:
+        is_passing:
+          description: Whether or not the relation has passed the criteria evaluation.
+          type: boolean
+        relation:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          required:
+            - id
+            - name
+        details:
+          $ref: '#/components/schemas/CriteriaEvaluationResultDetails'
+      required:
+        - is_passing
+        - relation
+        - details
+    CriteriaEvaluationErrorResult:
+      type: object
+      properties:
+        relation:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          required:
+            - id
+            - name
+        error:
+          description: |
+            Details about an error that occurred during evaluation preventing computation of a pass/fail result.
+            Will be `null` when no error occurred.
+          type: object
+          example: null
+          nullable: true
+          properties:
+            type:
+              description: The type of error that occurred.
+              type: string
+              example: integration_unauthorized
+            details:
+              description: Human-readable error message about the error.
+              type: string
+              example: |
+                The GitHub integration is unauthorized. Please ensure that the
+                integration is re-authorized for the criteria to be successfully evaluated.
+          required:
+            - type
+            - details
+      required:
+        - relation
+        - error
     CustomFields:
       description: |
         Map of customizable, catalog-defined fields providing information about a service.
@@ -2407,6 +3895,301 @@ components:
       required:
         - name
         - link
+    ServiceSelector:
+      oneOf:
+        - $ref: '#/components/schemas/AllEntitiesSelector'
+        - $ref: '#/components/schemas/ByIDsSelector'
+        - $ref: '#/components/schemas/ByNameSelector'
+        - $ref: '#/components/schemas/ByDisplayNameSelector'
+        - $ref: '#/components/schemas/ByCustomFieldSelector'
+        - $ref: '#/components/schemas/ByLabelSelector'
+        - $ref: '#/components/schemas/HasLabelKeySelector'
+        - $ref: '#/components/schemas/HasDocsSelector'
+        - $ref: '#/components/schemas/HasApisSelector'
+        - $ref: '#/components/schemas/HasResourcesSelector'
+    AllEntitiesSelector:
+      description: Entity selector that includes all entities of the given type within the catalog.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - all
+        selector_parameters:
+          type: string
+          enum:
+            - null
+          nullable: true
+      required:
+        - selector
+        - selector_parameters
+    ByIDsSelector:
+      description: Entity selector that includes entities contained within a list of IDs.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - ids
+        selector_parameters:
+          type: object
+          properties:
+            ids:
+              type: array
+              items:
+                type: string
+                format: uuid
+          required:
+            - ids
+      required:
+        - selector
+        - selector_parameters
+    ByNameSelector:
+      description: Entity selector that includes entities by `name`.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - name
+        selector_parameters:
+          $ref: '#/components/schemas/StringFieldSelectorParams'
+      required:
+        - selector
+        - selector_parameters
+    ByDisplayNameSelector:
+      description: Entity selector that includes entities by `display_name`.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - display_name
+        selector_parameters:
+          $ref: '#/components/schemas/StringFieldSelectorParams'
+      required:
+        - selector
+        - selector_parameters
+    ByCustomFieldSelector:
+      description: Entity selector that include entities by a custom field.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - custom_field
+        selector_parameters:
+          oneOf:
+            - type: object
+              title: StringCustomFieldSelectorParams
+              required:
+                - field
+                - value
+                - operator
+              properties:
+                field:
+                  description: Name of the custom field.
+                  type: string
+                value:
+                  type: string
+                operator:
+                  $ref: '#/components/schemas/StringSelectorOperator'
+            - type: object
+              title: NumberCustomFieldSelectorParams
+              required:
+                - field
+                - value
+                - operator
+              properties:
+                field:
+                  description: Name of the custom field.
+                  type: string
+                value:
+                  type: number
+                operator:
+                  $ref: '#/components/schemas/NumberSelectorOperator'
+            - type: object
+              title: BooleanCustomFieldSelectorParams
+              required:
+                - field
+                - value
+                - operator
+              properties:
+                field:
+                  description: Name of the custom field.
+                  type: string
+                value:
+                  type: boolean
+                operator:
+                  $ref: '#/components/schemas/BooleanSelectorOperator'
+            - type: object
+              title: UrlCustomFieldSelectorParams
+              required:
+                - field
+                - subfield
+                - value
+                - operator
+              properties:
+                field:
+                  description: Name of the custom field.
+                  type: string
+                subfield:
+                  description: Specify which subfield of the `url` custom field value to use for selection.
+                  type: string
+                  enum:
+                    - name
+                    - link
+                value:
+                  type: string
+                operator:
+                  $ref: '#/components/schemas/StringSelectorOperator'
+      required:
+        - selector
+        - selector_parameters
+    ByLabelSelector:
+      description: Entity selector that includes entities by `label` value.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - label
+        selector_parameters:
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/StringSelectorOperator'
+            value:
+              type: string
+            label_key:
+              type: string
+          required:
+            - operator
+            - value
+            - label_key
+          title: LabelSelectorParams
+      required:
+        - selector
+        - selector_parameters
+    HasLabelKeySelector:
+      description: Entity selector that includes entities by inclusion of a `label` key.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - has_label_key
+        selector_parameters:
+          type: object
+          properties:
+            label_key:
+              type: string
+          required:
+            - label_key
+          title: HasLabelKeySelectorParams
+      required:
+        - selector
+        - selector_parameters
+    HasDocsSelector:
+      description: Entity selector to include entities by attached documentation.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - has_docs
+        selector_parameters:
+          type: string
+          enum:
+            - null
+          nullable: true
+      required:
+        - selector
+        - selector_parameters
+    HasApisSelector:
+      description: Entity selector that includes services by attached APIs.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - api_count
+        selector_parameters:
+          $ref: '#/components/schemas/HasSelectorParams'
+      required:
+        - selector
+        - selector_parameters
+    HasResourcesSelector:
+      description: Entity selector that includes services by mapped resources.
+      type: object
+      properties:
+        selector:
+          type: string
+          enum:
+            - resource_count
+        selector_parameters:
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/HasRelationshipSelectorOperator'
+            value:
+              type: number
+            resource_type:
+              $ref: '#/components/schemas/CatalogResourceType'
+            integration:
+              description: The machine name of the integration that uniquely identifies it within the catalog.
+              type: string
+              example: gateway-manager
+          required:
+            - operator
+            - value
+            - resource_type
+            - integration
+          title: HasResourcesSelectorParams
+      required:
+        - selector
+        - selector_parameters
+    StringFieldSelectorParams:
+      type: object
+      properties:
+        operator:
+          $ref: '#/components/schemas/StringSelectorOperator'
+        value:
+          type: string
+      required:
+        - operator
+        - value
+    HasSelectorParams:
+      type: object
+      properties:
+        operator:
+          $ref: '#/components/schemas/HasRelationshipSelectorOperator'
+        value:
+          type: number
+      required:
+        - operator
+        - value
+    StringSelectorOperator:
+      type: string
+      enum:
+        - eq
+        - contains
+    NumberSelectorOperator:
+      type: string
+      enum:
+        - eq
+        - lt
+        - gt
+    BooleanSelectorOperator:
+      type: string
+      enum:
+        - eq
+    HasRelationshipSelectorOperator:
+      type: string
+      enum:
+        - eq
+        - gte
+        - lte
     SimpleSchema:
       type: object
       properties:
@@ -2521,6 +4304,27 @@ components:
         - type
         - config
         - integration
+    TimeValue:
+      description: Represents a time value inclusive of units.
+      type: object
+      properties:
+        value:
+          type: number
+          example: 3.25
+        unit:
+          type: string
+          example: hours
+          enum:
+            - milliseconds
+            - seconds
+            - minutes
+            - hours
+            - days
+            - months
+            - years
+      required:
+        - value
+        - unit
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -3691,13 +5495,6 @@ components:
           id: f0f2725e-051d-48fd-a63f-e1e76d5fec34
           name: sonarqube
           display_name: SonarQube
-    AzureApiManagementAuthConfigPayload:
-      value:
-        type: oauth
-        config:
-          grant_type: authorization_code
-          code: Yzk5ZDczMzRlNDEwY
-          redirect_uri: 'https://cloud.konghq.com/us/servicehub/integrations/azure-api-management/oauth'
     AzureApiManagementAuthConfigResponse:
       value:
         id: 2b7e1516-28ae-4d6c-8c2f-1e2b3c4d5e6f
@@ -4013,6 +5810,512 @@ components:
             number: 1
             size: 100
             total: 1
+    ListCriteriaTemplatesResponse:
+      value:
+        data:
+          - name: gateway_manager_error_rate
+            display_name: Gateway Service Error Rate
+            category: Observability
+            template_string: 'Error rate is lower than {{ threshold }}% over {{ relative_window }}'
+            installed: true
+            integration_name: gateway-manager
+            schema:
+              type: json_schema
+              definition:
+                type: object
+                required:
+                  - threshold
+                  - relative_window
+                properties:
+                  threshold:
+                    type: number
+                    maximum: 100
+                    minimum: 0
+                  relative_window:
+                    enum:
+                      - 15m
+                      - 1h
+                      - 6h
+                      - 12h
+                      - 24h
+                      - 7d
+                      - current_week
+                      - previous_week
+                      - 30d
+                      - current_month
+                      - previous_month
+                    type: string
+            required_integration_capability: null
+          - name: on_call_engineer_assigned
+            display_name: On Call Engineer Assigned
+            category: Incident Management
+            template_string: Has an on call engineer assigned to the service
+            installed: true
+            integration_name: null
+            schema: null
+            required_integration_capability: on_call_provider
+        meta:
+          page:
+            total: 2
+            size: 100
+            number: 1
+    ListScorecardTemplatesResponse:
+      value:
+        data:
+          - name: kong_best_practices
+            display_name: Kong Best Practices
+            description: Best practices that we encourage users to follow when using other Konnect applications.
+            criteria:
+              - template_name: gateway_manager_error_rate
+                template_parameters:
+                  relative_window: 30d
+                integration: gateway_manager
+                section_name: Gateway Observability
+              - template_name: gateway_manager_response_latency
+                template_parameters:
+                  metric: response_latency_p95
+                  relative_window: 30d
+                integration: gateway_manager
+                section_name: Gateway Observability
+              - template_name: gateway_manager_has_plugin
+                template_parameters: {}
+                integration: gateway_manager
+                section_name: Plugin Enforcement
+          - name: service_documentation
+            display_name: Service Documentation
+            description: 'Ensures that your services are well-documented with ownership information, documentation files, and API specs.'
+            criteria:
+              - template_name: has_service_docs
+                template_parameters:
+                  min_docs: 1
+                integration: null
+                section_name: Service Documentation
+              - template_name: has_api_specs
+                template_parameters:
+                  min_specs: 1
+                integration: null
+                section_name: API Documentation
+              - template_name: lint_api_specs
+                template_parameters:
+                  rulesets:
+                    - 'oas:recommended'
+                  include_warnings: false
+                integration: null
+                section_name: API Documentation
+        meta:
+          page:
+            total: 2
+            size: 100
+            number: 1
+    CreateScorecardPayload:
+      value:
+        name: Kong Best Practices
+        description: Best practices that we encourage users to follow when using other Konnect applications.
+        scorecard_template: kong_best_practices
+        criteria:
+          - enabled: true
+            template_name: gateway_manager_error_rate
+            template_parameters:
+              relative_window: 30d
+              threshold: 10
+            section_name: Gateway Observability
+          - enabled: true
+            template_name: gateway_manager_response_latency
+            template_parameters:
+              metric: response_latency_p95
+              relative_window: 30d
+              threshold: 30
+            section_name: Gateway Observability
+          - enabled: true
+            template_name: gateway_manager_has_plugin
+            template_parameters:
+              category: Authentication
+            section_name: Plugin Enforcement
+        entity_selector:
+          selector: all
+          selector_parameters: null
+    UpdateScorecardPayload:
+      value:
+        name: Kong Best Practices
+        description: Best practices that we encourage users to follow when using other Konnect applications.
+        scorecard_template: kong_best_practices
+        criteria:
+          - enabled: true
+            template_name: gateway_manager_error_rate
+            template_parameters:
+              relative_window: 30d
+              threshold: 10
+            section_name: Gateway Observability
+          - enabled: true
+            template_name: gateway_manager_response_latency
+            template_parameters:
+              metric: response_latency_p95
+              relative_window: 30d
+              threshold: 30
+            section_name: Gateway Observability
+          - enabled: true
+            template_name: gateway_manager_has_plugin
+            template_parameters:
+              category: Authentication
+            section_name: Plugin Enforcement
+        entity_selector:
+          selector: all
+          selector_parameters: null
+    FetchScorecardResponse:
+      value:
+        id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+        name: Kong Best Practices
+        description: Best practices that we encourage users to follow when using other Konnect applications.
+        score: null
+        entity_selector:
+          selector: all
+          selector_parameters: null
+        scorecard_template: kong_best_practices
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+        criteria:
+          - id: be228fb7-c492-4d5f-b933-6666a33373a8
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_error_rate
+            template_parameters:
+              threshold: 10
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: 5ea2ec85-73a1-46ed-9c2c-6f2b7a66c716
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_response_latency
+            template_parameters:
+              metric: response_latency_p95
+              threshold: 30
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+          - id: ff262fb9-2493-4c8a-9288-211ce0802be6
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_has_plugin
+            template_parameters:
+              category: Authentication
+            section_name: Plugin Enforcement
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+    ListScorecardResponse:
+      value:
+        data:
+          - id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            name: Kong Best Practices
+            description: Best practices that we encourage users to follow when using other Konnect applications.
+            score:
+              value: 67%
+              raw_value: 66.667
+            entity_selector:
+              selector: all
+              selector_parameters: null
+            scorecard_template: kong_best_practices
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    ListScorecardServicesResponse:
+      value:
+        data:
+          - id: 204d85d2-1bb9-4864-842f-6d97a7cbca2c
+            name: sample-service
+            description: This is a sample service
+            display_name: Sample Service
+            labels:
+              env: test
+            resources:
+              - integration:
+                  name: gateway-manager
+                  display_name: Gateway Manager
+                  instance:
+                    id: da715411-0393-4dc7-b711-33250e7658f3
+                    name: gateway-manager
+                    display_name: Gateway Manager
+                id: rQIGLHo1vhgy5VYb
+            custom_fields:
+              owner: John Appleseed
+              cost_center: Research and Development
+              product_manager: Jane
+              jira_project:
+                name: Sample Jira Project
+                link: 'https://my-company.atlassian.net/jira/software/c/projects/SAMPLE'
+              dashboard:
+                name: Sample Dashboard
+                link: 'https://my-company.dashboards.com/sample-dashboard'
+              git_repo:
+                name: Sample Project
+                link: 'https://github.com/MyCompany/SampleProject'
+              slack_channel:
+                name: My Company Channel
+                link: 'https://my-company.slack.com/archives/C000AAAAAAA'
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            score:
+              value: 67%
+              raw_value: 66.667
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    ListScorecardCriteriaResponse:
+      value:
+        data:
+          - id: be228fb7-c492-4d5f-b933-6666a33373a8
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_error_rate
+            template_parameters:
+              threshold: 10
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              num_services_passing: 1
+              passing_services_count: 1
+          - id: 5ea2ec85-73a1-46ed-9c2c-6f2b7a66c716
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_response_latency
+            template_parameters:
+              metric: response_latency_p95
+              threshold: 30
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              num_services_passing: 1
+              passing_services_count: 1
+          - id: ff262fb9-2493-4c8a-9288-211ce0802be6
+            name: null
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_has_plugin
+            template_parameters:
+              category: Authentication
+            section_name: Plugin Enforcement
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              num_services_passing: 0
+              passing_services_count: 0
+        meta:
+          page:
+            total: 3
+            size: 100
+            number: 1
+    ListScorecardCriteriaServicesResponse:
+      value:
+        data:
+          - id: 204d85d2-1bb9-4864-842f-6d97a7cbca2c
+            name: sample-service
+            description: This is a sample service
+            display_name: Sample Service
+            labels:
+              env: test
+            resources:
+              - integration:
+                  name: gateway-manager
+                  display_name: Gateway Manager
+                  instance:
+                    id: da715411-0393-4dc7-b711-33250e7658f3
+                    name: gateway-manager
+                    display_name: Gateway Manager
+                id: rQIGLHo1vhgy5VYb
+            custom_fields:
+              owner: John Appleseed
+              cost_center: Research and Development
+              product_manager: Jane
+              jira_project:
+                name: Sample Jira Project
+                link: 'https://my-company.atlassian.net/jira/software/c/projects/SAMPLE'
+              dashboard:
+                name: Sample Dashboard
+                link: 'https://my-company.dashboards.com/sample-dashboard'
+              git_repo:
+                name: Sample Project
+                link: 'https://github.com/MyCompany/SampleProject'
+              slack_channel:
+                name: My Company Channel
+                link: 'https://my-company.slack.com/archives/C000AAAAAAA'
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              is_passing: true
+              evaluation_context:
+                raw_value:
+                  map:
+                    rQIGLHo1vhgy5VYb:
+                      details:
+                        raw_value: 0
+                        display_text: 0%
+                      relation:
+                        id: rQIGLHo1vhgy5VYb
+                        name: my-gateway-service
+                      is_passing: true
+                  instance: criteria_result_relation_map
+                  relation: resource
+                display_text: 1 out of 1 gateway services passing error rate check
+              evaluation_error: null
+              successfully_evaluated_at: '2025-07-02T15:48:07.665Z'
+              attempted_at: '2025-07-02T15:48:07.663Z'
+              created_at: '2025-07-02T15:20:07.262Z'
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    ListServiceScorecardsResponse:
+      value:
+        data:
+          - id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            name: Kong Best Practices
+            description: Best practices that we encourage users to follow when using other Konnect applications.
+            score:
+              value: 67%
+              raw_value: 66.667
+            entity_selector:
+              selector: all
+              selector_parameters: null
+            scorecard_template: kong_best_practices
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+        meta:
+          page:
+            total: 1
+            size: 100
+            number: 1
+    FetchServiceScorecardResponse:
+      value:
+        id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+        name: Kong Best Practices
+        description: Best practices that we encourage users to follow when using other Konnect applications.
+        score:
+          value: 67%
+          raw_value: 66.667
+        entity_selector:
+          selector: all
+          selector_parameters: null
+        scorecard_template: kong_best_practices
+        created_at: '2022-11-04T20:10:06.927Z'
+        updated_at: '2022-11-04T20:10:06.927Z'
+        criteria:
+          - id: be228fb7-c492-4d5f-b933-6666a33373a8
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_error_rate
+            template_parameters:
+              threshold: 10
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              is_passing: true
+              evaluation_context:
+                raw_value:
+                  map:
+                    rQIGLHo1vhgy5VYb:
+                      details:
+                        raw_value: 0
+                        display_text: 0%
+                      relation:
+                        id: rQIGLHo1vhgy5VYb
+                        name: my-gateway-service
+                      is_passing: true
+                  instance: criteria_result_relation_map
+                  relation: resource
+                display_text: 1 out of 1 gateway services passing error rate check
+              evaluation_error: null
+              successfully_evaluated_at: '2025-07-02T16:02:04.894Z'
+              attempted_at: '2025-07-02T16:02:04.892Z'
+              created_at: '2025-07-02T15:20:07.262Z'
+          - id: 5ea2ec85-73a1-46ed-9c2c-6f2b7a66c716
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_response_latency
+            template_parameters:
+              metric: response_latency_p95
+              threshold: 30
+              relative_window: 30d
+            section_name: Gateway Observability
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              is_passing: true
+              evaluation_context:
+                raw_value:
+                  map:
+                    rQIGLHo1vhgy5VYb:
+                      details:
+                        raw_value: null
+                        display_text: No data
+                      relation:
+                        id: rQIGLHo1vhgy5VYb
+                        name: my-gateway-service
+                      is_passing: true
+                  instance: criteria_result_relation_map
+                  relation: resource
+                display_text: 1 out of 1 gateway services passing latency check
+              evaluation_error: null
+              successfully_evaluated_at: '2025-07-02T16:02:04.780Z'
+              attempted_at: '2025-07-02T16:02:04.779Z'
+              created_at: '2025-07-02T15:20:05.965Z'
+          - id: ff262fb9-2493-4c8a-9288-211ce0802be6
+            scorecard_id: 4e74159d-3d56-435a-920e-6ddb9ffce829
+            integration: gateway-manager
+            enabled: true
+            template_name: gateway_manager_has_plugin
+            template_parameters:
+              category: Authentication
+            section_name: Plugin Enforcement
+            created_at: '2022-11-04T20:10:06.927Z'
+            updated_at: '2022-11-04T20:10:06.927Z'
+            evaluation:
+              is_passing: false
+              evaluation_context:
+                raw_value:
+                  map:
+                    rQIGLHo1vhgy5VYb:
+                      details:
+                        raw_value: 0
+                        display_text: 0 plugins installed
+                      relation:
+                        id: rQIGLHo1vhgy5VYb
+                        name: my-gateway-service
+                      is_passing: false
+                  instance: criteria_result_relation_map
+                  relation: resource
+                display_text: 0 out of 1 gateway services passing plugin check
+              evaluation_error: null
+              successfully_evaluated_at: '2025-07-02T16:02:04.839Z'
+              attempted_at: '2025-07-02T16:02:04.839Z'
+              created_at: '2025-07-02T15:20:05.786Z'
     UnauthorizedExample:
       value:
         status: 401
@@ -4075,7 +6378,7 @@ components:
               $ref: '#/components/examples/SampleInstanceCreateDynatracePayload'
             SonarQube:
               $ref: '#/components/examples/SampleInstanceCreateSonarQubePayload'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/SampleInstanceCreateAzureApiManagementPayload'
             AzureDevops:
               $ref: '#/components/examples/SampleInstanceCreateAzureDevopsPayload'
@@ -4107,8 +6410,6 @@ components:
               $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthPayload'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthPayload'
-            azureApiManagement:
-              $ref: '#/components/examples/AzureApiManagementAuthConfigPayload'
             azureDevops:
               $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthPayload'
     UpsertIntegrationInstanceAuthConfigRequest:
@@ -4140,6 +6441,24 @@ components:
               $ref: '#/components/examples/CreateMappingByResourceIDPayload'
             Resource Config:
               $ref: '#/components/examples/CreateMappingByResourceConfigPayload'
+    CreateScorecardRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateScorecard'
+          examples:
+            Scorecard:
+              $ref: '#/components/examples/CreateScorecardPayload'
+    UpdateScorecardRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateScorecard'
+          examples:
+            Scorecard:
+              $ref: '#/components/examples/UpdateScorecardPayload'
   responses:
     CatalogServiceResponse:
       description: A response containing a single service object.
@@ -4263,7 +6582,7 @@ components:
               $ref: '#/components/examples/SampleCreateDynatraceMultiKeyAuthResponse'
             SonarQube:
               $ref: '#/components/examples/SampleCreateSonarQubeMultiKeyAuthResponse'
-            azureApiManagement:
+            AzureApiManagement:
               $ref: '#/components/examples/AzureApiManagementAuthConfigResponse'
             azureDevops:
               $ref: '#/components/examples/SampleCreateAzureDevopsMultiKeyAuthResponse'
@@ -4327,6 +6646,164 @@ components:
               $ref: '#/components/examples/ResourceFetchGwsResponse'
             Initialized Resource:
               $ref: '#/components/examples/ResourceInitializeResponse'
+    ListCriteriaTemplatesResponse:
+      description: A paginated list response for a collection of criteria templates.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CriteriaTemplate'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Criteria Templates:
+              $ref: '#/components/examples/ListCriteriaTemplatesResponse'
+    ListScorecardTemplatesResponse:
+      description: A paginated list response for a collection of scorecard templates.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScorecardTemplate'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Scorecard Templates:
+              $ref: '#/components/examples/ListScorecardTemplatesResponse'
+    ListScorecardsResponse:
+      description: A paginated list response for a collection of scorecards.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Scorecard'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Scorecards:
+              $ref: '#/components/examples/ListScorecardResponse'
+    ScorecardResponse:
+      description: A response containing a single scorecard.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ScorecardWithCriteria'
+          examples:
+            Scorecard:
+              $ref: '#/components/examples/FetchScorecardResponse'
+    ListScorecardCriteriaResponse:
+      description: A paginated list response for a collection of criteria belonging to a scorecard.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScorecardCriteriaWithEvaluation'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Scorecard Criteria:
+              $ref: '#/components/examples/ListScorecardCriteriaResponse'
+    ListCatalogServiceScorecardsResponse:
+      description: A paginated list response for a collection of scorecards targeting a service.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Scorecard'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Service Scorecards:
+              $ref: '#/components/examples/ListServiceScorecardsResponse'
+    CatalogServiceScorecardResponse:
+      description: A response containing a scorecard targeting a service.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogServiceScorecard'
+          examples:
+            Service Scorecard:
+              $ref: '#/components/examples/FetchServiceScorecardResponse'
+    ListScorecardServicesResponse:
+      description: A paginated list response for a collection of services targeted by a scorecard.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScorecardService'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Scorecard Services:
+              $ref: '#/components/examples/ListScorecardServicesResponse'
+    ListScorecardCriteriaServicesResponse:
+      description: A paginated list response for a collection of services targeted by a scorecard criteria.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScorecardCriteriaService'
+            additionalProperties: false
+            required:
+              - meta
+              - data
+          examples:
+            Scorecard Criteria Services:
+              $ref: '#/components/examples/ListScorecardCriteriaServicesResponse'
     BadRequest:
       description: Bad Request
       content:
@@ -4462,6 +6939,20 @@ tags:
   - name: Catalog Resource Services
     description: |
       Represents all the services mapped to a specific resource.
+  - name: Criteria Templates
+    description: |
+      Several criteria templates are provided to help ensure your services adhere to industry best practices.
+      A criteria template is a collection of criteria grouped together to target various categories.
+
+      Criteria may require a specific type of integration be installed and authorized.
+      For example, criteria which evaluates the operation performance across incident management may require a integration related to incident management to be installed and authorized.
+      Learn more about scorecards by visiting our [documentation](https://developer.konghq.com/service-catalog/scorecards/).
+  - name: Scorecards
+    description: |
+      A scorecard helps you evaluate services based on its criteria.
+      Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed.
+      From the scorecard, you can view details on either a per-service or per-criteria basis.
+      Learn more about scorecards by visiting our [documentation](https://developer.konghq.com/service-catalog/scorecards/).
 security:
   - konnectAccessToken: []
   - personalAccessToken: []

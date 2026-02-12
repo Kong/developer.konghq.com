@@ -1,0 +1,1 @@
+Configure AI Proxy with the `bedrock` provider and set up AWS authentication using IAM credentials or assumed roles. See [Use AWS Bedrock rerank API with AI Proxy](/how-to/use-bedrock-rerank-api/).

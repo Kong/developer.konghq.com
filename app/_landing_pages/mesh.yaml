@@ -48,7 +48,7 @@ rows:
                 Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
               cta:
                 text: Learn more 
-                url: /mesh/about/
+                url: /mesh/service-mesh/
       - blocks:
           - type: card
             config:

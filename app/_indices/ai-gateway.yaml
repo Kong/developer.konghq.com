@@ -1,24 +1,25 @@
-title: AI Gateway Documentation
+title: "{{site.ai_gateway}} Documentation"
+description: Index containing all documentation for {{site.ai_gateway}}.
 sections:
   - title: Overview
     items:
-      - title: AI Gateway Overview
+      - title: "{{site.ai_gateway}} Overview"
         description: Overview of AI gateway capabilities
         url: /ai-gateway/
       - title: Quickstart
-        description: Get started quickly with AI Gateway setup and usage.
+        description: Get started quickly with {{site.ai_gateway}} setup and usage.
         url: /ai-gateway/#quickstart
-      - title: AI Gateway Capabilities
-        description: Learn about the core capabilities of AI Gateway.
+      - title: "{{site.ai_gateway}} Capabilities"
+        description: Learn about the core capabilities of {{site.ai_gateway}}.
         url: /ai-gateway/#ai-gateway-capabilities
       - title: AI providers
-        description: Learn about the various providers supported by AI Gateway.
+        description: Learn about the various providers supported by {{site.ai_gateway}}.
         url: /ai-gateway/ai-providers/
       - title: AI Usage Governance
         description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
       - title: Data Governance
-        description: Explore how AI Gateway helps enforce data governance policies.
+        description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
         url: /ai-gateway/#data-governance
       - title: Prompt Engineering
         description: Best practices and tools for designing effective prompts.
@@ -33,18 +34,24 @@ sections:
         description: Learn how AI Proxy streaming works.
         url: /ai-gateway/streaming/
       - title: Audit log
-        description: Learn about AI Gateway logging capabilities.
+        description: Learn about {{site.ai_gateway}} logging capabilities.
         url: /ai-gateway/ai-audit-log-reference/
       - title: Monitor AI LLM Metrics
-        description: Explore how to monitor AI LLM metrics in AI Gateway.
+        description: Explore how to monitor AI LLM metrics in {{site.ai_gateway}}.
         url: /ai-gateway/monitor-ai-llm-metrics/
-      - title: Advanced Analytics
-        description: Access advanced analytics features in AI Gateway.
-        url: /advanced-analytics/
-      - title: AI Gateway resource sizing guidelines
-        description: Review Kong's AI Gateway recommended resource allocation sizing guidelines for Kong AI Gateway based on configuration and traffic patterns.
+      - title: Observability
+        description: Access advanced analytics features in {{site.ai_gateway}}.
+        url: /observability/
+      - title: "{{site.ai_gateway}} resource sizing guidelines"
+        description: Review {{site.ai_gateway}} recommended resource allocation sizing guidelines for {{site.ai_gateway}} based on configuration and traffic patterns.
         url: /ai-gateway/resource-sizing-guidelines-ai/
-  - title: AI Gateway plugins
+      - title: "Proxy AI CLI tools through {{site.ai_gateway}}"
+        description: onfigure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers.
+        url: /ai-gateway/ai-clis/
+      - title: Gen AI OpenTelemetry attributes reference
+        description: Reference for OpenTelemetry span attributes emitted by {{site.ai_gateway}} for generative AI requests, including model parameters, token usage, and tool-call metadata.
+        url: /ai-gateway/llm-open-telemetry/
+  - title: "{{site.ai_gateway}} plugins"
     items:
       - path: /plugins/?category=ai
       - path: /plugins/ai-azure-content-safety/
@@ -63,29 +70,26 @@ sections:
       - path: /plugins/ai-aws-guardrails/
       - path: /plugins/ai-mcp-proxy/
       - path: /plugins/ai-llm-as-judge/
+  - title: "{{site.ai_gateway}} providers"
+    items:
+      - path: /ai-gateway/ai-providers/**/*
   - title: MCP traffic gateway
     items:
       - path: /mcp/
       - title: Secure MCP traffic
-        description: Secure GitHub MCP Server traffic with Kong Gateway and Kong AI Gateway
+        description: Secure GitHub MCP Server traffic with Kong Gateway and {{site.ai_gateway}}
         url: /mcp/secure-mcp-traffic/
       - title: Govern MCP traffic
-        description: Use Kong AI Gateway to govern GitHub MCP traffic
+        description: Use {{site.ai_gateway}} to govern GitHub MCP traffic
         url: /mcp/govern-mcp-traffic
       - title: Observe MCP traffic
-        description: Observe GitHub MCP traffic with Kong AI Gateway
+        description: Observe GitHub MCP traffic with {{site.ai_gateway}}
         url: /mcp/observe-mcp-traffic
-      - title: "{{site.konnect_product_name}} MCP Server"
-        description: Get started with {{site.konnect_product_name}} MCP Server
-        url: /mcp/kong-mcp/get-started/
-      - title: "{{site.konnect_product_name}} MCP Server tools"
-        description: Check available {{site.konnect_product_name}} MCP Server tools
-        url: /mcp/kong-mcp/tools/
       - title: MCP logs
-        description: Learn about logs available for MCP traffic via Kong AI Gateway
+        description: Learn about logs available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
       - title: MCP traffic metrics
-        description: Learn about metrics available for MCP traffic via Kong AI Gateway
+        description: Learn about metrics available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics
   - title: AI load balancing
     items:

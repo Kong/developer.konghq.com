@@ -1,0 +1,29 @@
+description: 'Requires every incoming request to match a defined operation from an API or API package in Dev Portal.'
+
+extended_description: |
+  Requires every incoming request to match a defined operation from an API or API package in Dev Portal. 
+  If a request doesn't match, ACE rejects the request outright with a 404. 
+  All traffic will be rejected except operations or Routes in published APIs linked to an ACE-enabled {{site.base_gateway}}. 
+
+  {:.danger}
+  > **Warning:** Setting the `match_policy` to `required` can **block all traffic with a 404**. Any undefined endpoints will be blocked. If you accidentally enable this in your control planes, this could cause a potential outage in production.
+
+title: 'Require all requests to match operation'
+
+weight: 900
+
+requirements: 
+- "An API or API package in Dev Portal, linked to the control plane that uses the ACE plugin instance"
+
+config: 
+  match_policy: required
+
+min_version:
+  gateway: '3.13'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

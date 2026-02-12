@@ -3,7 +3,7 @@ title: 'Solace Upstream'
 name: 'Solace Upstream'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Solace messages in a Solace queue or topic'
 beta: true

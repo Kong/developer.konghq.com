@@ -45,25 +45,9 @@ The `DataPlane`, in order to be configured in {{site.konnect_short_name}}, needs
 
 In order to manually create and set up a certificate to be used for Konnect `DataPlane`s, you can perform type the following commands:
 
-1. Generate a new certificate and key:
+{% include k8s/operator_client_certificate.md %}
 
-    ```bash
-    openssl req -new -x509 -nodes -newkey rsa:2048 -subj "/CN=kongdp/C=US" -keyout ./tls.key -out ./tls.crt
-    ```
-
-1. Create a Kubernetes secret that contains the previously created certificate:
-
-    ```bash
-    kubectl create secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
-    ```
-
-1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
-
-    ```bash
-    kubectl label secret konnect-client-tls konghq.com/konnect-dp-cert=true
-    ```
-
-Once the secret containing your certificate has been created in the cluster, you can set up your `KonnectExtension` as follows:
+Once the `Secret` containing your certificate has been created in the cluster, you can set up your `KonnectExtension` as follows:
 
 ```yaml
 spec:

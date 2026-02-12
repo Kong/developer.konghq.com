@@ -27,7 +27,7 @@ deployment_topologies:
 
 releases:
   - release: "3.4"
-    ee-version: "3.4.3.22"
+    ee-version: "3.4.3.23"
     ce-version: "3.4.2"
     eol: 2026-08-31
     lts: true
@@ -40,7 +40,7 @@ releases:
             graviton: true
           docker: true
           docker_support:
-          eol: June 2026
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -48,15 +48,8 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - debian10:
-          package: true
-          package_support:
-            arm: false
-            fips: false
-            graviton: false
-          eol: June 2024
       - debian11:
           package: true
           package_support:
@@ -64,7 +57,7 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: June 2026
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -72,15 +65,8 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - rhel7:
-          package: true
-          package_support:
-            arm: false
-            fips: false
-            graviton: false
-          eol: June 2024
       - rhel8:
           package: true
           package_support:
@@ -88,7 +74,7 @@ releases:
             graviton: false
             fips: true
           docker: false
-          eol: August 2026
+          eol: 2026-08-31
       - rhel9:
           package: true
           package_support:
@@ -98,16 +84,8 @@ releases:
           docker: true
           docker_support:
             fips: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -117,7 +95,7 @@ releases:
           docker: true
           docker_support:
             fips: true
-          eol: August 2026
+          eol: 2026-08-31
           default: true
     third_party_support:
       s3_api:
@@ -555,7 +533,8 @@ releases:
   - release: "3.9"
     ee-version: "3.9.1.2"
     ce-version: "3.9.1"
-    eol: 2025-12-30
+    eol: 2025-12-12
+    sunset: true
     distributions:
       - amazonlinux2:
           package: true
@@ -748,7 +727,7 @@ releases:
             arm: true
             graviton: true
           docker: true
-          eol: June 2026
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -764,6 +743,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -789,14 +769,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -932,6 +904,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -972,14 +945,6 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
-          package: true
-          package_support:
-            graviton: false
-            arm: false
-            fips: true
-          docker: false
-          eol: April 2025
       - ubuntu2204:
           package: true
           package_support:
@@ -1108,7 +1073,6 @@ releases:
               - Confluent Cloud
 
   - release: "3.12"
-    latest: true
     ee-version: "3.12.0.2"
     eol: 2026-10-01
     distributions:
@@ -1119,6 +1083,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-06-30
       - amazonlinux2023:
           package: true
           package_support:
@@ -1134,6 +1099,7 @@ releases:
             arm: true
             graviton: true
           docker: true
+          eol: 2026-08-31
       - debian12:
           package: true
           package_support:
@@ -1159,14 +1125,186 @@ releases:
           docker_support:
             fips: true
           default: true
-      - ubuntu2004:
+      - ubuntu2204:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
+          docker: true
+          docker_support:
+            fips: true
+      - ubuntu2404:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
+          docker: true
+          docker_support:
+            fips: true
+          default: true
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+
+      s3_api:
+        - s3
+        - minio
+
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+        - conjur:
+            versions:
+              - 1.22.2-12
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+
+      datastore:
+        - postgres:
+            versions:
+              - 17
+              - 16
+              - 15
+              - 14
+              - 13
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
+  
+  - release: "3.13"
+    latest: true
+    ee-version: "3.13.0.1"
+    eol: 2026-12-18
+    distributions:
+      - amazonlinux2:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          eol: 2026-06-30
+      - amazonlinux2023:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          default: true
+      - debian11:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          eol: 2026-08-31
+      - debian12:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          default: true
+      - rhel8:
+          package: true
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
+          docker: false
+      - rhel9:
           package: true
           package_support:
             graviton: false
-            arm: false
+            arm: true
             fips: true
-          docker: false
-          eol: April 2025
+          docker: true
+          docker_support:
+            fips: true
+          default: true
       - ubuntu2204:
           package: true
           package_support:
@@ -1293,6 +1431,8 @@ releases:
               - 3.2
               - Confluent Cloud
 
+ 
+
 cloud_deployment_platforms:
   - AWS EKS
   - AWS EKS Fargate
@@ -1304,6 +1444,7 @@ cloud_deployment_platforms:
   - Google Cloud GKE
   - Google Cloud GKE Autopilot
   - Google Cloud Run
+  - Red Hat OpenShift
 
 marketplaces:
   - Azure Marketplace
@@ -1311,6 +1452,8 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.13.0.1': 2026/02/01
+  '3.13.0.0': 2025/12/18
   '3.12.0.2': 2025/12/10
   '3.12.0.1': 2025/11/18
   '3.12.0.0': 2025/10/01
@@ -1363,6 +1506,7 @@ release_dates:
   '3.5.0.2': 2023/12/21
   '3.5.0.1': 2023/11/14
   '3.5.0.0': 2023/11/08
+  '3.4.3.23': 2026/01/07
   '3.4.3.22': 2025/11/24
   '3.4.3.21': 2025/09/05
   '3.4.3.20': 2025/06/25
@@ -1436,6 +1580,9 @@ release_dates:
 
 public_keys:
   # e.g.: https://cloudsmith.io/~kong/repos/internal-gateway-37/pub-keys/
+  "313":
+    rsa_key: 45BBB5BD8790E760
+    gpg_key: B3A98B904066BD1F
   "312":
     rsa_key: CF99E3B118DABBFB
     gpg_key: 875433A518B93006

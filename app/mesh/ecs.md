@@ -87,7 +87,9 @@ In particular, every role must be tagged at a minimum with `kuma.io/type` set to
 either `dataplane`, `ingress`, or `egress`. For `dataplane`, i.e. a normal data
 plane proxy, the `kuma.io/mesh` tag is also required to be set.
 
-This means that the setting of these two tags on IAM roles
+{% new_in 2.13 %} When using `MeshIdentity` with the `kuma.io/workload` label in its SPIFFE ID path template (e.g., `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), the IAM role must also include a matching `kuma.io/workload` tag. This validation is enforced to ensure secure identity binding between IAM roles and dataplanes when workload labels are used.
+
+This means that the setting of these tags on IAM roles
 must be restricted accordingly for your AWS account
 (which must be explicitly given to the CP, see below).
 
@@ -233,7 +235,34 @@ It must always have the `kuma.io/type` tag set to either `"dataplane"`,
 `"ingress"`, or `"egress"`.
 
 If it's a `"dataplane"` type, then it must also have the `kuma.io/mesh` tag set.
-Additionally, you can set the `kuma.io/service` tag to further restrict its identity.
+
+{% new_in 2.13 %} When a `MeshIdentity` resource uses the `kuma.io/workload` label in its SPIFFE ID path template, the IAM role must include a `kuma.io/workload` tag that matches the dataplane's metadata labels. Ensure that:
+
+- **For Kubernetes**: Add `kuma.io/workload` to Pod labels (automatically synced to dataplane metadata)
+- **For Universal/ECS**: Add `kuma.io/workload` to dataplane metadata labels:
+
+```yaml
+type: Dataplane
+mesh: default
+name: dp-1
+labels:
+  kuma.io/workload: <workload-name>
+networking:
+  address: 127.0.0.1
+  inbound:
+    - port: 8080
+      tags:
+        kuma.io/service: backend
+```
+
+The IAM role must have a corresponding tag:
+
+```
+kuma.io/workload: <workload-name>
+```
+
+{:.info}
+> This validation only applies when a `MeshIdentity` exists for the mesh and uses `kuma.io/workload` in its SPIFFE ID path template.
 
 ### Sidecar
 

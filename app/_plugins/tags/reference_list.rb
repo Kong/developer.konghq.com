@@ -11,26 +11,15 @@ module Jekyll
       raise ArgumentError, 'Missing param for {% reference_list %}'
     end
 
-    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity,Metrics/MethodLength
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
       keys = @param.split('.')
       config = keys.reduce(context) { |c, key| c[key] }
 
-      quantity = config.fetch('quantity', 10)
+      references = fetch_references(config)
 
-      references = @site.pages.select { |p| p.data['content_type'] == 'reference' }.each_with_object([]) do |p, result|
-        next if p.data['auto_generated']
-
-        match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
-                (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
-                (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools']))
-
-        result << p if match
-        break result if result.size == quantity
-      end
-
-      if references.empty? && !config.fetch('allow_empty', false)
+      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 
@@ -43,6 +32,24 @@ module Jekyll
     end
 
     private
+
+    def fetch_references(config)
+      if config['pages']
+        @site.pages.select { |p| config['pages'].include?(p.url) }
+      else
+        quantity = config.fetch('quantity', 10)
+        @site.pages.select { |p| p.data['content_type'] == 'reference' }.each_with_object([]) do |p, result|
+          next if p.data['auto_generated']
+
+          match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
+                  (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
+                  (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools']))
+
+          result << p if match
+          break result if result.size == quantity
+        end
+      end
+    end
 
     def template
       @template ||= File.read(File.expand_path('app/_includes/components/reference_list.html'))

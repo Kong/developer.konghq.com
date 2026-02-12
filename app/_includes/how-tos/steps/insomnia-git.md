@@ -6,4 +6,4 @@
     * [Bitbucket](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/)
     * [Bitbucket Server](https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html)
     * [Azure DevOps](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate)
-1. {% new_in 11.4 %} If needed, select a branch.
+1. If needed, select a branch.

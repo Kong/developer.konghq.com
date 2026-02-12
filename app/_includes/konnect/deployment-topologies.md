@@ -1,7 +1,7 @@
 <!--vale off -->
 {% mermaid %} 
 flowchart TD
-    A(Dev Portal &bull; Advanced Analytics &bull; Catalog)
+    A(Dev Portal &bull; Observability &bull; Catalog)
     B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
     C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane #40;Kong Gateway instance#41;)
 

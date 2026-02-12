@@ -1,0 +1,20 @@
+title: Observability Documentation
+description: Index containing all documentation for {{site.observability}}.
+sections:
+  - title: Overview
+    items:
+      - path: /observability/
+    auto_exclude: true
+  - title: References
+    items:
+      - path: /observability/explorer/
+      - path: /observability/llm-reporting/
+      - title: Analytics teams and roles
+        description: Assign users to predefined Analytics teams in Konnect to control access levels.
+        url: /konnect-platform/teams-and-roles/
+  - title: Custom Dashboards
+    items: 
+      - path: /custom-dashboards/
+      - path: /observability/custom-dashboards-reference/
+      - path: /how-to/create-custom-dashboards/
+      - path: /how-to/automate-dashboard-terraform/

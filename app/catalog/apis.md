@@ -28,6 +28,10 @@ related_resources:
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
+  - text: Package APIs with Dev Portal
+    url: /how-to/package-apis-with-dev-portal/
+  - text: API packages reference
+    url: /catalog/api-packaging/
 faqs:
   - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
@@ -43,6 +47,8 @@ faqs:
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
       [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
+  - q: My team has a Dev Portal, why can't I see APIs?
+    a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
 ---
 
 {:.success}
@@ -92,19 +98,36 @@ resource "konnect_api" "my_api" {
 {% endnavtab %}
 {% endnavtabs %}
 
-## API versioning
+## API versions
 
-When you create your API, you can choose to keep it unversioned or version it using a free text string. This allows you to follow the versioning system of your choice:
-* Semantic versioning (examples: `v1`, `v2`)
-* Date-based versioning (examples: `2024-05-10`, `2024-10-22`) 
-* Custom naming scheme (example: `a1b2c3-internal-xxyyzz00`)
+When you create an API, you can optionally specify the version as a free text string.
 
-Each API is identified using the combination of `name+version`. For example, if your API is named `My Test API` and it has a version of `v3`, then it will be accessible via the API as `my-test-api-v3` in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). If a `version` isn't specified, then `name` is used as the unique identifier. 
+While you can use any version style, we recommend the following:
+* Semantic versioning (for example `1.0.0`, `2.1.0`) is best supported for default ordering
+* Create a unique API for each major version, since APIs must be unique based on the combination of `name` + `version`
+
+The API `slug` determines Dev Portal URL routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a name and version (major version if semantic versioning) in slug form. For example, if your API is named `my-test-api` and the version is `3`, this will default to `my-test-api-3`. If a version isn't specified, then `name` is used as the unique identifier. 
+
+### API specification versions
+
+If you upload OpenAPI or AsyncAPI specifications when you create the API, the API version will default to and be constrained by the version in the specification. You can specify multiple versions of API specifications in the API entity. Ideally, use multiple versions of API specs for minor versions of an API. When multiple `versions` are specified, a selector displays in the generated API reference to switch between versions of the API specification.
+
+The API entity's `version` property is treated as "current", meaning it is the version that will be listed in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis). 
+
 
 To version an API, do one of the following:
 {% navtabs "api-version" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to **Catalog > APIs** in the sidebar, and then click [**New API**](https://cloud.konghq.com/apis/create). Enter a version in the **API version** field. You can also add a version on existing APIs by editing them.
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/).
+1. Click [**New API**](https://cloud.konghq.com/apis/create).
+1. Enter a version in the **API version** field, or upload an API specification, which will set the version to match the API spec version. 
+
+You can also add versions to existing APIs when you edit them if they aren't associated with an API specification. To manage multiple versions of the API specification, do the following:
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.konnect_catalog}}**](https://cloud.konghq.com/service-catalog/). 
+1. Click your API. 
+1. Click the **API specification** tab.
+1. From the Actions dropdown menu, select "Add or update API spec". 
+1. If a newer version is in the API specification, you will be prompted to add a new `version` and set the current version.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
@@ -126,7 +149,6 @@ resource "konnect_api_version" "my_apiversion" {
   api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
   spec = {
     content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
-    type    = "oas3"
   }
   version = "1.0.0"
 }
@@ -135,48 +157,10 @@ resource "konnect_api_version" "my_apiversion" {
 {% endnavtab %}
 {% endnavtabs %}
 
-
-## API specs
-
-All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded. 
-
-To upload a spec to an API, do one of the following:
-{% navtabs "api-specs" %}
-{% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **API specification** tab, and then click **Upload Spec**.
-{% endnavtab %}
-{% navtab "{{site.konnect_short_name}} API" %}
-Send a POST request to the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version):
-<!--vale off-->
-{% konnect_api_request %}
-url: /v3/apis/$API_ID/versions
-status_code: 201
-method: POST
-body:
-    version: 1.0.0
-    spec:
-        content: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-{% endkonnect_api_request %}
-<!--vale on-->
-{% endnavtab %}
-{% navtab "Terraform" %}
-Use the [`konnect_api_version` resource](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/resources/konnect_api_version.tf):
-```hcl
-echo '
-resource "konnect_api_version" "my_apiversion" {
-  api_id = "9f5061ce-78f6-4452-9108-ad7c02821fd5"
-  spec = {
-    content = "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Example API\",\"version\":\"1.0.0\"},\"paths\":{\"/example\":{\"get\":{\"summary\":\"Example endpoint\",\"responses\":{\"200\":{\"description\":\"Successful response\"}}}}}}"
-    type    = "oas3"
-  }
-  version = "1.0.0"
-}
-' >> main.tf
-```
-{% endnavtab %}
-{% endnavtabs %}
 
 ### API spec validation
+
+All API specification files are validated during upload, although invalid specifications are permitted. If specifications are invalid, features like generated documentation and search may be degraded. 
 
 {{site.konnect_short_name}} looks for the following during spec validation:
 
@@ -429,7 +413,10 @@ Once published, the API appears in the selected Dev Portal. If [user authenticat
 
 When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
 
-The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). You must also enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
+The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
+
+
+You may need to enable the CORS plugin for this feature to work. Use the table below to determine the appropriate CORS configuration based on the Routes associated with your APIs:
 
 {% feature_table %} 
 item_title: Use case
@@ -458,6 +445,27 @@ features:
       * Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
     cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
+
+When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters.
+
+For example, this configuration allows spec renderer users to specify a custom audience value that is specific to their request:
+
+```yaml
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      x-kong-client-credentials-config:
+        extraTokenRequestParameters:
+          - name: audience
+            label: Audience
+            description: The audience of the authorization server to scope tokens to
+            omitIfEmpty: true
+            required: true
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://example.com/oauth/token'
+```
 
 ### Filtering published APIs in Dev Portal
 

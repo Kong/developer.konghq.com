@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Enabled at-rest keyring encryption for sensitive fields in AI Azure Content Safety plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for the global `tls_certificate_verify` option.\nWhen enabled globally via `kong.conf`, the plugin's `ssl_verify` config field cannot be set to `false`.\nThis ensures SSL/TLS certificate verification cannot be disabled when global security policy requires it.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added response guard to filter AI responses for safety and compliance.",

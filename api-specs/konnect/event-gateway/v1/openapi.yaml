@@ -16,12 +16,13 @@ info:
     When the value is an expression, the expression itself is stored and returned in API responses.
 
     `x-min-runtime-version` indicates the minimum Event Gateway runtime version required to use a certain policy or
-    policy feature. The runtime version can be configured at the Event Gateway entity level.
+    policy feature. The runtime version can be configured at the Event Gateway entity level. It must be a string
+    containing a semantic version in the `MAJOR.MINOR` format, e.g., `"1.1"`.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6071deefac069662eeb4c62ea0a0ed67eaca705d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6071deefac069662eeb4c62ea0a0ed67eaca705d'
+  x-oas-source: kong/platform-api@7e26d6e4d023b6aed068061cdcf7bb282246aced
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7e26d6e4d023b6aed068061cdcf7bb282246aced'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -203,7 +204,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
-        - $ref: '#/components/parameters/EventGatewayCommonFilter'
+        - $ref: '#/components/parameters/EventGatewayListenersFilter'
       responses:
         '200':
           $ref: '#/components/responses/ListEventGatewayListenersResponse'
@@ -733,6 +734,9 @@ paths:
       operationId: create-event-gateway-listener-policy
       summary: Create Policy for Listener
       description: Creates a new policy associated with the specified Event Gateway listener.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayListenerPolicyRequest'
       responses:
@@ -865,6 +869,41 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Event Gateway Listener Policies
+  '/event-gateways/{gatewayId}/listeners/{eventGatewayListenerId}/policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/eventGatewayListenerId'
+    get:
+      operationId: get-event-gateway-listener-policy-chain
+      summary: Get Policy Chain for Listener
+      description: |
+        Get the policy chain for a listener composed of all the ids of the policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Listener Policies
+    put:
+      operationId: update-event-gateway-listener-policy-chain
+      summary: Update Policy Chain for Listener
+      description: Update the policy chain for a listener by providing an ordered list of policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Listener Policies
   '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/consume-policies':
     parameters:
       - $ref: '#/components/parameters/gatewayId'
@@ -888,6 +927,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-consume-policy
       summary: Create Consume Policy for Virtual Cluster
       description: Creates a new consume policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayConsumePolicyRequest'
       responses:
@@ -1022,6 +1064,41 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Event Gateway Virtual Cluster Consume Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/consume-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-consume-policy-chain
+      summary: Get Consume Policy Chain
+      description: |
+        Get the consume policy chain for a virtual cluster composed of all the ids of the consume policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Consume Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-consume-policy-chain
+      summary: Update Consume Policy Chain
+      description: Update the consume policy chain for a virtual cluster by providing an ordered list of consume policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Consume Policies
   '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/produce-policies':
     parameters:
       - $ref: '#/components/parameters/gatewayId'
@@ -1045,6 +1122,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-produce-policy
       summary: Create Produce Policy for Virtual Cluster
       description: Creates a new produce policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayProducePolicyRequest'
       responses:
@@ -1179,6 +1259,41 @@ paths:
           $ref: '#/components/responses/Forbidden'
       tags:
         - Event Gateway Virtual Cluster Produce Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/produce-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-produce-policy-chain
+      summary: Get Produce Policy Chain for Virtual Cluster
+      description: |
+        Get the produce policy chain for a virtual cluster composed of all the ids of the produce policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Produce Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-produce-policy-chain
+      summary: Update Produce Policy Chain
+      description: Update the produce policy chain for a virtual cluster by providing an ordered list of produce policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Produce Policies
   '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/cluster-policies':
     parameters:
       - $ref: '#/components/parameters/gatewayId'
@@ -1202,6 +1317,9 @@ paths:
       operationId: create-event-gateway-virtual-cluster-cluster-level-policy
       summary: Create Cluster Policy for Virtual Cluster
       description: Creates a new cluster-level policy associated with the specified Event Gateway virtual cluster.
+      parameters:
+        - $ref: '#/components/parameters/EventGatewayPolicyBefore'
+        - $ref: '#/components/parameters/EventGatewayPolicyAfter'
       requestBody:
         $ref: '#/components/requestBodies/CreateEventGatewayClusterPolicyRequest'
       responses:
@@ -1328,6 +1446,41 @@ paths:
       responses:
         '204':
           description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Policies
+  '/event-gateways/{gatewayId}/virtual-clusters/{virtualClusterId}/cluster-policy-chain':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - $ref: '#/components/parameters/virtualClusterId'
+    get:
+      operationId: get-event-gateway-virtual-cluster-cluster-level-policy-chain
+      summary: Get Cluster Policy Chain for Virtual Cluster
+      description: |
+        Get the cluster-level policy chain for a virtual cluster composed of all the ids of the cluster-level policies in order of execution.
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway Virtual Cluster Policies
+    put:
+      operationId: update-event-gateway-virtual-cluster-cluster-level-policy-chain
+      summary: Update Cluster Policy Chain
+      description: Update the cluster-level policy chain for a virtual cluster by providing an ordered list of cluster-level policy ids.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateEventGatewayPolicyChainRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EventGatewayPolicyChainResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1558,6 +1711,19 @@ components:
       in: path
       required: true
       description: The ID of the Event Gateway Listener.
+    EventGatewayListenersFilter:
+      schema:
+        type: object
+        properties:
+          name:
+            $ref: '#/components/schemas/StringFieldContainsFilter'
+          virtual_cluster_id:
+            $ref: '#/components/schemas/StringFieldEqualsFilter'
+      in: query
+      name: filter
+      description: Filter listeners returned in the response.
+      required: false
+      style: deepObject
     eventGatewayNodeId:
       schema:
         type: string
@@ -1566,6 +1732,24 @@ components:
       in: path
       required: true
       description: The ID of the Event Gateway Node.
+    EventGatewayPolicyAfter:
+      schema:
+        type: string
+        format: uuid
+      in: query
+      name: after
+      description: |
+        Determines the id of the existing policy the new policy should be inserted after. Either 'before' or 'after' can be provided, when both are omitted the new policy is added to the end of the chain. When both are provided, the request fails with a 400 Bad Request.
+      required: false
+    EventGatewayPolicyBefore:
+      schema:
+        type: string
+        format: uuid
+      in: query
+      name: before
+      description: |
+        Determines the id of the existing policy the new policy should be inserted before. Either 'before' or 'after' can be provided, when both are omitted the new policy is added to the end of the chain. When both are provided, the request fails with a 400 Bad Request.
+      required: false
     EventGatewayPolicyListFilter:
       schema:
         type: object
@@ -1700,6 +1884,7 @@ components:
         description:
           description: A human-readable description of the listener.
           type: string
+          default: ''
           maxLength: 512
         addresses:
           $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -1732,6 +1917,7 @@ components:
       type: array
       items:
         type: string
+        minLength: 1
       minItems: 1
     EventGatewayListenerPorts:
       description: |
@@ -1764,6 +1950,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         destination:
           $ref: '#/components/schemas/BackendClusterReference'
@@ -2090,6 +2277,7 @@ components:
         description:
           description: A human-readable description of the backend cluster.
           type: string
+          default: ''
           maxLength: 512
         authentication:
           $ref: '#/components/schemas/BackendClusterAuthenticationSensitiveDataAwareScheme'
@@ -2198,6 +2386,19 @@ components:
           default:
             - tls12
             - tls13
+        client_identity:
+          description: Client mTLS configuration.
+          type: object
+          properties:
+            certificate:
+              $ref: '#/components/schemas/GatewaySecretReferenceOrLiteral'
+            key:
+              $ref: '#/components/schemas/GatewaySecret'
+          required:
+            - certificate
+            - key
+          x-min-runtime-version: '1.1'
+          x-speakeasy-param-computed: false
       required:
         - enabled
     BackendMetadataUpdateIntervalSeconds:
@@ -2340,6 +2541,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2376,6 +2578,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2406,6 +2609,7 @@ components:
         description:
           description: A human-readable description of the virtual cluster.
           type: string
+          default: ''
           maxLength: 512
         type:
           description: The type of the schema registry.
@@ -2589,37 +2793,25 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-        config:
-          description: The configuration of the policy.
-          type: object
         labels:
           $ref: '#/components/schemas/Labels'
         id:
           description: The unique identifier of the policy.
           type: string
           format: uuid
+        config:
+          description: The configuration of the policy.
+          type: object
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         parent_policy_id:
@@ -2629,14 +2821,21 @@ components:
           nullable: true
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields: []
       required:
         - type
-        - config
         - id
         - created_at
         - updated_at
     EventGatewayListenerPolicy:
-      description: A listener policy associated with an Event Gateway.
+      description: A policy associated with an Event Gateway.
       type: object
       properties:
         type:
@@ -2648,25 +2847,25 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        config:
-          description: The configuration of the policy.
-          type: object
         labels:
           $ref: '#/components/schemas/Labels'
         id:
           description: The unique identifier of the policy.
           type: string
           format: uuid
+        config:
+          description: The configuration of the policy.
+          type: object
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         parent_policy_id:
@@ -2678,10 +2877,10 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       required:
         - type
-        - config
         - id
         - created_at
         - updated_at
+        - config
     EventGatewayTLSListenerSensitiveDataAwarePolicy:
       description: |
         The TLS Server policy defines the certificates and keys used by the gateway server when the client connects
@@ -2702,22 +2901,22 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayTLSListenerPolicyConfigSensitiveDataAware'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -2741,22 +2940,22 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayTLSListenerPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -2861,7 +3060,6 @@ components:
           type: string
           example: context.topic.name.endsWith('my_suffix')
           maxLength: 1000
-          minLength: 1
           nullable: true
           x-expression:
             type: boolean
@@ -2932,16 +3130,18 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
@@ -2953,8 +3153,6 @@ components:
           oneOf:
             - $ref: '#/components/schemas/ForwardToClusterBySNIConfig'
             - $ref: '#/components/schemas/ForwardToClusterByPortMappingConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
         - config
@@ -2989,6 +3187,7 @@ components:
         advertised_host:
           description: 'Virtual brokers are advertised to clients using this host. Any kind of host supported by kafka can be used. If not defined, it''s listen_address. If listen_address is `0.0.0.0` it''s the destination IP of the TCP connection.'
           type: string
+          pattern: '^[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?)*$'
         bootstrap_port:
           description: |
             If set to `at_start`, the first port will be used as a bootstrap port.
@@ -3047,6 +3246,23 @@ components:
           type: integer
           maximum: 65535
           minimum: 1
+        broker_host_format:
+          description: |
+            Configures DNS names assigned to brokers in virtual clusters.
+
+            - `per_cluster_suffix` is the default and allocates one level in the hierarchy for virtual clusters: `broker-{node_id}.{virtual_cluster}.{sni_suffix}`
+            - `shared_suffix` puts all brokers from every virtual clusters into the same level: `broker-{node_id}-{virtual_cluster}.{sni_suffix}`. This makes it easier to manage certificates for this listener.
+          type: object
+          properties:
+            type:
+              type: string
+              default: per_cluster_suffix
+              enum:
+                - per_cluster_suffix
+                - shared_suffix
+          required:
+            - type
+          x-min-runtime-version: '1.1'
       additionalProperties: false
       required:
         - type
@@ -3113,7 +3329,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/EventGatewayACLsPolicy'
     EventGatewayEncryptPolicy:
-      description: Encrypts portions of Kafka records using AES_128_GCM. Keys are therefore 128 bits long.
+      description: Encrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
       properties:
         type:
@@ -3128,34 +3344,35 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayEncryptConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3179,7 +3396,7 @@ components:
         - part_of_record
         - encryption_key
     EventGatewayDecryptPolicy:
-      description: Decrypts portions of Kafka records using AES_128_GCM. Keys are therefore 128 bits long.
+      description: Decrypts Kafka records or keys using AES_256_GCM. Keys are therefore 256 bits long.
       type: object
       properties:
         type:
@@ -3194,34 +3411,35 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayDecryptPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3264,35 +3482,18 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: |
-            A string containing the boolean expression that determines whether the policy is applied.
-
-            When the policy is applied as a child policy of schema_validation, the expression can also reference
-            `record.value` fields.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-              - record.headers
-              - record.value.validated
-              - record.value.content
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the modify headers policy.
           type: object
@@ -3303,8 +3504,25 @@ components:
               items:
                 $ref: '#/components/schemas/EventGatewayModifyHeaderAction'
               minItems: 1
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
+              - record.value.validated
+              - record.value.content
       required:
         - type
         - config
@@ -3325,35 +3543,18 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: |
-            A string containing the boolean expression that determines whether the policy is applied.
-
-            When the policy is applied as a child policy of schema_validation, the expression can also reference
-            `record.value` fields.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
-              - record.headers
-              - record.value.validated
-              - record.value.content
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the modify headers policy.
           type: object
@@ -3364,8 +3565,25 @@ components:
               items:
                 $ref: '#/components/schemas/EventGatewayModifyHeaderAction'
               minItems: 1
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: |
+            A string containing the boolean expression that determines whether the policy is applied.
+
+            When the policy is applied as a child policy of schema_validation, the expression can also reference
+            `record.value` fields.
+          type: string
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
+              - record.value.validated
+              - record.value.content
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3379,24 +3597,29 @@ components:
       type: object
       properties:
         type:
+          description: The type name of the policy.
           type: string
           enum:
             - skip_record
+          maxLength: 255
+          minLength: 1
           x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         condition:
           description: |
             A string containing the boolean expression that determines whether the policy is applied.
@@ -3404,20 +3627,18 @@ components:
             When the policy is applied as a child policy of schema_validation, the expression can also reference
             `record.value` fields.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
+              - context.topic.name
               - record.headers
               - record.value.validated
               - record.value.content
-        labels:
-          $ref: '#/components/schemas/Labels'
       required:
         - type
     EventGatewaySkipRecordPolicyCreate:
@@ -3425,24 +3646,29 @@ components:
       type: object
       properties:
         type:
+          description: The type name of the policy.
           type: string
           enum:
             - skip_record
+          maxLength: 255
+          minLength: 1
           x-terraform-transform-const: true
         name:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         condition:
           description: |
             A string containing the boolean expression that determines whether the policy is applied.
@@ -3450,20 +3676,18 @@ components:
             When the policy is applied as a child policy of schema_validation, the expression can also reference
             `record.value` fields.
           type: string
-          example: context.topic.name.endsWith('my_suffix')
+          example: record.value.content.foo.bar == "a-value"
+          default: ''
           maxLength: 1000
-          minLength: 1
           x-expression:
             type: boolean
             fields:
-              - context.topic.name
               - context.auth.principal.name
               - context.auth.type
+              - context.topic.name
               - record.headers
               - record.value.validated
               - record.value.content
-        labels:
-          $ref: '#/components/schemas/Labels'
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3531,28 +3755,18 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the schema validation policy.
           type: object
@@ -3567,8 +3781,19 @@ components:
               $ref: '#/components/schemas/ConsumeValueValidationAction'
           required:
             - type
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3589,34 +3814,35 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
+              - context.topic.name
+              - record.headers
       required:
         - type
         - config
@@ -3681,34 +3907,33 @@ components:
           description: A unique user-defined name of the policy.
           type: string
           maxLength: 255
-          minLength: 1
           x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
         description:
           description: A human-readable description of the policy.
           type: string
+          default: ''
           maxLength: 512
         enabled:
           description: Whether the policy is enabled.
           type: boolean
           default: true
-        condition:
-          description: A string containing the boolean expression that determines whether the policy is applied.
-          type: string
-          example: context.topic.name.endsWith('my_suffix')
-          maxLength: 1000
-          minLength: 1
-          x-expression:
-            type: boolean
-            fields:
-              - context.topic.name
-              - context.auth.principal.name
-              - context.auth.type
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           description: The configuration of the policy.
           type: object
           $ref: '#/components/schemas/EventGatewayACLPolicyConfig'
-        labels:
-          $ref: '#/components/schemas/Labels'
+        condition:
+          description: A string containing the boolean expression that determines whether the policy is applied.
+          type: string
+          example: context.auth.principal.name == "this-user"
+          default: ''
+          maxLength: 1000
+          x-expression:
+            type: boolean
+            fields:
+              - context.auth.principal.name
+              - context.auth.type
       required:
         - type
         - config
@@ -3722,6 +3947,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventGatewayACLRule'
+          minItems: 1
       required:
         - rules
     EventGatewayACLRule:
@@ -4256,6 +4482,7 @@ components:
         description:
           description: A human-readable description of the static key.
           type: string
+          default: ''
           maxLength: 512
         labels:
           $ref: '#/components/schemas/Labels'
@@ -4288,6 +4515,7 @@ components:
         description:
           description: A human-readable description of the static key.
           type: string
+          default: ''
           maxLength: 512
         labels:
           $ref: '#/components/schemas/Labels'
@@ -4296,6 +4524,16 @@ components:
       required:
         - name
         - value
+    EventGatewayPolicyReference:
+      description: A reference to an Event Gateway policy.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the policy.
+          type: string
+          format: uuid
+      required:
+        - id
     CursorMetaPage:
       type: object
       properties:
@@ -4762,6 +5000,16 @@ components:
           title: Labels
       additionalProperties: false
       title: PatchGatewayRequest
+    StringFieldEqualsFilter:
+      description: Filters on the given string field value by exact match.
+      properties:
+        eq:
+          type: string
+      title: StringFieldEqualsFilter
+      x-examples:
+        example-1: equals-some-value
+        example-2:
+          eq: some-value
     CreatedAt:
       description: An ISO-8601 timestamp representation of entity creation date.
       type: string
@@ -4774,21 +5022,12 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
-      properties:
-        eq:
-          type: string
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
     GatewaySecretReferenceOrLiteral:
       description: |
         A literal value or a reference to an existing secret as a template string expression.
         The value is stored and returned by the API as-is, not treated as sensitive information.
       type: string
+      minLength: 1
       x-examples:
         reference:
           summary: Reference to a secret
@@ -4807,6 +5046,7 @@ components:
         If provided as an expression, the expression itself is stored and returned by the API.
       type: string
       example: '${vault.env[''MY_ENV_VAR'']}'
+      minLength: 1
       x-expression:
         type: string
         fields:
@@ -4892,6 +5132,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               addresses:
                 $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -4919,6 +5160,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               addresses:
                 $ref: '#/components/schemas/EventGatewayListenerAddresses'
@@ -4943,6 +5185,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               destination:
                 $ref: '#/components/schemas/BackendClusterReferenceModify'
@@ -4975,6 +5218,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               destination:
                 $ref: '#/components/schemas/BackendClusterReferenceModify'
@@ -5007,6 +5251,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               authentication:
                 $ref: '#/components/schemas/BackendClusterAuthenticationScheme'
@@ -5042,6 +5287,7 @@ components:
               description:
                 description: A human-readable description of the virtual cluster.
                 type: string
+                default: ''
                 maxLength: 512
               authentication:
                 $ref: '#/components/schemas/BackendClusterAuthenticationSensitiveDataAwareScheme'
@@ -5187,6 +5433,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/EventGatewayStaticKeyCreate'
+    UpdateEventGatewayPolicyChainRequest:
+      description: The request schema for updating the policy chain.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
   responses:
     EventGatewayNodeStatus:
       description: The status of an event gateway node.
@@ -5380,6 +5639,19 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/EventGatewayStaticKey'
+    EventGatewayPolicyChainResponse:
+      description: A response containing the list of policies in order of execution.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
     BadRequest:
       description: Bad Request
       content:

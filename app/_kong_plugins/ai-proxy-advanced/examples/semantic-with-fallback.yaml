@@ -1,0 +1,102 @@
+title: 'Load balancing: Semantic with fallback'
+description: 'Configure the plugin to route requests based on semantic similarity between prompts and model descriptions, with automatic fallback among models sharing identical descriptions.'
+
+extended_description: |
+  {% new_in 3.13 %} Configure the plugin to use three OpenAI models and route requests based on semantic similarity between the prompt and model descriptions.
+
+  In this example, two targets share the same description ("Specialist in programming problems"). When a prompt matches this description, the plugin will first route to the target with weight 75 (gpt-4o). If that target fails, it falls back to the target with weight 25 (gpt-4o-mini) using round-robin. The third target with a different description ("Specialist in real life topics") handles prompts about non-technical topics.
+
+weight: 111
+
+min_version:
+  gateway: '3.13'
+
+requirements:
+  - An OpenAI account
+  - A Redis instance for vector storage
+
+config:
+  balancer:
+    algorithm: semantic
+    retries: 3
+    failover_criteria:
+    - error
+    - timeout
+    - http_429
+    - http_503
+    - non_idempotent
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  vectordb:
+    strategy: redis
+    distance_metric: cosine
+    threshold: 0.7
+    dimensions: 1024
+    redis:
+      host: localhost
+      port: 6379
+  targets:
+  - model:
+      name: gpt-4o
+      provider: openai
+      options:
+        max_tokens: 1024
+        temperature: 1.0
+    route_type: llm/v1/chat
+    weight: 2
+    description: Specialist in real life topics
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    logging:
+      log_statistics: true
+      log_payloads: true
+  - model:
+      name: gpt-4o
+      provider: openai
+      options:
+        max_tokens: 1024
+        temperature: 1.0
+    route_type: llm/v1/chat
+    weight: 75
+    description: Specialist in programming problems
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    logging:
+      log_statistics: true
+      log_payloads: true
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 1024
+        temperature: 1.0
+    route_type: llm/v1/chat
+    weight: 25
+    description: Specialist in programming problems
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    logging:
+      log_statistics: true
+      log_payloads: true
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: load-balancing

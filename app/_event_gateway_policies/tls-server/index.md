@@ -22,6 +22,8 @@ related_resources:
     url: /event-gateway/entities/listener/
   - text: Policies
     url: /event-gateway/entities/policy/
+  - text: "How-to: Configure SNI routing with {{site.event_gateway_short}}"
+    url: /event-gateway/configure-sni-routing/
 
 policy_target: listener
 
@@ -43,7 +45,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[TLS connections](/event-gateway/policies/tls-server/examples/tls-connection/)"
+  - use_case: "[Example: TLS connections](/event-gateway/policies/tls-server/examples/tls-connection/)"
     description: "Allow clients to connect to {{site.event_gateway_short}} over TLS."
+  - use_case: "[How-to: SNI routing with TLS](/event-gateway/configure-sni-routing/)"
+    description: |
+      Set up SNI routing to send traffic to multiple virtual clusters in the same {{site.event_gateway_short}} control plane without opening more ports on the data plane.
 {% endtable %}
 <!--vale on-->

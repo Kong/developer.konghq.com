@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Builder
-  version: 3.0.27
+  version: 3.1.0
   description: The management API for building APIs for Konnect Dev Portals.
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@db794d79217507e281f72d4b0b0df015b4800e2c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/db794d79217507e281f72d4b0b0df015b4800e2c'
+  x-oas-source: kong/platform-api@d338ece9c89e865190819ddc20d925392fc59705
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d338ece9c89e865190819ddc20d925392fc59705'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -138,6 +138,19 @@ paths:
       operationId: update-api
       summary: Update API
       description: Updates an API.
+      parameters:
+        - name: force
+          in: query
+          description: |
+            If true, allows operations to be removed from the current version when using access control enforcement.
+            If false, operations removal will be rejected with a 409 error.
+            Omitting the value means true.
+          schema:
+            type: string
+            default: 'false'
+            enum:
+              - 'true'
+              - 'false'
       requestBody:
         $ref: '#/components/requestBodies/UpdateApiRequest'
       responses:
@@ -171,36 +184,6 @@ paths:
       responses:
         '204':
           description: API was deleted successfully.
-        '401':
-          $ref: '#/components/responses/ApiUnauthorized'
-        '403':
-          $ref: '#/components/responses/ApiForbidden'
-        '404':
-          $ref: '#/components/responses/ApiNotFound'
-      tags:
-        - API
-  /apis/_computed:
-    get:
-      operationId: list-apis-computed
-      summary: List APIs computed
-      description: Returns a collection of all APIs with computed fields.
-      parameters:
-        - $ref: '#/components/parameters/PageSize'
-        - $ref: '#/components/parameters/PageNumber'
-        - $ref: '#/components/parameters/ApiFilters'
-        - $ref: '#/components/parameters/ApiSort'
-      responses:
-        '200':
-          $ref: '#/components/responses/ListApiComputedResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/BadRequestError'
-              examples:
-                InvalidApiSortQueryBadRequestExample:
-                  $ref: '#/components/examples/InvalidApiSortQueryNameBadRequestExample'
         '401':
           $ref: '#/components/responses/ApiUnauthorized'
         '403':
@@ -568,6 +551,19 @@ paths:
       operationId: update-api-version
       summary: Update API Version
       description: Updates the version (OpenAPI or AsyncAPI) of an API.
+      parameters:
+        - name: force
+          in: query
+          description: |
+            If true, allows operations to be removed from the current version when using access control enforcement.
+            If false, operations removal will be rejected with a 409 error.
+            Omitting the value (i.e., setting `?force`) means true.
+          schema:
+            type: string
+            default: 'false'
+            enum:
+              - 'true'
+              - 'false'
       requestBody:
         $ref: '#/components/requestBodies/UpdateApiVersionRequest'
       responses:
@@ -692,6 +688,94 @@ paths:
           $ref: '#/components/responses/ApiNotFound'
       tags:
         - API Publication
+  '/portals/{portalId}/api-publications':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+    get:
+      operationId: list-portal-api-publications
+      summary: List Portal API Publications
+      description: |
+        Returns a collection of all API Publications for a specific portal.
+
+        **Access Control**: Requires permission to view the specified portal. Once portal access is granted, all API publications for that portal are returned regardless of the caller's individual API permissions.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PortalApiPublicationFilters'
+        - $ref: '#/components/parameters/PortalApiPublicationSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPublicationResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Publication
+  '/api-packages/{apiPackageId}/publications/{portalId}':
+    parameters:
+      - $ref: '#/components/parameters/ApiPackageId'
+      - $ref: '#/components/parameters/PortalId'
+    put:
+      operationId: publish-api-package-to-portal
+      summary: Publish API Package
+      description: |
+        Publish an API Package to a portal.
+      requestBody:
+        $ref: '#/components/requestBodies/PutApiPackagePublicationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackagePublicationResponse'
+        '400':
+          $ref: '#/components/responses/ApiPublicationBadRequest'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Publication
+    get:
+      operationId: fetch-api-package-publication
+      summary: Get an API Package Publication
+      description: |
+        Retrieve an API Package's publication in a portal.
+        If the API Package is not published to the portal, a 404 response is returned.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackagePublicationResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Publication
+    delete:
+      operationId: delete-api-package-publication
+      summary: Delete API Package Publication
+      description: Unpublish an API Package from a portal.
+      responses:
+        '204':
+          description: API Package was successfully unpublished from portal.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Publication
   '/apis/{apiId}/implementations':
     parameters:
       - $ref: '#/components/parameters/ApiId'
@@ -700,7 +784,11 @@ paths:
       summary: Create API Implementation
       description: |
         Creates an implementation for an API.
-        An API can be implemented by a single Gateway Service.
+        If all operations in an API are implemented by a single gateway service and the service
+        has no routes that are not part of the API, then the API can be linked to the service.
+        For cases where an API is implemented by multiple gateway services, only a subset of
+        routes in one or more gateway services, or API operations need to be made available for API packages,
+        then the API should be linked to the control plane that defines the routes that overlap with the API.
       requestBody:
         $ref: '#/components/requestBodies/CreateApiImplementationRequest'
       responses:
@@ -759,6 +847,51 @@ paths:
           $ref: '#/components/responses/ApiNotFound'
       tags:
         - API Implementation
+  '/apis/{apiId}/operations':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+    get:
+      operationId: list-api-operations
+      summary: List API Operations
+      description: |
+        Returns a list of operations for an API.
+        Returns 404 if the API is not configured for access control enforcement.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ApiOperationFilters'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListApiOperationResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Operations
+  '/apis/{apiId}/operations/{operationId}':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+      - $ref: '#/components/parameters/OperationId'
+    get:
+      operationId: fetch-api-operation
+      summary: Get an API Operation
+      description: |
+        Returns a specific operation for an API.
+        Returns 404 if the API is not configured for access control enforcement.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiOperationResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Operations
   /api-implementations:
     get:
       operationId: list-api-implementations
@@ -801,6 +934,500 @@ paths:
           $ref: '#/components/responses/ApiNotFound'
       tags:
         - API Attributes
+  /api-packages:
+    get:
+      operationId: list-api-packages
+      summary: List API Packages
+      description: List API packages
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ApiPackageFilters'
+        - $ref: '#/components/parameters/ApiPackageSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListApiPackagesResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Packages
+    post:
+      operationId: create-api-package
+      summary: Create API Package
+      description: |
+        Creates a package of APIs.
+        An API package is a collection of APIs that can be used to group related APIs together.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApiPackageRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/ApiPackageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Packages
+  '/api-packages/{packageId}':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    get:
+      operationId: get-api-package
+      summary: Get API Package
+      description: Get details of a specific API package.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Packages
+    patch:
+      operationId: patch-api-package
+      summary: Patch API Package
+      description: |
+        Updates an existing API package.
+        You can modify the name, description and version of the API Package.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateApiPackageRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+      tags:
+        - API Packages
+    delete:
+      operationId: delete-api-package
+      summary: Delete API Package
+      description: Deletes an API package.
+      responses:
+        '204':
+          description: API package was deleted successfully.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Packages
+  '/api-packages/{packageId}/documents':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    post:
+      operationId: create-api-package-document
+      summary: Create API Package Document
+      description: |
+        Publish a new document attached to an API Package.
+
+        All configuration options may be provided in the frontmatter section of `content`. If you set values in both the `POST` request _and_ in the frontmatter, the values in the `POST` request will take precedence.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApiDocumentRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/ApiPackageDocumentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                ApiNameBadRequestExample:
+                  $ref: '#/components/examples/ApiDocumentBadRequestExample'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/ApiSlugConflict'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+      tags:
+        - API Package Documentation
+    get:
+      operationId: list-api-package-documents
+      summary: List API Package Documents
+      description: Returns a collection of all documents for an API package.
+      parameters:
+        - $ref: '#/components/parameters/ApiDocumentFilters'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListApiPackageDocumentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                InvalidApiSortQueryBadRequestExample:
+                  $ref: '#/components/examples/InvalidApiSortQueryBadRequestExample'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Documentation
+  '/api-packages/{packageId}/documents/{documentId}':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+      - $ref: '#/components/parameters/DocumentId'
+    get:
+      operationId: fetch-api-package-document
+      summary: Get an API Package Document
+      description: Returns a document for the API Package.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageDocumentResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Documentation
+    patch:
+      operationId: update-api-package-document
+      summary: Update API Package Document
+      description: Updates a document for an API Package.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateApiDocumentRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageDocumentResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                ApiNameBadRequestExample:
+                  $ref: '#/components/examples/ApiDocumentBadRequestExample'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/ApiSlugConflict'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+      tags:
+        - API Package Documentation
+    delete:
+      operationId: delete-api-package-document
+      summary: Delete API Package Documentation
+      description: Removes a document from an API Package.
+      responses:
+        '204':
+          description: Document for the API was deleted successfully.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Documentation
+  '/api-packages/{packageId}/documents/{documentId}/move':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+      - $ref: '#/components/parameters/DocumentId'
+    post:
+      operationId: move-api-package-document
+      summary: Move API Package Documentation
+      description: 'This api allows the user to move a document within the document tree using the parameters parent_document_id and index. If parent_document_id is not provided, the document will be placed at the top level of the document tree. index represents a zero-indexed document order relative to its siblings under the same parent. For example, if we want to put the document at top level in first position we would send parent_document_id: null and index: 0. This api also supports using a negative index to count backwards from the end of the document list, which means you can put the document in last position by using index: -1.'
+      requestBody:
+        $ref: '#/components/requestBodies/MoveDocumentRequest'
+      responses:
+        '204':
+          description: Document for the API Package was moved successfully.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - API Package Documentation
+  '/api-packages/{packageId}/operations':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    get:
+      operationId: list-api-packages-operations
+      summary: List API Packages Operations
+      description: List API packages operations
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/ApiPackageOperationsFilters'
+        - $ref: '#/components/parameters/ApiPackageOperationsSort'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListApiPackagesOperationsResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Operations
+    patch:
+      operationId: update-api-package-operations
+      summary: Update API Package Operation
+      description: Update API Package Operations
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateApiPackageOperationRequest'
+      responses:
+        '204':
+          description: API operations were successfully added or removed to the package.
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/ApiSlugConflict'
+      tags:
+        - API Package Operations
+  '/api-packages/{packageId}/operations/{operationId}':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+      - name: operationId
+        in: path
+        description: The UUID API Operation identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    get:
+      operationId: get-api-packages-operation
+      summary: Get API Packages Operation
+      description: Get API packages operation
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageOperationResponse'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Operations
+    delete:
+      operationId: remove-api-package-operation
+      summary: Remove API Package Operation
+      description: Remove an operation from an API package.
+      responses:
+        '204':
+          description: API operation was removed successfully from the package.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Operations
+  '/api-packages/{packageId}/current-specification':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    put:
+      operationId: update-api-package-current-specification
+      summary: Update API package current specification
+      description: |
+        Updates the current specification of an API package.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateApiSpecRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiSpecResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                ApiNameBadRequestExample:
+                  $ref: '#/components/examples/ApiDocumentBadRequestExample'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+        '409':
+          $ref: '#/components/responses/ApiSlugConflict'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+      tags:
+        - API Package Specification
+    get:
+      operationId: get-api-package-current-specification
+      summary: Get the API package current specification
+      description: Fetches the current specification of an API Package.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiSpecResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                InvalidApiSortQueryBadRequestExample:
+                  $ref: '#/components/examples/InvalidApiSortQueryBadRequestExample'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Specification
+    delete:
+      operationId: delete-api-package-current-specification
+      summary: Delete API Package current Specification
+      description: |
+        Deletes the current specification of an API Package.
+      responses:
+        '204':
+          description: API Package Specification was deleted successfully.
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Specification
+  '/api-packages/{packageId}/computed-specification':
+    parameters:
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    get:
+      operationId: get-api-package-computed-specification
+      summary: Get the API package computed specification
+      description: Fetches the computed specification of an API Package.
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiSpecResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/ApiUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiForbidden'
+        '404':
+          $ref: '#/components/responses/ApiNotFound'
+      tags:
+        - API Package Specification
 components:
   parameters:
     ApiAttributeFilters:
@@ -864,6 +1491,64 @@ components:
           - api_id
           - control_plane_id
           - service_id
+          - created_at
+          - updated_at
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ApiOperationFilters:
+      name: filter
+      description: Filters API Operations in the response.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/ApiOperationFilterParameters'
+      style: deepObject
+    ApiPackageFilters:
+      name: filter
+      description: Filters API Packages in the response.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/ApiPackageFilterParameters'
+      style: deepObject
+    ApiPackageId:
+      schema:
+        type: string
+        format: uuid
+        example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+      name: apiPackageId
+      in: path
+      required: true
+      description: The UUID API Package identifier
+    ApiPackageOperationsFilters:
+      name: filter
+      description: Filters API Packages operations in the response.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/ApiPackageOperationsFilterParameters'
+      style: deepObject
+    ApiPackageOperationsSort:
+      name: sort
+      description: |
+        Sorts a collection of API Packages Operations. Supported sort attributes are:
+          - path
+          - method
+          - api_id
+          - created_at
+          - updated_at
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    ApiPackageSort:
+      name: sort
+      description: |
+        Sorts a collection of API Packages. Supported sort attributes are:
+          - name
+          - version
           - created_at
           - updated_at
       required: false
@@ -947,6 +1632,15 @@ components:
       in: path
       required: true
       description: The Portal identifier
+    OperationId:
+      schema:
+        type: string
+        format: uuid
+        example: b42d905a-ed33-46a3-a093-d8f536af9a8a
+      name: operationId
+      in: path
+      required: true
+      description: The API operation identifier
     PageNumber:
       name: 'page[number]'
       description: Determines which page of the entities to retrieve.
@@ -965,6 +1659,26 @@ components:
       schema:
         type: integer
         example: 10
+    PortalApiPublicationFilters:
+      name: filter
+      description: Filters API Publications in a portal response (excludes portal-specific filters).
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/PortalApiPublicationFilterParameters'
+      style: deepObject
+    PortalApiPublicationSort:
+      name: sort
+      description: |
+        Sorts a collection of API publications within a portal. Supported sort attributes are:
+          - api_id
+          - api_name
+          - created_at
+          - updated_at
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
     PortalId:
       schema:
         type: string
@@ -1069,6 +1783,11 @@ components:
           uniqueItems: true
         labels:
           $ref: '#/components/schemas/Labels'
+        implementation_mode:
+          description: the implementations that are associated with this api either gateway_entity_binding or access_control_enforcement
+          type: string
+          nullable: true
+          readOnly: true
         attributes:
           $ref: '#/components/schemas/ApiAttributes'
         created_at:
@@ -1088,19 +1807,6 @@ components:
         - api_spec_ids
         - current_version_summary
       title: API
-    ApiComputedSchema:
-      type: object
-      properties:
-        id:
-          description: The API identifier.
-          type: string
-          format: uuid
-          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
-        api_spec_validation_messages_count:
-          description: 'The number of validation messages for the API specification attached to the API. If there are no validation messages, the value will be 0, or if there are no API specifications, the value will be 0.'
-          type: integer
-          example: 1
-      additionalProperties: false
     AuthStrategyApiSyncError:
       type: object
       properties:
@@ -1440,6 +2146,8 @@ components:
           readOnly: true
         auto_approve_registrations:
           $ref: '#/components/schemas/AutoApproveRegistrations'
+        entity_type:
+          $ref: '#/components/schemas/EntityType'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
@@ -1457,7 +2165,50 @@ components:
         - updated_at
         - auth_strategy_ids
         - auto_approve_registrations
+        - entity_type
       title: API Publication List Item
+    PublicationListItem:
+      description: An API or API Package publication in a portal
+      type: object
+      properties:
+        api_id:
+          description: The API identifier.
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+          readOnly: true
+        portal_ids:
+          description: The portal identifier.
+          type: array
+          items:
+            type: string
+            format: uuid
+          example:
+            - 7710d5c4-d902-410b-992f-18b814155b53
+          readOnly: true
+        auto_approve_registrations:
+          $ref: '#/components/schemas/AutoApproveRegistrations'
+        entity_type:
+          $ref: '#/components/schemas/EntityType'
+        visibility:
+          $ref: '#/components/schemas/ApiPublicationVisibility'
+        auth_strategy_ids:
+          $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - api_id
+        - portal_ids
+        - visibility
+        - created_at
+        - updated_at
+        - auth_strategy_ids
+        - auto_approve_registrations
+        - entity_type
+      title: Publication List Item
     AutoApproveRegistrations:
       description: 'Whether the application registration auto approval on this portal for the api is enabled. If set to false, fallbacks on portal''s auto_approve_applications value.'
       type: boolean
@@ -1478,6 +2229,22 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       additionalProperties: false
       title: API Publication
+    ApiPackagePublication:
+      description: An API Package publication in a portal
+      type: object
+      properties:
+        auto_approve_registrations:
+          $ref: '#/components/schemas/AutoApproveRegistrations'
+        auth_strategy_ids:
+          $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        visibility:
+          $ref: '#/components/schemas/ApiPublicationVisibility'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      title: API Package Publication
     ApiImplementationService:
       description: A Gateway service that implements an API
       type: object
@@ -1499,11 +2266,28 @@ components:
         - control_plane_id
         - id
       title: API Implementation Service
+    ApiImplementationControlPlane:
+      description: A Control plane that implements an API
+      type: object
+      properties:
+        access_control_enforcement_enabled:
+          description: Indicates if the access control enforcement plugin is installed globally in the target control plane
+          type: boolean
+          readOnly: true
+        control_plane_id:
+          type: string
+          format: uuid
+          example: 7710d5c4-d902-410b-992f-18b814155b53
+      additionalProperties: false
+      required:
+        - control_plane_id
+      title: API Implementation Control Plane
     ApiImplementationListItem:
       description: An entity that implements an API
       type: object
       oneOf:
         - $ref: '#/components/schemas/ApiImplementationListItemGatewayServiceEntity'
+        - $ref: '#/components/schemas/ApiImplementationListItemControlPlaneEntity'
       title: API Implementation List Item
     ApiImplementationListItemGatewayServiceEntity:
       description: An API Implementation list item for gateway services
@@ -1530,11 +2314,38 @@ components:
         - created_at
         - updated_at
       title: ApiImplementationListItemGatewayServiceEntity
+    ApiImplementationListItemControlPlaneEntity:
+      description: An API Implementation list item for control planes
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        api_id:
+          description: The API identifier.
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+          readOnly: true
+        control_plane:
+          $ref: '#/components/schemas/ApiImplementationControlPlane'
+      additionalProperties: false
+      required:
+        - id
+        - api_id
+        - created_at
+        - updated_at
+        - control_plane
+      title: ApiImplementationListItemControlPlaneEntity
     ApiImplementation:
       description: An entity that implements an API
       type: object
       oneOf:
         - $ref: '#/components/schemas/ApiImplementationGatewayServiceEntity'
+        - $ref: '#/components/schemas/ApiImplementationControlPlaneEntity'
       title: API Implementation
     ApiImplementationGatewayServiceEntity:
       description: A gateway service that implements an API
@@ -1550,6 +2361,20 @@ components:
           $ref: '#/components/schemas/ApiImplementationService'
       additionalProperties: false
       title: ApiImplementationGatewayServiceEntity
+    ApiImplementationControlPlaneEntity:
+      description: A control plane that implements an API
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        control_plane:
+          $ref: '#/components/schemas/ApiImplementationControlPlane'
+      additionalProperties: false
+      title: ApiImplementationControlPlaneEntity
     ApiAttributeListItem:
       description: Entities that describe APIs
       type: object
@@ -1615,7 +2440,131 @@ components:
           pattern: '^[^,<>]*$'
       nullable: false
       title: API Attributes
+    ApiOperation:
+      description: An operation linked to an API
+      type: object
+      properties:
+        id:
+          description: The API operation identifier.
+          type: string
+          format: uuid
+          example: b42d905a-ed33-46a3-a093-d8f536af9a8a
+          readOnly: true
+        method:
+          $ref: '#/components/schemas/Method'
+        path:
+          description: The path of the operation.
+          type: string
+          example: /users/*
+        implementation_status:
+          $ref: '#/components/schemas/ApiOperationImplementationStatus'
+      additionalProperties: false
+      required:
+        - id
+        - method
+        - path
+      title: API Operation
+    ApiOperationImplementationStatus:
+      description: The implementation status of the operation.
+      type: object
+      properties:
+        matched:
+          description: Whether the operation is matched by a Kong route in the control plane
+          type: boolean
+          readOnly: true
+        route:
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              description: The route identifier
+              type: string
+              format: uuid
+            name:
+              description: The name of the route
+              type: string
+          readOnly: true
+          required:
+            - id
+            - name
+        service:
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              description: The service identifier
+              type: string
+              format: uuid
+            name:
+              description: The name of the service
+              type: string
+          readOnly: true
+          required:
+            - id
+            - name
+      additionalProperties: false
+      required:
+        - matched
+        - route
+        - service
+      title: API Operation Implementation Status
+    APIPackageJSONPatchOperation:
+      description: A JSON Patch operation to add or remove API Operations from a Package.
+      type: array
+      items:
+        $ref: '#/components/schemas/APIPackageJSONPatchItem'
+      minItems: 1
+      title: JSON Patch Operation
+    APIPackageJSONPatchItem:
+      description: A JSON Patch operation to add or remove an API Operation from a Package.
+      type: object
+      properties:
+        op:
+          description: The operation to perform.
+          type: string
+          enum:
+            - add
+            - remove
+            - replace
+        path:
+          description: 'The path to the API Operation in the Package, in the format "operations/<uuid>".'
+          type: string
+          pattern: '^operations/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+        value:
+          type: object
+          additionalProperties: false
+          properties:
+            rate_limiting_config:
+              $ref: '#/components/schemas/RateLimitingConfig'
+          required:
+            - rate_limiting_config
+      additionalProperties: false
+      required:
+        - op
+        - path
     ApiFilterParameters:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        version:
+          $ref: '#/components/schemas/StringFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
+        attributes:
+          $ref: '#/components/schemas/AttributesFieldFilter'
+        implementation_mode:
+          $ref: '#/components/schemas/StringFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+      title: API Filter Parameters
+    ApiPackageFilterParameters:
       type: object
       properties:
         id:
@@ -1632,7 +2581,21 @@ components:
           $ref: '#/components/schemas/DateTimeFieldFilter'
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
-      title: API Filter Parameters
+      title: API Package Filter Parameters
+    ApiPackageOperationsFilterParameters:
+      type: object
+      properties:
+        api_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        method:
+          $ref: '#/components/schemas/StringFieldFilter'
+        path:
+          $ref: '#/components/schemas/StringFieldFilter'
+        created_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+        updated_at:
+          $ref: '#/components/schemas/DateTimeFieldFilter'
+      title: API Package Operations Filter Parameters
     ApiDocumentFilterParameters:
       type: object
       properties:
@@ -1666,7 +2629,22 @@ components:
           $ref: '#/components/schemas/StringFieldFilter'
         auth_strategy_id:
           $ref: '#/components/schemas/UuidFieldFilter'
+        entity_type:
+          $ref: '#/components/schemas/StringFieldFilter'
       title: API Publication Filter Parameters
+    PortalApiPublicationFilterParameters:
+      description: API Publication filters excluding portal-specific fields (since portal is already specified in path)
+      type: object
+      properties:
+        api_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        api_name:
+          $ref: '#/components/schemas/StringFieldFilter'
+        auth_strategy_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        entity_type:
+          $ref: '#/components/schemas/StringFieldFilter'
+      title: Portal API Publication Filter Parameters
     ApiImplementationFilterParameters:
       type: object
       properties:
@@ -1695,6 +2673,183 @@ components:
         updated_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
       title: API Attribute Filter Parameters
+    ApiOperationFilterParameters:
+      type: object
+      properties:
+        method:
+          $ref: '#/components/schemas/StringFieldFilter'
+        path:
+          $ref: '#/components/schemas/StringFieldFilter'
+      title: API Operation Filter Parameters
+    ApiPackageResponseSchema:
+      type: object
+      properties:
+        id:
+          description: The API Package identifier.
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+          readOnly: true
+        name:
+          description: |
+            The name of your API Package. The `name + version` combination must be unique for each API Package you publish.
+          type: string
+          example: MyAPIPackage
+          maxLength: 255
+          minLength: 1
+        description:
+          description: A description of your API Package. Will be visible on your live Portal.
+          type: string
+          nullable: true
+        slug:
+          description: |
+            The unique slug for your API Package, It should be unique across all APIs and API Packages.
+          type: string
+          example: my-api-package-v1
+          nullable: true
+          pattern: '^[\w-]+$'
+        version:
+          description: An optional version for your API Package. Leave this empty if your API Package is unversioned.
+          type: string
+          maxLength: 255
+          minLength: 1
+          nullable: true
+        rate_limiting_config:
+          $ref: '#/components/schemas/RateLimitingConfig'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        attributes:
+          $ref: '#/components/schemas/ApiAttributes'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - slug
+        - version
+        - labels
+        - attributes
+        - created_at
+        - updated_at
+        - rate_limiting_config
+      title: API Package
+    ApiPackageOperationResponseSchema:
+      type: object
+      properties:
+        id:
+          description: The API Operation identifier.
+          type: string
+          format: uuid
+          example: 0f5061ce-78f6-4452-9108-ad7c02821fd6
+          readOnly: true
+        api:
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The API identifier.
+              type: string
+              format: uuid
+              example: 0f5061ce-78f6-4452-9108-ad7c02821fd6
+              readOnly: true
+            name:
+              description: The name of the API this operation belongs to.
+              type: string
+              example: MyAPI
+              readOnly: true
+            version:
+              description: The version of the API this operation belongs to.
+              type: string
+              example: 1.0.0
+              readOnly: true
+          readOnly: true
+          required:
+            - id
+            - name
+            - version
+        method:
+          $ref: '#/components/schemas/Method'
+        path:
+          description: The path of the API Operation.
+          type: string
+          example: '/users/{user_id}'
+          readOnly: true
+        rate_limiting_config:
+          description: Rate limit configuration that can be applied to an API Package or an API Package Operation.
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            limit:
+              description: The amount of requests allowed for each operation within the specified duration.
+              type: integer
+              minimum: 0
+            duration:
+              description: The timeframe to ensure that an application does not exceed the request limit.
+              type: string
+              enum:
+                - seconds
+                - minutes
+                - hours
+          readOnly: true
+          required:
+            - limit
+            - duration
+          title: Rate Limiting configuration
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+        implementation_status:
+          $ref: '#/components/schemas/ApiOperationImplementationStatus'
+      additionalProperties: false
+      required:
+        - id
+        - api
+        - method
+        - path
+        - created_at
+        - updated_at
+        - rate_limiting_config
+      title: API Package Operation Response
+    Method:
+      description: The HTTP method of an API Operation.
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - PATCH
+        - OPTIONS
+        - HEAD
+        - CONNECT
+        - TRACE
+      readOnly: true
+    RateLimitingConfig:
+      description: Rate limit configuration that can be applied to an API Package or an API Package Operation.
+      type: object
+      properties:
+        limit:
+          description: The amount of requests allowed for each operation within the specified duration.
+          type: integer
+          minimum: 0
+        duration:
+          description: The timeframe to ensure that an application does not exceed the request limit.
+          type: string
+          enum:
+            - seconds
+            - minutes
+            - hours
+      additionalProperties: false
+      nullable: true
+      required:
+        - limit
+        - duration
+      title: Rate Limiting configuration
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -2268,6 +3423,14 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    EntityType:
+      description: The type of entity that is being published. Can be either an API or an API Package.
+      type: string
+      example: api
+      enum:
+        - api
+        - api_package
+      title: Entity Type
     UUID:
       description: Contains a unique identifier used for this resource.
       type: string
@@ -2299,6 +3462,33 @@ components:
             display_name: My Portal
         api_spec_ids:
           - 123e4567-e89b-12d3-a456-426614174000
+    ApiPackageExample:
+      value:
+        id: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+        name: myAPIPackage
+        version: v1
+        slug: my-api-package-v1
+        description: My API
+        rate_limiting_config: null
+        created_at: '2023-01-01T00:00:00.000Z'
+        updated_at: '2023-01-01T00:00:00.000Z'
+        labels:
+          foo: bar
+        attributes:
+          env:
+            - production
+    ApiPackageOperationExample:
+      value:
+        id: 4fa80de7-bce1-41e0-8788-8c5df14a23a0
+        api:
+          id: c9defa01-f239-4d88-8e4c-bfbf4096340b
+          name: My Customer Api
+          version: 2.0.2
+        method: POST
+        path: /customers
+        rate_limiting_config: null
+        created_at: '2026-12-02T08:00:06.040Z'
+        updated_at: '2028-01-02T12:21:04.501Z'
     ApiSpecExample:
       value:
         id: 7710d5c4-d902-410b-992f-18b814155b53
@@ -2602,6 +3792,12 @@ components:
         title: Conflict
         instance: 'kong:trace:9039922446017540182'
         detail: 'Key (api_id, path)=(23380be0-c15e-4ca8-bcf7-43aadddc91b1, hidden.yaml) already exists.'
+    ApiOperationsRemovalConflictExample:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:1234567890123456789'
+        detail: Operations are not allowed to be removed from the current version when using access control enforcement
     ApiImplementationServiceConflictExample:
       value:
         status: 409
@@ -2686,6 +3882,72 @@ components:
         version: 1.0.2
         spec:
           content: '{"asyncapi":"2.6.0","info":{"title":"Account Service Updated","version":"1.0.1","description":"This service is in charge of processing user signups (updated)"},"channels":{"user/signedup":{"publish":{"summary":"Inform about signed up users","operationId":"sendUserSignedUp","message":{"name":"UserSignedUp","payload":{"type":"object","properties":{"displayName":{"type":"string","description":"Name of the user"},"email":{"type":"string","format":"email","description":"Email of the user"}}}}}}}}'
+    ApiOperationExample:
+      summary: API Operation Response
+      value:
+        id: b42d905a-ed33-46a3-a093-d8f536af9a8a
+        method: GET
+        path: /users/*
+    ListApiOperationExample:
+      summary: List API Operations Response
+      value:
+        data:
+          - id: b42d905a-ed33-46a3-a093-d8f536af9a8a
+            method: GET
+            path: /users/*
+          - id: c53e206b-fe44-57b4-b094-e9f647bf0b9b
+            method: POST
+            path: /users
+          - id: d64f317c-0f55-68c5-c1a5-f0f758cf1c0c
+            method: DELETE
+            path: /users/*
+        meta:
+          page:
+            number: 1
+            size: 3
+            total: 3
+    ListApiOperationWithImplementationStatusExample:
+      summary: List API Operations With Implementation Status Response
+      value:
+        data:
+          - id: b42d905a-ed33-46a3-a093-d8f536af9a8a
+            method: GET
+            path: /users/*
+            implementation_status:
+              matched: true
+              route:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-route
+              service:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-service
+          - id: c53e206b-fe44-57b4-b094-e9f647bf0b9b
+            method: POST
+            path: /users
+            implementation_status:
+              matched: true
+              route:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-route
+              service:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-service
+          - id: d64f317c-0f55-68c5-c1a5-f0f758cf1c0c
+            method: DELETE
+            path: /users/*
+            implementation_status:
+              matched: true
+              route:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-route
+              service:
+                id: 123e4567-e89b-12d3-a456-426614174000
+                name: example-service
+        meta:
+          page:
+            number: 1
+            size: 3
+            total: 3
     UnsupportedMediaTypeExample:
       value:
         status: 415
@@ -2773,6 +4035,11 @@ components:
                 uniqueItems: true
               labels:
                 $ref: '#/components/schemas/Labels'
+              implementation_mode:
+                description: the implementations that are associated with this api either gateway_entity_binding or access_control_enforcement
+                type: string
+                nullable: true
+                readOnly: true
               attributes:
                 $ref: '#/components/schemas/ApiAttributes'
               created_at:
@@ -2793,6 +4060,57 @@ components:
               $ref: '#/components/examples/CreateApiRequestMinimalExample'
             CreateApiFull:
               $ref: '#/components/examples/CreateApiRequestFullExample'
+    CreateApiPackageRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                description: The API Package identifier.
+                type: string
+                format: uuid
+                example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+                readOnly: true
+              name:
+                description: |
+                  The name of your API Package. The `name + version` combination must be unique for each API Package you publish.
+                type: string
+                example: MyAPIPackage
+                maxLength: 255
+                minLength: 1
+              description:
+                description: A description of your API Package. Will be visible on your live Portal.
+                type: string
+                nullable: true
+              slug:
+                description: |
+                  The unique slug for your API Package, It should be unique across all APIs and API Packages.
+                type: string
+                example: my-api-package-v1
+                nullable: true
+                pattern: '^[\w-]+$'
+              version:
+                description: An optional version for your API Package. Leave this empty if your API Package is unversioned.
+                type: string
+                maxLength: 255
+                minLength: 1
+                nullable: true
+              rate_limiting_config:
+                $ref: '#/components/schemas/RateLimitingConfig'
+              labels:
+                $ref: '#/components/schemas/Labels'
+              attributes:
+                $ref: '#/components/schemas/ApiAttributes'
+              created_at:
+                $ref: '#/components/schemas/CreatedAt'
+              updated_at:
+                $ref: '#/components/schemas/UpdatedAt'
+            additionalProperties: false
+            required:
+              - name
+            title: API Package
     CreateApiSpecRequest:
       required: true
       content:
@@ -3024,6 +4342,11 @@ components:
                 uniqueItems: true
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              implementation_mode:
+                description: the implementations that are associated with this api either gateway_entity_binding or access_control_enforcement
+                type: string
+                nullable: true
+                readOnly: true
               attributes:
                 $ref: '#/components/schemas/ApiAttributes'
               created_at:
@@ -3037,6 +4360,61 @@ components:
               $ref: '#/components/examples/UpdateApiNameRequestExample'
             UpdateApiVersion:
               $ref: '#/components/examples/UpdateApiVersionRequestExample'
+    UpdateApiPackageRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                description: The API Package identifier.
+                type: string
+                format: uuid
+                example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+                readOnly: true
+              name:
+                description: |
+                  The name of your API Package. The `name + version` combination must be unique for each API Package you publish.
+                type: string
+                example: MyAPIPackage
+                maxLength: 255
+                minLength: 1
+              description:
+                description: A description of your API Package. Will be visible on your live Portal.
+                type: string
+                nullable: true
+              slug:
+                description: |
+                  The unique slug for your API Package, It should be unique across all APIs and API Packages.
+                type: string
+                example: my-api-package-v1
+                nullable: true
+                pattern: '^[\w-]+$'
+              version:
+                description: An optional version for your API Package. Leave this empty if your API Package is unversioned.
+                type: string
+                maxLength: 255
+                minLength: 1
+                nullable: true
+              rate_limiting_config:
+                $ref: '#/components/schemas/RateLimitingConfig'
+              labels:
+                $ref: '#/components/schemas/LabelsUpdate'
+              attributes:
+                $ref: '#/components/schemas/ApiAttributes'
+              created_at:
+                $ref: '#/components/schemas/CreatedAt'
+              updated_at:
+                $ref: '#/components/schemas/UpdatedAt'
+            additionalProperties: false
+            title: API Package
+    UpdateApiPackageOperationRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIPackageJSONPatchOperation'
     UpdateApiDocumentRequest:
       required: true
       content:
@@ -3078,6 +4456,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiPublication'
+    PutApiPackagePublicationRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiPackagePublication'
     CreateApiImplementationRequest:
       required: true
       content:
@@ -3156,6 +4540,8 @@ components:
           schema:
             $ref: '#/components/schemas/ConflictError'
           examples:
+            ApiOperationsRemovalConflictExample:
+              $ref: '#/components/examples/ApiOperationsRemovalConflictExample'
             ApiSpecHiddenConflictExample:
               $ref: '#/components/examples/ApiSpecHiddenConflictExample'
     ApiImplementationConflict:
@@ -3259,8 +4645,26 @@ components:
                     number: 1
                     size: 1
                     total: 10
-    ListApiComputedResponse:
-      description: List of APIs with computed fields
+    ApiPackageResponse:
+      description: API Package
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiPackageResponseSchema'
+          examples:
+            ApiPackageResponse:
+              $ref: '#/components/examples/ApiPackageExample'
+    ApiPackageOperationResponse:
+      description: API Package Operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiPackageOperationResponseSchema'
+          examples:
+            ApiPackageResponse:
+              $ref: '#/components/examples/ApiPackageOperationExample'
+    ListApiPackagesResponse:
+      description: List of API Packages
       content:
         application/json:
           schema:
@@ -3271,12 +4675,120 @@ components:
               data:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ApiComputedSchema'
+                  $ref: '#/components/schemas/ApiPackageResponseSchema'
             additionalProperties: false
             required:
               - data
               - meta
-            title: List Api Computed Response
+            title: ListApiPackagesResponse
+          examples:
+            ApiPackageCollection:
+              value:
+                data:
+                  - id: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+                    name: myAPIPackage
+                    version: v1
+                    slug: my-api-package-v1
+                    description: This is an API package
+                    rate_limiting_config: null
+                    labels:
+                      env: test
+                    attributes:
+                      env:
+                        - production
+                    created_at: '2023-01-01T00:00:00.000Z'
+                    updated_at: '2023-01-01T00:00:00.000Z'
+                meta:
+                  page:
+                    number: 1
+                    size: 1
+                    total: 10
+    ListApiPackagesOperationsResponse:
+      description: List of API Package Operations
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPackageOperationResponseSchema'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListApiPackageOperationsResponse
+          examples:
+            ApiPackageCollection:
+              value:
+                data:
+                  - id: c9d02086-14bb-4e2e-8d40-991bf3fef9ce
+                    api:
+                      id: 830413b1-ac8e-4e71-a260-c1ba9ab33089
+                      name: My User Api
+                      version: 2.0.2
+                    method: GET
+                    path: /users
+                    rate_limiting_config:
+                      limit: 3600
+                      duration: seconds
+                    created_at: '2026-12-02T08:00:06.040Z'
+                    updated_at: '2028-01-02T12:21:04.501Z'
+                  - id: 4fa80de7-bce1-41e0-8788-8c5df14a23a0
+                    api:
+                      id: c9defa01-f239-4d88-8e4c-bfbf4096340b
+                      name: My Customer Api
+                      version: 2.0.2
+                    method: POST
+                    path: /customers
+                    rate_limiting_config: null
+                    created_at: '2026-12-02T08:00:06.040Z'
+                    updated_at: '2028-01-02T12:21:04.501Z'
+                meta:
+                  page:
+                    number: 1
+                    size: 10
+                    total: 2
+    ApiPackageDocumentResponse:
+      description: API Package document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/ApiDocumentId'
+              content:
+                $ref: '#/components/schemas/ApiDocumentContent'
+              title:
+                $ref: '#/components/schemas/ApiDocumentTitle'
+              slug:
+                $ref: '#/components/schemas/ApiDocumentSlug'
+              status:
+                $ref: '#/components/schemas/ApiDocumentStatus'
+              parent_document_id:
+                $ref: '#/components/schemas/ApiDocumentParentDocumentId'
+              created_at:
+                $ref: '#/components/schemas/CreatedAt'
+              updated_at:
+                $ref: '#/components/schemas/UpdatedAt'
+            additionalProperties: false
+            required:
+              - id
+              - parent_document_id
+              - title
+              - slug
+              - status
+              - content
+              - updated_at
+              - created_at
+            title: API Document
+          examples:
+            CreateApiDocumentResponse:
+              $ref: '#/components/examples/ApiDocumentExample'
     ApiDocumentResponse:
       description: API document
       content:
@@ -3314,6 +4826,20 @@ components:
           examples:
             CreateApiDocumentResponse:
               $ref: '#/components/examples/ApiDocumentExample'
+    ListApiPackageDocumentResponse:
+      description: List of API Package documents
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiDocumentSummaryWithChildren'
+            additionalProperties: false
+            required:
+              - data
     ListApiDocumentResponse:
       description: List of API documents
       content:
@@ -3589,6 +5115,49 @@ components:
               - data
               - meta
             title: ListApiPublications
+    ListPublicationResponse:
+      description: Paginated list of publications
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicationListItem'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListPublications
+    ApiPackagePublicationResponse:
+      description: An API Package publication in a portal
+      content:
+        application/json:
+          schema:
+            description: An API Package publication in a portal
+            type: object
+            properties:
+              auto_approve_registrations:
+                $ref: '#/components/schemas/AutoApproveRegistrations'
+              auth_strategy_ids:
+                $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+              visibility:
+                $ref: '#/components/schemas/ApiPublicationVisibility'
+              created_at:
+                $ref: '#/components/schemas/CreatedAt'
+              updated_at:
+                $ref: '#/components/schemas/UpdatedAt'
+            additionalProperties: false
+            required:
+              - visibility
+              - created_at
+              - updated_at
+              - auth_strategy_ids
+            title: API Package Publication
     ApiImplementationResponse:
       description: An API implementation
       content:
@@ -3598,6 +5167,7 @@ components:
             type: object
             oneOf:
               - $ref: '#/components/schemas/ApiImplementationGatewayServiceEntity'
+              - $ref: '#/components/schemas/ApiImplementationControlPlaneEntity'
             required:
               - id
               - created_at
@@ -3650,6 +5220,38 @@ components:
               $ref: '#/components/examples/ValidateApiSpecSuccessResponseExample'
             ValidateApiSpecSuccessResponseWithWarningExample:
               $ref: '#/components/examples/ValidateApiSpecSuccessResponseWithWarningExample'
+    ApiOperationResponse:
+      description: An API operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiOperation'
+          examples:
+            ApiOperationExample:
+              $ref: '#/components/examples/ApiOperationExample'
+    ListApiOperationResponse:
+      description: Paginated list of API operations
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiOperation'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+            title: ListApiOperations
+          examples:
+            ListApiOperationExample:
+              $ref: '#/components/examples/ListApiOperationExample'
+            ListApiOperationWithImplementationStatusExample:
+              $ref: '#/components/examples/ListApiOperationWithImplementationStatusExample'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:
@@ -3696,7 +5298,11 @@ tags:
   - name: API Specification
   - name: API Publication
   - name: API Implementation
+  - name: API Operations
   - name: API Attributes
+  - name: API Packages
+  - name: API Package Operations
+  - name: API Package Documentation
 security:
   - konnectAccessToken: []
   - personalAccessToken: []

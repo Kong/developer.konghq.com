@@ -150,6 +150,20 @@ rows:
                 url: "/how-to/monitor-dynatrace-slos-with-konnect-api/"
               - text: Tutorial ({{site.konnect_short_name}} UI)
                 url: "/how-to/monitor-dynatrace-slos-with-konnect-ui/"
+      
+      - blocks:
+        - type: card
+          config:
+            title: Azure DevOps
+            description: Connect Azure DevOps repositories directly to your {{site.konnect_catalog}} services.
+            icon: /assets/icons/azure-devops.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/azure-devops/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/connect-azure-devops-to-the-konnect-catalog-with-the-konnect-ui/"        
       - blocks:
         - type: card
           config:
@@ -163,6 +177,19 @@ rows:
                 url: "/how-to/monitor-sonarqube-projects-with-konnect-api/"
               - text: Tutorial ({{site.konnect_short_name}} UI)
                 url: "/how-to/monitor-sonarqube-projects-with-konnect-ui/"
+      - blocks:
+        - type: card
+          config:
+            title: Azure API Management
+            description: Connect Azure API Management APIs directly to your {{site.konnect_catalog}} services.
+            icon: /assets/icons/azure.svg
+            ctas:
+              - text: Reference
+                url: "/catalog/integrations/azure-api-management/"
+              - text: Tutorial ({{site.konnect_short_name}} API)
+                url: "/how-to/discover-azure-apis-with-konnect-api/"
+              - text: Tutorial ({{site.konnect_short_name}} UI)
+                url: "/how-to/discover-azure-apis-with-konnect-ui/"
   
   - header:
       type: h2

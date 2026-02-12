@@ -1,4 +1,41 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support to the `tls_certificate_verify`\nglobal option. When this option is enabled the plugin's flags\n`ssl_verify`, `tls_client_auth_ssl_verify`, and `session_memcached_ssl_verify`\ncannot be disabled.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added the flags `session_memcached_ssl` and\n`session_memcached_ssl_verify` to switch certificate verification when\nconnecting to Memcached server.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where for incremental sync, consumer related caches may not be properly invalidated, causing stale data to be served.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the issuer mismatch error message for the token's `iss` claim did not reflect the correct token type and expected issuers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `client_credentials`/`authorization_code` auth would not auto-recover if IdP was not accessible during Kong startup.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved claim validation logic to correctly handle timestamp claims (exp, nbf, iat) even when provided as non-numeric types.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where TLS client certificate loading failed in non-default workspaces. The certificate lookup now explicitly specifies the plugin's workspace when querying the database during configuration initialization.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for session binding (IP, scheme, and/or User-Agent header).\n",

@@ -1,4 +1,38 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where MCP-like request was not authenticated.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the oidc schema was polluted during merging.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where resource without path was not correctly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where there was an unexpected `required: false` in the plugin schema.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where x-forwarded-* headers were not respected.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where we didn't clear header for absent claim.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Introduced the AI MCP OAuth2 plugin, which protects the MCP traffic with OAuth2.\n",

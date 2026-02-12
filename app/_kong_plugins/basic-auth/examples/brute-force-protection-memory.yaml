@@ -1,0 +1,27 @@
+title: 'Brute force protection in memory'
+description: 'Protect against brute force attacks.'
+extended_description: |
+  [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection` and the `memory` strategy.
+  This will return an `429 Too Many Requests` error after the third failed login attempt.
+weight: 900
+
+requirements: 
+- "A [Consumer](/gateway/entities/consumer/) with a username and password"
+min_version:
+    gateway: '3.13'
+
+config:
+  brute_force_protection:
+    strategy: memory
+variables:
+  redis_host:
+    value: $REDIS_HOST
+  redis_password:
+    value: $REDIS_PASSWORD
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -81,11 +81,15 @@ module Jekyll
         end
 
         def config
-          @config ||= configuration.merge(@yaml.except('url'))
+          @config ||= configuration.merge(@yaml.except('url', 'section'))
         end
 
         def template_file
           @template_file ||= "app/_includes/how-tos/validations/#{id}/index.html"
+        end
+
+        def section
+          @section ||= @yaml['section'] || 'step'
         end
 
         private

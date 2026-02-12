@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b6321606a76ff4d736b45a17640baf5021adc6c6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b6321606a76ff4d736b45a17640baf5021adc6c6'
+  x-oas-source: kong/platform-api@9d894504533aac3107094b10429cc9c1f044f46a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d894504533aac3107094b10429cc9c1f044f46a'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -256,6 +256,7 @@ components:
             type: string
             enum:
               - api
+              - api_package
               - api_product
               - api_product_version
               - application
@@ -863,6 +864,42 @@ components:
             - operator
             - field
       title: Filter by api
+    MetricsApiPackageFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The IDs to include in the results.
+              type: array
+              items:
+                $ref: '#/components/schemas/UnscopedUuid'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_package
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - api_package
+          required:
+            - operator
+            - field
+      title: Filter by api_package
     MetricsApiProductFilterByField:
       oneOf:
         - title: Multiselect filters
@@ -1528,6 +1565,7 @@ components:
           propertyName: field
           mapping:
             api: '#/components/schemas/MetricsApiFilterByField'
+            api_package: '#/components/schemas/MetricsApiPackageFilterByField'
             api_product: '#/components/schemas/MetricsApiProductFilterByField'
             api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
             application: '#/components/schemas/MetricsApplicationFilterByField'
@@ -1548,6 +1586,7 @@ components:
             upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
         oneOf:
           - $ref: '#/components/schemas/MetricsApiFilterByField'
+          - $ref: '#/components/schemas/MetricsApiPackageFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductFilterByField'
           - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
           - $ref: '#/components/schemas/MetricsApplicationFilterByField'
@@ -2111,6 +2150,7 @@ components:
           ai_request_model: '#/components/schemas/MetricsAiRequestModelFilterByField'
           ai_response_model: '#/components/schemas/MetricsAiResponseModelFilterByField'
           api: '#/components/schemas/MetricsApiFilterByField'
+          api_package: '#/components/schemas/MetricsApiPackageFilterByField'
           api_product: '#/components/schemas/MetricsApiProductFilterByField'
           api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
           application: '#/components/schemas/MetricsApplicationFilterByField'
@@ -2138,6 +2178,7 @@ components:
         - $ref: '#/components/schemas/MetricsAiRequestModelFilterByField'
         - $ref: '#/components/schemas/MetricsAiResponseModelFilterByField'
         - $ref: '#/components/schemas/MetricsApiFilterByField'
+        - $ref: '#/components/schemas/MetricsApiPackageFilterByField'
         - $ref: '#/components/schemas/MetricsApiProductFilterByField'
         - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
         - $ref: '#/components/schemas/MetricsApplicationFilterByField'

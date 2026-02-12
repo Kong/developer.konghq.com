@@ -33,25 +33,10 @@ prereqs:
   inline:
     - title: Install kafkactl
       position: before
-      content: |
-        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+      include_content: knep/kafkactl
     - title: Define a context for kafkactl
       position: before
-      content: |
-        Let's define a context we can use to create Kafka topics.
-
-        ```bash
-        cat <<EOF > kafkactl.yaml
-        contexts:
-          direct:
-            brokers:
-              - localhost:9095
-              - localhost:9096
-              - localhost:9094
-        EOF
-        ```
-        {: data-test-prereqs="block" }
-
+      include_content: knep/kafka-context
     - title: Start a local Kafka cluster
       position: before
       include_content: knep/docker-compose-start
@@ -59,6 +44,8 @@ prereqs:
 related_resources:
   - text: Event Gateway
     url: /event-gateway/
+  - text: Configure SNI routing with {{site.event_gateway}}
+    url: /event-gateway/configure-sni-routing/
 ---
 
 ## Create kafka topics
@@ -79,13 +66,10 @@ First, we need to create these sample topics in the Kafka cluster we created in 
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_pageviews
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_clicks
-  kafkactl -C kafkactl.yaml --context direct create topic analytics_orders
-  kafkactl -C kafkactl.yaml --context direct create topic payments_transactions
-  kafkactl -C kafkactl.yaml --context direct create topic payments_refunds
-  kafkactl -C kafkactl.yaml --context direct create topic payments_orders
-  kafkactl -C kafkactl.yaml --context direct create topic user_actions
+  kafkactl -C kafkactl.yaml --context direct create topic \
+  analytics_pageviews analytics_clicks analytics_orders \
+  payments_transactions payments_refunds payments_orders \
+  user_actions
 expected:
   return_code: 0
 render_output: false
@@ -94,115 +78,20 @@ render_output: false
 
 ## Create a backend cluster
 
-Use the following command to create a [backend cluster](/event-gateway/entities/backend-cluster/) that connects to the Kafka servers you set up:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
-status_code: 201
-method: POST
-body:
-  name: backend_cluster
-  bootstrap_servers:
-    - kafka1:9092
-    - kafka2:9092
-    - kafka3:9092
-  authentication:
-    type: anonymous
-  tls:
-    enabled: false
-extract_body:
-  - name: id
-    variable: BACKEND_CLUSTER_ID
-capture: BACKEND_CLUSTER_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
+{% include knep/create-backend-cluster.md %}
 
 ## Create an analytics virtual cluster
 
-Use the following command to create the first virtual cluster for the `analytics` category:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
-status_code: 201
-method: POST
-body:
-  name: analytics_vc
-  destination:
-    id: $BACKEND_CLUSTER_ID
-  dns_label: analytics
-  authentication:
-    - type: sasl_plain
-      mediation: terminate
-      principals:
-        - username: analytics_user
-          password: analytics_password
-  acl_mode: enforce_on_gateway
-  namespace:
-    prefix: analytics_
-    mode: hide_prefix
-    additional:
-      topics:
-        - type: exact_list
-          conflict: warn
-          exact_list:
-            - backend: user_actions
-extract_body:
-  - name: id
-    variable: ANALYTICS_VC_ID
-capture: ANALYTICS_VC_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-This virtual cluster provides access to topics with the `analytics_` prefix, and the `user_actions` topic.
+{% include knep/create-virtual-cluster.md name="analytics" auth=true %}
 
 ## Create a payments virtual cluster
 
-Now create the `payments` virtual cluster:
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
-status_code: 201
-method: POST
-body:
-  name: payments_vc
-  destination:
-    id: $BACKEND_CLUSTER_ID
-  dns_label: payments
-  authentication:
-    - type: sasl_plain
-      mediation: terminate
-      principals:
-        - username: payments_user
-          password: payments_password
-  acl_mode: enforce_on_gateway
-  namespace:
-    prefix: payments_
-    mode: hide_prefix
-    additional:
-      topics:
-        - type: exact_list
-          conflict: warn
-          exact_list:
-            - backend: user_actions
-extract_body:
-  - name: id
-    variable: PAYMENTS_VC_ID
-capture: PAYMENTS_VC_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-This virtual cluster will be used to access topics with the `payments_` prefix, and the `user_actions` topic.
+{% include knep/create-virtual-cluster.md name="payments" auth=true %}
 
 ## Create an analytics listener with a policy
 
 For testing purposes, we'll use **port forwarding** to route traffic to each virtual cluster.  
-In production environments, you should use **SNI routing** instead.
+In production environments, you should use [**SNI routing**](/event-gateway/configure-sni-routing/) instead.
 
 Use the following command to create the listener for the `analytics` category:
 

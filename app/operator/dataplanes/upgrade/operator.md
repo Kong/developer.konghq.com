@@ -17,7 +17,7 @@ breadcrumbs:
 
 {{ site.operator_product_name }} uses [Semantic Versioning](https://semver.org/) and will not make breaking changes between major releases.
 
-To upgrade between minor releases, follow the steps shown in the [installation guide](/operator/install/).
+To upgrade between minor releases, follow the steps shown in the [installation guide](/operator).
 
 For major releases, consult the [changelog](/operator/changelog/) to see if there are any changes that require manual intervention before following the installation instructions.
 

@@ -87,9 +87,7 @@ export EVENT_GATEWAY_ID=your-gateway-id
 
 Copy and paste this into your terminal to configure your session.
 
-{:.info}
-> This quickstart script is meant for demo purposes only, therefore it runs locally with default parameters and a small number of exposed ports.
-If you want to run {{ site.base_gateway }} as a part of a production-ready platform, set up your control plane and data planes through the [{{site.konnect_short_name}} UI](/event-gateway/?tab=konnect-ui#install-event-gateway), or using [Terraform](/terraform/).
+{% include_cached /knep/quickstart-note.md %}
 
 ## Add a backend cluster
 
@@ -263,7 +261,7 @@ render_output: false
 {% endvalidation %}
 
 This file defines two configuration profiles:
-* `direct`: Connection addresses to all of the bootstrap servers you launched in the prerequisites, and configured in the backend cluster. 
+* `direct`: Connection addresses to all of the bootstrap servers you launched in the prerequisites, and configured in the backend cluster.
 Accessing the `direct` context will bypass the {{site.event_gateway}} proxy and connect directly to your Kafka cluster.
 * `vc`: Connection to the virtual cluster. Accessing the `vc` context will pass requests through the virtual cluster.
 

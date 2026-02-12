@@ -43,24 +43,26 @@ faqs:
 
 ## Insomnia teams
 
-You can use teams to manage access for multiple users. You can add users to a team, and the team can then be assigned to organizations. 
+Use teams to manage access for multiple users. From here, add users to a team, and then assign the team to one or more organizations. 
 
-Let's say that you have an engineering organization and a product organization. You could create:
-* An admin team which has access to all organizations
-* A dev team which has access to the engineering organization only
-* A product team which has access to the product organization only
+For example, if you have an engineering organization and a product organization, you could create:
+* An admin team with access to all organizations
+* A development team with access only to the engineering organization
+* A product team with access only to the product organization
 
-This would allow you to automatically add users to the relevant organizations by adding them to a team.
+This approach allows you to manage organization access by adding or removing users from teams.
 
-Teams are managed in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team). 
-You can create new teams, invite users to teams, and assign organizations to teams.
+If you have access to multiple team instances, you can switch between them by doing the following:
+1. Navigate to your [Insomnia dashboard](https://app.insomnia.rest/app/dashboard).
+1. From the sidebar, click the name of the team that you're currently viewing.
+1. From the dropdown menu, select the name of the team that you want to switch to.
+
+Manage teams in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/app/enterprise/team), to create new teams, invite users to teams, and assign organizations to teams.
 
 You can also manage teams using SCIM provisioning. For more information, see [SCIM](/insomnia/scim/).
 
 {:.info}
-> **Notes**:
-> * Roles are defined on the team level, which means that if the same team is linked to multiple organizations, the team members will have the same role in all linked organizations.
-> * Teams can't be renamed or deleted manually in Insomnia, but this feature will be added in a future release. However, teams deleted through SCIM will also be deleted in Insomnia.
+> Roles are defined on the team level, which means that if the same team is linked to multiple organizations, the team members will have the same role in all linked organizations.
 
 ## Domain capture
 
@@ -81,3 +83,22 @@ This data is maintained for 90 days. After 90 days without any activity, the dat
 
 {:.info}
 > For any user who last logged in before May 20, 2025, the date will show their last login date.
+
+## User types
+
+In your Enterprise Plan, there are two types of users:
+- **Managed Users**: A user that operates Insomnia from one of your verified domains and is associated with your Enterprise account. These users consume a license.
+- **Unmanaged Users**: A user that operates Insomnia from one of your verified domains, but is not associated with your Enterprise account. These users don't consume a license and not impacted by organization policies, for example, restrictions on allowed project storage types.
+
+You can review unmanaged users on a domain to identify accounts that you may want to add to your Enterprise organization. At this time, you must review unmanaged users on a per-domain basis. To view all of the unmanaged users associated with a domain:
+1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. Select your domain.
+1. From the **Unclaimed Accounts** section, click **Manage**.
+
+To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
+1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
+1. Select your domain.
+1. Enable the **Enable** toggle.
+
+{:.info}
+> The number of unmanaged users is cumulative across all your domains. Unclaimed accounts are specific to one domain and only reflect the unmanaged users associated with that specific domain. As a result, if you have more than one domain, the number of unmanaged users won't match the number of unclaimed accounts.

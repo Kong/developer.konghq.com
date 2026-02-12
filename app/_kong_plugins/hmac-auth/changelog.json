@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Enabled at-rest keyring encryption for sensitive fields in HMAC Auth plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",

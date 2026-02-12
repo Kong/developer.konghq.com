@@ -1,0 +1,34 @@
+description: 'The ACE plugin only engages with a request when it matches an operation.'
+
+extended_description: |
+  The ACE plugin only engages with a request when it matches an operation. 
+  If a request doesn't match, ACE lets the request pass through untouched. 
+  This means that non-matching requests aren't rejected, but ACE also won't perform authentication and authorization on them. 
+  This allows a request to still be processed by other plugins with a [lower priority](/gateway/entities/plugin/#plugin-priority) than ACE.  
+  
+  A limitation of this method is that all traffic outside of APIs linked to an ACE-enabled {{site.base_gateway}} won't be access controlled, this must be configured with a different plugin. 
+  Dev Portal will not be able to protect all operations.
+
+  Use cases:
+  * You have an environment where some Gateway Services or Routes are governed by Dev Portal–exposed APIs (with ACE), while others are regular Routes that should be left alone.
+  * You already have existing traffic and other access controls in place and want to avoid interruption.
+
+title: 'Only engage when a request matches an operation'
+
+weight: 900
+
+requirements: 
+- "An API or API package in Dev Portal, linked to the control plane that uses the ACE plugin instance"
+
+config: 
+  match_policy: if_present
+
+min_version:
+  gateway: '3.13'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

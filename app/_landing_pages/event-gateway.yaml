@@ -334,16 +334,16 @@ rows:
               a: |
                 Yes, the gateway can proxy multiple backend clusters, though only one can currently be proxied in a single client connection.
 
-  # - header:
-  #     type: h2
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             products:
-  #                 - event-gateway
-  #             quantity: 8
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - event-gateway
+              quantity: 8
 
   - columns:
       - blocks:

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.0.11
+  version: 3.1.0
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a46b5bb334cf846ccf39fb109659f6a220120967
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a46b5bb334cf846ccf39fb109659f6a220120967'
+  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -436,6 +436,9 @@ paths:
       summary: List Credentials
       description: |
         Lists the credentials for an application.
+        Response varies by auth strategy type:
+        - For Client-Credential applications: Returns the ID of each credential
+        - For Key-Auth applications: Returns the ID and name of each credential
         Basic information about the credential is returned, but not the credential secret itself.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
@@ -457,7 +460,13 @@ paths:
     post:
       operationId: create-credential
       summary: Create Credential
-      description: Allows a developer to create a credential for an application they own.
+      description: |
+        Allows a developer to create a credential for an application they own.
+        Creates credential based on application's auth strategy:
+        - For Client-Credential applications: Creates new client secret
+        - For Key-Auth applications: Creates new API key credential
+        Some Client Credentials applications may not support setting a display_name.
+        Secret value (`client_secret` for Client Credentials, `credential` for Key Auth API keys) is only returned on creation (one-time), not in subsequent list operations.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
       requestBody:
@@ -481,7 +490,11 @@ paths:
     put:
       operationId: update-credential
       summary: Update Credential
-      description: Updates a credential for an application owned by the current logged in developer.
+      description: |
+        Updates a credential for an application owned by the current logged in developer.
+        Updates credential metadata (display_name).
+        Some Client Credentials applications may not support setting a display_name.
+        Returns 400 error if operation not supported for Client Credentials.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
         - $ref: '#/components/parameters/CredentialId'
@@ -503,7 +516,8 @@ paths:
     delete:
       operationId: delete-credential
       summary: Delete Credential
-      description: Deletes a credential for an application they own.
+      description: |
+        Deletes a credential for an application they own.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
         - $ref: '#/components/parameters/CredentialId'
@@ -689,7 +703,7 @@ paths:
       security:
         - {}
       tags:
-        - Content
+        - Portal
   /api/v3/developer:
     post:
       operationId: register
@@ -1085,10 +1099,11 @@ components:
       name: credentialId
       in: path
       required: true
-      description: Id of the targeted credential
+      description: |
+        Id of the targeted credential.
+        Use the list-credentials endpoint to obtain the `id` field for each credential.
       schema:
         type: string
-        format: uuid
     DocumentIdOrSlug:
       name: documentIdOrSlug
       schema:
@@ -2382,6 +2397,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id
@@ -3117,6 +3148,22 @@ components:
             type: string
           example:
             - apikey
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       required:
         - id
         - name
@@ -3197,17 +3244,42 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Too Many Requests
-    CredentialListItem:
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
+        - type
         - id
         - display_name
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -3228,20 +3300,46 @@ components:
           type: string
           maxLength: 255
       additionalProperties: false
-    CredentialCreationResponse:
+    ApiKeyCredentialCreationResponse:
+      description: Response when creating an API key credential.
       type: object
       properties:
-        credential:
+        type:
           type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        credential:
+          description: The API key value (only returned on creation)
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
-        - credential
+        - type
         - id
         - display_name
+        - credential
+    CredentialCreationResponse:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:
@@ -3546,7 +3644,7 @@ components:
               type: boolean
               default: true
             try_it_insomnia:
-              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
               type: boolean
               default: true
             infinite_scroll:

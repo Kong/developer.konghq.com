@@ -82,3 +82,5 @@ key = md5(UUID | headers | body)
 ## Managing cache entities
 
 {% include_cached /plugins/caching/api.md name=page.name slug=page.slug %}
+
+{% include plugins/redis-cloud-auth.md %}

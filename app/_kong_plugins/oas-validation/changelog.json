@@ -1,4 +1,38 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added support for collecting all validation errors when `collect_all_errors` is set to `true` in the plugin configuration. Note: Enabling this option with OpenAPI 3.0 will affect performance.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Support readOnly and writeOnly keywords for OpenAPI 3.1.x.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where parameter data extraction failed when `$` appears in the path pattern.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where YAML 1.1 `null` values were parsed incorrectly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where certain query strings in URLs that did not conform to the configured OpenAPI specification could cause the plugin to throw an unexpected runtime error and respond with an HTTP 500 error.\n",

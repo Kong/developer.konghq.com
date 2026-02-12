@@ -1,0 +1,41 @@
+
+title: 'Image generation with xAI'
+description: 'Configure an image generation route with the xAI Grok 2 Image Gen model.'
+
+extended_description: |
+  Configure an image generation route with the xAI Grok 2 Image Gen model.
+  
+  See [Set up AI Proxy for image generation with Grok](/how-to/set-up-ai-proxy-for-image-generation-with-grok/) for a full how-to guide with this example.
+
+min_version:
+  gateway: '3.13'
+
+weight: 900
+
+min_version:
+  gateway: '3.13'
+
+requirements:
+- xAI account
+
+config:
+  route_type: image/v1/images/generations
+  genai_category: image/generation
+  auth:                       
+    header_name: Authorization                        
+    header_value: Bearer ${{ env "DECK_XAI_API_KEY" }}
+  model:         
+    provider: xai
+    name: grok-2-image
+
+variables:
+  key:
+    value: $XAI_API_KEY
+    description: The API key to use to connect to xAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

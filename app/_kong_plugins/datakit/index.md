@@ -50,6 +50,9 @@ Datakit allows you to create an API workflow, which can include:
 * Adjusting {{site.base_gateway}} entity configuration
 * Returning directly to users instead of proxying
 
+{:.warning}
+> When `tls_certificate_verify` is enabled in {{site.base_gateway}}, certificate verification for this plugin is enforced at runtime, not at configuration time. Since the `url` field can be set dynamically {% new_in 3.13 %}, the plugin cannot validate whether `ssl_verify=false` is appropriate until the request is processed. If the URL resolves to an HTTPS endpoint with `ssl_verify=false`, the request will be blocked. Conversely, if the URL resolves to an HTTP endpoint, the configuration is valid and the request proceeds.
+
 ## Use cases for Datakit
 
 The following are examples of common use cases for Datakit:
@@ -68,10 +71,16 @@ rows:
     description: Make requests to multiple APIs and combine their responses into one response.
   - usecase: "[Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)"
     description: Use the Datakit plugin to dynamically adjust request headers before passing them to a third-party service.
+  - usecase: "[Clear headers](/plugins/datakit/examples/clear-headers/)"
+    description: Use the Datakit plugin to dynamically clear headers before passing them to an input, causing the header to be ignored.
   - usecase: "[Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)"
     description: Authenticate to a third-party service using Vault secrets.
   - usecase: "[Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)"
     description: "Leverage the `cache` and `branch` nodes to conditionally store or retrieve cache items."
+  - usecase: "[Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)"
+    description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
+  - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
+    description: Dynamically resolve an internal authentication endpoint and inject the necessary request headers prior to proxying the request.
 {% endtable %}
 <!--vale on-->
 
@@ -486,40 +495,80 @@ columns:
     key: outputs
 rows:
   - nodetype: |
-      [`branch`](#branch-node) {% new_in 3.12 %}
+      [Branch (`branch`)](#branch-node) {% new_in 3.12 %}
     description: "Execute different nodes based on matching input conditions."
-    inputs: "user-defined"
+    inputs: |
+      User-defined.
+      <br>
+      The input to a branch node represents a boolean condition to test and branch on:
+      * If the input is `true`, the nodes named by the `then` array are executed
+      * If the input is `false`, the nodes named by the `else` array are executed
+      * If the input is a non-boolean value, an error is raised
     outputs: none
   - nodetype: |
-      [`cache`](#cache-node) {% new_in 3.12 %}
+      [Cache (`cache`)](#cache-node) {% new_in 3.12 %}
     description: "Store and fetch cached data."
-    inputs: "`key`, `ttl`, `data`"
-    outputs: "`hit`, `miss`, `stored`, `data`"
+    inputs: |
+      * `key` (**required**): The cache key string
+      * `ttl`: The TTL (Time to Live) in seconds
+      * `data`: The data to be cached. If not null, the cache node works in `set` mode storing data into cache; if null, the cache node fetches data.
+    outputs: |
+      * `hit`: `true` if a cache hit occurred
+      * `miss`: `true` if a cache miss occurred
+      * `stored`: `true` if data was successfully stored into the cache
+      * `data`: The data that was stored into the cache
   - nodetype: |
-      [`call`](#call-node)
+      [Call (`call`)](#call-node)
     description: "Send third-party HTTP calls."
-    inputs: "`body`, `headers`, `query`"
-    outputs: "`body`, `headers`, `status`"
+    inputs: |
+      * `body`: Request body
+      * `headers`: Request headers
+      * `query`: Key-value pairs to encode as the request query string
+      * `url`: The request URL resolved at runtime
+      * `https_proxy`: The HTTPS proxy URL to use for the request
+      * `http_proxy`: The HTTP proxy URL to use for the request
+      * `proxy_auth_username`: The username to authenticate with the proxy
+      * `proxy_auth_password`: The password to authenticate with the proxy
+    outputs: |
+      * `body`: The response body
+      * `headers`: The response headers
+      * `status`: The HTTP status code of the response
   - nodetype: |
-      [`jq`](#jq-node)
+      [jq (`jq`)](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
-    inputs: user-defined
-    outputs: user-defined
+    inputs: |
+      User-defined. See [jq node inputs](#jq-node-inputs) for more detail.
+    outputs: |
+      User-defined. See [jq node outputs](#jq-node-outputs) for more detail.
   - nodetype: |
-      [`exit`](#exit-node)
+      [Exit (`exit`)](#exit-node)
     description: "Return directly to the client without forwarding any further."
-    inputs: "`body`, `headers`"
-    outputs: none
+    inputs: |
+      * `body`: Body to use in the early-exit response.
+      * `headers`: Headers to use in the early-exit response.
+    outputs: None
   - nodetype: |
-      [`property`](#property-node)
+      [Property (`property`)](#property-node)
     description: "Get and set {{site.base_gateway}}-specific data."
-    inputs: "`$self`"
-    outputs: "`$self`"
+    inputs: |
+      Accepts `$self`. See [property node inputs](#property-node-inputs) for more detail. 
+    outputs: |
+      Outputs `$self`. See [property node outputs](#property-node-outputs) for more detail. 
   - nodetype: |
-      [`static`](#static-node)
+      [Static (`static`)](#static-node)
     description: "Configure static input values ahead of time."
-    inputs: none
-    outputs: user-defined
+    inputs: None
+    outputs: User-defined. See [static node outputs](#static-node-outputs) for more detail.
+  - nodetype: |
+      [XML to JSON (`xml_to_json`)](#xml-to-json-node) {% new_in 3.13 %}
+    description: "Transforms XML strings into JSON or a Lua table."
+    inputs: XML formatted data
+    outputs: JSON formatted data
+  - nodetype: |
+      [JSON to XML (`json_to_xml`)](#json-to-xml-node) {% new_in 3.13 %}
+    description: "Transforms JSON or a Lua table into XML strings."
+    inputs: JSON formatted data or Lua tables
+    outputs: XML formatted data
 {% endtable %}
 <!--vale on-->
 
@@ -529,14 +578,7 @@ You can learn more about the supported configuration parameters for each node in
 
 Execute different nodes based on matching input conditions, such as a cache hit or miss.
 
-See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `branch` from the node object dropdown to see all node attributes.
-
-#### Branch node inputs 
-
-The input to a branch node represents a boolean condition to test and branch on:
-* If the input is `true`, the nodes named by the `then` array are executed.
-* If the input is `false`, the nodes named by the `else` array are executed.
-* If the input is a non-boolean value, an error is raised.
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `branch` from the node object dropdown to see all node attributes, including inputs and outputs.
 
 {:.info}
 > **Note:** When using the `branch` node, the `then` and `else` parameters must list all nodes for both branches.
@@ -584,43 +626,19 @@ See the [configuration reference](/plugins/datakit/reference/#schema--config-nod
 The `cache` node requires a [`resources.cache` resource definition](#cache-resource) containing 
 cache configuration.
 
-#### Cache node inputs
+#### Examples
 
-The `cache` node takes the following inputs: 
-
-* `key` (**required**): the cache key string
-* `ttl`: The TTL (Time to Live) in seconds
-* `data`: The data to be cached. If not null, the cache node works in set mode, 
-  storing data into cache; if null, the cache node fetches data
-  
-#### Cache node outputs
-
-The `cache` node produces the following outputs:
-
-* `hit`: `true` if a cache hit occurred
-* `miss`: `true` if a cache miss occurred
-* `stored`: `true` if data was successfully stored into the cache
-* `data`: The data that was stored into the cache
+For a complete example, see:
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
 
 ### Call node
 
-Send an HTTP request and retrieve the response.
+Send an HTTP request and retrieve the response. 
+
+{% new_in 3.13 %} The `call` node can be executed before or after proxying a request.
+For versions of {{site.base_gateway}} 3.12 or earlier, call nodes could only be executed before proxying; see [limitations](#limitations) for details.
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `call` from the node object dropdown to see all node attributes.
-
-#### Call node inputs
-
-The `call` node takes the following inputs:
-
-* `body`: Request body
-* `headers`: Request headers
-* `query`: Key-value pairs to encode as the request query string
-
-#### Call node outputs
-
-* `body`: The response body
-* `headers`: The response headers
-* `status`: The HTTP status code of the response
 
 #### Examples
 
@@ -648,6 +666,27 @@ Send a POST request with a JSON body:
     id: 123
     name: Datakit
 ```
+
+Perform a request through a proxy server:
+
+```yaml
+- name: CALL
+  type: call
+  url: https://example.com/foo
+  inputs:
+    https_proxy: http://my-proxy.example.com:8080
+    proxy_auth_username: my-username
+    proxy_auth_password: my-password
+```
+
+Call nodes are used in most datakit workflows. For complete examples, see:
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Transform XML into JSON, or JSON into XML](/plugins/datakit/examples/convert-json-to-xml-and-back/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
 
 #### Automatic JSON body handling
 
@@ -693,11 +732,37 @@ the endpoint returns a non-2xx status code. It will also fail if the endpoint
 returns a JSON mime-type in the `Content-Type` header if the response body is
 not valid JSON.
 
+#### Resolve URL at runtime
+
+A `call` node defines its `url` statically during configuration. To substitute a different endpoint at runtime, pass a value via the `url` input. If the input is `nil`, Datakit automatically reverts to the configured static URL.
+
+For example:
+
+```yaml
+- name: DYNAMIC_URL
+  type: call
+  url: https://example.com/default
+  inputs:
+    url: request.body
+```
+
+#### Proxy options
+The `call` node supports performing requests via a proxy server. This is controlled by proxy options. See above example for more details.
+
+#### Request body encoding
+Call node supports following content types for request body encoding:
+* `application/json`
+* `application/x-www-form-urlencoded`
+
+By default, if the body input is an object, it will be encoded as JSON. To override this behavior and use `application/x-www-form-urlencoded`, set the `Content-Type` header accordingly in the `headers` input for the call node.
+
+See [Third-party auth](/plugins/datakit/examples/authenticate-third-party/) for an example of using `application/x-www-form-urlencoded` request body encoding.
+
 #### Limitations
 
-Due to platform limitations, the `call` node can't be executed after proxying a
+In {{site.base_gateway}} 3.12 and earlier, the `call` node couldn't be executed after proxying a
 request, so attempting to configure the node using outputs from the upstream service
-response will yield an error:
+response would yield an error:
 
 ```yaml
 - name: CALL
@@ -999,6 +1064,14 @@ Join the output of two API calls:
   jq: "."
 ```
 
+For more detailed examples, see:
+
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
+
 ### Exit node
 
 Trigger an early exit that produces a direct response, rather than forwarding
@@ -1007,13 +1080,6 @@ a proxied response.
 There are no outputs for an exit node.
 
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `exit` from the node object dropdown to see all node attributes.
-
-#### Exit node inputs
-
-The `exit` node accepts the following inputs:
-
-* `body`: Body to use in the early-exit response.
-* `headers`: Headers to use in the early-exit response.
 
 #### Examples
 
@@ -1028,6 +1094,13 @@ Make an HTTP request and send the response directly to the client:
   type: exit
   input: CALL
 ```
+
+For more detailed examples, see:
+
+* [Request multiplexing](/plugins/datakit/examples/combine-two-apis-into-one-response/)
+* [Manipulate request headers](/plugins/datakit/examples/manipulate-request-headers/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/)
 
 ### Property node
 
@@ -1246,11 +1319,9 @@ rows:
 Emits static values to be used as inputs for other nodes. 
 The `static` node can help you with hardcoding some known value for an input.
 
+There are no inputs for a static node.
+
 See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `static` from the node object dropdown to see all node attributes.
-
-#### Static node inputs
-
-None.
 
 #### Static node outputs
 
@@ -1351,6 +1422,133 @@ Set common request headers for different API requests:
     headers: HEADERS
 ```
 
+For more detailed examples, see:
+* [Third-party auth](/plugins/datakit/examples/authenticate-third-party/)
+* [Authentication with Vault secrets](/plugins/datakit/examples/authenticate-with-vault-secret/)
+* [Conditionally fetch or store cache data](/plugins/datakit/examples/conditionally-store-cached-items/)
+* [Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)
+
+### XML to JSON node {% new_in 3.13 %}
+
+Transforms XML strings to JSON or a Lua table. Empty XML tags or elements are converted into empty JSON objects. The resulting JSON won't preserve any information about the original XML element order.
+
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `xml_to_json` from the node object dropdown to see all node attributes.
+
+{:.info}
+> **Note:** One of the `attributes_block_name` or `attributes_name_prefix` is required. 
+
+#### Examples
+
+If provided the following XML:
+
+```xml
+<root>
+  <name>Alice</name>
+  <age>30</age>
+  <is_student>false</is_student>
+  <courses>Math</courses>
+  <courses>Science</courses>
+  <address>
+    <street>123 Main St</street>
+    <city>Wonderland</city>
+  </address>
+  <null_value>null</null_value>
+</root>
+```
+
+The XML to JSON node will output the following JSON:
+
+```json
+ {
+  "root": {
+    "name": "Alice",
+    "age": 30,
+    "is_student": false,
+    "courses": ["Math", "Science"],
+    "address": {
+      "street": "123 Main St",
+      "city": "Wonderland"
+    },
+    "null_value": null
+  }
+}
+```
+
+The configuration for the node would look like this:
+```yaml
+- name: CONVERT_XML_TO_JSON
+  type: xml_to_json
+  root_element_name: root
+  attributes_block_name: "#attr"
+  input: CALL_FOO
+```
+
+Where `CALL_FOO` is a call node that calls an API, and that API outputs XML.
+
+For a more detailed example, see [Convert XML into JSON](/plugins/datakit/examples/convert-xml-into-json/).
+
+For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
+
+### JSON to XML node {% new_in 3.13 %}
+
+Transforms JSON strings or Lua tables into XML. Empty string, empty array, and empty object values are converted into empty XML elements. The resulting XML won't preserve any information about the original JSON object key order. 
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `json_to_xml` from the node object dropdown to see all node attributes.
+
+{:.info}
+> The order of elements in the generated XML is non-deterministic and must not be relied upon.
+
+#### Examples
+
+If provided the following JSON:
+```json
+ {
+  "root": {
+    "name": "Alice",
+    "age": 30,
+    "is_student": false,
+    "courses": ["Math", "Science"],
+    "address": {
+      "street": "123 Main St",
+      "city": "Wonderland"
+    },
+    "null_value": null
+  }
+}
+```
+
+The JSON to XML node will output the following XML:
+
+```xml
+<root>
+  <name>Alice</name>
+  <age>30</age>
+  <is_student>false</is_student>
+  <courses>Math</courses>
+  <courses>Science</courses>
+  <address>
+    <street>123 Main St</street>
+    <city>Wonderland</city>
+  </address>
+  <null_value>null</null_value>
+</root>
+```
+
+The configuration for the node would look like this:
+```yaml
+- name: CONVERT_JSON_TO_XML
+  type: json_to_xml
+  root_element_name: root
+  attributes_block_name: "#attr"
+  input: CALL_BAR
+```
+Where `CALL_BAR` is a call node that calls an API, and that API outputs JSON.
+
+For a more detailed example, see [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/).
+
+For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
+
 ### Implicit nodes
 
 Datakit also defines a number of implicit nodes that can't be declared directly under the `nodes` configuration section.
@@ -1447,7 +1645,6 @@ nodes:
       secret2: vault.secret2
     jq: "."
 ```
-
 ## Resources
 
 Datakit supports a global `resources` object that can be used to declare shared resource configurations.
@@ -1751,3 +1948,5 @@ a result of `NODE_SKIPPED`.
 consumption to aid development and testing. Backwards-incompatible changes to
 the report format _may_ be included with any new release of
 {{site.base_gateway}}.
+
+{% include plugins/redis-cloud-auth.md %}

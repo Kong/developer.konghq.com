@@ -94,6 +94,8 @@ insomnia_run: https://insomnia.rest/run/
 
 # product name vars
 base_gateway: Kong Gateway
+ai_gateway: AI Gateway
+ai_gateway_name: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
@@ -107,6 +109,8 @@ operator_product_name_short: KO
 event_gateway: Kong Event Gateway
 event_gateway_short: Event Gateway
 konnect_catalog: Catalog
+metering_and_billing: Metering & Billing
+observability: Observability
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
@@ -157,4 +161,10 @@ latest_gateway_oss_version: "3.9.1"
 operator_gatewayconfiguration_api_version: "v2beta1"
 operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
 operator_konnectextension_api_version: "v1alpha2"
+operator_kongservice_api_version: "v1alpha1"
+operator_kongroute_api_version: "v1alpha1"
+operator_kongcertificate_api_version: "v1alpha1"
+operator_kongreferencegrant_api_version: "v1alpha1"
+operator_kongpluginbinding_api_version: "v1alpha1"
+gwapi_version: "1.4.1" 
 render_banner: false

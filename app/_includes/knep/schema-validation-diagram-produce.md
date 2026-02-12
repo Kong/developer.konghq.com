@@ -9,19 +9,19 @@ sequenceDiagram
 
   client->>egw: Produce message
 
-  opt Schema not cached
+  opt If schema isn't cached
     egw->>schema: Fetch schema
     schema-->>egw: Return schema
   end
 
   egw->>egw: Validate payload against schema
 
-  alt Validation passed
+  alt If validation passed
     egw->>broker: Forward
-  else Validation failed
-    alt Failure mode: reject
+  else If validation failed
+    alt If failure mode: reject
       egw -x client: Reject the message
-    else Failure mode: mark
+    else If failure mode: mark
       egw->>broker: Forward (marked invalid)
     end
   end

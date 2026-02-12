@@ -9,4 +9,4 @@
     > To do so, click the **Configure the App** link in the Insomnia Git Sync wizard or go to [https://app.insomnia.rest/oauth/github-app](https://app.insomnia.rest/oauth/github-app), and allow access to the relevant repositories.
     > * If your GitHub account is a managed user account, you may not be able to install the Insomnia Desktop app. For more details, see the [GitHub docs](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts#github-apps). In this case, you can configure access to your repository using the [generic Git workflow](./?tab=git).
 
-1. {% new_in 11.4 %} If needed, select a branch.
+1. If needed, select a branch.

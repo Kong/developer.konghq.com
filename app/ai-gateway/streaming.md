@@ -1,5 +1,5 @@
 ---
-title: "Streaming with AI Gateway"
+title: "Streaming with {{site.ai_gateway}}"
 content_type: reference
 layout: reference
 
@@ -15,6 +15,7 @@ breadcrumbs:
 tags:
   - ai
   - streaming
+  - ai-proxy
 
 plugins:
   - ai-proxy
@@ -117,7 +118,7 @@ It also estimates tokens for LLM services that decided to not stream back the to
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the AI Gateway plugin:
+Keep the following limitations in mind when you configure streaming for the {{site.ai_gateway}} plugin:
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
 * You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
@@ -138,6 +139,51 @@ The following is an example `llm/v1/completions` route streaming request:
 ```
 
 You should receive each batch of tokens as HTTP chunks, each containing one or many server-sent events.
+
+### Token usage in streaming responses {% new_in 3.13 %}
+
+You can receive token usage statistics in an SSE streaming response. Set the following parameter in the request JSON:
+
+```json
+{
+  "stream_options": {
+    "include_usage": true
+  }
+}
+```
+
+When you set this parameter, the `usage` object appears in the final SSE frame, before the `[DONE]` terminator. This object contains token count statistics for the request.
+
+
+The following example shows how to request and process token usage statistics in a streaming response:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:8000/openai",
+    api_key="none"
+)
+
+stream = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "Tell me the history of Kong Inc."}],
+    stream=True,
+    stream_options={"include_usage": True}
+)
+
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+    if chunk.usage:
+        print("\nDONE. Usage stats:\n")
+        print(chunk.usage)
+```
+
+{:.info}
+> This feature works with any provider and model when `llm_format` is set to `openai` mode.
+>
+> See the [OpenAI API Documentation](https://platform.openai.com/docs/api-reference/chat/create#chat_create-stream_options) for more information on stream options.
 
 ### Response streaming configuration parameters
 

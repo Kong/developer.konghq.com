@@ -1,4 +1,88 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added support for MCP ACL control.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for cookie in OpenAPI spec when doing MCP conversion.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for structured output from MCP conversion.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where path traversal can be done with path parameter.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where MCP server could not call upstream when proxy protocol is used.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where failing to fetch tools cache was not handled properly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where forwarding client headers to upstream could not be disabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where trusted ip relative headers were forwarded upstream.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `tools/call` could accept malformed requests and generate wrong responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where path invalid error was not handled properly.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we could not override the upstream's scheme when converting MCP tool to RESTful API.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where MCP server could not call upstream when self-signed certificate is used in Kong.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where mcp proxy is not parsing default values properly.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue when using passthrough-mode, tools without tool ACL do not apply default ACL.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where `tools/list` could expose tools to consumers denied by tool ACL in listener mode.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where PATCHing the tool caused an error.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",

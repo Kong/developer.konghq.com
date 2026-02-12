@@ -6,8 +6,7 @@ metadata:
     - /insomnia/
   products:
     - insomnia
-  min_version:
-    insomnia: '12.0'  
+ 
 rows:
   - header:
       type: h1
@@ -187,9 +186,6 @@ rows:
               - q: Which transports are supported for MCP Clients?
                 a: |
                   Both **HTTP** and **STDIO** transports are supported for connecting to MCP Servers.
-              - q: Can MCP Clients use Git Sync or Import/Export?
-                a: |
-                  Not yet. MCP Clients are stored locally and currently do not support Git Sync or import/export.
               - q: Why are commit suggestions less accurate when using a local LLM?
                 a: |
                   Local LLMs with fewer than **10 billion parameters** may produce less accurate or inconsistent commit suggestions.  

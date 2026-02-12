@@ -22,11 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           submodules: 'recursive'
 
@@ -51,7 +51,7 @@ jobs:
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
           RUNTIME: konnect
-          PRODUCT: event-gateway
+          PRODUCTS: event-gateway
           TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
         run: |
           DEBUG=tests:*,debug npm run run-tests

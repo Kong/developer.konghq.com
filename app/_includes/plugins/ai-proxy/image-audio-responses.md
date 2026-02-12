@@ -32,6 +32,12 @@
 
 {% endnavtab %}
 
+{% navtab "video/v1/videos/generation" %}
+
+{% include plugins/ai-proxy/responses-partials/video/video-generation.md %}
+
+{% endnavtab %}
+
 {% if plugin == "AI Proxy Advanced" %}
 
 {% navtab "realtime/v1/realtime" %}

@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where the consumer authentication cache was not isolated by realm.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where external consumers could not be used with traditional Kong deployments, such as with KIC.",

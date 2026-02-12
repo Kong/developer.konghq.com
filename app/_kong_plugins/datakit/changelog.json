@@ -1,4 +1,53 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added json_to_xml node to support converting JSON or lua table to XML data.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added xml_to_json node to support converting XML data to lua table and JSON format.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for dynamic url in `call` node.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for using the `call` node in the post-proxy phase.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Add support for using `application/x-www-form-urlencoded` as the body encoding.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added the `ssl_verify` flag to the call node. This flag allows\nusers to control certificate verification when making HTTPS requests to the\nconfigured `url` endpoint. It cannot be disabled when the\n`tls_certificate_verify` global option is enabled.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for clearing headers from the service_request and response nodes\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed implicit request node headers field to be correct type.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed xml_to_json node to recognize `text/xml` content-type in addition to `application/xml` for XML request body processing, ensuring RFC 7303 compliance.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added caching support via a new `cache` node type.",

@@ -12,6 +12,7 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 
 topologies:

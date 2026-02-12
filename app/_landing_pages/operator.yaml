@@ -2,7 +2,7 @@ metadata:
   title: Kong Operator
   content_type: landing_page
   description: |
-    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }}, and more.
+    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy data planes, configure {{ site.konnect_short_name }}, and more.
   products:
     - operator
 
@@ -19,9 +19,8 @@ rows:
       - blocks:
           - type: text
             config: |
-              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven entirely by Kubernetes 
-              Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
-              in a 100% declarative way.
+              {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven by Gateway API or Kong-specific Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
+              in a declarative way.
 
   - header:
       type: h2
@@ -30,48 +29,68 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/gateway.svg
-            title: Deploy {{ site.base_gateway }}
-            description: |
-              Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or self-managed Control Plane using 
-              the `DataPlane` resource.
-            cta:
-              text: Deploy a DataPlane
-              url: /operator/dataplanes/get-started/hybrid/install/
-
-      - blocks:
-        - type: card
-          config:
             icon: /assets/icons/kubernetes.svg
-            title: Deploy self-managed Control Plane
+            title: "Manage {{ site.base_gateway }} in Kubernetes through the Gateway API"
             description: |
-              Deploy and manage {{ site.base_gateway }}, configure automatically a self-managed Control Plane using Kubernetes
-              Gateway API resources such as `Gateway` and `HTTPRoute`
+              Deploy and configure {{ site.base_gateway }} in Kubernetes using Gateway API resources.
             cta:
-              text: Deploy self-managed Control Plane
-              url: /operator/dataplanes/get-started/kic/install/
+              text: Deploy {{ site.base_gateway }} in Kubernetes using Gateway API
+              url: /operator/get-started/gateway-api/install/ 
 
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/dedicated-cloud-gateway.svg
-            title: Configure {{ site.konnect_short_name }}
+            icon: /assets/logos/konglogo-gradient-secondary.svg
+            title: "Manage {{ site.base_gateway }} in Kubernetes through the {{site.konnect_short_name}} CRDs"
             description: |
-              Configure your {{ site.konnect_short_name }} organization using CRDs. Create control planes and configure {{ site.base_gateway }} 
-              entities, or configure Dedicated Cloud Gateways deployments. 
+              Deploy and configure {{ site.base_gateway }} in Kubernetes using Kong-specific Custom Resource Definitions (CRDs)
+              provided by {{ site.operator_product_name }}.
             cta:
-              text: Create and configure a Control Plane in {{ site.konnect_short_name }}
-              url: /operator/konnect/crd/control-planes/hybrid/
+              text: Deploy {{ site.base_gateway }} in Kubernetes using {{site.konnect_short_name}} CRDs
+              url: /operator/get-started/konnect-crds/install/
 
   - header:
       type: h2
-      text: "Konnect CRDs"
+      text: "{{site.konnect_short_name}} features"
+      sub_text: Which {{ site.konnect_short_name }} features are available in {{site.operator_product_name}}?
+    columns:
+      - blocks:
+        - type: text
+          config: |
+
+            Regardless of whether you use Gateway API or Kong entities with a {{site.konnect_short_name}} managed control 
+            plane, we support the features that will enhance your API ecosystem.
+
+      - blocks:
+        - type: table
+          config:
+            columns:
+              - title: Product
+                key: product
+              - title: Gateway API
+                key: supported_gwapi
+              - title: Kong entities
+                key: supported_kong
+            rows:
+              - product: Analytics
+                supported_gwapi: true
+                supported_kong: true
+              - product: Application Registration
+                supported_gwapi: true
+                supported_kong: true
+              - product: Debugger
+                supported_gwapi: true
+                supported_kong: true
+
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} CRDs"
       sub_text: Manage {{ site.konnect_short_name }} declaratively with first-class CRD support
     columns:
       - blocks:
         - type: text
           config: |
-            We built Konnect CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
+            We built {{site.konnect_short_name}} CRDs after listening to _you_. Users told us that their teams are used to working in Kubernetes. They have policy 
             enforcement engines running in their clusters, and well defined review processes for CRD changes.
 
             Now we need your help. We're expanding CRD support to new products, and need you to tell us which APIs you want us to build first.
@@ -95,13 +114,13 @@ rows:
               - product: Gateway Configuration
                 supported: true
               - product: Dedicated Cloud Gateways
-                supported: Partial Support
+                supported: Partially
               - product: Kong Mesh
                 supported: Planned
               - product: Developer Portal
-                supported: Planned
+                supported: true
               - product: Catalog
-                supported: Planned
+                supported: true
               - product: Analytics
                 supported: Planned
               - product: Team Management

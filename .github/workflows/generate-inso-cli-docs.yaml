@@ -1,0 +1,96 @@
+name: Generate Inso CLI Reference Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      insomnia_branch:
+        description: 'Branch to use from insomnia repository'
+        required: true
+        default: 'develop'
+        type: string
+      dev_site_base_branch:
+        description: 'Dev site base branch, e.g. main'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-inso-cli-docs:
+    name: Generate Inso CLI Reference Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Checkout developer.konghq.com
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Checkout insomnia repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          repository: 'Kong/insomnia'
+          token: ${{ steps.app-token.outputs.token }}
+          path: 'insomnia'
+          ref: ${{ inputs.insomnia_branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        with:
+          node-version-file: insomnia/.nvmrc
+          cache: npm
+          cache-dependency-path: insomnia/package-lock.json
+
+      - name: install dependencies
+        working-directory: insomnia
+        run: npm ci --ignore-scripts
+
+      - name: Generate Inso CLI reference docs
+        working-directory: insomnia
+        run: npm run build -w insomnia-inso && $PWD/packages/insomnia-inso/bin/inso generate-docs || true
+
+      - name: Copy generated docs to developer.konghq.com
+        run: |
+            cp -R ./insomnia/packages/insomnia-inso/reference/insomnia-inso/* app/_references/inso-cli/reference/
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8
+        with:
+          title: Generate Inso CLI reference docs
+          commit-message: Generate Inso CLI reference docs
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          branch: auto/generate-inso-cli-docs-${{ github.run_number }}
+          base: ${{ inputs.dev_site_base_branch }}
+          add-paths: |
+            app/_references/inso-cli/reference/**
+
+      - name: No changes detected
+        if: steps.changes.outputs.changed == 'false'
+        run: |
+          echo "No changes detected in the Inso CLI reference. No pull request will be created."

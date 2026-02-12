@@ -27,7 +27,7 @@ related_resources:
   - text: Static keys
     url: /event-gateway/entities/static-key/
   - text: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
-    url: /how-to/encrypt-kafka-messages-with-event-gateway/
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 
 phases:
   - consume
@@ -56,10 +56,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - use_case: "[Decrypt using a static key](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)"
+  - use_case: "[Example: Decrypt using a static key](/event-gateway/policies/decrypt/examples/decrypt-with-static-key/)"
     description: Decrypt a message value based on a key reference name.
 
-  - use_case: "[Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
+  - use_case: "[Example: Decrypt using an AWS key source](/event-gateway/policies/decrypt/examples/decrypt-with-aws/)"
     description: Decrypt a message value using an AWS key source.
 
 {% endtable %}

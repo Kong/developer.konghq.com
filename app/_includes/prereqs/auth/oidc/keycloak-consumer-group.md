@@ -56,7 +56,7 @@ rows:
 Export your client secret and issuer URL to environment variables so that you can pass them more securely.
 For example:
 
-{% env_variables %}
-DECK_ISSUER: http://host.docker.internal:8080/realms/master
-CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
-{% endenv_variables %}
+```sh
+export DECK_ISSUER='http://host.docker.internal:8080/realms/master'
+export CLIENT_SECRET='UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW'
+```

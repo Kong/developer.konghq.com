@@ -4,21 +4,18 @@ kic-get-started:
 plugin-dev-get-started:
   title: Get started with custom plugin development
   url: /custom-plugins/get-started/set-up-plugin-project/
-operator-konnectcrds-get-started:
-  title: Get Started with the Kong Gateway Operator
-  url: /index/operator/#get-started
-operator-get-started-hybrid:
-  title: Deploy Hybrid DataPlanes with {{ site.operator_product_name }}
-  url: /operator/dataplanes/get-started/hybrid/install/
-operator-get-started-kic:
-  title: Deploy self-managed Control Plane with {{ site.operator_product_name }}
-  url: /operator/dataplanes/get-started/kic/install/
 gateway-k8s-on-prem-install:
   title: Install {{ site.base_gateway }} on-prem on Kubernetes
   breadcrumb_title: On-Prem Kubernetes
   url: /gateway/install/kubernetes/on-prem/
+operator-get-started-gateway-api:
+  title: Get started with {{ site.operator_product_name }} and Gateway API
+  url: /operator/get-started/gateway-api/install/
+operator-get-started-konnect-crds:
+  title: Get started with {{ site.operator_product_name }} and Konnect CRDs
+  url: /operator/get-started/konnect-crds/install/
 mcp-traffic:
-  title: Secure, govern and observe MCP traffic with Kong AI Gateway
+  title: Secure, govern and observe MCP traffic with {{site.ai_gateway}}
   url: /mcp/secure-mcp-traffic/
 hashicorp-vault-llms:
   title: Configure dynamic authentication to LLM providers
@@ -32,3 +29,6 @@ mcp-conversion:
 mcp-weather-api:
   title: Autogenerate and observe MCP tools for Weather API
   url: /mcp/autogenerate-mcp-tools-for-weather-api/
+mcp-acls:
+  title: Control MCP tool access with Consumer and Consumer Group ACLs
+  url: /mcp/use-access-controls-for-mcp-tools/

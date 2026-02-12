@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@244ff7363a36bd242d8f49f235ebb904e3672d32
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/244ff7363a36bd242d8f49f235ebb904e3672d32'
+  x-oas-source: kong/platform-api@9f3960998faeb894d622f998d7ca3d64d1d47af8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9f3960998faeb894d622f998d7ca3d64d1d47af8'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -872,6 +872,7 @@ components:
       example: 39ed3790-085d-4605-9627-f96d86aaf425
       readOnly: true
     NetworkId:
+      description: 'The network ID to operate on. For serverless.v1 kind of cloud gateways, this field should be omitted.'
       type: string
       format: uuid
       example: 36ae63d3-efd1-4bec-b246-62aa5d3f5695
@@ -921,7 +922,7 @@ components:
         - sg
       title: Control-Plane Geo
     GatewayVersion:
-      description: Supported gateway version.
+      description: 'Supported gateway version. For serverless.v1 kind of cloud gateways, this field should be omitted.'
       type: string
       example: '3.2'
       title: Gateway Version
@@ -1146,7 +1147,7 @@ components:
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleStatic'
         - $ref: '#/components/schemas/ConfigurationDataPlaneGroupAutoscaleAutopilot'
     ConfigurationDataPlaneGroupAutoscaleStatic:
-      description: Object that describes the static autoscaling strategy. Deprecated in favor of the autopilot autoscaling strategy. Static autoscaling will be removed in a future version.
+      description: 'Object that describes the static autoscaling strategy. Deprecated in favor of the autopilot autoscaling strategy. Static autoscaling will be removed in a future version. For serverless.v1 kind of cloud gateways, this field should be omitted.'
       type: object
       properties:
         kind:
@@ -1167,7 +1168,7 @@ components:
         - requested_instances
       title: Configuration Autoscale Static
     ConfigurationDataPlaneGroupAutoscaleAutopilot:
-      description: Object that describes the autopilot autoscaling strategy.
+      description: 'Object that describes the autopilot autoscaling strategy. For serverless.v1 kind of cloud gateways, this field should be omitted.'
       type: object
       properties:
         kind:
@@ -1232,10 +1233,8 @@ components:
           $ref: '#/components/schemas/ConfigurationDataPlaneGroupEnvironment'
       additionalProperties: false
       required:
-        - autoscale
         - provider
         - region
-        - cloud_gateway_network_id
       title: Configuration Data-Plane Group Config Item
     ConfigurationDataPlaneGroup:
       description: Object that describes the set of data-plane groups currently pointed to this configuration.
@@ -1314,14 +1313,25 @@ components:
         - id
         - provider
         - region
-        - autoscale
-        - cloud_gateway_network_id
         - state
         - created_at
         - updated_at
       title: Cloud Gateway Configuration Data-Plane Group
     NetworkConfigurationReference:
       $ref: '#/components/schemas/ConfigurationManifest'
+    ConfigurationKind:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Kind of the Cloud Gateway deployment. If serverless.v1 is specified, the following fields
+        should be omitted (will be ignored if provided): autoscale, cloud_gateway_network_id, version.
+      type: string
+      default: dedicated.v0
+      enum:
+        - dedicated.v0
+        - serverless.v1
+      title: ConfigurationKind
     ConfigurationManifest:
       description: Object containing information about a control-plane's cloud-gateways configuration.
       type: object
@@ -1346,6 +1356,8 @@ components:
           items:
             $ref: '#/components/schemas/ConfigurationDataPlaneGroup'
           format: set
+        kind:
+          $ref: '#/components/schemas/ConfigurationKind'
         entity_version:
           description: |
             Positive, monotonically increasing version integer, to serialize configuration changes.
@@ -1372,7 +1384,6 @@ components:
         - id
         - control_plane_id
         - control_plane_geo
-        - version
         - dataplane_group_config
         - dataplane_groups
         - entity_version
@@ -1395,10 +1406,8 @@ components:
           $ref: '#/components/schemas/ConfigurationDataPlaneGroupEnvironment'
       additionalProperties: false
       required:
-        - autoscale
         - provider
         - region
-        - cloud_gateway_network_id
       title: CreateConfigurationDataPlaneGroup
     ProviderAccount:
       description: Object containing mapping for organization and cloud provider to account ID.
@@ -1616,6 +1625,7 @@ components:
         - `ready` - The transit gateway attachment is fully operational and can route traffic as configured.
         - `terminating` - The attachment is in the process of being deleted and is no longer accepting new traffic.
         - `terminated` - The attachment has been fully deleted and is no longer available.
+        - `error` - The attachment is in an error state.
       type: string
       enum:
         - created
@@ -1625,6 +1635,7 @@ components:
         - ready
         - terminating
         - terminated
+        - error
       readOnly: true
       title: Transit Gateway State
     AwsResourceEndpointConfigState:
@@ -2728,13 +2739,14 @@ components:
           items:
             $ref: '#/components/schemas/CreateConfigurationDataPlaneGroup'
           format: set
+        kind:
+          $ref: '#/components/schemas/ConfigurationKind'
         api_access:
           $ref: '#/components/schemas/ApiAccess'
       additionalProperties: false
       required:
         - control_plane_id
         - control_plane_geo
-        - version
         - dataplane_groups
       title: CreateConfigurationRequest
     CreateCustomDomainRequest:

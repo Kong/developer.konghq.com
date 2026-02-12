@@ -51,7 +51,7 @@ rows:
       <!--vale on-->
   - category: Vitals
     description: |
-      The product component known as Vitals is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. {{site.konnect_short_name}} users can take advantage of our Advanced Analytics offering, which provides a superset of Vitals functionality.
+      The product component known as Vitals is no longer included in {{site.ee_product_name}}. Existing customers who have purchased Kong Vitals can continue to use it and be supported via a dedicated mechanism. {{site.konnect_short_name}} users can take advantage of our {{site.observability}} offering, which provides a superset of Vitals functionality.
     action: |
       If you have purchased Vitals in the past and would like to continue to use it in 3.10, contact [Kong Support](https://support.konghq.com) for more information.
   - category: Plugins
@@ -265,7 +265,8 @@ rows:
       Remove these configurations before upgrading, or reach out to [Kong Support](https://support.konghq.com).
   - category: Licensing
     description: |
-      Enterprise Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+      Free mode is deprecated and will be removed in a future 3.x version of {{site.ee_product_name}}.
+      At that point, running {{site.base_gateway}} without a license will behave the same as running it with an expired license.
     action: |
       Try out [{{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide), or reach out to [Kong Sales](https://konghq.com/contact-sales?utm_medium=referral&utm_source=docs&utm_content=upgrade-guide) for a demo.
 {% endtable %}

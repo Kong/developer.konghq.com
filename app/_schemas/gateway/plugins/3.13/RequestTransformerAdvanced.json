@@ -1,0 +1,281 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "add": {
+          "properties": {
+            "body": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "headers": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "json_types": {
+              "default": [],
+              "items": {
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "querystring": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "allow": {
+          "properties": {
+            "body": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "append": {
+          "properties": {
+            "body": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "headers": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "json_types": {
+              "default": [],
+              "items": {
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "querystring": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "dots_in_keys": {
+          "default": true,
+          "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects.",
+          "type": "boolean"
+        },
+        "http_method": {
+          "description": "A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.",
+          "type": "string"
+        },
+        "remove": {
+          "properties": {
+            "body": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "headers": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "querystring": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "rename": {
+          "properties": {
+            "body": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "headers": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "querystring": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "replace": {
+          "properties": {
+            "body": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "headers": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "json_types": {
+              "default": [],
+              "items": {
+                "enum": [
+                  "boolean",
+                  "number",
+                  "string"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "querystring": {
+              "default": [],
+              "items": {
+                "type": "string",
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "type": "array"
+            },
+            "uri": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

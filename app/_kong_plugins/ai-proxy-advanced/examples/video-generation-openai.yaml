@@ -1,0 +1,40 @@
+title: 'Video generation route'
+description: 'Configure a video generation route using OpenAI Sora 2 model.'
+extended_description: |
+  {% new_in 3.13 %} Configure a video generation route using OpenAI Sora 2 model.
+
+weight: 900
+
+min_version:
+  gateway: '3.13'
+
+requirements:
+- OpenAI account
+
+config:
+  genai_category: video/generation
+  targets:
+    - route_type: video/v1/videos/generations
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: sora-2
+        options:
+          seconds: 4
+          size: 720x1280
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: multimodal-open-ai

@@ -22,7 +22,7 @@ extended_description: |
     - incoming: "`https://example.com/demo?foo=bar`"
       location: "`https://new.example.com/some-path`"
       keep_path: "`true`"
-      new_url: "`https://new.example.com/demo?foo=bar`"
+      new_url: "`https://new.example.com/some-path/demo?foo=bar`"
   {% endtable %}
 
 title: "Keep the incoming request path"

@@ -6,13 +6,13 @@ description: Learn about MCP servers in Insomnia, connect Insomnia to an MCP Ser
 breadcrumbs:
   - /insomnia/
 products:
-  - insomnia
-min_version:
-    insomnia: '12.0'  
+  - insomnia  
 
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: MCP catalog in {{site.konnect_short_name}} (tech preview)
+    url: https://cloud.konghq.com/global/organization/labs
 
 faqs:
   - q: What happens when authentication fails?
@@ -59,10 +59,20 @@ faqs:
   - q: What should I do if an MCP request is taking a long time to run?
     a: |
       From the **Events** tab, click the cancel icon beside the request that is currently running. This ends the current MCP task and returns control to the app.
-    
-        
+  - q: How are MCP Clients stored in Insomnia?
+    a: |
+      MCP Clients are project-scoped resources and can be stored in Local, Git, and Cloud projects.
+  - q: Why don’t MCP Clients appear in a Git or Cloud project after I upgrade Insomnia?
+    a: |
+      This can happen if the project was cloned or opened using an older version of Insomnia that did not support MCP Clients in Git or Cloud projects.
+
+      If you cloned or opened a Git or Cloud project before upgrading to Insomnia 12.3, and that project contains MCP Client files, you must re-clone the project after upgrading. This ensures Insomnia loads the MCP Client resources correctly.
+
+      {:.info}
+      > Projects cloned or created using Insomnia 12.3 or later are not affected.     
+       
 ---
-Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resource. An **MCP Client** defines this connection and stores authentication and configuration details.
+Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resources. An **MCP Client** defines this connection and stores authentication and configuration details.
 
 ## Overview
 
@@ -72,6 +82,16 @@ An MCP Server is an HTTP JSON-RPC endpoint that advertises callable operations:
 - **Resources** – Structured contextual data 
 
 The Insomnia **MCP Client** discovers these elements, which enables you to invoke, query, or test them directly in the app. Each workspace can include multiple MCP Clients.
+
+{% new_in 12.3 %} MCP Clients are project-scoped resources and can be stored in: 
+- Git projects
+- Cloud projects
+- Local projects
+
+This means that MCP Client configuration is saved as part of the project and can be shared, synced, and versioned in the same way as other project resources.
+
+{:.info}
+> Projects that contain MCP Clients require Insomnia 12.3 or later. If you opened or cloned a Git or Cloud project before upgrading to 12.3, re-clone the project after upgrading so Insomnia can load the MCP Client resources correctly.
 
 ### Create an MCP client
 To create a new MCP Client:
@@ -150,7 +170,7 @@ If the authorization server does not support Dynamic Client Registration, you ca
 Insomnia supports **MCP Elicitation**, a feature that allows a server to request additional information from the client during a request. When a server returns an elicitation request, Insomnia displays the fields defined by the server so you can provide the required information. Insomnia then returns the submitted values to the server so it can continue processing the original request.
 
 Elicitation supports workflows where the server needs more context or specific field values before it completes an action. Insomnia manages the entire flow: 
-1. It displays the elicitation UI
+1. Displays the elicitation UI
 1. Collects the user input
 1. Returns the elicitation response to the server
 
@@ -163,3 +183,20 @@ Elicitation supports workflows where the server needs more context or specific f
 1. The server continues processing using the new information.
 
 For more details, see the MCP client specification for [elicitation](https://modelcontextprotocol.io/specification/draft/client/elicitation)
+
+## Sampling responses
+
+Insomnia supports **MCP Sampling**. Sampling is a workflow where an MCP server requests Insomnia to generate a model response based on the current context. Insomnia then uses its AI integration to produce the sampling response, and it presents the request and response steps in a dedicated interface in the Response pane.
+
+### How sampling works
+
+1. The MCP server issues a `sampling/createMessage` request to the Insomnia MCP client.
+1. Insomnia displays the sampling request in the Response pane so that the user can review and modify it before generation.
+1. After the user approves the request, Insomnia forwards it to the model that's using Insomnia AI.
+1. Insomnia receives the model’s output and then displays the response so that the user can review and modify it.
+1. After the user approves the response, Insomnia then returns the final result to the MCP server. 
+
+{:.info}
+> When supported by the server, this process can continue across additional turns.
+
+For more information about sampling, go to the MCP [Sampling](https://modelcontextprotocol.io/specification/draft/client/sampling) documentation.

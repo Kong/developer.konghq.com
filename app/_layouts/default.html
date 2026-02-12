@@ -99,6 +99,7 @@
       data-modal-override-open-selector=".ask-ai-button"
       data-kapa-branding-hide="true"
       data-project-logo="https://developer.konghq.com/assets/logos/konglogo-gradient-secondary.svg"
+      data-modal-example-questions="Can I set up Kong as an MCP server?,How do I publish an API to Dev Portal?,Set up rate limiting in API Gateway,Which AI providers are supported?"
     ></script>
     {% endif %}
 
@@ -156,6 +157,7 @@
     {% endif %}
 
     {% include_cached footer.html %}
+    <div id="tooltip" class="fixed hidden bg-terciary text-white text-sm rounded p-2 border border-brand-saturated/40 max-w-64 z-50"></div>
   </div>
   <script>
     window.searchFilters = {{site.data.searchFilters | jsonify }}

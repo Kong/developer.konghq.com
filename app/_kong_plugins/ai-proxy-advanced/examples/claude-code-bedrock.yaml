@@ -1,0 +1,51 @@
+title: 'Configure AI Proxy for Claude Code with AWS Bedrock'
+description: 'Set up the AI Proxy plugin to work with Claude Code, using AWS Bedrock with Claude Haiku 4.5 model.'
+
+extended_description: |
+  {% new_in 3.13 %}Set up the AI Proxy plugin to work with Claude Code, using AWS Bedrock with Claude Haiku 4.5 model.
+  For a detailed guide on how to use AWS Bedrock with Claude Code see [this guide](/how-to/use-claude-code-with-ai-gateway-bedrock/)
+
+show_in_api: true
+weight: 903
+
+requirements:
+- AWS account
+- AWS Bedrock access enabled
+- AWS IAM credentials configured
+
+config:
+  llm_format: anthropic
+  targets:
+  - route_type: llm/v1/chat
+    auth:
+      allow_override: false
+      aws_access_key_id: "${aws_access_key_id}"
+      aws_secret_access_key: "${aws_secret_access_key}"
+    model:
+      provider: bedrock
+      name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+      options:
+        anthropic_version: bedrock-2023-05-31
+        bedrock:
+          aws_region: "${aws_region}"
+        max_tokens: 8192
+
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+    description: The AWS access key ID for authentication.
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+    description: The AWS secret access key for authentication.
+  aws_region:
+    value: $AWS_REGION
+    description: The AWS region for Bedrock service (for example, us-west-2).
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code

@@ -78,6 +78,11 @@ kuma:
         Key: "token"
 ```
 
+Install the zone control plane:
+
+```sh
+helm --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh/kong-mesh -f Values.yaml 
+```
 
 {% endnavtab %}
 {% navtab "Universal" %}

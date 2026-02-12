@@ -33,11 +33,11 @@ rows:
                     - Upstream and downstream dependencies
                     - Associated code repositories and CI/CD pipelines
                     - API gateway and service mesh mappings
-                    - Comprehensive API catalog
+                    - Comprehensive API and MCP server catalog
 
   - header:
         type: h2
-        text: "Explore key features"
+        text: "Create your catalog"
     columns:
       - blocks:
         - type: card
@@ -50,6 +50,8 @@ rows:
             ctas:
               - text: APIs reference
                 url: "/catalog/apis/"
+              - text: API packages
+                url: /catalog/api-packaging/
               - text: Create an API catalog with the {{site.konnect_short_name}} API
                 url: "/how-to/automate-api-catalog/"
               - text: Create an API catalog with Terraform
@@ -66,6 +68,20 @@ rows:
               cta:
                 text: Learn about {{site.konnect_catalog}} services
                 url: /catalog/services/
+      - blocks:
+          - type: card
+            config:
+              title: MCP catalog (tech preview)
+              description: |
+                Discover and connect MCP servers to {{site.konnect_short_name}} {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Enable in {{site.konnect_short_name}} Labs.
+                url: https://cloud.konghq.com/global/organization/labs
+  - header:
+      type: h2
+      text: "Explore more features"
+    columns:
       - blocks:
           - type: card
             config:

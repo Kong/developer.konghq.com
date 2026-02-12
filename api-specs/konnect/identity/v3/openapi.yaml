@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@7d824963a8659aaf8b9db42df1c777b078a7413f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7d824963a8659aaf8b9db42df1c777b078a7413f'
+  x-oas-source: kong/platform-api@32f132716d696635a0ba267d833570da64a9aa83
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/32f132716d696635a0ba267d833570da64a9aa83'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -3259,6 +3259,7 @@ components:
                   - Deployer
                   - Discovery Admin
                   - Discovery Viewer
+                  - Editor
                   - Gateway Service Admin
                   - Integration Admin
                   - Integration Viewer
@@ -3302,6 +3303,7 @@ components:
                   - Mesh Control Planes
                   - Networks
                   - Portals
+                  - Reports
                   - Service Hub
               entity_region:
                 description: Region of the team.
@@ -4454,6 +4456,54 @@ components:
                   roles:
                     type: object
                     properties:
+                      admin:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Admin
+                          description:
+                            type: string
+                            example: 'Allows users to edit, delete, and share a Dashboard in Konnect Analytics.'
+                            enum:
+                              - 'Allows users to edit, delete, and share a Dashboard in Konnect Analytics.'
+                        required:
+                          - name
+                          - description
+                      creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Creator
+                          description:
+                            type: string
+                            example: Allows users to create a new Dashboard in Konnect Analytics.
+                            enum:
+                              - Allows users to create a new Dashboard in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      editor:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Editor
+                          description:
+                            type: string
+                            example: Allows users to edit a Dashboard in Konnect Analytics.
+                            enum:
+                              - Allows users to edit a Dashboard in Konnect Analytics.
+                        required:
+                          - name
+                          - description
                       viewer:
                         type: object
                         additionalProperties: false
@@ -4467,6 +4517,84 @@ components:
                             example: Allows users to view any Dashboards content in Konnect Analytics.
                             enum:
                               - Allows users to view any Dashboards content in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                required:
+                  - name
+                  - roles
+              reports:
+                type: object
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                    enum:
+                      - Reports
+                  roles:
+                    type: object
+                    properties:
+                      admin:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Admin
+                          description:
+                            type: string
+                            example: 'Allows users to edit, delete, and share a Report in Konnect Analytics.'
+                            enum:
+                              - 'Allows users to edit, delete, and share a Report in Konnect Analytics.'
+                        required:
+                          - name
+                          - description
+                      creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Creator
+                          description:
+                            type: string
+                            example: Allows users to create a new Report in Konnect Analytics.
+                            enum:
+                              - Allows users to create a new Report in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      editor:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Editor
+                          description:
+                            type: string
+                            example: Allows users to edit a Report in Konnect Analytics.
+                            enum:
+                              - Allows users to edit a Report in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      viewer:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Viewer
+                          description:
+                            type: string
+                            example: Allows users to view a Report in Konnect Analytics.
+                            enum:
+                              - Allows users to view a Report in Konnect Analytics.
                         required:
                           - name
                           - description
@@ -4707,6 +4835,7 @@ components:
               updated_at: '2022-08-02T08:35:49Z'
               expires_at: '2022-12-31T12:52:23Z'
               last_used_at: '2022-10-24T13:05:42Z'
+              token: spat_12345678901234567890123456789012345678901234567890
             title: System Account Access Token Created Response
           examples:
             Sample Access Token:
@@ -4717,7 +4846,7 @@ components:
                 updated_at: '2019-08-24T14:15:22Z'
                 expires_at: '2019-08-24T14:15:22Z'
                 last_used_at: '2019-08-24T14:15:22Z'
-                token: npat_12345678901234567890123456789012345678901234567890
+                token: spat_12345678901234567890123456789012345678901234567890
     MeOrganization:
       description: Me Organization
       content:

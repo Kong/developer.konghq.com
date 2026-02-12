@@ -1,18 +1,20 @@
 metadata:
-  title: "AI Gateway providers"
+  title: "{{site.ai_gateway}} providers"
   content_type: landing_page
-  description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
+  description: This page is an introduction to the AI providers available in {{site.ai_gateway}}.
   products:
     - ai-gateway
   works_on:
     - on-prem
     - konnect
+  breadcrumbs:
+    - /ai-gateway/
   tags:
     - ai
 rows:
   - header:
       type: h1
-      text: "AI Gateway providers"
+      text: "{{site.ai_gateway}} providers"
 
     columns:
       - blocks:
@@ -21,445 +23,167 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The core of [AI Gateway](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [{{site.ai_gateway}}](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
 
                 - type: unordered_list
                   items:
                     - Client applications are shielded from AI provider API specifics, promoting code reusability
                     - Centralized AI provider credential management
-                    - The AI Gateway gives developers and organizations a central point of governance and observability over AI data and usage
+                    - The {{site.ai_gateway}} gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
                     - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
-
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
         - type: icon_card
           config:
             title: OpenAI
             icon: /assets/icons/openai.svg
             cta:
-              url: ./#openai
+              url: /ai-gateway/ai-providers/openai/
       - blocks:
         - type:  icon_card
           config:
             title: Azure AI
             icon: /assets/icons/azure.svg
             cta:
-              url: ./#azure-ai
+              url: /ai-gateway/ai-providers/azure/
       - blocks:
         - type: icon_card
           config:
             title: Amazon Bedrock
             icon: /assets/icons/bedrock.svg
             cta:
-              url: ./#amazon-bedrock
-  - columns:
+              url: /ai-gateway/ai-providers/bedrock/
       - blocks:
         - type: icon_card
           config:
             title: Gemini
             icon: /assets/icons/gemini.svg
             cta:
-              url: ./#gemini
+              url: /ai-gateway/ai-providers/gemini/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Vertex AI
+            icon: /assets/icons/Vertex.svg
+            cta:
+              url: /ai-gateway/ai-providers/vertex/
       - blocks:
         - type: icon_card
           config:
             title: Anthropic
             icon: /assets/icons/anthropic.svg
             cta:
-              url: ./#anthropic
+              url: /ai-gateway/ai-providers/anthropic/
       - blocks:
         - type: icon_card
           config:
             title: Cohere
             icon: /assets/icons/cohere.svg
             cta:
-              url: ./#cohere
-  - columns:
+              url: /ai-gateway/ai-providers/cohere/
       - blocks:
         - type: icon_card
           config:
             title: Hugging Face
             icon: /assets/icons/huggingface.svg
             cta:
-              url: ./#hugging-face
+              url: /ai-gateway/ai-providers/huggingface/
       - blocks:
         - type: icon_card
           config:
             title: Llama
             icon: /assets/icons/metaai.svg
             cta:
-              url: ./#llama
+              url: /ai-gateway/ai-providers/llama/
       - blocks:
         - type: icon_card
           config:
             title: Mistral
             icon: /assets/icons/mistral.svg
             cta:
-              url: ./#mistral
-
-
-  - header:
-      type: h2
-      text: "Supported providers"
-    columns:
+              url: /ai-gateway/ai-providers/mistral/
+      - blocks:
+        - type: icon_card
+          config:
+            title: xAI
+            icon: /assets/icons/xai.svg
+            cta:
+              url: /ai-gateway/ai-providers/xai/
+      - blocks:
+        - type: icon_card
+          config:
+            title: DashScope
+            icon: /assets/icons/dashscope.svg
+            cta:
+              url: /ai-gateway/ai-providers/dashscope/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Cerebras
+            icon: /assets/icons/cerebras.svg
+            cta:
+              url: /ai-gateway/ai-providers/cerebras/
+  - columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    The following providers are supported by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
-                    Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
-                    See the plugins documentation for more details.
-  - header:
-      type: h3
-      text: "OpenAI"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with OpenAI
-            description:
-              Configure the AI Proxy plugin to proxy requests to an OpenAI model
-            cta:
-              url: /plugins/ai-proxy/examples/openai-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with OpenAI
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to an OpenAI model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/openai-chat-route/
-              align: end
-              text: Configuration example
-  - header:
-      type: h4
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags:
-                - openai
-              quantity: 3
-              allow_empty: true
+                    {:.info}
+                    > Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types.
+                    > See the specific provider documentation for more details.
 
   - header:
-      type: h3
-      text: "Azure AI"
+      type: h2
+      text: References
     columns:
       - blocks:
-        - type: card
+        - type: reference_list
           config:
-            title: AI Proxy with Azure AI
-            description:
-              Configure the AI Proxy plugin to proxy requests to an Azure AI model
-            cta:
-              url: /plugins/ai-proxy/examples/azure-chat-route/
-              align: end
-              text: Configuration example
+            pages:
+              - /plugins/ai-proxy/
+              - /plugins/ai-proxy-advanced/
+              - /ai-gateway/load-balancing/
+              - /ai-gateway/resource-sizing-guidelines-ai/
+              - /how-to/?tags=ai
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
       - blocks:
-        - type: card
+        - type: faqs
           config:
-            title: AI Proxy Advanced with Azure AI
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to an Azure AI model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - azure-ai
-  #             quantity: 3
-  #             allow_empty: true
+            - q: Can I authenticate to Azure AI with Azure Identity?
+              a: |
+                {% include faqs/azure-identity.md %}
 
-  - header:
-      type: h3
-      text: "Amazon Bedrock"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Amazon Bedrock
-            description:
-              Configure the AI Proxy plugin to proxy requests to an Amazon Bedrock model
-            cta:
-              url: /plugins/ai-proxy/examples/bedrock-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Amazon Bedrock
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to an Amazon Bedrock model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - bedrock
-  #             quantity: 3
-  #             allow_empty: true
-
-  - header:
-      type: h3
-      text: "Gemini"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Gemini
-            description:
-              Configure the AI Proxy plugin to proxy requests to a Gemini model
-            cta:
-              url: /plugins/ai-proxy/examples/gemini-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Gemini
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to a Gemini model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/gemini-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - gemini
-  #             quantity: 3
-  #             allow_empty: true
-
-  - header:
-      type: h3
-      text: "Anthropic"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Anthropic
-            description:
-              Configure the AI Proxy plugin to proxy requests to an Anthropic model
-            cta:
-              url: /plugins/ai-proxy/examples/anthropic-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Anthropic
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to an Anthropic model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
-              align: end
-              text: Configuration example
-  - header:
-      type: h4
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags:
-                - anthropic
-              quantity: 3
-              allow_empty: true
-
-  - header:
-      type: h3
-      text: "Cohere"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Cohere
-            description:
-              Configure the AI Proxy plugin to proxy requests to a Cohere model
-            cta:
-              url: /plugins/ai-proxy/examples/cohere-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Cohere
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to a Cohere model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/cohere-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - cohere
-  #             quantity: 3
-  #             allow_empty: true
-
-  - header:
-      type: h3
-      text: "Hugging Face"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Hugging Face
-            description:
-              Configure the AI Proxy plugin to proxy requests to a Hugging Face model
-            cta:
-              url: /plugins/ai-proxy/examples/huggingface-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Hugging Face
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to a Hugging Face model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - hugging-face
-  #             quantity: 3
-  #             allow_empty: true
-
-  - header:
-      type: h3
-      text: "Llama"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Llama
-            description:
-              Configure the AI Proxy plugin to proxy requests to a Llama model
-            cta:
-              url: /plugins/ai-proxy/examples/llama2-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Llama
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to a Llama model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
-              align: end
-              text: Configuration example
-  - header:
-      type: h4
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags:
-                - llama
-              quantity: 3
-              allow_empty: true
-
-  - header:
-      type: h3
-      text: "Mistral"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy with Mistral
-            description:
-              Configure the AI Proxy plugin to proxy requests to a Mistral model
-            cta:
-              url: /plugins/ai-proxy/examples/mistral-chat-route/
-              align: end
-              text: Configuration example
-      - blocks:
-        - type: card
-          config:
-            title: AI Proxy Advanced with Mistral
-            description:
-              Configure the AI Proxy Advanced plugin to proxy requests to a Mistral model
-            cta:
-              url: /plugins/ai-proxy-advanced/examples/mistral-chat-route/
-              align: end
-              text: Configuration example
-  # - header:
-  #     type: h4
-  #     text: How-to Guides
-  #   columns:
-  #     - blocks:
-  #         - type: how_to_list
-  #           config:
-  #             plugins:
-  #               - ai-proxy
-  #               - ai-proxy-advanced
-  #             tags:
-  #               - mistral
-  #             quantity: 3
-  #             allow_empty: true
-
+            - q: How can I set model generation parameters when calling Gemini?
+              a: |
+                {% include faqs/gemini-model-params.md %}
+            - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
+              a: |
+                {% include faqs/gemini-search.md %}
+            - q: How do I control aspect ratio and resolution for Gemini image generation?
+              a: |
+                {% include faqs/gemini-image.md %}
+            - q: How do I get reasoning traces from Gemini models?
+              a: |
+                {% include faqs/gemini-thinking.md %}
+            - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
+              a: |
+                {% include faqs/bedrock-models.md %}
+            - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
+              a: |
+                {% include faqs/bedrock-fps.md %}
+            - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
+              a: |
+                {% include faqs/bedrock-rerank.md %}
+            - q: How do I include guardrail configuration with Amazon Bedrock requests?
+              a: |
+                {% include faqs/bedrock-guardrails.md %}
+            - q: How do I use Cohere's document-grounded chat for RAG pipelines?
+              a: |
+                {% include faqs/cohere-rerank.md %}

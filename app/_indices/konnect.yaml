@@ -1,4 +1,5 @@
 title: Konnect Platform Documentation
+description: Index containing all documentation for the {{site.konnect_short_name}} platform.
 sections:
   - title: About Konnect
     items:
@@ -7,7 +8,7 @@ sections:
         url: /konnect/
       - title: Get started with Kong Gateway on Konnect
         description: Get started by setting up {{site.konnect_short_name}} hybrid deployment and walking through some common API management tasks. 
-        url: /gateway/get-started/
+        url: /gateway/get-started/?deployment=konnect
       - path: /gateway/topology-hosting-options/
       - path: /konnect-platform/kai/
   
@@ -15,8 +16,9 @@ sections:
     items:
       - path: /dev-portal/
       - path: /catalog/
-      - path: /advanced-analytics/
+      - path: /observability/
       - path: /ai-manager/
+      - path: /metering-and-billing/
       - path: /gateway/
       - path: /mesh/
 

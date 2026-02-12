@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Provided detailed error messages for `oneOf` / `anyOf` subschemas.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for specifying JSON schema draft versions.",

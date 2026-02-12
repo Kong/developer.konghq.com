@@ -123,7 +123,7 @@ Each section uses the format:
 ## Kong Mesh
 
 - [Kong Mesh Overview](https://developer.konghq.com/mesh/): Enterprise service mesh built on Kuma with full support for multi-zone, zero-trust, and policy-based traffic control.
-- [About Mesh](https://developer.konghq.com/mesh/about/): Overview of Mesh use cases, architecture, and deployment models.
+- [About Mesh](https://developer.konghq.com/mesh/service-mesh/): Overview of Mesh use cases, architecture, and deployment models.
 - [Mesh Concepts](https://developer.konghq.com/mesh/concepts/): Core concepts such as meshes, zones, dataplanes, and control planes.
 - [Mesh Architecture](https://developer.konghq.com/mesh/architecture/): Internal architecture and interaction between control and data planes.
 - [Mesh CLI](https://developer.konghq.com/mesh/cli/): Reference guide for using the `kumactl` CLI to manage Kong Mesh.
@@ -154,7 +154,7 @@ Each section uses the format:
 ## Kong Operator
 
 - [Operator Overview](https://developer.konghq.com/operator/): Kubernetes controller that automates deployment and configuration of Kong Gateway.
-- [Install the Operator](https://developer.konghq.com/operator/install/): Installation instructions and CRD setup.
+- [Install the Operator](https://developer.konghq.com/operator/get-started/gateway-api/install/): Installation instructions and CRD setup.
 
 ---
 

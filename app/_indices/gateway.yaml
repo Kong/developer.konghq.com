@@ -1,4 +1,5 @@
 title: Gateway Documentation
+description: Index containing all documentation for {{site.base_gateway}}.
 sections:
   - title: Overview
     items:

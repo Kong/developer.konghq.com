@@ -4,23 +4,24 @@
     "description": "",
     "scripts": {
         "generate-instruction-files": "node ./generate-instructions-files.js",
-        "run-tests": "node ./run.js"
+        "run-tests": "NODE_ENV=test dotenvx run --convention=nextjs -- node ./run.js"
     },
     "type": "module",
     "keywords": [],
     "license": "MIT",
     "dependencies": {
+        "@dotenvx/dotenvx": "^1.51.1",
         "debug": "^4.4.0",
         "dockerode": "^4.0.3",
-        "dotenv": "^17.2.3",
         "fast-glob": "^3.3.3",
         "fetch-cookie": "^3.1.0",
+        "formdata-node": "^6.0.3",
         "gray-matter": "^4.0.3",
-        "https": "^1.0.0",
         "js-yaml": "^4.1.0",
         "minimist": "^1.2.8",
         "node-fetch": "^3.3.2",
         "playwright": "^1.54.2",
-        "tough-cookie": "^5.1.2"
+        "tough-cookie": "^6.0.0",
+        "undici": "^7.18.2"
     }
 }

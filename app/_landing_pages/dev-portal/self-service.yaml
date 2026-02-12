@@ -183,7 +183,7 @@ rows:
                 text: |
                   You can choose to auto approve developers and applications or require admin approval for developers and applications by navigating to **Settings** and the **Security** tab in your Dev Portal settings.
 
-                  If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the sidebar. 
+                  If your settings require developer or application approval, you can manage approvals by navigating to **Access and approvals** in the sidebar. You need the [API Registration Approver and Portal Viewer role](/konnect-platform/teams-and-roles/#dev-portal) assigned to the Teams that control the APIs to approve these.
                   Additionally, you can add developers to teams by clicking on the settings menu next to the name of the developer.
                   
                   Once approved, developers can create applications and view APIs, and the application can generate credentials to use the APIs.

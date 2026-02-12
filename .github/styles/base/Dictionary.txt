@@ -13,6 +13,7 @@ agentic
 Agno
 Agno's
 Alertmanager
+Alibaba
 allow_terminated
 allowlist
 allowlisting
@@ -20,6 +21,7 @@ allowlisted
 Amal
 Amberflo
 amberflo
+andAll
 anonymization
 anonymized
 Anonymizer
@@ -60,10 +62,13 @@ autoscales
 autoscaling
 Avro
 aws
+Adyen
 AZs
+Backblaze
 backfilled
 Backfilling
 backfilling
+backoff
 backport
 backported
 backporting
@@ -84,6 +89,7 @@ Bintray
 Bintray
 Bitnami
 Bitnami
+bloblang
 blockquote
 blockquotes
 body_filter
@@ -100,13 +106,18 @@ callout
 callouts
 camelCase
 cef
+Cerebras
 certificate_admin
+Cerebras
+cerebras
 charset
 chatbot
 chatbots
+chatwise
 cidr
 cidrs
 cleartext
+cli
 client_credentials
 client_payload
 client_status
@@ -122,6 +133,8 @@ Cloudsmith
 cmd
 cncf
 cncf's
+Cohere
+cohere
 Cognito
 Cognito
 Collectd
@@ -145,6 +158,8 @@ crd
 crds
 created_at
 creationTimestamp
+CRMs
+cron
 cronjob
 CrowdStrike
 cryptocurrency
@@ -157,6 +172,7 @@ DAOs
 DAOs
 daos
 dashboarding
+Dashscope
 Datadog
 Datadog
 datadog
@@ -190,6 +206,7 @@ deserialize
 deserialized
 destructuring
 dev
+devops
 Dex
 Dex
 dict
@@ -216,6 +233,7 @@ DPPs
 drilldown
 dynatrace
 Dynatrace
+eason
 ecs
 ElastiCache
 ElastiCache
@@ -231,13 +249,16 @@ Equinix
 Equinix
 Equinix
 Equinix
+ERPs
 etag
 etcd
 event_hook
 eventhooks
 eventTime
+evaluable
 example_service
 exfiltrate
+extra_body
 failover
 fapi
 Fargate
@@ -261,8 +282,11 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+generationConfig
 geo
 geos
+gemini
+Gemini
 getter
 getters
 gevent
@@ -277,11 +301,16 @@ gluu
 Gluu
 gojira
 Golang
+googleSearch
+goroutine
 Goroutine
-Goroutine
+goroutines
+GPUs
 gbps
 grafana
 Grafana
+greaterThan
+greaterThanOrEquals
 grpc
 grpcbin
 GRPCRoute
@@ -319,6 +348,8 @@ HTTPie
 HTTPRoute
 HTTPRoutes
 https
+HuggingFace
+huggingface
 idempotency
 IdPs
 if_version
@@ -425,6 +456,8 @@ Knatives
 knep
 kong
 kongair
+kongctl
+kong_konnect_api_request
 kong_name
 kong-ip
 Kong/kong
@@ -460,9 +493,12 @@ Kustomize
 kustomize
 kustomize
 kv
+Lakera
 langchain
 lapis
 lastTimestamp
+lessThan
+lessThanOrEquals
 Librato
 Librato
 libxml2
@@ -500,6 +536,7 @@ md
 mebibytes
 Memcached
 Memcached
+Memorystore
 meshopa
 meshopas
 meshpassthrough
@@ -520,6 +557,7 @@ misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+mockbin
 modelarmor
 Moesif
 Moesif
@@ -571,6 +609,7 @@ nopped
 nopping
 npm
 nrec
+Nvidia
 OAuth
 OAuth
 observability
@@ -628,6 +667,7 @@ PostgreSQL
 PowerShell
 PowerShell
 preferred_name
+premade
 prepend
 prepended
 prepending
@@ -635,6 +675,7 @@ prepends
 prepopulated
 preread
 printf
+prisma
 private_key
 productize
 productized
@@ -647,6 +688,7 @@ proto
 Protobuf
 Protobuf
 protobuf
+proviance
 proxied
 proxy_listen
 proxy_ssl
@@ -656,6 +698,7 @@ Qdrant
 qubit
 querystring
 qux
+Qwen
 ratelimit
 rbac
 reachability
@@ -669,6 +712,7 @@ Realtime
 realtime
 reconverge
 redis
+Redpanda
 reentrant
 referenceable
 ReferenceGrant
@@ -681,6 +725,7 @@ Rekor
 remediation
 remediations
 repo
+repos
 reportingComponent
 reportingInstance
 requery
@@ -689,9 +734,12 @@ requeue
 request_counts
 requestable
 RequestResponse
+rerank
 Rerank
+reranked
 reranking
 resourceVersion
+response_format
 Resty
 Resty
 resty
@@ -727,6 +775,8 @@ SBOMs
 SCCs
 SCCs
 schema's
+scim
+SCIM
 Scriptable
 SDKs
 search_by_username
@@ -736,6 +786,7 @@ serializer
 serverless
 serviceaccounts
 serviceless
+service_name
 shm
 show_in_api
 Sigstore
@@ -782,6 +833,8 @@ submodule
 submodule's
 subnet
 subnets
+subprocess
+subprocesses
 subresource
 substring
 subtable
@@ -823,6 +876,9 @@ Terraform's
 Terraform's
 text_splitters
 tfvars
+thinkingConfig
+thinking_budget
+imageConfig
 timeframe
 timeframes
 timeseries
@@ -873,6 +929,7 @@ ungrouped
 Unicode
 unicode
 unix
+unlinking
 unmanaged
 unmarshalled
 unnamespaced
@@ -924,6 +981,7 @@ Valero
 Valero
 validator
 validators
+Valkey
 vararg
 vc
 viewport
@@ -955,7 +1013,9 @@ workingDir
 workqueue
 workspace
 workspace's
+xai
 xbox
+xcode
 xenial
 yaml
 yml

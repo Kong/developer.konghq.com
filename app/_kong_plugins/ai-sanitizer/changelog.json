@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added a `skip_logging_sanitized_items` option to control whether to log the sanitized items, which may contain sensitive data.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for sanitizing LLM responses.\n",

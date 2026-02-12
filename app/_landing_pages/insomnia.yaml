@@ -34,15 +34,32 @@ rows:
       text: Install Insomnia
     columns:
       - blocks:
-        - type: tabs
-          tab_group: install-on-os
+        - type: card
           config:
-            - title: macOS
-              include_content: tools/insomnia/install/osx
-            - title: Windows
-              include_content: tools/insomnia/install/windows
-            - title: Linux
-              include_content: tools/insomnia/install/linux
+            title: macOS
+            description: Download and install Insomnia for macOS.
+            icon:  /assets/icons/third-party/mac.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Windows
+            description: Download and install Insomnia for Windows.
+            icon: /assets/icons/third-party/windows.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/windows/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Linux
+            description: Download and install Insomnia for Linux.
+            icon: /assets/icons/third-party/linux.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/ubuntu/latest?&app=com.insomnia.app&source=website
   - header:
       type: h2
       text: Get started
@@ -307,4 +324,9 @@ rows:
               a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
             - q: How often does Insomnia release updates?
               a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
+            - q: Does Insomnia automatically update to the latest version?
+              a: |
+                On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
+
+                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia doesn't own or maintain all Linux distribution mechanisms, automatic updates aren't guaranteed on Linux.
             

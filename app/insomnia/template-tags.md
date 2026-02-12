@@ -120,3 +120,14 @@ module.exports.templateTags = [{
 }];
 ```
 
+### Raw template syntax
+
+Use **Raw template syntax** to control how Insomnia inserts and edits template tags.
+
+It's disabled by default, which means that Insomnia opens the template tag configuration form. You configure values using structured fields, and then Insomnia generates the template tag syntax automatically.
+
+When enabled, Insomnia inserts template tags as plain text expressions instead of opening the configuration form. This means that you must write and edit the template tag syntax manually, and Insomnia won't display field hints, validation, or guided inputs in this mode.
+
+Use **Raw template syntax** when you want direct control over template tag expressions. Leave it disabled if you want guided configuration and inline validation.
+
+To enable **Raw template syntax**, from inside the Insomnia application, go to **Preferences > General > Application > Raw template syntax**.

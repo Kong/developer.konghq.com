@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added brute force protection with exponential backoff for failed login attempts.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",

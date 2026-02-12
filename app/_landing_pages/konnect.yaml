@@ -5,7 +5,7 @@ metadata:
     About the {{site.konnect_short_name}} SaaS API platform
   products:
     - konnect
-    
+
 rows:
   - header:
       type: h1
@@ -27,7 +27,7 @@ rows:
                   * Easily manage {{site.base_gateway}}
                   * Catalog and publish APIs
                   * Achieve federated API management with [multi-geo](/konnect-platform/geos/) support
-                          
+
           - type: button
             config:
               text: "Start a free trial &rarr;"
@@ -54,13 +54,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Advanced Analytics 
+            title: "{{site.konnect_short_name}} {{site.observability}}"
             description: |
-              Advanced Analytics is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
+              {{site.konnect_short_name}} {{site.observability}} is a real-time, highly contextual analytics platform that provides deep insights into API health, performance, and usage.
             icon: /assets/icons/analytics.svg
             ctas:
               - text: Explore analytics
-                url: /advanced-analytics/
+                url: /observability/
                 align: end
       - blocks:
         - type: card
@@ -85,6 +85,17 @@ rows:
               - text: Set up {{site.konnect_catalog}} integrations
                 url: /catalog/
                 align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.metering_and_billing}}"
+            description: |
+                {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.
+            icon: /assets/icons/metering-and-billing.svg
+            ctas:
+              - text: Set up {{site.metering_and_billing}}
+                url: /metering-and-billing/
+                align: end
 
   - header:
       type: h2
@@ -97,15 +108,15 @@ rows:
               - type: text
                 text: |
                   The {{site.konnect_short_name}} platform runs in [hybrid mode](/gateway/hybrid-mode/) and provides several hosted control plane options to manage all service configurations.
-                  The control plane propagates those configurations to the data plane group, which is composed of data plane nodes (and in the case of {{site.mesh_product_name}}, proxies). 
+                  The control plane propagates those configurations to the data plane group, which is composed of data plane nodes (and in the case of {{site.mesh_product_name}}, proxies).
                   The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
   - columns:
     - blocks:
           - type: card
             config:
-              title: AI Gateway
+              title: "{{site.ai_gateway}}"
               description: |
-                Kong AI Gateway is a powerful set of AI features built on top of {{ site.base_gateway }}, 
+                {{site.ai_gateway}} is a powerful set of AI features built on top of {{ site.base_gateway }},
                 designed to help developers and organizations effectively adopt AI quickly and securely.
               icon: /assets/icons/ai.svg
               ctas:
@@ -115,7 +126,7 @@ rows:
               - text: Get started
                 url: /ai-gateway/get-started/
                 align: end
-  
+
     - blocks:
           - type: card
             config:
@@ -128,9 +139,9 @@ rows:
                 url: /gateway/
                 align: end
               - text: Get started
-                url: /gateway/get-started/
+                url: /gateway/get-started/?deployment=konnect
                 align: end
-              
+
     - blocks:
           - type: card
             config:
@@ -145,13 +156,13 @@ rows:
               - text: Get started
                 url: /mesh/konnect-global-control-plane/
                 align: end
-    
+
     - blocks:
           - type: card
             config:
               title: Event Gateway
               description: |
-                {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
+                {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters.
                 It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
               icon: /assets/icons/event.svg
               ctas:
@@ -190,7 +201,7 @@ rows:
                     - "[{{site.konnect_short_name}} APIs](/konnect-api/): Manage all aspects of the {{site.konnect_short_name}} platform, applications, and runtimes using APIs"
                     - "[Kong AI assistant](/konnect-platform/kai/): Use Kong's AI assistant, KAi, to detect issues and suggest fixes."
 
-        
+
 
   - header:
       type: h2
@@ -202,8 +213,8 @@ rows:
           config:
             title: "{{site.konnect_short_name}} authentication"
             description: |
-              {{site.konnect_short_name}} offers multiple options for authentication. 
-              You can configure single sign-on with any SAML and OIDC provider or use built-in authentication. 
+              {{site.konnect_short_name}} offers multiple options for authentication.
+              You can configure single sign-on with any SAML and OIDC provider or use built-in authentication.
             icon: /assets/icons/lock.svg
             ctas:
             - text: Learn about {{site.konnect_short_name}} authentication methods
@@ -220,14 +231,14 @@ rows:
             - text: Set up teams and roles
               url: /konnect-platform/teams-and-roles/
               align: end
-      - blocks: 
+      - blocks:
         - type: card
-          config: 
+          config:
             title: Customer-Managed Encryption Keys (CMEK)
-            description: | 
+            description: |
               Customer-Managed Encryption Keys (CMEK) enhances privacy, security, and regulatory compliance by enabling customer-controlled encryption.
             icon: /assets/icons/lock.svg
-            ctas: 
+            ctas:
             - text: View the reference
               url: "/konnect-platform/cmek/"
       - blocks:
@@ -241,20 +252,20 @@ rows:
             - text: Learn about audit logging
               url: /konnect-platform/audit-logs/
               align: end
-      
+
       - blocks:
         - type: card
           config:
-            title: "Kong Identity (Beta)"
+            title: "Kong Identity"
             description: |
-              Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}. 
-              It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth. 
+              Kong Identity enables you to generate, authenticate, and authorize API access using {{site.konnect_short_name}}.
+              It implements OAuth 2.0 with OpenID Connect and supports plugins like OpenID Connect, OAuth 2.0 Introspection, and Upstream OAuth.
             icon: /assets/icons/rbac.svg
             ctas:
             - text: Start using Kong Identity
               url: /kong-identity/
               align: end
-  
+
   - header:
       type: h2
       text: References
@@ -268,7 +279,7 @@ rows:
                 Learn about new {{site.konnect_short_name}} features.
               icon: /assets/icons/document-list.svg
               cta:
-                text: View the changelog 
+                text: View the changelog
                 url: https://app.getbeamer.com/kongreleases/en
                 align: end
       - blocks:
@@ -340,7 +351,7 @@ rows:
               description: |
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
-                text: View the compatibility policy 
+                text: View the compatibility policy
                 url: /konnect-platform/compatibility/
                 align: end
       - blocks:
@@ -348,10 +359,10 @@ rows:
             config:
               title: "Kong vulnerability patching process"
               description: |
-                Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
+                Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or
                 third-party code, and how to report any security issues.
               cta:
-                text: View the vulnerability policy 
+                text: View the vulnerability policy
                 url: /gateway/vulnerabilities/
                 align: end
       - blocks:
@@ -371,7 +382,7 @@ rows:
               description: |
                 Learn about {{site.konnect_short_name}} plans and pricing.
               cta:
-                text: View {{site.konnect_short_name}} pricing 
+                text: View {{site.konnect_short_name}} pricing
                 url: https://konghq.com/pricing
                 align: end
   - header:

@@ -1,0 +1,51 @@
+title: 'Configure AI Proxy for Claude Code with Azure OpenAI'
+description: 'Set up the AI Proxy plugin to work with Claude Code, using Azure OpenAI as the LLM provider with GPT-4.1 model.'
+
+extended_description: |
+  {% new_in 3.13 %}Set up the AI Proxy plugin to work with Claude Code, using Azure OpenAI as the LLM provider with GPT-4.1 model
+  For a detailed guide on how to use Azure OpenAI with Claude Code see [this guide](/how-to/use-claude-code-with-ai-gateway-azure/)
+
+show_in_api: true
+weight: 901
+
+requirements:
+- Azure OpenAI subscription
+- Azure deployment configured
+
+config:
+  llm_format: anthropic
+  targets:
+  - route_type: llm/v1/chat
+    logging:
+      log_payloads: true
+      log_statistics: true
+    auth:
+      header_name: "Authorization"
+      header_value: "Bearer ${azure_api_key}"
+    model:
+      provider: azure
+      name: gpt-4.1
+      options:
+        azure_api_version: "2024-12-01-preview"
+        azure_instance: "${azure_instance}"
+        azure_deployment_id: "${azure_deployment_id}"
+
+variables:
+  azure_api_key:
+    value: $AZURE_API_KEY
+    description: The API key to use to connect to Azure OpenAI.
+  azure_instance:
+    value: $AZURE_INSTANCE
+    description: The Azure OpenAI instance name.
+  azure_deployment_id:
+    value: $AZURE_DEPLOYMENT_ID
+    description: The Azure OpenAI deployment ID for the model.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code

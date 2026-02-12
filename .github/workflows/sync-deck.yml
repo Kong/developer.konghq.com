@@ -16,21 +16,30 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
       - uses: Kong/setup-deck@v1
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Fetch OAS Data
         run: |
           cd tools/deck-versions
           npm ci
           node extract-help.js
           node fetch-versions.js
+
       - name: Create pull request
-        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8
         with:
           title: Sync Deck Releases
           commit-message: Sync Deck Releases
           labels: skip-changelog,review:general
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.app-token.outputs.token }}

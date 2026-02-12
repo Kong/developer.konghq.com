@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where a stacktrace error occurred during initialization and teardown.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Introduced the AI Semantic Response Guard plugin, enabling you to guard LLM responses against semantic content.\n",

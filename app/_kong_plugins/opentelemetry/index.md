@@ -48,29 +48,95 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+
+faqs:
+  - q: Why am I not getting traces for my request when it results in a cache hit?
+    a: |
+      Since the [Proxy Caching Advanced](/plugins/proxy-cache-advanced/) plugin runs before the OpenTelemetry plugin, when a response results in a cache hit, the process ends before the OpenTelemetry plugin can run. This means that no traces are produced for that request.
+
+      If needed, you can use [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering) to run the OpenTelemetry plugin first, but be aware that this could impact performance.
+
 ---
 
-Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server.
+The OpenTelemetry plugin provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
 
-The OpenTelemetry plugin is fully compatible with the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/) and can be used with any OpenTelemetry compatible backend.
+The OpenTelemetry plugin allows you to collect data for the following signals:
+* [Metrics](#metrics) {% new_in 3.13 %}
+* [Traces](#tracing)
+* [Logging](#logging)
 
-## Collecting telemetry data
+## Use cases
 
-There are two ways to set up an OpenTelemetry backend:
-* Using an OpenTelemetry-compatible backend directly, like Jaeger (v1.35.0+). 
-  
-  All the vendors supported by OpenTelemetry are listed in [OpenTelemetry's Vendor support](https://opentelemetry.io/vendors/).
-* Using the OpenTelemetry Collector, which is middleware that can be used to proxy OpenTelemetry spans to a compatible backend.
-  
-  You can view all the available OpenTelemetry Collector exporters at [open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter).
+Common use cases for the OpenTelemetry plugin:
 
-## Metrics {% new_in 3.8 %}
-Metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Enable the OTEL plugin for metrics](./examples/metrics/)"
+    description: Configure the OpenTelemetry plugin to send metrics.
+
+  - use_case: "[Enable the OTEL plugin for API transactional logs](./examples/transactional-logs/)"
+    description: Configure the OpenTelemetry plugin to send API transactional logs.
+
+  - use_case: "[Enable the OTEL plugin for runtime logs](./examples/runtime-logs/)"
+    description: "Configure the OpenTelemetry plugin to logs about the data plane's internal execution."
+
+  - use_case: "[Enable the OTEL plugin for traces](./examples/traces/)"
+    description: Configure the OpenTelemetry plugin to send traces.
+
+  - use_case: "[Enable the OTEL plugin for all signals](./examples/enable-otel/)"
+    description: Configure the OpenTelemetry plugin to send metrics, tracing and data plane/error logs and API transaction logs.
+
+  - use_case: "[Extract, clear, and inject tracing data](./examples/extract-clear-inject/)"
+    description: Configure the OpenTelemetry plugin to extract tracing context, clear specific headers, and inject tracing context using a specific format.
+
+  - use_case: "[Ignore incoming headers](./examples/ignore-incoming-headers/)"
+    description: Configure the OpenTelemetry plugin to inject tracing context in multiple formats.
+
+  - use_case: "[Multiple injection](./examples/multiple-injection/)"
+    description: Configure the OpenTelemetry plugin to extract tracing context in one format and inject tracing context in multiple formats.
+
+  - use_case: "[Preserve incoming format](./examples/preserve-incoming-format/)"
+    description: Configure the OpenTelemetry plugin to extract and preserve the tracing context in the same header type.
+
+{% endtable %}
+<!--vale on-->
+
+{% include plugins/otel/collecting-otel-data.md plugin=page.name %}
+
+## Resource attributes
+
+The OpenTelemetry plugin attaches additional resource attributes to all telemetry data it sends to an OTLP endpoint. Resource attributes describe the entity that produced the telemetry and are shared across all signals.
+
+The OpenTelemetry plugin automatically sets the following resource attributes:
+
+{% include plugins/otel/resource_attributes.html %}
+
+You can add or override resource attributes by configuring the [`config.resource_attributes`](./reference/#schema--config-resource-attributes) parameter. Custom resource attributes are merged with the default attributes and are included with all exported telemetry data. Some metric backends, such as Prometheus, apply resource attributes to every metric. Be mindful of the impact on cardinality.
+
+## Metrics {% new_in 3.13 %}
+
+In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry plugin. You can send metrics using the parameters under [`config.metrics`](./reference/#schema--config-metrics).
+
+### Available metrics
+
+The following metrics are exposed:
+
+{% include plugins/otel/metric_tables.html %}
+
+### Metrics with {{site.base_gateway}} 3.12 or earlier
+
+If you're using {{site.base_gateway}} 3.12 or earlier, metrics are enabled using the `contrib` version of the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/installation/).
 
 The `spanmetrics` connector allows you to aggregate traces and provide metrics to any third party observability platform.
 
-To include span metrics for application traces, configure the collector exporters section of 
-the OpenTelemetry Collector configuration file: 
+To include span metrics for application traces, configure the collector exporters section of
+the OpenTelemetry Collector configuration file:
 
 ```yaml
 connectors:
@@ -117,6 +183,17 @@ The top level span has the following attributes:
 
 For more information, see the [Tracing reference](/gateway/tracing/).
 
+{:.info}
+>**Note**: When the OpenTelemetry plugin is used together with the [Proxy Cache Advanced](/plugins/proxy-cache-advanced/) plugin, cache-HIT responses are not traced.
+> This is expected behavior. When a request results in a cache-HIT, the response is served before the request lifecycle reaches the phase where the OpenTelemetry plugin executes. As a result, no spans are generated for cache-HIT requests. Cache-MISS requests continue through the full request lifecycle and are traced normally.
+
+
+### Gen AI tracing attributes {% new_in 3.13 %}
+
+When processing generative AI traffic through {{site.ai_gateway}}, additional span attributes are emitted following the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/). These attributes capture model parameters, token usage, and tool-call metadata.
+
+For the complete attribute reference, see [Gen AI OpenTelemetry attributes](/ai-gateway/llm-open-telemetry/).
+
 ### Propagation
 
 The OpenTelemetry plugin supports propagation of the following header formats:
@@ -134,7 +211,7 @@ See the plugin's [configuration reference](/plugins/opentelemetry/reference/#sch
 
 
 {:.info}
-> **Note:** If any of the [`config.propagation.*`](/plugins/opentelemetry/reference/#schema--config-propagation) configuration options (`extract`, `clear`, or `inject`) are configured, the `config.propagation` configuration takes precedence over the deprecated `header_type` parameter. 
+> **Note:** If any of the [`config.propagation.*`](/plugins/opentelemetry/reference/#schema--config-propagation) configuration options (`extract`, `clear`, or `inject`) are configured, the `config.propagation` configuration takes precedence over the deprecated `header_type` parameter.
 If none of the `config.propagation.*` configuration options are set, the `header_type` parameter is still used to determine the propagation behavior.
 
 In {{site.base_gateway}} 3.6 or earlier, the plugin detects the propagation format from the headers and will use the appropriate format to propagate the span context.
@@ -169,7 +246,7 @@ The OpenTelemetry plugin is built on top of the {{site.base_gateway}} tracing PD
 
    -- Append attributes
    span:set_attribute("custom.attribute", "custom value")
-      
+
    -- Close the span
    span:finish()
    ```
@@ -189,8 +266,8 @@ This plugin supports [OpenTelemetry Logging](https://opentelemetry.io/docs/specs
 ### Log scopes
 
 Two different kinds of logs are exported:
-  * **Request** logs are directly associated with requests. These application logs are produced during the request lifecycle. For example, these could be logs generated by a plugin during its [Access or Response phase](/gateway/entities/plugin/#plugin-contexts), or by {{site.base_gateway}}'s core logic.
-  * **Non-request** logs aren't directly associated with a request. They're produced outside the request lifecycle. For example, they could be logs generated asynchronously (in a timer) or during a worker's startup.
+  * {% new_in 3.13 %} API transactional logs (also known as access logs) represent metadata about client requests. These access logs are produced during the request lifecycle. These logs typically don't have a severity.
+  * Runtime and error logs aren't directly associated with a request. They're produced by the data plane and provide data about its internal execution. For example, they could be logs generated asynchronously (in a timer) or during a worker's startup.
 
 ### Log level
 
@@ -199,7 +276,7 @@ Logs are recorded based on the [log level](/gateway/logs/#log-levels) that is co
 {:.info}
 > **Note:** Not all logs are guaranteed to be recorded. Logs that aren't recorded include those produced by the Nginx master process and low-level errors produced by Nginx. Operators are expected to still capture the Nginx `error.log` file (which always includes all such logs) in addition to using this feature, to avoid losing any details that might be useful for deeper troubleshooting.
 
-### Log entry
+### Runtime and error log entry
 
 Each log entry adheres to the [OpenTelemetry Logs Data Model](https://opentelemetry.io/docs/specs/otel/logs/data-model/). The available information depends on the log scope and on whether [**tracing**](#tracing) is enabled for this plugin.
 
@@ -226,7 +303,7 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 
 ### Logging for custom plugins
 
-The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
+The custom [plugin PDK](/gateway/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin.
 The module records a structured log entry, which is reported via the OpenTelemetry plugin.
 
 ## Queuing
@@ -235,7 +312,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 
 ## Trace IDs in serialized logs {% new_in 3.5 %}
 
-When the OpenTelemetry plugin is configured along with a plugin that uses the 
+When the OpenTelemetry plugin is configured along with a plugin that uses the
 [Log Serializer](/gateway/pdk/reference/kong.log/#kong-log-serialize),
 the trace ID of each request is added to the key `trace_id` in the serialized log output.
 
@@ -272,4 +349,6 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
 - Only supports the HTTP protocols (http/https) of {{site.base_gateway}}.
 - May impact the performance of {{site.base_gateway}}.
   We recommend setting the sampling rate (`tracing_sampling_rate`)
-  via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin.
+  via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
+- Doesn't support `custom_fields_by_lua`.
+- Doesn't support {{site.ai_gateway}} and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.

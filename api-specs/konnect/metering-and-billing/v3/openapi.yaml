@@ -1,0 +1,4457 @@
+openapi: 3.0.0
+info:
+  title: Konnect Metering & Billing
+  version: 0.0.1
+  contact:
+    name: Kong
+    url: 'https://cloud.konghq.com'
+  description: Konnect Metering & Billing API.
+  x-oas-source: kong/platform-api@fff8d6357a54702356158b3bf2b5b80db22fc823
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fff8d6357a54702356158b3bf2b5b80db22fc823'
+servers:
+  - url: 'https://us.api.konghq.com/v3'
+    description: United-States Production region
+  - url: 'https://eu.api.konghq.com/v3'
+    description: Europe Production region
+  - url: 'https://au.api.konghq.com/v3'
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v3'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v3'
+    description: India Production region
+  - url: 'https://sg.api.konghq.com/v3'
+    description: Singapore Production region
+paths:
+  /openmeter/apps:
+    get:
+      operationId: list-apps
+      summary: List apps
+      description: List installed apps.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Apps
+  '/openmeter/apps/{appId}':
+    get:
+      operationId: get-app
+      summary: Get app
+      description: Get an installed app.
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: App response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingApp'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Apps
+  /openmeter/customers:
+    post:
+      operationId: create-customer
+      summary: Create customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+      responses:
+        '201':
+          description: Customer created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Customers
+    get:
+      operationId: list-customers
+      summary: List customers
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: sort
+          in: query
+          description: |-
+            Sort customers returned in the response.
+            Supported sort attributes are:
+            - `id`
+            - `name` (default)
+            - `created_at`
+
+            The `asc` suffix is optional as the default sort order is ascending.
+            The `desc` suffix is used to specify a descending order.
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          description: |-
+            Filter customers returned in the response.
+
+            To filter customers by key add the following query param: filter[key]=my-db-id
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListCustomersParamsFilter'
+          style: deepObject
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}':
+    get:
+      operationId: get-customer
+      summary: Get customer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: Customer response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+    put:
+      operationId: upsert-customer
+      summary: Upsert customer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertCustomerRequest'
+      responses:
+        '200':
+          description: Customer upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+    delete:
+      operationId: delete-customer
+      summary: Delete customer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: Deleted response.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing':
+    get:
+      operationId: get-customer-billing
+      summary: Get customer billing data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: CustomerBillingData response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Customers
+    put:
+      operationId: update-customer-billing
+      summary: Update customer billing data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertCustomerBillingDataRequest'
+      responses:
+        '200':
+          description: CustomerBillingData upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/app-data':
+    put:
+      operationId: update-customer-billing-app-data
+      summary: Update customer billing app data
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAppCustomerDataRequest'
+      responses:
+        '200':
+          description: AppCustomerData upsert response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppCustomerData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/stripe/checkout-sessions':
+    post:
+      operationId: create-customer-stripe-checkout-session
+      summary: Create Stripe Checkout Session
+      description: |-
+        Create a [Stripe Checkout Session](https://docs.stripe.com/payments/checkout) for the customer.
+
+        Creates a Checkout Session for collecting payment method information from customers.
+        The session operates in "setup" mode, which collects payment details without charging
+        the customer immediately. The collected payment method can be used for future
+        subscription billing.
+
+        For hosted checkout sessions, redirect customers to the returned URL. For embedded
+        sessions, use the client_secret to initialize Stripe.js in your application.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCustomerStripeCreateCheckoutSessionRequest'
+      responses:
+        '201':
+          description: CreateStripeCheckoutSessionResult created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppStripeCreateCheckoutSessionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/billing/stripe/portal-sessions':
+    post:
+      operationId: create-customer-stripe-portal-session
+      summary: Create Stripe customer portal session
+      description: |-
+        Create Stripe Customer Portal Session.
+
+        Useful to redirect the customer to the Stripe Customer Portal to manage their payment methods,
+        change their billing address and access their invoice history.
+        Only returns URL if the customer billing profile is linked to a stripe app and customer.
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCustomerStripeCreateCustomerPortalSessionRequest'
+      responses:
+        '201':
+          description: CreateStripeCustomerPortalSessionResult created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingAppStripeCreateCustomerPortalSessionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/Gone'
+      tags:
+        - OpenMeter Customers
+  '/openmeter/customers/{customerId}/entitlement-access':
+    get:
+      operationId: list-customer-entitlement-access
+      summary: List customer entitlement access
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: List the customer's active features and their access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCustomerEntitlementAccessResponseData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Entitlements
+  /openmeter/events:
+    post:
+      operationId: ingest-metering-events
+      summary: Ingest metering events
+      description: Ingests an event or batch of events following the CloudEvents specification.
+      requestBody:
+        required: true
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: '#/components/schemas/MeteringEvent'
+          application/cloudevents-batch+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MeteringEvent'
+          application/json:
+            schema:
+              anyOf:
+                - $ref: '#/components/schemas/MeteringEvent'
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/MeteringEvent'
+      responses:
+        '202':
+          description: The events have been ingested and are being processed asynchronously.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Metering Events
+  /openmeter/meters:
+    post:
+      operationId: create-meter
+      summary: Create meter
+      description: Create a meter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMeterRequest'
+      responses:
+        '201':
+          description: Meter created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Meters
+    get:
+      operationId: list-meters
+      summary: List meters
+      description: List meters.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeterPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Meters
+  '/openmeter/meters/{meterId}':
+    get:
+      operationId: get-meter
+      summary: Get meter
+      description: Get a meter by ID.
+      parameters:
+        - name: meterId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: Meter response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meter'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Meters
+    delete:
+      operationId: delete-meter
+      summary: Delete meter
+      description: Delete a meter.
+      parameters:
+        - name: meterId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: Deleted response.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Meters
+  /openmeter/profiles:
+    get:
+      operationId: list-billing-profiles
+      summary: List billing profiles
+      description: List billing profiles.
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfilePagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Billing
+    post:
+      operationId: create-billing-profile
+      summary: Create a new billing profile
+      description: |-
+        Create a new billing profile.
+
+        Billing profiles contain the settings for billing and controls invoice generation.
+        An organization can have multiple billing profiles defined.
+        A billing profile is linked to a specific app. This association is established during the billing profile's creation and remains immutable.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBillingProfileRequest'
+      responses:
+        '201':
+          description: BillingProfile created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - OpenMeter Billing
+  '/openmeter/profiles/{id}':
+    get:
+      operationId: get-billing-profile
+      summary: Get a billing profile
+      description: Get a billing profile.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: BillingProfile response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
+    put:
+      operationId: update-billing-profile
+      summary: Update a billing profile
+      description: Update a billing profile.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertBillingProfileRequest'
+      responses:
+        '200':
+          description: BillingProfile updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
+    delete:
+      operationId: delete-billing-profile
+      summary: Delete a billing profile
+      description: |-
+        Delete a billing profile.
+
+        Only such billing profiles can be deleted that are:
+        - not the default profile
+        - not pinned to any customer using customer overrides
+        - only have finalized invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '204':
+          description: Deleted response.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Billing
+  /openmeter/subscriptions:
+    post:
+      operationId: create-subscription
+      summary: Create subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingSubscriptionCreate'
+      responses:
+        '201':
+          description: Subscription created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Subscriptions
+    get:
+      operationId: list-subscriptions
+      summary: List subscriptions
+      parameters:
+        - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: filter
+          in: query
+          description: Filter subscriptions.
+          required: false
+          schema:
+            type: object
+            properties:
+              customer_id:
+                description: Filter subscriptions by customer ID.
+                type: string
+                example: 01G65Z755AFWAKHE12NY0CQ9FH
+                pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                title: ULID
+          style: deepObject
+      responses:
+        '200':
+          description: Page paginated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionPagePaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Subscriptions
+  '/openmeter/subscriptions/{subscriptionId}':
+    get:
+      operationId: get-subscription
+      summary: Get subscription
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: Subscription response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - OpenMeter Subscriptions
+  '/openmeter/subscriptions/{subscriptionId}/cancel':
+    post:
+      operationId: cancel-subscription
+      summary: Cancel subscription
+      description: |-
+        Cancels the subscription.
+        Will result in a scheduling conflict if there are other subscriptions scheduled to start after the cancelation time.
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingSubscriptionCancel'
+      responses:
+        '200':
+          description: Subscription updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Subscriptions
+  '/openmeter/subscriptions/{subscriptionId}/change':
+    post:
+      operationId: change-subscription
+      summary: Change subscription
+      description: |-
+        Closes a running subscription and starts a new one according to the specification.
+        Can be used for upgrades, downgrades, and plan changes.
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingSubscriptionChange'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscriptionChangeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Subscriptions
+  '/openmeter/subscriptions/{subscriptionId}/unschedule-cancelation':
+    post:
+      operationId: unschedule-cancelation
+      summary: Unschedule subscription cancelation
+      description: Unschedules the subscription cancelation.
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ULID'
+      responses:
+        '200':
+          description: Subscription updated response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingSubscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - OpenMeter Subscriptions
+components:
+  parameters:
+    PagePaginationQuery:
+      name: page
+      in: query
+      required: false
+      description: Determines which page of the collection to retrieve.
+      schema:
+        type: object
+        properties:
+          size:
+            type: integer
+          number:
+            type: integer
+      style: deepObject
+  schemas:
+    AppPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingApp'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    BillingApp:
+      description: Installed application.
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          stripe: '#/components/schemas/BillingAppStripe'
+          sandbox: '#/components/schemas/BillingAppSandbox'
+          external_invoicing: '#/components/schemas/BillingAppExternalInvoicing'
+      oneOf:
+        - $ref: '#/components/schemas/BillingAppStripe'
+        - $ref: '#/components/schemas/BillingAppSandbox'
+        - $ref: '#/components/schemas/BillingAppExternalInvoicing'
+    BillingAppCustomerData:
+      description: App customer data.
+      type: object
+      properties:
+        stripe:
+          description: Used if the customer has a linked Stripe app.
+          type: object
+          properties:
+            customer_id:
+              description: The Stripe customer ID used.
+              type: string
+              example: cus_1234567890
+              title: Stripe customer ID
+            default_payment_method_id:
+              description: The Stripe default payment method ID.
+              type: string
+              example: pm_1234567890
+              title: Stripe default payment method ID
+            labels:
+              description: Labels for this Stripe integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: Stripe
+        external_invoicing:
+          description: Used if the customer has a linked external invoicing app.
+          type: object
+          properties:
+            labels:
+              description: Labels for this external invoicing integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: External invoicing
+    BillingAppExternalInvoicing:
+      description: |-
+        External Invoicing app enables integration with third-party invoicing or payment system.
+
+        The app supports a bi-directional synchronization pattern where OpenMeter Billing manages
+        the invoice lifecycle while the external system handles invoice presentation and payment collection.
+
+        Integration workflow:
+        1. The billing system creates invoices and transitions them through lifecycle states (draft → issuing → issued)
+        2. The integration receives webhook notifications about invoice state changes
+        3. The integration calls back to provide external system IDs and metadata
+        4. The integration reports payment events back via the payment status API
+
+        State synchronization is controlled by hooks that pause invoice progression until the
+        external system confirms synchronization via API callbacks.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - external_invoicing
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+        enable_draft_sync_hook:
+          description: |-
+            Enable draft synchronization hook.
+
+            When enabled, invoices will pause at the draft state and wait for the integration
+            to call the draft synchronized endpoint before progressing to the issuing state.
+            This allows the external system to validate and prepare the invoice data.
+
+            When disabled, invoices automatically progress through the draft state based on
+            the configured workflow timing.
+          type: boolean
+        enable_issuing_sync_hook:
+          description: |-
+            Enable issuing synchronization hook.
+
+            When enabled, invoices will pause at the issuing state and wait for the integration
+            to call the issuing synchronized endpoint before progressing to the issued state.
+            This ensures the external invoicing system has successfully created and finalized
+            the invoice before it is marked as issued.
+
+            When disabled, invoices automatically progress through the issuing state and are
+            immediately marked as issued.
+          type: boolean
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+        - enable_draft_sync_hook
+        - enable_issuing_sync_hook
+    BillingAppSandbox:
+      description: Sandbox app can be used for testing billing features.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - sandbox
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+    BillingAppStripe:
+      description: Stripe app.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        type:
+          description: The app type.
+          type: string
+          enum:
+            - stripe
+          readOnly: true
+        definition:
+          description: The app catalog definition that this installed app is based on.
+          type: object
+          example:
+            type: stripe
+            name: Stripe
+            description: Stripe integration allows you to collect payments with Stripe.
+          properties:
+            type:
+              description: Type of the app.
+              type: string
+              enum:
+                - sandbox
+                - stripe
+                - external_invoicing
+              readOnly: true
+            name:
+              description: Name of the app.
+              type: string
+              readOnly: true
+            description:
+              description: Description of the app.
+              type: string
+              readOnly: true
+          readOnly: true
+          required:
+            - type
+            - name
+            - description
+        status:
+          description: Status of the app connection.
+          type: string
+          enum:
+            - ready
+            - unauthorized
+          readOnly: true
+        account_id:
+          description: The Stripe account ID associated with the connected Stripe account.
+          type: string
+          readOnly: true
+        livemode:
+          description: Indicates whether the app is connected to a live Stripe account.
+          type: boolean
+          readOnly: true
+        masked_api_key:
+          description: The masked Stripe API key that only exposes the first and last few characters.
+          type: string
+          readOnly: true
+      required:
+        - id
+        - name
+        - type
+        - definition
+        - status
+        - account_id
+        - livemode
+        - masked_api_key
+    BillingAppStripeCreateCheckoutSessionResult:
+      description: |-
+        Result of creating a Stripe Checkout Session.
+
+        Contains all the information needed to redirect customers to the checkout
+        or initialize an embedded checkout flow.
+      type: object
+      properties:
+        customer_id:
+          description: The customer ID in the billing system.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          title: ULID
+        stripe_customer_id:
+          description: The Stripe customer ID.
+          type: string
+        session_id:
+          description: The Stripe checkout session ID.
+          type: string
+        setup_intent_id:
+          description: The setup intent ID created for collecting the payment method.
+          type: string
+        client_secret:
+          description: |-
+            Client secret for initializing Stripe.js on the client side.
+
+            Required for embedded checkout sessions.
+            See: https://docs.stripe.com/payments/checkout/custom-success-page
+          type: string
+        client_reference_id:
+          description: |-
+            The client reference ID provided in the request.
+
+            Useful for reconciling the session with your internal systems.
+          type: string
+        customer_email:
+          description: Customer's email address if provided to Stripe.
+          type: string
+        currency:
+          description: Currency code for the checkout session.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+        created_at:
+          description: Timestamp when the checkout session was created.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        expires_at:
+          description: Timestamp when the checkout session will expire.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        metadata:
+          description: Metadata attached to the checkout session.
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          description: |-
+            The status of the checkout session.
+
+            See: https://docs.stripe.com/api/checkout/sessions/object#checkout_session_object-status
+          type: string
+        url:
+          description: URL to redirect customers to the checkout page (for hosted mode).
+          type: string
+        mode:
+          description: |-
+            Mode of the checkout session.
+
+            Currently only "setup" mode is supported for collecting payment methods.
+          type: string
+          enum:
+            - setup
+        cancel_url:
+          description: The cancel URL where customers are redirected if they cancel.
+          type: string
+        success_url:
+          description: The success URL where customers are redirected after completion.
+          type: string
+        return_url:
+          description: The return URL for embedded sessions after authentication.
+          type: string
+      required:
+        - customer_id
+        - stripe_customer_id
+        - session_id
+        - setup_intent_id
+        - created_at
+        - mode
+    BillingAppStripeCreateCustomerPortalSessionResult:
+      description: |-
+        Result of creating a [Stripe Customer Portal Session](https://docs.stripe.com/api/customer_portal/sessions/object).
+
+        Contains all the information needed to redirect the customer to the Stripe Customer Portal.
+      type: object
+      properties:
+        id:
+          description: |-
+            The ID of the customer portal session.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-id
+          type: string
+        stripe_customer_id:
+          description: The ID of the stripe customer.
+          type: string
+        configuration_id:
+          description: |-
+            Configuration used to customize the customer portal.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-configuration
+          type: string
+        livemode:
+          description: |-
+            Livemode.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-livemode
+          type: boolean
+        created_at:
+          description: |-
+            Created at.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-created
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        return_url:
+          description: |-
+            Return URL.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-return_url
+          type: string
+        locale:
+          description: |-
+            The IETF language tag of the locale customer portal is displayed in.
+
+            See: https://docs.stripe.com/api/customer_portal/sessions/object#portal_session_object-locale
+          type: string
+        url:
+          description: |-
+            The URL to redirect the customer to after they have completed
+            their requested actions.
+          type: string
+      required:
+        - id
+        - stripe_customer_id
+        - configuration_id
+        - livemode
+        - created_at
+        - return_url
+        - locale
+        - url
+    BillingCustomer:
+      description: Customers can be individuals or organizations that can subscribe to plans and have access to features.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        key:
+          $ref: '#/components/schemas/ExternalResourceKey'
+        usage_attribution:
+          description: Mapping to attribute metered usage to the customer by the event subject.
+          type: object
+          properties:
+            subject_keys:
+              description: |-
+                The subjects that are attributed to the customer.
+                Can be empty when no usage event subjects are associated with the customer.
+              type: array
+              items:
+                $ref: '#/components/schemas/UsageAttributionSubjectKey'
+              minItems: 0
+              title: Subject Keys
+          required:
+            - subject_keys
+          title: Usage Attribution
+        primary_email:
+          description: The primary email address of the customer.
+          type: string
+          title: Primary Email
+        currency:
+          description: |-
+            Currency of the customer.
+            Used for billing, tax and invoicing.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        billing_address:
+          description: |-
+            The billing address of the customer.
+            Used for tax and invoicing.
+          type: object
+          properties:
+            country:
+              description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+              type: string
+              example: US
+              maxLength: 2
+              minLength: 2
+              pattern: '^[A-Z]{2}$'
+              title: Country
+            postal_code:
+              description: Postal code.
+              type: string
+              title: Postal Code
+            state:
+              description: State or province.
+              type: string
+              title: State
+            city:
+              description: City.
+              type: string
+              title: City
+            line1:
+              description: First line of the address.
+              type: string
+              title: Line 1
+            line2:
+              description: Second line of the address.
+              type: string
+              title: Line 2
+            phone_number:
+              description: Phone number.
+              type: string
+              title: Phone Number
+          title: Billing Address
+      required:
+        - id
+        - name
+        - key
+    BillingCustomerData:
+      description: Billing customer data.
+      type: object
+      properties:
+        billing_profile:
+          description: |-
+            The billing profile for the customer.
+
+            If not provided, the default billing profile will be used.
+          type: object
+          properties:
+            id:
+              description: The ID of the billing profile.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          required:
+            - id
+          title: Billing profile
+        app_data:
+          description: App customer data.
+          type: object
+          properties:
+            stripe:
+              description: Used if the customer has a linked Stripe app.
+              type: object
+              properties:
+                customer_id:
+                  description: The Stripe customer ID used.
+                  type: string
+                  example: cus_1234567890
+                  title: Stripe customer ID
+                default_payment_method_id:
+                  description: The Stripe default payment method ID.
+                  type: string
+                  example: pm_1234567890
+                  title: Stripe default payment method ID
+                labels:
+                  description: Labels for this Stripe integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: Stripe
+            external_invoicing:
+              description: Used if the customer has a linked external invoicing app.
+              type: object
+              properties:
+                labels:
+                  description: Labels for this external invoicing integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: External invoicing
+          title: App customer data
+    BillingCustomerStripeCreateCheckoutSessionRequest:
+      description: |-
+        Request to create a Stripe Checkout Session for the customer.
+
+        Checkout Sessions are used to collect payment method information from customers
+        in a secure, Stripe-hosted interface. This integration uses setup mode to collect
+        payment methods that can be charged later for subscription billing.
+      type: object
+      properties:
+        stripe_options:
+          description: |-
+            Options for configuring the Stripe Checkout Session.
+
+            These options are passed directly to Stripe's [checkout session creation API](https://docs.stripe.com/api/checkout/sessions/create).
+          type: object
+          properties:
+            billing_address_collection:
+              description: |-
+                Whether to collect the customer's billing address.
+
+                Defaults to auto, which only collects the address when necessary for tax calculation.
+              type: string
+              default: auto
+              enum:
+                - auto
+                - required
+            cancel_url:
+              description: |-
+                URL to redirect customers who cancel the checkout session.
+
+                Not allowed when ui_mode is "embedded".
+              type: string
+            client_reference_id:
+              description: |-
+                Unique reference string for reconciling sessions with internal systems.
+
+                Can be a customer ID, cart ID, or any other identifier.
+              type: string
+            customer_update:
+              description: Controls which customer fields can be updated by the checkout session.
+              type: object
+              properties:
+                address:
+                  description: |-
+                    Whether to save the billing address to customer.address.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+                name:
+                  description: |-
+                    Whether to save the customer name to customer.name.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+                shipping:
+                  description: |-
+                    Whether to save shipping information to customer.shipping.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - auto
+                    - never
+            consent_collection:
+              description: Configuration for collecting customer consent during checkout.
+              type: object
+              properties:
+                payment_method_reuse_agreement:
+                  description: Controls the visibility of payment method reuse agreement.
+                  type: object
+                  properties:
+                    position:
+                      description: Position and visibility of the payment method reuse agreement.
+                      type: string
+                      enum:
+                        - auto
+                        - hidden
+                promotions:
+                  description: |-
+                    Enables collection of promotional communication consent.
+
+                    Only available to US merchants. When set to "auto", Checkout determines
+                    whether to show the option based on the customer's locale.
+                  type: string
+                  enum:
+                    - auto
+                    - none
+                terms_of_service:
+                  description: |-
+                    Requires customers to accept terms of service before payment.
+
+                    Requires a valid terms of service URL in your Stripe Dashboard settings.
+                  type: string
+                  enum:
+                    - none
+                    - required
+            currency:
+              description: |-
+                Three-letter ISO 4217 currency code in uppercase.
+
+                Required for payment mode sessions. Optional for setup mode sessions.
+              type: string
+              example: USD
+              maxLength: 3
+              minLength: 3
+              pattern: '^[A-Z]{3}$'
+            custom_text:
+              description: Custom text to display during checkout at various stages.
+              type: object
+              properties:
+                after_submit:
+                  description: Text displayed after the payment confirmation button.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                shipping_address:
+                  description: Text displayed alongside shipping address collection.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                submit:
+                  description: Text displayed alongside the payment confirmation button.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+                terms_of_service_acceptance:
+                  description: Text replacing the default terms of service agreement text.
+                  type: object
+                  properties:
+                    message:
+                      description: The custom message text (max 1200 characters).
+                      type: string
+                      maxLength: 1200
+            expires_at:
+              description: |-
+                Unix timestamp when the checkout session expires.
+
+                Can be 30 minutes to 24 hours from creation. Defaults to 24 hours.
+              type: integer
+              format: int64
+            locale:
+              description: |-
+                IETF language tag for the checkout UI locale.
+
+                If blank or "auto", uses the browser's locale. Example: "en", "fr", "de".
+              type: string
+            metadata:
+              description: |-
+                Set of key-value pairs to attach to the checkout session.
+
+                Useful for storing additional structured information.
+              type: object
+              additionalProperties:
+                type: string
+            return_url:
+              description: |-
+                Return URL for embedded checkout sessions after payment authentication.
+
+                Required if ui_mode is "embedded" and redirect-based payment methods are enabled.
+              type: string
+            success_url:
+              description: |-
+                Success URL to redirect customers after completing payment or setup.
+
+                Not allowed when ui_mode is "embedded".
+                See: https://docs.stripe.com/payments/checkout/custom-success-page
+              type: string
+            ui_mode:
+              description: |-
+                The UI mode for the checkout session.
+
+                "hosted" displays a Stripe-hosted page. "embedded" integrates directly into your app.
+                Defaults to "hosted".
+              type: string
+              default: hosted
+              enum:
+                - embedded
+                - hosted
+            payment_method_types:
+              description: |-
+                List of payment method types to enable (e.g., "card", "us_bank_account").
+
+                If not specified, Stripe enables all relevant payment methods.
+              type: array
+              items:
+                type: string
+            redirect_on_completion:
+              description: |-
+                Redirect behavior for embedded checkout sessions.
+
+                Controls when to redirect users after completion.
+                See: https://docs.stripe.com/payments/checkout/custom-success-page?payment-ui=embedded-form
+              type: string
+              enum:
+                - always
+                - if_required
+                - never
+            tax_id_collection:
+              description: Configuration for collecting tax IDs during checkout.
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable tax ID collection during checkout.
+
+                    Defaults to false.
+                  type: boolean
+                  default: false
+                required:
+                  description: |-
+                    Whether tax ID collection is required.
+
+                    Defaults to "never".
+                  type: string
+                  default: never
+                  enum:
+                    - if_supported
+                    - never
+      required:
+        - stripe_options
+    BillingCustomerStripeCreateCustomerPortalSessionRequest:
+      description: |-
+        Request to create a Stripe Customer Portal Session for the customer.
+
+        Useful to redirect the customer to the Stripe Customer Portal to manage their payment methods,
+        change their billing address and access their invoice history.
+        Only returns URL if the customer billing profile is linked to a stripe app and customer.
+      type: object
+      properties:
+        stripe_options:
+          description: Options for configuring the Stripe Customer Portal Session.
+          type: object
+          properties:
+            configuration_id:
+              description: |-
+                The ID of an existing [Stripe configuration](https://docs.stripe.com/api/customer_portal/configurations) to use for this session,
+                describing its functionality and features.
+                If not specified, the session uses the default configuration.
+              type: string
+            locale:
+              description: |-
+                The IETF [language tag](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-locale) of the locale customer portal is displayed in.
+                If blank or `auto`, the customer's preferred_locales or browser's locale is used.
+              type: string
+            return_url:
+              description: |-
+                The [URL to redirect](https://docs.stripe.com/api/customer_portal/sessions/create#create_portal_session-return_url) the customer to after they have completed
+                their requested actions.
+              type: string
+      required:
+        - stripe_options
+    BillingEntitlementAccessResult:
+      description: Entitlement access result.
+      type: object
+      properties:
+        type:
+          description: The type of the entitlement.
+          type: string
+          example: static
+          enum:
+            - metered
+            - static
+            - boolean
+          readOnly: true
+        feature_key:
+          description: The feature key of the entitlement.
+          type: string
+          example: available_models
+          maxLength: 64
+          minLength: 1
+          pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+          readOnly: true
+          title: Resource Key
+        has_access:
+          description: |-
+            Whether the customer has access to the feature.
+            Always true for `boolean` and `static` entitlements.
+            Depends on balance for `metered` entitlements.
+          type: boolean
+          example: true
+          readOnly: true
+        config:
+          description: |-
+            Only available for static entitlements.
+            Config is the JSON parsable configuration of the entitlement.
+            Useful to describe per customer configuration.
+          type: string
+          example: '{ "availableModels": ["gpt-5", "gpt-4o"] }'
+          readOnly: true
+      required:
+        - type
+        - feature_key
+        - has_access
+    BillingProfile:
+      description: Billing profiles contain the settings for billing and controls invoice generation.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        apps:
+          description: The applications used by this billing profile.
+          type: object
+          properties:
+            tax:
+              description: The tax app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            invoicing:
+              description: The invoicing app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            payment:
+              description: The payment app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+          required:
+            - tax
+            - invoicing
+            - payment
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - id
+        - name
+        - supplier
+        - workflow
+        - apps
+        - default
+    BillingProfilePagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingProfile'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    BillingSubscription:
+      description: Subscription.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        customer_id:
+          description: The customer ID of the subscription.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: Customer ID
+        plan_id:
+          description: |-
+            The plan ID of the subscription.
+            Set if subscription is created from a plan.
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: Plan ID
+        billing_anchor:
+          description: |-
+            A billing anchor is the fixed point in time that determines the subscription's recurring billing cycle.
+            It affects when charges occur and how prorations are calculated.
+            Common anchors:
+            - Calendar month (1st of each month): `2025-01-01T00:00:00Z`
+            - Subscription anniversary (day customer signed up)
+            - Custom date (customer-specified day)
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: Billing anchor
+        status:
+          description: The status of the subscription.
+          type: string
+          enum:
+            - active
+            - inactive
+            - canceled
+            - scheduled
+          readOnly: true
+          title: Status
+      required:
+        - id
+        - customer_id
+        - billing_anchor
+        - status
+    BillingSubscriptionCancel:
+      description: Request for canceling a subscription.
+      type: object
+      properties:
+        timing:
+          description: If not provided the subscription is canceled immediately.
+          example: immediate
+          default: immediate
+          oneOf:
+            - $ref: '#/components/schemas/BillingSubscriptionEditTimingEnum'
+            - $ref: '#/components/schemas/DateTime'
+    BillingSubscriptionChange:
+      description: Request for changing a subscription.
+      type: object
+      properties:
+        labels:
+          $ref: '#/components/schemas/Labels'
+        customer:
+          description: The customer to create the subscription for.
+          type: object
+          properties:
+            id:
+              description: |-
+                The ID of the customer to create the subscription for.
+
+                Either customer ID or customer key must be provided.
+                If both are provided, the ID will be used.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Customer ID
+            key:
+              description: |-
+                The key of the customer to create the subscription for.
+
+                Either customer ID or customer key must be provided.
+                If both are provided, the ID will be used.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: Customer Key
+        plan:
+          description: The plan reference of the subscription.
+          type: object
+          properties:
+            id:
+              description: |-
+                The plan ID of the subscription.
+                Set if subscription is created from a plan.
+
+                ID or Key of the plan is required if creating a subscription from a plan.
+                If both are provided, the ID will be used.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Plan ID
+            key:
+              description: |-
+                The plan Key of the subscription, if any.
+                Set if subscription is created from a plan.
+
+                ID or Key of the plan is required if creating a subscription from a plan.
+                If both are provided, the ID will be used.
+              type: string
+              example: resource_key
+              maxLength: 64
+              minLength: 1
+              pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+              title: Plan Key
+            version:
+              description: |-
+                The plan version of the subscription, if any.
+                If not provided, the latest version of the plan will be used.
+              type: integer
+              title: Plan Version
+        billing_anchor:
+          description: |-
+            A billing anchor is the fixed point in time that determines the subscription's recurring billing cycle.
+            It affects when charges occur and how prorations are calculated.
+            Common anchors:
+            - Calendar month (1st of each month): `2025-01-01T00:00:00Z`
+            - Subscription anniversary (day customer signed up)
+            - Custom date (customer-specified day)
+
+            If not provided, the subscription will be created with the subscription's creation time as the billing anchor.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Billing anchor
+        timing:
+          description: |-
+            Timing configuration for the change, when the change should take effect.
+            For changing a subscription, the accepted values depend on the subscription configuration.
+          example: immediate
+          oneOf:
+            - $ref: '#/components/schemas/BillingSubscriptionEditTimingEnum'
+            - $ref: '#/components/schemas/DateTime'
+      required:
+        - customer
+        - plan
+        - timing
+    BillingSubscriptionChangeResponse:
+      description: Response for changing a subscription.
+      type: object
+      properties:
+        current:
+          description: The current subscription before the change.
+          type: object
+          properties:
+            id:
+              description: ULID (Universally Unique Lexicographically Sortable Identifier).
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: ULID
+            labels:
+              $ref: '#/components/schemas/Labels'
+            created_at:
+              description: An ISO-8601 timestamp representation of entity creation date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            updated_at:
+              description: An ISO-8601 timestamp representation of entity last update date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            deleted_at:
+              description: An ISO-8601 timestamp representation of entity deletion date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            customer_id:
+              description: The customer ID of the subscription.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Customer ID
+            plan_id:
+              description: |-
+                The plan ID of the subscription.
+                Set if subscription is created from a plan.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Plan ID
+            billing_anchor:
+              description: |-
+                A billing anchor is the fixed point in time that determines the subscription's recurring billing cycle.
+                It affects when charges occur and how prorations are calculated.
+                Common anchors:
+                - Calendar month (1st of each month): `2025-01-01T00:00:00Z`
+                - Subscription anniversary (day customer signed up)
+                - Custom date (customer-specified day)
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Billing anchor
+            status:
+              description: The status of the subscription.
+              type: string
+              enum:
+                - active
+                - inactive
+                - canceled
+                - scheduled
+              readOnly: true
+              title: Status
+          required:
+            - id
+            - customer_id
+            - billing_anchor
+            - status
+        next:
+          description: The new state of the subscription after the change.
+          type: object
+          properties:
+            id:
+              description: ULID (Universally Unique Lexicographically Sortable Identifier).
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: ULID
+            labels:
+              $ref: '#/components/schemas/Labels'
+            created_at:
+              description: An ISO-8601 timestamp representation of entity creation date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            updated_at:
+              description: An ISO-8601 timestamp representation of entity last update date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            deleted_at:
+              description: An ISO-8601 timestamp representation of entity deletion date.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: RFC3339 Date-Time
+            customer_id:
+              description: The customer ID of the subscription.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Customer ID
+            plan_id:
+              description: |-
+                The plan ID of the subscription.
+                Set if subscription is created from a plan.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              readOnly: true
+              title: Plan ID
+            billing_anchor:
+              description: |-
+                A billing anchor is the fixed point in time that determines the subscription's recurring billing cycle.
+                It affects when charges occur and how prorations are calculated.
+                Common anchors:
+                - Calendar month (1st of each month): `2025-01-01T00:00:00Z`
+                - Subscription anniversary (day customer signed up)
+                - Custom date (customer-specified day)
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              readOnly: true
+              title: Billing anchor
+            status:
+              description: The status of the subscription.
+              type: string
+              enum:
+                - active
+                - inactive
+                - canceled
+                - scheduled
+              readOnly: true
+              title: Status
+          required:
+            - id
+            - customer_id
+            - billing_anchor
+            - status
+      required:
+        - current
+        - next
+    BillingSubscriptionCreate:
+      description: Subscription create request.
+      type: object
+      properties:
+        labels:
+          $ref: '#/components/schemas/Labels'
+        customer:
+          description: The customer to create the subscription for.
+          type: object
+          properties:
+            id:
+              description: |-
+                The ID of the customer to create the subscription for.
+
+                Either customer ID or customer key must be provided.
+                If both are provided, the ID will be used.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Customer ID
+            key:
+              description: |-
+                The key of the customer to create the subscription for.
+
+                Either customer ID or customer key must be provided.
+                If both are provided, the ID will be used.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: Customer Key
+        plan:
+          description: The plan reference of the subscription.
+          type: object
+          properties:
+            id:
+              description: |-
+                The plan ID of the subscription.
+                Set if subscription is created from a plan.
+
+                ID or Key of the plan is required if creating a subscription from a plan.
+                If both are provided, the ID will be used.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: Plan ID
+            key:
+              description: |-
+                The plan Key of the subscription, if any.
+                Set if subscription is created from a plan.
+
+                ID or Key of the plan is required if creating a subscription from a plan.
+                If both are provided, the ID will be used.
+              type: string
+              example: resource_key
+              maxLength: 64
+              minLength: 1
+              pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+              title: Plan Key
+            version:
+              description: |-
+                The plan version of the subscription, if any.
+                If not provided, the latest version of the plan will be used.
+              type: integer
+              title: Plan Version
+        billing_anchor:
+          description: |-
+            A billing anchor is the fixed point in time that determines the subscription's recurring billing cycle.
+            It affects when charges occur and how prorations are calculated.
+            Common anchors:
+            - Calendar month (1st of each month): `2025-01-01T00:00:00Z`
+            - Subscription anniversary (day customer signed up)
+            - Custom date (customer-specified day)
+
+            If not provided, the subscription will be created with the subscription's creation time as the billing anchor.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: Billing anchor
+      required:
+        - customer
+        - plan
+    BillingSubscriptionEditTimingEnum:
+      description: |-
+        Subscription edit timing.
+        When immediate, the requested changes take effect immediately.
+        When next_billing_cycle, the requested changes take effect at the next billing cycle.
+      type: string
+      enum:
+        - immediate
+        - next_billing_cycle
+    BillingWorkflowCollectionAlignmentAnchored:
+      description: |-
+        BillingWorkflowCollectionAlignmentAnchored specifies the alignment for collecting the pending line items
+        into an invoice.
+      type: object
+      properties:
+        type:
+          description: The type of alignment.
+          type: string
+          enum:
+            - anchored
+        recurring_period:
+          description: The recurring period for the alignment.
+          type: object
+          properties:
+            anchor:
+              description: A date-time anchor to base the recurring period on.
+              type: string
+              format: date-time
+              example: '2023-01-01T01:01:01.001Z'
+              title: Anchor time
+            interval:
+              description: The interval duration in ISO 8601 format.
+              type: string
+              format: ISO8601
+              example: P1M
+              pattern: '^P(?:\d+(?:\.\d+)?Y)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?W)?(?:\d+(?:\.\d+)?D)?(?:T(?:\d+(?:\.\d+)?H)?(?:\d+(?:\.\d+)?M)?(?:\d+(?:\.\d+)?S)?)?$'
+              title: Interval in ISO 8601 duration format
+          required:
+            - anchor
+            - interval
+      required:
+        - type
+        - recurring_period
+    BillingWorkflowCollectionAlignmentSubscription:
+      description: |-
+        BillingWorkflowCollectionAlignmentSubscription specifies the alignment for collecting the pending line items
+        into an invoice.
+      type: object
+      properties:
+        type:
+          description: The type of alignment.
+          type: string
+          enum:
+            - subscription
+      required:
+        - type
+    BillingWorkflowPaymentChargeAutomaticallySettings:
+      description: Payment settings for a billing workflow when the collection method is charge automatically.
+      type: object
+      properties:
+        collection_method:
+          description: The collection method for the invoice.
+          type: string
+          enum:
+            - charge_automatically
+      required:
+        - collection_method
+    BillingWorkflowPaymentSendInvoiceSettings:
+      description: Payment settings for a billing workflow when the collection method is send invoice.
+      type: object
+      properties:
+        collection_method:
+          description: The collection method for the invoice.
+          type: string
+          enum:
+            - send_invoice
+        due_after:
+          description: |-
+            The period after which the invoice is due.
+            With some payment solutions it's only applicable for manual collection method.
+          type: string
+          format: ISO8601
+          example: P30D
+          default: P30D
+      required:
+        - collection_method
+    CreateBillingProfileRequest:
+      description: BillingProfile create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        apps:
+          description: The applications used by this billing profile.
+          type: object
+          properties:
+            tax:
+              description: The tax app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            invoicing:
+              description: The invoicing app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+            payment:
+              description: The payment app used for this workflow.
+              type: object
+              properties:
+                id:
+                  description: The ID of the app.
+                  type: string
+                  example: 01G65Z755AFWAKHE12NY0CQ9FH
+                  pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                  title: ULID
+              required:
+                - id
+          required:
+            - tax
+            - invoicing
+            - payment
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - name
+        - supplier
+        - workflow
+        - apps
+        - default
+    CreateCustomerRequest:
+      description: Customer create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        key:
+          $ref: '#/components/schemas/ExternalResourceKey'
+        usage_attribution:
+          description: Mapping to attribute metered usage to the customer by the event subject.
+          type: object
+          properties:
+            subject_keys:
+              description: |-
+                The subjects that are attributed to the customer.
+                Can be empty when no usage event subjects are associated with the customer.
+              type: array
+              items:
+                $ref: '#/components/schemas/UsageAttributionSubjectKey'
+              minItems: 0
+              title: Subject Keys
+          required:
+            - subject_keys
+          title: Usage Attribution
+        primary_email:
+          description: The primary email address of the customer.
+          type: string
+          title: Primary Email
+        currency:
+          description: |-
+            Currency of the customer.
+            Used for billing, tax and invoicing.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        billing_address:
+          description: |-
+            The billing address of the customer.
+            Used for tax and invoicing.
+          type: object
+          properties:
+            country:
+              description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+              type: string
+              example: US
+              maxLength: 2
+              minLength: 2
+              pattern: '^[A-Z]{2}$'
+              title: Country
+            postal_code:
+              description: Postal code.
+              type: string
+              title: Postal Code
+            state:
+              description: State or province.
+              type: string
+              title: State
+            city:
+              description: City.
+              type: string
+              title: City
+            line1:
+              description: First line of the address.
+              type: string
+              title: Line 1
+            line2:
+              description: Second line of the address.
+              type: string
+              title: Line 2
+            phone_number:
+              description: Phone number.
+              type: string
+              title: Phone Number
+          title: Billing Address
+      required:
+        - name
+        - key
+    CreateMeterRequest:
+      description: Meter create request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        key:
+          $ref: '#/components/schemas/ResourceKey'
+        aggregation:
+          description: The aggregation type to use for the meter.
+          type: string
+          enum:
+            - sum
+            - count
+            - unique_count
+            - avg
+            - min
+            - max
+            - latest
+        event_type:
+          description: The event type to include in the aggregation.
+          type: string
+          example: prompt
+          minLength: 1
+        events_from:
+          description: |-
+            The date since the meter should include events.
+            Useful to skip old events.
+            If not specified, all historical events are included.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        value_property:
+          description: |-
+            JSONPath expression to extract the value from the ingested event's data property.
+
+            The ingested value for sum, avg, min, and max aggregations is a number or a string that can be parsed to a number.
+
+            For unique_count aggregation, the ingested value must be a string. For count aggregation the value_property is ignored.
+          type: string
+          example: $.tokens
+          minLength: 1
+        dimensions:
+          description: |-
+            Named JSONPath expressions to extract the group by values from the event data.
+
+            Keys must be unique and consist only alphanumeric and underscore characters.
+          type: object
+          example:
+            type: $.type
+          additionalProperties:
+            type: string
+      required:
+        - name
+        - key
+        - aggregation
+        - event_type
+    CustomerPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingCustomer'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    DateTime:
+      description: '[RFC3339](https://tools.ietf.org/html/rfc3339) formatted date-time string in UTC.'
+      type: string
+      format: date-time
+      example: '2023-01-01T01:01:01.001Z'
+      title: RFC3339 Date-Time
+    ExternalResourceKey:
+      description: ExternalResourceKey is a unique string that is used to identify a resource in an external system.
+      type: string
+      example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+      maxLength: 256
+      minLength: 1
+      title: External Resource Key
+    ListCustomerEntitlementAccessResponseData:
+      description: List customer entitlement access response data.
+      type: object
+      properties:
+        data:
+          description: The list of entitlement access results.
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingEntitlementAccessResult'
+          readOnly: true
+      required:
+        - data
+    ListCustomersParamsFilter:
+      description: Filter options for listing customers.
+      type: object
+      properties:
+        key:
+          description: |-
+            Filter customers by key.
+            Case-insensitive partial match.
+          type: string
+          example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+          maxLength: 256
+          minLength: 1
+          title: External Resource Key
+    Meter:
+      description: A meter is a configuration that defines how to match and aggregate events.
+      type: object
+      properties:
+        id:
+          description: ULID (Universally Unique Lexicographically Sortable Identifier).
+          type: string
+          example: 01G65Z755AFWAKHE12NY0CQ9FH
+          pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+          readOnly: true
+          title: ULID
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          description: An ISO-8601 timestamp representation of entity creation date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        updated_at:
+          description: An ISO-8601 timestamp representation of entity last update date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        deleted_at:
+          description: An ISO-8601 timestamp representation of entity deletion date.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          readOnly: true
+          title: RFC3339 Date-Time
+        key:
+          $ref: '#/components/schemas/ResourceKey'
+        aggregation:
+          description: The aggregation type to use for the meter.
+          type: string
+          enum:
+            - sum
+            - count
+            - unique_count
+            - avg
+            - min
+            - max
+            - latest
+        event_type:
+          description: The event type to include in the aggregation.
+          type: string
+          example: prompt
+          minLength: 1
+        events_from:
+          description: |-
+            The date since the meter should include events.
+            Useful to skip old events.
+            If not specified, all historical events are included.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          title: RFC3339 Date-Time
+        value_property:
+          description: |-
+            JSONPath expression to extract the value from the ingested event's data property.
+
+            The ingested value for sum, avg, min, and max aggregations is a number or a string that can be parsed to a number.
+
+            For unique_count aggregation, the ingested value must be a string. For count aggregation the value_property is ignored.
+          type: string
+          example: $.tokens
+          minLength: 1
+        dimensions:
+          description: |-
+            Named JSONPath expressions to extract the group by values from the event data.
+
+            Keys must be unique and consist only alphanumeric and underscore characters.
+          type: object
+          example:
+            type: $.type
+          additionalProperties:
+            type: string
+      example:
+        id: 01G65Z755AFWAKHE12NY0CQ9FH
+        key: tokens_total
+        name: Tokens Total
+        description: AI Token Usage
+        aggregation: sum
+        event_type: prompt
+        value_property: $.tokens
+        dimensions:
+          model: $.model
+          type: $.type
+        created_at: '2024-01-01T01:01:01.001Z'
+        updated_at: '2024-01-01T01:01:01.001Z'
+      required:
+        - id
+        - name
+        - key
+        - aggregation
+        - event_type
+    MeterPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meter'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    MeteringEvent:
+      description: Metering event following the CloudEvents specification.
+      type: object
+      properties:
+        id:
+          description: Identifies the event.
+          type: string
+          example: 5c10fade-1c9e-4d6c-8275-c52c36731d3c
+          minLength: 1
+        source:
+          description: Identifies the context in which an event happened.
+          type: string
+          format: uri-reference
+          example: service-name
+          minLength: 1
+        specversion:
+          description: The version of the CloudEvents specification which the event uses.
+          type: string
+          example: '1.0'
+          default: '1.0'
+          minLength: 1
+        type:
+          description: Contains a value describing the type of event related to the originating occurrence.
+          type: string
+          example: com.example.someevent
+          minLength: 1
+        datacontenttype:
+          description: Content type of the CloudEvents data value. Only the value "application/json" is allowed over HTTP.
+          type: string
+          example: application/json
+          enum:
+            - application/json
+          nullable: true
+        dataschema:
+          description: Identifies the schema that data adheres to.
+          type: string
+          format: uri
+          minLength: 1
+          nullable: true
+        subject:
+          description: Describes the subject of the event in the context of the event producer (identified by source).
+          type: string
+          example: customer-id
+          minLength: 1
+        time:
+          description: Timestamp of when the occurrence happened. Must adhere to RFC 3339.
+          type: string
+          format: date-time
+          example: '2023-01-01T01:01:01.001Z'
+          nullable: true
+          title: RFC3339 Date-Time
+        data:
+          description: |-
+            The event payload.
+            Optional, if present it must be a JSON object.
+          type: object
+          additionalProperties: {}
+          nullable: true
+      example:
+        specversion: '1.0'
+        id: 5c10fade-1c9e-4d6c-8275-c52c36731d3c
+        source: service-name
+        type: prompt
+        subject: customer-id
+        time: '2023-01-01T01:01:01.001Z'
+        data:
+          prompt: 'Hello, world!'
+          tokens: 100
+          model: gpt-4o
+          type: input
+      required:
+        - id
+        - source
+        - specversion
+        - type
+        - subject
+      title: Metering Event
+    ResourceKey:
+      description: A key is a unique string that is used to identify a resource.
+      type: string
+      example: resource_key
+      maxLength: 64
+      minLength: 1
+      pattern: '^[a-z0-9]+(?:_[a-z0-9]+)*$'
+      title: Resource Key
+    SubscriptionPagePaginatedResponse:
+      description: Page paginated response.
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingSubscription'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      required:
+        - data
+        - meta
+    ULID:
+      description: ULID (Universally Unique Lexicographically Sortable Identifier).
+      type: string
+      example: 01G65Z755AFWAKHE12NY0CQ9FH
+      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+      title: ULID
+    UpsertAppCustomerDataRequest:
+      description: AppCustomerData upsert request.
+      type: object
+      properties:
+        stripe:
+          description: Used if the customer has a linked Stripe app.
+          type: object
+          properties:
+            customer_id:
+              description: The Stripe customer ID used.
+              type: string
+              example: cus_1234567890
+              title: Stripe customer ID
+            default_payment_method_id:
+              description: The Stripe default payment method ID.
+              type: string
+              example: pm_1234567890
+              title: Stripe default payment method ID
+            labels:
+              description: Labels for this Stripe integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: Stripe
+        external_invoicing:
+          description: Used if the customer has a linked external invoicing app.
+          type: object
+          properties:
+            labels:
+              description: Labels for this external invoicing integration on the customer.
+              type: object
+              example:
+                env: test
+              additionalProperties:
+                type: string
+                pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                minLength: 1
+                maxLength: 63
+              maxProperties: 50
+              title: Labels
+          title: External invoicing
+    UpsertBillingProfileRequest:
+      description: BillingProfile upsert request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        supplier:
+          description: The name and contact information for the supplier this billing profile represents
+          type: object
+          properties:
+            id:
+              description: Unique identifier for the party.
+              type: string
+              readOnly: true
+            key:
+              description: An optional unique key of the party.
+              type: string
+              example: 019ae40f-4258-7f15-9491-842f42a7d6ac
+              maxLength: 256
+              minLength: 1
+              title: External Resource Key
+            name:
+              description: Legal name or representation of the party.
+              type: string
+            tax_id:
+              description: |-
+                The entity's legal identification used for tax purposes. They may have
+                other numbers, but we're only interested in those valid for tax purposes.
+              type: object
+              properties:
+                code:
+                  description: Normalized tax identification code shown on the original identity document.
+                  type: string
+                  maxLength: 32
+                  minLength: 1
+            addresses:
+              description: Address for where information should be sent if needed.
+              type: object
+              properties:
+                billing_address:
+                  description: Billing address.
+                  type: object
+                  properties:
+                    country:
+                      description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+                      type: string
+                      example: US
+                      maxLength: 2
+                      minLength: 2
+                      pattern: '^[A-Z]{2}$'
+                      title: Country
+                    postal_code:
+                      description: Postal code.
+                      type: string
+                      title: Postal Code
+                    state:
+                      description: State or province.
+                      type: string
+                      title: State
+                    city:
+                      description: City.
+                      type: string
+                      title: City
+                    line1:
+                      description: First line of the address.
+                      type: string
+                      title: Line 1
+                    line2:
+                      description: Second line of the address.
+                      type: string
+                      title: Line 2
+                    phone_number:
+                      description: Phone number.
+                      type: string
+                      title: Phone Number
+              required:
+                - billing_address
+        workflow:
+          description: The billing workflow settings for this profile
+          type: object
+          properties:
+            collection:
+              description: The collection settings for this workflow
+              type: object
+              properties:
+                alignment:
+                  description: The alignment for collecting the pending line items into an invoice.
+                  type: object
+                  default:
+                    type: subscription
+                  discriminator:
+                    propertyName: type
+                    mapping:
+                      subscription: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                      anchored: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                  oneOf:
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentSubscription'
+                    - $ref: '#/components/schemas/BillingWorkflowCollectionAlignmentAnchored'
+                interval:
+                  description: |-
+                    This grace period can be used to delay the collection of the pending line items specified in
+                    alignment.
+
+                    This is useful, in case of multiple subscriptions having slightly different billing periods.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: PT1H
+              title: Workflow collection settings
+            invoicing:
+              description: The invoicing settings for this workflow
+              type: object
+              properties:
+                auto_advance:
+                  description: Whether to automatically issue the invoice after the draftPeriod has passed.
+                  type: boolean
+                  default: true
+                draft_period:
+                  description: The period for the invoice to be kept in draft status for manual reviews.
+                  type: string
+                  format: ISO8601
+                  example: P1D
+                  default: P0D
+                progressive_billing:
+                  description: Should progressive billing be allowed for this workflow?
+                  type: boolean
+                  default: true
+              title: Workflow invoice settings
+            payment:
+              description: The payment settings for this workflow
+              type: object
+              discriminator:
+                propertyName: collection_method
+                mapping:
+                  charge_automatically: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                  send_invoice: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+              oneOf:
+                - $ref: '#/components/schemas/BillingWorkflowPaymentChargeAutomaticallySettings'
+                - $ref: '#/components/schemas/BillingWorkflowPaymentSendInvoiceSettings'
+            tax:
+              description: The tax settings for this workflow
+              type: object
+              properties:
+                enabled:
+                  description: |-
+                    Enable automatic tax calculation when tax is supported by the app.
+                    For example, with Stripe Invoicing when enabled, tax is calculated via Stripe Tax.
+                  type: boolean
+                  default: true
+                enforced:
+                  description: |-
+                    Enforce tax calculation when tax is supported by the app.
+                    When enabled, the billing system will not allow to create an invoice without tax calculation.
+                    Enforcement is different per apps, for example, Stripe app requires customer
+                    to have a tax location when starting a paid subscription.
+                  type: boolean
+                  default: false
+                default_tax_config:
+                  description: Default tax configuration to apply to the invoices for line items.
+                  type: object
+                  properties:
+                    behavior:
+                      description: |-
+                        Tax behavior.
+
+                        If not specified the billing profile is used to determine the tax behavior.
+                        If not specified in the billing profile, the provider's default behavior is used.
+                      type: string
+                      enum:
+                        - inclusive
+                        - exclusive
+                      title: Tax behavior
+                    stripe:
+                      description: Stripe tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
+                          type: string
+                          example: txcd_10000000
+                          pattern: '^txcd_\d{8}$'
+                          title: Tax code
+                      required:
+                        - code
+                      title: Stripe tax config
+                    external_invoicing:
+                      description: External invoicing tax config.
+                      type: object
+                      properties:
+                        code:
+                          description: The tax code should be interpreted by the external invoicing provider.
+                          type: string
+                          maxLength: 64
+                          title: Tax code
+                      required:
+                        - code
+                      title: External invoicing tax config
+              title: Workflow tax settings
+        default:
+          description: Whether this is the default profile.
+          type: boolean
+      required:
+        - name
+        - supplier
+        - workflow
+        - default
+    UpsertCustomerBillingDataRequest:
+      description: CustomerBillingData upsert request.
+      type: object
+      properties:
+        billing_profile:
+          description: |-
+            The billing profile for the customer.
+
+            If not provided, the default billing profile will be used.
+          type: object
+          properties:
+            id:
+              description: The ID of the billing profile.
+              type: string
+              example: 01G65Z755AFWAKHE12NY0CQ9FH
+              pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+              title: ULID
+          required:
+            - id
+          title: Billing profile
+        app_data:
+          description: App customer data.
+          type: object
+          properties:
+            stripe:
+              description: Used if the customer has a linked Stripe app.
+              type: object
+              properties:
+                customer_id:
+                  description: The Stripe customer ID used.
+                  type: string
+                  example: cus_1234567890
+                  title: Stripe customer ID
+                default_payment_method_id:
+                  description: The Stripe default payment method ID.
+                  type: string
+                  example: pm_1234567890
+                  title: Stripe default payment method ID
+                labels:
+                  description: Labels for this Stripe integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: Stripe
+            external_invoicing:
+              description: Used if the customer has a linked external invoicing app.
+              type: object
+              properties:
+                labels:
+                  description: Labels for this external invoicing integration on the customer.
+                  type: object
+                  example:
+                    env: test
+                  additionalProperties:
+                    type: string
+                    pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+                    minLength: 1
+                    maxLength: 63
+                  maxProperties: 50
+                  title: Labels
+              title: External invoicing
+          title: App customer data
+    UpsertCustomerRequest:
+      description: Customer upsert request.
+      type: object
+      properties:
+        name:
+          description: |-
+            Display name of the resource.
+
+            Between 1 and 256 characters.
+          type: string
+          maxLength: 256
+          minLength: 1
+        description:
+          description: |-
+            Optional description of the resource.
+
+            Maximum 1024 characters.
+          type: string
+          maxLength: 1024
+        labels:
+          $ref: '#/components/schemas/Labels'
+        usage_attribution:
+          description: Mapping to attribute metered usage to the customer by the event subject.
+          type: object
+          properties:
+            subject_keys:
+              description: |-
+                The subjects that are attributed to the customer.
+                Can be empty when no usage event subjects are associated with the customer.
+              type: array
+              items:
+                $ref: '#/components/schemas/UsageAttributionSubjectKey'
+              minItems: 0
+              title: Subject Keys
+          required:
+            - subject_keys
+          title: Usage Attribution
+        primary_email:
+          description: The primary email address of the customer.
+          type: string
+          title: Primary Email
+        currency:
+          description: |-
+            Currency of the customer.
+            Used for billing, tax and invoicing.
+          type: string
+          example: USD
+          maxLength: 3
+          minLength: 3
+          pattern: '^[A-Z]{3}$'
+          title: Currency
+        billing_address:
+          description: |-
+            The billing address of the customer.
+            Used for tax and invoicing.
+          type: object
+          properties:
+            country:
+              description: 'Country code in [ISO 3166-1](https://www.iso.org/iso-3166-country-codes.html) alpha-2 format.'
+              type: string
+              example: US
+              maxLength: 2
+              minLength: 2
+              pattern: '^[A-Z]{2}$'
+              title: Country
+            postal_code:
+              description: Postal code.
+              type: string
+              title: Postal Code
+            state:
+              description: State or province.
+              type: string
+              title: State
+            city:
+              description: City.
+              type: string
+              title: City
+            line1:
+              description: First line of the address.
+              type: string
+              title: Line 1
+            line2:
+              description: Second line of the address.
+              type: string
+              title: Line 2
+            phone_number:
+              description: Phone number.
+              type: string
+              title: Phone Number
+          title: Billing Address
+      required:
+        - name
+    UsageAttributionSubjectKey:
+      description: Subject key.
+      type: string
+      minLength: 1
+    Labels:
+      description: |
+        Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        env: test
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: Labels
+    PageMeta:
+      description: Contains pagination query parameters and the total number of objects returned.
+      type: object
+      properties:
+        number:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        total:
+          type: number
+          example: 100
+      required:
+        - number
+        - size
+        - total
+    PaginatedMeta:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta'
+      required:
+        - page
+      title: PaginatedMeta
+    BaseError:
+      description: standard error
+      type: object
+      properties:
+        status:
+          description: |
+            The HTTP status code of the error. Useful when passing the response
+            body to child properties in a frontend UI. Must be returned as an integer.
+          type: integer
+          readOnly: true
+        title:
+          description: |
+            A short, human-readable summary of the problem. It should not
+            change between occurences of a problem, except for localization.
+            Should be provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+        type:
+          description: The error type.
+          type: string
+          readOnly: true
+        instance:
+          description: |
+            Used to return the correlation ID back to the user, in the format
+            kong:trace:<correlation_id>. This helps us find the relevant logs
+            when a customer reports an issue.
+          type: string
+          readOnly: true
+        detail:
+          description: |
+            A human readable explanation specific to this occurence of the problem.
+            This field may contain request/entity data to help the user understand
+            what went wrong. Enclose variable values in square brackets. Should be
+            provided as "Sentence case" for direct use in the UI.
+          type: string
+          readOnly: true
+      required:
+        - status
+        - title
+        - instance
+        - detail
+      title: Error
+    InvalidRules:
+      description: invalid parameters rules
+      type: string
+      enum:
+        - required
+        - is_array
+        - is_base64
+        - is_boolean
+        - is_date_time
+        - is_integer
+        - is_null
+        - is_number
+        - is_object
+        - is_string
+        - is_uuid
+        - is_fqdn
+        - is_arn
+        - unknown_property
+        - missing_reference
+        - is_label
+        - matches_regex
+        - invalid
+        - is_supported_network_availability_zone_list
+        - is_supported_network_cidr_block
+        - is_supported_provider_region
+        - type
+      nullable: true
+      readOnly: true
+    InvalidParameterStandard:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          $ref: '#/components/schemas/InvalidRules'
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+    InvalidParameterMinimumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - min_length
+            - min_digits
+            - min_lowercase
+            - min_uppercase
+            - min_symbols
+            - min_items
+            - min
+          nullable: false
+          readOnly: true
+        minimum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must have at least 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - minimum
+    InvalidParameterMaximumLength:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - max_length
+            - max_items
+            - max
+          nullable: false
+          readOnly: true
+        maximum:
+          type: integer
+          example: 8
+        source:
+          type: string
+          example: body
+        reason:
+          type: string
+          example: must not have more than 8 characters
+          readOnly: true
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - maximum
+    InvalidParameterChoiceItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - enum
+          nullable: false
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        choices:
+          type: array
+          items: {}
+          minItems: 1
+          nullable: false
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - reason
+        - rule
+        - choices
+    InvalidParameterDependentItem:
+      type: object
+      properties:
+        field:
+          type: string
+          example: name
+          readOnly: true
+        rule:
+          description: invalid parameters rules
+          type: string
+          enum:
+            - dependent_fields
+          nullable: true
+          readOnly: true
+        reason:
+          type: string
+          example: is a required field
+          readOnly: true
+        dependents:
+          type: array
+          items: {}
+          nullable: true
+          readOnly: true
+          uniqueItems: true
+        source:
+          type: string
+          example: body
+      additionalProperties: false
+      required:
+        - field
+        - rule
+        - reason
+        - dependents
+    InvalidParameters:
+      description: invalid parameters
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/InvalidParameterStandard'
+          - $ref: '#/components/schemas/InvalidParameterMinimumLength'
+          - $ref: '#/components/schemas/InvalidParameterMaximumLength'
+          - $ref: '#/components/schemas/InvalidParameterChoiceItem'
+          - $ref: '#/components/schemas/InvalidParameterDependentItem'
+      minItems: 1
+      nullable: false
+      uniqueItems: true
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          required:
+            - invalid_parameters
+          properties:
+            invalid_parameters:
+              $ref: '#/components/schemas/InvalidParameters'
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+            type:
+              example: 'https://httpstatuses.com/401'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Invalid credentials
+    ForbiddenError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+            type:
+              example: 'https://httpstatuses.com/403'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Forbidden
+    NotFoundError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+            type:
+              example: 'https://httpstatuses.com/404'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Not found
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
+    GoneError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 410
+            title:
+              example: Gone
+            type:
+              example: 'https://httpstatuses.com/410'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Gone
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
+  examples:
+    UnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: Unauthorized
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    NotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/UnauthorizedExample'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            NotFoundExample:
+              $ref: '#/components/examples/NotFoundExample'
+    Gone:
+      description: Gone
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/GoneError'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+  securitySchemes:
+    systemAccountAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The system account access token is meant for automations and integrations that are not directly associated with a human identity.
+        You can generate a system account Access Token by creating a system account and then obtaining a system account access token for that account.
+        The access token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer spat_i2Ej...'`
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+      description: |
+        The personal access token is meant to be used as an alternative to basic-auth when accessing Konnect via APIs.
+        You can generate a Personal Access Token (PAT) from the [personal access token page](https://cloud.konghq.com/global/account/tokens/) in the Konnect dashboard.
+        The PAT token must be passed in the header of a request, for example:
+        `curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT...'`
+    konnectAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+tags:
+  - name: OpenMeter Billing
+    description: 'Billing manages the billing profiles, and invoices for customers.'
+  - name: OpenMeter Apps
+    description: 'Apps enable you to extend and customize billing and usage workflows by integrating with external systems and services. Apps can automate and enhance your billing ecosystem by supporting capabilities such as synchronizing usage data with third-party platforms, calculating taxes, generating and delivering invoices, handling payment collection, and other billing-related tasks.'
+  - name: OpenMeter Entitlements
+    description: Entitlements are used to control access to features for customers.
+  - name: OpenMeter Subscriptions
+    description: Subscriptions are used to track usage of your product or service. Subscriptions can be individuals or organizations that can subscribe to plans and have access to features.
+  - name: OpenMeter Customers
+    description: Customers are used to track usage of your product or service. Customers can be individuals or organizations that can subscribe to plans and have access to features.
+  - name: Metering Events
+    description: 'Metering events are used to track usage of your product or service. Events are processed asynchronously by the meters, so they may not be immediately available for querying.'
+  - name: Meters
+    description: 'Meters specify how to aggregate events for billing and analytics purposes. Meters can be configured with multiple aggregation methods and groupings. Multiple meters can be created for the same event type, enabling flexible metering scenarios.'
+security:
+  - systemAccountAccessToken: []
+  - personalAccessToken: []
+  - konnectAccessToken: []

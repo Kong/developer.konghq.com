@@ -129,6 +129,9 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% endfor %}
 {% endnavtabs %}
 
+{:.info}
+> **Note**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
+
 For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
 
 ## Marketplaces
@@ -141,7 +144,7 @@ For information about FIPS, see the [FIPS support policy](/gateway/fips-support/
 
 ## Supported public cloud deployment platforms
 
-{{site.base_gateway}} supports the following public cloud deployment platforms:
+{{site.base_gateway}} can run on supported [Kubernetes distributions certified by the CNCF](https://www.cncf.io/training/certification/software-conformance/) and Docker-based environments including the following public cloud deployment platforms:
 
 {% for platform in site.data.products.gateway.cloud_deployment_platforms %}
 * {{ platform }}

@@ -3,9 +3,6 @@ title: Scripts in Insomnia
 
 description: Learn how to write pre-request and after-response scripts in Insomnia.
 
-min_version:
-  insomnia: '9.3'
-
 content_type: reference
 layout: reference
 breadcrumbs: 

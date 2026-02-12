@@ -1,9 +1,10 @@
 title: Mesh Documentation
+description: Index containing all documentation for {{site.mesh_product_name}}.
 sections:
   - title: Overview
     items:
       - path: /mesh/
-      - path: /mesh/about/
+      - path: /mesh/service-mesh/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -42,7 +43,7 @@ sections:
       - path: /mesh/mesh-multi-tenancy/
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
-      - path: /mesh/kuma-user-interface-gui/
+      - path: /mesh/interact-with-control-plane/
       - path: /mesh/use-mesh-cli/
       - path: /mesh/annotations/
       - path: /mesh/data-plane-proxy/
@@ -76,11 +77,11 @@ sections:
 
   - title: Built-in Gateways
     items:
-      - path: /mesh/add-builtin-gateway/
-      - path: /mesh/managing-ingress-traffic/gateway/
+      - path: /how-to/set-up-a-built-in-mesh-gateway/
+      - path: /mesh/built-in-gateway/
       - path: /mesh/gateway-listeners/
       - path: /mesh/gateway-routes/
-      - path: /mesh/gateway-api/
+      - path: /how-to/set-up-a-built-in-kubernetes-gateway/
       - path: /mesh/gateway-pods-k8s/
       - path: /mesh/kubernetes-gateway-api/
 
@@ -126,7 +127,7 @@ sections:
       - path: /mesh/reference/kuma-cp/
       - path: /mesh/data-collection/
       - path: /mesh/configure-data-plane-proxy-membership/
-      - path: /mesh/cp-config/
+      - path: /mesh/control-plane-configuration/
       - path: /mesh/dns/
       - path: /mesh/ipv6-support/
       - path: /mesh/performance-tuning/

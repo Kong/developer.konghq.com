@@ -37,7 +37,7 @@ rows:
             config:
               diagram: |
                 flowchart LR
-                  A(Dev Portal &bull; Advanced Analytics &bull; Catalog)
+                  A(Dev Portal &bull; Observability &bull; Catalog)
                   B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
                   C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane #40;Kong Gateway instance#41;)
 
@@ -67,7 +67,7 @@ rows:
               icon: /assets/logos/konglogo-gradient-secondary.svg
               cta:
                 text: Get started
-                url: https://cloud.konghq.com/gateway-manager/create-control-plane
+                url: https://cloud.konghq.com/gateway-manager/create-gateway
       - blocks:
           - type: card
             config:

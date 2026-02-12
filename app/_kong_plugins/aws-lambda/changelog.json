@@ -1,4 +1,18 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.1": [
+    {
+      "message": "Fixed an issue where Lambda responses with empty or null body caused 500 errors when `is_proxy_integration` is enabled.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added support for AWS API Gateway payload v2. A new configuration field `awsgateway_compatible_payload_version` has been added to control the version of the payload.\n",

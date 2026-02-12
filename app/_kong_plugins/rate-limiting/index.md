@@ -86,3 +86,5 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 ## Headers sent to the client
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
+
+{% include plugins/redis-cloud-auth.md %}

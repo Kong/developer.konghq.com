@@ -1,7 +1,6 @@
 import debug from "debug";
 import fs from "fs/promises";
 import yaml from "js-yaml";
-import dotenv from "dotenv";
 import { executeCommand, fetchImage, setEnvVariable } from "./docker-helper.js";
 import path from "path";
 import { dirname } from "path";
@@ -10,11 +9,6 @@ import { fileURLToPath } from "url";
 const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// Only load .env when running locally
-if (process.env.GITHUB_ACTIONS !== "true") {
-  dotenv.config();
-}
 
 export async function getRuntimeConfig(runtime) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
