@@ -1,6 +1,7 @@
 ---
 title: Set up observability for {{site.event_gateway}}
 content_type: how_to
+permalink: /event-gateway/configure-observability-with-otel/
 breadcrumbs:
   - /event-gateway/
 
