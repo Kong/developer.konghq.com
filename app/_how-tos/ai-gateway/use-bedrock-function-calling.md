@@ -10,6 +10,7 @@ related_resources:
     url: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Converse.html
 breadcrumbs:
  - /ai-gateway/
+permalink: /how-tos/use-bedrock-function-calling/
 
 description: "Configure the AI Proxy Advanced plugin to use AWS Bedrock's Converse API for function calling with Cohere Command R."
 
