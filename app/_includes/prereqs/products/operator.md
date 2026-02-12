@@ -1,10 +1,8 @@
-{% assign summary='{{site.operator_product_name}} running' %}
-
-{% if prereqs.enterprise %}
-{% assign summary = summary | append:' (with an Enterprise license)' %}
-{% endif %}
-
-{% capture license %}
+{%- assign summary='{{site.operator_product_name}} running' -%}
+{%- if prereqs.enterprise -%}
+{%- assign summary = summary | append:' (with an Enterprise license)' -%}
+{%- endif -%}
+{%- capture license %}
 ```
 echo "
 apiVersion: configuration.konghq.com/v1alpha1
@@ -15,17 +13,13 @@ rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
 {:data-deployment-topology='on-prem'}
-{% endcapture %}
-
-{% capture cert-manager %}
+{%- endcapture -%}
+{%- capture cert-manager -%}
 {% include k8s/cert-manager.md %}
-{% endcapture %}
-
-{% capture cert %}
+{%- endcapture -%}
+{%- capture cert -%}
 {% include k8s/ca-cert.md %}
-{% endcapture %}
-
-
+{%- endcapture -%}
 {% capture details_content %}
 
 1. Add the Kong Helm charts:
@@ -74,23 +68,22 @@ rawLicenseString: '$(cat ./license.json)'
    {:data-deployment-topology='on-prem'}
 
 {% endif %}
-
 {{cert-manager | indent: 3}}
-
 {{cert | indent: 3}}
-   
+
+{% if page.works_on contains 'on-prem' %}
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
 {:data-deployment-topology='on-prem'}
 {{license | indent: 3}}
-
 {% else %}
 This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
 {:data-deployment-topology='on-prem'}
 {{license}}
 
-{% endif %}
-{% endcapture %}
+{%- endif -%}
+{%- endif -%}
+{%- endcapture -%}
 
 {% if include.raw %}
 {{ details_content }}
