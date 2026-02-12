@@ -993,6 +993,7 @@ vms
 vnet
 vpc
 vpcs
+VS Code
 Vue
 Vue
 walkthrough

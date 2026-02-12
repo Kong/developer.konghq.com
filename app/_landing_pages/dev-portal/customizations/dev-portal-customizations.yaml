@@ -92,7 +92,7 @@ rows:
       - blocks: 
           - type: card
             config:
-              title: Manage pages and content in VScode (tech preview)
+              title: Manage pages and content in VS Code (tech preview)
               description: |
                 Edit and view your Dev Portal pages in real-time in Visual Studio Code. 
                 Integrates with the {{site.konnect_short_name}} API and kongctl to securely manage Dev Portal content.

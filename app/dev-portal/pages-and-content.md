@@ -84,7 +84,7 @@ related_resources:
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
-  - text: Dev Portal VScode extension (tech preview)
+  - text: Dev Portal VS Code extension (tech preview)
     url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
 ---
 
