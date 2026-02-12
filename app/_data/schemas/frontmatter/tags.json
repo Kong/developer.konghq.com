@@ -131,6 +131,7 @@
     "mtls",
     "multi-zone",
     "network",
+    "native-apis",
     "nginx",
     "notifications",
     "oauth2",
