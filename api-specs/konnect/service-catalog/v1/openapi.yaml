@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@6b57ebfa7cc09751d81d376d421cbb5909f7fde4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6b57ebfa7cc09751d81d376d421cbb5909f7fde4'
+  x-oas-source: kong/platform-api@f5abe19d8ab80d6c690ce204d964dcfbd82baddc
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f5abe19d8ab80d6c690ce204d964dcfbd82baddc'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1918,6 +1918,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1948,6 +1950,8 @@ components:
           type: string
           maxLength: 2048
           nullable: true
+        labels:
+          $ref: '#/components/schemas/LabelsUpdate'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
       additionalProperties: false
@@ -1966,6 +1970,8 @@ components:
             - $ref: '#/components/schemas/StringFieldFilter'
         authorized:
           $ref: '#/components/schemas/BooleanFieldFilter'
+        labels:
+          $ref: '#/components/schemas/LabelsFieldFilter'
         created_at:
           $ref: '#/components/schemas/DateTimeFieldFilter'
         updated_at:
@@ -2006,6 +2012,8 @@ components:
           type: boolean
           example: true
           readOnly: true
+        labels:
+          $ref: '#/components/schemas/Labels'
         config:
           $ref: '#/components/schemas/IntegrationInstanceConfig'
         created_at:
@@ -5107,8 +5115,6 @@ components:
                   definition:
                     control_plane_id: string
                     gateway_service_id: string
-                integration_data_schema: null
-                resource_id_template: '{{control_plane_id}}:{{gateway_service_id}}'
             discovery:
               resource_integration_data_examples:
                 gateway_svc:
@@ -5168,8 +5174,6 @@ components:
                   type: simple
                   definition:
                     report_id: string
-                integration_data_schema: null
-                resource_id_template: '{{report_id}}'
             discovery:
               resource_integration_data_examples:
                 report:
@@ -5198,8 +5202,6 @@ components:
                     mesh_name: string
                     mesh_service_name: string
                     global_control_plane_id: string
-                integration_data_schema: null
-                resource_id_template: '{{global_control_plane_id}}:{{mesh_name}}'
             discovery:
               resource_integration_data_examples:
                 service_insight:

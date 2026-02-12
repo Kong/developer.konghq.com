@@ -91,8 +91,9 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                   {% for tier in site.data.products.gateway.tiers %}
                   {% assign tier_value = tier[0] %}
                   {% assign tier_text = tier[1].text %}
+                  {% assign text = site.data.tooltips.tier[tier_value]%}
                   {% include checkbox.html value=tier_value name="tier"
-                  label=tier_text %}
+                  label=tier_text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -100,8 +101,9 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="text-sm text-brand font-semibold">Deployment Platforms</div>
                 <div class="flex flex-col gap-3">
                   {% for deployment_topology in site.data.products.gateway.deployment_topologies %}
+                  {% assign text = site.data.tooltips.deployment_topology[deployment_topology.slug]%}
                   {% include checkbox.html value=deployment_topology.slug name="deployment-topology"
-                  label=deployment_topology.text %}
+                  label=deployment_topology.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -110,7 +112,8 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="flex flex-col gap-3">
 
                   {% for support in site.data.plugin_support.support_by %}
-                  {% include checkbox.html value=support.slug name="support" label=support.text %}
+                  {% assign text = site.data.tooltips.support_by[support.slug]%}
+                  {% include checkbox.html value=support.slug name="support" label=support.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -119,7 +122,8 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="flex flex-col gap-3">
 
                   {% for trust in site.data.plugin_support.trusted_content %}
-                  {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text %}
+                  {% assign text = site.data.tooltips.trusted_content[trust.slug]%}
+                  {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>

@@ -3176,7 +3176,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/secrets':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: SecretList#get
+        terraform-resource: MeshSecretList#get
         terraform-datasource: null
       operationId: getSecretList
       summary: Returns a list of Secret in the mesh.
@@ -3314,7 +3314,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/zoneegresses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: ZoneEgressList#get
+        terraform-resource: MeshZoneEgressList#get
         terraform-datasource: null
       operationId: getZoneEgressList
       summary: Returns a list of ZoneEgress in the mesh.
@@ -3428,7 +3428,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/zoneingresses':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: ZoneIngressList#get
+        terraform-resource: MeshZoneIngressList#get
         terraform-datasource: null
       operationId: getZoneIngressList
       summary: Returns a list of ZoneIngress in the mesh.
@@ -3612,7 +3612,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/hostnamegenerators':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: HostnameGeneratorList#get
+        terraform-resource: MeshHostnameGeneratorList#get
         terraform-datasource: null
       operationId: getHostnameGeneratorList
       summary: Returns a list of HostnameGenerator in the mesh.
@@ -4434,7 +4434,7 @@ paths:
   '/mesh/control-planes/{cpId}/api/meshes/{mesh}/workloads':
     get:
       x-speakeasy-entity-operation:
-        terraform-resource: WorkloadList#get
+        terraform-resource: MeshWorkloadList#get
         terraform-datasource: null
       operationId: getWorkloadList
       summary: Returns a list of Workload in the mesh.
@@ -4777,6 +4777,348 @@ paths:
           $ref: '#/components/responses/MeshOPAList'
       tags:
         - MeshOPA
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/accessaudits':
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessAuditList#get
+        terraform-datasource: null
+      operationId: getAccessAuditList
+      summary: Returns a list of AccessAudit in the mesh.
+      parameters:
+        - name: offset
+          in: query
+          description: offset in the list of entities
+          required: false
+          schema:
+            type: integer
+          example: 0
+        - name: size
+          in: query
+          description: the number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+            minimum: 1
+        - name: filter
+          in: query
+          description: 'filter by labels when multiple filters are present, they are ANDed'
+          required: false
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+          example:
+            label.k8s.kuma.io/namespace: my-ns
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessAuditList'
+      tags:
+        - AccessAudit
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/accessaudits/{name}':
+    delete:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessAudit#delete
+        terraform-datasource: null
+      operationId: deleteAccessAudit
+      summary: Deletes AccessAudit entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessAudit
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessAuditDeleteSuccessResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessAudit
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessAudit#get
+        terraform-datasource: null
+      operationId: getAccessAudit
+      summary: Returns AccessAudit entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessAudit
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessAuditItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessAudit
+    put:
+      x-speakeasy-entity-operation:
+        terraform-resource: 'MeshAccessAudit#create,update'
+        terraform-datasource: null
+      operationId: putAccessAudit
+      summary: Creates or Updates AccessAudit entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessAudit
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Put request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessAuditItem'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessAuditCreateOrUpdateSuccessResponse'
+        '201':
+          $ref: '#/components/responses/AccessAuditCreateOrUpdateSuccessResponse'
+      tags:
+        - AccessAudit
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/access-roles':
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRoleList#get
+        terraform-datasource: null
+      operationId: getAccessRoleList
+      summary: Returns a list of AccessRole in the mesh.
+      parameters:
+        - name: offset
+          in: query
+          description: offset in the list of entities
+          required: false
+          schema:
+            type: integer
+          example: 0
+        - name: size
+          in: query
+          description: the number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+            minimum: 1
+        - name: filter
+          in: query
+          description: 'filter by labels when multiple filters are present, they are ANDed'
+          required: false
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+          example:
+            label.k8s.kuma.io/namespace: my-ns
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleList'
+      tags:
+        - AccessRole
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/access-roles/{name}':
+    delete:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRole#delete
+        terraform-datasource: null
+      operationId: deleteAccessRole
+      summary: Deletes AccessRole entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRole
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleDeleteSuccessResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessRole
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRole#get
+        terraform-datasource: null
+      operationId: getAccessRole
+      summary: Returns AccessRole entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRole
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessRole
+    put:
+      x-speakeasy-entity-operation:
+        terraform-resource: 'MeshAccessRole#create,update'
+        terraform-datasource: null
+      operationId: putAccessRole
+      summary: Creates or Updates AccessRole entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRole
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Put request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessRoleItem'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleCreateOrUpdateSuccessResponse'
+        '201':
+          $ref: '#/components/responses/AccessRoleCreateOrUpdateSuccessResponse'
+      tags:
+        - AccessRole
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/access-role-bindings':
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRoleBindingList#get
+        terraform-datasource: null
+      operationId: getAccessRoleBindingList
+      summary: Returns a list of AccessRoleBinding in the mesh.
+      parameters:
+        - name: offset
+          in: query
+          description: offset in the list of entities
+          required: false
+          schema:
+            type: integer
+          example: 0
+        - name: size
+          in: query
+          description: the number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+            minimum: 1
+        - name: filter
+          in: query
+          description: 'filter by labels when multiple filters are present, they are ANDed'
+          required: false
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+          example:
+            label.k8s.kuma.io/namespace: my-ns
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleBindingList'
+      tags:
+        - AccessRoleBinding
+    parameters:
+      - $ref: '#/components/parameters/cpId'
+  '/mesh/control-planes/{cpId}/api/access-role-bindings/{name}':
+    delete:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRoleBinding#delete
+        terraform-datasource: null
+      operationId: deleteAccessRoleBinding
+      summary: Deletes AccessRoleBinding entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRoleBinding
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleBindingDeleteSuccessResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessRoleBinding
+    get:
+      x-speakeasy-entity-operation:
+        terraform-resource: MeshAccessRoleBinding#get
+        terraform-datasource: null
+      operationId: getAccessRoleBinding
+      summary: Returns AccessRoleBinding entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRoleBinding
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleBindingItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - AccessRoleBinding
+    put:
+      x-speakeasy-entity-operation:
+        terraform-resource: 'MeshAccessRoleBinding#create,update'
+        terraform-datasource: null
+      operationId: putAccessRoleBinding
+      summary: Creates or Updates AccessRoleBinding entity
+      parameters:
+        - name: name
+          in: path
+          description: name of the AccessRoleBinding
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Put request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessRoleBindingItem'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRoleBindingCreateOrUpdateSuccessResponse'
+        '201':
+          $ref: '#/components/responses/AccessRoleBindingCreateOrUpdateSuccessResponse'
+      tags:
+        - AccessRoleBinding
     parameters:
       - $ref: '#/components/parameters/cpId'
   /mesh/control-planes:
@@ -5449,6 +5791,10 @@ components:
           description: indicates that this policy can be used as an inbound policy
           type: boolean
           x-speakeasy-param-computed: false
+        hasRulesTargetRef:
+          description: indicates that the policy has a rules targetRef field for matching
+          type: boolean
+          x-speakeasy-param-computed: false
         isFromAsRules:
           description: 'If set to `true`, performs a backward compatibility conversion from the deprecated ''from'' array to the new ''rules'' array. This ensures older policies remain functional under the updated schema.'
           type: boolean
@@ -5456,6 +5802,7 @@ components:
       required:
         - hasToTargetRef
         - hasFromTargetRef
+        - hasRulesTargetRef
         - isTargetRef
         - isFromAsRules
     ResourceTypeDescription:
@@ -6243,6 +6590,10 @@ components:
                       listening to. When transparent proxying is not used, Envoy will bind to
                       this port.
                     type: integer
+                    x-speakeasy-param-computed: false
+                  protocol:
+                    description: 'Protocol of the service (tcp, http, grpc, etc).'
+                    type: string
                     x-speakeasy-param-computed: false
                   serviceAddress:
                     description: |-
@@ -16186,6 +16537,10 @@ components:
                           this port.
                         type: integer
                         x-speakeasy-param-computed: false
+                      protocol:
+                        description: 'Protocol of the service (tcp, http, grpc, etc).'
+                        type: string
+                        x-speakeasy-param-computed: false
                       serviceAddress:
                         description: |-
                           Address of the service that requests will be forwarded to.
@@ -17925,6 +18280,15 @@ components:
             selector:
               type: object
               properties:
+                dataplaneLabels:
+                  type: object
+                  properties:
+                    matchLabels:
+                      type: object
+                      additionalProperties:
+                        type: string
+                      x-speakeasy-param-computed: false
+                  x-speakeasy-param-computed: false
                 dataplaneRef:
                   type: object
                   properties:
@@ -19456,6 +19820,238 @@ components:
           $ref: '#/components/schemas/MeshControlPlaneFeatureMeshCreation'
       required:
         - type
+    AccessAuditItem:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          x-speakeasy-param-computed: false
+        name:
+          type: string
+          x-speakeasy-param-computed: false
+        rules:
+          type: array
+          items:
+            properties:
+              access:
+                type: array
+                items:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+              accessAll:
+                type: boolean
+                x-speakeasy-param-computed: false
+              mesh:
+                type: string
+                x-speakeasy-param-computed: false
+              types:
+                type: array
+                items:
+                  type: string
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+            type: object
+          x-speakeasy-plan-modifiers: SupressZeroNullModifier
+        type:
+          type: string
+          x-speakeasy-param-computed: false
+      required:
+        - type
+        - name
+    AccessRoleItem:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          x-speakeasy-param-computed: false
+        name:
+          type: string
+          x-speakeasy-param-computed: false
+        rules:
+          type: array
+          items:
+            properties:
+              access:
+                type: array
+                items:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+              mesh:
+                type: string
+                x-speakeasy-param-computed: false
+              names:
+                type: array
+                items:
+                  type: string
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+              types:
+                type: array
+                items:
+                  type: string
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+              when:
+                type: array
+                items:
+                  properties:
+                    destinations:
+                      type: object
+                      properties:
+                        match:
+                          description: 'Tags to match, can be used for both source and destinations'
+                          type: object
+                          additionalProperties:
+                            type: string
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                    dpToken:
+                      type: object
+                      properties:
+                        tags:
+                          type: array
+                          items:
+                            properties:
+                              name:
+                                type: string
+                                x-speakeasy-param-computed: false
+                              value:
+                                type: string
+                                x-speakeasy-param-computed: false
+                            type: object
+                          x-speakeasy-plan-modifiers: SupressZeroNullModifier
+                      x-speakeasy-param-computed: false
+                    from:
+                      type: object
+                      properties:
+                        targetRef:
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            mesh:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            tags:
+                              type: object
+                              additionalProperties:
+                                type: string
+                              x-speakeasy-param-computed: false
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                    selectors:
+                      type: object
+                      properties:
+                        match:
+                          description: 'Tags to match, can be used for both source and destinations'
+                          type: object
+                          additionalProperties:
+                            type: string
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                    sources:
+                      type: object
+                      properties:
+                        match:
+                          description: 'Tags to match, can be used for both source and destinations'
+                          type: object
+                          additionalProperties:
+                            type: string
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                    targetRef:
+                      type: object
+                      properties:
+                        kind:
+                          type: string
+                          x-speakeasy-param-computed: false
+                        mesh:
+                          type: string
+                          x-speakeasy-param-computed: false
+                        name:
+                          type: string
+                          x-speakeasy-param-computed: false
+                        tags:
+                          type: object
+                          additionalProperties:
+                            type: string
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                    to:
+                      type: object
+                      properties:
+                        targetRef:
+                          type: object
+                          properties:
+                            kind:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            mesh:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            name:
+                              type: string
+                              x-speakeasy-param-computed: false
+                            tags:
+                              type: object
+                              additionalProperties:
+                                type: string
+                              x-speakeasy-param-computed: false
+                          x-speakeasy-param-computed: false
+                      x-speakeasy-param-computed: false
+                  type: object
+                x-speakeasy-plan-modifiers: SupressZeroNullModifier
+            type: object
+          x-speakeasy-plan-modifiers: SupressZeroNullModifier
+        type:
+          type: string
+          x-speakeasy-param-computed: false
+      required:
+        - type
+        - name
+    AccessRoleBindingItem:
+      type: object
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          x-speakeasy-param-computed: false
+        name:
+          type: string
+          x-speakeasy-param-computed: false
+        roles:
+          type: array
+          items:
+            type: string
+          x-speakeasy-plan-modifiers: SupressZeroNullModifier
+        subjects:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+                x-speakeasy-param-computed: false
+              type:
+                type: string
+                x-speakeasy-param-computed: false
+            type: object
+          x-speakeasy-plan-modifiers: SupressZeroNullModifier
+        type:
+          type: string
+          x-speakeasy-param-computed: false
+      required:
+        - type
+        - name
     MeshControlPlaneLabels:
       description: Labels to facilitate tagged search on control planes. Keys must be of length 1-63 characters.
       type: object
@@ -21522,6 +22118,138 @@ components:
         application/json:
           schema:
             type: object
+    AccessAuditCreateOrUpdateSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              warnings:
+                description: |
+                  warnings is a list of warning messages to return to the requesting Kuma API clients.
+                  Warning messages describe a problem the client making the API request should correct or be aware of.
+                type: array
+                items:
+                  type: string
+                readOnly: true
+    AccessAuditDeleteSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+    AccessAuditItem:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessAuditItem'
+    AccessAuditList:
+      description: List
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessAuditItem'
+              next:
+                description: URL to the next page
+                type: string
+              total:
+                description: The total number of entities
+                type: number
+    AccessRoleCreateOrUpdateSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              warnings:
+                description: |
+                  warnings is a list of warning messages to return to the requesting Kuma API clients.
+                  Warning messages describe a problem the client making the API request should correct or be aware of.
+                type: array
+                items:
+                  type: string
+                readOnly: true
+    AccessRoleDeleteSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+    AccessRoleItem:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessRoleItem'
+    AccessRoleList:
+      description: List
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessRoleItem'
+              next:
+                description: URL to the next page
+                type: string
+              total:
+                description: The total number of entities
+                type: number
+    AccessRoleBindingCreateOrUpdateSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              warnings:
+                description: |
+                  warnings is a list of warning messages to return to the requesting Kuma API clients.
+                  Warning messages describe a problem the client making the API request should correct or be aware of.
+                type: array
+                items:
+                  type: string
+                readOnly: true
+    AccessRoleBindingDeleteSuccessResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+    AccessRoleBindingItem:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessRoleBindingItem'
+    AccessRoleBindingList:
+      description: List
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessRoleBindingItem'
+              next:
+                description: URL to the next page
+                type: string
+              total:
+                description: The total number of entities
+                type: number
     RetrieveMeshControlPlaneResponse:
       description: A response to creating a control plane.
       content:

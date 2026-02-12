@@ -1,5 +1,5 @@
 ---
-title: "Load balancing in {{site.base_gateway}}"
+title: "Load balancing in {{site.base_gateway}} reference"
 
 description: "Learn how to load balance requests to upstream services with {{site.base_gateway}}"
 

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.1.1
+  version: 3.1.3
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@90e6da4043acbbd94d69a769beb1f3424f01cd56
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/90e6da4043acbbd94d69a769beb1f3424f01cd56'
+  x-oas-source: kong/platform-api@4412091670664166cea4d20bd5c1a87c26fc1fb0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4412091670664166cea4d20bd5c1a87c26fc1fb0'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4513,6 +4513,8 @@ components:
         - account-access-approved
         - account-access-rejected
         - account-access-revoked
+        - api-key-expiring-soon
+        - api-key-expired
     EmailTemplateVariableName:
       description: |
         Enum for available portal email template variables.
@@ -4528,6 +4530,8 @@ components:
         - api_name
         - api_version
         - application_name
+        - credential_name
+        - credential_expires_at
     DefaultEmailTemplate:
       type: object
       properties:
@@ -5452,6 +5456,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id

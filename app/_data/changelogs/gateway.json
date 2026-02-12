@@ -19715,5 +19715,77 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.10.0.8": {
+    "kong": [
+      {
+        "message": "**opentelemetry**: Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed several issues that `kong start` and `kong stop` command throw error when the configuration contains vault reference and a prefix directory exists.",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**aws-lambda**: added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Added `lru_cache_size` to allow configuration of in-memory LRU cache size.",
+        "type": "bugfix",
+        "scope": "Configuration"
+      },
+      {
+        "message": "**request-validator**: Added support for specifying JSON schema draft versions.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Kong incorrectly logged upstream status codes as 000 (or empty) when HTTP/2 clients disconnected during response processing. This occurred when response buffering was enabled. Kong now correctly records the actual upstream status code even when the HTTP/2 client disconnects before receiving the complete response.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `kong health` command would fail to run when kong configuration contains vault references.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed redundant configuration exports when multiple data planes connect concurrently by coalescing triggers and delegating export/broadcast to the background push loop.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `username` and `password` were used for Redis Sentinel and no authentication supported for Redis, causing `NOAUTH Authentication Required` errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenTelemetry**: Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where control planes may consume unnecessary memory when only incremental data planes are connected.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**oas-validation**: Improved performance for OpenAPI 3.1.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

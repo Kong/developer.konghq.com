@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b0852934fe6d461ff6ea7b8e818446fed2f2e81f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b0852934fe6d461ff6ea7b8e818446fed2f2e81f'
+  x-oas-source: kong/platform-api@7e26d6e4d023b6aed068061cdcf7bb282246aced
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7e26d6e4d023b6aed068061cdcf7bb282246aced'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2398,6 +2398,7 @@ components:
             - certificate
             - key
           x-min-runtime-version: '1.1'
+          x-speakeasy-param-computed: false
       required:
         - enabled
     BackendMetadataUpdateIntervalSeconds:
@@ -5437,9 +5438,14 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/EventGatewayPolicyReference'
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
   responses:
     EventGatewayNodeStatus:
       description: The status of an event gateway node.
@@ -5638,9 +5644,14 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/EventGatewayPolicyReference'
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
     BadRequest:
       description: Bad Request
       content:

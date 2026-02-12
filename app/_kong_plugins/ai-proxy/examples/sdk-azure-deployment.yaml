@@ -1,7 +1,7 @@
 title: 'OpenAI SDK: Use the Azure deployment relevant to a specific model name'
 description: Configure a dynamic route to target multiple Azure OpenAI model deployments.
 extended_description: |
-  Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
+  Configure a header capture to insert the requested model name directly into the plugin configuration for {{site.ai_gateway}} deployment with Azure OpenAI, as a string substitution.
 
   {:.warning}
   > For this plugin to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:

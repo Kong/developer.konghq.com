@@ -31,6 +31,8 @@
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
 /mesh/add-builtin-gateway/  /how-to/set-up-a-built-in-mesh-gateway/
 /mesh/gateway-api/  /how-to/set-up-a-built-in-kubernetes-gateway/
+/how-to/send-asychronous-llm-requests/ /how-to/send-asynchronous-llm-requests/
+/how-to/encrypt-kafka-messages-with-event-gateway/ /event-gateway/encrypt-kafka-messages-with-event-gateway/
 
 # Mesh redirects
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
@@ -159,6 +161,8 @@
 
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
+/gateway/debugger/  /observability/debugger/
+/gateway/debugger-spans/  /observability/debugger-spans/
 
 
 ## Insomnia
@@ -171,9 +175,23 @@
 /index/konnect-platform/  /index/konnect/
 
 
-## KGO
+## Kong Operator
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
+/operator/konnect/crd/gateway/hybrid/ /operator/get-started/gateway-api/deploy-gateway/
+/operator/konnect/get-started/install/ /operator/get-started/konnect-crds/install/
+/operator/konnect/get-started/authentication/ /operator/get-started/konnect-crds/authentication/
+/operator/konnect/get-started/control-plane/ /operator/get-started/konnect-crds/controlplane/
+/operator/konnect/get-started/service-and-route/ /operator/get-started/konnect-crds/service-and-route/
+/operator/konnect/get-started/proxy-caching/ /operator/get-started/konnect-crds/proxy-caching/
+/operator/konnect/get-started/key-authentication/ /operator/get-started/konnect-crds/key-authentication/
+/operator/dataplanes/get-started/hybrid/deploy-dataplane/ /operator/konnect/crd/dataplane/hybrid/
+/operator/dataplanes/get-started/hybrid/create-route/ /operator/get-started/gateway-api/create-route/
+/operator/dataplanes/get-started/hybrid/install/ /operator/get-started/gateway-api/install/
+/operator/dataplanes/get-started/kic/create-gateway/ /operator/get-started/gateway-api/deploy-gateway/
+/operator/dataplanes/get-started/kic/create-route/ /operator/get-started/gateway-api/create-route/
+/operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
+/operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
 
 # Service Catalog rename
 

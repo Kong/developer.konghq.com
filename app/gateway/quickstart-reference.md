@@ -24,7 +24,7 @@ related_resources:
     url: /gateway/
   - text: Get started with {{site.base_gateway}}
     url: /gateway/get-started/
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
 
 works_on:
@@ -42,7 +42,7 @@ To run this quickstart you just need to start Docker and store your Kong license
 {{base_cmd}}
 ```
 
-For more information about the configuration used for the quickstart, check out the [full script](https://get.konghq.com/quickstart). 
+For more information about the configuration used for the quickstart, check out the [full script](https://get.konghq.com/quickstart).
 
 ## Quickstart script parameters
 
@@ -88,23 +88,23 @@ rows:
 {% endtable %}
 
 
-## AI Gateway quickstart {% new_in 3.6 %}
+## {{site.ai_gateway}} quickstart {% new_in 3.6 %}
 Kong also provides an interactive AI quickstart script that launches a demo instance of {{site.base_gateway}} running [AI Proxy](/plugins/ai-proxy/):
 
 ```sh
 curl -Ls https://get.konghq.com/ai | bash -s -- -e KONG_LICENSE_DATA
 ```
 
-The script can either run a {{site.base_gateway}} instance in traditional mode or as a data plane instance for {{site.konnect_short_name}}. You will be prompted to input an API key to configure authentication with an AI provider. 
+The script can either run a {{site.base_gateway}} instance in traditional mode or as a data plane instance for {{site.konnect_short_name}}. You will be prompted to input an API key to configure authentication with an AI provider.
 This key will not be exposed outside of the host machine.
 
 The script creates a [Gateway Service](/gateway/entities/service/) with two [Routes](/gateway/entities/route/), and configures the AI Proxy plugin on those Routes based on the provider that you specify.
 
-Check out the full script at [https://get.konghq.com/ai](https://get.konghq.com/ai) to see which entities 
-it generates, and access all of your Routes and Services by visiting either [API Gateway in {{site.konnect_short_name}}](https://cloud.konghq.com/gateway-manager/) or 
+Check out the full script at [https://get.konghq.com/ai](https://get.konghq.com/ai) to see which entities
+it generates, and access all of your Routes and Services by visiting either [API Gateway in {{site.konnect_short_name}}](https://cloud.konghq.com/gateway-manager/) or
 [Kong Manager](/gateway/kong-manager/) at `https://localhost:8002` in any browser.
 
 {:.info}
 > **Note:**
 > By default, local models are configured on the endpoint `http://host.docker.internal:11434`,
-> which allows {{site.base_gateway}} running in Docker to connect to the host machine. 
+> which allows {{site.base_gateway}} running in Docker to connect to the host machine.

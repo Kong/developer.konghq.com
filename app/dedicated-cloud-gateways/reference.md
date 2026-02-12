@@ -78,7 +78,9 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 tags:
   - dedicated-cloud-gateways
 ---
@@ -381,6 +383,10 @@ body:
           value: "0.01"
 {% endkonnect_api_request %}
 <!-- vale on -->
+
+## CIDR size requirements
+
+{% include /konnect/cidr-minimum-requirements.md %}
 
 ## Securing backend communication
 

@@ -31,7 +31,7 @@ rows:
       Configure a dynamic route to target multiple Azure OpenAI model deployments.
   - action: "[Use multiple routes to map mulitple Azure Deployment](./examples/sdk-multiple-azure-deployments/)"
     description: |
-       Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4..
+       Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
 {% endtable %}
 <!--vale on-->
 

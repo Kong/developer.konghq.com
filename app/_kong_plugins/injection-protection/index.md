@@ -72,10 +72,10 @@ sequenceDiagram
     Client->>Kong: Sends a request
     Kong->>Plugin: Evaluates for regex match
 
-    alt No regex match
+    alt If no regex match
         Plugin->>Client: 200 OK
         Plugin->>Upstream: Proxies request
-    else Regex match
+    else If regex matches
         Plugin->>Client: 400 Bad Request
         Plugin->>Kong: Logs injection 
     end

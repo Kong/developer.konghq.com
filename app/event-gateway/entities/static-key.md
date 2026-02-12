@@ -11,7 +11,7 @@ related_resources:
   - text: "Decrypt policy"
     url: /event-gateway/policies/decrypt/
   - text: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
-    url: /how-to/encrypt-kafka-messages-with-event-gateway/
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 tools:
     - konnect-api
 

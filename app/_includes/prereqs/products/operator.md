@@ -14,11 +14,17 @@ metadata:
 rawLicenseString: '$(cat ./license.json)'
 " | kubectl apply -f -
 ```
+{:data-deployment-topology='on-prem'}
+{% endcapture %}
+
+{% capture cert-manager %}
+{% include k8s/cert-manager.md %}
 {% endcapture %}
 
 {% capture cert %}
-{% include k8s/cert-manager.md %}
+{% include k8s/ca-cert.md %}
 {% endcapture %}
+
 
 {% capture details_content %}
 
@@ -33,8 +39,6 @@ rawLicenseString: '$(cat ./license.json)'
 
 {% if include.v_maj == 1 %}
 
-   {% if page.works_on contains "konnect"%}
-
    ```bash
    helm upgrade --install kgo kong/gateway-operator -n kong-system \
      --create-namespace \
@@ -43,10 +47,6 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='konnect'}
 
-   {% endif %}
-   
-   {% if page.works_on contains "on-prem"%}
-
    ```bash
    helm upgrade --install kgo kong/gateway-operator -n kong-system \
      --create-namespace{% if prereqs.operator.controllers %} \{% for controller in prereqs.operator.controllers %}
@@ -54,11 +54,7 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='on-prem'}
 
-   {% endif %}
-
 {% else %}
-
-   {% if page.works_on contains "konnect"%}
    
    ```bash
    helm upgrade --install kong-operator kong/kong-operator -n kong-system \
@@ -69,10 +65,6 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='konnect'}
 
-   {% endif %}
-
-   {% if page.works_on contains "on-prem"%}
-
    ```bash
    helm upgrade --install kong-operator kong/kong-operator -n kong-system \
      --create-namespace \
@@ -81,18 +73,20 @@ rawLicenseString: '$(cat ./license.json)'
    ```
    {:data-deployment-topology='on-prem'}
 
-   {% endif %}
 {% endif %}
 
+{{cert-manager | indent: 3}}
+
 {{cert | indent: 3}}
-
-
+   
 {% if prereqs.enterprise %}
 1. Apply a `KongLicense`. This assumes that your license is available in `./license.json`
+{:data-deployment-topology='on-prem'}
 {{license | indent: 3}}
 
 {% else %}
 This tutorial doesn't require a license, but you can add one using `KongLicense`. This assumes that your license is available in `./license.json`.
+{:data-deployment-topology='on-prem'}
 {{license}}
 
 {% endif %}

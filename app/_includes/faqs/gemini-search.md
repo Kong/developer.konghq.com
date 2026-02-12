@@ -1,0 +1,1 @@
+Configure AI Proxy Advanced with the Gemini provider and declare the `googleSearch` tool in your requests. See [Use Gemini's googleSearch tool with AI Proxy Advanced](/how-to/use-gemini-3-google-search/).

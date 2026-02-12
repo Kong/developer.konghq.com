@@ -1,4 +1,5 @@
 title: "Catalog Documentation"
+description: Index containing all documentation for {{site.konnect_catalog}}.
 sections:
   - title: Overview
     items:

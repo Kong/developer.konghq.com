@@ -26,7 +26,7 @@ breadcrumbs:
 
 The default is set to `:8080`.
 
-## How to access
+## Access metrics
 
 {{ site.operator_product_name }} uses [kube-rbac-proxy](https://github.com/brancz/kube-rbac-proxy) to secure its endpoints behind an RBAC proxy.
 By default, [Kong's Gateway Operator Helm chart](https://github.com/Kong/charts/tree/main/charts/gateway-operator) creates a `Service` which is configured to expose `kube-rbac-proxy` behind port 8443.
@@ -133,6 +133,24 @@ The metrics are grouped by server URLs, entity types, operation types (create/up
 
 {:.info}
 > **Note**: When `success = "false"` indicates the operation failed, the `status_code` label shows the status code in the response. `status_code` is `"0"` and `success` is `"false"` are operations that failed but {{ site.operator_product_name }} cannot fetch the status code. When `success` is `"true"`, the `status_code` label is empty.
+
+## Data plane metrics
+
+Besides metrics exposed by {{ site.operator_product_name }} itself, you can also collect metrics from the data plane instances managed by {{ site.operator_product_name }}.
+
+### Direct scraping
+
+Each data plane Pod exposes its own metrics on port `8100` if the [Prometheus plugin](/plugins/prometheus/) is enabled. You can scrape these metrics directly by targeting the data plane Pods or Services.
+
+For a step-by-step guide on setting up monitoring with direct scraping, see [Monitor {{site.base_gateway}} with Prometheus using direct scraping](/operator/how-to/observability/prometheus-direct-scraping/).
+
+### Enriched metrics
+
+{{ site.operator_product_name }} provides a [`DataPlaneMetricsExtension`](/operator/reference/custom-resources/#gateway-operator-konghq-com-v1alpha1-dataplanemetricsextension) resource that enables {{ site.operator_product_name }} to scrape data plane instances, enrich the metrics with Kubernetes metadata (such as Pod name and namespace), and re-expose them on {{ site.operator_product_name }}'s `/metrics` endpoint.
+
+This is particularly useful for:
+- Autoscaling: Using enriched metrics with the [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/).
+- Simplified scraping: Scraping a single endpoint to get aggregated metrics from multiple data planes.
 
 ## Example metrics dump
 

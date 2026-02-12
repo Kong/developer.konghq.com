@@ -1,7 +1,7 @@
 metadata:
   title: Load balancing with {{site.base_gateway}}
   content_type: landing_page
-  description: Learn how to load balancing traffic with {{site.base_gateway}}
+  description: Learn about how {{site.base_gateway}} load balances traffic, and what the options are to adjust it.
   breadcrumbs:
     - /gateway/
   products:
@@ -15,7 +15,7 @@ rows:
   - header:
       type: h1
       text: "Load balancing with {{site.base_gateway}}"
-  
+
     columns:
       - blocks:
           - type: structured_text
@@ -23,21 +23,21 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Distribute traffic across your upstream services, or, for AI Gateway, to different AI models.
-                 
-                    
+                    Distribute traffic across your upstream services.
+
+
   - columns:
       - blocks:
         - type: card
           config:
             title: DNS-based load balancing
             description: |
-              Every Gateway Service that has been defined with a host containing a hostname 
+              Every Gateway Service that has been defined with a host containing a hostname
               automatically uses DNS-based load balancing if the name resolves to multiple IP addresses.
-              
+
               This is similar to round-robin load balancing, but without any health checking functionality.
             cta:
-              text: Learn more about DNS-based load balancing 
+              text: Learn more about DNS-based load balancing
               url: /gateway/traffic-control/load-balancing-reference/#dns-based-load-balancing
       - blocks:
         - type: card
@@ -47,19 +47,19 @@ rows:
               Advanced load balancing algorithms are available through the Upstream entity.
               Upstreams let you load-balance traffic across multiple Targets based on a chosen algorithm.
             cta:
-              text: Learn more about advanced load balancing 
+              text: Learn more about advanced load balancing
               url: /gateway/traffic-control/load-balancing-reference/#load-balancing-using-upstreams-and-targets
       - blocks:
         - type: card
           config:
             title: Health checks and circuit breakers
             description: |
-              Using a combination of Targets and Upstreams, you can proxy requests to an 
-              upstream service through a ring balancer. 
-              
+              Using a combination of Targets and Upstreams, you can proxy requests to an
+              upstream service through a ring balancer.
+
               The ring balancer is a Kong Gateway load balancer that distributes the traffic load among Targets, and manages active Targets based on their health.
-            cta:  
-              text: Get started with health checking 
+            cta:
+              text: Get started with health checking
               url: /gateway/traffic-control/health-checks-circuit-breakers/
 
   - header:
@@ -72,7 +72,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Advanced load-balancing algorithms are available through the [Upstream](/gateway/entities/upstream/) entity, 
+                    Advanced load-balancing algorithms are available through the [Upstream](/gateway/entities/upstream/) entity,
                     and they let you load balance traffic across your upstream services using [Targets](/gateway/entities/target/).
 
   - columns:
@@ -81,20 +81,20 @@ rows:
           config:
             title: Round-robin
             description: |
-              The round-robin algorithm is done in a weighted manner. 
+              The round-robin algorithm is done in a weighted manner.
               It provides identical results to the default DNS-based load balancing, and also gives you access to active and passive health checks.
             cta:
-              text: Round-robin load balancing 
+              text: Round-robin load balancing
               url: /gateway/entities/upstream/#round-robin
       - blocks:
         - type: card
           config:
             title: Consistent-hashing
             description: |
-              With the consistent-hashing algorithm, a configurable client input is used to calculate a hash value. 
+              With the consistent-hashing algorithm, a configurable client input is used to calculate a hash value.
               This hash value is then tied to a specific upstream service.
             cta:
-              text: Consistent-hashing load balancing 
+              text: Consistent-hashing load balancing
               url: /gateway/entities/upstream/#consistent-hashing
 
       - blocks:
@@ -105,7 +105,7 @@ rows:
               The least-connections algorithm keeps track of the number of in-flight requests for each upstream service.
               It uses weights to calculate the connection capacity of an upstream service, and routes requests to the upstream service with the highest spare capacity.
             cta:
-              text: Least-connections load balancing 
+              text: Least-connections load balancing
               url: /gateway/entities/upstream/#least-connections
       - blocks:
         - type: card
@@ -123,15 +123,15 @@ rows:
             title: Latency
             description: |
               The latency algorithm is based on the peak EWMA (Exponentially Weighted Moving Average),
-              which ensures that the balancer selects the upstream service by the lowest latency. 
+              which ensures that the balancer selects the upstream service by the lowest latency.
             cta:
-              text: Lowest-latency load balancing 
+              text: Lowest-latency load balancing
               url: /gateway/entities/upstream/#latency
 
 
   - header:
       type: h2
-      text: "Load balancing algorithms for AI Gateway"
+      text: "Load balancing algorithms for {{site.ai_gateway}}"
     columns:
       - blocks:
           - type: structured_text
@@ -140,74 +140,7 @@ rows:
                 - type: text
                   text: |
                     You can load balance across AI models when using the [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/),
-                    allowing for efficient distribution of requests across different models. 
-    
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Round-robin (weighted)
-            description: |
-              In round-robin load balancing, AI Gateway maintains a list of target AI models and distributes each request to the next AI model in rotation.
-              The round-robin algorithm is done in a weighted manner. 
-            cta:
-              text: Round-robin load balancing in AI Gateway 
-              url: /plugins/ai-proxy-advanced/examples/round-robin/
-      - blocks:
-        - type: card
-          config:
-            title: Consistent-hashing
-            description: |
-              The consistent-hashing algorithm uses a specified header value as the hash input.
-              It creates a sticky session which ensures that all requests with the same header are dealt with the same way.
-            cta:
-              text: Consistent-hashing load balancing in AI Gateway 
-              url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
-
-      - blocks:
-        - type: card
-          config:
-            title: Lowest-usage
-            description: |
-               The lowest-usage algorithm is based on the volume of usage for each model. 
-               It balances the load by distributing requests to models with the lowest usage, 
-               measured by factors such as prompt token counts, response token counts, or other resource metrics.
-            cta:
-              text: Lowest-usage load balancing in AI Gateway
-              url: /plugins/ai-proxy-advanced/examples/lowest-usage/
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Lowest-latency
-            description: |
-              The lowest-latency algorithm is based on the response time for each model. 
-              It distributes requests to models with the lowest response time.
-            cta:
-              text: Lowest-latency load balancing in AI Gateway 
-              url: /plugins/ai-proxy-advanced/examples/lowest-latency/
-
-      - blocks:
-        - type: card
-          config:
-            title: Semantic
-            description: |
-              The semantic algorithm distributes requests to different models based on the similarity between the prompt 
-              in the request and the description provided in the model configuration. 
-            cta:
-              text: Semantic load balancing in AI Gateway 
-              url: /plugins/ai-proxy-advanced/examples/semantic/
-
-      - blocks:
-        - type: card
-          config:
-            title: Priority
-            description: |
-              The priority algorithm allows you to define groups of targets with different priority levels 
-              and distribute traffic between targets in a group. 
-            cta:
-              text: Priority load balancing in AI Gateway 
-              url: /plugins/ai-proxy-advanced/examples/priority/
+                    allowing for efficient distribution of requests across different models.
 
   - header:
       type: h2
@@ -220,7 +153,7 @@ rows:
                 - load-balancing
               products:
                 - gateway
+                - ai-gateway
               quantity: 6
               allow_empty: true
 
- 

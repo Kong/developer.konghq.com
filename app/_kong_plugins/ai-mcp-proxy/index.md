@@ -41,11 +41,11 @@ tags:
   - mcp
 
 related_resources:
-  - text: About AI Gateway
+  - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: Autogenerate serverless MCP
     url: /mcp/autogenerate-mcp-tools/
-  - text: All AI Gateway plugins
+  - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
     url: /mcp/
@@ -58,6 +58,8 @@ related_resources:
     url: /mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
     url: /mcp/enforce-acls-on-aggregated-mcp-servers/
+  - text: MCP catalog in {{site.konnect_short_name}} (tech preview)
+    url: https://cloud.konghq.com/global/organization/labs
 
 examples_groups:
   - slug: basic
@@ -102,7 +104,7 @@ The AI MCP Proxy plugin lets you connect any Kong-managed Service to the [Model 
 
 The plugin’s `mode` parameter controls whether it proxies MCP requests, converts RESTful APIs into MCP tools, or exposes grouped tools as an MCP server. This flexibility allows you to integrate existing HTTP APIs into MCP workflows, front third-party MCP servers with Kong’s policies, or expose multiple tool sets as a managed MCP server.
 
-Because the plugin runs directly on Kong AI Gateway, MCP endpoints are provisioned dynamically on demand. You don’t need to host or scale them separately, and the Kong AI Gateway applies its authentication, traffic control, and observability features to MCP traffic at the same scale it delivers for traditional APIs.
+Because the plugin runs directly on {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don’t need to host or scale them separately, and the {{site.ai_gateway}} applies its authentication, traffic control, and observability features to MCP traffic at the same scale it delivers for traditional APIs.
 
 {:.warning}
 > **Note:** Unlike other available AI plugins, the AI MCP Proxy plugin is not invoked as part of an LLM request flow.
@@ -171,7 +173,7 @@ sequenceDiagram
 <!-- vale on -->
 
 {:.info}
-> Pings from your MCP client are included in the total request count for your Kong AI Gateway instance, in addition to the requests made to the MCP server.
+> Pings from your MCP client are included in the total request count for your {{site.ai_gateway}} instance, in addition to the requests made to the MCP server.
 
 ## Prerequisites
 
@@ -180,7 +182,7 @@ sequenceDiagram
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
 > - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
-> - The Kong AI Gateway instance supports the AI MCP Proxy plugin (is 3.12 or higher).
+> - The {{site.ai_gateway}} instance supports the AI MCP Proxy plugin (is 3.12 or higher).
 
 ## Configuration modes
 
@@ -368,9 +370,9 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate scoped default ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong-->>Client: Filtered tool list
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end
@@ -383,11 +385,11 @@ sequenceDiagram
     Auth-->>Kong: Consumer identity
     Kong->>ACL: Evaluate per-tool ACL
     ACL-->>Log: Audit entry
-    alt Allowed
+    alt If allowed
       Kong->>Up: Forward request
       Up-->>Kong: Response
       Kong-->>Client: Response
-    else Denied
+    else If denied
       Kong-->>Client: INVALID_PARAMS -32602
     end
   end

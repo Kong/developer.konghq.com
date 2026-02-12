@@ -1,4 +1,5 @@
 title: Observability Documentation
+description: Index containing all documentation for {{site.observability}}.
 sections:
   - title: Overview
     items:

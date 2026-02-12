@@ -222,7 +222,7 @@ When you use an AI feature, Insomnia sends the data for AI processing only to th
 
 Depending on your configuration, AI processing can occur in one of the following locations:
 - **Locally**: A local large language model that runs entirely on your machine
-- **In your environment**: A self-hosted model endpoint or AI gateway
+- **In your environment**: A self-hosted model endpoint
 - **With a third-party AI provider**: In accordance with that provider’s data handling policies
 
 Insomnia doesn't store AI-related data on Kong-managed servers or control the configured AI model provider’s data handling or processing behavior.
