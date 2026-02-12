@@ -134,7 +134,11 @@ rows:
               > Git Sync respects standard Git rules and protections.
 
               Git Sync provides version control features directly in the Insomnia UI. These features let you manage changes using familiar Git workflows without leaving the application.
-
+              
+  - columns:
+      - blocks:
+          - type: text
+            config: |
               **Supported Git actions**
 
               From the Git Sync interface, you can:
@@ -144,7 +148,9 @@ rows:
               - Pull changes from the repository
               - Merge branches
               - Resolve conflicts
-
+      - blocks:
+          - type: text
+            config: |
               **Branch behaviour and protections**
 
               Git Sync follows standard Git branch behaviour:
@@ -152,7 +158,9 @@ rows:
               - Branches are not shared across different objects
               - Repository branch protections are respected
               - Protected branches cannot be pushed to from Insomnia
-
+      - blocks:
+          - type: text
+            config: |
               **Commit history and revert behaviour**
 
               Git Sync does not currently provide a way to revert commits from the UI. If you need to revert a change, use your Git provider’s tools. Support for reverting commits in the Git Sync UI is planned for a future release.
@@ -164,12 +172,18 @@ rows:
       - blocks:
           - type: text
             config: |
-              Git Sync resolves conflicts only when manual input is required. The merge UI appears when:
-                - local changes exist
+              Not every sync requires conflict resolution. Git Sync resolves conflicts only when manual input is required. The merge UI appears when:
+                - Local changes exist
                 - Remote changes exist 
                 - Both changes affect the same content
                 - You perform a pull or push action
-
+          - type: button
+            config:
+              text: Learn more about conflict resolution
+              url: "/insomnia/three-way-merge/"      
+      - blocks:
+          - type: text
+            config: |
               Git Sync uses 3-way merge to resolve conflicts. When a conflict occurs, the following flow applies:
               1. A pull or push action triggers a conflict.
               2. The merge UI opens.
@@ -177,7 +191,7 @@ rows:
               4. You commit the merged result.
               5. You push the merge to the repository.
 
-              Not every sync requires conflict resolution. For more information about Insomnia's three-way merge and conflict resolution, navigate to [3-way merge](/insomnia/three-way-merge/).
+
   - header:
         type: h2
         text: Git Sync data
@@ -254,7 +268,7 @@ rows:
       - blocks:
           - type: text
             config: |
-              Git Sync supports multiple ways to configure Git credentials. You can configure credentials include:
+              Git Sync supports multiple ways to configure Git credentials. You can configure credentials through:
                 - Git Sync settings
                 - Local `git.config`
                 - Insomnia Preferences
@@ -290,7 +304,13 @@ rows:
                 - Analyzes staged Git changes
                 - Suggests commit groupings
                 - Suggests commit messages
-
+          - type: button
+            config:
+              text: Learn more about AI in Insomnia
+              url: "/insomnia/ai-in-insomnia/"      
+      - blocks:
+          - type: text
+            config: |
               To use AI commit suggestions:
                 1. Open the Git Sync interface.
                 1. Enable AI commit suggestions.
@@ -327,7 +347,7 @@ rows:
                       - Git Sync settings
                       - Local `git.config``
                       - Preferences > Credentials
-            icon: /assets/icons/
+            icon: /assets/icons/login.svg
             cta:
               text: Authenticate Git repository
               url: /insomnia/rbac/
@@ -352,7 +372,7 @@ rows:
                         - Pull first to avoid working against stale content
                         - If conflicts exist, Insomnia opens the merge UI only when manual input is required
                         - If no conflicts exist, the pull completes without interruption
-            icon: "/assets/icons/"
+            icon: /assets/icons/git.svg
             cta:
               text: Pull from remote
               url: /insomnia/scim/
@@ -364,7 +384,7 @@ rows:
                        Confirm that end-to-end Git Sync works before real work begins.
                         - Make a small, reversible change. For example, rename a folder or update a description.
                         - Commit and push from the version control panel
-            icon: /assets/icons/domain.svg
+            icon: /assets/icons/add.svg
             cta:
               text: Push changes
               url: /insomnia/scim/              
