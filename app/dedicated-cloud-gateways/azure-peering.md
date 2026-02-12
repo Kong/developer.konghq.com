@@ -59,7 +59,7 @@ This process includes three main steps:
 
     ```bash
     az role definition create --output none --role-definition '{
-        "Name": "Kong Cloud Gateway Peering Creator - Kong",
+        "Name": "Kong Cloud Gateway Peering Creator",
         "Description": "Perform cross-tenant network peering.",
         "Actions": [
             "Microsoft.Network/virtualNetworks/read",
