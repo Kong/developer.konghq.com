@@ -12,6 +12,7 @@ related_resources:
     url: /how-to/bedrock-function-calling/
 breadcrumbs:
  - /ai-gateway/
+permalink: /how-to/use-bedrock-function-calling-with-streaming/
 
 description: "Configure the AI Proxy Advanced plugin to stream AWS Bedrock Converse API responses that include function calling."
 
