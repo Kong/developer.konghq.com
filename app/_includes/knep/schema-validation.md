@@ -21,6 +21,8 @@ rows:
   - use_case: "[Example: Validate messages for a topic](/event-gateway/policies/{{include.slug}}/examples/validate-a-topic/)"
     description: |
       Ensure that all messages produced to a topic are validated against a schema, and reject messages that don't conform.
+  - use_case: "[Tutorial: Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)"
+    description: Parses JSON records so that a nested [Modify Headers policy](/event-gateway/policies/modify-headers/) can add a header to specific records.
 {% endtable %}
 <!--vale on-->
 

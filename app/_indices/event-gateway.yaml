@@ -6,6 +6,7 @@ sections:
       - path: /event-gateway/
       - path: /event-gateway/architecture/
       - path: /event-gateway/policies/
+      - path: /event-gateway/version-support-policy/
     auto_exclude: true
   - title: Getting started
     items:
@@ -28,7 +29,11 @@ sections:
   - title: "How-tos"
     items:
       - path: /event-gateway/productize-kafka-topics/
-      - path: /how-to/encrypt-kafka-messages-with-event-gateway/
+      - path: /event-gateway/encrypt-kafka-messages-with-event-gateway/
+      - path: /event-gateway/configure-observability-with-otel/
+      - path: /event-gateway/configure-sni-routing/
+      - path: /event-gateway/kong-identity-oauth/
+      - path: /event-gateway/filter-records-by-classification/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
@@ -36,4 +41,5 @@ sections:
         url: /api/konnect/event-gateway/
       - path: /event-gateway/configuration/
       - path: /event-gateway/expressions/
+      - path: /event-gateway/metrics/
       - path: /event-gateway/known-limitations/

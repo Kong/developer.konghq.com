@@ -27,7 +27,7 @@ faqs:
       Telemetry includes traffic metrics by Service, Route, and consuming application. It does not include any customer data.
       All telemetry is encrypted using mTLS.
 
-      If you use [Debugger](/gateway/debugger/), {{site.konnect_short_name}} will collect request and response data. {{site.konnect_short_name}} only collects this data if you've opted in to Debugger, it doesn't collect this data by default.
+      If you use [Debugger](/observability/debugger/), {{site.konnect_short_name}} will collect request and response data. {{site.konnect_short_name}} only collects this data if you've opted in to Debugger, it doesn't collect this data by default.
   - q: How frequently do Data Planes send telemetry data to the Control Plane?
     a: |
       Telemetry data is sent at different intervals depending on the Data Plane version:
