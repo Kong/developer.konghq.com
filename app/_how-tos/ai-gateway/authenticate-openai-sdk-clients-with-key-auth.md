@@ -44,7 +44,7 @@ tags:
   - ai-sdks
 
 tldr:
-  q: How do I use Key Authentication with the OpenAI SDK and Kong AI Gateway?
+  q: How do I use Key Authentication with the OpenAI SDK and {{site.ai_gateway}}?
   a: The OpenAI SDK sends API keys as Bearer tokens in the Authorization header, which Key Auth doesn't recognize. Add a Pre-function plugin to extract the Bearer token and rewrite it into a header that Key Auth expects, then configure Key Auth and AI Proxy Advanced as usual.
 
 tools:
