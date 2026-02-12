@@ -119,7 +119,7 @@ When a token is close to expiration and cannot be refreshed automatically, Insom
 
 ### SCIM token expiration and renewal
 
-SCIM tokens expire based on the configuration in your identity provider. When a token approaches expiration or becomes invalid, Insomnia surfaces warnings to account owners and co-owners.
+SCIM tokens expire based on the configuration in your identity provider. When a token approaches expiration or becomes invalid, Insomnia warns account owners and co-owners.
 
 If the token expires and is not renewed:
 
