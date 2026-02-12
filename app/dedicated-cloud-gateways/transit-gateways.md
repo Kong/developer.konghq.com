@@ -36,6 +36,9 @@ related_resources:
     url: /how-to/create-transit-gateway-with-operator-and-aws/
   - text: Use AWS workload identities
     url: /dedicated-cloud-gateways/reference/#aws-workload-identities
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 ---
 
 When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
