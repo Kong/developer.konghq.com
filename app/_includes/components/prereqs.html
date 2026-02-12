@@ -1,35 +1,17 @@
-{% assign default_accordion = 'data-default="0" ' %}
-{% if prereqs.expand_accordion == false %}
-  {% assign default_accordion = '' %}
-{% endif %}
-
-
-{% assign shouldRenderWorksOn = true %}
-{% if page.series and page.series.position > 1 %}
-{% assign shouldRenderWorksOn = false %}
-{% endif %}
-
-{% if prereqs.show_works_on != null %}
-{% assign shouldRenderWorksOn = prereqs.show_works_on %}
-{% endif %}
-
 {% assign product=page.products[0] %}
 
-<div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs" data-test-products="{{page.products | join: ','}}">
+<div class="flex flex-col accordion prerequisites" {{ prereqs.default_accordion }}data-multiple="false" data-test-id="prereqs" data-test-products="{{page.products | join: ','}}">
 
-  {% assign inline_before = prereqs.inline | where: "position", "before" %}
-  {% for prereq in inline_before %}
+  {% for prereq in prereqs.inline_before %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
     {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
 
-  {% if page.works_on contains 'konnect' and shouldRenderWorksOn %}
-    {% unless page.products contains 'gateway' or page.products contains 'ai-gateway' %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
-        {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
-      </div>
-    {% endunless %}
+  {% if prereqs.konnect_auth_only? %}
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+      {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
+    </div>
   {% endif %}
 
   {% for prereq in prereqs.cloud %}
@@ -63,7 +45,7 @@
     <div class="invisible" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" {% if page.rbac %}, "rbac": true {% endif %} {% if page.wasm %}, "wasm": true {% endif %}  }'></div>
     {% endif %}
   {% else %}
-    {% if page.products and shouldRenderWorksOn %}
+    {% if page.products and prereqs.render_works_on? %}
       {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         {% if page.works_on contains 'konnect' %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
@@ -147,8 +129,8 @@
     </div>
   {% endif %}
 
-  {% assign inline = prereqs.inline | where: "position", empty %}
-  {% for prereq in inline %}
+
+  {% for prereq in prereqs.inline_without_position %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
     {% include prereqs/inline.md prereq=prereq %}
   </div>
