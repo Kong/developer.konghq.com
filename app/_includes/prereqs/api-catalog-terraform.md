@@ -1,6 +1,7 @@
 For this tutorial, you’ll need a Dev Portal pre-configured. These settings are essential for Dev Portal to function, but configuring them isn’t the focus of this guide. If you don't have these settings already configured, follow these steps to pre-configure them:
 
 1. Create a Dev Portal and add a page to display your published APIs:
+
    ```hcl
    echo '
    resource "konnect_portal" "my_portal" {
@@ -37,7 +38,9 @@ For this tutorial, you’ll need a Dev Portal pre-configured. These settings are
    }
    ' >> main.tf
    ```
+
 1. Create all of the defined resources using Terraform:
+
    ```bash
    terraform apply -auto-approve
    ```
