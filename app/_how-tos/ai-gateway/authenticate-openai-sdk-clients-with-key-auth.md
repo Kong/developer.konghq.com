@@ -85,7 +85,7 @@ The [Key Auth](/plugins/key-auth/) plugin doesn't inspect the `Authorization` he
 
 To work around this, you can use the [Pre-function](/plugins/pre-function/) plugin to extract the Bearer token from the `Authorization` header and copy it into the header that Key Auth expects. Pre-function runs before Key Auth in Kong's plugin execution order, so the rewritten header is in place by the time authentication happens.
 
-{:.note}
+{:.info}
 > If you use the [OpenID Connect](/plugins/openid-connect/) plugin instead of Key Auth, this workaround isn't necessary. OIDC natively inspects Bearer tokens in the `Authorization` header.
 
 ## Create a Consumer
