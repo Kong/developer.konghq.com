@@ -8,6 +8,7 @@
     "after-response-scripts",
     "ai",
     "ai-proxy",
+    "ai-sdks",
     "allowlist",
     "amazon-certificate-manager",
     "analytics",
