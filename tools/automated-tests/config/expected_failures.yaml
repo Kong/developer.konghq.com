@@ -11,7 +11,7 @@ input/instructions/how-to/protect-sensitive-information-with-ai/gateway.yaml: "E
 input/instructions/how-to/use-ai-semantic-prompt-guard-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
 input/instructions/ai-gateway/get-started/gateway.yaml: "Expected: request http://localhost:8000/chat to have status code 200, got: 401."
 input/instructions/how-to/create-a-complex-ai-chat-history/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
-input/instructions/how-to/send-asychronous-llm-requests/gateway.yaml: "Expected: request http://localhost:8000/files to have status code 200, got: 400."
+input/instructions/how-to/send-asynchronous-llm-requests/gateway.yaml: "Expected: request http://localhost:8000/files to have status code 200, got: 400."
 input/instructions/how-to/set-up-ai-proxy-advanced-with-ollama/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 502."
 input/instructions/how-to/set-up-ai-proxy-with-ollama/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 502."
 input/instructions/how-to/use-ai-prompt-template-plugin/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
