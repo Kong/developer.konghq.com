@@ -43,7 +43,7 @@ Before you configure SSO, you must meet all of the following requirements:
 In Insomnia:
 - Your organization is on the Enterprise plan.
 - You have the Owner role in the Insomnia organization.
-- You have added and verified at least one domain for SSO login.
+- You have added and verified at least one [domain](https://app.insomnia.rest/app/enterprise/domains/list) for SSO login.
 
 In your identity provider:
 - You have an administrator account with permission to create or configure an Enterprise application for SSO.
@@ -51,7 +51,6 @@ In your identity provider:
 ## Configure SSO
 
 To configure SSO, you need to:
-1. Add and verify a [domain](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Configure SSO in your IdP and get the sign in URL and the certificate.
 1. Enable [SSO](https://app.insomnia.rest/app/enterprise/sso/list) with the relevant parameters for your IdP.
 
