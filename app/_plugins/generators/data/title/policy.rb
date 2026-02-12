@@ -5,7 +5,7 @@ require_relative 'base'
 module Jekyll
   module Data
     module Title
-      class MeshPolicy < Base # rubocop:disable Style/Documentation
+      class Policy < Base # rubocop:disable Style/Documentation
         def title_sections
           return [page_title] unless @page.data['plugin?']
 
