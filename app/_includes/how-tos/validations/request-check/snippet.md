@@ -22,8 +22,8 @@
 ){% endif -%}
 {% if count > 1 %}; done{% endif %}
 ```
-
 {% if include.message %}
+
 You should see the following response:
 
 ```text
