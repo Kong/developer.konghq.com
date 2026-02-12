@@ -117,6 +117,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.8": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved performance for OpenAPI 3.1.",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",
