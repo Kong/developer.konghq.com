@@ -1,7 +1,6 @@
 {% assign summary='Create a KonnectAPIAuthConfiguration resource' %}
 
 {% capture details_content %}
-
 <!-- vale off -->
 {% konnect_crd %}
 create_namespace: kong

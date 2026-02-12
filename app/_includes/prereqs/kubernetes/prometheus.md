@@ -1,9 +1,7 @@
-{% if include.config.gateway_api != false %}
-
-{% assign summary = "Install Prometheus" %}
-{% assign icon_url = "/assets/icons/prometheus.svg" %}
-
-{% capture details_content %}
+{%- if include.config.gateway_api != false -%}
+{%- assign summary = "Install Prometheus" -%}
+{%- assign icon_url = "/assets/icons/prometheus.svg" -%}
+{%- capture details_content %}
 
 Create a `values-monitoring.yaml` file to set the scrape interval, use Grafana persistence, and install {{site.base_gateway}}'s dashboard:
 ```yaml
@@ -46,11 +44,6 @@ helm install promstack prometheus-community/kube-prometheus-stack --namespace mo
 ```
 
 By default, kube-prometheus-stack [selects ServiceMonitors and PodMonitors by a `release` label equal to the release name](https://github.com/prometheus-community/helm-charts/blob/kube-prometheus-stack-19.0.1/charts/kube-prometheus-stack/values.yaml#L2128-L2169). We will set the `release` label when we install {{ site.kic_product_name }}.
-
-{% endcapture %}
-
+{%- endcapture -%}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url=icon_url %}
-
-{% endif %}
-
-
+{%- endif -%}
