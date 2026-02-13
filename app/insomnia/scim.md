@@ -64,9 +64,9 @@ faqs:
       No. Insomnia does not store the SCIM token value. Store the token securely after it is generated.
 ---
 
-Use SCIM (System for Cross-domain Identity Management) to manage users and teams in Insomnia through your identity provider (IdP) instead of managing them manually.
+Use SCIM (System for Cross-domain Identity Management) to manage users and teams in Insomnia through your identity provider (IdP) instead of managing them manually. 
 
-SCIM is available on the Enterprise plan and is designed to work alongside [Single Sign-On (SSO)](/insomnia/sso/). When you enable SCIM, Insomnia uses your IdP as the source of truth for provisioning. This means that you can:
+SCIM is available on the Enterprise plan and is designed to work alongside [Single Sign-On (SSO)](/insomnia/sso/). In Insomnia, SCIM provisioning is one-way. When you enable SCIM, Insomnia uses your IdP as the source of truth for provisioning. This means that you can:
 - Provision Enterprise users and teams from your IdP.
 - Manage user access, team membership, and license consumption through your IdP after configuring SSO.
 - Keep existing manually managed users unchanged unless you explicitly modify them.
@@ -75,6 +75,7 @@ Insomnia supports SCIM provisioning with the following identity providers:
 - Okta
 - Azure
 
+When you enable SCIM in Insomnia, use your IdP to manage SCIM-managed users and teams.
 
 ## Insomnia SCIM requirements
 
@@ -92,7 +93,7 @@ In your IdP, you must:
 ## User and team provisioning
 SCIM provisioning in Insomnia follows predictable, non-destructive rules:
 - Users and teams that you assigned to the Insomnia application in your IdP are provisioned by Insomnia.
-- Existing Insomnia users are matched to IdP users by email address.
+- Insomnia matches existing Insomnia users to IdP users by email address.
 - If a user exists in Insomnia but not in the IdP, Insomnia doesn't remove or disable that user automatically.
 
 SCIM provisioning lets you manage access to Insomnia through your IdP, in the same way that you manage access to other enterprise applications.
@@ -100,7 +101,16 @@ SCIM provisioning lets you manage access to Insomnia through your IdP, in the sa
 {:.info}
 > SCIM applies only to users and groups provisioned through your identity provider. Users who were added manually before SCIM was enabled remain unchanged and continue to consume licenses until you update or remove them manually. Insomnia does not automatically reconcile or modify manually added users when you enable SCIM. This behavior prevents unintended changes to existing accounts.
 
-When SCIM is enabled, Insomnia licenses are consumed like the following:
+### User lifecycle behavior
+
+When you assign a user to the Insomnia application in your IdP, the IdP provisions that user in Insomnia through SCIM.
+
+- If the user doesn't exist in Insomnia, Insomnia creates the user.
+- If the user already exists in Insomnia, Insomnia matches the user by email address.
+
+When you unassign, deactivate, or delete a user in your IdP, the IdP sends a provisioning update to Insomnia.
+
+When SCIM is enabled, the following users consume Insomnia licenses:
 - Users provisioned through SCIM consume Enterprise licenses.
 - Manually added users continue to consume licenses until you remove them or transition them to IdP-managed provisioning.
 
@@ -117,7 +127,15 @@ Administrators can view the current SCIM token status in Insomnia:
 
 When a token is close to expiration and cannot be refreshed automatically, Insomnia displays a warning message on the SCIM page and sends email notifications starting 20 days before the token expires.
 
-### SCIM token expiration and renewal
+### Connector URL and token
+
+SCIM provisioning uses a connector URL and token generated in Insomnia. The token authorizes your IdP to provision users and teams. When you enable SCIM in Insomnia from the Enterprise Controls, a modal opens for you to generate the token.
+
+{:.warning}
+> The token is displayed only once when it is generated. Store it securely. If you lose the token, refresh it in Insomnia and update the token in your IdP. To manually refresh the SCIM token, navigate to [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
+
+
+### Automatic token refresh
 
 SCIM tokens expire based on the configuration in your identity provider. When a token approaches expiration or becomes invalid, Insomnia warns account owners and co-owners.
 
@@ -133,7 +151,9 @@ You must manually refresh the token from the [SCIM](https://app.insomnia.rest/ap
 3. Enter your passphrase to generate a new token.
 4. In your identity provider, update the token.
 
-After you update the token in your identity provider, SCIM provisioning resumes.
+## SCIM logs
+
+Use SCIM logs to validate your SCIM configuration and troubleshoot provisioning issues. To view SCIM request logs, navigate to [**Enterprise Controls > SCIM**](https://app.insomnia.rest/app/enterprise/scim).
 
 ## Next steps
 
