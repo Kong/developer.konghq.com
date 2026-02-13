@@ -453,16 +453,6 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
   -
-    path: app/_src/production/secure-deployment/secrets.md
-    title: 'Manage secrets'
-    description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
-    url: '/mesh/manage-secrets/'
-    related_resources:
-      - text: 'Authentication with the API server'
-        url: '/mesh/authentication-with-the-api-server/'
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-  -
     path: app/_src/quickstart/kubernetes-demo.md
     title: 'Deploy Kong Mesh on Kubernetes'
     description: 'Start learning how {{site.mesh_product_name}} works by running and securing a simple demo application that consists of two services.'
