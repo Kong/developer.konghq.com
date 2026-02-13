@@ -124,3 +124,67 @@ rows:
       <br><br>
       `example3.com` → `192.168.1.1`
 {% endtable %}
+
+## Configure private DNS 
+
+Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a private DNS zone in Azure, linking the private DNS zone to your Virtual Network, and configuring a private hosted zone in {{site.konnect_short_name}}.
+
+### Create a private DNS zone in Azure
+
+1. [Create a private DNS zone in Azure](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#create-a-private-dns-zone) in the same resource group as your Virtual Network you're using for VNET peering.
+1. Use the Azure CLI to assign the Private DNS Zone Contributor role to the same service principal as our VNET Peering:
+   ```sh
+   az role assignment create \
+     --role "Private DNS Zone Contributor" \
+     --assignee "$(az ad sp list --filter "appId eq '$SERVICE-PRINCIPAL-APP-ID'" \
+     --output tsv --query '[0].id')" \
+     --scope "/subscriptions/$RESOURCE-GROUP-ID/resourceGroups/$RESOURCE-GROUP-NAME/providers/Microsoft.Network/privateDnsZones/$YOUR-DOMAIN"
+   ```
+
+   Be sure to replace the following:
+   * `$SERVICE-PRINCIPAL-APP-ID`: The [service principal ID](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-view-managed-identity-service-principal?pivots=identity-mi-service-principal-portal) that is used by VNET peering.
+   * `$RESOURCE-GROUP-ID`: Your resource group subscription ID. To get this value, in the Azure portal, navigate to **Resource groups** in the sidebar. Click your resource group where your private DNS zone is located and copy the Subscription ID.
+   * `$RESOURCE-GROUP-NAME`: The name of your resource group.
+   * `$YOUR-DOMAIN`: The domain name you entered in your Azure private DNS zone.
+
+1. [Link Private DNS to your VNET](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network):
+   ```sh
+   az network private-dns link vnet create \
+   --name $VNET-LINK-NAME \
+   --resource-group $RESOURCE-GROUP-NAME \
+   --zone-name $PRIVATE-DNS-ZONE-NAME \
+   --virtual-network $VNET-NAME \
+   --registration-enabled false
+   ```
+   NEED TO LIST THINGS TO REPLACE HERE
+
+### Configure private DNS for your Azure network in {{site.konnect_short_name}}
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. Click your Azure Dedicated Cloud Gateway.
+1. In the API Gateways sidebar, click **Networks**.
+1. Click the action menu next to your Azure network and select "Configure private DNS".
+1. Click **Private hosted zone**.
+1. In the **Name** field, enter a name for your private hosted zone.
+1. In the **Tenant ID** field, enter your [tenant ID from Microsoft Entra](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
+1. In the **Subscription ID** field, enter the subscription ID for your Virtual Network.
+1. In the **Resource group ID** field, enter the resource group ID that your private DNS zone is in.
+1. In the **VNet link name** field, enter the name of the Virtual Network link.
+1. probably more here too
+1. Click **Next**.
+
+
+<!-- 
+"Outbound DNS resolver" needs more config steps for this that we don't have yet
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. Click your Azure Dedicated Cloud Gateway.
+1. In the API Gateways sidebar, click **Networks**.
+1. Click the action menu next to your Azure network and select "Configure private DNS".
+1. Click **Outbound DNS resolver**.
+1. In the **Outbound Resolver name** field, enter
+1. In the **Domain name** field, enter
+1. In the **Target IP address** field, enter
+1. Click **Save**.
+-->
+
+
