@@ -58,7 +58,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/icons/insomnia/insomnia-cloud-sync.svg
+              url: /assets/insomnia/insomnia-cloud-sync.svg
               alt_text: "Insomnia git sync architecture"
 
   - header:
