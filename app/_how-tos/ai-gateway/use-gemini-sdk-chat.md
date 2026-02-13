@@ -34,6 +34,7 @@ entities:
 tags:
   - ai
   - gemini
+  - ai-sdks
 
 tldr:
   q: How do I use the Google Generative AI SDK with {{site.ai_gateway}}?
