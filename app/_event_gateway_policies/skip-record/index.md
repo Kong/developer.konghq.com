@@ -1,7 +1,7 @@
 ---
 title: Skip Records
 name: Skip Records
-content_type: reference
+content_type: plugin
 description: Skip the processing of a record
 products:
     - event-gateway

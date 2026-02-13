@@ -1,7 +1,7 @@
 ---
 title: Schema Validation Produce
 name: Schema Validation Produce
-content_type: reference
+content_type: plugin
 description: Validate records against a schema during the produce phase
 products:
     - event-gateway

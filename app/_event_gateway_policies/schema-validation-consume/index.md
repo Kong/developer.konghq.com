@@ -1,7 +1,7 @@
 ---
 title: Schema Validation Consume
 name: Schema Validation Consume
-content_type: reference
+content_type: plugin
 description: Validate records against a schema during the consume phase
 products:
     - event-gateway

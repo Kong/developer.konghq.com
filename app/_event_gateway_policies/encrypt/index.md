@@ -1,7 +1,7 @@
 ---
 title: Encrypt
 name: Encrypt
-content_type: reference
+content_type: plugin
 description: Encrypt portions of Kafka records
 products:
     - event-gateway

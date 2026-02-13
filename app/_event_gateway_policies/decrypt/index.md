@@ -1,7 +1,7 @@
 ---
 title: Decrypt
 name: Decrypt
-content_type: reference
+content_type: plugin
 description: Decrypt messages that were previously encrypted using the referenced key
 products:
     - event-gateway
