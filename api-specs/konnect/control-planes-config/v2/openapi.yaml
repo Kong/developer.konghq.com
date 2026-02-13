@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 2.0.0
-  x-oas-source: kong/platform-api@bd4fbc416b020727d8a44379c43cfcfd6f9f7fad
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bd4fbc416b020727d8a44379c43cfcfd6f9f7fad'
+  x-oas-source: kong/platform-api@e14ca7c68630ed0a05db55021ef9cf4d6ac82bec
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e14ca7c68630ed0a05db55021ef9cf4d6ac82bec'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -4776,6 +4776,46 @@ components:
           x-sensitive: true
       required:
         - value
+    NodeCompatibilityIssue:
+      type: object
+      properties:
+        code:
+          description: The compatibility issue code.
+          type: string
+        severity:
+          description: The severity of the issue.
+          type: string
+        description:
+          description: The description of the issue.
+          type: string
+        resolution:
+          description: Steps required to take in order to resolve the issue.
+          type: string
+        affected_resources:
+          description: Details of the resources affected by the issue.
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeCompatibilityIssueAffectedResource'
+        documentation_url:
+          description: Doc URL for the compatibility issue.
+          type: string
+    NodeCompatibilityIssueAffectedResource:
+      type: object
+      properties:
+        id:
+          description: ID of the affected resource.
+          type: string
+        type:
+          description: Type of the affected resource.
+          type: string
+        parent_code:
+          description: Parent Issue Code.
+          type: string
+        details:
+          description: Deatils of the affected resource.
+          type: array
+          items:
+            type: string
     ACL:
       type: object
       properties:
@@ -8434,6 +8474,10 @@ components:
                       properties:
                         state:
                           type: string
+                        issues:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/NodeCompatibilityIssue'
               page:
                 type: object
                 properties:
@@ -8495,6 +8539,10 @@ components:
                     properties:
                       state:
                         type: string
+                      issues:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NodeCompatibilityIssue'
     list-plugin-schemas:
       description: A paginated list response for a collection of custom plugin schemas.
       content:

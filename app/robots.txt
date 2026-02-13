@@ -15,4 +15,7 @@ User-agent: *
 Disallow: /
 {% endunless %}
 
+User-agent: *
+Disallow: /search/
+
 Sitemap: {{ site.links.web }}/sitemap.xml
