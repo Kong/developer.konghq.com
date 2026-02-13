@@ -14,14 +14,21 @@ module Jekyll
 
       return if site.config.dig('skip', 'llm_pages')
 
-      # TODO: Do the same for collections
       site.pages.each do |page|
         next if page.data['llm'] == false
         next if page.data['published'] == false
         next if page.path.start_with?('assets/')
-        next if page.path.start_with?('_api/')
 
         site.config['markdown_pages_to_render'] << MarkdownPage.new(site:, page:)
+      end
+
+      site.collections.each do |name, collection|
+        collection.docs.each do |page|
+          next if page.data['llm'] == false
+          next if page.data['published'] == false
+
+          site.config['markdown_pages_to_render'] << MarkdownPage.new(site:, page:)
+        end
       end
     end
   end
