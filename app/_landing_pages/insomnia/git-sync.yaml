@@ -58,7 +58,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/insomnia/insomnia-cloud-sync.svg
+              url: /assets/icons/insomnia/insomnia-cloud-sync.svg
 
   - header:
       type: h2
