@@ -1,13 +1,14 @@
 ---
-title: Set up AI Proxy with DashScope (Alibaba Cloud) in {{site.base_gateway}}
+title: Set up AI Proxy Advanced with DashScope (Alibaba Cloud) in {{site.base_gateway}}
+permalink: /how-to/set-up-ai-proxy-advanced-with-dashscope/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy plugin to create a chat route using DashScope (Alibaba Cloud).
+description: Configure the AI Proxy Advanced plugin to create a chat route using DashScope (Alibaba Cloud).
 
 products:
   - gateway
@@ -21,7 +22,7 @@ min_version:
   gateway: '3.6'
 
 plugins:
-  - ai-proxy
+  - ai-proxy-advanced
 
 entities:
   - service
@@ -33,8 +34,8 @@ tags:
   - dashscope
 
 tldr:
-  q: How do I use the AI Proxy plugin with DashScope (Alibaba Cloud)?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the DashScope (Alibaba Cloud) provider and add the model and your API key.
+  q: How do I use the AI Proxy Advanced plugin with DashScope (Alibaba Cloud)?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the DashScope (Alibaba Cloud) provider and add the model and your API key.
 
 tools:
   - deck
@@ -66,27 +67,28 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with DashScope (Alibaba Cloud), specify the model and set the appropriate authentication header.
+To set up AI Proxy Advanced with DashScope (Alibaba Cloud), specify the model and set the appropriate authentication header.
 
 In this example, we'll use the Qwen Plus model:
 
 {% entity_examples %}
 entities:
   plugins:
-  - name: ai-proxy
+  - name: ai-proxy-advanced
     config:
-      route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${key}
-      model:
-        provider: dashscope
-        name: qwen-plus
-        options:
-          dashscope:
-            international: true
-          max_tokens: 512
-          temperature: 1.0
+      targets:
+        - route_type: llm/v1/chat
+          auth:
+            header_name: Authorization
+            header_value: Bearer ${key}
+          model:
+            provider: dashscope
+            name: qwen-plus
+            options:
+              dashscope:
+                international: true
+              max_tokens: 512
+              temperature: 1.0
 variables:
   key:
     value: $DASHSCOPE_API_KEY
