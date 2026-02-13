@@ -1,29 +1,28 @@
 ## {{include.title | liquify }}
 
-{% if page.example.extended_description %}
+{% if page.example.extended_description -%}
 {{ page.example.extended_description | liquify  }}
-{% else %}
+{%- else -%}
 {{ page.example.description | liquify }}
-{% endif %}
+{%- endif -%}
 
 {% unless page.example.requirements == empty %}
-
 ## Prerequisites
 
 {% for requirement in page.example.requirements %}
 * {{ requirement | liquify }}
-{% endfor %}
-
-{% endunless %}
-
+{%- endfor -%}
+{%- endunless -%}
 {% unless page.example.variables == empty %}
-
 ## Environment variables
 
 {% for variable in page.example.variables %}
 * `{{ variable.value }}` {%- if variable.description -%}: {{variable.description | liquify }}{% endif%}
 {% endfor %}
-
 {% endunless %}
 
+{%- if page.output_format == 'markdown' -%}
+{% include components/plugin_config_example.md plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label %}
+{%- else -%}
 {% include components/plugin_config_example.html plugin_config_example=page.example entity='plugin' targets=include.targets entity=include.entity target_label=include.target_label %}
+{%- endif -%}
