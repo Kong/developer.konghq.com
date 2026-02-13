@@ -75,7 +75,7 @@ defaults:
       path: "_support"
       type: "support"
     values:
-      layout: "reference"
+      layout: "support"
       permalink: "/support/:path/"
       breadcrumbs:
         - "/support/"
