@@ -1,7 +1,7 @@
 metadata:
-  title: "Kong AI Gateway"
+  title: "{{site.ai_gateway_name}}"
   content_type: landing_page
-  description: This page is an introduction to Kong AI Gateway.
+  description: This page is an introduction to {{site.ai_gateway}}.
   products:
     - ai-gateway
     - gateway
@@ -14,14 +14,14 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong AI Gateway"
+      text: "{{site.ai_gateway}}"
       sub_text: Connectivity and governance layer for modern AI-native applications built on top of {{site.base_gateway}}
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Introducing Kong AI Gateway"
+                text: "Introducing {{site.ai_gateway}}"
               blocks:
                 - type: text
                   text: |
@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    Kong AI Gateway addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, Kong AI Gateway ensures scalable, secure, and reliable AI infrastructure.
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
 
 
       - blocks:
@@ -49,7 +49,9 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.base_gateway}} running AI Proxy:
+                  [Sign up for {{site.konnect_short_name}}](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=ai-gateway) to get started with {{site.ai_gateway}}.
+
+                  Or, launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.ai_gateway}} running on-prem:
                   ```sh
                   curl -Ls https://get.konghq.com/ai | bash
                   ```
@@ -90,7 +92,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "AI Gateway providers"
+              text: "{{site.ai_gateway}} providers"
             blocks:
               - type: text
                 text: |
@@ -131,7 +133,7 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "AI Gateway in {{site.konnect_short_name}}"
+                text: "{{site.ai_gateway}} in {{site.konnect_short_name}}"
               blocks:
                 - type: text
                   text: |
@@ -140,7 +142,7 @@ rows:
 
                     Key features include:
                     * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Assign Gateway Services and define how traffic is distributed across models.
-                    * **Streaming and authentication**: Enable streaming responses and manage authentication through the AI Gateway.
+                    * **Streaming and authentication**: Enable streaming responses and manage authentication through the {{site.ai_gateway}}.
                     * **Access control**: Create and apply access tiers to control how clients interact with LLMs.
                     * **Usage analytics**: Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
                     * **Visual traffic maps**: Explore interactive maps that show how requests flow between clients and models in real time.
@@ -149,7 +151,7 @@ rows:
           - type: image
             config:
               url: /assets/images/konnect/ai-manager.png
-              alt_text: "AI Gateway Dashboard in Konnect"
+              alt_text: "{{site.ai_gateway}} Dashboard in Konnect"
 
   - header:
     columns:
@@ -162,27 +164,27 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[Kong AI Gateway resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for Kong AI Gateway."
+                    - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
                     - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
       - header:
           type: h2
-          text: "Tools to manage AI Gateway"
+          text: "Tools to manage {{site.ai_gateway}}"
         blocks:
           - type: structured_text
             config:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[AI Gateway editor](https://cloud.konghq.com/ai-manager): GUI for managing all your Kong AI Gateway resources in one place."
-                    - "[decK](/deck/): Manage Kong AI Gateway and {{site.base_gateway}} configuration through declarative state files."
+                    - "[{{site.ai_gateway}} editor](https://cloud.konghq.com/ai-manager): GUI for managing all your {{site.ai_gateway}} resources in one place."
+                    - "[decK](/deck/): Manage {{site.ai_gateway}} and {{site.base_gateway}} configuration through declarative state files."
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}."
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services."
                     - "[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/): Manage on-prem {{site.base_gateway}} entities via an API."
                     - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API."
   - header:
       type: h2
-      text: "AI Gateway capabilities"
+      text: "{{site.ai_gateway}} capabilities"
     columns:
       - blocks:
           - type: structured_text
@@ -190,7 +192,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    You can enable the AI Gateway features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
+                    You can enable the {{site.ai_gateway}} features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
                     When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
   - column_count: 3
     columns:
@@ -234,7 +236,7 @@ rows:
         - type: card
           config:
             title: MCP traffic gateway
-            description: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
+            description: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
             icon: /assets/icons/mcp.svg
             cta:
               url: /mcp
@@ -279,7 +281,7 @@ rows:
         - type: card
           config:
             title: Load balancing
-            description: Learn about the load balancing algorithms available for AI Gateway
+            description: Learn about the load balancing algorithms available for {{site.ai_gateway}}
             icon: /assets/icons/load-balance.svg
             cta:
               url: ./#load-balancing
@@ -288,7 +290,7 @@ rows:
         - type: card
           config:
             title: Audit log
-            description: Learn about AI Gateway logging capabilities
+            description: Learn about {{site.ai_gateway}} logging capabilities
             icon: /assets/icons/audit.svg
             cta:
               url: /ai-gateway/ai-audit-log-reference/
@@ -324,7 +326,7 @@ rows:
         - type: card
           config:
             title: Streaming
-            description: Stream user requests with AI Gateway
+            description: Stream user requests with {{site.ai_gateway}}
             icon: /assets/icons/network.svg
             cta:
               url: /ai-gateway/streaming/
@@ -368,8 +370,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Proxy AI CLI tools through Kong AI Gateway
-            description: Configure Kong AI Gateway to proxy requests from AI command-line tools to LLM providers
+            title: Proxy AI CLI tools through {{site.ai_gateway}}
+            description: Configure {{site.ai_gateway}} to proxy requests from AI command-line tools to LLM providers
             icon: /assets/icons/terminal.svg
             cta:
               url: /ai-gateway/ai-clis/
@@ -388,7 +390,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Kong’s AI Gateway Universal API, delivered through the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins, simplifies AI model integration by providing a single, standardized interface for interacting with models across multiple providers.
+                  Kong’s {{site.ai_gateway}} Universal API, delivered through the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins, simplifies AI model integration by providing a single, standardized interface for interacting with models across multiple providers.
 
                     - [**Easy to use**](/plugins/ai-proxy/examples/openai-chat-route/): Configure once and access any AI model with minimal integration effort.
 
@@ -435,7 +437,7 @@ rows:
                 - type: text
                   text: |
                     <p/><p/>
-                    Kong AI Gateway helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
+                    {{site.ai_gateway}} helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
 
                     - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
                     - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
@@ -453,7 +455,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      AI Gateway enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, AI Gateway ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+                      {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
   - columns:
       - blocks:
         - type: plugin
@@ -480,7 +482,7 @@ rows:
                   text: |
                     AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
                     Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
-                    Kong AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
+                    {{site.ai_gateway}} supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
   - columns:
       - blocks:
         - type: plugin
@@ -501,7 +503,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. Kong AI Gateway provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
+                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
   - column_count: 3
     columns:
       - blocks:
@@ -549,9 +551,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway allows you to use AI technology to augment other API traffic.
+                    {{site.ai_gateway}} allows you to use AI technology to augment other API traffic.
                     One example is routing API responses through an AI language translation prompt before returning it to the client.
-                    Kong AI Gateway provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
+                    {{site.ai_gateway}} provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
                     These plugins can be configured independently of the AI Proxy plugin.
   - columns:
       - blocks:
@@ -593,14 +595,14 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway’s load balancer routes requests across AI models to optimize for speed, cost, and reliability. It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10%}. The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
+                    {{site.ai_gateway}}’s load balancer routes requests across AI models to optimize for speed, cost, and reliability. It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10%}. The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
 
   - columns:
       - blocks:
         - type: card
           config:
             title: Load balancing
-            description: Learn about the load balancing algorithms available for AI Gateway.
+            description: Learn about the load balancing algorithms available for {{site.ai_gateway}}.
             icon: /assets/icons/load-balance.svg
             cta:
               url: /ai-gateway/load-balancing/
@@ -609,7 +611,7 @@ rows:
         - type: card
           config:
             title: Retry and fallback
-            description: Learn about how AI Gateway load balancers handle retry and fallback.
+            description: Learn about how {{site.ai_gateway}} load balancers handle retry and fallback.
             icon: /assets/icons/redo.svg
             cta:
               url: /ai-gateway/load-balancing/#retry-and-fallback
@@ -624,7 +626,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The AI Gateway helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
+                    The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
 
   - columns:
       - blocks:
@@ -659,7 +661,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway provides multiple approaches to monitor LLM traffic and operations. Track token usage, latency, and costs through audit logs and metrics exporters. Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
+                    {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations. Track token usage, latency, and costs through audit logs and metrics exporters. Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
 
 
   - columns:
@@ -667,7 +669,7 @@ rows:
         - type: card
           config:
             title: Audit log
-            description: Learn about AI Gateway logging capabilities.
+            description: Learn about {{site.ai_gateway}} logging capabilities.
             icon: /assets/icons/audit.svg
             cta:
               url: /ai-gateway/ai-audit-log-reference/
@@ -720,11 +722,11 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: Is AI Gateway available for all deployment modes?
+            - q: Is {{site.ai_gateway}} available for all deployment modes?
               a: |
                 Yes, AI plugins are supported in all [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
 
-            - q: Why should I use AI Gateway instead of adding the LLM's API behind {{site.base_gateway}}?
+            - q: Why should I use {{site.ai_gateway}} instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
                 If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic.
                 With AI plugins, {{site.base_gateway}} can understand the prompts that are being sent through the gateway.

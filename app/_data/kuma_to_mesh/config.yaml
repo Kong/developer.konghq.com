@@ -89,36 +89,6 @@ pages:
       - text: Service discovery
         url: /mesh/service-discovery/
   -
-    path: app/_src/networking/hostnamegenerator.md
-    title: 'HostnameGenerator'
-    description: 'Customize hostnames for MeshService resources using templated HostnameGenerator policies.'
-    url: '/mesh/hostnamegenerator/'
-    related_resources:
-      - text: MeshMultiZoneService
-        url: '/mesh/meshmultizoneservice/'
-      - text: MeshService
-        url: '/mesh/meshservice/'
-      - text: MeshExternalService
-        url: '/mesh/meshexternalservice/'
-    min_version:
-      mesh: '2.8'
-  -
-    path: app/_src/networking/meshexternalservice.md
-    title: 'MeshExternalService'
-    description: 'Declare external resources that services in the mesh can consume, enabling TLS, routing, and hostname customization.'
-    url: '/mesh/meshexternalservice/'
-    related_resources:
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-    min_version:
-      mesh: '2.8'
-  -
     path: app/_src/networking/meshmultizoneservice.md
     title: 'MeshMultiZoneService'
     description: 'Group MeshServices across zones into a single multizone service with zone-agnostic hostnames and load balancing.'
@@ -482,18 +452,6 @@ pages:
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/secure-deployment/api-server-auth.md
-    title: 'Authentication with the API server'
-    description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
-    url: '/mesh/authentication-with-the-api-server/'
-    related_resources:
-      - text: 'Manage secrets'
-        url: '/mesh/manage-secrets/'
-      - text: Mesh ports
-        url: /mesh/interact-with-control-plane/#control-plane-ports
-      - text: Zone Ingress
-        url: /mesh/zone-ingress/
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'

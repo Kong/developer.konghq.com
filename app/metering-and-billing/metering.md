@@ -18,7 +18,7 @@ related_resources:
     url: /metering-and-billing/subjects/
 faqs:
   - q: Do I need to bill or create plans for my meters?
-    a: No, you can use metering on it's own to track customer usage. 
+    a: No, you can use metering on it's own to track customer usage.
 ---
 
 {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
@@ -44,7 +44,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-You can meter {{site.base_gateway}} events, like API requests and LLM token usage, as well as generic events. 
+You can meter {{site.base_gateway}} events, like API requests and LLM token usage, as well as generic events.
 
 Each generic meter is comprised from the following attributes:
 * Event type: The event type that the meter is tracking. This is used to filter the events that are used to calculate the meter.
@@ -82,7 +82,7 @@ rows:
 
 ## Event ingestion
 
-{{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion. 
+{{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion.
 
 As CloudEvents is generic, here are some best practices for defining events in {{site.metering_and_billing}}:
 <!--vale off -->
@@ -129,7 +129,7 @@ To configure a meter in {{site.konnect_short_name}}, do the following:
 
 {% navtabs "create-meter" %}
 {% navtab "{{site.base_gateway}} API requests" %}
-To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and[Route](/gateway/entities/route/#set-up-a-route). 
+To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and[Route](/gateway/entities/route/#set-up-a-route).
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
 1. Enable **Gateway**.
@@ -137,11 +137,11 @@ To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Serv
 1. Click **Enable Gateway**
 
 {% endnavtab %}
-{% navtab "Kong AI Gateway LLM tokens" %}
-To meter Kong AI Gateway LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured with `config.logging.log_payloads` and `config.logging.log_statistics` enabled.
+{% navtab "{{site.ai_gateway}} LLM tokens" %}
+To meter {{site.ai_gateway}} LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
 
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. Enable **AI Gateway Tokens**.
+1. Enable **{{site.ai_gateway}} Tokens**.
 
 You will see `kong_konnect_llm_tokens` available from the list of available meters.
 {% endnavtab %}
@@ -162,7 +162,7 @@ The following example show how you can configure meters and usage events for com
 ### LLM token usage
 
 {:.info}
-> If you want to meter Kong AI Gateway LLM token usage, you can enable the built-in integration to meter usage in one click.
+> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage in one click.
 
 In most cases, AI applications want to count token usage for billing or cost control purposes. As a single AI interaction involves consuming multiple tokens, we define our generic meter with the `SUM` aggregation and report token usage in the data's tokens property. As most LLMs charge differently for input, output and system prompts and different models it makes sense to add model and prompt type to the group by.
 

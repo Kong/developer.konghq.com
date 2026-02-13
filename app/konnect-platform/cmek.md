@@ -20,9 +20,9 @@ faqs:
     a: No. CMEK currently only supports AWS Key Management Service (KMS).
 related_resources:
   - text: "{{site.konnect_short_name}} Debugger"
-    url: /gateway/debugger/
+    url: /observability/debugger/
   - text: Debugger spans
-    url: /gateway/debugger-spans/
+    url: /observability/debugger-spans/
   - text: "{{site.base_gateway}} tracing reference"
     url: /gateway/tracing/
 ---
@@ -40,7 +40,7 @@ related_resources:
 
 CMEK currently applies to:
 
-* Payloads captured through [the {{site.konnect_short_name}} Debugger](/gateway/debugger/)
+* Payloads captured through [the {{site.konnect_short_name}} Debugger](/observability/debugger/)
 * Request logs stored in Debugger workflows
 * Data stored in [{{site.konnect_short_name}} Config Store vault](/how-to/configure-the-konnect-config-store/). 
    

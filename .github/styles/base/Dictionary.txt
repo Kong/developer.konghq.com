@@ -117,6 +117,7 @@ chatwise
 cidr
 cidrs
 cleartext
+cli
 client_credentials
 client_payload
 client_status
@@ -164,6 +165,7 @@ CrowdStrike
 cryptocurrency
 Curity
 curity
+cutover
 DAO
 DAO
 dao
@@ -275,6 +277,7 @@ firstTimestamp
 flamegraph
 Flatpak
 foogineer
+FQDNs
 full_name
 Gateway
 GatewayClass
@@ -456,6 +459,7 @@ Knatives
 knep
 kong
 kongair
+kongctl
 kong_konnect_api_request
 kong_name
 kong-ip
@@ -556,6 +560,7 @@ misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+mockbin
 modelarmor
 Moesif
 Moesif
@@ -566,6 +571,7 @@ multimodal
 multitenant
 multitenancy
 mutex
+NACLs
 nameserver
 nameservers
 namespace
@@ -686,6 +692,7 @@ proto
 Protobuf
 Protobuf
 protobuf
+proviance
 proxied
 proxy_listen
 proxy_ssl

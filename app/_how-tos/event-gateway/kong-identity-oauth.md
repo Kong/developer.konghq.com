@@ -1,6 +1,7 @@
 ---
 title: Set up {{site.event_gateway}} with Kong Identity OAuth
 content_type: how_to
+permalink: /event-gateway/kong-identity-oauth/
 breadcrumbs:
   - /event-gateway/
  

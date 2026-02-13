@@ -67,7 +67,7 @@ The AI Lakera Guard plugin evaluates requests and responses that pass through Ko
 The plugin inspects model traffic at three points in the LLM request lifecycle. Each phase pages data into memory, extracts content that Lakera Guard can evaluate, and sends that content to Lakera for inspection.
 
 * **Request phase**: Inspection occurs **before** any data leaves the gateway toward the target LLM. The plugin buffers the full request body in memory, extracts the fields that the AI Lakera Guard plugin can evaluate, and sends them for inspection.
-* **Response phase (buffered)**: Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before Kong AI Gateway sends any part of the response back to the client.
+* **Response phase (buffered)**: Inspection occurs **before** any byte is transmitted back toward the client. The plugin buffers the full upstream response in memory, extracts the response fields that Lakera Guard can evaluate, and inspects them. This occurs before {{site.ai_gateway}} sends any part of the response back to the client.
 * **Response phase (per-frame)**: The plugin runs during streaming responses like Server-Sent Events. Kong processes the response in chunks, buffering each frame in memory as it arrives. When enough data is available to extract an evaluable segment, the plugin inspects that segment with Lakera Guard before forwarding the frame to the client.
 
 The plugin inspects request and response bodies for routes that use supported model interaction formats. It skips inspection on response types that are not text responses based on Lakera Guard’s current product limitations.
@@ -115,11 +115,11 @@ You can use the [logging capabilities](/ai-gateway/ai-audit-log-reference/) of t
 
 The plugin provides detailed logging and controls over how violations are reported:
 * **SaaS platform logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
-* **Kong AI Gateway logging**: Kong logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
+* **{{site.ai_gateway}} logging**: Kong logs all request and response **Lakera request UUIDs** to the standard logging subsystem.
 * **Unsupported logging outputs**: [Prometheus](/plugins/prometheus/), [Splunk](/plugins/kong-splunk-log/), or [OpenTelemetry](/plugins/opentelemetry/).
 * **Logging outputs**:  [HTTP-Log](/plugins/http-log/), [File-Log](/plugins/file-log/), and [TCP-Log](/plugins/tcp-log/).
 
-By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to Kong AI Gateway logs for administrators.
+By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to {{site.ai_gateway}} logs for administrators.
 
 To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
 

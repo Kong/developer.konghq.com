@@ -1,7 +1,7 @@
 metadata:
   title: "MCP Traffic Gateway"
   content_type: landing_page
-  description: This page is an introduction to MCP Traffic Gateway capabilites in Kong AI Gateway.
+  description: This page is an introduction to MCP Traffic Gateway capabilites in {{site.ai_gateway}}.
   products:
     - ai-gateway
     - gateway
@@ -16,18 +16,18 @@ rows:
   - header:
       type: h1
       text: "A trust and control layer for proxying traffic to MCP servers"
-      sub_text: Gain control and visibility over AI agent infrastructure with AI Gateway-driven MCP capabilities
+      sub_text: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
 
   - header:
       type: h2
-      text: Bring MCP servers to production securely with Kong AI Gateway
+      text: Bring MCP servers to production securely with {{site.ai_gateway}}
     columns:
       - blocks:
           - type: text
             config: |
               AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
-              Kong AI Gateway enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
+              {{site.ai_gateway}} enables teams to manage remote MCP traffic with enterprise-grade security, performance, authentication, context propagation, load balancing, and observability.
 
               Learn how to:
               - [Autogenerate and secure MCP tools from any API](#autogenerate-mcp-servers-using-ai-mcp-proxy)
@@ -46,11 +46,11 @@ rows:
           config:
             header:
               type: h2
-              text: "Autogenerate MCP servers using Kong AI Gateway"
+              text: "Autogenerate MCP servers using {{site.ai_gateway}}"
             blocks:
               - type: text
                 text: |
-                  Kong AI Gateway lets you create and manage MCP servers without writing custom code. Transform any API into an MCP server, apply security and governance controls, and integrate them with AI assistants.
+                  {{site.ai_gateway}} lets you create and manage MCP servers without writing custom code. Transform any API into an MCP server, apply security and governance controls, and integrate them with AI assistants.
 
   - header:
     columns:
@@ -127,13 +127,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}. 
+                    You can catalog your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
                     This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
           - type: button
             config:
               text: "Enable MCP catalog in {{site.konnect_short_name}} Labs"
               url: https://cloud.konghq.com/global/organization/labs
-  
+
   - header:
       type: h2
       text: "MCP traffic observability"
@@ -144,7 +144,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong AI Gateway records detailed Model Context Protocol (MCP) traffic data so you can analyze how requests are processed and resolved.
+                    {{site.ai_gateway}} records detailed Model Context Protocol (MCP) traffic data so you can analyze how requests are processed and resolved.
                     - Logs capture session IDs, JSON-RPC method calls, payloads, latencies, and errors.
                     - Metrics track latency, response sizes, and error counts over time, giving you a complete view of MCP server performance and behavior.
   - columns:
@@ -152,7 +152,7 @@ rows:
         - type: card
           config:
             title: MCP traffic audit log {% new_in 3.12 %}
-            description: Learn about AI Gateway logging capabilities for MCP traffic.
+            description: Learn about {{site.ai_gateway}} logging capabilities for MCP traffic.
             cta:
               url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs
               align: end

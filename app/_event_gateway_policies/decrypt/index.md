@@ -27,7 +27,7 @@ related_resources:
   - text: Static keys
     url: /event-gateway/entities/static-key/
   - text: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
-    url: /how-to/encrypt-kafka-messages-with-event-gateway/
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 
 phases:
   - consume
