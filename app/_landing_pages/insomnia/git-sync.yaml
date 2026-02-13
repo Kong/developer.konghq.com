@@ -56,43 +56,9 @@ rows:
                     - No pre-request or post-request scripts for gRPC.
                     - No persistent execution history for gRPC requests.
       - blocks:
-          - type: mermaid
+          - type: image
             config:
-              diagram: |
-                flowchart LR
-                    subgraph userDesktop [User desktop]
-                        A(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
-                        B(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
-                    end 
-
-                    subgraph unsure [ ]
-                        C(<b>Insomnia resources</b><br>Design documents<br>Request collections<br>Unit tests<br>Environments)
-                        D(<b>Git capabilities</b><br>Manage commits<br>Git pull/push<br>Git branches)
-                    end
-
-                    subgraph insomniaCloud [Insomnia Cloud]
-                        E(<img src="/assets/icons/database.svg" style="max-width:25px; display:block; margin:0 auto;" />Database)
-                        F(<img src="/assets/icons/google-cloud.svg" style="max-width:25px; display:block; margin:0 auto;" />Google Cloud)
-                    end
-
-                    subgraph Git-based source code management provider
-                      subgraph .
-                        G(<img src="/assets/icons/bitbucket.svg" style="max-width:25px; display:block; margin:0 auto;"/>Bitbucket)
-                        H(<img src="/assets/icons/gitlab.svg" style="max-width:25px; display:block; margin:0 auto;" />GitLab)
-                        I(<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" />GitHub)
-                        end
-                    end
-                    
-                    J(<b>Insomnia resources</b><br>RBAC<br>License)
-
-
-                    E <--> J
-                    F <--> J <--> A <--> C
-                    B <--> D
-                    C <--> G & H & I
-                    D <--> G & H & I
-
-                    style . stroke:none      
+              url: /assets/images/insomnia/insomnia-cloud-sync.svg
 
   - header:
       type: h2
@@ -116,12 +82,12 @@ rows:
           - type: text
             config: |
               Git Sync uses Git as the collaboration layer instead of Insomnia Cloud sharing. Git Sync projects are: 
-                - Visible only to the person who creates them 
-                - Not automatically shared through Insomnia organisations
+                - Visible only to the person that creates them.
+                - Not automatically shared through Insomnia organisations.
 
                Collaboration happens through standard Git workflows, including branches, commits, and merges. Each collaborator: 
-                - Works in their own Insomnia project
-                - Connects that project to the same Git repository
+                - Works in their own Insomnia project.
+                - Connects that project to the same Git repository.
 
   - header:
       type: h2
@@ -142,22 +108,22 @@ rows:
               **Supported Git actions**
 
               From the Git Sync interface, you can:
-              - Create and check out branches
-              - Commit changes
-              - Commit and push changes
-              - Pull changes from the repository
-              - Merge branches
-              - Resolve conflicts
+              - Create and check out branches.
+              - Commit changes.
+              - Commit and push changes.
+              - Pull changes from the repository.
+              - Merge branches.
+              - Resolve conflicts.
       - blocks:
           - type: text
             config: |
               **Branch behaviour and protections**
 
               Git Sync follows standard Git branch behaviour:
-              - Branches are object-specific
-              - Branches are not shared across different objects
-              - Repository branch protections are respected
-              - Protected branches cannot be pushed to from Insomnia
+              - Branches are object-specific.
+              - Branches are not shared across different objects.
+              - Repository branch protections are respected.
+              - Protected branches cannot be pushed to from Insomnia.
       - blocks:
           - type: text
             config: |
@@ -173,10 +139,10 @@ rows:
           - type: text
             config: |
               Not every sync requires conflict resolution. Git Sync resolves conflicts only when manual input is required. The merge UI appears when:
-                - Local changes exist
-                - Remote changes exist 
-                - Both changes affect the same content
-                - You perform a pull or push action
+                - Local changes exist.
+                - Remote changes exist.
+                - Both changes affect the same content.
+                - You perform a pull or push action.
           - type: button
             config:
               text: Learn more about conflict resolution
@@ -203,7 +169,7 @@ rows:
               - type: text
                 text: |
                   All Git Sync data is stored in the connected Git repository using the provider’s native storage. Git Sync can store the following types of data:     
-  - column_count: 5 
+  - column_count: 3
     columns:
       - blocks:
         - type: card
@@ -269,16 +235,16 @@ rows:
           - type: text
             config: |
               Git Sync supports multiple ways to configure Git credentials. You can configure credentials through:
-                - Git Sync settings
-                - Local `git.config`
-                - Insomnia Preferences
+                - Git Sync settings.
+                - Local `git.config`.
+                - Insomnia Preferences.
 
               Git Sync requires a passphrase to decrypt account keys. This requirement applies to both Git Sync and Cloud Sync users. For more information about passphrases, navigate to [Passphrase](/insomnia/accounts/#passphrase).
 
               Insomnia doesn't enforce secret prevention in Git repositories. To reduce the risk of committing sensitive data:
-                - Use Private Environments for secrets
-                - Integrate with an external vault
-                - Apply external Git controls like hooks or scanners
+                - Use Private Environments for secrets.
+                - Integrate with an external vault.
+                - Apply external Git controls like hooks or scanners.
   - header:
       type: h2
       text: Storage choices and governance
@@ -301,9 +267,9 @@ rows:
           - type: text
             config: |
               Git Sync includes AI-assisted commit grouping to help you review and organise changes before you commit them. This feature: 
-                - Analyzes staged Git changes
-                - Suggests commit groupings
-                - Suggests commit messages
+                - Analyzes staged Git changes.
+                - Suggests commit groupings.
+                - Suggests commit messages.
           - type: button
             config:
               text: Learn more about AI in Insomnia
@@ -344,9 +310,9 @@ rows:
             description: |
                       Confirm that you can authenticate to the Git repository.
                       Configure Git credentials using one of the supported methods:
-                      - Git Sync settings
-                      - Local `git.config``
-                      - Preferences > Credentials
+                      - Git Sync settings.
+                      - Local `git.config`.
+                      - Preferences > Credentials.
             icon: /assets/icons/login.svg
             cta:
               text: Authenticate Git repository
@@ -369,9 +335,9 @@ rows:
             title: 3. Pull to establish a clean baseline
             description: |
                        Align your local workspace with the current remote state before making changes.
-                        - Pull first to avoid working against stale content
-                        - If conflicts exist, Insomnia opens the merge UI only when manual input is required
-                        - If no conflicts exist, the pull completes without interruption
+                        - Pull first to avoid working against stale content.
+                        - If conflicts exist, Insomnia opens the merge UI only when manual input is required.
+                        - If no conflicts exist, the pull completes without interruption.
             icon: /assets/icons/git.svg
             cta:
               text: Pull from remote
@@ -383,7 +349,7 @@ rows:
             description: |
                        Confirm that end-to-end Git Sync works before real work begins.
                         - Make a small, reversible change. For example, rename a folder or update a description.
-                        - Commit and push from the version control panel
+                        - Commit and push from the version control panel.
             icon: /assets/icons/add.svg
             cta:
               text: Push changes
