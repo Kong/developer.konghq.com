@@ -201,6 +201,8 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/catalog/integrations/gateway-manager/ /catalog/integrations/api-gateway/
+/how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 
 # Cloud Gateways
 
