@@ -105,8 +105,8 @@ SCIM provisioning lets you manage access to Insomnia through your IdP, in the sa
 
 When you assign a user to the Insomnia application in your IdP, the IdP provisions that user in Insomnia through SCIM.
 
-- If the user doesn't exist in Insomnia, then Insomnia creates the user.
-- If the user already exists in Insomnia, then Insomnia matches the user by email address.
+- If the user doesn't exist in Insomnia, Insomnia creates the user.
+- If the user already exists in Insomnia, Insomnia matches the user by email address.
 
 When you unassign, deactivate, or delete a user in your IdP, the IdP sends a provisioning update to Insomnia.
 
