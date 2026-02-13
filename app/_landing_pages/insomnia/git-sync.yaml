@@ -32,7 +32,7 @@ rows:
                     Git Sync uses a third-party Git repository to store Insomnia project data. Supported Git providers include GitHub, GitLab, and Bitbucket.
 
                     {:.info}
-                    > Git Sync is not Insomnia Cloud storage. Git Sync projects are not automatically shared across Insomnia organizations, and they are not managed or hosted by Insomnia. If you require automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync](/insomnia/cloud-sync/) instead.
+                    > Git Sync is not Insomnia Cloud storage. Git Sync projects are not automatically shared across Insomnia organizations, and they are not managed or hosted by Insomnia. If you require automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync](/insomnia/storage#cloud-sync/) instead.
 
   - header:
       type: h2
@@ -291,7 +291,7 @@ rows:
               {:.info}
               > Converting a project doesn't modify or delete the connected Git repository.
 
-              Enterprise administrators can control which storage types are available to users. From [Enterprise Controls > Storage](https://app.insomnia.rest/app/enterprise/storage), administrators can also allow or restrict Cloud Sync, Local Vault, and Git Sync.
+              Enterprise administrators can control which storage types are available to users. From [**Enterprise Controls > Storage**](https://app.insomnia.rest/app/enterprise/storage), administrators can also allow or restrict Cloud Sync, Local Vault, and Git Sync.
                 
   - header:
       type: h2
