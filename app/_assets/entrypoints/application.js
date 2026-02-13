@@ -25,6 +25,7 @@ import "@/javascripts/mesh_service_switcher";
 import "@/javascripts/feedback";
 import "@/javascripts/clipboard_copy";
 import "@/javascripts/tooltip";
+import "@/javascripts/konami";
 import "@github/clipboard-copy-element";
 
 document.addEventListener("DOMContentLoaded", function () {
