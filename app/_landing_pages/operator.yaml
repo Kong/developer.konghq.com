@@ -118,9 +118,9 @@ rows:
               - product: Kong Mesh
                 supported: Planned
               - product: Developer Portal
-                supported: true
+                supported: Planned
               - product: Catalog
-                supported: true
+                supported: Planned
               - product: Analytics
                 supported: Planned
               - product: Team Management
