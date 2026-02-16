@@ -80,8 +80,8 @@ pages:
     related_resources:
       - text: Configure the Kong Mesh CNI
         url: '/mesh/cni/'
-      - text: Configure transparent proxying
-        url: '/how-to/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
       - text: Mesh concepts
@@ -182,8 +182,8 @@ pages:
     related_resources:
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Configure transparent proxying
-        url: '/how-to/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
   -
@@ -238,8 +238,8 @@ pages:
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
     url: '/mesh/performance-tuning/'
     related_resources:
-      - text: Configure transparent proxying
-        url: '/how-to/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability

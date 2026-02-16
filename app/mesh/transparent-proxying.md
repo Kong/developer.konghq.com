@@ -11,8 +11,6 @@ breadcrumbs:
   - /mesh/
 
 related_resources:
-  - text: Configure transparent proxying
-    url: /how-to/configure-transparent-proxying/
   - text: Multi-zone deployment
     url: /mesh/mesh-multizone-service-deployment/
   - text: Service discovery
