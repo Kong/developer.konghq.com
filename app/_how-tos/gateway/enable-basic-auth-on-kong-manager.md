@@ -29,7 +29,7 @@ tags:
 
 tldr:
     q: How do I enable basic authentication for Kong Manager?
-    a: Set `enforce-rbac = on`, `admin_gui_auth = basic-auth`, and `admin_gui_session_conf = { "secret":"kong" }` in your Kong configuration file or as environment variables. And run migrations with environment variable `KONG_PASSWORD=kong` to create admin user. Then, log in to Kong Manager with `kong_admin` as your username and `kong` as your password.
+    a: Set `enforce-rbac = on`, `admin_gui_auth = basic-auth`, and `admin_gui_session_conf = { "secret":"kong" }` in your Kong configuration file or as environment variables. And run [database migrations](https://developer.konghq.com/how-to/configure-datastore/#run-a-kong-gateway-database-migration) with environment variable `KONG_PASSWORD=kong` to create admin user. Then, log in to Kong Manager with `kong_admin` as your username and `kong` as your password.
 
 tools: []
 
