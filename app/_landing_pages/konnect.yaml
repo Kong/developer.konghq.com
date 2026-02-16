@@ -395,11 +395,30 @@ rows:
             - q: How do I get a {{site.konnect_short_name}} license?
               a: |
                 When you create a {{site.konnect_saas}} account, {{site.ee_product_name}}, {{site.kic_product_name}} (KIC), and {{site.mesh_product_name}}
-                licenses are automatically provisioned to your organization. You do not need to manage these
-                licenses manually.
+                licenses are automatically provisioned to your organization. 
+                You do not need to manage these licenses manually.
 
                 Any data plane nodes or {{site.kic_product_name}} associations configured through {{site.konnect_short_name}}
-                also implicitly receive the same license from the {{site.konnect_saas}}
-                control plane. You should never have to deal with a license directly.
-
+                automatically inherit the license from the {{site.konnect_saas}} control plane. 
+                You cannot access or retrieve this {{site.konnect_short_name}} license key directly.
+                
                 For any license questions, contact your sales representative.
+            - q: Can I check my {{site.konnect_short_name}} usage metrics?
+              a: |
+
+                Yes, you can check your {{site.konnect_short_name}} license usage through the **Organization** > **Plan and usage** {{site.konnect_short_name}} menu, 
+                or the `/kbilling/v1/usage` endpoint of the {{site.konnect_short_name}} API.
+
+                If using the API, pass an [access token](/konnect-api/#konnect-api-authentication) for your organization with the following command:
+
+                 ```sh
+                curl -X GET 'https://global.api.konghq.com/kbilling/v1/usage' \
+                  --header 'Authorization: Bearer $KONNECT_TOKEN' -s
+                ```
+
+                You can filter the report for any particular metric. For example, the see the total number of requests:
+                
+                ```sh
+                curl -X GET 'https://global.api.konghq.com/kbilling/v1/usage' \
+                  --header 'Authorization: Bearer $KONNECT_TOKEN' -s | jq .data.us.total_request_count
+                ```
