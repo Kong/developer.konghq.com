@@ -67,7 +67,7 @@ env:
 EOF
 ```
 
-For more details about these arguments, see [{{ site.operator_product_name }} configuration options](/operator/reference/configuration-options/#flags).
+For more details about these options, see [{{ site.operator_product_name }} configuration options](/operator/reference/configuration-options/#flags).
 
 ## Install {{ site.operator_product_name }}
 
