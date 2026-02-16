@@ -395,14 +395,12 @@ rows:
             - q: How do I get a {{site.konnect_short_name}} license?
               a: |
                 When you create a {{site.konnect_saas}} account, {{site.ee_product_name}}, {{site.kic_product_name}} (KIC), and {{site.mesh_product_name}}
-                licenses are automatically provisioned to your organization. You do not need to manage these
-                licenses manually.
+                licenses are automatically provisioned to your organization. 
+                You do not need to manage these licenses manually.
 
                 Any data plane nodes or {{site.kic_product_name}} associations configured through {{site.konnect_short_name}}
-                also implicitly receive the same license from the {{site.konnect_saas}}
-                control plane. You should never have to deal with a license directly, other that to check license report metrics.
-
-                You cannot access or retrieve the {{site.konnect_short_name}} license key.
+                automatically inherit the license from the {{site.konnect_saas}} control plane. 
+                You cannot access or retrieve this {{site.konnect_short_name}} license key directly.
                 
                 For any license questions, contact your sales representative.
             - q: Can I check my {{site.konnect_short_name}} usage metrics?
