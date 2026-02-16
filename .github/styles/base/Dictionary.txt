@@ -165,6 +165,7 @@ CrowdStrike
 cryptocurrency
 Curity
 curity
+cutover
 DAO
 DAO
 dao
@@ -172,7 +173,8 @@ DAOs
 DAOs
 daos
 dashboarding
-Dashscope
+DashScope
+dashscope
 Datadog
 Datadog
 datadog
@@ -275,6 +277,7 @@ firstTimestamp
 flamegraph
 Flatpak
 foogineer
+FQDNs
 full_name
 Gateway
 GatewayClass
@@ -568,6 +571,7 @@ multimodal
 multitenant
 multitenancy
 mutex
+NACLs
 nameserver
 nameservers
 namespace
@@ -699,6 +703,7 @@ qubit
 querystring
 qux
 Qwen
+qwen
 ratelimit
 rbac
 reachability

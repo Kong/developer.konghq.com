@@ -19,7 +19,9 @@ breadcrumbs:
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 tags:
   - azure
   - security

@@ -43,7 +43,9 @@ prereqs:
       export RESOLVER_IPS='10.0.0.10,10.1.0.53'
       export FORWARD_ZONES='example.internal.dev,example2.internal.dev'
       ```
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 automated_tests: false
 ---
 

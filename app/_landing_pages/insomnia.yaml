@@ -263,7 +263,7 @@ rows:
                   ee: true
                 - title: |
                     [Git Sync](/insomnia/storage/#git-sync)
-                  essentials: false
+                  essentials: true
                   individual: false
                   pro: true
                   ee: true
