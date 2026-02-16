@@ -118,7 +118,7 @@ When a debug session is initiated with payload capture, the debugger captures re
 ### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
 
-Debug session with payload data are retained for up to 3 days after which there are purged from {{site.konnect_short_name}}.
+Debug session with payload data is retained for up to 3 days, after which they are purged from {{site.konnect_short_name}}.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
 By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
