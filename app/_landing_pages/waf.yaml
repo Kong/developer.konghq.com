@@ -19,7 +19,7 @@ rows:
   - header:
       type: h1
       text: "{{site.base_gateway}} WAF capabilities"
-      sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}} plugins"
+      sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}}"
 
   - columns:
       - blocks:
@@ -79,7 +79,7 @@ rows:
             config:
               title: Form field manipulation protection 
               description: |
-                The Request Validator plugin can validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators
+                The Request Validator plugin can validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators.
 
               icon: /assets/icons/monitor.svg
               ctas:
