@@ -37,7 +37,7 @@ related_resources:
 faqs:
   - q: Why do I get a 403 error when committing?
     a: |  
-      Insomnia uses the **Insomnia GitHub App** to perform Git operations. Authenticating with GitHub isn't sufficient. The GitHub App must be installed on your GitHub account or organization and granted access to the target repository.
+      Insomnia uses the **Insomnia GitHub App** to perform Git operations. Authenticating with GitHub isn't sufficient. The GitHub App must be installed on your GitHub account or organization and granted access to the target repository. Each Insomnia project is bound to a specific Git repository and credential context.
       
       If the app doesn't have repository access:
       - The repository doesn't appear in the selection list.
