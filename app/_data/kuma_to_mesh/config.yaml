@@ -80,8 +80,8 @@ pages:
     related_resources:
       - text: Configure the Kong Mesh CNI
         url: '/mesh/cni/'
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
       - text: Mesh concepts
@@ -162,8 +162,8 @@ pages:
     related_resources:
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
   -
@@ -218,8 +218,8 @@ pages:
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
     url: '/mesh/performance-tuning/'
     related_resources:
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
@@ -410,28 +410,6 @@ pages:
         url: /mesh/cli/
       - text: Data plane health
         url: /mesh/dataplane-health/
-  -
-    path: app/_src/networking/transparent-proxying.md
-    title: 'Transparent proxying'
-    description: 'Explains how Transparent Proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.'
-    url: '/mesh/transparent-proxying/'
-    related_resources:
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh Service Discovery
-        url: '/mesh/service-discovery/'
-  -
-    path: app/_src/production/dp-config/transparent-proxying.md
-    title: 'Configure transparent proxying'
-    description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
-    url: '/mesh/configure-transparent-proxying/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
