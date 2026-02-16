@@ -17,6 +17,10 @@ related_resources:
     url: /mesh/policies/meshtls/
   - text: Mesh policies
     url: /mesh/policies/
+
+faqs:
+  - q: Can I reference secrets from a third-party application?
+    a: No, there are no integration to reference secrets.
 ---
 
 The `Secret` resource enables users to store sensitive data. This includes anything a user considers non-public, such as:
@@ -36,7 +40,7 @@ How you store secrets in the `Secrets` resource depends on if you're using Kuber
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
 
-On Kubernetes, {{site.mesh_product_name}} leverages the native [Kubernetes Secret](https://kubernetes.io/docs/concepts/configuration/secret/) resource to store sensitive information.
+On Kubernetes, {{site.mesh_product_name}} leverages the native Kubernetes Secret resource to store sensitive information. For more information about how Kubernetes secures your Secrets, see the the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/secret/#information-security-for-secrets).
 
 {{site.mesh_product_name}} secrets are stored in the same namespace as the control plane with `type` set to `system.kuma.io/secret`. 
 You can use `kubectl` to manage secrets like any other Kubernetes resource:
@@ -56,7 +60,7 @@ type: system.kuma.io/secret" | kubectl apply -f -
 kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/secret'
 ```
 
-Kubernetes secrets are identified with the combination of their name and namespace, therefore is impossible to have a `Secret` with the same name in multiple meshes, since multiple meshes always belong to one {{site.mesh_product_name}} control plane that always runs in one namespace.
+Kubernetes secrets are identified with the combination of their name and namespace, it's impossible to have a `Secret` with the same name in multiple meshes, since multiple meshes always belong to one {{site.mesh_product_name}} control plane that always runs in one namespace.
 
 In order to reassign a `Secret` from one mesh to another, you must delete the `Secret` resource and create it in another mesh.
 
