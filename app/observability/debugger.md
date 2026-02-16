@@ -53,7 +53,7 @@ The debugger helps capture OpenTelemetry-compatible traces for all requests matc
 * Traces can be generated for a service or per route
 * Refined traces can be generated for all requests matching a sampling criteria
 * Sampling criteria can be defined with simple expressions language, for example: `http.method` == `GET`
-* Trace sessions are retained for up to 7 days
+* Trace sessions are retained for up to 15 days
 * Traces can be visualized in {{site.konnect_short_name}}'s built in trace viewer
 
 To ensure consistency and interoperability, tracing adheres to OpenTelemetry naming conventions for spans and attributes, wherever possible.
@@ -150,7 +150,7 @@ Once the session starts, traces will be captured for requests that match the rul
 {:.success}
 > You can also start a debug session from the overview page of a control plane, Gateway Service, or Route by clicking the **Actions** dropdown menu and clicking **Start Debugging**. Additionally, you can use [KAi](/konnect-platform/kai/) to debug as well. 
 
-Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 7 days.
+Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 15 days.
 
 For details on defining sampling rules, see [Debugger sessions](#debugger-sessions).
 
