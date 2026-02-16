@@ -98,6 +98,90 @@ There are several advantages when using transparent proxying in Universal mode:
 {:.info}
 > If you run `firewalld` to manage firewalls and wrap `iptables`, add the `--store-firewalld` flag to `kumactl install transparent-proxy`. This persists the relevant rules across host restarts. The changes are stored in `/etc/firewalld/direct.xml`. There is no uninstall command for this feature.
 
+### Configuring transparent proxying on Universal
+
+To configure transparent proxying in Universal mode, you must first:
+
+* Install `kuma-dp`, `envoy`, and `coredns` on the node that runs your service mesh workload.
+* Set `coredns` in the path so that `kuma-dp` can access it. You can also set the location with the `--dns-coredns-path` flag in the `kuma-dp` command.
+
+#### Configuring the service host
+
+{{site.mesh_product_name}} comes with [`kumactl` executable](/mesh/cli/#kumactl), which can help you prepare the host for transparent proxying. 
+
+{:.info}
+> Due to the wide variety of Linux setup options, these steps may vary and may need to be adjusted for the specifics of the particular deployment.
+
+The host that will run the `kuma-dp` process in transparent proxying mode needs to be prepared with the following steps, executed as `root`:
+
+1. Create a new dedicated user on the machine.
+
+   ```sh
+   useradd -u 5678 -U kuma-dp
+   ```
+
+1. Redirect all the relevant inbound, outbound and DNS traffic to the {{site.mesh_product_name}} data plane proxy:
+
+   ```sh
+   kumactl install transparent-proxy \
+     --kuma-dp-user kuma-dp \
+     --redirect-dns \
+     --exclude-inbound-ports 22
+   ```
+
+   If you're running any other services on that machine, adjust the comma separated lists of `--exclude-inbound-ports` and `--exclude-outbound-ports` accordingly.
+
+   {:.danger}
+   > This command **will change** the host's `iptables` rules.
+
+   {:.info}
+   > The changes won't persist over restarts. You must either add this command to your start scripts or use `firewalld`.
+
+#### Configuring the Dataplane resource
+
+In transparent proxying mode, the `Dataplane` resource should omit the `networking.outbound` section and use `networking.transparentProxying` section instead:
+
+```yaml
+type: Dataplane
+mesh: default
+name: {% raw %}{{ name }}{% endraw %}
+networking:
+  address: {% raw %}{{ address }}{% endraw %}
+  inbound:
+  - port: {% raw %}{{ port }}{% endraw %}
+    tags:
+      kuma.io/service: demo-client
+  transparentProxying:
+    redirectPortInbound: 15006
+    redirectPortOutbound: 15001
+```
+
+The ports used above are the default ones that `kumactl install transparent-proxy` will set. These can be changed using the relevant flags to that command.
+
+#### Invoking the {{site.mesh_product_name}} data plane
+
+{:.warning}
+> It's' important that the `kuma-dp` process runs with the same system user that was passed to `kumactl install transparent-proxy --kuma-dp-user`.
+> The service itself should run with any other user than `kuma-dp`. Otherwise, it won't be able to leverage transparent proxying.
+
+When using `systemd`, you can invoke the data plane with a `User=kuma-dp` entry in the `[Service]` section of the service file.
+
+When starting `kuma-dp` with a script or some other automation, you can use `runuser`:
+
+```sh
+runuser -u kuma-dp -- \
+  /usr/bin/kuma-dp run \
+    --cp-address=https://$CONTROL_PLANE_HOST:5678 \
+    --dataplane-token-file=$TOKEN_FILEPATH \
+    --dataplane-file=$DATAPLANE_CONFIG_FILE \
+    --dataplane-var name=dp-demo \
+    --dataplane-var address=$VM_IP \
+    --dataplane-var port=$SERVICE_PORT  \
+    --binary-path /usr/local/bin/envoy
+```
+
+Once this is configured, you'll be able to reach the Service on the same IP and port as before installing transparent proxy, but the traffic will go through Envoy. You can also connect to Services using [{{site.mesh_product_name}} DNS](/mesh/dns/).
+
 ### Upgrades
 
 Before upgrading to the next version of {{site.mesh_product_name}}, we recommend uninstalling the transparent proxy before replacing the `kumactl` binary:
@@ -430,3 +514,4 @@ kumactl install transparent-proxy \
 
 {% endnavtab %}
 {% endnavtabs %}
+
