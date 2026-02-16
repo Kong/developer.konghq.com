@@ -88,14 +88,49 @@ This process includes three main steps:
         --scope "/subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.Network/virtualNetworks/{vnet-name}"
     ```
 
-### Konnect configuration for VNET peering
+### Configure VNET peering in {{site.konnect_short_name}}
 
-To configure peering in {{site.konnect_short_name}} you need to input the following values from Azure into the {{site.konnect_short_name}} UI for your Dedicated Cloud Gateway:
-
-* Azure Tenant ID  
-* Azure VNET Subscription ID  
-* Azure VNET Resource Group Name  
-* Azure VNET Name  
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. Click your Azure Dedicated Cloud Gateway.
+1. In the API Gateways sidebar, click **Networks**.
+1. From the action menu next to your Azure network, select "Configure VNET peering".
+1. In the **Tenant ID** field, enter [your Microsoft Entra tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
+1. In the **Subscription ID** field, enter your virtual network's subscription ID.
+1. In the **Resource group name** field, enter your virtual network's resource group name.
+1. In the **VNET Name** field, enter your virtual network's name.
+1. Optional: Configure the DNS configuration settings as needed.
+1. Click **Next**.
+1. Grant access to the Dedicated Cloud Gateway app in Microsoft Entra using the link provided in the setup wizard.
+   
+   {:.danger}
+   > **Important:** You need an admin account to approve the app.
+1. Create a peering role with the Azure CLI:
+   ```sh
+   az role definition create --output none --role-definition '{
+       "Name": "Kong Cloud Gateway Peering Creator - Kong",
+       "Description": "Perform cross-tenant network peering.",
+       "Actions": [
+           "Microsoft.Network/virtualNetworks/read",
+           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
+           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
+           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
+           "Microsoft.Network/virtualNetworks/peer/action"
+       ],
+       "AssignableScopes": [
+           "/subscriptions/$VNET-SUBSCRIPTION-ID",
+       ]
+   }'
+   ```
+1. Assign the role to the service principal with the Azure CLI:
+   ```sh
+   az role assignment create \
+     --role "Kong Cloud Gateway Peering Creator - Kong" \
+     --assignee "$(az ad sp list --filter "appId eq '207b296f-cf25-4d23-9eba-9a2c41dc62ca'" \
+     --output tsv --query '[0].id')" \
+     --scope "/subscriptions/$VNET-SUBSCRIPTION-ID/resourceGroups/$RESOURCE-GROUP-NAME/providers/Microsoft.Network/virtualNetworks/$VNET-NAME"
+   ```
+1. Select **Please confirm if you have completed the above mentioned steps.**
+1. Click **Done**.
 
 ### DNS mappings
 
@@ -132,7 +167,7 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
 ### Create a private DNS zone in Azure
 
 1. [Create a private DNS zone in Azure](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#create-a-private-dns-zone) in the same resource group as your Virtual Network you're using for VNET peering.
-1. Use the Azure CLI to assign the Private DNS Zone Contributor role to the same service principal as our VNET Peering:
+1. Use the Azure CLI to assign the Private DNS Zone Contributor role to the same service principal as your VNET peering:
    ```sh
    az role assignment create \
      --role "Private DNS Zone Contributor" \
@@ -147,7 +182,7 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
    * `$RESOURCE-GROUP-NAME`: The name of your resource group.
    * `$YOUR-DOMAIN`: The domain name you entered in your Azure private DNS zone.
 
-1. [Link Private DNS to your VNET](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network):
+1. [Link your private DNS zone to your Virtual Network](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network):
    ```sh
    az network private-dns link vnet create \
    --name $VNET-LINK-NAME \
@@ -156,14 +191,19 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
    --virtual-network $VNET-NAME \
    --registration-enabled false
    ```
-   NEED TO LIST THINGS TO REPLACE HERE
+
+   Be sure to replace the following:
+   * `$VNET-LINK-NAME`: The name you want to use for your Virtual Network link.
+   * `$RESOURCE-GROUP-NAME`: The name of your resource group.
+   * `$PRIVATE-DNS-ZONE-NAME`: The name of your private DNS zone.
+   * `$VNET-NAME`: The name of your Virtual Network.
 
 ### Configure private DNS for your Azure network in {{site.konnect_short_name}}
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.
 1. In the API Gateways sidebar, click **Networks**.
-1. Click the action menu next to your Azure network and select "Configure private DNS".
+1. From the action menu next to your Azure network, select "Configure private DNS".
 1. Click **Private hosted zone**.
 1. In the **Name** field, enter a name for your private hosted zone.
 1. In the **Tenant ID** field, enter your [tenant ID from Microsoft Entra](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).

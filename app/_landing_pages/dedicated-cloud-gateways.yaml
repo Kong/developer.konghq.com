@@ -78,12 +78,8 @@ rows:
               ctas:
                 - text: Transit gateways
                   url: /dedicated-cloud-gateways/transit-gateways/
-                - text: Private zones
-                  url: /dedicated-cloud-gateways/private-hosted-zones/
                 - text: VPC peering
                   url: /dedicated-cloud-gateways/aws-vpc-peering/
-                - text: Resource endpoints
-                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
       - blocks:
           - type: card
             config:
@@ -92,8 +88,6 @@ rows:
                 Dedicated Cloud Gateways support both private DNS and VPC peering for Google Cloud.
               icon: /assets/icons/google-cloud.svg
               ctas:
-                - text: Private DNS
-                  url: /dedicated-cloud-gateways/gcp-private-dns/
                 - text: VPC peering
                   url: /dedicated-cloud-gateways/gcp-vpc-peering/
       - blocks:
@@ -106,7 +100,70 @@ rows:
               ctas:
                 - text: VNet peering
                   url: /dedicated-cloud-gateways/azure-peering/
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Name resolution"
+            blocks:
+              - type: text
+                text: |
+                  We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
+                  Use private hosted zones or private DNS if your services are in the same cloud. 
+                  Use outbound DNS resolver if your services are in an external or on-premise DNS server. 
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: AWS
+              icon: /assets/icons/aws.svg
+              description: |
+                Dedicated Cloud Gateways in AWS support private name resolution through AWS private hosted zones and outbound DNS resolver.
+              ctas:
+                - text: Private hosted zones
+                  url: /dedicated-cloud-gateways/private-hosted-zones/
+                - text: Outbound DNS resolver
+                  url: /dedicated-cloud-gateways/outbound-dns-resolver/
+      - blocks:
+          - type: card
+            config:
+              title: Google Cloud
+              description: |
+                Dedicated Cloud Gateways in Google Cloud support private name resolution through Google Cloud private DNS zones and outbound DNS resolver.
+              icon: /assets/icons/google-cloud.svg
+              ctas:
+                - text: Private DNS zones
+                  url: /dedicated-cloud-gateways/gcp-private-dns/
+      - blocks:
+          - type: card
+            config:
+              title: Azure
+              description: |
+                Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and outbound DNS resolver.
+              icon: /assets/icons/azure.svg
+              ctas:
+                - text: Private DNS zones
+                  url: /dedicated-cloud-gateways/azure-peering/#configure-private-dns
+  - header:
+      type: h2
+      text: "Service-level private access"
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AWS resource endpoints
+            icon: /assets/icons/aws.svg
+            description: |
+              AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from Konnect’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
+            cta:
+              text: Learn more
+              url: /dedicated-cloud-gateways/aws-resource-endpoints/  
       
+      
+
 
   - header:
       type: h2
