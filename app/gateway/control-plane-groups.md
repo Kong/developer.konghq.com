@@ -245,7 +245,7 @@ rows:
   - entity: Consumer Groups
     behavior: >-
       Only Consumers from the same Control Plane can be added to a Consumer Group.<br><br>
-      In the Rate Limiting Advanced plugin, Consumer Group names can reference groups from other Control Plane Group members.
+      In the Rate Limiting Advanced plugin, the configuration field [`config.consumer_groups`](/plugins/rate-limiting-advanced/reference/#schema--config-consumer-groups) can reference Consumer Groups from other Control Plane Group members.
   - entity: Vaults
     behavior: >-
       Vault prefixes must be unique.<br><br>
