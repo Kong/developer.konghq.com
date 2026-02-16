@@ -40,7 +40,7 @@ How you store secrets in the `Secrets` resource depends on if you're using Kuber
 {% navtabs "Environments" %}
 {% navtab "Kubernetes" %}
 
-On Kubernetes, {{site.mesh_product_name}} leverages the native Kubernetes Secret resource to store sensitive information. For more information about how Kubernetes secures your Secrets, see the the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/secret/#information-security-for-secrets).
+On Kubernetes, {{site.mesh_product_name}} leverages the native Kubernetes Secret resource to store sensitive information. For more information about how Kubernetes secures your Secrets, see the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/secret/#information-security-for-secrets).
 
 {{site.mesh_product_name}} secrets are stored in the same namespace as the control plane with `type` set to `system.kuma.io/secret`. 
 You can use `kubectl` to manage secrets like any other Kubernetes resource:
