@@ -89,26 +89,6 @@ pages:
       - text: Service discovery
         url: /mesh/service-discovery/
   -
-    path: app/_src/networking/meshmultizoneservice.md
-    title: 'MeshMultiZoneService'
-    description: 'Group MeshServices across zones into a single multizone service with zone-agnostic hostnames and load balancing.'
-    url: '/mesh/meshmultizoneservice/'
-    related_resources:
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: 'Zone ingress'
-        url: /mesh/zone-ingress/
-      - text: Zone egress
-        url: /mesh/zone-egress/
-    min_version:
-      mesh: '2.9'
-  -
     path: app/_src/networking/meshservice.md
     title: 'MeshService'
     description: 'Define and manage services within the mesh, replacing kuma.io/service tags for clearer service targeting and routing.'
