@@ -33,6 +33,21 @@ related_resources:
     url: /insomnia/storage/
   - text: Version control in Insomnia
     url: /insomnia/version-control/
+
+faqs:
+  - q: Why do I get a 403 error when committing?
+    a: |  
+      Insomnia uses the **Insomnia GitHub App** to perform Git operations. Authenticating with GitHub isn't sufficient. The GitHub App must be installed on your GitHub account or organization and granted access to the target repository.
+      
+      If the app doesn't have repository access:
+      - The repository doesn't appear in the selection list.
+      - Commits fail with a **403 Forbidden** error.
+      
+      To resolve this issue, install or configure the Insomnia GitHub App and grant it access to the repository in your [Github applications](https://github.com/apps/insomnia-desktop)
+      
+      {:.warning}
+      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.
+  
 ---
 
 ## Create a project
@@ -72,7 +87,7 @@ related_resources:
 If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. You can also create the Git Sync project now and add a repository later. 
 
 {:.info}
-> If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in newer versions.
+> If the repository contains legacy Insomnia content prior to 11.0, Insomnia will convert this content to the new format introduced in newer versions.
 
 ## Commit and push the content to your repository
 
