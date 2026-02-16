@@ -16,6 +16,8 @@ rows:
   - role: "`Dashboard creator`"
     description: |
       Can create new dashboards, and automatically become an Admin of the created dashboard.
+
+      To access the underlying data of the dashboard, you'll also need to assign users with `Dashboard creator` roles to the [`Analytics Viewer` pre-built team](/konnect-platform/teams-and-roles/#predefined-teams).
   - role: "`Dashboard admin`"
     description: |
       * Can edit, share, and delete dashboards.
@@ -34,6 +36,8 @@ rows:
   - role: "`Report creator`"
     description: |
       Can create new reports and automatically becomes an admin of the created report.
+
+      To access the underlying data of the report, you'll also need to assign users with `Report creator` roles to the [`Analytics Viewer` pre-built team](/konnect-platform/teams-and-roles/#predefined-teams).
   - role: "`Report admin`"
     description: |
       * Can edit, share, and delete reports.
