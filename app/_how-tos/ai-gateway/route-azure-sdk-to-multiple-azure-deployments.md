@@ -72,7 +72,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-The [Azure OpenAI SDK](https://github.com/openai/openai-python#microsoft-azure-openai) can connect to [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/chatgpt) through Kong AI Gateway. With Azure, the `model` parameter in SDK calls maps to a deployment name on your Azure instance. The SDK constructs request URLs in the format `https://{azure_instance}.openai.azure.com/openai/deployments/{azure_deployment_id}/chat/completions`. When the SDK sends a request to `/openai/deployments/gpt-4o/chat/completions`, the route captures `gpt-4o` into the `azure_deployment` named group.
+The [Azure OpenAI SDK](https://github.com/openai/openai-python#microsoft-azure-openai) can connect to [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/chatgpt) through {{site.ai_gateway}}. With Azure, the `model` parameter in SDK calls maps to a deployment name on your Azure instance. The SDK constructs request URLs in the format `https://{azure_instance}.openai.azure.com/openai/deployments/{azure_deployment_id}/chat/completions`. When the SDK sends a request to `/openai/deployments/gpt-4o/chat/completions`, the route captures `gpt-4o` into the `azure_deployment` named group.
 
 Instead of creating a separate route for each deployment, you can configure a single route with a regex path that captures the deployment name from the URL. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) reads the captured value through a [template variable](/plugins/ai-proxy-advanced/#dynamic-model-and-options-from-request-parameters) and uses it as the Azure deployment ID.
 
