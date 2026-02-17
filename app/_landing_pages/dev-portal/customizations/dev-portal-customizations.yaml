@@ -60,7 +60,7 @@ rows:
             config:
               url: /assets/images/dev-portal/dev-portal-editor.png
               alt_text: "KongAir Dev Portal"
-  - column_count: 3
+  - column_count: 4
     columns:
       - blocks: 
           - type: card
@@ -89,6 +89,16 @@ rows:
                 icon: /assets/icons/dev-portal.svg
                 cta:
                   url: /dev-portal/portal-settings/
+      - blocks: 
+          - type: card
+            config:
+              title: VS Code extension
+              description: |
+                Edit and view your Dev Portal pages in real-time in Visual Studio Code. 
+                Integrates with the {{site.konnect_short_name}} API and kongctl to securely manage Dev Portal content.
+              icon: /assets/icons/vscode.png
+              cta:
+                url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
   
   - header:
       type: h2

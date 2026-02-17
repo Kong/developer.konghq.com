@@ -173,7 +173,8 @@ DAOs
 DAOs
 daos
 dashboarding
-Dashscope
+DashScope
+dashscope
 Datadog
 Datadog
 datadog
@@ -702,6 +703,7 @@ qubit
 querystring
 qux
 Qwen
+qwen
 ratelimit
 rbac
 reachability
@@ -993,6 +995,7 @@ vms
 vnet
 vpc
 vpcs
+VS Code
 Vue
 Vue
 walkthrough
