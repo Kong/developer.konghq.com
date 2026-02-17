@@ -2,25 +2,47 @@
 
 module Jekyll
   class ClosestHeading # rubocop:disable Style/Documentation
-    def initialize(page, tag)
+    def initialize(page, line_number, context)
       @page = page
-      @tag = tag
+      @line_number = line_number
+      @context = context
+    end
+
+    def closest_heading
+      return 2 if @line_number.nil?
+
+      # Scan backwards from the tag's line
+      heading = lines[0...@line_number - 1]
+                .reverse
+                .find { |line| line.match?(/^\#{1,6}\s+/) }
+
+      return 2 unless heading
+
+      match = heading.match(/^(\#{1,6})\s+(.*)/)
+      match[1].length
     end
 
     def level
-      last_heading_level = 1
+      closest = closest_heading
+      current_level = closest || @context['heading_level'] || 2
 
-      content.lines.each do |line|
-        last_heading_level = ::Regexp.last_match(1).length if line =~ /^(\#{1,6})\s+(.*)/
-
-        break if line.include?("{% #{@tag}") || line.include?("{%#{@tag}")
-      end
-
-      last_heading_level
+      current_level += 1
+      current_level += 1 if @context['tab_id']
+      current_level
     end
 
-    def content
-      @content ||= @page['content']
+    private
+
+    def site
+      @site ||= @context.registers[:site]
+    end
+
+    def lines
+      @lines ||= if @context.registers[:current_include_path]
+                   File.readlines(@context.registers[:current_include_path])
+                 else
+                   @page['content'].lines
+                 end
     end
   end
 end

@@ -56,11 +56,12 @@ module Jekyll
                strict_filters: @site.config['liquid']['strict_filters'],
                strict_variables: @site.config['liquid']['strict_variables'] }
 
-      rendered_content = Liquid::Template.parse(@content).render!(payload, info)
+      rendered_content = Liquid::Template.parse(@content, { line_numbers: true }).render!(payload, info)
 
       layout = @site.layouts['llm']
       layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
-      Liquid::Template.parse(layout.content).render!(layout_payload, info)
+
+      Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
     end
 
     def output_ext
