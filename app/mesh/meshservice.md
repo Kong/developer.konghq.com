@@ -109,7 +109,7 @@ spec:
       kuma.io/service: test-server
 ```
 
-However, if you create another `DataPlane` with the following configuration, {{site.mesh_product_name}} can't combine the two inbounds into a single coherent `MeshService` for `test-server`:
+However, if you create another `Dataplane` with the following configuration, {{site.mesh_product_name}} can't combine the two inbounds into a single coherent `MeshService` for `test-server`:
 
 ```yaml
 inbound:
