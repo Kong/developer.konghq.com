@@ -622,7 +622,7 @@ spec:
     metadata:
       [...]
       annotations:
-        kuma.io/wait-for-dataplane-ready: true
+        kuma.io/wait-for-dataplane-ready: "true"
     spec:
       containers:
         [...]
