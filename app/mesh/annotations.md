@@ -79,6 +79,13 @@ metadata:
  name: default
  labels:
    kuma.io/mesh: default
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: default
+  labels:
+    kuma.io/mesh: default
 [...]
 ```
 
@@ -94,7 +101,7 @@ metadata:
 [...]
 ```
 
-Labeling pods or deployments will take precedence on the namespace annotation.
+Labeling Pods or Deployments will take precedence over the namespace annotation.
 
 ### `kuma.io/system-namespace`
 
@@ -194,9 +201,9 @@ These listeners are needed because transparent proxy and mTLS assume a single IP
 
 ### `kuma.io/application-probe-proxy-port` {% new_in 2.9 %}
 
-Specifies the port on which Application Probe Proxy listens. Application Probe Proxy coverts `HTTPGet`, `TCPSocket`, and `gRPC` probes in the Pod to `HTTPGet` probes and converts back to their original types before sending to the application when actual probe requests are received. 
+Specifies the port on which Application Probe Proxy listens. Application Probe Proxy converts `HTTPGet`, `TCPSocket`, and `gRPC` probes in the Pod to `HTTPGet` probes and converts back to their original types before sending to the application when actual probe requests are received. 
 
-Application Probe Proxy by default listens on port `9001` and it suppresses the virtual probes feature. By setting it to `0`, you can disable this feature and activate virtual probes, unless it's also disabled.
+Application Probe Proxy listens on port 9001 by default and suppresses the virtual probes feature. Set it to 0 to disable Application Probe Proxy and activate virtual probes instead, unless virtual probes are also disabled.
 
 ```yaml
 apiVersion: v1
@@ -620,7 +627,7 @@ spec: ...
 
 ### `prometheus.metrics.kuma.io/aggregate-<name>-path`
 
-Defines the path that the `kuma-dp` sidecar has to scrape for prometheus metrics. The default value is `/metrics`.
+Defines the path that the `kuma-dp` sidecar has to scrape for Prometheus metrics. The default value is `/metrics`.
 
 ```yaml
 apiVersion: v1
@@ -634,7 +641,7 @@ spec: ...
 
 ### `prometheus.metrics.kuma.io/aggregate-<name>-port`
 
-Defines the port, that the `kuma-dp` sidecar has to scrape for prometheus metrics.
+Defines the port, that the `kuma-dp` sidecar has to scrape for Prometheus metrics.
 
 ```yaml
 apiVersion: v1
