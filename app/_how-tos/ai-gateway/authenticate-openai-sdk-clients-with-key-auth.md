@@ -55,12 +55,12 @@ prereqs:
     - title: OpenAI API Key
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
-    - title: OpenAI SDK
-      include_content: prereqs/openai-sdk
-      icon_url: /assets/icons/openai.svg
     - title: Python
       include_content: prereqs/python
       icon_url: /assets/icons/python.svg
+    - title: OpenAI SDK
+      include_content: prereqs/openai-sdk
+      icon_url: /assets/icons/openai.svg
   entities:
     services:
       - example-service
@@ -133,7 +133,7 @@ entities:
 
 ## Configure the AI Proxy Advanced plugin
 
-Enable [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to proxy authenticated requests to OpenAI. The `auth` block here holds the upstream OpenAI API key, which is separate from the consumer's Key Auth credential:
+Enable [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to proxy authenticated requests to OpenAI. The `auth` block here holds the upstream OpenAI API key, which is separate from the Consumer's Key Auth credential:
 
 {% entity_examples %}
 entities:
@@ -158,7 +158,7 @@ variables:
 
 ## Validate
 
-Create a test script to verify the full authentication flow. The script uses the OpenAI Python SDK, pointing at your Kong route with the consumer's Key Auth credential as the API key.
+Create a test script to verify the full authentication flow. The script uses the OpenAI Python SDK, pointing at your {{site.base_gateway}} Route with the Consumer's Key Auth credential as the API key.
 ```bash
 cat <<EOF > test_openai.py
 from openai import OpenAI
