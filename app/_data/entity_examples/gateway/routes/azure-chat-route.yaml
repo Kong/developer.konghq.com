@@ -4,4 +4,4 @@ paths:
 methods:
   - POST
 service:
-  name: azure-openai.service
+  name: azure-openai-service

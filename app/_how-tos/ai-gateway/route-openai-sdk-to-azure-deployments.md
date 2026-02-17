@@ -36,7 +36,6 @@ tags:
   - ai
   - openai
   - azure
-  - ai-sdks
 
 tldr:
   q: How do I route OpenAI SDK requests to different Azure OpenAI deployments through a single Kong route?
