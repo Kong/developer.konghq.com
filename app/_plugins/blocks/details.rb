@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+require 'yaml'
+
+module Jekyll
+  class Details < Liquid::Block # rubocop:disable Style/Documentation
+    def initialize(tag_name, markup, tokens)
+      super
+      @name = markup.strip
+    end
+
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      @context = context
+      @site = context.registers[:site]
+      @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
+
+      contents = super
+
+      config = YAML.load(contents)
+
+      context.stack do
+        context['config'] = config
+        Liquid::Template.parse(template).render(context)
+      end
+    rescue Psych::SyntaxError => e
+      message = <<~STRING
+        On `#{@page['path']}`, the following {% details %} block contains a malformed yaml:
+        #{contents.strip.split("\n").each_with_index.map { |l, i| "#{i}: #{l}" }.join("\n")}
+        #{e.message}
+      STRING
+
+      raise ArgumentError, message
+    end
+
+    def template
+      if @page['output_format'] == 'markdown'
+        File.read(File.join(@site.source, '_includes/components/details.md'))
+      else
+        File.read(File.join(@site.source, '_includes/components/details.html'))
+      end
+    end
+  end
+end
+
+Liquid::Template.register_tag('details', Jekyll::Details)

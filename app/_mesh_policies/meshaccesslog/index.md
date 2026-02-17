@@ -210,163 +210,157 @@ Example output:
 }
 ```
 
-<details>
-  <summary>TCP configuration with default fields:</summary>
+{% details %}
+summary: "TCP configuration with default fields:"
+content: |
+  {% if_version lte:2.2.x %}
+  ```yaml
+  format:
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+  ```
+  {% endif_version %}
+  {% if_version gte:2.3.x %}
+  ```yaml
+  format:
+    type: Json
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+  ```
+  {% endif_version %}
+{% enddetails %}
 
-  <div markdown="1" class="code">
-{% if_version lte:2.2.x %}
-```yaml
-format:
-  json:
-    - key: "start_time"
-      value: "%START_TIME%"
-    - key: "response_flags"
-      value: "%RESPONSE_FLAGS%"
-    - key: "kuma_mesh"
-      value: "%KUMA_MESH%"
-    - key: "kuma_source_address_without_port"
-      value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-    - key: "kuma_source_service"
-      value: "%KUMA_SOURCE_SERVICE%"
-    - key: "upstream_host"
-      value: "%UPSTREAM_HOST%"
-    - key: "kuma_destination_service"
-      value: "%KUMA_DESTINATION_SERVICE%"
-    - key: "duration_ms"
-      value: "%DURATION%"
-    - key: "bytes_sent"
-      value: "%BYTES_SENT%"
-    - key: "bytes_received"
-      value: "%BYTES_RECEIVED%"
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
-```yaml
-format:
-  type: Json
-  json:
-    - key: "start_time"
-      value: "%START_TIME%"
-    - key: "response_flags"
-      value: "%RESPONSE_FLAGS%"
-    - key: "kuma_mesh"
-      value: "%KUMA_MESH%"
-    - key: "kuma_source_address_without_port"
-      value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-    - key: "kuma_source_service"
-      value: "%KUMA_SOURCE_SERVICE%"
-    - key: "upstream_host"
-      value: "%UPSTREAM_HOST%"
-    - key: "kuma_destination_service"
-      value: "%KUMA_DESTINATION_SERVICE%"
-    - key: "duration_ms"
-      value: "%DURATION%"
-    - key: "bytes_sent"
-      value: "%BYTES_SENT%"
-    - key: "bytes_received"
-      value: "%BYTES_RECEIVED%"
-```
-{% endif_version %}
-</div>
-
-</details>
-
-<details>
-  <summary>HTTP configuration with default fields:</summary>
-
-<div markdown="1" class="code">
-{% if_version lte:2.2.x %}
-```yaml
-format:
-  json:
-    - key: "start_time"
-      value: "%START_TIME%"
-    - key: "kuma_mesh"
-      value: "%KUMA_MESH%"
-    - key: 'method'
-      value: '"%REQ(:METHOD)%'
-    - key: "path"
-      value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-    - key: 'protocol'
-      value: '%PROTOCOL%'
-    - key: "response_code"
-      value: "%RESPONSE_CODE%"
-    - key: "response_flags"
-      value: "%RESPONSE_FLAGS%"
-    - key: "bytes_received"
-      value: "%BYTES_RECEIVED%"
-    - key: "bytes_sent"
-      value: "%BYTES_SENT%"
-    - key: "duration_ms"
-      value: "%DURATION%"
-    - key: "upstream_service_time"
-      value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
-    - key: 'x_forwarded_for'
-      value: '"%REQ(X-FORWARDED-FOR)%"'
-    - key: 'user_agent'
-      value: '"%REQ(USER-AGENT)%"'
-    - key: 'request_id'
-      value: '"%REQ(X-REQUEST-ID)%"'
-    - key: 'authority'
-      value: '"%REQ(:AUTHORITY)%"'
-    - key: "kuma_source_service"
-      value: "%KUMA_SOURCE_SERVICE%"
-    - key: "kuma_destination_service"
-      value: "%KUMA_DESTINATION_SERVICE%"
-    - key: "kuma_source_address_without_port"
-      value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-    - key: "upstream_host"
-      value: "%UPSTREAM_HOST%"
-```
-{% endif_version %}
-{% if_version gte:2.3.x %}
-```yaml
-format:
-  type: Json
-  json:
-    - key: "start_time"
-      value: "%START_TIME%"
-    - key: "kuma_mesh"
-      value: "%KUMA_MESH%"
-    - key: 'method'
-      value: '"%REQ(:METHOD)%'
-    - key: "path"
-      value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-    - key: 'protocol'
-      value: '%PROTOCOL%'
-    - key: "response_code"
-      value: "%RESPONSE_CODE%"
-    - key: "response_flags"
-      value: "%RESPONSE_FLAGS%"
-    - key: "bytes_received"
-      value: "%BYTES_RECEIVED%"
-    - key: "bytes_sent"
-      value: "%BYTES_SENT%"
-    - key: "duration_ms"
-      value: "%DURATION%"
-    - key: "upstream_service_time"
-      value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
-    - key: 'x_forwarded_for'
-      value: '"%REQ(X-FORWARDED-FOR)%"'
-    - key: 'user_agent'
-      value: '"%REQ(USER-AGENT)%"'
-    - key: 'request_id'
-      value: '"%REQ(X-REQUEST-ID)%"'
-    - key: 'authority'
-      value: '"%REQ(:AUTHORITY)%"'
-    - key: "kuma_source_service"
-      value: "%KUMA_SOURCE_SERVICE%"
-    - key: "kuma_destination_service"
-      value: "%KUMA_DESTINATION_SERVICE%"
-    - key: "kuma_source_address_without_port"
-      value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
-    - key: "upstream_host"
-      value: "%UPSTREAM_HOST%"
-```
-{% endif_version %}
-</div>
-
-</details>
+{% details %}
+summary: "HTTP configuration with default fields:"
+content: |
+  {% if_version lte:2.2.x %}
+  ```yaml
+  format:
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: 'method'
+        value: '"%REQ(:METHOD)%'
+      - key: "path"
+        value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+      - key: 'protocol'
+        value: '%PROTOCOL%'
+      - key: "response_code"
+        value: "%RESPONSE_CODE%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "upstream_service_time"
+        value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+      - key: 'x_forwarded_for'
+        value: '"%REQ(X-FORWARDED-FOR)%"'
+      - key: 'user_agent'
+        value: '"%REQ(USER-AGENT)%"'
+      - key: 'request_id'
+        value: '"%REQ(X-REQUEST-ID)%"'
+      - key: 'authority'
+        value: '"%REQ(:AUTHORITY)%"'
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+  ```
+  {% endif_version %}
+  {% if_version gte:2.3.x %}
+  ```yaml
+  format:
+    type: Json
+    json:
+      - key: "start_time"
+        value: "%START_TIME%"
+      - key: "kuma_mesh"
+        value: "%KUMA_MESH%"
+      - key: 'method'
+        value: '"%REQ(:METHOD)%'
+      - key: "path"
+        value: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+      - key: 'protocol'
+        value: '%PROTOCOL%'
+      - key: "response_code"
+        value: "%RESPONSE_CODE%"
+      - key: "response_flags"
+        value: "%RESPONSE_FLAGS%"
+      - key: "bytes_received"
+        value: "%BYTES_RECEIVED%"
+      - key: "bytes_sent"
+        value: "%BYTES_SENT%"
+      - key: "duration_ms"
+        value: "%DURATION%"
+      - key: "upstream_service_time"
+        value: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+      - key: 'x_forwarded_for'
+        value: '"%REQ(X-FORWARDED-FOR)%"'
+      - key: 'user_agent'
+        value: '"%REQ(USER-AGENT)%"'
+      - key: 'request_id'
+        value: '"%REQ(X-REQUEST-ID)%"'
+      - key: 'authority'
+        value: '"%REQ(:AUTHORITY)%"'
+      - key: "kuma_source_service"
+        value: "%KUMA_SOURCE_SERVICE%"
+      - key: "kuma_destination_service"
+        value: "%KUMA_DESTINATION_SERVICE%"
+      - key: "kuma_source_address_without_port"
+        value: "%KUMA_SOURCE_ADDRESS_WITHOUT_PORT%"
+      - key: "upstream_host"
+        value: "%UPSTREAM_HOST%"
+  ```
+  {% endif_version %}
+{% enddetails %}
 
 
 ### Backends
