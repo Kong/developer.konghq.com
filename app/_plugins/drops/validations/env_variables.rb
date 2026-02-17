@@ -8,7 +8,7 @@ module Jekyll
     module Validations
       class EnvVariables < Base # rubocop:disable Style/Documentation
         def variables
-          @variables ||= @yaml.except('section')
+          @variables ||= @yaml.except('section', 'indent')
         end
 
         def data_validate

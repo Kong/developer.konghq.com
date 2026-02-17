@@ -80,6 +80,7 @@ prereqs:
 
            {% env_variables %}
            DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
+           indent: 3
            {% endenv_variables %}
       icon_url: /assets/icons/ollama.svg
 
