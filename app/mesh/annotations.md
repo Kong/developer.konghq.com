@@ -28,7 +28,7 @@ min_version:
   mesh: '2.8'
 ---
 
-This page provides a complete list of all the annotations you can specify when you run {{site.mesh_product_name}} in Kubernetes mode.
+This page provides a complete list of all the annotations and labels you can specify when you run {{site.mesh_product_name}} in Kubernetes mode.
 
 ## Labels
 
@@ -36,9 +36,7 @@ This page provides a complete list of all the annotations you can specify when y
 
 Enable or disable sidecar injection.
 
-**Example**
-
-Used on the namespace it will inject the sidecar in all pods created in the namespace:
+Apply this label on the namespace to inject the sidecar in all Pods created in the namespace:
 
 ```yaml
 apiVersion: v1
@@ -50,7 +48,10 @@ metadata:
 [...]
 ```
 
-Used on a deployment using pod template it will inject the sidecar in all pods managed by this deployment:
+{:.info}
+> Since {{ site.mesh_product_name }} 2.11, each namespace in the mesh must have the `kuma.io/sidecar-injection` label.
+
+Apply this label on a deployment using a Pod template to inject the sidecar in all Pods managed by this deployment:
 
 ```yaml
 apiVersion: v1
@@ -65,15 +66,11 @@ spec:
 [...]
 ```
 
-Labeling pods or deployments will take precedence on the namespace annotation.
-
 ### `kuma.io/mesh`
 
-Associate Pods with a particular Mesh. Label value must be the name of a Mesh resource.
+Associate Pods with a particular mesh. The label value must be the name of a `Mesh` resource.
 
-**Example**
-
-It can be used on an entire namespace:
+Apply the label on an entire namespace:
 
 ```yaml
 apiVersion: v1
@@ -85,7 +82,7 @@ metadata:
 [...]
 ```
 
-It can be used on a pod:
+Apply the label on a Pod:
 
 ```yaml
 apiVersion: v1
@@ -101,17 +98,14 @@ Labeling pods or deployments will take precedence on the namespace annotation.
 
 ### `kuma.io/system-namespace`
 
-This label is used to indicate the Namespace that Kuma stores its secrets in.
-It's automatically set on the Namespace the Helm chart is installed into by a
-Job started by Helm.
+This label is used to indicate the namespace in which {{site.mesh_product_name}} stores its secrets.
+It's automatically set on the namespace in which the Helm chart is installed by a job started by Helm.
 
 ## Annotations
 
 ### `kuma.io/gateway`
 
 Lets you specify the Pod should run in gateway mode. Inbound listeners are not generated.
-
-**Example**
 
 ```yaml
 apiVersion: apps/v1
@@ -133,9 +127,7 @@ spec:
 
 ### `kuma.io/ingress`
 
-Marks the Pod as the Zone Ingress. Needed for multizone communication -- provides the entry point for traffic from other zones.
-
-**Example**
+Marks the Pod as the zone ingress. This is needed for multi-zone communication since it provides the entry point for traffic from other zones.
 
 ```yaml
 apiVersion: v1
@@ -149,9 +141,7 @@ metadata:
 
 ### `kuma.io/ingress-public-address`
 
-Specifies the public address for Ingress. If not provided, {{site.mesh_product_name}} picks the address from the Ingress Service.
-
-**Example**
+Specifies the public address for an ingress. If it's not provided, {{site.mesh_product_name}} picks the address from the ingress Service.
 
 ```yaml
 apiVersion: v1
@@ -166,9 +156,7 @@ metadata:
 
 ### `kuma.io/ingress-public-port`
 
-Specifies the public port for Ingress. If not provided, {{site.mesh_product_name}} picks the port from the Ingress Service.
-
-**Example**
+Specifies the public port for an ingress. If it's not provided, {{site.mesh_product_name}} picks the port from the ingress Service.
 
 ```yaml
 apiVersion: v1
@@ -185,8 +173,6 @@ metadata:
 
 Defines a comma-separated list of Services that can be accessed directly.
 
-**Example**
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -199,20 +185,18 @@ metadata:
     kuma.io/transparent-proxying-outbound-port: [...]
 ```
 
-When you provide this annotation, {{site.mesh_product_name}} generates a listener for each IP address and redirects traffic through a `direct-access` cluster that's configured to encrypt connections.
+When you provide this annotation, {{site.mesh_product_name}} generates a listener for each IP address and redirects traffic through a `direct-access` cluster configured to encrypt connections.
 
-These listeners are needed because transparent proxy and mTLS assume a single IP per cluster (for example, the ClusterIP of a Kubernetes Service). If you pass requests to direct IP addresses, Envoy considers them unknown destinations and manages them in passthrough mode -- which means they're not encrypted with mTLS. The `direct-access` cluster enables encryption anyway.
+These listeners are needed because transparent proxy and mTLS assume a single IP per cluster (for example, the ClusterIP of a Kubernetes Service). If you pass requests to direct IP addresses, Envoy considers them unknown destinations and manages them in passthrough mode, which means they're not encrypted with mTLS. The `direct-access` cluster enables encryption anyway.
 
 {:.warning}
 > You should specify this annotation only if you really need it. Generating listeners for every endpoint makes the xDS snapshot very large.
 
 ### `kuma.io/application-probe-proxy-port` {% new_in 2.9 %}
 
-Specifies the port on which "Application Probe Proxy" listens. Application Probe Proxy coverts `HTTPGet`, `TCPSocket` and `gRPC` probes in the pod to `HTTPGet` probes and converts back to their original types before sending to the application when actual probe requests are received. 
+Specifies the port on which Application Probe Proxy listens. Application Probe Proxy coverts `HTTPGet`, `TCPSocket`, and `gRPC` probes in the Pod to `HTTPGet` probes and converts back to their original types before sending to the application when actual probe requests are received. 
 
-Application Probe Proxy by default listens on port `9001` and it suppresses the "Virtual Probes" feature. By setting it to `0`, you can disable this feature and activate "Virtual Probes" unless it's also disabled.
-
-**Example**
+Application Probe Proxy by default listens on port `9001` and it suppresses the virtual probes feature. By setting it to `0`, you can disable this feature and activate virtual probes, unless it's also disabled.
 
 ```yaml
 apiVersion: v1
@@ -226,9 +210,7 @@ metadata:
 
 ### `kuma.io/virtual-probes`
 
-Enables automatic converting of HttpGet probes to virtual probes. The virtual probe is served on a sub-path of the insecure port specified with `kuma.io/virtual-probes-port` -- for example, `:8080/health/readiness` -> `:9000/8080/health/readiness`, where `9000` is the value of the `kuma.io/virtual-probes-port` annotation.
-
-**Example**
+Enables automatic converting of `HTTPGet` probes to virtual probes. The virtual probe is served on a sub-path of the insecure port specified with `kuma.io/virtual-probes-port`. For example, `:8080/health/readiness` points to `:9000/8080/health/readiness`, where `9000` is the value of the `kuma.io/virtual-probes-port` annotation.
 
 ```yaml
 apiVersion: v1
@@ -247,9 +229,7 @@ Specifies the insecure port for listening on virtual probes.
 
 ### `kuma.io/sidecar-env-vars`
 
-Semicolon (`;`) separated list of environment variables for the {{site.mesh_product_name}} sidecar.
-
-**Example**
+Semicolon-separated list of environment variables for the {{site.mesh_product_name}} sidecar.
 
 ```yaml
 apiVersion: v1
@@ -262,16 +242,9 @@ metadata:
 
 ### `kuma.io/container-patches`
 
-Specifies the list of names of `ContainerPatch` resources to be applied on
-`kuma-init` and `kuma-sidecar` containers.
+Specifies the list of names of `ContainerPatch` resources to be applied on the `kuma-init` and `kuma-sidecar` containers.
 
-More information about how to use `ContainerPatch` you can find at
-[Custom Container Configuration](/docs/{{ page.release }}/production/dp-config/dpp-on-kubernetes/#custom-container-configuration).
-
-**Example**
-
-It can be used on a resource describing workload (i.e. `Deployment`, `DaemonSet`
-or `Pod`):
+It can be used on a resource describing a workload (`Deployment`, `DaemonSet`, or `Pod`):
 
 ```yaml
 apiVersion: apps/v1
@@ -293,11 +266,11 @@ spec:
     spec: [...]
 ```
 
+For more information about how to use `ContainerPatch`, see [Custom container configuration](/mesh/data-plane-kubernetes/#custom-container-configuration).
+
 ### `prometheus.metrics.kuma.io/port`
 
-Lets you override the `Mesh`-wide default port that Prometheus should scrape metrics from.
-
-**Example**
+Lets you override the mesh-wide default port that Prometheus should scrape metrics from.
 
 ```yaml
 apiVersion: v1
@@ -310,9 +283,7 @@ metadata:
 
 ### `prometheus.metrics.kuma.io/path`
 
-Lets you override the `Mesh`-wide default path that Prometheus should scrape metrics from.
-
-**Example**
+Lets you override the mesh-wide default path that Prometheus should scrape metrics from.
 
 ```yaml
 apiVersion: v1
@@ -327,8 +298,6 @@ metadata:
 
 Tells the sidecar to use its builtin DNS server.
 
-**Example**
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -341,8 +310,6 @@ metadata:
 ### `kuma.io/builtindnsport`
 
 Port the builtin DNS server should listen on for DNS queries.
-
-**Example**
 
 ```yaml
 apiVersion: v1
@@ -357,10 +324,8 @@ metadata:
 ### `kuma.io/ignore`
 
 A boolean to mark a resource as ignored by {{site.mesh_product_name}}.
-It currently only works for services.
+It currently only works for Services.
 This is useful when transitioning to {{site.mesh_product_name}} or to temporarily ignore some entities.
-
-**Example**
 
 ```yaml
 apiVersion: v1
@@ -375,8 +340,6 @@ metadata:
 
 List of inbound ports to exclude from traffic interception by the {{site.mesh_product_name}} sidecar.
 
-**Example**
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -390,8 +353,6 @@ metadata:
 
 List of outbound ports to exclude from traffic interception by the {{site.mesh_product_name}} sidecar.
 
-**Example**
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -403,10 +364,8 @@ metadata:
 
 ### `kuma.io/transparent-proxying-experimental-engine`
 
-Enable or disable experimental transparent proxy engine on Pod.
-Default is `disabled`.
-
-**Example**
+Enable or disable the experimental transparent proxy engine on Pod.
+The default value is `disabled`.
 
 ```yaml
 apiVersion: v1
@@ -419,9 +378,7 @@ metadata:
 
 ### `kuma.io/envoy-admin-port`
 
-Specifies the port for Envoy Admin API. If not set, default admin port 9901 will be used.
-
-**Example**
+Specifies the port for Envoy Admin API. If not set, the default admin port 9901 is used.
 
 ```yaml
 apiVersion: v1
@@ -436,8 +393,6 @@ metadata:
 
 Specifies the log level for Envoy system logs to enable. The available log levels are `trace`, `debug`, `info`, `warning/warn`, `error`, `critical`, `off`. The default is `info`.
 
-**Example**
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -449,9 +404,7 @@ metadata:
 
 ### `kuma.io/envoy-component-log-level`
 
-Specifies the log level for Envoy system logs to enable by components. See `ALL_LOGGER_IDS` in [logger.h from Envoy source](https://github.com/envoyproxy/envoy/blob/main/source/common/common/logger.h#L36) for a list of available components.
-
-**Example**
+Specifies the log level for Envoy system logs to enable by components. See `ALL_LOGGER_IDS` in [logger.h](https://github.com/envoyproxy/envoy/blob/main/source/common/common/logger.h#L36) from the Envoy source code for a list of available components.
 
 ```yaml
 apiVersion: v1
@@ -464,9 +417,7 @@ metadata:
 
 ### `kuma.io/service-account-token-volume`
 
-Volume (specified in the pod spec) containing a service account token for {{site.mesh_product_name}} to inject into the sidecar.
-
-**Example**
+Volume (specified in the Pod spec) containing a Service account token for {{site.mesh_product_name}} to inject into the sidecar.
 
 ```yaml
 apiVersion: v1
@@ -504,10 +455,8 @@ spec:
 
 ### `kuma.io/transparent-proxying-reachable-services`
 
-A comma separated list of `kuma.io/service` to indicate which services this communicates with.
-For more details see the [reachable services docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying#reachable-services).
-
-**Example**
+A comma-separated list of `kuma.io/service`values to indicate which Services this resource communicates with.
+For more information, see the [Reachable Services](/mesh/configure-transparent-proxying/#reachable-services).
 
 ```yaml
 apiVersion: apps/v1
@@ -521,7 +470,6 @@ spec:
     metadata:
       ...
       annotations:
-        # a comma separated list of kuma.io/service values
         kuma.io/transparent-proxying-reachable-services: "redis_kuma-demo_svc_6379,elastic_kuma-demo_svc_9200"
     spec:
       containers:
@@ -530,11 +478,10 @@ spec:
 
 ### `kuma.io/transparent-proxying-ebpf`
 
-When transparent proxy is installed with ebpf mode, you can disable it for particular workloads if necessary.
+When transparent proxy is installed with eBPF mode, you can disable it for particular workloads if necessary.
 
-For more details see the [transparent proxying with ebpf docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#transparent-proxy-with-ebpf-experimental).
+For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
-**Example**
 
 ```yaml
 apiVersion: apps/v1
@@ -556,11 +503,9 @@ spec:
 
 ### `kuma.io/transparent-proxying-ebpf-bpf-fs-path`
 
-Path to BPF FS if different than default (`/sys/fs/bpf`)
+Path to the BPF FS if it's different from the default `/sys/fs/bpf` path.
 
-For more details see the [transparent proxying with ebpf docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#transparent-proxy-with-ebpf-experimental).
-
-**Example**
+For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -582,11 +527,9 @@ spec:
 
 ### `kuma.io/transparent-proxying-ebpf-cgroup-path`
 
-cgroup2 path if different than default (`/sys/fs/cgroup`)
+`cgroup2` path if it's different from the default `/sys/fs/cgroup` path.
 
-For more details see the [transparent proxying with ebpf docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#transparent-proxy-with-ebpf-experimental).
-
-**Example**
+For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -608,11 +551,9 @@ spec:
 
 ### `kuma.io/transparent-proxying-ebpf-programs-source-path`
 
-Custom path for ebpf programs to be loaded when installing transparent proxy
+Custom path for eBPF programs to be loaded when installing transparent proxy.
 
-For more details see the [transparent proxying with ebpf docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#transparent-proxy-with-ebpf-experimental).
-
-**Example**
+For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -634,13 +575,10 @@ spec:
 
 ### `kuma.io/transparent-proxying-ebpf-tc-attach-iface`
 
-Name of the network interface which should be used to attach to it TC-related
-eBPF programs. By default {{site.mesh_product_name}} will use first, non-loopback
-interface it'll find.
+Name of the network interface that should be used to attach TC-related eBPF programs. 
+By default, {{site.mesh_product_name}} uses the first non-loopback interface it finds.
 
-For more details see the [transparent proxying with ebpf docs](/docs/{{ page.release }}/production/dp-config/transparent-proxying/#transparent-proxy-with-ebpf-experimental).
-
-**Example**
+For more information, see [Transparent proxy with eBPF](/mesh/configure-transparent-proxying/#transparent-proxy-with-ebpf-experimental).
 
 ```yaml
 apiVersion: apps/v1
@@ -662,12 +600,13 @@ spec:
 
 ### `kuma.io/wait-for-dataplane-ready`
 
-Define if you want the kuma-sidecar container to wait for the dataplane to be ready before starting app container.
-Read relevant [Data plane on Kubernetes](/docs/{{ page.release }}/production/dp-config/dpp-on-kubernetes/#waiting-for-the-dataplane-to-be-ready) section for more information.
+Defines whether the sidecar container waits for the data plane to be ready before starting app container.
+For more information, see [Data plane on Kubernetes](/mesh/data-plane-kubernetes/#waiting-for-the-data-plane-to-be-ready).
 
 ### `prometheus.metrics.kuma.io/aggregate-<name>-enabled`
 
-Define if `kuma-dp` should scrape metrics from the application that has been defined in the `Mesh` configuration. Default value: `true`. For more details see the [applications metrics docs](/docs/{{ page.release }}/policies/traffic-metrics#expose-metrics-from-applications)
+Defines whether `kuma-dp` should scrape metrics from the application defined in the `Mesh` configuration. 
+The default value is `true`. 
 
 ```yaml
 apiVersion: v1
@@ -681,9 +620,7 @@ spec: ...
 
 ### `prometheus.metrics.kuma.io/aggregate-<name>-path`
 
-Define path, which `kuma-dp` sidecar has to scrape for prometheus metrics. Default value: `/metrics`. For more details see the [applications metrics docs](/docs/{{ page.release }}/policies/traffic-metrics#expose-metrics-from-applications)
-
-**Example**
+Defines the path that the `kuma-dp` sidecar has to scrape for prometheus metrics. The default value is `/metrics`.
 
 ```yaml
 apiVersion: v1
@@ -697,9 +634,7 @@ spec: ...
 
 ### `prometheus.metrics.kuma.io/aggregate-<name>-port`
 
-Define port, which `kuma-dp` sidecar has to scrape for prometheus metrics. For more details see the [applications metrics docs](/docs/{{ page.release }}/policies/traffic-metrics#expose-metrics-from-applications)
-
-**Example**
+Defines the port, that the `kuma-dp` sidecar has to scrape for prometheus metrics.
 
 ```yaml
 apiVersion: v1
@@ -713,9 +648,7 @@ spec: ...
 
 ### `kuma.io/transparent-proxying-inbound-v6-port`
 
-Define the port to use for [IPv6](/docs/{{ page.release }}/production/dp-config/ipv6/) traffic. To turn off IPv6 set this to 0.
-
-**Example**
+Defines the port to use for [IPv6](/mesh/ipv6-support/) traffic. To turn off IPv6, set this to 0.
 
 ```yaml
 apiVersion: v1
@@ -729,10 +662,8 @@ spec: ...
 
 ### `kuma.io/sidecar-drain-time`
 
-Allows specifying drain time of {{site.mesh_product_name}} DP sidecar. The default value is 30s.
-The default could be changed using [the control-plane configuration](/docs/{{ page.release }}/reference/kuma-cp) or `KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_DRAIN_TIME` env.
-
-**Example**
+Allows specifying drain time of {{site.mesh_product_name}} data plane sidecar. The default value is 30s.
+It can be changed using [the control plane configuration](/mesh/reference/kuma-cp/) or `KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_DRAIN_TIME` env.
 
 ```yaml
 apiVersion: v1
@@ -743,12 +674,11 @@ metadata:
     kuma.io/sidecar-drain-time: "10s"
 spec: ...
 ```
+
 ### `kuma.io/init-first`
 
-Allows specifying that the {{site.mesh_product_name}} init container should run first (ahead of any other init containers). 
-The default is `false` if omitted. Setting this to `true` may be desirable for security, as it would prevent network access for other init containers. The order is _not_ guaranteed, as other mutating admission webhooks may further manipulate this ordering. 
-
-**Example**
+Allows specifying that the {{site.mesh_product_name}} init container should run first, ahead of any other init containers. 
+The default is `false` if omitted. Setting this to `true` may be desirable for security, as it would prevent network access for other init containers. The order is not guaranteed, as other mutating admission webhooks may further manipulate this ordering.
 
 ```yaml
 apiVersion: v1
