@@ -89,8 +89,8 @@ To convert a project’s storage type:
 {:.info}
 > If you convert a project to **Git Sync**, Insomnia displays additional configuration fields.  
 > 
-> You must:
-> - Select a Git provider.
-> - Authorize your account.
-> - Select a repository.
-> - Select a branch.
+> You must also:
+> 1. Select a Git provider.
+> 1. Authorize your account.
+> 1. Select a repository.
+> 1. Select a branch.
