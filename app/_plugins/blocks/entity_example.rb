@@ -26,7 +26,7 @@ module Jekyll
 
       output = context.stack do
         context['entity_example'] = entity_example_drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
 
       if example['indent']

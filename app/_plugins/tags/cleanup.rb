@@ -15,7 +15,7 @@ module Jekyll
 
       context.stack do
         context['cleanup'] = cleanup_drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 

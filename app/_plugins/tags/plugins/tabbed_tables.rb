@@ -11,7 +11,7 @@ module Jekyll
         context.stack do
           context['type'] = table
           context['tables'] = tables(site)
-          Liquid::Template.parse(template).render(context)
+          Liquid::Template.parse(template, { line_numbers: true }).render(context)
         end
       end
 

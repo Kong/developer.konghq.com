@@ -21,7 +21,7 @@ module Jekyll
 
       context.stack do
         context['faqs'] = faqs
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 

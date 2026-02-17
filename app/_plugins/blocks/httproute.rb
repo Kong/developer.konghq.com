@@ -55,7 +55,7 @@ module Jekyll
         context['indentation'] = config['indent'].to_i
         context['gateway_api'] = gateway_api if gateway_api
         context['ingress'] = ingress if ingress
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

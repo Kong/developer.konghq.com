@@ -16,7 +16,7 @@ module Jekyll
 
       context.stack do
         context['changelog'] = changelog
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 

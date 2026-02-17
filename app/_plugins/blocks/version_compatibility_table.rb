@@ -18,7 +18,7 @@ module Jekyll
       context.stack do
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['features'], 'item_title' => config['item_title'] }
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

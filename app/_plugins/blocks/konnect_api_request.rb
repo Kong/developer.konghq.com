@@ -27,7 +27,7 @@ module Jekyll
 
       output = context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file)).render(context)
+        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
       end
 
       if drop.config['indent']

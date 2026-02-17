@@ -325,8 +325,8 @@ module Jekyll
         context['kube'] = contents[:kube]
         context['uni_legacy'] = contents[:uni_legacy]
         context['uni'] = contents[:uni]
-        context['heading_level'] = Jekyll::ClosestHeading.new(@page, 'policy_yaml').level + 1
-        ::Liquid::Template.parse(template).render(context)
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+        ::Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
