@@ -66,8 +66,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Overview
-
 [OpenAI-compatible SDKs](https://platform.openai.com/docs/libraries) always set the `model` field in the request body. This is a required parameter and can't be omitted.
 
 [AI Proxy Advanced](/plugins/ai-proxy-advanced/) validates the body `model` against the plugin-configured model. If they don't match, the plugin rejects the request with `400 Bad Request: cannot use own model - must be: <configured-model>`. When load balancing across multiple models, the balancer may route to a target that doesn't match the SDK's `model` value, which triggers this error.
