@@ -19,20 +19,18 @@ tldr:
 faqs:
   - q: Where does Insomnia get Git credentials from?
     a: Insomnia uses the authentication provider that you selected during Git Sync setup. It also reads credentials from your local Git configuration.
+  - q: Can Insomnia use my existing local Git configuration for authentication?
+    a: |
+      Yes. Insomnia can use credentials configured in your local Git environment for Git operations.
+
+      If authentication fails, verify your local Git configuration and confirm that you have access to the repository.  
 
 prereqs:
   inline:
     - title: Git repository access
       content: |
         Ensure that you have access to the Git repository and required permissions to both push and pull changes.
-      icon_url: /assets/icons/git.svg
-
-faqs:
-  - q: Can Insomnia use my existing local Git configuration for authentication?
-    a: |
-      Yes. Insomnia can use credentials configured in your local Git environment for Git operations.
-
-      If authentication fails, verify your local Git configuration and confirm that you have access to the repository.      
+      icon_url: /assets/icons/git.svg   
 
 related_resources:
   - text: Storage options in Insomnia
