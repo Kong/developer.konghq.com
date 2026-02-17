@@ -1,5 +1,5 @@
 ---
-title: Kubernetes annotations and labels
+title: Kubernetes annotations and labels for {{site.mesh_product_name}}
 description: Reference for all Kubernetes annotations and labels available in {{site.mesh_product_name}}, including sidecar injection, mesh association, transparent proxy settings, and metrics configuration.
 
 content_type: reference
