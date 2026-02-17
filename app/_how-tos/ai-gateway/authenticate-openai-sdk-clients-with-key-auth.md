@@ -77,7 +77,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Overview
 
 The [OpenAI SDK](https://platform.openai.com/docs/api-reference/authentication) authenticates by sending `Authorization: Bearer <api-key>` with every request. This behavior is hardcoded in the SDK and can't be changed.
 
