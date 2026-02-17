@@ -32,7 +32,6 @@ rows:
                   text: |
                     {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
 
-                    Common problems can be mapped to specific {{site.base_gateway}} plugins, and we provide examples for how to configure them for common use cases in the sections below.
 
   - column_count: 3
     columns:
