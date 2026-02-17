@@ -1,6 +1,5 @@
 ---
 title: Configure Git credentials for Git Sync in Insomnia
-permalink: /how-to/configure-git-credentials-git-sync/
 content_type: how_to
 
 products:
@@ -28,6 +27,13 @@ prereqs:
         Ensure that you have access to the Git repository and required permissions to both push and pull changes.
       icon_url: /assets/icons/git.svg
 
+faqs:
+  - q: Can Insomnia use my existing local Git configuration for authentication?
+    a: |
+      Yes. Insomnia can use credentials configured in your local Git environment for Git operations.
+
+      If authentication fails, verify your local Git configuration and confirm that you have access to the repository.      
+
 related_resources:
   - text: Storage options in Insomnia
     url: /insomnia/storage/
@@ -36,35 +42,24 @@ related_resources:
 ---
 Insomnia Git Sync lets you store and version Insomnia project data in an external Git repository. To push and pull changes, Insomnia requires credentials that authenticate with your Git provider. For example, GitHub, GitLab, or Bitbucket.
 
-Insomnia can retrieve Git credentials in the following ways:
+You can configure Git credentials in three supported ways:
+- In **Insomnia Preferences**
+- During **Git Sync project setup**
+- In your local Git configuration file
 
-- From the Git Sync configuration in Insomnia
-- From your local Git configuration file
-- From Insomnia credential preferences
+## Add credentials in Preferences
 
-## Configure Git Sync credentials
+Adding credentials in **Preferences** lets you reuse them across projects.
+1. In Insomnia, click **Preferences**.
+2. Click **Credentials**.
+3. Under **Git Credentials**, click **Add Credential**.
+4. Choose one of the following:
+   - **GitHub**: Complete the OAuth flow.
+   - **GitLab**: Complete the OAuth flow.
+   - **Access Token**: Enter the required fields, such as base URL and access token.
+5. Click **Save Credential**.
 
-1. In the Insomnia application, from the **PROJECTS** panel, hover over a project.
-1. Select the dropdown arrow, and click **Settings**.
-1. In **Type**, select **Git Sync**.
-1. In **Authorized as**, select your authentication provider.
-1. In **Repository**, select the repository or enter the repository URL.
-1. (Optional) In **Branch**, select the branch to sync with.
-1. Click **Scan for files**.
-
-## Update local Git configuration file
-
-[insert content]
-
-## Edit Insomnia git credentials
-
-1. In the Insomnia application, click **Preferences**.
-1. Click **Credentials**.
-1. From **Git Credentials**, click **Add Credential**.
-1. Choose either:
-    - GitHub: Click **Authenticate with GitHub App**.
-    - GitLab: Click **Authenticate with GitLab App**.
-    - Access Token: Fill out the **Access Token Credential** form and click **Save Credential**.
+Insomnia stores the credential and makes it available when creating or cloning Git Sync projects.
 
 ## Validation
 
