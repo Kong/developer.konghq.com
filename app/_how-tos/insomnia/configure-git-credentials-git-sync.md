@@ -1,6 +1,7 @@
 ---
 title: Configure Git credentials for Git Sync in Insomnia
 content_type: how_to
+permalink: /how-to/configure-git-credentials-git-sync/
 
 products:
   - insomnia
