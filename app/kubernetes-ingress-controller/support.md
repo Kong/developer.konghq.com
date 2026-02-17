@@ -65,9 +65,6 @@ rows:
   - version: "**3.4.x**"
     release: "**2024-12-18**"
     support: "**2027-12-18**"
-  - version: "3.3.x"
-    release: "2024-08-26"
-    support: "2025-08-26"
   - version: "**2.12.x**"
     release: "**2023-09-25**"
     support: "**2026-09-25**"
@@ -85,6 +82,9 @@ columns:
   - title: End of Support
     key: support
 rows:
+  - version: "3.3.x"
+    release: "2024-08-26"
+    support: "2025-08-26"
   - version: "3.2.x"
     release: "2024-06-12"
     support: "2025-06-12"

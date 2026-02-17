@@ -53,7 +53,7 @@ The debugger helps capture OpenTelemetry-compatible traces for all requests matc
 * Traces can be generated for a service or per route
 * Refined traces can be generated for all requests matching a sampling criteria
 * Sampling criteria can be defined with simple expressions language, for example: `http.method` == `GET`
-* Trace sessions are retained for up to 7 days
+* Trace sessions are retained for up to 15 days
 * Traces can be visualized in {{site.konnect_short_name}}'s built in trace viewer
 
 To ensure consistency and interoperability, tracing adheres to OpenTelemetry naming conventions for spans and attributes, wherever possible.
@@ -118,7 +118,7 @@ When a debug session is initiated with payload capture, the debugger captures re
 ### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
 
-Debug session with payload data are retained for up to 3 days after which there are purged from {{site.konnect_short_name}}.
+Debug session with payload data is retained for up to 3 days, after which they are purged from {{site.konnect_short_name}}.
 
 ## Data Security with Customer-Managed Encryption Keys (CMEK)
 By default, logs are automatically encrypted using encryption keys that are owned and managed by {{site.konnect_short_name}}. However if you have a specific compliance and regulatory requirements related to the keys that protect your data, you can use the customer-managed encryption keys. This ensures that sensitive data are secured for each organization with their own key and nobody, including {{site.konnect_short_name}}, has access to that data. For more information about how to create and manage CMEK keys, see [Customer-Managed Encryption Keys (CMEK)](/konnect-platform/cmek/).
@@ -150,7 +150,7 @@ Once the session starts, traces will be captured for requests that match the rul
 {:.success}
 > You can also start a debug session from the overview page of a control plane, Gateway Service, or Route by clicking the **Actions** dropdown menu and clicking **Start Debugging**. Additionally, you can use [KAi](/konnect-platform/kai/) to debug as well. 
 
-Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 7 days.
+Each session can be configured to run for a time between 10 seconds and 30 minutes. Sessions are retained for up to 15 days.
 
 For details on defining sampling rules, see [Debugger sessions](#debugger-sessions).
 
