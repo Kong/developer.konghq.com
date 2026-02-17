@@ -223,7 +223,7 @@ Here's a configuration example that can be used under `targetRef` or `backendRef
 In this case, the entry selects any resource with the display name `test-server-v2` from the `east` zone in the `test-app` namespace.
 Only one resource will be selected.
 
-But if you leave out the namespace, any_resource named `test-server-v2` in the `east` zone is selected, regardless of its namespace:
+But if you leave out the namespace, any resource named `test-server-v2` in the `east` zone is selected, regardless of its namespace:
 
 ```yaml
 - kind: MeshService
