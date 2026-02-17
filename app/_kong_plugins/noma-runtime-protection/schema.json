@@ -1,0 +1,87 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "API_base": {
+          "default": "https://api.noma.security",
+          "description": "API Base URL for Noma AI-DR\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "application_ID": {
+          "description": "Application ID for Noma tracking",
+          "type": "string"
+        },
+        "client_ID": {
+          "description": "Client ID for OAuth2 authentication\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string"
+        },
+        "client_secret": {
+          "description": "Client Secret for OAuth2 authentication\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).\nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string"
+        },
+        "monitor_mode": {
+          "default": false,
+          "description": "Monitor Mode - log only without blocking",
+          "type": "boolean"
+        }
+      }
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "http",
+        "https"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+
+          "http",
+          "https"
+        ],
+        "required": [],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
