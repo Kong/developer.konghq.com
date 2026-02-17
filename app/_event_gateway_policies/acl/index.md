@@ -1,7 +1,7 @@
 ---
 title: ACLs
 name: ACLs
-content_type: reference
+content_type: plugin
 description: Manage access to your virtual cluster resources.
 products:
     - event-gateway

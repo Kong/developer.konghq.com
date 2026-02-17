@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management
-  version: 2.2.1
+  version: 2.2.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
+  x-oas-source: kong/platform-api@2943485539e433bd895d518fc781e8a8805f986c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2943485539e433bd895d518fc781e8a8805f986c'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1910,7 +1910,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer
@@ -2093,6 +2093,11 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignRoleRequest
     PortalAuthenticationSettingsUpdateRequest:
       description: Properties to update a portal's developer auth settings.
@@ -2335,6 +2340,12 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - id
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignedRoleResponse
     ListPortalsResponse:
       description: A paginated list of portals in the current region in the organization.
@@ -5732,7 +5743,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer

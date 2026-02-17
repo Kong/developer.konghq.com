@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@7e26d6e4d023b6aed068061cdcf7bb282246aced
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7e26d6e4d023b6aed068061cdcf7bb282246aced'
+  x-oas-source: kong/platform-api@197f3664b6c1d3c551710276775dff9bffaee3d1
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/197f3664b6c1d3c551710276775dff9bffaee3d1'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1991,6 +1991,7 @@ components:
       anyOf:
         - $ref: '#/components/schemas/VirtualClusterReferenceById'
         - $ref: '#/components/schemas/VirtualClusterReferenceByName'
+      x-terraform-preferred: '#/components/schemas/VirtualClusterReferenceById'
     VirtualClusterReferenceById:
       description: Reference a virtual cluster by its unique identifier.
       type: object
@@ -2734,6 +2735,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SchemaRegistryReferenceById'
         - $ref: '#/components/schemas/SchemaRegistryReferenceByName'
+      x-terraform-preferred: '#/components/schemas/SchemaRegistryReferenceById'
     SchemaRegistryReferenceById:
       type: object
       properties:
@@ -3974,10 +3976,24 @@ components:
           items:
             $ref: '#/components/schemas/EventGatewayACLOperation'
         resource_names:
-          description: 'If any of these entries match, the resource name matches for this rule.'
-          type: array
-          items:
-            $ref: '#/components/schemas/EventGatewayACLResourceName'
+          description: 'If any of these entries match, the resource name matches for this rule. A maximum of 50 entries are allowed.'
+          oneOf:
+            - type: array
+              maxItems: 50
+              items:
+                $ref: '#/components/schemas/EventGatewayACLResourceName'
+            - type: string
+              x-min-runtime-version: '1.1'
+              example: 'context.auth.tokens.claims["topics"]'
+              x-expression:
+                type: array
+                fields:
+                  - context.auth.principal.name
+                  - context.auth.type
+                  - context.auth.token.claims
+              description: |
+                This expression should evaluate to an array of glob patterns,
+                equivalent to the `match` values in the array form of `resource_names`.
       required:
         - resource_type
         - action
@@ -4135,6 +4151,7 @@ components:
       anyOf:
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceById'
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceByName'
+      x-terraform-preferred: '#/components/schemas/EncryptionKeyStaticReferenceById'
     EncryptionKeyStaticReferenceById:
       description: A static encryption key reference by ID.
       type: object
@@ -5130,7 +5147,7 @@ components:
                 maxLength: 255
                 minLength: 1
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the listener.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5158,7 +5175,7 @@ components:
                 maxLength: 255
                 minLength: 1
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the listener.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5249,7 +5266,7 @@ components:
               name:
                 $ref: '#/components/schemas/BackendClusterName'
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the backend cluster.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5285,7 +5302,7 @@ components:
               name:
                 $ref: '#/components/schemas/BackendClusterName'
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the backend cluster.
                 type: string
                 default: ''
                 maxLength: 512
