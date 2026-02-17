@@ -52,6 +52,8 @@ Before you convert a project:
 
 ## Conversion behavior and limits
 
+Each storage conversion changes where the project data is stored and how the project syncs. Before converting, review the effects of the target storage type. Converting can stop collaboration or disconnect the project from its previous storage backend.
+
 ### Convert Cloud Sync to Local Vault
 
 When you convert a Cloud Sync project to Local Vault, Insomnia permanently removes the project’s cloud-stored data and stores the project on your local device. Cloud collaboration stops.
