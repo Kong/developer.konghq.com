@@ -18,10 +18,10 @@ module Jekyll
       contents = super
 
       config = YAML.load(contents)
-
       context.stack do
         context['config'] = config
-        Liquid::Template.parse(template).render(context)
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

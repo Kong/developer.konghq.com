@@ -45,8 +45,9 @@ module Jekyll
           context['environment'] = environment
           context['navtabs_id'] = navtabs_id
           context['heading_level'] = parse_heading_level(context)
+
           Liquid::Template
-            .parse(template)
+            .parse(template, { line_numbers: true })
             .render(context)
         end
       end
@@ -69,7 +70,7 @@ module Jekyll
         elsif context['prereqs']
           4
         else
-          Jekyll::ClosestHeading.new(@page, 'navtabs').level + 1
+          Jekyll::ClosestHeading.new(@page, @line_number, context).level
         end
       end
     end
@@ -112,10 +113,14 @@ module Jekyll
         # Set a default slug if not provided
         evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
         environment = context.environments.first
-
-        contents = super
+        @page = context.environments.first['page']
 
         navtabs_id = environment['navtabs-stack'].last
+
+        context['tab_id'] = navtabs_id
+        contents = super
+        context['tab_id'] = nil
+
         environment["navtabs-#{navtabs_id}"][evaluated_title] = {
           'content' => block_content(context, contents),
           'attributes' => evaluated_attributes

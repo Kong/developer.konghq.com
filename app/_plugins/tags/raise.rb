@@ -9,7 +9,7 @@ module Jekyll
     end
 
     def render(context)
-      message = Liquid::Template.parse(@param).render(context)
+      message = Liquid::Template.parse(@param, { line_numbers: true }).render(context)
       raise "#{message} via #{context.registers[:page]['path']}"
     end
   end

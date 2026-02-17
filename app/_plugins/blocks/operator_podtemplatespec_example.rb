@@ -16,7 +16,7 @@ module Jekyll
       context.stack do
         context['kubectl_apply'] = config['kubectl_apply']
         context['spec'] = Jekyll::Utils::HashToYAML.new(config['dataplane']).convert(indent_level: 0)
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
