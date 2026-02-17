@@ -1,6 +1,5 @@
 ---
 title: Convert project storage types in Insomnia
-permalink: /insomnia/storage/convert-project-storage/
 content_type: reference
 layout: reference
 breadcrumbs: 
