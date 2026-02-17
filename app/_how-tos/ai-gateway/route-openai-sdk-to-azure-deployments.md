@@ -50,6 +50,12 @@ prereqs:
     - title: Azure
       include_content: prereqs/azure-ai
       icon_url: /assets/icons/azure.svg
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
+    - title: OpenAI SDK
+      include_content: prereqs/openai-sdk
+      icon_url: /assets/icons/openai.svg
   entities:
     services:
       - azure-openai-service
