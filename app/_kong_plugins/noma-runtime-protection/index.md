@@ -28,6 +28,8 @@ search_aliases:
   - ai-dr
   - ai detection and response
 
+min_version:
+  gateway: '3.6'
 ---
 
 [Noma](https://noma.security)'s {{site.ai_gateway_name}} plugin offers full AI detection & response (AI-DR) runtime protection to all OpenAI-compliant modules through your {{site.ai_gateway_name}}.
@@ -46,7 +48,7 @@ The Noma Runtime Protection plugin is available as a LuaRocks module or as a set
 
 ### Prerequisites
 
-Before enabling the plugin, you need to obtain assets from Noma and set up {{site.ai_gateway}}.
+Before enabling the plugin, you need to obtain assets from Noma.
 
 Noma assets:
 * Obtain the Noma plugin `.rock` file or set of Lua files from your Noma Technical Account Manager.
@@ -137,7 +139,7 @@ After installing the plugin, you will need the following {{site.base_gateway}} e
 1. [Set up {{site.ai_gateway}}](/ai-gateway/get-started/) by creating a Service, a Route, and enabling the AI Proxy plugin.
 1. [Create a Consumer and an auth key](/how-to/enable-key-authentication-on-a-service-with-kong-gateway/) to identify the application/client calling the API.
 1. [Group Consumers](/gateway/entities/consumer-group/) (Optional): If you want to set up shared runtime policies, group your Consumers into Consumer Groups.
-1. [Enable the Noma AI Runtime Security plugin](/plugins/noma-runtime-protection/examples/enable-noma-runtime-protection/).
+1. [Enable the Noma Runtime Protection plugin](/plugins/noma-runtime-protection/examples/enable-noma-runtime-protection/).
 
 ## Monitoring vs blocking mode
 
