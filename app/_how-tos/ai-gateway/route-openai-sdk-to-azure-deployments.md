@@ -36,6 +36,7 @@ tags:
   - ai
   - openai
   - azure
+  - ai-sdks
 
 tldr:
   q: How do I route OpenAI SDK requests to different Azure OpenAI deployments through a single Kong route?
@@ -46,7 +47,7 @@ tools:
 
 prereqs:
   inline:
-    - title: Azure
+    - title: Azure OpenAI service
       include_content: prereqs/azure-ai
       icon_url: /assets/icons/azure.svg
     - title: Python
