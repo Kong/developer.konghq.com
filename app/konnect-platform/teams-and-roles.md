@@ -5,6 +5,7 @@ layout: reference
 breadcrumbs:
   - /konnect/
 
+toc_depth: 4
 products:
   - konnect
 
