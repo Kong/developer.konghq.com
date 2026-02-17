@@ -9,7 +9,7 @@ related_resources:
   - text: "AI Proxy Advanced: Dynamic Azure deployments"
     url: /plugins/ai-proxy-advanced/examples/sdk-azure-one-route/
 
-permalink: /how-to/route-openai-sdk-to-multiple-azure-deployments
+permalink: /how-to/route-azure-sdk-to-multiple-azure-deployments
 
 description: Configure a single route that dynamically maps OpenAI SDK requests to different Azure OpenAI deployments based on the URL path.
 
