@@ -289,7 +289,7 @@ The default directory for {{site.base_gateway}} logs is [`/usr/local/kong/logs`]
     * Data Plane node failed to connect to the Control Plane.
     * Data Plane node failed to ping the Control Plane.
     * Data Plane node failed to receive a ping response from the Control Plane.
-    * Invalid [configuration partials](https://developer.konghq.com/gateway/entities/partial/)
+    * Invalid [configuration partials](/gateway/entities/partial/)
 
     You may have an issue on the host network where the node resides.
     Diagnose and resolve the issue, then restart the node and check the sync status in {{site.konnect_short_name}}.
