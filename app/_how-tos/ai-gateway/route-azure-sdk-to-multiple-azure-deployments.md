@@ -1,5 +1,5 @@
 ---
-title: Route OpenAI SDK requests to Azure OpenAI deployments
+title: Route Azure AI SDK requests to Azure OpenAI deployments
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -9,7 +9,7 @@ related_resources:
   - text: "AI Proxy Advanced: Dynamic Azure deployments"
     url: /plugins/ai-proxy-advanced/examples/sdk-azure-one-route/
 
-permalink: /how-to/route-openai-sdk-to-azure-deployments
+permalink: /how-to/route-openai-sdk-to-multiple-azure-deployments
 
 description: Configure a single route that dynamically maps OpenAI SDK requests to different Azure OpenAI deployments based on the URL path.
 
@@ -39,7 +39,7 @@ tags:
   - ai-sdks
 
 tldr:
-  q: How do I route OpenAI SDK requests to different Azure OpenAI deployments through a single Kong route?
+  q: How do I route Azure AI SDK requests to different Azure OpenAI deployments through a single Kong route?
   a: Create a route with a regex path that captures the deployment name, then use the $(uri_captures) template variable in AI Proxy Advanced to set the Azure deployment ID dynamically.
 
 tools:
