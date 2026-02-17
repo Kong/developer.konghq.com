@@ -44,7 +44,7 @@ prereqs:
   inline:
   - title: Cerebras
     content: |
-        This tutorial uses OpenAI:
+        This tutorial uses Cerebras:
         1. [Create a Cerebras account](https://chat.cerebras.ai).
         1. Get an API key. 
         1. Create a decK variable with the API key:
