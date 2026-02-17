@@ -610,6 +610,24 @@ spec:
 Defines whether the sidecar container waits for the data plane to be ready before starting app container.
 For more information, see [Data plane on Kubernetes](/mesh/data-plane-kubernetes/#waiting-for-the-data-plane-to-be-ready).
 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  namespace: kuma-example
+spec:
+  [...]
+  template:
+    metadata:
+      [...]
+      annotations:
+        kuma.io/wait-for-dataplane-ready: true
+    spec:
+      containers:
+        [...]
+```
+
 ### `prometheus.metrics.kuma.io/aggregate-<name>-enabled`
 
 Defines whether `kuma-dp` should scrape metrics from the application defined in the `Mesh` configuration. 
