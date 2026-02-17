@@ -67,7 +67,7 @@ cleanup:
 
 ## Overview
 
-The [OpenAI Python SDK](https://platform.openai.com/docs/libraries) can talk to any provider that Kong AI Gateway supports. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) translates the OpenAI request format into the provider's native format and handles authentication.
+The [OpenAI Python SDK](https://platform.openai.com/docs/libraries) can talk to any provider that {{site.ai_gateway}} supports. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) translates the OpenAI request format into the provider's native format and handles authentication.
 
 To route requests to different providers, create a separate route for each provider. Each route has its own AI Proxy Advanced plugin instance with the correct provider config and credentials. The SDK switches between providers by changing the `base_url`, and the model name is captured from the URL path using a [template variable](/plugins/ai-proxy-advanced/#dynamic-model-and-options-from-request-parameters).
 
