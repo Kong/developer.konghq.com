@@ -56,11 +56,13 @@ module Jekyll
                strict_filters: @site.config['liquid']['strict_filters'],
                strict_variables: @site.config['liquid']['strict_variables'] }
 
-      rendered_content = Liquid::Template.parse(@content).render!(payload, info)
+      rendered_content = Liquid::Template.parse(@content, { line_numbers: true }).render!(payload, info)
 
       layout = @site.layouts['llm']
       layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
-      Liquid::Template.parse(layout.content).render!(layout_payload, info)
+
+      content = Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
+      post_process_content(content)
     end
 
     def output_ext
@@ -74,6 +76,22 @@ module Jekyll
     def write
       FileUtils.mkdir_p(File.dirname(output_path))
       File.write(output_path, render)
+    end
+
+    def post_process_content(content)
+      kramdown_attributes = {
+        '{:\s*.info}' => '> **Note**:',
+        '{:\s*.warning}' => '> **Warning**:',
+        '{:\s*.danger}' => '> **Caution**:',
+        '{:\s*.success}' => '> **Tip**:',
+        '{:\s*.neutral}' => '> **Tip**:',
+        '{:\s*.decorative}' => '> **Tip**:'
+      }
+
+      kramdown_attributes.each do |pattern, replacement|
+        content.gsub!(/#{pattern}/, replacement)
+      end
+      content
     end
   end
 end

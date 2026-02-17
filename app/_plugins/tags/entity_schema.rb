@@ -15,7 +15,7 @@ module Jekyll
 
       context.stack do
         context['entity_schema'] = entity_schema_drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 

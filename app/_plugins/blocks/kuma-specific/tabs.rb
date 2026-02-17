@@ -32,7 +32,7 @@ module Jekyll
           context['navtabs_id'] = tabs_id
           context['heading_level'] = parse_heading_level(context)
           Liquid::Template
-            .parse(template)
+            .parse(template, { line_numbers: true })
             .render(context)
         end
       end
@@ -46,7 +46,7 @@ module Jekyll
       end
 
       def parse_heading_level(context)
-        Jekyll::ClosestHeading.new(@page, 'tabs').level + 1
+        Jekyll::ClosestHeading.new(@page, @line_number, context).level
       end
     end
 

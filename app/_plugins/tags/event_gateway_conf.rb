@@ -11,7 +11,7 @@ module Jekyll
 
       context.stack do
         context['schema'] = @site.data.dig('event-gateway-bootstrap-schema', release(@site, @page).gsub('.', ''))
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
