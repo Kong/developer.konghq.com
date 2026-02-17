@@ -40,7 +40,7 @@ You can convert a project to:
 
 - **[Local Vault](/insomnia/storage/#local-vault)**
 - **[Cloud Sync](/insomnia/storage/#cloud-sync)**
-- **[Git Sync](/insomnia/git-sync/)**
+- **[Git Sync](/insomnia/storage/#git-sync/)**
 
 ## Prerequisites
 
@@ -90,6 +90,6 @@ To convert a project’s storage type:
 > 
 > You must:
 > - Select a Git provider.
-> - Authorize your account, if required.
+> - Authorize your account.
 > - Select a repository.
 > - Select a branch.
