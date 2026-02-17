@@ -40,7 +40,7 @@ tags:
 
 tldr:
   q: How do I route Azure AI SDK requests to different Azure OpenAI deployments through a single Kong route?
-  a: Create a route with a regex path that captures the deployment name, then use the $(uri_captures) template variable in AI Proxy Advanced to set the Azure deployment ID dynamically.
+  a: Create a route with a regex path that captures the deployment name, then use the `$(uri_captures)` template variable in AI Proxy Advanced to set the Azure deployment ID dynamically.
 
 tools:
   - deck
