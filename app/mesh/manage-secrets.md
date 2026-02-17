@@ -20,7 +20,7 @@ related_resources:
 
 faqs:
   - q: Can I reference secrets from a third-party application?
-    a: No, there are no integration to reference secrets.
+    a: No, there are no integrations to reference secrets.
 ---
 
 The `Secret` resource enables users to store sensitive data. This includes anything a user considers non-public, such as:
