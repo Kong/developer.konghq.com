@@ -30,46 +30,51 @@ tldr:
   a: |
     Create a `Secret` with a `konghq.com/credential: acl` label and apply it to the Consumer that you want to access the Service.
 
-    <details markdown="1">
-    <summary>View details</summary>
-    ```bash
-    echo '
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: admin-acl
-      labels:
-        konghq.com/credential: acl
-    stringData:
-      group: admin
-    ' | kubectl apply -f -
-    ```
+    {% details %}
+    summary: |
+      View details
+    content: |
+      ```bash
+      echo '
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: admin-acl
+        labels:
+          konghq.com/credential: acl
+      stringData:
+        group: admin
+      ' | kubectl apply -f -
+      ```
 
-    Update an existing consumer to uses these credentials:
+      Update an existing consumer to uses these credentials:
 
-    ```bash
-    kubectl patch --type json kongconsumer my-admin \
-    -p='[{
-      "op":"add",
-      "path":"/credentials/-",
-      "value":"admin-acl"
-    }]'
-    ```
+      ```bash
+      kubectl patch --type json kongconsumer my-admin \
+      -p='[{
+        "op":"add",
+        "path":"/credentials/-",
+        "value":"admin-acl"
+      }]'
+      ```
 
-    Then apply the ACL plugin to the service you want to protect
+      Then apply the ACL plugin to the service you want to protect
 
-    {% entity_example %}
-    type: plugin
-    data:
-      name: admin-acl
-      plugin: acl
-      config:
-        allow:
-          - admin
+      {% capture example %}
+      {% entity_example %}
+      type: plugin
+      data:
+        name: admin-acl
+        plugin: acl
+        config:
+          allow:
+            - admin
 
-      service: my-service
-    {% endentity_example %}
-    </details>
+        service: my-service
+      {% endentity_example %}
+      {% endcapture %}
+      {{example | indent: 2}}
+    {% enddetails %}
 
 prereqs:
   kubernetes:
