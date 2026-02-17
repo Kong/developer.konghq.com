@@ -25,9 +25,6 @@ faqs:
   - q: What happens if the Git repository contains legacy Insomnia content?
     a: |
       When you create a Git Sync project from a repository that contains legacy Insomnia content, Insomnia converts the content to the current project format during project creation.
-  - q: Can I choose which email address Insomnia uses for Git commits?
-    a: |
-      Yes. If your OAuth provider account has more than one verified email address, Insomnia allows you to select the email address used for Git commits. Insomnia uses the selected email for commit metadata in that project.
 
 ---
 
