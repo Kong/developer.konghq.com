@@ -261,24 +261,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/reference/kubernetes-annotations.md
-    title: 'Kubernetes annotations and labels'
-    description: 'Reference for all Kubernetes annotations and labels available in {{site.mesh_product_name}}, including sidecar injection, mesh association, transparent proxy settings, and metrics configuration.'
-    url: '/mesh/annotations/'
-    related_resources:
-      - text: 'Deploy Kong Mesh on Kubernetes'
-        url: '/mesh/kubernetes/'
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-  -
     path: app/_src/reference/kuma-cp.md
     title: 'kuma-cp configuration reference'
     description: 'Configuration Reference'
