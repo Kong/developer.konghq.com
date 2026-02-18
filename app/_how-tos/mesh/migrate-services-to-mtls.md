@@ -109,15 +109,18 @@ spec:
    kubectl label namespace kong-mesh-demo-migration kuma.io/sidecar-injection=enabled --overwrite
    ```
 
-1. Restart the `kv` Deployment to apply the changes:
+1. Restart the `kv` Pod to apply the changes:
 
    ```sh
    kubectl rollout restart deployment kv -n kong-mesh-demo-migration
    ```
 
+   {:.info}
+   > This can take a few minutes, make sure to wait until it's completed to move on to the next step.
+
 ## Check that the Service is receiving traffic
 
-1. Enable port-forwarding for the control plane:
+1. Once the `kv` Pod has restarted, enable port-forwarding for the control plane:
 
    ```sh
    kubectl port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
@@ -146,17 +149,17 @@ spec:
    You should get a response similar to this:
 
    ```
-   kong-mesh-demo Service
-   cluster.localhost_5050.upstream_rq_2xx: 2305
-   http.localhost_5050.rbac.allowed: 3461
-   kong-mesh-demo-migration Service
-   cluster.localhost_5050.upstream_rq_2xx: 3483
+   Service kong-mesh-demo
+   cluster.localhost_5050.upstream_rq_2xx: 871
+   http.localhost_5050.rbac.allowed: 1310
+   Service kong-mesh-demo-migration
+   cluster.localhost_5050.upstream_rq_2xx: 5
    http.localhost_5050.rbac.allowed: 0
-   kong-mesh-demo Service
-   cluster.localhost_5050.upstream_rq_2xx: 2359
-   http.localhost_5050.rbac.allowed: 3542
-   kong-mesh-demo-migration Service
-   cluster.localhost_5050.upstream_rq_2xx: 3535
+   Service kong-mesh-demo
+   cluster.localhost_5050.upstream_rq_2xx: 873
+   http.localhost_5050.rbac.allowed: 1313
+   Service kong-mesh-demo-migration
+   cluster.localhost_5050.upstream_rq_2xx: 7
    http.localhost_5050.rbac.allowed: 0
    ```
 
@@ -170,14 +173,15 @@ spec:
 
 ## Migrate the demo app client to the mesh
 
-1. Run the following command restart the `demo-app` Deployment from the `kong-mesh-demo-migration` namespace and add it to the mesh:
+1. Run the following command restart the `demo-app` Pod from the `kong-mesh-demo-migration` namespace and add it to the mesh:
 
    ```sh
    kubectl rollout restart deployment demo-app -n kong-mesh-demo-migration
    ```
 
    {:.info}
-   > Once the restart is done, port-forwarding will stop for this Service.
+   > * This can take a few minutes, make sure to wait until it's completed to move on to the next step.
+   > * Once the restart is done, port-forwarding will stop for this Service.
 
 
 1. Run the following command re-enable port-forwarding:
@@ -187,7 +191,7 @@ spec:
 
 1. Go to <http://localhost:5052/> and select the **Auto Increment** checkbox to send requests to the Service.
 
-1. Run the following command to get the encrypted request metrics for the data plane proxy in the `kong-mesh-demo-migration` namespace:
+1. In a new terminal window, run the following command to get the encrypted request metrics for the data plane proxy in the `kong-mesh-demo-migration` namespace:
 
    ```sh
    for i in {1..2}; do
