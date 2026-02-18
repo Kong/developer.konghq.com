@@ -37,7 +37,7 @@ faqs:
 
       To verify repository access:
 
-      1. Go to the Insomnia GitHub App page: https://github.com/apps/insomnia-desktop
+      1. Navigate to [Insomnia GitHub App](https://github.com/apps/insomnia-desktop).
       2. Click **Configure**.
       3. Select your account or organization.
       4. Under **Repository access**, confirm that:
