@@ -1,5 +1,5 @@
 {%- if page.output_format == 'markdown' -%}
-### {{ include.summary | liquify}}
+### {{ include.summary | liquify | lstrip }}
 {{ include.details_content | liquify }}
 {%- else -%}
 {%- assign slug = include.summary | liquify | slugify -%}
