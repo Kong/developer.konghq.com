@@ -19,6 +19,7 @@
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
+/mesh/progressively-rolling-in-strict-mtls/ /how-to/migrate-services-to-mtls/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
