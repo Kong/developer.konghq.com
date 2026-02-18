@@ -25,6 +25,16 @@ faqs:
       Yes. Insomnia can use credentials configured in your local Git environment for Git operations.
 
       If authentication fails, verify your local Git configuration and confirm that you have access to the repository.  
+  - q: Why don’t my private repositories appear when configuring Git credentials?
+    a: |
+      Repository visibility depends on how you authenticate with GitHub.
+
+      If you use the GitHub App integration, the app must be granted access to the required private repositories in GitHub. To verify your configuration, navigate to your [GitHub Intallations](https://github.com/apps/insomnia-desktop/installations/select_target).
+
+      If you use a Personal Access Token (PAT), use a fine-grained token and ensure that it includes access to the required private repositories. 
+      
+      {:.warning}
+      > Classic tokens may not include repository access depending on how they were configured.
 
 prereqs:
   inline:
