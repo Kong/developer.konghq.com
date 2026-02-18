@@ -103,6 +103,9 @@ kubectl port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
 
 ```sh
 export KV_DPP_NAME=$(curl -s http://localhost:5681/meshes/default/dataplanes/_overview\?name\=kv | jq -r '.items[0].name')
+```
+
+```sh
 curl -s http://localhost:5681/meshes/default/dataplanes/$KV_DPP_NAME/stats | grep cluster.localhost_5050.upstream_rq_2xx
 ```
 
@@ -114,4 +117,14 @@ kubectl rollout restart deployment demo-app -n kong-mesh-demo-migration
 
 ```sh
 kubectl port-forward svc/demo-app -n kong-mesh-demo-migration 5052:5050
+```
+
+```sh
+curl -s http://localhost:5681/meshes/default/dataplanes/$KV_DPP_NAME/stats | grep http.localhost_5050.rbac.allowed
+```
+
+## Remove MeshTLS in permissive mode
+
+```sh
+kubectl delete meshtlses -n kong-mesh-demo-migration kv
 ```
