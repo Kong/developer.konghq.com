@@ -1,0 +1,634 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "authentication": {
+          "properties": {
+            "mechanism": {
+              "description": "The SASL authentication mechanism.  Supported options: `PLAIN` or `SCRAM-SHA-256`.",
+              "enum": [
+                "PLAIN",
+                "SCRAM-SHA-256",
+                "SCRAM-SHA-512"
+              ],
+              "type": "string"
+            },
+            "password": {
+              "description": "Password for SASL authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "strategy": {
+              "description": "The authentication strategy for the plugin, the only option for the value is `sasl`.",
+              "enum": [
+                "sasl"
+              ],
+              "type": "string"
+            },
+            "tokenauth": {
+              "description": "Enable this to indicate `DelegationToken` authentication",
+              "type": "boolean"
+            },
+            "user": {
+              "description": "Username for SASL authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            }
+          },
+          "type": "object"
+        },
+        "auto_offset_reset": {
+          "default": "latest",
+          "description": "The offset to start from when there is no initial offset in the consumer group.",
+          "enum": [
+            "earliest",
+            "latest"
+          ],
+          "type": "string"
+        },
+        "bootstrap_servers": {
+          "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
+          "items": {
+            "properties": {
+              "host": {
+                "description": "A string representing a host name, such as example.com.",
+                "type": "string"
+              },
+              "port": {
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "maximum": 65535,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "host",
+              "port"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "cluster_name": {
+          "description": "An identifier for the Kafka cluster.",
+          "type": "string"
+        },
+        "commit_strategy": {
+          "default": "auto",
+          "description": "The strategy to use for committing offsets.",
+          "enum": [
+            "auto",
+            "off"
+          ],
+          "type": "string"
+        },
+        "dlq_topic": {
+          "description": "The topic to use for the Dead Letter Queue.",
+          "type": "string"
+        },
+        "enable_dlq": {
+          "description": "Enables Dead Letter Queue. When enabled, if the message doesn't conform to the schema (from Schema Registry) or there's an error in the `message_by_lua_functions`, it will be forwarded to `dlq_topic` that can be processed later.",
+          "type": "boolean"
+        },
+        "enforce_latest_offset_reset": {
+          "default": false,
+          "description": "When true, 'latest' offset reset behaves correctly (starts from end). When false (default), maintains backwards compatibility where 'latest' acts like 'earliest'.",
+          "type": "boolean"
+        },
+        "message_by_lua_functions": {
+          "description": "The Lua functions that manipulates the message being sent to the client.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "message_deserializer": {
+          "default": "noop",
+          "description": "The deserializer to use for the consumed messages.",
+          "enum": [
+            "json",
+            "noop"
+          ],
+          "type": "string"
+        },
+        "mode": {
+          "default": "http-get",
+          "description": "The mode of operation for the plugin.",
+          "enum": [
+            "http-get",
+            "server-sent-events",
+            "websocket"
+          ],
+          "type": "string"
+        },
+        "schema_registry": {
+          "description": "The plugin-global schema registry configuration.",
+          "properties": {
+            "confluent": {
+              "properties": {
+                "authentication": {
+                  "properties": {
+                    "basic": {
+                      "properties": {
+                        "password": {
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true,
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                        },
+                        "username": {
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true,
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                        }
+                      },
+                      "required": [
+                        "password",
+                        "username"
+                      ],
+                      "type": "object"
+                    },
+                    "mode": {
+                      "default": "none",
+                      "description": "Authentication mode to use with the schema registry.",
+                      "enum": [
+                        "basic",
+                        "none",
+                        "oauth2"
+                      ],
+                      "type": "string"
+                    },
+                    "oauth2": {
+                      "properties": {
+                        "audience": {
+                          "default": [],
+                          "description": "List of audiences passed to the IdP when obtaining a new token.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "client_id": {
+                          "description": "The client ID for the application registration in the IdP. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        },
+                        "client_secret": {
+                          "description": "The client secret for the application registration in the IdP. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        },
+                        "grant_type": {
+                          "default": "client_credentials",
+                          "description": "The OAuth grant type to be used.",
+                          "enum": [
+                            "client_credentials",
+                            "password"
+                          ],
+                          "type": "string"
+                        },
+                        "password": {
+                          "description": "The password to use if `config.oauth.grant_type` is set to `password`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        },
+                        "scopes": {
+                          "default": [
+                            "openid"
+                          ],
+                          "description": "List of scopes to request from the IdP when obtaining a new token.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "token_endpoint": {
+                          "description": "The token endpoint URI.",
+                          "type": "string"
+                        },
+                        "token_headers": {
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true,
+                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          },
+                          "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "object"
+                        },
+                        "token_post_args": {
+                          "additionalProperties": {
+                            "type": "string",
+                            "x-referenceable": true,
+                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          },
+                          "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "object"
+                        },
+                        "username": {
+                          "description": "The username to use if `config.oauth.grant_type` is set to `password`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                          "type": "string",
+                          "x-encrypted": true,
+                          "x-referenceable": true
+                        }
+                      },
+                      "required": [
+                        "token_endpoint"
+                      ],
+                      "type": "object"
+                    },
+                    "oauth2_client": {
+                      "properties": {
+                        "auth_method": {
+                          "default": "client_secret_post",
+                          "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body.",
+                          "enum": [
+                            "client_secret_basic",
+                            "client_secret_jwt",
+                            "client_secret_post",
+                            "none"
+                          ],
+                          "type": "string"
+                        },
+                        "client_secret_jwt_alg": {
+                          "default": "HS512",
+                          "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication.",
+                          "enum": [
+                            "HS256",
+                            "HS512"
+                          ],
+                          "type": "string"
+                        },
+                        "http_proxy": {
+                          "description": "The proxy to use when making HTTP requests to the IdP.",
+                          "type": "string"
+                        },
+                        "http_proxy_authorization": {
+                          "description": "The `Proxy-Authorization` header value to be used with `http_proxy`.",
+                          "type": "string"
+                        },
+                        "http_version": {
+                          "default": 1.1,
+                          "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
+                          "type": "number"
+                        },
+                        "https_proxy": {
+                          "description": "The proxy to use when making HTTPS requests to the IdP.",
+                          "type": "string"
+                        },
+                        "https_proxy_authorization": {
+                          "description": "The `Proxy-Authorization` header value to be used with `https_proxy`.",
+                          "type": "string"
+                        },
+                        "keep_alive": {
+                          "default": true,
+                          "description": "Whether to use keepalive connections to the IdP.",
+                          "type": "boolean"
+                        },
+                        "no_proxy": {
+                          "description": "A comma-separated list of hosts that should not be proxied.",
+                          "type": "string"
+                        },
+                        "ssl_verify": {
+                          "default": false,
+                          "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
+                          "type": "boolean"
+                        },
+                        "timeout": {
+                          "default": 10000,
+                          "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                          "maximum": 2147483646,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "ssl_verify": {
+                  "default": true,
+                  "description": "Set to false to disable SSL certificate verification when connecting to the schema registry.",
+                  "type": "boolean"
+                },
+                "ttl": {
+                  "description": "The TTL in seconds for the schema registry cache.",
+                  "maximum": 3600,
+                  "minimum": 0,
+                  "type": "number"
+                },
+                "url": {
+                  "description": "The URL of the schema registry.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "security": {
+          "properties": {
+            "certificate_id": {
+              "description": "UUID of certificate entity for mTLS authentication.",
+              "type": "string"
+            },
+            "ssl": {
+              "description": "Enables TLS.",
+              "type": "boolean"
+            },
+            "ssl_verify": {
+              "default": false,
+              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "topics": {
+          "description": "The Kafka topics and their configuration you want to consume from.",
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "schema_registry": {
+                "description": "The plugin-global schema registry configuration.",
+                "properties": {
+                  "confluent": {
+                    "properties": {
+                      "authentication": {
+                        "properties": {
+                          "basic": {
+                            "properties": {
+                              "password": {
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true,
+                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              },
+                              "username": {
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true,
+                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              }
+                            },
+                            "required": [
+                              "password",
+                              "username"
+                            ],
+                            "type": "object"
+                          },
+                          "mode": {
+                            "default": "none",
+                            "description": "Authentication mode to use with the schema registry.",
+                            "enum": [
+                              "basic",
+                              "none",
+                              "oauth2"
+                            ],
+                            "type": "string"
+                          },
+                          "oauth2": {
+                            "properties": {
+                              "audience": {
+                                "default": [],
+                                "description": "List of audiences passed to the IdP when obtaining a new token.",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "client_id": {
+                                "description": "The client ID for the application registration in the IdP. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "client_secret": {
+                                "description": "The client secret for the application registration in the IdP. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "grant_type": {
+                                "default": "client_credentials",
+                                "description": "The OAuth grant type to be used.",
+                                "enum": [
+                                  "client_credentials",
+                                  "password"
+                                ],
+                                "type": "string"
+                              },
+                              "password": {
+                                "description": "The password to use if `config.oauth.grant_type` is set to `password`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              },
+                              "scopes": {
+                                "default": [
+                                  "openid"
+                                ],
+                                "description": "List of scopes to request from the IdP when obtaining a new token.",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "token_endpoint": {
+                                "description": "The token endpoint URI.",
+                                "type": "string"
+                              },
+                              "token_headers": {
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "x-referenceable": true,
+                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                                },
+                                "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "object"
+                              },
+                              "token_post_args": {
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "x-referenceable": true,
+                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                                },
+                                "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                                "type": "object"
+                              },
+                              "username": {
+                                "description": "The username to use if `config.oauth.grant_type` is set to `password`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                                "type": "string",
+                                "x-encrypted": true,
+                                "x-referenceable": true
+                              }
+                            },
+                            "required": [
+                              "token_endpoint"
+                            ],
+                            "type": "object"
+                          },
+                          "oauth2_client": {
+                            "properties": {
+                              "auth_method": {
+                                "default": "client_secret_post",
+                                "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body.",
+                                "enum": [
+                                  "client_secret_basic",
+                                  "client_secret_jwt",
+                                  "client_secret_post",
+                                  "none"
+                                ],
+                                "type": "string"
+                              },
+                              "client_secret_jwt_alg": {
+                                "default": "HS512",
+                                "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication.",
+                                "enum": [
+                                  "HS256",
+                                  "HS512"
+                                ],
+                                "type": "string"
+                              },
+                              "http_proxy": {
+                                "description": "The proxy to use when making HTTP requests to the IdP.",
+                                "type": "string"
+                              },
+                              "http_proxy_authorization": {
+                                "description": "The `Proxy-Authorization` header value to be used with `http_proxy`.",
+                                "type": "string"
+                              },
+                              "http_version": {
+                                "default": 1.1,
+                                "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0.",
+                                "type": "number"
+                              },
+                              "https_proxy": {
+                                "description": "The proxy to use when making HTTPS requests to the IdP.",
+                                "type": "string"
+                              },
+                              "https_proxy_authorization": {
+                                "description": "The `Proxy-Authorization` header value to be used with `https_proxy`.",
+                                "type": "string"
+                              },
+                              "keep_alive": {
+                                "default": true,
+                                "description": "Whether to use keepalive connections to the IdP.",
+                                "type": "boolean"
+                              },
+                              "no_proxy": {
+                                "description": "A comma-separated list of hosts that should not be proxied.",
+                                "type": "string"
+                              },
+                              "ssl_verify": {
+                                "default": false,
+                                "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
+                                "type": "boolean"
+                              },
+                              "timeout": {
+                                "default": 10000,
+                                "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                                "maximum": 2147483646,
+                                "minimum": 0,
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "ssl_verify": {
+                        "default": true,
+                        "description": "Set to false to disable SSL certificate verification when connecting to the schema registry.",
+                        "type": "boolean"
+                      },
+                      "ttl": {
+                        "description": "The TTL in seconds for the schema registry cache.",
+                        "maximum": 3600,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      "url": {
+                        "description": "The URL of the schema registry.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "minLength": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "bootstrap_servers",
+        "topics"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "ws",
+        "wss"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

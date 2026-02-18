@@ -1,0 +1,304 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "flow": {
+          "description": "The flow related configuration.",
+          "properties": {
+            "ack_mode": {
+              "default": "CLIENT",
+              "description": "Controls how acknowledgments are generated for received Guaranteed messages. When set to `AUTO`, the messages are positively acknowledged upon receiving them. When set to 'CLIENT', the messages are positively or negatively acknowledged by Kong regarding to client delivery status.",
+              "enum": [
+                "AUTO",
+                "CLIENT"
+              ],
+              "type": "string"
+            },
+            "binds": {
+              "items": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the Queue that is the target of the bind. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures['queue']` when the matched route has a path `~/(?<queue>[a-z]+)`)",
+                    "type": "string"
+                  },
+                  "type": {
+                    "default": "QUEUE",
+                    "description": "The type of object to which this Flow is bound.",
+                    "enum": [
+                      "QUEUE"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "minLength": 1,
+              "type": "array"
+            },
+            "functions": {
+              "description": "The Lua functions that manipulates the message being received from Solace. The `message` variable can be used to access the current message content, and the function can return a new content.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "max_unacked_messages": {
+              "default": -1,
+              "description": "This property controls the maximum number of messages that may be unacknowledged on the Flow.",
+              "type": "integer"
+            },
+            "properties": {
+              "additionalProperties": {
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "description": "Additional Solace flow properties (each setting needs to have `FLOW_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "object"
+            },
+            "selector": {
+              "description": "The selector when binding to an endpoint.",
+              "type": "string"
+            },
+            "wait_timeout": {
+              "default": 50,
+              "description": "Specifies in milliseconds how long to wait for messages to appear on each poll before giving up or retrying.",
+              "maximum": 5000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "window_size": {
+              "default": 255,
+              "description": "The Guaranteed message window size for the Flow.",
+              "maximum": 255,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "binds"
+          ],
+          "type": "object"
+        },
+        "mode": {
+          "default": "POLLING",
+          "description": "The mode of operation for the plugin. The `AUTO` determines the mode automatically from the client request.",
+          "enum": [
+            "AUTO",
+            "POLLING",
+            "SERVER-SENT-EVENTS",
+            "WEBSOCKET"
+          ],
+          "type": "string"
+        },
+        "polling": {
+          "description": "The `POLLING` mode related configuration settings.",
+          "properties": {
+            "timeout": {
+              "default": 0,
+              "description": "Polling timeout in milliseconds. When set to `0`, the polling works like short-polling and waits at maximum the Flow `wait_timeout` amount of time for the new messages (short-polling). When set to larger than `0`, the connection is kept open and only closed after the timeout or in case messages appear earlier (long-polling).",
+              "maximum": 300000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "session": {
+          "description": "Session related configuration.",
+          "properties": {
+            "authentication": {
+              "description": "Session authentication related configuration.",
+              "properties": {
+                "access_token": {
+                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "access_token_header": {
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
+                  "type": "string"
+                },
+                "basic_auth_header": {
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
+                  "type": "string"
+                },
+                "id_token": {
+                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "id_token_header": {
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "maxLength": 128,
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "scheme": {
+                  "default": "BASIC",
+                  "description": "The client authentication scheme used when connection to an event broker.",
+                  "enum": [
+                    "BASIC",
+                    "NONE",
+                    "OAUTH2"
+                  ],
+                  "type": "string"
+                },
+                "username": {
+                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "maxLength": 189,
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
+            },
+            "calculate_message_expiry": {
+              "default": true,
+              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
+              "type": "boolean"
+            },
+            "connect_timeout": {
+              "default": 3000,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "maximum": 100000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            "generate_rcv_timestamps": {
+              "default": true,
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "type": "boolean"
+            },
+            "generate_send_timestamps": {
+              "default": true,
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "generate_sender_id": {
+              "default": true,
+              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "generate_sequence_number": {
+              "default": true,
+              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "host": {
+              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "properties": {
+              "additionalProperties": {
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "object"
+            },
+            "ssl_validate_certificate": {
+              "default": false,
+              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "type": "boolean"
+            },
+            "vpn_name": {
+              "description": "The name of the Message VPN to attempt to join when connecting to an event broker.",
+              "maxLength": 32,
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ],
+          "type": "object"
+        },
+        "websocket": {
+          "description": "The `WEBSOCKET` mode related configuration settings.",
+          "properties": {
+            "max_recv_len": {
+              "default": 65536,
+              "description": "Specifies the maximal length of payload allowed when receiving WebSocket frames.",
+              "type": "integer"
+            },
+            "max_send_len": {
+              "default": 65536,
+              "description": "Specifies the maximal length of payload allowed when sending WebSocket frames.",
+              "type": "integer"
+            },
+            "timeout": {
+              "default": 1000,
+              "description": "Specifies the network timeout threshold in milliseconds.",
+              "maximum": 60000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "flow",
+        "session"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
