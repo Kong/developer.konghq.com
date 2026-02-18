@@ -33,9 +33,9 @@ faqs:
     a: To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
   - q: My team has a Dev Portal, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
-  - q: Why can't my users create dashboards or reports even though they have the Creator role?
-    a: |
-      To access the underlying data of the dashboard, you'll also need to assign users with `Dashboard creator` and `Report creator` roles to the [`Analytics Viewer` pre-built team](/konnect-platform/teams-and-roles/#predefined-teams).
+  - q: Why can't my users create dashboards even though they have the Dashboard Creator, Admin, or Editor role?
+    a: | 
+      {% include konnect/faqs/roles.md %}
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
