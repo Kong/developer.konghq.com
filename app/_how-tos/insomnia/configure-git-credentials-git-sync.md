@@ -17,7 +17,6 @@ tldr:
   q: How do I configure Git credentials for Git Sync in Insomnia?
   a: Add your Git credentials in **Preferences > Credentials**, select a repository and branch, and confirm that the author name and email used for commits.
 
-<!--vale off-->
 faqs:
   - q: Where does Insomnia get Git credentials from?
     a: Insomnia uses the authentication provider that you selected during Git Sync setup. It also reads credentials from your local Git configuration.
@@ -36,7 +35,6 @@ faqs:
       
       {:.warning}
       > Classic tokens may not include repository access depending on how they were configured.
-<!--vale on-->
 
 prereqs:
   inline:
