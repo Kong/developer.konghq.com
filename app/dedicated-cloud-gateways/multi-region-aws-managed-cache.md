@@ -137,7 +137,7 @@ entities:
    Repeat this setup on other control planes in the control plane group as needed.
    
    {:.warning}
-   > **Important:** If you're configuring your plugins with decK, you must include the `konnect-managed` partial [default lookup tag](/deck/gateway/tags/). Add the following to your plugin config file:
+   > **Important:** If you're configuring your plugins with decK, you must include the `konnect-managed` partial [default lookup tag](/deck/gateway/tags/) to ensure the managed cache partial is available. Add the following to your plugin config file:
    ```yaml
    _info:
    default_lookup_tags:
