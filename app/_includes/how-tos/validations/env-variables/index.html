@@ -1,5 +1,5 @@
 {% capture wrapper %}
-{%- assign indentation = 0 -%}{%- if config.indent -%}{% assign indentation = config.indent %}{%- endif -%}
+{% assign indentation = 0 %}{% if config.indent %}{% assign indentation = config.indent %}{% endif %}
 {% if page.works_on contains 'on-prem' %}
 <div data-deployment-topology="on-prem" markdown="1" {% if config.section == 'prereqs' %}data-test-prereqs="{{ config.data_validate | escape }}" {% else %}data-test-step="{{ config.data_validate | escape }}"{% endif %}>
 {% include how-tos/validations/env-variables/snippet.md variables=config.variables %}
