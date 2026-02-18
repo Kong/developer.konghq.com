@@ -34,7 +34,7 @@
 {%- if page.products contains 'kic'  -%}
 {% include prereqs/kubernetes/kic-konnect-cp.md prereqs=prereqs %}
 {%- endif -%}
-{%- for product in prereqs.products -%}
+{%- for product in prereqs.products %}
 {%- assign product_include = 'prereqs/products/' | append: product | append: '.md' -%}
 {%- if page.works_on -%}
 {%- if page.works_on contains 'konnect' -%}
