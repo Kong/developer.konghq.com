@@ -22,7 +22,7 @@ rows:
                   text: | 
                     Git Sync is designed for teams that want Git-native workflows, full data ownership, and direct control over where their data lives.
 
-                    With Git Sync:
+                    
                     - Your data lives in your Git repository.
                     - Insomnia does not host or manage your project data.
                     - Collaboration follows standard Git workflows.
