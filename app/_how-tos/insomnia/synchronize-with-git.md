@@ -28,6 +28,27 @@ tldr:
     q: How can I push content from Insomnia to a Git repository?
     a: Create a remote Git repository and an Insomnia project with Git Sync. Select the Git provider and connect to the repository. In the project, click the button at the bottom of the left pane to see the Git Sync menu and push your changes.
 
+faqs:
+  - q: Why can I only see public repositories after connecting GitHub?
+    a: |
+      If you can see only public repositories but not private repositories, review your [GitHub App installation settings](https://github.com/apps/insomnia-desktop/installations/select_target).
+
+      Insomnia uses the GitHub App integration. The app must be granted access to private repositories during installation.
+
+      To verify repository access:
+
+      1. Go to the Insomnia GitHub App page: https://github.com/apps/insomnia-desktop
+      2. Click **Configure**.
+      3. Select your account or organization.
+      4. Under **Repository access**, confirm that:
+         - **All repositories** is selected, or
+         - The required private repositories are explicitly included.
+      5. If you make changes, click **Save**.
+
+      {:.info}
+      > After updating the installation settings, disconnect and reconnect GitHub in Insomnia if the repositories still don't appear.
+
+
 related_resources:
   - text: Storage options in Insomnia
     url: /insomnia/storage/
