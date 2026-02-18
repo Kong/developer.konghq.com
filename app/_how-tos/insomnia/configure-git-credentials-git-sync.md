@@ -29,7 +29,7 @@ faqs:
     a: |
       Repository visibility depends on how you authenticate with GitHub.
 
-      If you use the GitHub App integration, the app must be granted access to the required private repositories in GitHub. To verify your configuration, navigate to your [GitHub Intallations](https://github.com/apps/insomnia-desktop/installations/select_target).
+      If you use the GitHub App integration, the app must be granted access to the required private repositories in GitHub. To verify your configuration, navigate to your [GitHub Installations](https://github.com/apps/insomnia-desktop/installations/select_target).
 
       If you use a Personal Access Token (PAT), use a fine-grained token and ensure that it includes access to the required private repositories. 
       
