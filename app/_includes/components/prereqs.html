@@ -70,7 +70,7 @@
 
       {% for product in prereqs.products %}
         {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-        {% if page.works_on %}
+        {% if page.works_on  and product != 'operator' %}
          {% if page.works_on contains 'konnect' %}
           <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
             {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
