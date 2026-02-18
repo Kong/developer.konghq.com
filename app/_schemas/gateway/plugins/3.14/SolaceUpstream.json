@@ -1,0 +1,288 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "message": {
+          "description": "The message related configuration.",
+          "properties": {
+            "ack_timeout": {
+              "default": 2000,
+              "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
+              "maximum": 100000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "default_content": {
+              "description": "When not using `forward_method`, `forward_uri`, `forward_headers` or `forward_body`, this sets the message content.",
+              "type": "string"
+            },
+            "delivery_mode": {
+              "default": "DIRECT",
+              "description": "Sets the message delivery mode.",
+              "enum": [
+                "DIRECT",
+                "PERSISTENT"
+              ],
+              "type": "string"
+            },
+            "destinations": {
+              "description": "The message destinations.",
+              "items": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the destination. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?<queue>[a-z]+)`).",
+                    "type": "string"
+                  },
+                  "type": {
+                    "default": "QUEUE",
+                    "description": "The type of the destination.",
+                    "enum": [
+                      "QUEUE",
+                      "TOPIC"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              },
+              "minLength": 1,
+              "type": "array"
+            },
+            "dmq_eligible": {
+              "default": false,
+              "description": "Sets the dead message queue (DMQ) eligible property on the message.",
+              "type": "boolean"
+            },
+            "forward_body": {
+              "default": false,
+              "description": "Include the request body and the body arguments in the message.",
+              "type": "boolean"
+            },
+            "forward_headers": {
+              "default": false,
+              "description": "Include the request headers in the message.",
+              "type": "boolean"
+            },
+            "forward_method": {
+              "default": false,
+              "description": "Include the request method in the message.",
+              "type": "boolean"
+            },
+            "forward_uri": {
+              "default": false,
+              "description": "Include the request URI and the URI arguments (as in, query arguments) in the message.",
+              "type": "boolean"
+            },
+            "functions": {
+              "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "priority": {
+              "default": 4,
+              "description": "Sets the message priority.",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "sender_id": {
+              "description": "Allows the application to set the content of the sender identifier.",
+              "type": "string"
+            },
+            "tracing": {
+              "default": false,
+              "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
+              "type": "boolean"
+            },
+            "tracing_sampled": {
+              "default": false,
+              "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
+              "type": "boolean"
+            },
+            "ttl": {
+              "default": 0,
+              "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "destinations"
+          ],
+          "type": "object"
+        },
+        "session": {
+          "description": "Session related configuration.",
+          "properties": {
+            "authentication": {
+              "description": "Session authentication related configuration.",
+              "properties": {
+                "access_token": {
+                  "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "access_token_header": {
+                  "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
+                  "type": "string"
+                },
+                "basic_auth_header": {
+                  "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
+                  "type": "string"
+                },
+                "id_token": {
+                  "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "id_token_header": {
+                  "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "The password used with `BASIC` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "maxLength": 128,
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                },
+                "scheme": {
+                  "default": "BASIC",
+                  "description": "The client authentication scheme used when connection to an event broker.",
+                  "enum": [
+                    "BASIC",
+                    "NONE",
+                    "OAUTH2"
+                  ],
+                  "type": "string"
+                },
+                "username": {
+                  "description": "The username used with `BASIC` authentication scheme when connecting to an event broker. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+                  "maxLength": 189,
+                  "type": "string",
+                  "x-encrypted": true,
+                  "x-referenceable": true
+                }
+              },
+              "type": "object"
+            },
+            "calculate_message_expiry": {
+              "default": true,
+              "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
+              "type": "boolean"
+            },
+            "connect_timeout": {
+              "default": 3000,
+              "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+              "maximum": 100000,
+              "minimum": 100,
+              "type": "integer"
+            },
+            "generate_rcv_timestamps": {
+              "default": true,
+              "description": "When enabled, a receive timestamp is recorded for each message.",
+              "type": "boolean"
+            },
+            "generate_send_timestamps": {
+              "default": true,
+              "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "generate_sender_id": {
+              "default": true,
+              "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "generate_sequence_number": {
+              "default": true,
+              "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
+              "type": "boolean"
+            },
+            "host": {
+              "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "properties": {
+              "additionalProperties": {
+                "type": "string",
+                "x-lua-required": true,
+                "x-referenceable": true,
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              },
+              "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "object"
+            },
+            "ssl_validate_certificate": {
+              "default": false,
+              "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
+              "type": "boolean"
+            },
+            "vpn_name": {
+              "description": "The name of the Message VPN to attempt to join when connecting to an event broker.",
+              "maxLength": 32,
+              "type": "string"
+            }
+          },
+          "required": [
+            "host"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "message",
+        "session"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
