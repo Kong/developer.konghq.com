@@ -18,9 +18,10 @@ module Jekyll
       contents = super
       config = YAML.load(contents)
       drop = Drops::Validations::Base.make_for(id: 'env-variables', yaml: config, format: @format)
+
       context.stack do
         context['config'] = drop
-        context['heading_level'] = heading_level
+        context['heading_level'] = heading_level(config)
         Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
@@ -32,8 +33,8 @@ module Jekyll
       raise ArgumentError, message
     end
 
-    def heading_level
-      if @context['prereqs']
+    def heading_level(config)
+      if config['section'] == 'prereqs'
         4
       else
         Jekyll::ClosestHeading.new(@page, @line_number, @context).level
