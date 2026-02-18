@@ -1252,7 +1252,6 @@ releases:
               - Confluent Cloud
   
   - release: "3.13"
-    latest: true
     ee-version: "3.13.0.1"
     eol: 2026-12-18
     distributions:
@@ -1431,6 +1430,185 @@ releases:
               - 3.2
               - Confluent Cloud
 
+  - release: "3.14"
+    latest: true
+    ee-version: "3.14.0.0"
+    eol: tba
+    distributions:
+      - amazonlinux2:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          eol: 2026-06-30
+      - amazonlinux2023:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          default: true
+      - debian11:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          eol: 2026-08-31
+      - debian12:
+          package: true
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
+          docker: true
+          default: true
+      - rhel8:
+          package: true
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
+          docker: false
+      - rhel9:
+          package: true
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
+          docker: true
+          docker_support:
+            fips: true
+          default: true
+      - ubuntu2204:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
+          docker: true
+          docker_support:
+            fips: true
+      - ubuntu2404:
+          package: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
+          docker: true
+          docker_support:
+            fips: true
+          default: true
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+
+      s3_api:
+        - s3
+        - minio
+
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+        - conjur:
+            versions:
+              - 1.22.2-12
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+
+      datastore:
+        - postgres:
+            versions:
+              - 17
+              - 16
+              - 15
+              - 14
+              - 13
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - valkey:
+            versions:
+              - 8
+        - influxdb:
+            versions:
+              - 1
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
  
 
 cloud_deployment_platforms:

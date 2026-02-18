@@ -1,0 +1,190 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "anonymize": {
+          "default": [
+            "all_and_credentials"
+          ],
+          "description": "List of types to be anonymized",
+          "items": {
+            "enum": [
+              "all",
+              "all_and_credentials",
+              "bank",
+              "credentials",
+              "creditcard",
+              "crypto",
+              "custom",
+              "date",
+              "domain",
+              "driverlicense",
+              "email",
+              "general",
+              "ip",
+              "medical",
+              "nationalid",
+              "nrp",
+              "passport",
+              "phone",
+              "ssn",
+              "url"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "block_if_detected": {
+          "default": false,
+          "description": "Whether to block requests containing PII data",
+          "type": "boolean"
+        },
+        "custom_patterns": {
+          "description": "List of custom patterns to be used for anonymization",
+          "items": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "regex": {
+                "type": "string"
+              },
+              "score": {
+                "default": 0.5,
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "regex"
+            ],
+            "type": "object"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "host": {
+          "default": "localhost",
+          "description": "The host of the sanitizer",
+          "type": "string"
+        },
+        "keepalive_timeout": {
+          "default": 60000,
+          "description": "The keepalive timeout for the established http connnection",
+          "type": "number"
+        },
+        "port": {
+          "default": 8080,
+          "description": "The port of the sanitizer",
+          "type": "number"
+        },
+        "recover_redacted": {
+          "default": true,
+          "description": "Whether to recover redacted data. This doesn't apply to the redacted output.",
+          "type": "boolean"
+        },
+        "redact_type": {
+          "default": "placeholder",
+          "description": "What value to be used to redacted to",
+          "enum": [
+            "placeholder",
+            "synthetic"
+          ],
+          "type": "string"
+        },
+        "sanitization_mode": {
+          "default": "INPUT",
+          "description": "The sanitization mode to use for the request",
+          "enum": [
+            "BOTH",
+            "INPUT",
+            "OUTPUT"
+          ],
+          "type": "string"
+        },
+        "scheme": {
+          "default": "http",
+          "description": "The protocol can be http and https",
+          "type": "string"
+        },
+        "skip_logging_sanitized_items": {
+          "default": false,
+          "description": "Whether to log sanitized items in the Kong log plugins. Turn it on if you want to hide sensitive data from logs.",
+          "type": "boolean"
+        },
+        "stop_on_error": {
+          "default": true,
+          "description": "Stop processing if an error occurs.",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Connection timeout with the sanitizer",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

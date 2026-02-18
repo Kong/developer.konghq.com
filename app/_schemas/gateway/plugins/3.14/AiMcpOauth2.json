@@ -1,0 +1,251 @@
+{
+  "properties": {
+    "config": {
+      "description": "The configuration for MCP authorization in OAuth2. If this is enabled, make sure the configured metadata_endpoint is also covered by the same route so the authorization can be applied correctly.",
+      "properties": {
+        "args": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional arguments to send in the POST body.",
+          "type": "object"
+        },
+        "authorization_servers": {
+          "items": {
+            "description": "The authorization server identifier.",
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "cache_introspection": {
+          "default": true,
+          "description": "If enabled, the plugin will cache the introspection response for the access token. This can improve performance by reducing the number of introspection requests to the authorization server.",
+          "type": "boolean"
+        },
+        "claim_to_header": {
+          "items": {
+            "properties": {
+              "claim": {
+                "description": "The claim name to be used in the access token.",
+                "type": "string"
+              },
+              "header": {
+                "description": "The HTTP header name to be used for forwarding the claim value to the upstream.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "claim",
+              "header"
+            ],
+            "type": "object"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "client_alg": {
+          "description": "The client JWT signing algorithm.",
+          "enum": [
+            "ES256",
+            "ES384",
+            "ES512",
+            "EdDSA",
+            "HS256",
+            "HS384",
+            "HS512",
+            "PS256",
+            "PS384",
+            "PS512",
+            "RS256",
+            "RS384",
+            "RS512"
+          ],
+          "type": "string"
+        },
+        "client_auth": {
+          "description": "The client authentication method.",
+          "enum": [
+            "client_secret_basic",
+            "client_secret_jwt",
+            "client_secret_post",
+            "none",
+            "private_key_jwt",
+            "self_signed_tls_client_auth",
+            "tls_client_auth"
+          ],
+          "type": "string"
+        },
+        "client_id": {
+          "description": "The client ID for authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "client_jwk": {
+          "description": "The client JWK for private_key_jwt authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "client_secret": {
+          "description": "The client secret for authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional headers for the introspection request.",
+          "type": "object"
+        },
+        "http_proxy": {
+          "description": "HTTP proxy to use.",
+          "type": "string"
+        },
+        "http_proxy_authorization": {
+          "description": "HTTP proxy authorization header.",
+          "type": "string"
+        },
+        "http_version": {
+          "default": 1.1,
+          "description": "The HTTP version used for requests.",
+          "type": "number"
+        },
+        "https_proxy": {
+          "description": "HTTPS proxy to use.",
+          "type": "string"
+        },
+        "https_proxy_authorization": {
+          "description": "HTTPS proxy authorization header.",
+          "type": "string"
+        },
+        "insecure_relaxed_audience_validation": {
+          "default": false,
+          "description": "If enabled, the plugin will not validate the audience of the access token. Disable it if the authorization server does not correctly set the audience claim according to RFC 8707 and MCP specification.",
+          "type": "boolean"
+        },
+        "introspection_endpoint": {
+          "description": "The introspection endpoint URL.",
+          "type": "string"
+        },
+        "introspection_format": {
+          "description": "Controls introspection response format.",
+          "enum": [
+            "base64",
+            "base64url",
+            "string"
+          ],
+          "type": "string"
+        },
+        "keepalive": {
+          "default": true,
+          "description": "Enable HTTP keepalive for requests.",
+          "type": "boolean"
+        },
+        "max_request_body_size": {
+          "default": 1048576,
+          "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "type": "integer"
+        },
+        "metadata_endpoint": {
+          "description": "The path for OAuth 2.0 Protected Resource Metadata. Default to $resource/.well-known/oauth-protected-resource. For example, if the configured resource is https://api.example.com/mcp, the metadata endpoint is /mcp/.well-known/oauth-protected-resource.",
+          "type": "string"
+        },
+        "mtls_introspection_endpoint": {
+          "description": "The mTLS alias for the introspection endpoint.",
+          "type": "string"
+        },
+        "no_proxy": {
+          "description": "Comma-separated list of hosts to exclude from proxy.",
+          "type": "string"
+        },
+        "resource": {
+          "description": "The resource identifier.",
+          "type": "string"
+        },
+        "scopes_supported": {
+          "items": {
+            "description": "Recommended scopes that are used in authorization requests to request access to this protected resource.",
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "ssl_verify": {
+          "default": true,
+          "description": "Verify the SSL certificate.",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Network I/O timeout in milliseconds.",
+          "type": "number"
+        },
+        "tls_client_auth_cert": {
+          "description": "PEM-encoded client certificate for mTLS.",
+          "type": "string"
+        },
+        "tls_client_auth_key": {
+          "description": "PEM-encoded private key for mTLS.",
+          "type": "string"
+        },
+        "tls_client_auth_ssl_verify": {
+          "default": true,
+          "description": "Verify server certificate in mTLS.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "authorization_servers",
+        "client_id",
+        "introspection_endpoint",
+        "resource"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
