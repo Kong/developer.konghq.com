@@ -9,6 +9,8 @@ products:
 breadcrumbs:
   - /mesh/
 
+permalink: /mesh/reference/kuma-cp/
+
 related_resources:
   - text: Control plane configuration
     url: /mesh/control-plane-configuration/
