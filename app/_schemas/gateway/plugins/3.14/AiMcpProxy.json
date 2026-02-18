@@ -1,0 +1,284 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "consumer_identifier": {
+          "default": "username",
+          "description": "Which subject type entries in ACL lists refer to for per-consumer matching.",
+          "enum": [
+            "consumer_id",
+            "custom_id",
+            "username"
+          ],
+          "type": "string"
+        },
+        "default_acl": {
+          "description": "Optional list of default ACL rules keyed by scope (for example: tools).",
+          "items": {
+            "description": "Default ACL entry for the given scope. `deny` has higher precedence than `allow`.",
+            "properties": {
+              "allow": {
+                "description": "Subjects explicitly allowed to access this scope. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "deny": {
+                "description": "Subjects explicitly denied from this scope. `deny` takes precedence over `allow`. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "scope": {
+                "default": "tools",
+                "description": "Scope for this default ACL entry (for example: 'tools'). Defaults to 'tools'.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "include_consumer_groups": {
+          "default": false,
+          "description": "If enabled (true), allows Consumer Group names to be used in default and per-primitive ACL.",
+          "type": "boolean"
+        },
+        "logging": {
+          "properties": {
+            "log_audits": {
+              "default": false,
+              "description": "If true, emit audit logs for ACL evaluations.",
+              "type": "boolean"
+            },
+            "log_payloads": {
+              "default": false,
+              "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
+              "type": "boolean"
+            },
+            "log_statistics": {
+              "default": false,
+              "description": "If enabled, will add mcp metrics into the Kong log plugin(s) output.",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "max_request_body_size": {
+          "default": 1048576,
+          "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "type": "integer"
+        },
+        "mode": {
+          "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'.",
+          "enum": [
+            "conversion-listener",
+            "conversion-only",
+            "listener",
+            "passthrough-listener"
+          ],
+          "type": "string"
+        },
+        "server": {
+          "properties": {
+            "forward_client_headers": {
+              "default": true,
+              "description": "Whether to forward the client request headers to the upstream server when calling the tools.",
+              "type": "boolean"
+            },
+            "tag": {
+              "description": "The tag of the MCP server. This is used to filter the exported MCP tools. The field should contain exactly one tag. ",
+              "type": "string"
+            },
+            "timeout": {
+              "default": 10000,
+              "description": "The timeout for calling the tools in milliseconds.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "tools": {
+          "items": {
+            "properties": {
+              "acl": {
+                "description": "Optional per-primitive ACL. `deny` has higher precedence than `allow`.",
+                "properties": {
+                  "allow": {
+                    "description": "Subjects explicitly allowed to use this primitive. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "deny": {
+                    "description": "Subjects explicitly denied from using this primitive. `deny` takes precedence over `allow`. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "annotations": {
+                "properties": {
+                  "destructive_hint": {
+                    "description": "If true, the tool may perform destructive updates",
+                    "type": "boolean"
+                  },
+                  "idempotent_hint": {
+                    "description": "If true, repeated calls with same args have no additional effect",
+                    "type": "boolean"
+                  },
+                  "open_world_hint": {
+                    "description": "If true, tool interacts with external entities",
+                    "type": "boolean"
+                  },
+                  "read_only_hint": {
+                    "description": "If true, the tool does not modify its environment",
+                    "type": "boolean"
+                  },
+                  "title": {
+                    "description": "Human-readable title for the tool",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "description": {
+                "description": "The description of the MCP tool. This is used to provide information about the tool's functionality and usage.",
+                "type": "string"
+              },
+              "headers": {
+                "additionalProperties": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "description": "The headers of the exported API. By default, Kong will extract the headers from API configuration. If the configured headers are not exactly matched, this field is required.",
+                "type": "object"
+              },
+              "host": {
+                "description": "The host of the exported API. By default, Kong will extract the host from API configuration. If the configured host is wildcard, this field is required.",
+                "type": "string"
+              },
+              "method": {
+                "description": "The method of the exported API. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required.",
+                "enum": [
+                  "DELETE",
+                  "GET",
+                  "PATCH",
+                  "POST",
+                  "PUT"
+                ],
+                "type": "string"
+              },
+              "name": {
+                "description": "Tool identifier. In passthrough-listener mode, used to match remote MCP Server tools for ACL enforcement. In other modes, it is also used as the tool name (overrides tools.annotations.title if present).",
+                "type": "string"
+              },
+              "parameters": {
+                "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "nullable": true,
+                "type": "array"
+              },
+              "path": {
+                "description": "The path of the exported API. By default, Kong will extract the path from API configuration. If the configured path is not exactly matched, this field is required. Paths not starting with '/' are treated as relative paths.",
+                "type": "string"
+              },
+              "query": {
+                "additionalProperties": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "description": "The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required.",
+                "type": "object"
+              },
+              "request_body": {
+                "additionalProperties": true,
+                "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
+                "nullable": true,
+                "type": "object"
+              },
+              "responses": {
+                "additionalProperties": true,
+                "description": "The API responses specification defined in OpenAPI. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, '{\"200\":{\"description\":\"Successful response\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"result\":{\"type\":\"string\"}}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details.Only one non-error (status code < 400) responses are supported.",
+                "nullable": true,
+                "type": "object"
+              },
+              "scheme": {
+                "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",
+                "enum": [
+                  "http",
+                  "https"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "description"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
