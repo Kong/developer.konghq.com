@@ -221,11 +221,10 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    [Solace](https://solace.com/) helps teams manage and govern their APIs and events through a shared control plane, 
-                    built jointly on the Kong and Solace platforms, allowing them to apply consistent lifecycles, policies, authentication, and access controls across every data path.
+                    [Solace](https://solace.com/) enables teams to manage and govern APIs and events through a shared control plane
+                    built on Kong and Solace. This allows consistent lifecycle management, policies, authentication, and access controls across all data paths.
                     
-                    Solace delivers high-performance real-time data movement, event governance, and event-driven agentic AI orchestration, 
-                    while Kong adds centralized API management, security, observability, and AI governance. 
+                    Solace provides high-performance real-time data movement, event governance, and orchestration for event-driven agentic AI. Kong complements this with centralized API management, security, observability, and AI governance.
   - columns:
     - blocks:
       - type: structured_text
