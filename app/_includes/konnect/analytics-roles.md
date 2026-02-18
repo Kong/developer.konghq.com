@@ -41,13 +41,13 @@ rows:
   - role: "`Report admin`"
     description: |
       * Can edit, share, and delete reports.
-      * Can access Explorer.
+      * Can access Explorer if they are also assigned to the [Analytics Viewer pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams).
       * Can only see the reports that they've been granted access to.
 
   - role: "`Report editor`"
     description: |
       * Can only edit an existing report.
-      * Can access Explorer.
+      * Can access Explorer if they are also assigned to the [Analytics Viewer pre-defined team](/konnect-platform/teams-and-roles/#predefined-teams).
       * Can only see the reports that they've been granted access to.
 
 {% endtable %}
