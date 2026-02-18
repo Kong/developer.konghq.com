@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@2943485539e433bd895d518fc781e8a8805f986c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2943485539e433bd895d518fc781e8a8805f986c'
+  x-oas-source: kong/platform-api@408ea0ec3518b52070809011e4600c17c9199642
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/408ea0ec3518b52070809011e4600c17c9199642'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -5181,6 +5181,12 @@ components:
       type: string
       example: YOUR_CLIENT_ID
       title: OIDC Identity Provider Login Client Id Property
+    OIDCIdentityProviderClientSecret:
+      description: The Client Secret assigned to your application by the identity provider.
+      type: string
+      example: YOUR_CLIENT_SECRET
+      title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -5221,6 +5227,8 @@ components:
           $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
         client_id:
           $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        client_secret:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
         scopes:
           $ref: '#/components/schemas/OIDCIdentityProviderScopes'
         claim_mappings:
@@ -5292,30 +5300,6 @@ components:
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
-    OIDCIdentityProviderClientSecret:
-      description: The Client Secret assigned to your application by the identity provider.
-      type: string
-      example: YOUR_CLIENT_SECRET
-      title: OIDC Identity Provider Login Client Secret Property
-    ConfigureOIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        client_secret:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
     CreateIdentityProvider:
       description: The identity provider that contains configuration data for creating an authentication integration.
       type: object
@@ -5327,7 +5311,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
     UpdateIdentityProvider:
@@ -5339,7 +5323,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
   examples:
