@@ -47,14 +47,6 @@ faqs:
 
       {:.info}
       > After updating the installation settings, disconnect and reconnect GitHub in Insomnia if the repositories still don't appear.
-
-related_resources:
-  - text: Storage options in Insomnia
-    url: /insomnia/storage/
-  - text: Version control in Insomnia
-    url: /insomnia/version-control/
-
-faqs:
   - q: Why do I get a 403 error when committing?
     a: |  
       Insomnia uses the **Insomnia GitHub App** to perform Git operations. Authenticating with GitHub isn't sufficient. The GitHub App must be installed on your GitHub account or organization and granted access to the target repository. Each Insomnia project is bound to a specific Git repository and credential context.
@@ -66,7 +58,13 @@ faqs:
       To resolve this issue, install or configure the Insomnia GitHub App and grant it access to the repository in your [Github applications](https://github.com/apps/insomnia-desktop)
       
       {:.warning}
-      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.
+      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.    
+
+related_resources:
+  - text: Storage options in Insomnia
+    url: /insomnia/storage/
+  - text: Version control in Insomnia
+    url: /insomnia/version-control/
   
 ---
 
