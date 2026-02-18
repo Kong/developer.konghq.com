@@ -52,6 +52,7 @@ prereqs:
         DECK_APP_NAME: 'YOUR FUNCTION APP NAME'
         DECK_FUNCTION_NAME: 'httpget'
         DECK_FUNCTION_APP_KEY: 'YOUR FUNCTION APP API KEY'
+        section: prereqs
         {% endenv_variables %}
       icon_url: /assets/icons/azure.svg 
 
