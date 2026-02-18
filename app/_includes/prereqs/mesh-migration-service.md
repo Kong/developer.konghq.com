@@ -173,3 +173,4 @@ spec:
         ports:
         - containerPort: 5050
           name: http" | kubectl apply -f -
+```
