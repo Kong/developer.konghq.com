@@ -1,5 +1,5 @@
 {%- assign product=page.products[0] -%}
-{%- for prereq in prereqs.inline_before -%}
+{%- for prereq in prereqs.inline_before %}
 {% include prereqs/inline.md prereq=prereq %}
 {%- endfor -%}
 {%- if prereqs.konnect_auth_only? -%}
@@ -73,6 +73,6 @@
 {%- assign prereq_path = "prereqs/entities/" | append: product | append: ".md" -%}
 {% include {{ prereq_path }} data=prereqs.data %}
 {%- endif -%}
-{%- for prereq in prereqs.inline_without_position -%}
+{%- for prereq in prereqs.inline_without_position %}
 {% include prereqs/inline.md prereq=prereq %}
 {% endfor -%}
