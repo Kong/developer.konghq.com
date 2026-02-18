@@ -72,6 +72,8 @@ prereqs:
             DECK_IDENTIFIER: SAML-application-identifier
             DECK_LOGIN_URL: SAML-login-URL
             DECK_CERTIFICATE: certificate-contents
+            section: prereqs
+            indent: 3
             {% endenv_variables %}
 
         {:.warning}
