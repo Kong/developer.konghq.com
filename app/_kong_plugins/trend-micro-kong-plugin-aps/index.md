@@ -38,9 +38,9 @@ related_resources:
     url: https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-apis
 ---
 
-The TrendAI API Security plugin delivers risk visibility for your {{site.base_gateway}}s and protects their cloud-hosted infrastructure through TrendAI Vision One [Cloud Risk Management](https://www.trendmicro.com/en_us/business/products/hybrid-cloud/cloud-risk-management.html) and [Container Security](https://www.trendmicro.com/en_us/business/products/hybrid-cloud/cloud-one-container-image-security.html).
+The TrendAI API Security plugin delivers risk visibility for your {{site.base_gateway}}s and protects their cloud-hosted infrastructure through TrendAI Vision One [Cloud Risk Management](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-cloud-risk-management) and [Container Security](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-container-security).
 
-This plugin connects your Kong environment to the [TrendAI Vision One]() platform, and is intended for TrendAI Vision One customers.
+This plugin connects your Kong environment to the [TrendAI Vision One](https://signin.v1.trendmicro.com/) platform, and is intended for TrendAI Vision One customers.
 
 Key benefits include:
 * Discovery and risk assessment of {{site.base_gateway}}s and their associated APIs, including checks for misconfiguration, authentication status, zombie APIs, and internet exposure.
