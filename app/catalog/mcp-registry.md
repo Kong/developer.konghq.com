@@ -152,7 +152,7 @@ We are continuing to evolve MCP Registries alongside the broader MCP ecosystem.
 Planned enhancements include:
 
 * Publishing MCP servers to Dev Portal  
-* Auto-registration of MCP servers created via {{site.konnect_short_name}}-native workflows such as AI Gateway  
+* Auto-registration of MCP servers created via {{site.konnect_short_name}}-native workflows such as {{site.ai_gateway}} 
 * Additional governance and lifecycle controls
 
 Because the MCP specification is still evolving, we are committed to iterating in partnership with customers who have already begun developing MCP servers and experimenting with agent-based workflows.
