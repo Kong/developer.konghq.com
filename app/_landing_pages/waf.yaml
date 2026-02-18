@@ -38,7 +38,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Injection protection SQL
+              title: SQL injection protection
               description: |
                 Detect and block SQL injection and other code injection patterns before they reach your upstream services.
               icon: /assets/icons/lock.svg
@@ -105,7 +105,9 @@ rows:
               icon: /assets/icons/api.svg
               ctas:
                 - text: Configure XML Threat Protection
-                  url: /plugins/xml-threat-protection/ 
+                  url: /plugins/xml-threat-protection/
+                - text: Configure JSON Threat Protection
+                  url: /plugins/json-threat-protection/  
   - header:
       type: h2
       text: "Other security-related resources"
