@@ -26,7 +26,7 @@ The following parameters can be used to configure `kuma-cp`:
 
 ## Helm values.yaml
 
-The folloowing parameters can be used to configure `kuma-cp` in the Helm `values.yaml` file:
+The following parameters can be used to configure `kuma-cp` in the Helm `values.yaml` file:
 
 ```yaml
 {% embed helm-values.yaml versioned %}
