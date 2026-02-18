@@ -29,7 +29,7 @@ search_aliases:
   - ai detection and response
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.12'
 ---
 
 [Noma](https://noma.security)'s {{site.ai_gateway_name}} plugin offers full AI detection & response (AI-DR) runtime protection to all OpenAI-compliant modules through your {{site.ai_gateway_name}}.
