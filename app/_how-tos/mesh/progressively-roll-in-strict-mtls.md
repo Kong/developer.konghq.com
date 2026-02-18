@@ -1,9 +1,9 @@
 ---
-title: Migrate {{site.mesh_product_name}} Services to mTLS
+title: Progressively roll in strict mTLS with {{site.mesh_product_name}}
 description: Progressively roll in mutual TLS with the MeshTLS policy in {{site.mesh_product_name}} without disrupting traffic.
     
 content_type: how_to
-permalink: /how-to/migrate-services-to-mtls/
+permalink: /how-to/progressively-roll-in-strict-mtls/
 
 bread-crumbs: 
   - /mesh/
@@ -23,9 +23,9 @@ products:
   - mesh
 
 tldr:
-  q: TODO
+  q: How can I migrate to mTLS without interrupting traffic?
   a: |
-    TODO
+    Create an app in a namespace outside of the mesh, create a permissive `MeshTLS` policy to allow the Service to receive traffic during the migration, then migrate the app to the mesh and update the `MeshTLS` to use strict mode.
 
 prereqs:
   inline:
@@ -60,9 +60,9 @@ spec:
         action: Allow" | kubectl apply -f -
 ```
 
-## Port-forward the two Services
+## Port-forward the two demo apps
 
-In order to interact with the two `demo-app` Services we created in the prerequisites, we need to enable port-forwarding.
+In order to interact with the two `demo-app` Pods we created in the prerequisites, we need to enable port-forwarding.
 
 1. Run the following command to port-forward the [first Service](#install-kong-mesh-with-demo-configuration):
    ```sh
@@ -101,7 +101,7 @@ spec:
       mode: Permissive" | kubectl apply -f -
 ```
 
-## Add the second Service to the mesh
+## Add the Pods to the mesh
 
 1. Run the following command to enable sidecar injection on the `kong-mesh-demo-migration` namespace to add its Pods to the mesh:
 
@@ -203,8 +203,8 @@ spec:
    This value should now be increasing:
 
    ```
-   http.localhost_5050.rbac.allowed: 5351
-   http.localhost_5050.rbac.allowed: 6254
+   http.localhost_5050.rbac.allowed: 1065
+   http.localhost_5050.rbac.allowed: 1737
    ```
 
 ## Update the MeshTLS policy
