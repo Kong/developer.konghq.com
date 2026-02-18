@@ -36,7 +36,7 @@
 {%- endif -%}
 {%- for product in prereqs.products %}
 {%- assign product_include = 'prereqs/products/' | append: product | append: '.md' -%}
-{%- if page.works_on -%}
+{%- if page.works_on and product != 'operator' -%}
 {%- if page.works_on contains 'konnect' -%}
 {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
 {%- endif -%}
