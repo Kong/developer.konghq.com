@@ -17,22 +17,12 @@ breadcrumbs:
 
 prereqs:
   inline:
-  - title: Running LLM endpoint
+  - title: OpenAI-compatible LLM endpoint
     content: |
-      Your LLM service must be running and accessible, with the endpoint meeting OpenAI API specifications.
-    icon_url: /assets/icons/code.svg
-  - title: Available model on the LLM endpoint
-    content: |
-      Your LLM endpoint must have at least one model available to serve requests.
+      Your LLM service must be running, reachable, and implement the OpenAI API specification.
 
-      Insomnia retrieves available models from the endpoint during configuration. If no models are available, the **Load Models** step will return an empty list.
+      The endpoint must have at least one model available. Insomnia retrieves available models during configuration. If no models are available, the **Load Models** step returns an empty list.
 
-      For example, if using Ollama locally, pull a model before configuring Insomnia:
-      ```sh
-      ollama pull deepseek-r1
-      ```
-
-      Ensure that the model is running so it can receive requests.
     icon_url: /assets/icons/code.svg
 
 
