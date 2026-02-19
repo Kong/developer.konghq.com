@@ -119,7 +119,7 @@ rows:
 
   - header:
       type: h2
-      text: "MCP catalog registry (tech preview)"
+      text: "MCP Registry (tech preview)"
     columns:
       - blocks:
           - type: structured_text
@@ -131,8 +131,8 @@ rows:
                     This provides an internal catalog in {{site.konnect_short_name}} of your MCP servers.
           - type: button
             config:
-              text: "Enable MCP catalog in {{site.konnect_short_name}} Labs"
-              url: https://cloud.konghq.com/global/organization/labs
+              text: "Enable MCP Registry in {{site.konnect_short_name}} Labs"
+              url: /catalog/mcp-registry/
 
   - header:
       type: h2
