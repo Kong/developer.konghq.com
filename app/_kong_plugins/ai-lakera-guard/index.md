@@ -12,8 +12,8 @@ description: 'Inspect and enforce Lakera Guard safety policies on LLM requests a
 category: AI
 
 products:
-    - ai-gateway
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

@@ -1,0 +1,5 @@
+name: weather-internet-mcp
+paths:
+  - /mcp/weather-internet
+service:
+  name: weather-internet-service

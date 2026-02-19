@@ -1,0 +1,2 @@
+name: mcp-acl-service
+url: http://host.docker.internal:3001/mcp

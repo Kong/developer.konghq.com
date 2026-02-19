@@ -1,0 +1,7 @@
+name: example-websocket-route
+paths:
+  - /anything
+protocols:
+  - ws
+service: 
+  name: example-websocket-service

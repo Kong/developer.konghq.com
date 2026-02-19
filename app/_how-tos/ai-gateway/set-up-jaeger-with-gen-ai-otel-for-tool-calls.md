@@ -11,8 +11,8 @@ related_resources:
 description: Use the OpenTelemetry plugin to capture and validate LLM tool call attributes in Jaeger dashboards when using function calling with AI providers.
 
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
 
 works_on:
     - on-prem

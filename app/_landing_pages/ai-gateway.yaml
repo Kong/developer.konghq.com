@@ -3,8 +3,8 @@ metadata:
   content_type: landing_page
   description: This page is an introduction to {{site.ai_gateway}}.
   products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
   works_on:
     - on-prem
     - konnect

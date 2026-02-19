@@ -4,8 +4,8 @@ content_type: how_to
 permalink: /ai-gateway/get-started/
 description: Learn how to quickly get started with {{site.ai_gateway}}
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
 
 works_on:
     - on-prem

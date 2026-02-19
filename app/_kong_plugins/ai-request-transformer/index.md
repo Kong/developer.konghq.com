@@ -9,7 +9,8 @@ description: Use an LLM service to transform a client request body prior to prox
 
 
 products:
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

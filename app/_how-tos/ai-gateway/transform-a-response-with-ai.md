@@ -9,8 +9,8 @@ related_resources:
 description: Use the AI Response Transformer plugin with OpenAI to transform a response before returning it to the client.
 
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
 
 works_on:
     - on-prem

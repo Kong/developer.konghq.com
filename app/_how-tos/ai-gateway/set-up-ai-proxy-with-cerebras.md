@@ -11,8 +11,8 @@ related_resources:
 description: Configure the AI Proxy plugin to create a chat route using Cerebras .
 
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
 
 works_on:
     - on-prem

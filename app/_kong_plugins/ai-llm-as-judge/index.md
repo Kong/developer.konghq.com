@@ -9,7 +9,8 @@ publisher: kong-inc
 description: 'Evaluate and optimize your Large Language Models with accuracy'
 
 products:
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

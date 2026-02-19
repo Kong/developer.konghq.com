@@ -9,8 +9,8 @@ publisher: kong-inc
 description: 'Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of llm/v1/chat or llm/v1/completions requests'
 
 products:
-    - ai-gateway
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

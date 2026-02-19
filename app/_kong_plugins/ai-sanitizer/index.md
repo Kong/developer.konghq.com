@@ -11,8 +11,8 @@ description: Protect sensitive information in client request or response bodies 
 show_in_api: true
 
 products:
-    - ai-gateway
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

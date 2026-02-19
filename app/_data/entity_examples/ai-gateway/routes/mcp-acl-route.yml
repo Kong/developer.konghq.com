@@ -1,0 +1,5 @@
+name: mcp-acl-route
+paths:
+  - /mcp
+service:
+  name: mcp-acl-service

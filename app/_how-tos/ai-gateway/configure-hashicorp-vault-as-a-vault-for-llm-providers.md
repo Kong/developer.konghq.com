@@ -4,8 +4,8 @@ permalink: /how-to/configure-hashicorp-vault-as-a-vault-for-llm-providers/
 description: "Use HashiCorp Vault to securely store and reference API keys for OpenAI, Mistral, and other LLM providers in {{site.ai_gateway}}."
 content_type: how_to
 products:
-    - ai-gateway
-    - gateway
+  - ai-gateway
+  - gateway
 
 series:
   id: hashicorp-vault-llms

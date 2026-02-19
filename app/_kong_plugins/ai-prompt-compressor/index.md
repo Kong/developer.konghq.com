@@ -8,8 +8,8 @@ publisher: kong-inc
 description: Compress prompts before they are sent to LLMs to reduce costs, and improve latency
 
 products:
-    - ai-gateway
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

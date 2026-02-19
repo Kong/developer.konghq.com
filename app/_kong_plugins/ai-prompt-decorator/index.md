@@ -9,8 +9,8 @@ description: Prepend or append an array of llm/v1/chat messages to a user's chat
 
 
 products:
-    - ai-gateway
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

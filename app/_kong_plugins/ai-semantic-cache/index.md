@@ -10,7 +10,8 @@ description: 'Enhance performance for AI providers by caching LLM responses sema
 
 
 products:
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem
