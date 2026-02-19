@@ -9,9 +9,9 @@ columns:
 rows:
   - role: "`Dashboard viewer`"
     description: |
-      - Cannot edit dashboards.
-      - Can apply temporary filters during a session.
-      - Can only see dashboards that they are explicitly granted access to.
+      * Cannot edit dashboards.
+      * Can apply temporary filters during a session.
+      * Can only see dashboards that they are explicitly granted access to.
   - role: "`Dashboard creator`"
     description: |
       Can create new dashboards, and automatically become an Admin of the created dashboard.
