@@ -49,7 +49,7 @@ This feature is built on top of the MCP Registry API specification defined by An
 
 ## Enable MCP Registries in {{site.konnect_catalog}}
 
-MCP Registries in {{site.konnect_catalog}} is currently available in tech preview via {{site.konnect_short_name}} Labs.
+MCP Registries in {{site.konnect_catalog}} are currently available in tech preview via {{site.konnect_short_name}} Labs.
 
 1. In the {{site.konnect_short_name}} sidebar, navigate to **Organizations**.
 1. In the Organization sidebar, click **Labs**.
@@ -135,14 +135,14 @@ An MCP server can define multiple packages and multiple remotes simultaneously. 
 
 ## Access and authentication
 
-Today, registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate access tokens can query the registry URL:
+Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
 
 ```sh
 curl -X GET "https://klabs.us.api.konghq.com/v0/registries/internal-mcp-registry/v0.1/servers" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
-Future enhancements will allow MCP servers to be published to Dev Portal, enabling controlled exposure to broader audiences, including users and agents outside of {{site.konnect_short_name}}.
+Future enhancements will allow publishing MCP servers to Dev Portal, enabling controlled exposure to broader audiences, including users and agents outside of {{site.konnect_short_name}}.
 
 
 ## What’s next
