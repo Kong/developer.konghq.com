@@ -1,3 +1,5 @@
+Now that your Dedicated Cloud Gateway Azure network is ready, you can configure VNET peering to connect your Azure virtual network to your Dedicated Cloud Gateway.
+
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.
 1. In the API Gateways sidebar, click **Networks**.
@@ -35,7 +37,7 @@
     * Permission to perform peering actions
 
     Use the Azure CLI to define the role, replacing `$VNET_SUBSCRIPTION_ID` with your Azure subscription ID.
-1. Assign the role to the service principal so it has permission to peer with your virtual network with the Azure CLI:
+1. Assign the role to the service principal so it has permission to peer with your virtual network:
    ```sh
    az role assignment create \
      --role "Kong Cloud Gateway Peering Creator - Kong" \

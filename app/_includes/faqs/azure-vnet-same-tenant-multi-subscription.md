@@ -1,0 +1,1 @@
+This error can occur because you have multiple subscriptions in the same Entra tenant and the Azure CLI can't assign another subscription to the role. To resolve this in Azure, search for the role and manually add additional subscription IDs to it instead of using the CLI.

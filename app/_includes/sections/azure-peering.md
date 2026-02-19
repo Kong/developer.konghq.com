@@ -1,4 +1,4 @@
-When you deploy Dedicated Cloud Gateway in {{site.konnect_short_name}}, {{site.konnect_short_name}} hosts the Data Plane Nodes on Azure. Then, you can use [Azure virtual network peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) to establish a secure, low-latency connection between your Azure environment and the {{site.konnect_short_name}} platform.
+When you deploy Dedicated Cloud Gateway in {{site.konnect_short_name}}, {{site.konnect_short_name}} hosts the data plane nodes on Azure. Then, you can use [Azure virtual network peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) to establish a secure, low-latency connection between your Azure environment and the {{site.konnect_short_name}} platform.
 
 <!--vale off -->
 {% mermaid %}

@@ -99,7 +99,7 @@ rows:
               icon: /assets/icons/azure.svg
               ctas:
                 - text: VNet peering
-                  url: /dedicated-cloud-gateways/azure-vnet-peering/
+                  url: /dedicated-cloud-gateways/azure-peering/
   - columns:
       - blocks:
         - type: structured_text
