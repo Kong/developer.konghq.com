@@ -14,8 +14,8 @@ related_resources:
 description: Configure {{site.ai_gateway}} to proxy Claude CLI traffic
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

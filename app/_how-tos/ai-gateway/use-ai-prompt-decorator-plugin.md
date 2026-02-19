@@ -9,8 +9,8 @@ tldr:
   a: Route the requests to Cohere using the AI Proxy plugin and use the AI Prompt Decorator plugin to prepend ethical and security instructions, and compliance-focused instructions to every chat request.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

@@ -13,8 +13,8 @@ related_resources:
 description: Learn how to compare LLM models accuracy using the AI LLM as Judge plugin
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

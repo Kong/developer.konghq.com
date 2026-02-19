@@ -12,8 +12,8 @@ description: Use the OpenTelemetry plugin to send {{site.base_gateway}} analytic
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

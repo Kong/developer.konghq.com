@@ -21,8 +21,8 @@ series:
 description: Learn how to govern MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and AI Prompt Guard plugins
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

@@ -13,8 +13,8 @@ related_resources:
 description: Learn how to configure the AI RAG Injector plugin.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

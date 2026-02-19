@@ -14,8 +14,8 @@ related_resources:
 description: Learn how to use the AI AWS Guardrails plugin.
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

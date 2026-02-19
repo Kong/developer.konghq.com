@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy Advanced plugin to stream responses from Google's Vertex AI using the native streamGenerateContent endpoint format."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

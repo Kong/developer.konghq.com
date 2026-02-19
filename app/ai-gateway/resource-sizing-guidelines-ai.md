@@ -4,8 +4,8 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

@@ -9,8 +9,8 @@ description: 'Use an LLM service to transform the upstream HTTP(S) prior to forw
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

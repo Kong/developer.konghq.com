@@ -14,8 +14,8 @@ related_resources:
 description: Learn how to use the Azure AI Content Safety plugin.
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

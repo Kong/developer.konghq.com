@@ -15,8 +15,8 @@ breadcrumbs:
 description: "Configure the AI Proxy plugin to use AWS Bedrock's Rerank API for improving document retrieval relevance in RAG pipelines."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

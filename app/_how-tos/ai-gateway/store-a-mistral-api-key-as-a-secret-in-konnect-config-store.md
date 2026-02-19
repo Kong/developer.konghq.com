@@ -18,8 +18,8 @@ related_resources:
     url: https://docs.mistral.ai/
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - konnect

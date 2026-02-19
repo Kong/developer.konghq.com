@@ -9,8 +9,8 @@ description: The AI Proxy plugin lets you transform and proxy requests to a numb
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

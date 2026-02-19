@@ -14,8 +14,8 @@ related_resources:
 description: Restrict access to aggregated MCP tools using Consumer Groups. This guide shows how to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
 

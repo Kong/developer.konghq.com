@@ -9,8 +9,8 @@ related_resources:
 description: Use the AI Request Transformer plugin with OpenAI to transform a client request body before proxying it.
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

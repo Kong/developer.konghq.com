@@ -10,8 +10,8 @@ entities:
   - service
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

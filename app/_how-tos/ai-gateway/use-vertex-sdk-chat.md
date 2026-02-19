@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy Advanced plugin to authenticate with Google's Gemini API using GCP service account credentials and test with the native Vertex AI request format."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy Advanced plugin to use Gemini's `thinkingConfig` feature for detailed reasoning traces."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

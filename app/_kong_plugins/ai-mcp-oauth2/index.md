@@ -9,8 +9,8 @@ description: 'Secure MCP server access with OAuth2 authentication'
 
 tech_preview: true
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

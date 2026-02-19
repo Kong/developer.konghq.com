@@ -13,8 +13,8 @@ related_resources:
 description: Use the AI Semantic Response Guard plugin to enforce topic-level guardrails on LLM responses, blocking outputs that fall outside approved categories.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

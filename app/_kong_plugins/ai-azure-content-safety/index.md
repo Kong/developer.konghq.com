@@ -9,8 +9,8 @@ publisher: kong-inc
 description: 'Use Azure AI Content Safety to check and audit AI Proxy plugin messages before proxying them to an upstream LLM'
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

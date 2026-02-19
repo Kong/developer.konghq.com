@@ -15,8 +15,8 @@ permalink: /how-tos/use-bedrock-function-calling/
 description: "Configure the AI Proxy Advanced plugin to use AWS Bedrock's Converse API for function calling with Cohere Command R."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

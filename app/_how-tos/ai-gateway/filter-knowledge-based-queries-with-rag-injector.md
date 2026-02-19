@@ -13,8 +13,8 @@ related_resources:
 description: Learn how to use metadata filtering to refine search results within knowledge base collections.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

@@ -21,8 +21,8 @@ series:
 description: Learn how to observe MCP traffic within GitHub remote MCP server with the AI Proxy Advanced and {{ site.base_gateway }} Prometheus plugin
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

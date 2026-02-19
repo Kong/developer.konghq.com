@@ -10,8 +10,8 @@ description: The AI Proxy Advanced plugin lets you transform and proxy requests 
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

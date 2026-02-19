@@ -9,8 +9,8 @@ description: 'Provide fill-in-the-blank AI prompts to users'
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

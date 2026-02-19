@@ -11,8 +11,8 @@ breadcrumbs:
  - /ai-gateway/
  - /mcp/
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

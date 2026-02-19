@@ -11,8 +11,8 @@ related_resources:
 description: Use the AI Proxy Advanced plugin to route chat requests to OpenAI models based on semantic intent, secured with API keys stored in HashiCorp Vault.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

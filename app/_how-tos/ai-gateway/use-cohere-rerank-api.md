@@ -12,8 +12,8 @@ breadcrumbs:
   - /ai-gateway/
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

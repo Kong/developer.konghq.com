@@ -11,8 +11,8 @@ related_resources:
 description: Configure the AI Proxy Advanced plugin to create a chat route using Anthropic.
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 
 works_on:

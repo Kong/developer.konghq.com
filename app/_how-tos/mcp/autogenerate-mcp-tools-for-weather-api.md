@@ -10,8 +10,8 @@ related_resources:
 description: |
     Learn how to use the AI MCP Proxy plugin to expose WeatherAPI endpoints as MCP tools, allowing AI clients like Cursor to query weather data.
 products:
-  - gateway
   - ai-gateway
+  - gateway
 permalink: /mcp/autogenerate-mcp-tools-for-weather-api/
 
 series:

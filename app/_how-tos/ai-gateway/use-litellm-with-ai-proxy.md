@@ -9,8 +9,8 @@ related_resources:
 description: Connect your LiteLLM integrations with {{site.ai_gateway}} with no code changes.
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

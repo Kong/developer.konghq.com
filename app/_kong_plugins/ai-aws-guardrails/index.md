@@ -9,8 +9,8 @@ publisher: kong-inc
 description: 'Use AWS Guardrails to validate requests and/or responses in the AI Proxy plugin before forwarding them between clients and upstream LLMs.'
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

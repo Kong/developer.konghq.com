@@ -11,8 +11,8 @@ description: 'Audit and validate LLM prompts with Google Cloud Model Armor befor
 categories:
   - ai
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem

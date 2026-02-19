@@ -17,8 +17,8 @@ related_resources:
     icon: assets/icons/agno.svg
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

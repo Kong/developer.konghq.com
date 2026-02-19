@@ -10,8 +10,8 @@ description: 'Create RAG pipelines by automatically injecting content from a vec
 
 
 products:
-    - gateway
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem
