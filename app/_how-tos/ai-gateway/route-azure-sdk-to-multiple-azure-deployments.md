@@ -11,7 +11,7 @@ related_resources:
 
 permalink: /how-to/route-azure-sdk-to-multiple-azure-deployments
 
-description: Configure a single route that dynamically maps OpenAI SDK requests to different Azure OpenAI deployments based on the URL path.
+description: Configure a single Route that dynamically maps OpenAI SDK requests to different Azure OpenAI deployments based on the URL path.
 
 products:
   - gateway
@@ -40,7 +40,7 @@ tags:
 
 tldr:
   q: How do I route Azure AI SDK requests to different Azure OpenAI deployments through a single Kong route?
-  a: Create a route with a regex path that captures the deployment name, then use the `$(uri_captures)` template variable in AI Proxy Advanced to set the Azure deployment ID dynamically.
+  a: Create a Route with a regex path that captures the deployment name, then use the `$(uri_captures)` template variable in AI Proxy Advanced to set the Azure deployment ID dynamically.
 
 tools:
   - deck
@@ -72,9 +72,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-The [Azure OpenAI SDK](https://github.com/openai/openai-python#microsoft-azure-openai) can connect to [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/chatgpt) through {{site.ai_gateway}}. With Azure, the `model` parameter in SDK calls maps to a deployment name on your Azure instance. The SDK constructs request URLs in the format `https://{azure_instance}.openai.azure.com/openai/deployments/{azure_deployment_id}/chat/completions`. When the SDK sends a request to `/openai/deployments/gpt-4o/chat/completions`, the route captures `gpt-4o` into the `azure_deployment` named group.
+The [Azure OpenAI SDK](https://github.com/openai/openai-python#microsoft-azure-openai) can connect to [Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/chatgpt) through {{site.ai_gateway}}. With Azure, the `model` parameter in SDK calls maps to a deployment name on your Azure instance. The SDK constructs request URLs in the format `https://{azure_instance}.openai.azure.com/openai/deployments/{azure_deployment_id}/chat/completions`. When the SDK sends a request to `/openai/deployments/gpt-4o/chat/completions`, the Route captures `gpt-4o` into the `azure_deployment` named group.
 
-Instead of creating a separate route for each deployment, you can configure a single route with a regex path that captures the deployment name from the URL. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) reads the captured value through a [template variable](/plugins/ai-proxy-advanced/#dynamic-model-and-options-from-request-parameters) and uses it as the Azure deployment ID.
+Instead of creating a separate Route for each deployment, you can configure a single Route with a regex path that captures the deployment name from the URL. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) reads the captured value through a [template variable](/plugins/ai-proxy-advanced/#dynamic-model-and-options-from-request-parameters) and uses it as the Azure deployment ID.
 
 ## Configure the AI Proxy Advanced plugin
 
@@ -99,14 +99,14 @@ entities:
                 azure_deployment_id: "$(uri_captures.azure_deployment)"
 variables:
   azure_openai_key:
-    value: $AZURE_OPENAI_KEY
+    value: $AZURE_OPENAI_API_KEY
   azure_instance:
-    value: $AZURE_INSTANCE
+    value: $AZURE_INSTANCE_NAME
 {% endentity_examples %}
 
 ## Validate
 
-Now, let's create a test script that sends requests to different Azure deployments through the same Kong route. The `AzureOpenAI` client constructs URLs with `/openai/deployments/{model}/chat/completions`, which matches the route regex. The `model` parameter determines which deployment receives the request:
+Now, let's create a test script that sends requests to different Azure deployments through the same {{site.base_gateway}} Route. The `AzureOpenAI` client constructs URLs with `/openai/deployments/{model}/chat/completions`, which matches the Route regex. The `model` parameter determines which deployment receives the request:
 ```bash
 cat <<EOF > test_azure_deployments.py
 from openai import AzureOpenAI
@@ -152,7 +152,7 @@ Run the script:
 python test_azure_deployments.py
 ```
 
-You should see each request routed to the corresponding Azure deployment, confirming that a single Kong route handles multiple deployments dynamically:
+You should see each request routed to the corresponding Azure deployment, confirming that a single {{site.base_gateway}} Route handles multiple deployments dynamically:
 
 ```text
 Requested: gpt-4o, Got: gpt-4o-2024-11-20

@@ -11,7 +11,7 @@ related_resources:
 
 permalink: /how-to/route-azure-sdk-to-specific-deployments
 
-description: Configure separate Kong routes that map to specific Azure OpenAI deployments, each with its own AI Proxy Advanced configuration.
+description: Configure separate {{site.base_gateway}} Routes that map to specific Azure OpenAI deployments, each with its own AI Proxy Advanced configuration.
 
 products:
   - gateway
@@ -39,8 +39,8 @@ tags:
   - ai-sdks
 
 tldr:
-  q: How do I map Azure OpenAI SDK requests to specific deployments using separate Kong routes?
-  a: Create a route for each Azure deployment with a path that matches the SDK's URL pattern, then configure AI Proxy Advanced on each route with the corresponding deployment ID. The SDK switches between deployments by changing the base URL.
+  q: How do I map Azure OpenAI SDK requests to specific deployments using separate {{site.base_gateway}} Routes?
+  a: Create a Route for each Azure deployment with a path that matches the SDK's URL pattern, then configure AI Proxy Advanced on each Route with the corresponding deployment ID. The SDK switches between deployments by changing the base URL.
 
 tools:
   - deck
@@ -75,13 +75,13 @@ cleanup:
 
 The [Azure OpenAI SDK](https://github.com/openai/openai-python#microsoft-azure-openai) constructs request URLs in the format `https://{azure_instance}.openai.azure.com/openai/deployments/{deployment_id}/chat/completions`. Each deployment has its own URL path.
 
-You can map each deployment to a separate Kong route with its own [AI Proxy Advanced](/plugins/ai-proxy-advanced/) configuration. The SDK switches between deployments by pointing `azure_endpoint` at Kong and changing the `model` parameter. Kong matches the request to the correct route and forwards it to the corresponding Azure deployment. When the SDK sends a request with `model="gpt-4o"`, the `AzureOpenAI` client constructs the path `/openai/deployments/gpt-4o/chat/completions`, which matches the first route. Requests with `model="gpt-4.1-mini"` match the second route.
+You can map each deployment to a separate {{site.base_gateway}} Route with its own [AI Proxy Advanced](/plugins/ai-proxy-advanced/) configuration. The SDK switches between deployments by pointing `azure_endpoint` at {{site.base_gateway}} and changing the `model` parameter. {{site.base_gateway}} matches the request to the correct Route and forwards it to the corresponding Azure deployment. When the SDK sends a request with `model="gpt-4o"`, the `AzureOpenAI` client constructs the path `/openai/deployments/gpt-4o/chat/completions`, which matches the first Route. Requests with `model="gpt-4.1-mini"` match the second Route.
 
 This approach gives you explicit control over each deployment's configuration, such as different auth keys, model options, or logging settings per deployment.
 
-## Configure AI Proxy Advanced for the GPT-4o route
+## Configure AI Proxy Advanced for the GPT-4o Route
 
-Configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) on the `azure-gpt-4o` route to target the `gpt-4o` deployment:
+Configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) on the `azure-gpt-4o` Route to target the `gpt-4o` deployment:
 
 {% entity_examples %}
 entities:
@@ -102,14 +102,14 @@ entities:
                 azure_deployment_id: gpt-4o
 variables:
   azure_openai_key:
-    value: $AZURE_OPENAI_KEY
+    value: $AZURE_OPENAI_API_KEY
   azure_instance:
-    value: $AZURE_INSTANCE
+    value: $AZURE_INSTANCE_NAME
 {% endentity_examples %}
 
-## Configure AI Proxy Advanced for the GPT-4.1-mini route
+## Configure AI Proxy Advanced for the GPT-4.1-mini Route
 
-Configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) on the `azure-gpt-4-1-mini` route to target the `gpt-4.1-mini` deployment:
+Configure [AI Proxy Advanced](/plugins/ai-proxy-advanced/) on the `azure-gpt-4-1-mini` Route to target the `gpt-4.1-mini` deployment:
 
 {% entity_examples %}
 entities:
@@ -130,14 +130,14 @@ entities:
                 azure_deployment_id: gpt-4.1-mini
 variables:
   azure_openai_key:
-    value: $AZURE_OPENAI_KEY
+    value: $AZURE_OPENAI_API_KEY
   azure_instance:
-    value: $AZURE_INSTANCE
+    value: $AZURE_INSTANCE_NAME
 {% endentity_examples %}
 
 ## Validate
 
-Create a test script that sends requests to both deployments through Kong. The `AzureOpenAI` client constructs the correct URL path for each deployment based on the `model` parameter:
+Create a test script that sends requests to both deployments through {{site.base_gateway}}. The `AzureOpenAI` client constructs the correct URL path for each deployment based on the `model` parameter:
 ```bash
 cat <<EOF > test_azure_multi_route.py
 from openai import AzureOpenAI
@@ -183,4 +183,4 @@ Run the script:
 python test_azure_multi_route.py
 ```
 
-You should see each request routed to the corresponding Azure deployment, confirming that each route maps to a different model.
+You should see each request routed to the corresponding Azure deployment, confirming that each Route maps to a different model.
