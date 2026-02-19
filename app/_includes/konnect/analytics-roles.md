@@ -9,7 +9,6 @@ columns:
 rows:
   - role: "`Dashboard viewer`"
     description: |
-      - Can view the [Analytics](/observability/) summary and report data.
       - Cannot edit dashboards.
       - Can apply temporary filters during a session.
       - Can only see dashboards that they are explicitly granted access to.
