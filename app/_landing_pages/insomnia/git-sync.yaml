@@ -29,7 +29,7 @@ rows:
                     - You can use Git features such as version control, peer review, and auditable change history.
                     - You retain local ownership of your data.
 
-                    Git Sync uses a third-party Git repository to store Insomnia project data. Supported Git providers include GitHub, GitLab, and Bitbucket.
+                    Git Sync uses a third-party Git repository to store Insomnia project data. Supported native Git providers include GitHub, GitLab, and Bitbucket. Additionally, Git Sync also works with other providers if you manually configure credentials.
 
                     {:.info}
                     > Git Sync is not Insomnia Cloud storage. Git Sync projects are not automatically shared across Insomnia organizations, and they are not managed or hosted by Insomnia. If you require automatic sharing and cloud-hosted storage, use [Insomnia Cloud Sync](/insomnia/storage#cloud-sync/) instead.
@@ -45,16 +45,11 @@ rows:
                 - type: text
                   text: | 
                     **Direct-to-Git architecture**: 
-                      - Insomnia syncs directly between your device and your Git provider. This means that your project data never passes through Insomnia servers.
+                      - Insomnia syncs directly between your device and your Git provider. This means that your project data never touches Insomnia servers.
                       - All storage, access control, retention, and auditability are handled by your Git provider and your existing Git governance practices.
                     
                       {:.decorative}
                       > This architecture is a core reason teams choose Git Sync.
-
-                    **Known limitations**:
-                    - No UI support for reverting commits.
-                    - No pre-request or post-request scripts for gRPC.
-                    - No persistent execution history for gRPC requests.
       - blocks:
           - type: image
             config:
@@ -63,13 +58,13 @@ rows:
 
   - header:
       type: h2
-      text: System changes
+      text: Metadata changes
     columns:
       - blocks:
           - type: text
             config: |
               Expect occasional system changes in Git Sync projects. System changes exist because Git Sync communicates directly with Git, which means that Insomnia must store some Insomnia-specific metadata in the repository.
-                - These updates may appear as system changes
+                - These updates appear as system changes
                 - They support internal features such as tracking and access-related metadata
 
               {:.warning}
@@ -83,12 +78,13 @@ rows:
           - type: text
             config: |
               Git Sync uses Git as the collaboration layer instead of Insomnia Cloud sharing. Git Sync projects are: 
-                - Visible only to the person that creates them.
-                - Not automatically shared through Insomnia organisations.
+                - Exist locally on the user’s device.
+                - Are not automatically shared through Insomnia organizations.
 
                Collaboration happens through standard Git workflows, including branches, commits, and merges. Each collaborator: 
-                - Works in their own Insomnia project.
-                - Connects that project to the same Git repository.
+                - Clones the repository.
+                - Configures Git Sync in Insomnia.
+                - Works in their own local Insomnia project connected to that repository.
 
   - header:
       type: h2
@@ -157,7 +153,6 @@ rows:
               3. You select which changes to keep.
               4. You commit the merged result.
               5. You push the merge to the repository.
-
 
   - header:
         type: h2
@@ -236,11 +231,8 @@ rows:
           - type: text
             config: |
               Git Sync supports multiple ways to configure Git credentials. You can configure credentials through:
-                - Git Sync settings.
-                - Local `git.config`.
-                - Insomnia Preferences.
-
-              Git Sync requires a passphrase to decrypt account keys. This requirement applies to both Git Sync and Cloud Sync users. For more information about passphrases, navigate to [Passphrase](/insomnia/accounts/#passphrase).
+                - Git Sync settings
+                - Insomnia Preferences
 
               Insomnia doesn't enforce secret prevention in Git repositories. To reduce the risk of committing sensitive data:
                 - Use Private Environments for secrets.
@@ -294,7 +286,13 @@ rows:
             config: |
               You can use the Inso CLI with Git Sync projects to automate workflows and integrate with local tooling. The Inso CLI works with data that is available on your local machine.
 
-              When you use Git Sync, Insomnia creates an `.insomnia` directory in the project. The Inso CLI can use this directory as a data source.
+              Git Sync stores collections, design documents, and other resources as YAML files in the repository. You can organize these files anywhere within the repository structure.
+
+              When using Inso, specify the path to the file you want to operate on. For example:
+
+              ```sh
+              inso run collection <collection-name>.yaml
+              ```
 
               Key points to be aware of:
               - Inso CLI is available for Git Sync projects.
@@ -321,19 +319,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: 2. Set your passphrase
-            description: |
-                      Set a passphrase to avoid being locked out of synced storage workflows later.
-                      
-                      Insomnia requires a passphrase for users who use Git Sync to decrypt account keys.
-            icon: /assets/icons/key.svg
-            cta:
-              text: Set passphrase
-              url: /insomnia/accounts/#passphrase
-      - blocks:
-        - type: card
-          config:
-            title: 3. Pull to establish a clean baseline
+            title: 2. Pull to establish a clean baseline
             description: |
                        Align your local workspace with the current remote state before making changes.
                         - Pull first to avoid working against stale content.
@@ -342,11 +328,11 @@ rows:
             icon: /assets/icons/git.svg
             cta:
               text: Pull from remote
-              url: /insomnia/scim/
+              url: /how-to/synchronize-with-git/
       - blocks:
         - type: card
           config:
-            title: 4. Verify that you can push changes
+            title: 3. Verify that you can push changes
             description: |
                        Confirm that end-to-end Git Sync works before real work begins.
                         - Make a small, reversible change. For example, rename a folder or update a description.
@@ -354,7 +340,7 @@ rows:
             icon: /assets/icons/add.svg
             cta:
               text: Push changes
-              url: /insomnia/scim/              
+              url: /how-to/synchronize-with-git/#commit-and-push-the-content-to-your-repository             
  
   - header:
       text: "Frequently asked questions"
@@ -395,4 +381,9 @@ rows:
                 {:.decorative}
                 > **Tip:** Before converting, make sure that you pull the latest project updates, as any changes that aren't pulled beforehand aren't included in the Local Vault project.
             - q: What happens if my Git repository contains legacy Insomnia content when I create a Git Sync project?
-              a: If the Git repository you connect contains legacy Insomnia content, Insomnia automatically converts that content to the current project format during project creation. This ensures that the content is compatible with modern Insomnia workflows. If the repository already contains Insomnia content, whether legacy or current, Insomnia prompts you to import that content into the new Git Sync project before continuing.                
+              a: If the Git repository you connect contains legacy Insomnia content, Insomnia automatically converts that content to the current project format during project creation. This ensures that the content is compatible with modern Insomnia workflows. If the repository already contains Insomnia content, whether legacy or current, Insomnia prompts you to import that content into the new Git Sync project before continuing.
+            - q: Can I revert commits from the Git Sync UI in Insomnia?
+              a: |
+                No. Insomnia does not provide a user interface for reverting commits in Git Sync projects.
+
+                If you need to revert a commit, use your Git provider or local Git tooling to perform the revert operation.                 
