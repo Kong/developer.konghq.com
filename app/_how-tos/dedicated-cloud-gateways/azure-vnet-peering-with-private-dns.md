@@ -83,7 +83,7 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
            "Microsoft.Network/virtualNetworks/peer/action"
        ],
        "AssignableScopes": [
-           "/subscriptions/$VNET_SUBSCRIPTION_ID",
+           "/subscriptions/$PRIVATE_DNS_SUBSCRIPTION_ID",
        ]
    }'
    ```
@@ -92,20 +92,20 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
    az role assignment create \
     --role "Kong Cloud Gateway DNS Link Creator - Kong" \
     --assignee "$(az ad sp list --filter "appId eq '54aeca8a-ec61-4737-9a1a-99ca4fed32da'" --output tsv --query '[0].id')" \
-    --scope "/subscriptions/$RESOURCE_GROUP_ID/resourceGroups/$RESOURCE_GROUP_NAME/providers/Microsoft.Network/privateDnsZones/$YOUR_DOMAIN"
+    --scope "/subscriptions/$PRIVATE_DNS_SUBSCRIPTION_ID/resourceGroups/$PRIVATE_DNS_RESOURCE_GROUP_NAME/providers/Microsoft.Network/privateDnsZones/$YOUR_DOMAIN"
    ```
 
    Be sure to replace the following:
    * `$SERVICE_PRINCIPAL_APP_ID`: The [service principal ID](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-view-managed-identity-service-principal?pivots=identity-mi-service-principal-portal) that is used by VNET peering.
-   * `$RESOURCE_GROUP_ID`: Your resource group subscription ID. To get this value, in the Azure portal, navigate to **Resource groups** in the sidebar. Click your resource group where your private DNS zone is located and copy the Subscription ID.
-   * `$RESOURCE_GROUP_NAME`: The name of your resource group.
+   * `$PRIVATE_DNS_SUBSCRIPTION_ID`: Your resource group subscription ID. To get this value, in the Azure portal, navigate to **Resource groups** in the sidebar. Click your resource group where your private DNS zone is located and copy the Subscription ID.
+   * `$PRIVATE_DNS_RESOURCE_GROUP_NAME`: The name of your resource group.
    * `$YOUR_DOMAIN`: The domain name you entered in your Azure private DNS zone.
 
 1. [Link your private DNS zone to your Virtual Network](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) using the command provided by the private DNS wizard in the UI:
    ```sh
    az network private-dns link vnet create \
    --name $VNET_LINK_NAME \
-   --resource-group $RESOURCE_GROUP_NAME \
+   --resource-group $PRIVATE_DNS_RESOURCE_GROUP_NAME \
    --zone-name $PRIVATE_DNS_ZONE_NAME \
    --virtual-network $VNET_NAME \
    --registration-enabled false
@@ -113,7 +113,7 @@ Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a p
 
    Be sure to replace the following:
    * `$VNET_LINK_NAME`: The name you want to use for your Virtual Network link.
-   * `$RESOURCE_GROUP_NAME`: The name of your resource group.
+   * `$PRIVATE_DNS_RESOURCE_GROUP_NAME`: The name of your resource group.
    * `$PRIVATE_DNS_ZONE_NAME`: The name of your private DNS zone.
    * `$VNET_NAME`: The name of your Virtual Network.
 

@@ -79,7 +79,7 @@ Configuring [private resolvers in Azure](https://learn.microsoft.com/en-us/azure
 1. Click **Outbound DNS resolver**.
 1. In the **Outbound Resolver name** field, enter the name of your private DNS resolver in Azure.
 1. In the **Domain name** field, enter your domain.
-1. In the **Target IP address** field, enter...
+1. In the **Target IP address** field, enter the IP address.
 1. Click **Save**.
 
 ## Validate
