@@ -108,6 +108,38 @@ rows:
                   url: /plugins/xml-threat-protection/
                 - text: Configure JSON Threat Protection
                   url: /plugins/json-threat-protection/  
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Rate limiting traffic
+              description: |
+                {{ site.base_gateway }} can be configured to apply rate limiting rules on incoming traffic.
+              icon: /assets/icons/gateway.svg
+              ctas:
+                - text: Configure Rate Limiting
+                  url: /plugins/rate-limiting/examples/rate-limit-with-local-policy/
+      - blocks: 
+        - type: card
+          config:
+            title: Request size limits
+            description: |
+              Block incoming requests where the body is greater than a specific size.
+            icon: /assets/icons/firewall.svg
+            ctas:
+              - text: Configure Request Size Limiting
+                url: /plugins/request-size-limiting/examples/limit-in-bytes/
+      - blocks:
+          - type: card
+            config:
+              title: Response Transformer 
+              description: |
+                This plugin allows you to transform the response sent by the upstream server on the fly before returning it to the client.
+              icon: /assets/icons/plugins/response-transformer.png
+              ctas:
+                - text: Configure Response Transformer
+                  url: /plugins/response-transformer/examples/add-header/
   - header:
       type: h2
       text: "Other security-related resources"
