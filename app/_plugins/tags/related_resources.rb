@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderRelatedResources < Liquid::Tag
     def initialize(tag_name, param, _tokens)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderEmbed < Liquid::Tag # rubocop:disable Style/Documentation
     def initialize(tag_name, param, _tokens)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderKongConf < Liquid::Tag # rubocop:disable Style/Documentation
     def render(context)

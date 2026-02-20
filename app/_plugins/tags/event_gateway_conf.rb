@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require_relative '../monkey_patch'
 
 module Jekyll
   class EventGatewayConf < Liquid::Tag # rubocop:disable Style/Documentation
