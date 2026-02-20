@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@197f3664b6c1d3c551710276775dff9bffaee3d1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/197f3664b6c1d3c551710276775dff9bffaee3d1'
+  x-oas-source: kong/platform-api@5f6e0ecdf21a607b8200d8e7b974631bc5e59c13
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5f6e0ecdf21a607b8200d8e7b974631bc5e59c13'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3365,7 +3365,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3432,7 +3432,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3786,7 +3786,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3835,7 +3835,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
