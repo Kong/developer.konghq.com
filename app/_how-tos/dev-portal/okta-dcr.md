@@ -73,9 +73,9 @@ Using your Okta credentials, log in to the Okta portal and click **Security > AP
 
 1. Click **Security > API** in the sidebar.
 
-3. From the **Tokens** tab, click the **Create token** button.
+1. From the **Tokens** tab, click the **Create token** button.
 
-4. Enter a name for your token, and then copy the token value.
+1. Enter a name for your token, and then copy the token value.
    {:.warning}
    > **Important:** Store the token in a secure location you can reference later, as it will only be visible as a hashed value after this step.
 
@@ -83,9 +83,9 @@ Using your Okta credentials, log in to the Okta portal and click **Security > AP
 
 1. Click **Security > API** in the sidebar.
 
-3. Select the authorization server that you want to configure.
+1. Select the authorization server that you want to configure.
 
-4. Click the **Scopes** tab, and click **Add Scope**.
+1. Click the **Scopes** tab, and click **Add Scope**.
 
 1. Configure the scope as needed.
 
@@ -95,11 +95,11 @@ To map an application from the Dev Portal to Okta, you have to create a claim.
 
 1. Click **Security > API** in the sidebar.
 
-3. Select the authorization server that you want to configure.
+1. Select the authorization server that you want to configure.
 
-4. Click the **Claims** tab, and then click **Add Claim**.
+1. Click the **Claims** tab, and then click **Add Claim**.
 
-5. Enter a name for this claim, and enter `app.clientId` for **Value**. You can leave the **Value type** as "Expression", and include it in any scope.
+1. Enter a name for this claim, and enter `app.clientId` for **Value**. You can leave the **Value type** as "Expression", and include it in any scope.
 
 ## Configure the Okta Dynamic Client Registration in Dev Portal
 
@@ -109,17 +109,17 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 1. Log in to {{site.konnect_short_name}} and select [Dev Portal](https://cloud.konghq.com/portals/) from the menu.
 
-2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your API Products.
+1. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your API Products.
 
-3. Click the **DCR Providers** tab to see all existing DCR providers.
+1. Click the **DCR Providers** tab to see all existing DCR providers.
 
-4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Okta configuration:
+1. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Okta configuration:
    1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
    1. Enter the **Issuer URL** of your authorization server and the **DCR Token** that you created in Okta. The Issuer URL and DCR token will be stored in isolated, encrypted storage and will not be readable through any Konnect API.
    1. Select Okta as the **Provider Type**. 
    1. Save your DCR provider. You should now see it in the list of DCR providers.
 
-7. Navigate to the **Auth Strategy** tab, then click [**New Auth Strategy**](https://cloud.konghq.com/portals/application-auth/auth-strategy/create) to create an auth strategy that uses the DCR provider:
+1. Navigate to the **Auth Strategy** tab, then click [**New Auth Strategy**](https://cloud.konghq.com/portals/application-auth/auth-strategy/create) to create an auth strategy that uses the DCR provider:
 
    1. Provide a name for internal use within {{site.konnect_short_name}} and a display name for visibility on your Portal.
    1. In the **Auth Type** dropdown menu select DCR. 
