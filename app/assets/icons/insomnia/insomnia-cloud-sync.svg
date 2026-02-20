@@ -1,0 +1,168 @@
+<svg width="1600" height="720" viewBox="0 0 1600 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .section-title { font: bold 17px 'Segoe UI', system-ui, sans-serif; fill: #ffffff; }
+    .section-subtitle { font: bold 15px 'Segoe UI', system-ui, sans-serif; }
+    .item { font: 13.5px 'Segoe UI', system-ui, sans-serif; fill: #b0bec5; }
+    .label { font: 13px 'Segoe UI', system-ui, sans-serif; fill: #78909c; }
+    .provider-label { font: bold 16px 'Segoe UI', system-ui, sans-serif; }
+    .arrow-label { font: 11px 'Segoe UI', system-ui, sans-serif; }
+  </style>
+
+  <defs>
+    <marker id="arrPush" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5 Z" fill="#26a69a"/>
+    </marker>
+    <marker id="arrPull" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5 Z" fill="#ffb74d"/>
+    </marker>
+    <marker id="arrCloud" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <path d="M0,0 L7,2.5 L0,5 Z" fill="#42a5f5"/>
+    </marker>
+    <linearGradient id="bitbucketGrad" x1="18" y1="8" x2="5" y2="20">
+      <stop offset="0%" stop-color="#2684FF"/>
+      <stop offset="100%" stop-color="#0052CC"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="720" fill="rgb(var(--color-bg-primary))"/>
+
+  <!-- ===== 1. INSOMNIA CLOUD (x: 40–280) ===== -->
+  <rect x="40" y="120" width="240" height="310" rx="14" fill="none" stroke="#1e3a5f" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="160" y="105" text-anchor="middle" class="section-title">Insomnia Cloud</text>
+
+  <!-- Database -->
+  <rect x="65" y="160" width="190" height="100" rx="10" fill="#04284f" stroke="#1565c0" stroke-width="1.5"/>
+  <g transform="translate(143, 170)">
+    <ellipse cx="15" cy="4" rx="15" ry="4.5" fill="#42a5f5" opacity="0.9"/>
+    <path d="M0,4 v6 c0,2.5 6.7,4.5 15,4.5 s15,-2 15,-4.5 v-6" fill="none" stroke="#42a5f5" stroke-width="1.5"/>
+    <ellipse cx="15" cy="10" rx="15" ry="4.5" fill="none" stroke="#42a5f5" stroke-width="0.5" opacity="0.4"/>
+    <path d="M0,10 v6 c0,2.5 6.7,4.5 15,4.5 s15,-2 15,-4.5 v-6" fill="none" stroke="#42a5f5" stroke-width="1.5"/>
+    <ellipse cx="15" cy="16" rx="15" ry="4.5" fill="none" stroke="#42a5f5" stroke-width="0.5" opacity="0.4"/>
+    <path d="M0,16 v6 c0,2.5 6.7,4.5 15,4.5 s15,-2 15,-4.5 v-6" fill="none" stroke="#42a5f5" stroke-width="1.5"/>
+    <ellipse cx="15" cy="22" rx="15" ry="4.5" fill="none" stroke="#42a5f5" stroke-width="1.5"/>
+  </g>
+  <text x="160" y="230" text-anchor="middle" class="section-subtitle" fill="#42a5f5">Database</text>
+  <text x="160" y="248" text-anchor="middle" class="item">Cloud storage</text>
+
+  <!-- Google Cloud -->
+  <rect x="65" y="300" width="190" height="100" rx="10" fill="#04284f" stroke="#1565c0" stroke-width="1.5"/>
+  <g transform="translate(138, 308) scale(0.22)">
+    <path fill="#ea4535" d="M80.6 40.3h.4l-.2-.2 14-14v-.3c-11.8-10.4-28.1-14-43.2-9.5C36.5 20.8 24.9 32.8 20.7 48c.2-.1.5-.2.8-.2 5.2-3.4 11.4-5.4 17.9-5.4 2.2 0 4.3.2 6.4.6.1-.1.2-.1.3-.1 9-9.9 24.2-11.1 34.6-2.6h-.1z"/>
+    <path fill="#557ebf" d="M108.1 47.8c-2.3-8.5-7.1-16.2-13.8-22.1L80 39.9c6 4.9 9.5 12.3 9.3 20v2.5c16.9 0 16.9 25.2 0 25.2H63.9v20h-.1l.1.2h25.4c14.6.1 27.5-9.3 31.8-23.1 4.3-13.8-1-28.8-13-36.9z"/>
+    <path fill="#36a852" d="M39 107.9h26.3V87.7H39c-1.9 0-3.7-.4-5.4-1.1l-15.2 14.6v.2c6 4.3 13.2 6.6 20.7 6.6z"/>
+    <path fill="#f9bc15" d="M40.2 41.9c-14.9.1-28.1 9.3-32.9 22.8-4.8 13.6 0 28.5 11.8 37.3l15.6-14.9c-8.6-3.7-10.6-14.5-4-20.8 6.6-6.4 17.8-4.4 21.7 3.8L68 55.2C61.4 46.9 51.1 42 40.2 42.1z"/>
+  </g>
+  <text x="160" y="368" text-anchor="middle" class="section-subtitle" fill="#42a5f5">Google Cloud</text>
+  <text x="160" y="386" text-anchor="middle" class="item">Infrastructure</text>
+
+  <!-- ===== 2. INSOMNIA RESOURCES intermediary (x: 330–520) ===== -->
+  <rect x="330" y="210" width="190" height="120" rx="10" fill="#04284f" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="425" y="243" text-anchor="middle" class="section-subtitle" fill="#a78bfa">Insomnia resources</text>
+  <text x="425" y="270" text-anchor="middle" class="item">RBAC</text>
+  <text x="425" y="292" text-anchor="middle" class="item">License</text>
+
+  <!-- Cloud ↔ Resources arrows (blue) -->
+  <line x1="280" y1="250" x2="328" y2="250" stroke="#42a5f5" stroke-width="1.3" marker-end="url(#arrCloud)"/>
+  <line x1="328" y1="280" x2="280" y2="280" stroke="#42a5f5" stroke-width="1.3" marker-end="url(#arrCloud)"/>
+
+  <!-- Resources ↔ Desktop arrows (blue) -->
+  <line x1="520" y1="250" x2="568" y2="250" stroke="#42a5f5" stroke-width="1.3" marker-end="url(#arrCloud)"/>
+  <line x1="568" y1="280" x2="520" y2="280" stroke="#42a5f5" stroke-width="1.3" marker-end="url(#arrCloud)"/>
+
+  <!-- ===== 3. USER DESKTOP (x: 570–910) ===== -->
+  <rect x="570" y="120" width="340" height="500" rx="14" fill="none" stroke="#37474f" stroke-width="1.5"/>
+  <text x="740" y="105" text-anchor="middle" class="section-title">User desktop</text>
+
+  <!-- Insomnia resources -->
+  <rect x="600" y="160" width="280" height="185" rx="10" fill="#04284f" stroke="#ff9800" stroke-width="1.5"/>
+  <text x="740" y="193" text-anchor="middle" class="section-subtitle" fill="#ffffff">Insomnia resources</text>
+  <text x="740" y="223" text-anchor="middle" class="item">Design documents</text>
+  <text x="740" y="247" text-anchor="middle" class="item">Request collections</text>
+  <text x="740" y="271" text-anchor="middle" class="item">Unit tests</text>
+  <text x="740" y="295" text-anchor="middle" class="item">Environments</text>
+
+  <!-- Git capabilities -->
+  <rect x="600" y="390" width="280" height="145" rx="10" fill="#04284f" stroke="#ff9800" stroke-width="1.5"/>
+  <text x="740" y="423" text-anchor="middle" class="section-subtitle" fill="#ffffff">Git capabilities</text>
+  <text x="740" y="453" text-anchor="middle" class="item">Manage commits</text>
+  <text x="740" y="477" text-anchor="middle" class="item">Git pull / push</text>
+  <text x="740" y="501" text-anchor="middle" class="item">Git branches</text>
+
+  <!-- Dashed link between desktop boxes -->
+  <line x1="740" y1="345" x2="740" y2="390" stroke="#37474f" stroke-width="1" stroke-dasharray="4 3"/>
+
+  <!-- ===== 4. GIT PROVIDERS (x: 1160–1560) ===== -->
+  <rect x="1160" y="120" width="400" height="500" rx="14" fill="none" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="1360" y="105" text-anchor="middle" class="section-title">Git-based source code management</text>
+
+  <!-- Bitbucket -->
+  <rect x="1230" y="175" width="260" height="80" rx="10" fill="#04284f" stroke="#2196f3" stroke-width="1.5"/>
+  <g transform="translate(1260, 200)">
+    <path d="M0.5,2 L4.2,2 L5,15 L14,15 L15,2 L18.5,2 C19,2 19.2,2.4 19.1,2.8 L16.5,20 C16.4,20.4 16,20.7 15.6,20.7 L3.2,20.7 C2.5,20.7 1.9,20.2 1.8,19.5 L-0.1,2.8 C-0.2,2.4 0.1,2 0.5,2 Z" fill="#2684FF"/>
+    <path d="M13.5,8 L10.2,8 L9.5,13 L5.5,13 L1.5,20.2 C1.7,20.5 2,20.7 2.4,20.7 L15.6,20.7 C16,20.7 16.4,20.4 16.5,20 L18,8 L13.5,8 Z" fill="url(#bitbucketGrad)"/>
+  </g>
+  <text x="1360" y="223" text-anchor="middle" class="provider-label" fill="#42a5f5">Bitbucket</text>
+
+  <!-- GitLab -->
+  <rect x="1230" y="320" width="260" height="80" rx="10" fill="#04284f" stroke="#e65100" stroke-width="1.5"/>
+  <g transform="translate(1252, 342)">
+    <path d="M12,22.5 L16.5,8.5 L7.5,8.5 Z" fill="#E24329"/>
+    <path d="M12,22.5 L7.5,8.5 L1,8.5 Z" fill="#FC6D26"/>
+    <path d="M1,8.5 L0,11.5 C-0.1,11.9 0.1,12.3 0.4,12.5 L12,22.5 L1,8.5 Z" fill="#FCA326"/>
+    <path d="M1,8.5 L3.5,1 C3.6,0.7 4,0.7 4.1,1 L7.5,8.5 L1,8.5 Z" fill="#E24329"/>
+    <path d="M12,22.5 L16.5,8.5 L23,8.5 Z" fill="#FC6D26"/>
+    <path d="M23,8.5 L24,11.5 C24.1,11.9 23.9,12.3 23.6,12.5 L12,22.5 L23,8.5 Z" fill="#FCA326"/>
+    <path d="M23,8.5 L20.5,1 C20.4,0.7 20,0.7 19.9,1 L16.5,8.5 L23,8.5 Z" fill="#E24329"/>
+  </g>
+  <text x="1360" y="368" text-anchor="middle" class="provider-label" fill="#ff9800">GitLab</text>
+
+  <!-- GitHub -->
+  <rect x="1230" y="465" width="260" height="80" rx="10" fill="#04284f" stroke="#78909c" stroke-width="1.5"/>
+  <g transform="translate(1252, 485)">
+    <path d="M12,0.5 C5.4,0.5 0,5.9 0,12.5 C0,17.8 3.4,22.3 8.2,23.9 C8.8,24 9,23.6 9,23.3 C9,23 9,22.3 9,21.3 C5.7,22 5,19.7 5,19.7 C4.4,18.3 3.6,17.9 3.6,17.9 C2.5,17.1 3.7,17.1 3.7,17.1 C4.9,17.2 5.5,18.4 5.5,18.4 C6.6,20.3 8.3,19.7 9,19.4 C9.1,18.6 9.4,18.1 9.8,17.8 C7.1,17.5 4.3,16.5 4.3,11.9 C4.3,10.6 4.8,9.5 5.5,8.7 C5.4,8.4 4.9,7.1 5.6,5.4 C5.6,5.4 6.6,5.1 9,6.7 C10,6.4 11,6.3 12,6.3 C13,6.3 14,6.4 15,6.7 C17.4,5.1 18.4,5.4 18.4,5.4 C19.1,7.1 18.6,8.4 18.5,8.7 C19.2,9.5 19.7,10.6 19.7,11.9 C19.7,16.5 16.9,17.5 14.2,17.8 C14.7,18.2 15.1,19 15.1,20.2 C15.1,21.9 15.1,23.2 15.1,23.3 C15.1,23.6 15.3,24 15.9,23.9 C20.6,22.3 24,17.8 24,12.5 C24,5.9 18.6,0.5 12,0.5 Z" fill="#e0e0e0"/>
+  </g>
+  <text x="1360" y="513" text-anchor="middle" class="provider-label" fill="#e0e0e0">GitHub</text>
+
+  <!-- ===== PUSH TRUNK (teal, desktop → providers) ===== -->
+  <line x1="880" y1="230" x2="1020" y2="230" stroke="#26a69a" stroke-width="1.3"/>
+  <line x1="880" y1="455" x2="1020" y2="455" stroke="#26a69a" stroke-width="1.3"/>
+
+  <!-- Vertical push trunk -->
+  <line x1="1020" y1="205" x2="1020" y2="500" stroke="#26a69a" stroke-width="1.5"/>
+
+  <!-- Push branches to providers -->
+  <line x1="1020" y1="205" x2="1228" y2="205" stroke="#26a69a" stroke-width="1.3" marker-end="url(#arrPush)"/>
+  <line x1="1020" y1="350" x2="1228" y2="350" stroke="#26a69a" stroke-width="1.3" marker-end="url(#arrPush)"/>
+  <line x1="1020" y1="500" x2="1228" y2="500" stroke="#26a69a" stroke-width="1.3" marker-end="url(#arrPush)"/>
+
+  <!-- Push junction dots -->
+  <circle cx="1020" cy="230" r="3" fill="#26a69a"/>
+  <circle cx="1020" cy="455" r="3" fill="#26a69a"/>
+
+  <!-- ===== PULL TRUNK (amber, providers → desktop) ===== -->
+  <line x1="1228" y1="225" x2="1090" y2="225" stroke="#ffb74d" stroke-width="1.3" marker-end="url(#arrPull)"/>
+  <line x1="1228" y1="370" x2="1090" y2="370" stroke="#ffb74d" stroke-width="1.3" marker-end="url(#arrPull)"/>
+  <line x1="1228" y1="515" x2="1090" y2="515" stroke="#ffb74d" stroke-width="1.3" marker-end="url(#arrPull)"/>
+
+  <!-- Vertical pull trunk -->
+  <line x1="1090" y1="225" x2="1090" y2="515" stroke="#ffb74d" stroke-width="1.5"/>
+
+  <!-- Pull into desktop boxes -->
+  <line x1="1090" y1="275" x2="880" y2="275" stroke="#ffb74d" stroke-width="1.3" marker-end="url(#arrPull)"/>
+  <line x1="1090" y1="478" x2="880" y2="478" stroke="#ffb74d" stroke-width="1.3" marker-end="url(#arrPull)"/>
+
+  <!-- Pull junction dots -->
+  <circle cx="1090" cy="275" r="3" fill="#ffb74d"/>
+  <circle cx="1090" cy="478" r="3" fill="#ffb74d"/>
+
+  <!-- ===== LEGEND (centered) ===== -->
+  <line x1="530" y1="680" x2="575" y2="680" stroke="#26a69a" stroke-width="2" marker-end="url(#arrPush)"/>
+  <text x="588" y="685" font-size="13" font-family="Segoe UI, system-ui, sans-serif" fill="#26a69a">Push to remote</text>
+
+  <line x1="730" y1="680" x2="775" y2="680" stroke="#ffb74d" stroke-width="2" marker-end="url(#arrPull)"/>
+  <text x="788" y="685" font-size="13" font-family="Segoe UI, system-ui, sans-serif" fill="#ffb74d">Pull from remote</text>
+
+  <line x1="940" y1="680" x2="985" y2="680" stroke="#42a5f5" stroke-width="2" marker-end="url(#arrCloud)"/>
+  <text x="998" y="685" font-size="13" font-family="Segoe UI, system-ui, sans-serif" fill="#42a5f5">Cloud sync</text>
+</svg>
