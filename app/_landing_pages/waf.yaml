@@ -136,7 +136,7 @@ rows:
               title: Response Transformer 
               description: |
                 Transform the response sent by the upstream server on the fly before returning it to the client.
-              icon: /assets/icons/plugins/response-transformer.png
+              icon: /assets/icons/plugins/transformation.svg
               ctas:
                 - text: Configure Response Transformer
                   url: /plugins/response-transformer/examples/add-header/
