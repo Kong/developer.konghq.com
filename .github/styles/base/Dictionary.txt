@@ -804,6 +804,7 @@ snis
 sonarqube
 Splunk
 Splunk
+sse
 ssl
 ssl_cert_key
 ssl_certificate
@@ -901,6 +902,7 @@ transcoded
 transcoder
 transpile
 transpiled
+trendai
 trusted_ips
 truststore
 truthy
@@ -995,6 +997,7 @@ vms
 vnet
 vpc
 vpcs
+VS Code
 Vue
 Vue
 walkthrough
