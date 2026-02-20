@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uri'
+require_relative '../monkey_patch'
 
 module Jekyll
   class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
