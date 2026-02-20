@@ -118,8 +118,8 @@ rows:
                 Apply rate limiting rules on incoming traffic.
               icon: /assets/icons/gateway.svg
               ctas:
-                - text: Configure Rate Limiting
-                  url: /plugins/rate-limiting/examples/rate-limit-with-local-policy/
+                - text: Configure request throttling
+                  url: /plugins/rate-limiting-advanced/examples/throttle-requests/
       - blocks: 
         - type: card
           config:
