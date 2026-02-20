@@ -115,33 +115,36 @@ Create the `conf.yaml` file:
 ```sh
 touch ./.datadog-agent/conf.d/openmetrics.d/conf.yaml
 ```
+
 This command uses the macOS directory location. For other distributions, see Datadog's [Agent configuration directory](https://docs.datadoghq.com/agent/configuration/agent-configuration-files/#agent-configuration-directory). 
 
 Copy and paste the following configuration in the `conf.yaml` file:
 
-```yaml
-instances:
-  - openmetrics_endpoint: http://localhost:8001/metrics
-    namespace: kong
-    metrics:
-      - kong.*
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```yaml
+  instances:
+    - openmetrics_endpoint: http://localhost:8001/metrics
+      namespace: kong
+      metrics:
+        - kong.*
+  ```
 
-```yaml
-instances:
-  - openmetrics_endpoint: http://localhost:8100/metrics
-    namespace: kong
-    metrics:
-      - kong.*
-```
-{: data-deployment-topology="konnect" }
+  This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} metrics endpoint (`http://localhost:8001/metrics`).
+{% endon_prem %}
 
-This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} metrics endpoint (`http://localhost:8001/metrics`).
-{: data-deployment-topology="on-prem" }
+{% konnect %}
+content: |
+  ```yaml
+  instances:
+    - openmetrics_endpoint: http://localhost:8100/metrics
+      namespace: kong
+      metrics:
+        - kong.*
+  ```
 
-This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} [Status API metrics](/api/gateway/status/v1/#/paths/metrics/get) endpoint (`http://localhost:8100/metrics`).
-{: data-deployment-topology="konnect" }
+  This configuration pulls all the `kong.` prefixed metrics from the {{site.base_gateway}} [Status API metrics](/api/gateway/status/v1/#/paths/metrics/get) endpoint (`http://localhost:8100/metrics`).
+{% endkonnect %}
 
 {:.warning}
 > **Important:** If you're running {{site.base_gateway}} and the Datadog Agent in Docker, you'll need to replace `localhost` in the `config.yaml` with the name of the {{site.base_gateway}} container. Also, both containers need to be running on the same network for them to communicate.
