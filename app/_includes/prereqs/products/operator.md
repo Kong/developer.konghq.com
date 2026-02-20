@@ -31,6 +31,7 @@ rawLicenseString: '$(cat ./license.json)'
 1. Install {{ site.operator_product_name }} using Helm:
 
 {% if include.v_maj == 1 %}
+   {% if page.works_on contains 'konnect' %}
    {% konnect %}
    content: |
      ```bash
@@ -41,7 +42,9 @@ rawLicenseString: '$(cat ./license.json)'
      ```
    indent: 3
    {% endkonnect %}
+   {% endif %}
 
+   {% if page.works_on contains 'on-prem' %}
    {% on_prem %}
    content: |
      ```bash
@@ -51,7 +54,9 @@ rawLicenseString: '$(cat ./license.json)'
      ```
    indent: 3
    {% endon_prem %}
+   {% endif %}
 {% else %}
+   {% if page.works_on contains 'konnect' %}
    {% konnect %}
    content: |
      ```bash
@@ -63,7 +68,9 @@ rawLicenseString: '$(cat ./license.json)'
      ```
    indent: 3
    {% endkonnect %}
+   {% endif %}
 
+   {% if page.works_on contains 'on-prem' %}
    {% on_prem %}
    content: |
      ```bash
@@ -74,6 +81,7 @@ rawLicenseString: '$(cat ./license.json)'
      ```
    indent: 3
    {% endon_prem %}
+   {% endif %}
 
 {% endif %}
 {{cert-manager | indent: 3}}
