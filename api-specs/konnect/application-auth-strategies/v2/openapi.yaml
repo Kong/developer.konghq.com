@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8d361aa9e068e3bf7fcd14d2119c5984bf448137
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8d361aa9e068e3bf7fcd14d2119c5984bf448137'
+  x-oas-source: kong/platform-api@a74fde75d3176908457e8562babb966752b3e350
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a74fde75d3176908457e8562babb966752b3e350'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1062,6 +1062,39 @@ components:
             - unit
       additionalProperties: false
       title: AppAuthStrategyConfigKeyAuth
+    PartialAppAuthStrategyConfigKeyAuth:
+      description: |
+        Key Auth configuration for updating an Application Auth Strategy.
+        The ttl field can be set to null to unset the Time-To-Live.
+      type: object
+      properties:
+        key_names:
+          description: The names of the headers containing the API key. You can specify multiple header names.
+          type: array
+          items:
+            type: string
+            maxLength: 256
+          maxItems: 10
+          minItems: 1
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy. Set to null to unset.
+          type: object
+          nullable: true
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
+      additionalProperties: false
+      title: PartialAppAuthStrategyConfigKeyAuth
     PartialAppAuthStrategyConfigOpenIDConnect:
       description: |
         A more advanced mode to configure an API Product Version’s Application Auth Strategy. 
@@ -1395,7 +1428,7 @@ components:
       type: object
       properties:
         key-auth:
-          $ref: '#/components/schemas/AppAuthStrategyConfigKeyAuth'
+          $ref: '#/components/schemas/PartialAppAuthStrategyConfigKeyAuth'
       additionalProperties: false
       required:
         - key-auth
