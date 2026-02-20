@@ -236,7 +236,7 @@ data:
       - admin
       - user
   route: secured-endpoint
-indent: 4
+indent: 3
 {% endentity_example %}
 
 1. Create an ACL plugin that allows requests from anyone in the `admin` group to `/sensitive-endpoint`:
@@ -251,7 +251,7 @@ data:
       - admin
 
   route: sensitive-endpoint
-indent: 4
+indent: 3
 {% endentity_example %}
 
 ## Validate your configuration
@@ -273,7 +273,7 @@ headers:
   - apikey:my-admin-password
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+indent: 3
 {% endvalidation %}
 
 1. `my-user` can access `/secured-endpoint`:
@@ -285,7 +285,7 @@ headers:
   - apikey:my-user-password
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+indent: 3
 {% endvalidation %}
 
 1. `my-admin` can access `/sensitive-endpoint`:
@@ -297,7 +297,7 @@ headers:
   - apikey:my-admin-password
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+indent: 3
 {% endvalidation %}
 
 1. `my-user` can't access `/sensitive-endpoint`:
@@ -310,5 +310,5 @@ headers:
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 message: "You cannot consume this service"
-indent: 4
+indent: 3
 {% endvalidation %}
