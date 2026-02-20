@@ -56,7 +56,7 @@ tags:
   - install
   - helm
 
-excerpt: ""
+excerpt: "" # XXX: we need this here so Jekyll doesn't throw a warning
 ---
 
 {% konnect %}
