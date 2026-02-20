@@ -2,6 +2,7 @@
 
 require 'erb'
 require 'securerandom'
+require_relative '../monkey_patch'
 
 module Jekyll
   module NavTabs

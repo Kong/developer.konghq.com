@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 DEFAULTS = {
   'gwapi_version' => 'v1',

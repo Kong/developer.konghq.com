@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class KonnectApiRequest < Liquid::Block # rubocop:disable Style/Documentation
