@@ -45,3 +45,6 @@ palo-alto-networks:
 
 trendai:
   name: TrendAI
+
+noma:
+  name: Noma
