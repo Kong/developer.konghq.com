@@ -17,12 +17,12 @@ To complete this tutorial, make sure you have Ollama installed and running local
    You can replace `llama2` with the model you want to run, such as `llama3`.
 
 1. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance. 
-{% capture variables%}
+
 {% env_variables %}
 DECK_OLLAMA_UPSTREAM_URL: 'http://localhost:11434/api/chat'
+section: prereqs
+indent: 3
 {% endenv_variables %}
-{% endcapture%}
-{{ variables | indent: 3}}
 
    By default, Ollama runs at `localhost:11434`. You can verify this by running:
 
