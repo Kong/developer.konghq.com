@@ -130,10 +130,14 @@ variables:
 
 ## Validate
 
-To validate that the SAML configuration works, go to `$KONNECT_PROXY_URL/anything` in a browser.
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  To validate that the SAML configuration works, go to `$KONNECT_PROXY_URL/anything` in a browser.
+{% endkonnect %}
 
-To validate that the SAML configuration works, go to `http://localhost:8000/anything` in a browser.
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  To validate that the SAML configuration works, go to `http://localhost:8000/anything` in a browser.
+{% endon_prem %}
 
 When prompted, log in with a user that has access to the SAML application.

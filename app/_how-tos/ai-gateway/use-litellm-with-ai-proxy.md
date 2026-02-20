@@ -132,44 +132,48 @@ pip install -U litellm
 
 Use the following command to create a file named `app.py` containing a LiteLLM Python script:
 
-```sh
-cat <<EOF > app.py
-import litellm
+{% on_prem %}
+content: |
+  ```sh
+  cat <<EOF > app.py
+  import litellm
 
-kong_url = "http://127.0.0.1:8000"
-kong_route = "anything"
+  kong_url = "http://127.0.0.1:8000"
+  kong_route = "anything"
 
-response = litellm.completion(
-    model="gpt-4.1",
-    messages=[{"role": "user", "content": "What are you?"}],
-    api_key="my-api-key",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  response = litellm.completion(
+      model="gpt-4.1",
+      messages=[{"role": "user", "content": "What are you?"}],
+      api_key="my-api-key",
+      base_url=f"{kong_url}/{kong_route}"
+  )
 
-print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
-EOF
-```
-{: data-deployment-topology="on-prem" }
+  print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
+  EOF
+  ```
+{% endon_prem %}
 
-```sh
-cat <<EOF > app.py
-import litellm
-import os
+{% konnect %}
+content: |
+  ```sh
+  cat <<EOF > app.py
+  import litellm
+  import os
 
-kong_url = os.environ['KONNECT_PROXY_URL']
-kong_route = "anything"
+  kong_url = os.environ['KONNECT_PROXY_URL']
+  kong_route = "anything"
 
-response = litellm.completion(
-    model="gpt-4.1",
-    messages=[{"role": "user", "content": "What are you?"}],
-    api_key="my-api-key",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  response = litellm.completion(
+      model="gpt-4.1",
+      messages=[{"role": "user", "content": "What are you?"}],
+      api_key="my-api-key",
+      base_url=f"{kong_url}/{kong_route}"
+  )
 
-print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
-EOF
-```
-{: data-deployment-topology="konnect" }
+  print(f"$ ChainAnswer:> {response['choices'][0]['message']['content']}")
+  EOF
+  ```
+{% endkonnect %}
 
 With the `base_url` parameter, we can override the OpenAI base URL that LiteLLM uses by default with the URL to our {{site.base_gateway}} Route. This allows proxying requests and applying {{site.base_gateway}} plugins while still using LiteLLM’s API interface.
 

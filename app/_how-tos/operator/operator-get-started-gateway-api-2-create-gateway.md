@@ -46,55 +46,57 @@ prereqs:
 
 ## Create a `GatewayConfiguration` resource
 
-First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
-{:data-deployment-topology='konnect'}
+{% konnect %}
+content: |
+  First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration:
 
-First, let's create a `GatewayConfiguration` resource to specify our Gateway parameters:
-{:data-deployment-topology='on-prem'}
+  ```bash
+  echo '
+  kind: GatewayConfiguration
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  metadata:
+    name: kong-configuration
+    namespace: kong
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+            - name: proxy
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
+  ```
+{% endkonnect %}
 
-```bash
-echo '
-kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
-metadata:
-  name: kong-configuration
-  namespace: kong
-spec:
-  konnect:
-    authRef:
-      name: konnect-api-auth
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: proxy
-            image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
-```
-{:data-deployment-topology='konnect'}
+{% on_prem %}
+content: |
+  First, let's create a `GatewayConfiguration` resource to specify our Gateway parameters:
 
-```bash
-kubectl create namespace kong 
-```
-{:data-deployment-topology='on-prem'}
+  ```bash
+  kubectl create namespace kong
+  ```
 
-```bash
-echo '
-kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
-metadata:
-  name: kong-configuration
-  namespace: kong
-spec:
-  dataPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: proxy
-            image: kong/kong-gateway:3.9' | kubectl apply -f -
-```
-{:data-deployment-topology='on-prem'}
+  ```bash
+  echo '
+  kind: GatewayConfiguration
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  metadata:
+    name: kong-configuration
+    namespace: kong
+  spec:
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+            - name: proxy
+              image: kong/kong-gateway:3.9' | kubectl apply -f -
+  ```
+{% endon_prem %}
+
 
 ## Create a `GatewayClass`
 
@@ -135,11 +137,13 @@ spec:
 ' | kubectl apply -f -
 ```
 
-{{site.operator_product_name}} will automatically create the `DataPlane` and `KonnectGatewayControlPlane` resources.
-{:data-deployment-topology='konnect'}
+{% konnect %}
+content: {{site.operator_product_name}} will automatically create the `DataPlane` and `KonnectGatewayControlPlane` resources.
+{% endkonnect %}
 
-{{site.operator_product_name}} will automatically create the `DataPlane` and `ControlPlane` resources.
-{:data-deployment-topology='on-prem'}
+{% on_prem %}
+content: {{site.operator_product_name}} will automatically create the `DataPlane` and `ControlPlane` resources.
+{% endon_prem %}
 
 ## Validation
 
