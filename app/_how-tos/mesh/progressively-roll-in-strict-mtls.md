@@ -184,6 +184,8 @@ spec:
    > * Once the restart is done, port-forwarding will stop for this Service.
 
 
+## Validate
+
 1. Run the following command re-enable port-forwarding:
    ```sh
    kubectl port-forward svc/demo-app -n kong-mesh-demo-migration 5052:5050
@@ -207,26 +209,24 @@ spec:
    http.localhost_5050.rbac.allowed: 1737
    ```
 
-## Update the MeshTLS policy
+1. To disable unencrypted traffic, update the `MeshTLS` policy from permissive to strict:
 
-To disable unencrypted traffic, update the `MeshTLS` policy from permissive to strict:
+   ```sh
+   echo "apiVersion: kuma.io/v1alpha1
+   kind: MeshTLS
+   metadata:
+     name: kv
+     namespace: kong-mesh-demo-migration
+     labels:
+       kuma.io/mesh: default
+   spec:
+     targetRef:
+       kind: Dataplane
+       labels:
+         app: kv
+     rules:
+     - default:
+         mode: Strict" | kubectl apply -f -
+   ```
 
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshTLS
-metadata:
-  name: kv
-  namespace: kong-mesh-demo-migration
-  labels:
-    kuma.io/mesh: default
-spec:
-  targetRef:
-    kind: Dataplane
-    labels:
-      app: kv
-  rules:
-  - default:
-      mode: Strict" | kubectl apply -f -
-```
-
-The Service can now only receive encrypted traffic.
+   The Service can now only receive encrypted traffic.
