@@ -79,7 +79,9 @@ You can now configure this custom plugin like any other plugin in {{site.konnect
 {% navtab "Docker" %}
 
 If you are using Docker, see the following example Dockerfile for installing the Noma Runtime Protection plugin. 
-Make sure to adjust the filenames and {{site.base_gateway}} image tag for your own installation:
+
+The `noma-runtime-protection.zip` file is a ZIP archive containing the plugin’s Lua source files. 
+You can generate it by unpacking the plugin `.rock` and zipping the plugin directory located at `kong/plugins/noma-runtime-protection/` (directory containing `handler.lua`, `schema.lua`, and so on).
 
 ```docker
 FROM kong/kong-gateway:latest

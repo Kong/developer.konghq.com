@@ -22,9 +22,9 @@ requirements:
 
 variables:
   api-base:
-    value: https://api.noma.cloud
+    value: https://api.noma.security
     description: |
-      The base URL for the Noma API. The default value is `https://api.noma.cloud`.
+      The base URL for the Noma API. The default value is `https://api.noma.security`.
   app-id:
     value: $NOMA_APPLICATION_ID
     description: Your Noma Application ID.
@@ -36,7 +36,7 @@ variables:
     description: Your Noma Client Secret. Contact your Noma Technical Account Manager to receive this.
 
 config:
-  API_base: ${api-base}
+  API_base: https://api.noma.security
   monitor_mode: true
   application_id: ${app-id}
   client_id: ${client_id}
