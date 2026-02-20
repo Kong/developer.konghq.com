@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Extracted from: https://github.com/kumahq/kuma-website/blob/master/jekyll-kuma-plugins/lib/jekyll/kuma-plugins/liquid/tags/policyyaml.rb
+require_relative '../monkey_patch'
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block

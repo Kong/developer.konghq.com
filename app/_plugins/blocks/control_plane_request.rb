@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class ControlPlaneRequest < Liquid::Block # rubocop:disable Style/Documentation
