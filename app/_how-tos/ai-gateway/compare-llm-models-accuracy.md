@@ -81,6 +81,7 @@ prereqs:
            {% env_variables %}
            DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
            indent: 3
+           section: prereqs
            {% endenv_variables %}
       icon_url: /assets/icons/ollama.svg
 
@@ -318,7 +319,7 @@ inline_sleep: 3
 {% endvalidation %}
 <!-- vale on -->
 
-You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model’s evaluation.
+You should see JSON logs from your HTTP log plugin endpoint in `kong_logs.txt`. The `llm_accuracy` field reflects how well the model’s response aligns with the judge model's evaluation.
 
 When comparing two models, notice how `gpt-4.1-mini` produces a **much higher `llm_accuracy` score** than `orca-mini`, showing that the judged responses are significantly more accurate.
 
