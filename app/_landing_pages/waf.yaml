@@ -78,7 +78,7 @@ rows:
             config:
               title: Form field manipulation protection 
               description: |
-                The Request Validator plugin can validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators.
+                Validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators.
 
               icon: /assets/icons/monitor.svg
               ctas:
@@ -90,7 +90,7 @@ rows:
             config:
               title: IP allow and deny lists
               description: |
-                IP Restriction supports allow and deny lists of IPs and CIDR blocks, configurable at multiple scopes. 
+                Control access with allow and deny lists of IPs and CIDR blocks, configurable at multiple scopes. 
               icon: /assets/icons/firewall.svg
               ctas:
                 - text: Configure IP Restriction
@@ -101,7 +101,7 @@ rows:
             config:
               title: XML and JSON threat protection
               description: |
-                Configure an XML Threat Protection policy to catch XML requests that exceed configured limits.
+                Configure an XML or JSON threat protection policy to catch requests that exceed configured limits.
               icon: /assets/icons/api.svg
               ctas:
                 - text: Configure XML Threat Protection
@@ -115,7 +115,7 @@ rows:
             config:
               title: Rate limiting traffic
               description: |
-                {{ site.base_gateway }} can be configured to apply rate limiting rules on incoming traffic.
+                Apply rate limiting rules on incoming traffic.
               icon: /assets/icons/gateway.svg
               ctas:
                 - text: Configure Rate Limiting
@@ -135,7 +135,7 @@ rows:
             config:
               title: Response Transformer 
               description: |
-                This plugin allows you to transform the response sent by the upstream server on the fly before returning it to the client.
+                Transform the response sent by the upstream server on the fly before returning it to the client.
               icon: /assets/icons/plugins/response-transformer.png
               ctas:
                 - text: Configure Response Transformer
