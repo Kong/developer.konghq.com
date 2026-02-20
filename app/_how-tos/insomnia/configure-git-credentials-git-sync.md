@@ -51,10 +51,9 @@ related_resources:
 ---
 Insomnia Git Sync lets you store and version Insomnia project data in an external Git repository. To push and pull changes, Insomnia requires credentials that authenticate with your Git provider. For example, GitHub, GitLab, or Bitbucket.
 
-You can configure Git credentials in three supported ways:
+You can configure Git credentials:
 - In **Insomnia Preferences**
 - During **Git Sync project setup**
-- In your local Git configuration file
 
 ## Add credentials in Preferences
 
