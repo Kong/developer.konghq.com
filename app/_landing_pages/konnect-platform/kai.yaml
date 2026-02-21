@@ -16,7 +16,7 @@ rows:
   - header:
       type: h1
       text: "Kong AI assistant"
-      sub_text: KAi is Kong's AI assistant that can help you detect issues and suggest fixes.
+      sub_text: KAi is Kong's AI assistant that can help you detect issues, suggest fixes, and accelerate your workflows.
 
   - columns:
       - blocks:
@@ -31,13 +31,14 @@ rows:
                     Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
 
                     KAi can help you do the following:
-                    * Run a debug session to analyze API performance issues
-                    * Provides recommendations to improve API performance
-                    * Answer any {{site.konnect_short_name}} questions using the Kong Docs
+                    * **Find information on {{site.konnect_short_name}}:** Ask questions about {{site.konnect_short_name}} features, settings and configurations.
+                    * **Explore gateway entities:** View and explore API gateway entities: Services, Routes, plugins, and more.
+                    * **Debug and analyze API traffic:** Get real-time insights and troubleshoot performance bottlenecks and issues.
+
           - type: button
             config:
-              text: "Try KAi in {{site.konnect_short_name}}"
-              url: https://cloud.konghq.com?agent=true
+              text: "Try KAi in {{site.konnect_short_name}} &rarr;"
+              url: https://cloud.konghq.com/global/organization/labs/kai
       - blocks:
           - type: image
             config:
@@ -57,13 +58,17 @@ rows:
                   KAi is made up of a series of components running inside {{site.konnect_short_name}}.
                   The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities.
                   You can interact with the agent in the following ways:
-                  * Use the chat in the {{site.konnect_short_name}} UI by clicking the sparkle icon <span style="opacity:0.5">✨</span> on the top right.
+                  * Use the chat in the {{site.konnect_short_name}} UI by clicking **Ask KAi** on the top right.
                   * Use the `kongctl` command-line tool with the `kongctl kai` command.
 
                   The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data.
                   Because the MCP server is authenticated via the logged-in user's session, it only has access to data and resources that the user themselves has permission to access.
 
                   KAi also has access to Kong's documentation and support knowledge base, so it can provide guidance on configuration, architecture, and troubleshooting.
+
+                  Like other AI chatbots, KAi uses sessions. 
+                  KAi can remember context within a session while the data is retained, but doesn't share context between sessions. 
+                  You can have a maximum of three current sessions with KAi.
 
       - blocks:
         - type: mermaid
@@ -73,7 +78,7 @@ rows:
                 subgraph backends["<b>Backends & data sources</b>"]
                   direction LR
                   LLM["LLM backend"]
-                  MCP["Konnect MCP Server"]
+                  MCP["<a href="/konnect-platform/konnect-mcp/">Konnect MCP Server</a>"]
                   KB["Kong Docs & support knowledge base"]
                 end
 
@@ -98,9 +103,9 @@ rows:
             blocks:
               - type: text
                 text: |
-                  To start a chat with KAi, click the sparkle icon <span style="opacity:0.5">✨</span> on the top right of the {{site.konnect_short_name}} UI.
+                  To start a chat with KAi, click **Ask KAi** on the top right of the {{site.konnect_short_name}} UI.
 
-                  KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions.
+                  KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions. We recommend adding context, like your control plane, to get the best possible answer from KAi.
                   You can create a new session from the **Active session** dropdown menu by selecting "New conversation". Each user is limited to three sessions. To delete a session, click the action menu icon next to the session and click **Delete**.
   - header:
       text: "Use the {{site.konnect_short_name}} MCP Server with external tools"
@@ -124,56 +129,28 @@ rows:
             text: "Learn how to configure the MCP server"
             url: /konnect-platform/konnect-mcp/
   - header:
-      text: "What's new in KAi"
-      type: h2
     columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  The following are the latest changes in KAi:
-                  * Beta trial is available for Enterprise accounts in [{{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+      - header:
+          type: h2
+          text: Supported product areas
+        blocks:
+        - type: text
+          config: |
+            KAi can help you in the following product areas:
+            * Gateway control planes
+            * Gateway configurations (Services, Routes, Vaults, Consumers, Debugger)
 
-                  For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
-      - blocks:
-        - type: table
-          config:
-            columns:
-              - title: Product Area
-                key: product
-              - title: Supported?
-                key: supported
-              - title: Sub-Features
-                key: features
-            rows:
-              - product: Gateway Control Planes
-                supported: true
-                features: All
-              - product: Gateway Configurations
-                supported: Partial
-                features: Services, Routes, Vaults, Consumers, Debugger
-              - product: Event Gateways
-                supported: Planned
-              - product: "{{site.ai_gateway}}"
-                support: Planned
-              - product: Dedicated Cloud Gateways
-                supported: Planned
-              - product: Kong Mesh
-                supported: Planned
-              - product: Dev Portal
-                supported: Planned
-              - product: "{{site.konnect_catalog}}"
-                supported: Planned
-              - product: "{{site.metering_and_billing}}"
-                supported: Planned (~Q1'26)
-              - product: Analytics
-                supported: Planned (~Q1'26))
-              - product: Team Management
-                supported: Planned (~Q4'25)
-              - product: Organizations
-                supported: Planned (~Q4'25)
+      - header:
+          type: h2
+          text: What's new in KAi
+        blocks:
+        - type: text
+          config: |
+            The following are the latest changes in KAi:
+            * Beta trial is available for Enterprise accounts in [{{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+
+            For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
+  
 
   - header:
       text: "Frequently asked questions"
