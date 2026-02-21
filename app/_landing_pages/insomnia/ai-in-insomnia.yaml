@@ -29,12 +29,14 @@ rows:
                     - [**AI-assisted mock server generation**](/insomnia/self-hosted-mocks/#create-an-auto-generated-mock-server), which transforms prompts or API definitions into mock APIs.  
                     - [**AI commit message suggestions**](/insomnia/ai-in-insomnia/#ai-driven-git-commits), which help maintain clear and atomic commit histories.
 
-                    Activate these features by enabling a **Large Language Model (LLM)** in **Preferences > AI Settings**.  
-                    Choose from one of the following providers:
-                    - **Local**
-                    - **Claude**
-                    - **OpenAI**
-                    - **Gemini**
+                    To activate these features, enable a **Large Language Model (LLM)** in **Preferences > AI Settings**.  
+                    
+                    From **Activate an LLM**, choose from one of the following providers, and connect an API Key:
+                    - **Claude**: A hosted LLM with very large context windows and alignment-focused training, well-suited for long-form document analysis and instruction-following tasks. For more information on how to retrieve a Claude API Token, naviagte to [Anthropic](https://platform.claude.com/docs/en/api/overview#prerequisites).
+                    - **OpenAI**: A general-purpose hosted LLM platform providing high-capability models with strong reasoning, code generation, and tool-calling support via a mature API ecosystem. For more information on how to retrieve an OpenAI API Token, naviagte to [OpenAI](https://platform.openai.com/docs/quickstart).
+                    - **Gemini**: A hosted multimodal LLM capable of joint reasoning over text, images, and other modalities, designed for deep integration with Google Cloud and Workspace services. For more information on how to retrieve a Gemini API Token, naviagte to [Gemini](https://ai.google.dev/gemini-api/docs/api-key).
+                    - **LLM URL**: A configurable HTTP endpoint that represents an externally hosted LLM service, that allows users to connect to custom, proxied, or self-hosted model deployments independent of a specific provider.
+                    - **Local LLM**: A self-hosted LLM deployed on local or private infrastructure, that enables full data residency and model control at the cost of higher operational and hardware requirements.
 
                     {:.info}
                     > Local models keep processing fully on your machine for privacy and control, but may run slower and produce less-refined responses than hosted models.
