@@ -20,7 +20,7 @@ module Jekyll
 
       context.stack do
         context['config'] = drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

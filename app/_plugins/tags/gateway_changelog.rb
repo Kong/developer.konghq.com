@@ -10,19 +10,24 @@ module Jekyll
 
     def render(context)
       @context = context
+      @page = @context.environments.first['page']
       site = context.registers[:site]
       changelog = Drops::GatewayChangelog.new(site:)
 
       context.stack do
         context['changelog'] = changelog
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/gateway_changelog.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/gateway_changelog.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/gateway_changelog.html'))
+      end
     end
   end
 end

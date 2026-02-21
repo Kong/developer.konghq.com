@@ -40,7 +40,7 @@ module Jekyll
         context['how_tos'] = how_tos
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 

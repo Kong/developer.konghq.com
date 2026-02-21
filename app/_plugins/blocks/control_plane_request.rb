@@ -13,6 +13,7 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
 
@@ -26,11 +27,11 @@ module Jekyll
       # end
 
       config = YAML.load(contents)
-      drop = Drops::ControlPlaneRequest.new(yaml: config)
+      drop = Drops::ControlPlaneRequest.new(yaml: config, format: @format)
 
       context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file)).render(context)
+        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

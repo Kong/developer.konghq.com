@@ -87,140 +87,140 @@ Below is a script that automates the import process for all resources in a Mesh 
 It takes the Control Plane ID and region as arguments and uses the `$KONNECT_TOKEN` environment variable to authenticate with the {{site.konnect_short_name}} API.
 The script is provided as best effort and may need to be adjusted.
 
-<details markdown=1>
-  <summary>Expand to see import.sh</summary>
-
-```bash
-#!/bin/bash
-
-set -euo pipefail  # Exit on error, undefined variables, and failed pipes
-
-# Ensure script is run with required arguments
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <cp_id> <region>" >&2
-  exit 1
-fi
-
-# Capture arguments
-CP_ID="$1"
-REGION="$2"
-
-# Ensure KONNECT_TOKEN is set
-if [ -z "${KONNECT_TOKEN:-}" ]; then
-  echo "Error: KONNECT_TOKEN environment variable is not set." >&2
-  exit 1
-fi
-
-# Define API base URL with dynamic cp_id
-BASE_URL="https://${REGION}.api.konghq.com/v1/mesh/control-planes/${CP_ID}/api"
-AUTH_HEADER="Authorization: Bearer ${KONNECT_TOKEN}"
-
-# Resources that are not mesh-scoped
-RESOURCE_TYPES=(
-  hostnamegenerators
-)
-
-# Resources that are mesh-scoped
-MESH_RESOURCE_TYPES=(
-  meshexternalservices
-  meshmultizoneservices
-  meshservices
-  meshaccesslogs
-  meshcircuitbreakers
-  meshfaultinjections
-  meshhealthchecks
-  meshhttproutes
-  meshloadbalancingstrategies
-  meshmetrics
-  meshpassthroughs
-  meshproxypatches
-  meshratelimits
-  meshretries
-  meshtcproutes
-  meshtimeouts
-  meshtlses
-  meshtraces
-  meshtrafficpermissions
-)
-
-# Print import block for the Control Plane itself
-cat <<EOF
-
-import {
-  provider = konnect-beta
-  to = konnect_mesh_control_plane.my_meshcontrolplane
-  id = "${CP_ID}"
-}
-
-EOF
-
-# Fetch all meshes first
-MESHES=$(curl -s "$BASE_URL/meshes" -H "$AUTH_HEADER" | jq -r '.items[].name' || true)
-
-# Function to convert PascalCase to snake_case
-pascal_to_snake() {
-  echo "$1" | perl -pe 's/([a-z0-9])([A-Z])/\1_\L\2/g' | tr '[:upper:]' '[:lower:]' | tr -d '\n'
-}
-
-# Loop over each non-mesh-scoped resource
-for RESOURCE in "${RESOURCE_TYPES[@]}"; do
-  OUTPUT=$(curl -s "$BASE_URL/$RESOURCE" -H "$AUTH_HEADER")
-  NAMES=()  # Initialize NAMES as an empty array
-  NAMES=$(echo "$OUTPUT" | jq -r '.items[].name' || true)
-  TYPE=$(echo "$OUTPUT" | jq -r '.items[0].type' || true)
-  TYPE_SNAKE=$(pascal_to_snake "$TYPE")
-
-  # Generate and print import blocks
-  for NAME in $NAMES; do
-    cat <<EOF
-
-import {
-  provider = konnect-beta
-  to = konnect_mesh_${TYPE_SNAKE}.${NAME}
-  id = "{ \"cp_id\": \"${CP_ID}\", \"name\": \"$NAME\" }"
-}
-
-EOF
-  done
-done
-
-# Loop over each mesh
-for MESH in $MESHES; do
-  # Print mesh import block separately
+{% details %}
+summary: "Expand to see import.sh"
+content: |
+  ```bash
+  #!/bin/bash
+  
+  set -euo pipefail  # Exit on error, undefined variables, and failed pipes
+  
+  # Ensure script is run with required arguments
+  if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <cp_id> <region>" >&2
+    exit 1
+  fi
+  
+  # Capture arguments
+  CP_ID="$1"
+  REGION="$2"
+  
+  # Ensure KONNECT_TOKEN is set
+  if [ -z "${KONNECT_TOKEN:-}" ]; then
+    echo "Error: KONNECT_TOKEN environment variable is not set." >&2
+    exit 1
+  fi
+  
+  # Define API base URL with dynamic cp_id
+  BASE_URL="https://${REGION}.api.konghq.com/v1/mesh/control-planes/${CP_ID}/api"
+  AUTH_HEADER="Authorization: Bearer ${KONNECT_TOKEN}"
+  
+  # Resources that are not mesh-scoped
+  RESOURCE_TYPES=(
+    hostnamegenerators
+  )
+  
+  # Resources that are mesh-scoped
+  MESH_RESOURCE_TYPES=(
+    meshexternalservices
+    meshmultizoneservices
+    meshservices
+    meshaccesslogs
+    meshcircuitbreakers
+    meshfaultinjections
+    meshhealthchecks
+    meshhttproutes
+    meshloadbalancingstrategies
+    meshmetrics
+    meshpassthroughs
+    meshproxypatches
+    meshratelimits
+    meshretries
+    meshtcproutes
+    meshtimeouts
+    meshtlses
+    meshtraces
+    meshtrafficpermissions
+  )
+  
+  # Print import block for the Control Plane itself
   cat <<EOF
-
-import {
-  provider = konnect-beta
-  to = konnect_mesh.${MESH}
-  id = "{ \"cp_id\": \"${CP_ID}\", \"name\": \"$MESH\"}"
-}
-
-EOF
-
-  # Loop over each mesh-scoped resource type
-  for RESOURCE in "${MESH_RESOURCE_TYPES[@]}"; do
-    RESOURCES_OUTPUT=$(curl -s "$BASE_URL/meshes/${MESH}/$RESOURCE" -H "$AUTH_HEADER")
+  
+  import {
+    provider = konnect-beta
+    to = konnect_mesh_control_plane.my_meshcontrolplane
+    id = "${CP_ID}"
+  }
+  
+  EOF
+  
+  # Fetch all meshes first
+  MESHES=$(curl -s "$BASE_URL/meshes" -H "$AUTH_HEADER" | jq -r '.items[].name' || true)
+  
+  # Function to convert PascalCase to snake_case
+  pascal_to_snake() {
+    echo "$1" | perl -pe 's/([a-z0-9])([A-Z])/\1_\L\2/g' | tr '[:upper:]' '[:lower:]' | tr -d '\n'
+  }
+  
+  # Loop over each non-mesh-scoped resource
+  for RESOURCE in "${RESOURCE_TYPES[@]}"; do
+    OUTPUT=$(curl -s "$BASE_URL/$RESOURCE" -H "$AUTH_HEADER")
     NAMES=()  # Initialize NAMES as an empty array
-    NAMES=$(echo "$RESOURCES_OUTPUT" | jq -r '.items[].name' || true)
-    TYPE=$(echo "$RESOURCES_OUTPUT" | jq -r '.items[0].type' || true)
+    NAMES=$(echo "$OUTPUT" | jq -r '.items[].name' || true)
+    TYPE=$(echo "$OUTPUT" | jq -r '.items[0].type' || true)
     TYPE_SNAKE=$(pascal_to_snake "$TYPE")
-
-    # Generate and print import blocks for mesh-specific resources
+  
+    # Generate and print import blocks
     for NAME in $NAMES; do
       cat <<EOF
-
-import {
-  provider = konnect-beta
-  to = konnect_${TYPE_SNAKE}.${NAME}
-  id = "{ \"cp_id\": \"${CP_ID}\", \"mesh\": \"$MESH\", \"name\": \"$NAME\" }"
-}
-
-EOF
+  
+  import {
+    provider = konnect-beta
+    to = konnect_mesh_${TYPE_SNAKE}.${NAME}
+    id = "{ \"cp_id\": \"${CP_ID}\", \"name\": \"$NAME\" }"
+  }
+  
+  EOF
     done
   done
-done
-```
-</details>
+  
+  # Loop over each mesh
+  for MESH in $MESHES; do
+    # Print mesh import block separately
+    cat <<EOF
+  
+  import {
+    provider = konnect-beta
+    to = konnect_mesh.${MESH}
+    id = "{ \"cp_id\": \"${CP_ID}\", \"name\": \"$MESH\"}"
+  }
+  
+  EOF
+  
+    # Loop over each mesh-scoped resource type
+    for RESOURCE in "${MESH_RESOURCE_TYPES[@]}"; do
+      RESOURCES_OUTPUT=$(curl -s "$BASE_URL/meshes/${MESH}/$RESOURCE" -H "$AUTH_HEADER")
+      NAMES=()  # Initialize NAMES as an empty array
+      NAMES=$(echo "$RESOURCES_OUTPUT" | jq -r '.items[].name' || true)
+      TYPE=$(echo "$RESOURCES_OUTPUT" | jq -r '.items[0].type' || true)
+      TYPE_SNAKE=$(pascal_to_snake "$TYPE")
+  
+      # Generate and print import blocks for mesh-specific resources
+      for NAME in $NAMES; do
+        cat <<EOF
+  
+  import {
+    provider = konnect-beta
+    to = konnect_${TYPE_SNAKE}.${NAME}
+    id = "{ \"cp_id\": \"${CP_ID}\", \"mesh\": \"$MESH\", \"name\": \"$NAME\" }"
+  }
+  
+  EOF
+      done
+    done
+  done
+  ```
+{% enddetails %}
 
 Example use:
 

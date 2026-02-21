@@ -34,7 +34,7 @@ module Jekyll
 
       context.stack do
         context['related_resources'] = related_resources
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
@@ -47,7 +47,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/related_resources.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/related_resources.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/related_resources.html'))
+      end
     end
   end
 end

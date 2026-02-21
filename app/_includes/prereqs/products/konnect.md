@@ -30,6 +30,4 @@ This is a Konnect tutorial and requires a Konnect personal access token.
     Copy and paste these into your terminal to configure your session.
 
 {% endcapture %}
-
-
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/gateway.svg' %}

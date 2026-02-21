@@ -168,3 +168,8 @@ operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
 gwapi_version: "1.4.1" 
 render_banner: false
+
+# Copy
+llm_copy:
+  on_prem_snippet: 'On-prem deployments'
+  konnect_snippet: 'Konnect deployments'

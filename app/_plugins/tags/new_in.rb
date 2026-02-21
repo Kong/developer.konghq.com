@@ -11,6 +11,7 @@ module Jekyll
     def render(context)
       @context = context
       @site = context.registers[:site]
+      @page = @context.environments.first['page']
 
       raise ArgumentError, 'Missing required parameter `version` for {% new_in %} ' unless @param
 
@@ -18,14 +19,18 @@ module Jekyll
 
       context.stack do
         context['version'] = version
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/new_in.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/new_in.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/new_in.html'))
+      end
     end
   end
 end
