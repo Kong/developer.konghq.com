@@ -215,3 +215,6 @@
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
 /mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
+
+# AI Proxy Advanced examples
+/plugins/ai-proxy-advanced/examples/sdk-two-routes/ /how-to/route-openai-sdk-to-multiple-providers
