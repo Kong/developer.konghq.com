@@ -9,7 +9,7 @@ layout: policies/without_aside
       <ul class="tabcolumn">
         {% for example in page.examples %}
           <li>
-            <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title }}</a>
+            <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title | liquify }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -18,7 +18,7 @@ layout: policies/without_aside
   <div class="flex md:hidden bg-secondary rounded-md justify-between py-2 px-4 gap-2 w-full shadow-primary items-center">
     <select id="plugin-example-dropdown" class="bg-secondary grow max-w-full">
       {% for example in page.examples %}
-          <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+          <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title | liquify }}</option>
       {% endfor %}
   </select>
   </div>
