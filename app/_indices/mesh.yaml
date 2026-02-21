@@ -106,7 +106,7 @@ sections:
     items:
       - path: /mesh/ca-rotation/
       - path: /mesh/manage-secrets/
-      - path: /mesh/progressively-rolling-in-strict-mtls/
+      - path: /how-to/progressively-roll-in-strict-mtls/
       - path: /mesh/access-audit/
       - path: /mesh/provenance-verification-binaries/
       - path: /mesh/provenance-verification-images/
