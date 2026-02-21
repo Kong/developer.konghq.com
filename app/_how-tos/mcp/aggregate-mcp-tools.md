@@ -12,8 +12,8 @@ related_resources:
 description: Learn how to aggregate MCP tools from multiple RESTful APIs using AI MCP Proxy plugins in conversion-only and listener modes.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 permalink: /mcp/aggregate-mcp-tools/
 
 works_on:

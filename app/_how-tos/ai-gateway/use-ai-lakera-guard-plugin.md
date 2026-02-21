@@ -22,8 +22,8 @@ related_resources:
 description: Learn how to use the AI Lakera Guard plugin to protect your {{site.ai_gateway}} from prompt injection attacks, harmful content, data leakage, and malicious links using Lakera's threat detection service.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

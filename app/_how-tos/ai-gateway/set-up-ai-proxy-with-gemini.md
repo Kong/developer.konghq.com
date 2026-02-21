@@ -13,8 +13,8 @@ related_resources:
 description: Configure the AI Proxy plugin to create a chat route using Gemini.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

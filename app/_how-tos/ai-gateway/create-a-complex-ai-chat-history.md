@@ -18,8 +18,8 @@ tldr:
   a: Route requests to Azure OpenAI using the AI Proxy plugin and configure the AI Prompt Decorator plugin to establish task-specific behavior, tone, and privacy rules.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

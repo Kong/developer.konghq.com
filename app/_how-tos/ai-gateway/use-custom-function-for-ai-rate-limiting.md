@@ -17,8 +17,8 @@ tldr:
   a: Set up AI Proxy to route requests to Cohere, use a custom Lua function to count tokens via the `x-prompt-count` header, and enforce usage limits with Redis-based rate limiting.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

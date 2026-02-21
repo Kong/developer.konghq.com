@@ -11,8 +11,8 @@ description: Learn how to observe MCP tool activity after you apply access contr
 
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
   - insomnia
 
 permalink: /mcp/observe-mcp-traffic-with-acls/

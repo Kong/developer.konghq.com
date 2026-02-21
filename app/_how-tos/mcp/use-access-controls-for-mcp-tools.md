@@ -10,8 +10,8 @@ related_resources:
 description: Learn how to use the AI MCP Proxy plugin to restrict access to specific MCP tools based on Kong Consumers and Consumer Groups. Configure global and per-tool ACLs, define user roles, and validate access behavior using Insomnia’s MCP Client.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
   - insomnia
 
 permalink: /mcp/use-access-controls-for-mcp-tools/

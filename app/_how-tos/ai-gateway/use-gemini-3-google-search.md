@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy Advanced plugin to use Gemini's built-in `googleSearch` tool for real-time web searches."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

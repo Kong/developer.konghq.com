@@ -11,8 +11,8 @@ related_resources:
 description: Reduce costs by using llm/v1/files and llm/v1/batches route_types to send asynchronous batched requests to LLMs.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

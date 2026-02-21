@@ -1,0 +1,9 @@
+name: no-delete-route
+paths:
+  - /anything
+methods:
+  - GET
+  - POST
+  - PUT
+service: 
+  name: example-service

@@ -13,8 +13,8 @@ related_resources:
 description: Learn how to use the AI Compressor plugin alongside the RAG Injector and AI Prompt Decorator plugins to keep prompts lean, reduce latency, and optimize LLM usage for cost efficiency
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

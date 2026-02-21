@@ -15,8 +15,8 @@ related_resources:
 description: Configure {{site.ai_gateway}} to proxy OpenAI Codex CLI traffic using AI Proxy Advanced.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

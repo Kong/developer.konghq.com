@@ -11,8 +11,8 @@ related_resources:
 description: Configure the AI Proxy plugin to create an image generation route using xAI Grok.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

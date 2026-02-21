@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy plugin to use Gemini's `imageConfig` parameters for controlling image generation aspect ratio and resolution."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

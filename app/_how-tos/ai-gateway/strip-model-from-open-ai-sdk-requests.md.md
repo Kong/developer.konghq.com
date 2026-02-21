@@ -14,8 +14,8 @@ permalink: /how-to/strip-model-from-openai-sdk-requests
 description: Use the [Pre-function](/plugins/pre-function/) plugin to remove the model field from the request body so AI Proxy Advanced controls model selection during load balancing.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

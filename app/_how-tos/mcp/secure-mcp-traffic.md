@@ -19,8 +19,8 @@ series:
     position: 1
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

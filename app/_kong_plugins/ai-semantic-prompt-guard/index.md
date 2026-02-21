@@ -10,7 +10,8 @@ description: 'Semantically and intelligently create allow and deny lists of topi
 
 
 products:
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

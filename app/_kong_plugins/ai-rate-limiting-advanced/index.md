@@ -7,7 +7,8 @@ publisher: kong-inc
 tier: ai_gateway_enterprise
 
 products:
-    - gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

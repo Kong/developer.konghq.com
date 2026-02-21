@@ -13,8 +13,8 @@ related_resources:
 description: Configure the AI Proxy Advanced plugin to optimize LLM usage and reduce costs by intelligently routing chat requests across multiple OpenAI models based on semantic similarity.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

@@ -13,8 +13,8 @@ related_resources:
 description: Configure {{site.ai_gateway}} to proxy Google Gemini CLI traffic using AI Proxy
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

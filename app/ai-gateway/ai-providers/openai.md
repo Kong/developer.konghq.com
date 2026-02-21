@@ -21,8 +21,8 @@ works_on:
  - konnect
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 tags:
   - ai

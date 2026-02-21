@@ -1,0 +1,3 @@
+username: example-consumer
+groups: 
+  - name: example-consumer-group

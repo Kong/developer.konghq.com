@@ -14,8 +14,8 @@ permalink: /how-to/forward-openai-sdk-model-to-ai-proxy-advanced
 description: Use the Pre-function plugin to extract the OpenAI SDK model value into a header, then reference it dynamically in AI Proxy Advanced configuration.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

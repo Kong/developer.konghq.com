@@ -13,8 +13,8 @@ related_resources:
 description: Configure {{site.ai_gateway}} to proxy Qwen Code CLI traffic using AI Proxy with OpenAI-compatible endpoints
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

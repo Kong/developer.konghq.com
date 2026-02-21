@@ -9,8 +9,8 @@ description: 'Check llm/v1/chat or llm/v1/completions requests against a list of
 
 
 products:
-    - gateway
-    - ai-gateway
+  - gateway
+  - ai-gateway
 
 works_on:
     - on-prem

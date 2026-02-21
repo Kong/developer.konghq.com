@@ -13,8 +13,8 @@ related_resources:
 description: Use the AI Semantic Prompt Guard plugin to enforce topic-level guardrails for LLM traffic, filtering prompts based on meaning.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

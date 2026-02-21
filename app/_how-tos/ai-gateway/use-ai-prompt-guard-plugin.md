@@ -13,8 +13,8 @@ related_resources:
 description: Use the AI Prompt Guard plugin to filter LLM traffic based on regex rules that allow general IT questions and deny unsafe or off-topic content.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

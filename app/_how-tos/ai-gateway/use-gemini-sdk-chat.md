@@ -13,8 +13,8 @@ related_resources:
 description: "Configure the AI Proxy plugin for Gemini and test with the Google Generative AI SDK using the standard Gemini API format."
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem

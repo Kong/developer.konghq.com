@@ -9,8 +9,8 @@ related_resources:
 
 description: Learn how to use the AI MCP Proxy plugin to generate MCP from any RESTful API, including setting up a mock Node.js server for testing.
 products:
-  - gateway
   - ai-gateway
+  - gateway
 permalink: /mcp/autogenerate-mcp-tools/
 
 series:

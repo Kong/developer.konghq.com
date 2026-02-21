@@ -18,8 +18,8 @@ tldr:
   a: Configure the [AI Proxy](/plugins/ai-proxy/) plugin to route traffic, then use the [AI Prompt Template](/plugins/ai-prompt-template/) plugin to define and enforce reusable prompt formats.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem
