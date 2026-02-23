@@ -56,29 +56,28 @@ Dedicated Cloud Gateway (DCGW) Managed Cache introduces a built-in Redis-compati
 
 You can configure AWS managed caches for control planes and control plane groups. When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. 
 
-## How managed cache works
-* Control planes (not in a control plane group)
-  When the managed cache is ready, Konnect automatically creates a Redis partial configuration. This configuration appears as Konnect Managed in Redis-enabled plugin configuration fields and can be selected directly.
-* Control plane groups
-  You must manually create and apply a Redis partial configuration on each control plane where Redis-backed plugins are used. The managed cache provides the required environment variables, but the Redis partial is not created automatically.
+## Set up an AWS managed cache on a single control plane
 
-The API calls for creating and managing the managed cache apply to both flows. Manual Redis configuration is required only when you are using a control plane group.
+1. List your existing Dedicated Cloud Gateway control planes:
+{% capture list_cp %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes
+status_code: 201
+method: POST
+region: global
+body:
+    filter:
+      cloud_gateway: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ list_cp | indent: 3}}
 
-## Limitations
-
-* This feature is enabled only for Gateways with 3.13 or later.
-* AWS is the only provider supported currently. All regions within AWS are supported.
-* You can’t use redis configuration in custom plugins. Use env referenceable fields directly.
-
-## Set up an AWS managed cache
-
-Choose one of the following configurations:
-* Control plane group
-	1.	Create a control plane group enabled for dedicated cloud gateways.
-	1.	Add AWS multi-region data plane groups to the control plane group.
-	1.	Add control planes to the control plane group.
-* Single control plane
-	1.	Create or use an existing control plane enabled for dedicated cloud gateways.
+1. Copy and export the control plane you want to configure the managed cache for:
+   ```sh
+   export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
+   ```
 
 1. Create a managed cache using the Cloud Gateways add-ons API. This step is required for both control planes and control plane groups:
 
@@ -90,11 +89,11 @@ Choose one of the following configurations:
    method: POST
    region: global
    body:
-       name: my-add-on
+       name: aws-managed-cache
        owner:
-           kind: control-plane-group
-           control_plane_group_id: 71e52a7e-06ae-43b1-a350-d38df65f8654
-           control_plane_group_geo: eu
+           kind: control-plane
+           control_plane_id: $CONTROL_PLANE_ID
+           control_plane_geo: us
        config:
            kind: managed-cache.v0
            capacity_config:
@@ -105,13 +104,18 @@ Choose one of the following configurations:
    {% endcapture %}
    {{ create_addon | indent: 3}}
 
-   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates.
+   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions in AWS are supported.
+
+1. Export the ID of your managed cache in the response:
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
 
 1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
    {% konnect_api_request %}
-   url: /v2/cloud-gateways/add-ons/{addOnId}
+   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
    status_code: 200
    method: GET
    region: global
@@ -119,60 +123,50 @@ Choose one of the following configurations:
    {% endcapture %}
    {{ get_addon | indent: 3}}
 
-## Configure Redis for plugins:
+   This can take about 15 minutes.
 
-* **Control planes:** No manual Redis configuration is required. After the managed cache is ready, Konnect automatically creates a Redis partial configuration. When configuring Redis-backed plugins, select Konnect Managed in the Redis configuration field.
-* **Control plane groups:** For control plane groups, you must manually create a Redis partial configuration on each control plane where Redis-backed plugins are enabled.
+## Configure Redis for plugins
 
-1. Apply a Redis partial configuration using decK:
+For control planes, no manual Redis configuration is required. After the managed cache is ready, Konnect automatically creates a Redis partial configuration. When configuring Redis-backed plugins, select Konnect Managed in the Redis configuration field.
 
-{% capture redis_config %}
-{% entity_examples %}
-entities:
-  partial:
-    - name: test-partial
-      type: redis-ee
-      config:
-        cloud_authentication:
-            auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
-            aws_cache_name: "{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}"
-            aws_region: "{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}"
-            aws_is_serverless: false
-            aws_assume_role_arn: "{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}"
-        connect_timeout: 2000
-        connection_is_proxied: false
-        database: 0
-        host: "{vault://env/ADDON_MANAGED_CACHE_HOST}"
-        keepalive_backlog: 512
-        keepalive_pool_size: 256
-        port: "{vault://env/ADDON_MANAGED_CACHE_PORT}"
-        read_timeout: 5000
-        send_timeout: 2000
-        server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
-        ssl_verify: true
-        ssl: true
-        username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
-{% endentity_examples %}
+[Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup Redis-supported plugins. Select the automatically created Konnect Managed Redis configuration.
+   
+{:.warning}
+> **Important:** If you're configuring your plugins with decK, you must include the `konnect-managed` partial [default lookup tag](/deck/gateway/tags/) to ensure the managed cache partial is available. Add the following to your plugin config file:
+```yaml
+_info:
+default_lookup_tags:
+  partials:
+    - konnect-managed
+```
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. Click your Dedicated Cloud Gateway.
+1. In the API Gateways sidebar, click **Plugins**.
+1. Click **New plugin**.
+1. Select **Rate Limiting Advanced**.
+1. Click **View advanced parameters**.
+1. In the **Strategy** dropdown menu, select "redis".
+1. In the **Shared Redis Configuration** dropdown menu, select your {{site.konnect_short_name}}-managed configuration.
+1. Click **Save**.
+
+{:.important}
+> **Note:** You can’t use redis configuration in custom plugins. Use env referenceable fields directly.
+
+## Validate
+
+Verify that the Rate Limiting Advanced plugin is using the managed cache partial configuration:
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
+status_code: 200
+method: GET
+region: global
+{% endkonnect_api_request %}
 {% endcapture %}
-{{ redis_config | indent: 3}}
 
-1. [Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup plugins.
-   
-   Use the managed Redis configuration when setting up Redis-backed plugins:
-   * For control planes, select the automatically created Konnect Managed Redis configuration.
-   * For control plane groups, reference the Redis partial configuration you created.
+In the response, locate your `rate-limiting-advanced` plugin and confirm that `config.strategy` is set to `redis` and that the partials array contains your managed Redis partial:
 
-   Repeat this setup on other control planes in the control plane group as needed.
-   
-   {:.warning}
-   > **Important:** If you're configuring your plugins with decK, you must include the `konnect-managed` partial [default lookup tag](/deck/gateway/tags/) to ensure the managed cache partial is available. Add the following to your plugin config file:
-   ```yaml
-   _info:
-   default_lookup_tags:
-     partials:
-       - konnect-managed
-   ```
- 
-1. Set up redis configuration and plugins on other CPs in that CPG as needed.
-   
-   You can add more data plane groups to the CPG or remove existing data plane groups. The cache is automatically updated accordingly. You can check the managed cache's ready status to make sure managed cache is up-to-date.
+```sh
+example response here
+```
+{:.no-copy-code}
