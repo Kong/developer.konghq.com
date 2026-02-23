@@ -47,15 +47,16 @@ faqs:
 
       {:.info}
       > After updating the installation settings, disconnect and reconnect GitHub in Insomnia if the repositories still don't appear.
+  - q: Which Personal Access Token should I use for Git Sync?
+    a: |
+      If you authenticate using a Personal Access Token (PAT), use a **fine-grained** PAT.
+
+      Navigate to [Github Personal access tokens](https://github.com/settings/personal-access-tokens) and ensure that the token is configured to allow access to the repositories you want to sync.    
   - q: Why do I get a 403 error when committing?
     a: |  
-      Insomnia uses the **Insomnia GitHub App** to perform Git operations. Authenticating with GitHub isn't sufficient. The GitHub App must be installed on your GitHub account or organization and granted access to the target repository. Each Insomnia project is bound to a specific Git repository and credential context.
-      
-      If the app doesn't have repository access:
-      - The repository doesn't appear in the selection list.
-      - Commits fail with a **403 Forbidden** error.
-      
-      To resolve this issue, install or configure the Insomnia GitHub App and grant it access to the repository in your [Github applications](https://github.com/apps/insomnia-desktop)
+      A **403 Forbidden** error usually indicates that Insomnia does not have access to the target repository.
+
+      If you use GitHub, navigate to [Github applications](https://github.com/apps/insomnia-desktop) tto ensure that the Insomnia GitHub App is installed and has access to the repository.
       
       {:.warning}
       > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.    
