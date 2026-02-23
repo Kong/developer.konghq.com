@@ -120,6 +120,7 @@
     "license",
     "linting",
     "llama",
+    "llm",
     "load-balancing",
     "logging",
     "mcp",
