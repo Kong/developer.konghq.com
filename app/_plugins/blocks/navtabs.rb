@@ -68,8 +68,6 @@ module Jekyll
           else
             Liquid::Template.parse('{{heading_level}}').render(context)
           end
-        elsif context['prereqs']
-          4
         else
           Jekyll::ClosestHeading.new(@page, @line_number, context).level
         end
