@@ -12,7 +12,8 @@
 {%- endif -%}
 {%- if page.works_on %}{% assign incompatibilities = page.works_on | works_on_incompatibilities %}{% if incompatibilities.size > 0  %}
 - Incompatible with: {{incompatibilities | join: ', '}}
-{%- endif %}{% endif -%}
+{%- else -%}
+- Supports both On-prem and Konnect deployments{%- endif %}{% endif -%}
 {%- if page.tools %}
 - Tools: {{page.llm_metadata.tools | join: ', '}}
 {%- endif -%}
