@@ -74,4 +74,4 @@ Insomnia stores the credential and makes it available when creating or cloning G
 To confirm that you've successfully configured your git credentials:
 1. In the Insomnia application, in the **PROJECTS** panel, select the name of your branch.
 1. Click **Repository Settings**.
-1. Verify that your git profile is present.
+1. Verify that your Git profile is present.
