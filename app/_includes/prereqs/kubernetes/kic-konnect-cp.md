@@ -1,4 +1,5 @@
 {% assign summary = "Create a KIC Control Plane" %}
+{%- if page.output_format == 'markdown' and page.works_on.size > 1 %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.konnect_snippet }}{% endcapture %}{% endif -%}
 {%- if include.config.gateway_api_optional == true -%}
 {%- assign summary = summary | append: " (Optional)" -%}
 {%- endif -%}
