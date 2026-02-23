@@ -89,42 +89,6 @@ pages:
       - text: Service discovery
         url: /mesh/service-discovery/
   -
-    path: app/_src/networking/meshmultizoneservice.md
-    title: 'MeshMultiZoneService'
-    description: 'Group MeshServices across zones into a single multizone service with zone-agnostic hostnames and load balancing.'
-    url: '/mesh/meshmultizoneservice/'
-    related_resources:
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: 'Zone ingress'
-        url: /mesh/zone-ingress/
-      - text: Zone egress
-        url: /mesh/zone-egress/
-    min_version:
-      mesh: '2.9'
-  -
-    path: app/_src/networking/meshservice.md
-    title: 'MeshService'
-    description: 'Define and manage services within the mesh, replacing kuma.io/service tags for clearer service targeting and routing.'
-    url: '/mesh/meshservice/'
-    related_resources:
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-    min_version:
-      mesh: '2.8'
-  -
     path: app/_src/policies/introduction.md
     title: 'Policies'
     description: 'Learn how policies in Kong Mesh configure Data Plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
@@ -297,42 +261,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/reference/kubernetes-annotations.md
-    title: 'Kubernetes annotations and labels'
-    description: 'Reference for all Kubernetes annotations and labels available in {{site.mesh_product_name}}, including sidecar injection, mesh association, transparent proxy settings, and metrics configuration.'
-    url: '/mesh/annotations/'
-    related_resources:
-      - text: 'Deploy Kong Mesh on Kubernetes'
-        url: '/mesh/kubernetes/'
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-  -
-    path: app/_src/reference/kuma-cp.md
-    title: 'kuma-cp configuration reference'
-    description: 'Configuration Reference'
-    url: '/mesh/reference/kuma-cp/'
-    related_resources:
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: 'Deploy Kong Mesh on Kubernetes'
-        url: '/mesh/kubernetes/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
     title: 'Running built-in gateway pods on Kubernetes'
     description: 'Guide to running builtin gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.'
@@ -452,16 +380,6 @@ pages:
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
-  -
-    path: app/_src/production/secure-deployment/secrets.md
-    title: 'Manage secrets'
-    description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
-    url: '/mesh/manage-secrets/'
-    related_resources:
-      - text: 'Authentication with the API server'
-        url: '/mesh/authentication-with-the-api-server/'
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
   -
     path: app/_src/quickstart/kubernetes-demo.md
     title: 'Deploy Kong Mesh on Kubernetes'

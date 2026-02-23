@@ -63,7 +63,6 @@ faqs:
       * Verify that your Kafka broker is healthy.
       * Check if you're using the correct `kafkactl` context.
       * Ensure that the proxy is properly connected to the backend cluster.
-      * Ensure that `acl_mode` is set to `passthrough` in the virtual cluster. If set to `enforce_on_gateway`, you won't see any topics listed without an ACL policy.
 next_steps:
   - text: Productize Kafka topics with {{site.event_gateway}}
     url: /event-gateway/productize-kafka-topics/
@@ -146,7 +145,7 @@ body:
   dns_label: vcluster-1
   authentication:
     - type: anonymous
-  acl_mode: passthrough
+  acl_mode: enforce_on_gateway
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
@@ -157,9 +156,46 @@ jq: ".id"
 
 In this example:
 * `authentication`: Allows anonymous authentication.
-* `acl_mode`: The setting `passthrough` means that all clients are allowed and don't have to match a defined ACL. 
-In a production environment, you would set this to `enforce_on_gateway` and define an ACL policy.
+* `acl_mode`: The setting `enforce_on_gateway` requires clients to match an ACL policy. 
+If you want to test without ACLs, you can set this to `passthrough`, which means that all clients are allowed and don't have to match a defined ACL. 
 * `name` is an internal name for the configuration object, while the `dns_label` is necessary for SNI routing.
+
+## Add an ACL policy
+
+An [ACL (Access Control List) policy](/event-gateway/policies/acl/) lets you define which operations clients are allowed to perform on Kafka topics through the virtual cluster. 
+
+Use the following command to add an ACL policy that allows producing and consuming of topics on the `example_virtual_cluster` virtual cluster:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters/$VIRTUAL_CLUSTER_ID/cluster-policies
+status_code: 201
+method: POST
+body:
+  type: acls
+  name: example_acl_policy
+  config:
+    rules:
+      - resource_type: topic
+        action: allow
+        operations:
+          - name: describe
+          - name: describe_configs
+          - name: read
+          - name: write
+        resource_names:
+          - match: '*'
+      - resource_type: topic
+        action: deny
+        operations:
+          - name: write
+        resource_names:
+          - match: 'blocked-topic'
+{% endkonnect_api_request %}
+<!--vale on-->
+
+This policy allows all clients connecting through the virtual cluster to perform describe, read, and write 
+operations on any topic except `blocked-topic`, which has write operations blocked.
 
 ## Add a listener
 
@@ -330,6 +366,36 @@ render_output: false
 The output should contain your new header:
 ```shell
 My-New-Header:header_value
+```
+{:.no-copy-code}
+
+Finally, test that your ACL is policy blocking write requests to `blocked-topic`. 
+
+Let's create the topic:
+
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context direct create topic blocked-topic
+expected:
+  message: "topic created: blocked-topic"
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
+And let's try to produce a message to `blocked-topic` through the virtual cluster:
+
+{% validation custom-command %}
+command: |
+  kafkactl -C kafkactl.yaml --context vc produce blocked-topic --value="test message"
+expected:
+  message: "Failed to produce message: kafka server: The client is not authorized to access this topic"
+  return_code: 0
+render_output: false
+{% endvalidation %}
+
+The operation should be blocked, which confirms that the ACL policy is being enforced by {{site.event_gateway_short}}:
+```shell
+Failed to produce message: kafka server: The client is not authorized to access this topic
 ```
 {:.no-copy-code}
 

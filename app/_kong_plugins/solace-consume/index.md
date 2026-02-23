@@ -6,7 +6,7 @@ content_type: plugin
 tier: enterprise
 publisher: kong-inc
 description: 'Consume messages from Solace topics and make them available through HTTP endpoints'
-
+premium_partner: true
 
 products:
     - gateway

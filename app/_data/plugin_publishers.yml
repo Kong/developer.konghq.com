@@ -42,3 +42,9 @@ imperva:
 
 palo-alto-networks:
   name: Palo Alto Networks
+
+trendai:
+  name: TrendAI
+
+noma:
+  name: Noma

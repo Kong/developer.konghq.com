@@ -84,6 +84,8 @@ related_resources:
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
+  - text: Dev Portal VS Code extension (tech preview)
+    url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
 ---
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
