@@ -81,6 +81,11 @@ module Jekyll
     def post_process_content(content)
       content.gsub!(/<!--\s*vale on\s*-->/, '')
       content.gsub!(/<!--\s*vale off\s*-->/, '')
+
+      %w[info warning danger success neutral decorative].each do |type|
+        content.gsub!(/{:\s*.#{type}}/, '')
+      end
+
       content
     end
   end
