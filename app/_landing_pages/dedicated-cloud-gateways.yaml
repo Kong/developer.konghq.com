@@ -111,7 +111,7 @@ rows:
                 text: |
                   We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
                   Use private hosted zones or private DNS if your services are in the same cloud. 
-                  Use outbound DNS resolver if your services are in an external or on-premise DNS server. 
+                  Use an outbound DNS resolver if your services are in an external or on-premise DNS server. 
   - column_count: 3
     columns:
       - blocks:
@@ -120,7 +120,7 @@ rows:
               title: AWS
               icon: /assets/icons/aws.svg
               description: |
-                Dedicated Cloud Gateways in AWS support private name resolution through AWS private hosted zones and outbound DNS resolver.
+                Dedicated Cloud Gateways in AWS support private name resolution through AWS private hosted zones and an outbound DNS resolver.
               ctas:
                 - text: Private hosted zones
                   url: /dedicated-cloud-gateways/private-hosted-zones/
@@ -141,7 +141,7 @@ rows:
             config:
               title: Azure
               description: |
-                Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and outbound DNS resolver.
+                Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and an outbound DNS resolver.
               icon: /assets/icons/azure.svg
               ctas:
                 - text: Private DNS zones

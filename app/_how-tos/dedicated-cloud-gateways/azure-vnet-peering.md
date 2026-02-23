@@ -33,10 +33,7 @@ prereqs:
       content: |
         To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
 
-        Copy and export your Entra tenant ID from your dashboard:
-        ```sh
-        export TENANT_ID='YOUR TENANT ID'
-        ```
+        Copy your Entra tenant ID from your dashboard.
     - title: Microsoft Azure CLI
       content: |
         [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
@@ -47,12 +44,7 @@ prereqs:
       content: |
         To configure VNET peering in {{site.konnect_short_name}}, you'll need a [virtual network configured in Azure](https://learn.microsoft.com/en-us/azure/virtual-network/quickstart-create-virtual-network?tabs=portal). 
 
-        Copy and export the following:
-        ```sh
-        export VNET_SUBSCRIPTION_ID='YOUR VNET SUBSCRIPTION ID'
-        export RESOURCE_GROUP_NAME='RESOURCE GROUP NAME FOR YOUR VNET'
-        export VNET_NAME='YOUR VNET NAME'
-        ```
+        Copy your virtual network subscription ID, resource group name, and virtual network name.
 
         {:.danger}
         > **Important:** Your Azure virtual network **must** use a different IP than your network in {{site.konnect_short_name}}, which is `10.0.0.0/16` by default but can be edited.

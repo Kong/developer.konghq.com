@@ -33,10 +33,7 @@ prereqs:
       content: |
         To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
 
-        Copy and export your Entra tenant ID from your dashboard:
-        ```sh
-        export TENANT_ID='YOUR TENANT ID'
-        ```
+        Copy your Entra tenant ID from your dashboard.
     - title: Microsoft Azure CLI
       content: |
         [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
@@ -52,13 +49,7 @@ prereqs:
         Configuring Azure private DNS for Dedicated Cloud Gateways involves creating a private DNS zone in Azure, linking the private DNS zone to your virtual network, and configuring a private hosted zone in {{site.konnect_short_name}}.
 
         1. [Create a private DNS zone in Azure](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#create-a-private-dns-zone) in the same resource group as the virtual network that you're using for VNET peering.
-        1. Export the following variables for your private DNS zone:
-          ```sh
-          export YOUR_DOMAIN='YOUR PRIVATE DNS DOMAIN NAME'
-          export PRIVATE_DNS_ZONE_NAME='YOUR PRIVATE DNS ZONE NAME'
-          export PRIVATE_DNS_SUBSCRIPTION_ID='YOUR PRIVATE DNS ZONE SUBSCRIPTION ID'
-          export PRIVATE_DNS_RESOURCE_GROUP_NAME='YOUR PRIVATE DNS RESOURCE GROUP NAME'
-          ```
+        1. Copy and save your domain name, private DNS zone name, private DNS subscription ID, and private DNS resource group name.
       icon_url: /assets/icons/azure.svg
 faqs:
   - q: "When I try to create the VNET peering role and assign the role to the service principal, I get the following errors: `(RoleDefinitionWithSameNameExists) A custom role with the same name already exists in this directory.` and `Role 'Kong Cloud Gateway Peering Creator - Kong' doesn't exist.`. How do I fix this?"
@@ -92,42 +83,9 @@ next_steps:
 1. In the **Subscription ID** field, enter the subscription ID for your private DNS zone.
 1. In the **Resource group ID** field, enter the resource group ID that your private DNS zone is in.
 1. In the **VNet link name** field, enter the name of the virtual network link.
-1. Create a DNS link creator role with the Azure CLI:
-   ```sh
-   az role definition create --output none --role-definition '{
-       "Name": "Kong Cloud Gateway DNS Link Creator - Kong",
-       "Description": "Perform cross-tenant network peering.",
-       "Actions": [
-           "Microsoft.Network/virtualNetworks/read",
-           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/read",
-           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/write",
-           "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/delete",
-           "Microsoft.Network/virtualNetworks/peer/action"
-       ],
-       "AssignableScopes": [
-           "/subscriptions/$PRIVATE_DNS_SUBSCRIPTION_ID",
-       ]
-   }'
-   ```
-1. Assign the role to the service principal so it has permission to peer with your virtual network with the Azure CLI:
-   ```sh
-   az role assignment create \
-    --role "Kong Cloud Gateway DNS Link Creator - Kong" \
-    --assignee "$(az ad sp list --filter "appId eq '54aeca8a-ec61-4737-9a1a-99ca4fed32da'" --output tsv --query '[0].id')" \
-    --scope "/subscriptions/$PRIVATE_DNS_SUBSCRIPTION_ID/resourceGroups/$PRIVATE_DNS_RESOURCE_GROUP_NAME/providers/Microsoft.Network/privateDnsZones/$YOUR_DOMAIN"
-   ```
-
-1. [Link your private DNS zone to your virtual network](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) using the command provided by the private DNS wizard in the UI:
-   ```sh
-   az network private-dns link vnet create \
-   --name $VNET_LINK_NAME \
-   --resource-group $PRIVATE_DNS_RESOURCE_GROUP_NAME \
-   --zone-name $PRIVATE_DNS_ZONE_NAME \
-   --virtual-network $VNET_NAME \
-   --registration-enabled false
-   ```
-
-   Be sure to replace `$VNET_LINK_NAME` with the name you want to use for your virtual network link.
+1. Create a DNS link creator role with the Azure CLI using the command in the UI wizard.
+1. Assign the role to the service principal so it has permission to peer with your virtual network with the Azure CLI using the command in the UI wizard.
+1. [Link your private DNS zone to your virtual network](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) using the command provided by the private DNS wizard in the UI.
 1. Select **I confirm that I completed all required steps and understand that incorrect configuration can cause DNS resolution issues.**
 1. Click **Connect**.
 

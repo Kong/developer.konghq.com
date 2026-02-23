@@ -18,7 +18,7 @@ tldr:
   a: |
     Using a virtual network and a private DNS resolver in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
     When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. 
-    Configure outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. 
+    Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. 
     You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your outbound DNS resolver.
 related_resources:
   - text: Dedicated Cloud Gateways
@@ -37,10 +37,7 @@ prereqs:
       content: |
         To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
 
-        Copy and export your Entra tenant ID from your dashboard:
-        ```sh
-        export TENANT_ID='YOUR TENANT ID'
-        ```
+        Copy your Entra tenant ID from your dashboard.
     - title: Microsoft Azure CLI
       content: |
         [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
@@ -78,10 +75,10 @@ next_steps:
 
 {% include_cached /sections/azure-dcgw-vnet-peering-setup.md %}
 
-A DNS Outbound Resolver is already created when the VNET peering is set up. 
+An outbound DNS resolver is already created when the VNET peering is set up. 
 We just need to add additional outbound endpoints.
 
-## Configure outbound DNS resolver for your Azure network in {{site.konnect_short_name}}
+## Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.
@@ -128,4 +125,4 @@ Once your outbound DNS resolver configuration displays as ready, you can begin u
 1. Click your Azure Dedicated Cloud Gateway.
 1. In the API Gateways sidebar, click **Networks**.
 1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Scroll until you see `Ready` for outbound DNS resolver.
+1. Scroll until you see `Ready` for your outbound DNS resolver.
