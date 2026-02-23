@@ -56,7 +56,7 @@ faqs:
     a: |  
       A **403 Forbidden** error usually indicates that Insomnia does not have access to the target repository.
 
-      If you use GitHub, navigate to [Github applications](https://github.com/apps/insomnia-desktop) tto ensure that the Insomnia GitHub App is installed and has access to the repository.
+      If you use GitHub, navigate to [Github applications](https://github.com/apps/insomnia-desktop) to ensure that the Insomnia GitHub App is installed and has access to the repository.
       
       {:.warning}
       > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.    
