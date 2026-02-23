@@ -123,4 +123,5 @@
 {%- if is_konnect -%}
 {%- assign summary = summary | append:' (attached to Konnect)' -%}
 {%- endif -%}
+{%- if page.output_format == 'markdown' and page.works_on.size > 1  %}{% if is_konnect %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.konnect_snippet }}{% endcapture %}{% else %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.on_prem_snippet }}{% endcapture %}{% endif %}{% endif %}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}

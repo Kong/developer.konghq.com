@@ -1,5 +1,5 @@
 {% assign summary='{{site.base_gateway}} running' %}
-
+{%- if page.output_format == 'markdown' and page.works_on.size > 1 %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.on_prem_snippet }}{% endcapture %}{% endif -%}
 {% capture rbac_snippet %}
 ```bash
 curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
