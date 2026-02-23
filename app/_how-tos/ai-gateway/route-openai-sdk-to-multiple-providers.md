@@ -14,8 +14,8 @@ permalink: /how-to/route-openai-sdk-to-multiple-providers
 description: Configure separate Kong routes to direct OpenAI SDK requests to different LLM providers based on the base URL.
 
 products:
-  - gateway
   - ai-gateway
+  - gateway
 
 works_on:
   - on-prem
