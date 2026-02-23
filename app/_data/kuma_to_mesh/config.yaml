@@ -261,24 +261,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/reference/kuma-cp.md
-    title: 'kuma-cp configuration reference'
-    description: 'Configuration Reference'
-    url: '/mesh/reference/kuma-cp/'
-    related_resources:
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Deploy Kong Mesh on Universal
-        url: '/mesh/universal/'
-      - text: 'Deploy Kong Mesh on Kubernetes'
-        url: '/mesh/kubernetes/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
     title: 'Running built-in gateway pods on Kubernetes'
     description: 'Guide to running builtin gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.'

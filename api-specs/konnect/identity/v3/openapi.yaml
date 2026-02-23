@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@32f132716d696635a0ba267d833570da64a9aa83
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/32f132716d696635a0ba267d833570da64a9aa83'
+  x-oas-source: kong/platform-api@408ea0ec3518b52070809011e4600c17c9199642
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/408ea0ec3518b52070809011e4600c17c9199642'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -97,7 +97,7 @@ paths:
       operationId: get-identity-providers
       summary: List Identity Providers
       description: |
-        Retrieves the identity providers available within the organization. This operation provides information about 
+        Retrieves the identity providers available within the organization. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
         - name: filter
@@ -123,7 +123,7 @@ paths:
       operationId: create-identity-provider
       summary: Create Identity Provider
       description: |
-        Creates a new identity provider. This operation allows the creation of a new identity provider for 
+        Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
         $ref: '#/components/requestBodies/CreateIdentityProviderRequest'
@@ -154,7 +154,7 @@ paths:
       operationId: get-identity-provider
       summary: Get Identity Provider
       description: |
-        Retrieves the configuration of a single identity provider. This operation returns information about a 
+        Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
         '200':
@@ -173,7 +173,7 @@ paths:
       operationId: update-identity-provider
       summary: Update Identity Provider
       description: |
-        Updates the configuration of an existing identity provider. This operation allows modifications to be made 
+        Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
         $ref: '#/components/requestBodies/UpdateIdentityProviderRequest'
@@ -196,7 +196,7 @@ paths:
       operationId: delete-identity-provider
       summary: Delete Identity Provider
       description: |
-        Deletes an existing identity provider configuration. This operation removes a specific identity provider 
+        Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the organization.
       responses:
         '204':
@@ -1528,6 +1528,7 @@ components:
       type: string
       example: YOUR_CLIENT_SECRET
       title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -1582,16 +1583,16 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/IdentityProviderType'
-        login_path:
-          $ref: '#/components/schemas/IdentityProviderLoginPath'
         enabled:
           $ref: '#/components/schemas/IdentityProviderEnabled'
+        login_path:
+          $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Create Identity Provider
     UpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
@@ -1603,9 +1604,9 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Update Identity Provider
     IdentityProvider:
       description: The identity provider that contains configuration data for authentication integration.
       type: object
@@ -1629,23 +1630,6 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
     OIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
-    ConfigureOIDCIdentityProviderConfig:
       description: The identity provider that contains configuration data for the OIDC authentication integration.
       type: object
       properties:
@@ -3501,7 +3485,7 @@ components:
       description: The request schema for the update IdP configuration request.
     CreateIdentityProviderRequest:
       description: |
-        An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for creating a new identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -3516,7 +3500,7 @@ components:
               $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadata'
     UpdateIdentityProviderRequest:
       description: |
-        An object representing the configuration for updating an identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for updating an identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -4925,7 +4909,7 @@ components:
               $ref: '#/components/examples/SAMLIdentityProviderWithMetadata'
     IdentityProviders:
       description: |
-        A collection of identity providers. This response contains a collection of identity providers, which may  include both OIDC and SAML identity providers.
+        A collection of identity providers. This response contains a collection of identity providers, which may include both OIDC and SAML identity providers.
       content:
         application/json:
           schema:

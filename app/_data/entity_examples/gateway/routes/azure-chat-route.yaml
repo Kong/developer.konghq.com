@@ -1,0 +1,7 @@
+name: azure-chat-route
+paths:
+  - "~/openai/deployments/(?<azure_deployment>[^/]+)/chat/completions$"
+methods:
+  - POST
+service:
+  name: azure-openai-service

@@ -1,4 +1,4 @@
-## {{include.title}}
+## {{include.title | liquify }}
 
 {% if page.example.extended_description %}
 {{ page.example.extended_description | liquify | markdownify }}
