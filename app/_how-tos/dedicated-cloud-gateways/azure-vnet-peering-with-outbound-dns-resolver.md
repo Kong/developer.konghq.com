@@ -9,10 +9,17 @@ products:
   - gateway
 works_on:
   - konnect
+tags:
+  - azure
+  - network
 automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution?
-  a: After you configure a virtual network and create a private DNS resolver in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. Configure outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your outbound DNS resolver.
+  a: |
+    Using a virtual network and a private DNS resolver in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. 
+    Configure outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. 
+    You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your outbound DNS resolver.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
@@ -46,7 +53,7 @@ prereqs:
       icon_url: /assets/icons/azure.svg
     - title: Azure private DNS resolver
       content: |
-        Before you can configure outbound DNS in {{site.konnect_short_name}}, you must configure [private resolvers in Azure](https://learn.microsoft.com/en-us/azure/dns/private-resolver-endpoints-rulesets?source=recommendations). 
+        Before you can configure outbound DNS in {{site.konnect_short_name}}, you must configure [private resolvers in Azure](https://learn.microsoft.com/en-us/azure/dns/private-resolver-endpoints-rulesets?source=recommendations):
 
         1. Create a [DNS resolver inside your virtual network](https://learn.microsoft.com/en-us/azure/dns/dns-private-resolver-get-started-portal#create-a-dns-resolver-inside-the-virtual-network) in Azure. Save the name of your DNS resolver. 
         1. Configure the outbound endpoints in your DNS resolver in Azure.

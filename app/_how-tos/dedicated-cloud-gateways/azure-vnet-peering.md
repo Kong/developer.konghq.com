@@ -9,6 +9,9 @@ products:
   - konnect
 works_on:
   - konnect
+tags:
+  - azure
+  - network
 automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering?
