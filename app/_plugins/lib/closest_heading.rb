@@ -23,6 +23,8 @@ module Jekyll
     end
 
     def level
+      return 4 if @context['prereqs']
+
       closest = closest_heading
       current_level = closest || @context['heading_level'] || 2
 
