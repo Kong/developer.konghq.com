@@ -61,7 +61,8 @@ module Jekyll
       layout = @site.layouts['llm']
       layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
 
-      Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
+      content = Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
+      post_process_content(content)
     end
 
     def output_ext
@@ -75,6 +76,12 @@ module Jekyll
     def write
       FileUtils.mkdir_p(File.dirname(output_path))
       File.write(output_path, render)
+    end
+
+    def post_process_content(content)
+      content.gsub!(/<!--\s*vale on\s*-->/, '')
+      content.gsub!(/<!--\s*vale off\s*-->/, '')
+      content
     end
   end
 end
