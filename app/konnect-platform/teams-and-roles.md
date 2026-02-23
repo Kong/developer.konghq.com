@@ -5,6 +5,7 @@ layout: reference
 breadcrumbs:
   - /konnect/
 
+toc_depth: 4
 products:
   - konnect
 
@@ -33,6 +34,9 @@ faqs:
     a: To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
   - q: My team has a Dev Portal, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
+  - q: Why can't my users create dashboards even though they have the Dashboard Creator, Admin, or Editor role?
+    a: | 
+      {% include konnect/faqs/roles.md %}
 ---
 
 To help secure and govern your environment, {{site.konnect_short_name}} provides
@@ -87,9 +91,9 @@ columns:
     key: description
 rows:
   - team: Analytics Admin
-    description: Users can fully manage all [Analytics](/observability/) content, which includes creating, editing, and deleting reports, as well as viewing the analytics summary.
+    description: Users can fully manage all [Analytics](/observability/) content, which includes creating, editing, and deleting reports, as well as viewing the analytics summary. They also have [roles](#observability) for Dashboard Creator, Dashboard Admin (for all instances), Report Creator, and Report Admin (for all instances). 
   - team: Analytics Viewer
-    description: Users can view the [Analytics](/observability/) summary and report data.
+    description: Users can view the [Analytics](/observability/) summary and report data. They also have [roles](#observability) for Dashboard Viewer and Report Viewer for all instances.
   - team: Organization Admin
     description: Users can fully manage all entities and configuration in the organization. In addition to users granted the Organization Admin role, each organization also has one Owner, who always has this role and is the only user who can delete the organization.
   - team: Organization Admin (Read Only)

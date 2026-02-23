@@ -11,8 +11,8 @@ products:
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
-  - text: MCP catalog in {{site.konnect_short_name}} (tech preview)
-    url: https://cloud.konghq.com/global/organization/labs
+  - text: MCP Registry in {{site.konnect_short_name}} (tech preview)
+    url: /catalog/mcp-registry/
 
 faqs:
   - q: What happens when authentication fails?

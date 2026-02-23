@@ -5,6 +5,8 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 Make sure to also check the upgrade notes for the matching version of [Kuma](https://kuma.io/docs/latest/production/upgrades-tuning/upgrades).
 
+## Upgrade to `2.14.x`
+
 ## Upgrade to `2.13.x`
 
 ### AWS IAM workload label validation for MeshIdentity

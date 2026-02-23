@@ -7,6 +7,7 @@ content_type: plugin
 publisher: kong-inc
 tier: enterprise
 description: 'Publish request and response logs to a Solace endpoint or topic'
+premium_partner: true
 
 products:
     - gateway

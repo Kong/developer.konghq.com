@@ -10,7 +10,7 @@ layout: plugins/without_aside
       <ul class="tabcolumn">
         {% for example in page.basic_examples %}
           <li>
-            <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title }}</a>
+            <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title | liquify }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -20,7 +20,7 @@ layout: plugins/without_aside
         <ul class="tabcolumn">
           {% for example in group_examples[1] %}
             <li>
-              <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title }}</a>
+              <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title | liquify }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -32,14 +32,14 @@ layout: plugins/without_aside
       {% if page.basic_examples != empty %}
         <optgroup label="Basic use cases">
           {% for example in page.basic_examples %}
-            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title | liquify }}</option>
           {% endfor %}
         </optgroup>
       {% endif %}
       {% for group_examples in page.examples_by_group %}
         <optgroup label="{{group_examples[0]}}">
           {% for example in group_examples[1] %}
-            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title | liquify }}</option>
           {% endfor %}
         </optgroup>
       {% endfor %}

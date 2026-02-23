@@ -13,6 +13,7 @@ metadata:
     - confluent
     - traceable
     - dynatrace
+    - solace
 rows:
   - header:
       type: h1
@@ -43,6 +44,14 @@ rows:
           icon: /assets/icons/third-party/dynatrace.png
           cta:
             url: "#dynatrace"
+
+    - blocks:
+      - type: icon_card
+        config:
+          title: Solace
+          icon: /assets/icons/third-party/solace.svg
+          cta:
+            url: "#solace"
 
   - header:
       type: h2
@@ -201,3 +210,70 @@ rows:
           cta:
             text: Set up Dynatrace in the {{site.konnect_catalog}} 
             url: "/catalog/integrations/dynatrace/"
+
+  - header:
+      type: h2
+      text: "Solace"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    [Solace](https://solace.com/) enables teams to manage and govern APIs and events through a shared control plane
+                    built on Kong and Solace. This allows consistent lifecycle management, policies, authentication, and access controls across all data paths.
+                    
+                    Solace provides high-performance real-time data movement, event governance, and orchestration for event-driven agentic AI. Kong complements this with centralized API management, security, observability, and AI governance.
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Using the **Solace Consume plugin**, {{site.base_gateway}} can consume messages from a Solace PubSub+ Event Broker and make
+                them available through HTTP endpoints.
+
+                With this plugin, you can:
+                * Securely communicate with Solace using basic and OAuth2 authentication
+                * Dynamically configure Solace session properties
+                * Read custom content payloads
+                * Configure acknowledgement wait times for guaranteed message delivery
+                * Securely connect to Solace brokers using SSL/TLS
+    - blocks:
+      - type: plugin
+        config:
+          slug: solace-consume
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Using the **Solace Upstream** plugin, {{site.base_gateway}} can convert requests (or custom data) into Solace messages and publish them to specified Solace queues or topics. 
+                
+                With this plugin, you can:
+                * Securely communicate with Solace using basic and OAuth2 authentication
+                * Dynamically configure Solace session properties
+                * Configure direct or persistent message delivery
+                * Transform message content with Lua functions
+    
+    - blocks:
+      - type: plugin
+        config:
+          slug: solace-upstream
+
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Using the **Solace Log plugin**, {{site.base_gateway}} can publish request and response logs in JSON format to a Solace endpoint or topic. 
+    - blocks:
+      - type: plugin
+        config:
+          slug: solace-log

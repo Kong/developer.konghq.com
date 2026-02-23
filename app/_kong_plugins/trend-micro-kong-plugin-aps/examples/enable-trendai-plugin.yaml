@@ -1,0 +1,41 @@
+description: 'Enable the TrendAI API Security plugin to send data to TrendAI Vision One.' 
+
+extended_description: |
+  Enable the TrendAI API Security plugin to send data to TrendAI Vision One.
+
+  In the following example, the TrendAI API Security plugin is configured with a TrendAI Vision One API Key to send configuration data to TrendAI Vision One every hour. 
+  The TrendAI Vision One endpoint ensures data is routed to the appropriate data center based on the region of your TrendAI Vision One account.
+
+  The TrendAI Vision One for {{site.base_gateway}} plugin relies on a Trend Vision One API key and endpoint URL. 
+  Ensure you have copied these parameters from the {{site.base_gateway}} Third-Party Integrations page in Trend Vision One.
+  We recommend storing and managing this key in a Vault. See [Secrets Management](/gateway/entities/vault/) for more details. 
+
+title: 'Enable the TrendAI API Security plugin'
+
+weight: 900
+
+requirements:
+- "Download and install the [TrendAI API Security plugin](/plugins/trend-micro-kong-plugin-aps/)."
+- "Copy the Trend Vision One API key and endpoint URL (`fqdn`) from the [{{site.base_gateway}} Third-Party Integrations page](https://docs.trendmicro.com/en-us/documentation/article/trend-vision-one-kong-gateway) in Trend Vision One."
+
+variables:
+  fqdn:
+    description: The TrendAI Vision One endpoint URL (`fqdn`) copied from the {{site.base_gateway}} Third-Party Integrations page in Trend Vision One. For example, `export V1_ENDPOINT=https://api.xdr.trendmicro.com`.
+    value: $V1_ENDPOINT
+  token:
+    description: The Trend Vision One API key exported as an environment variable. For example, `export TREND_API_KEY={api_key}`.
+    value: $TREND_API_KEY
+
+config:
+  fqdn: ${fqdn}
+  token: ${token}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+    gateway: '2.7'
