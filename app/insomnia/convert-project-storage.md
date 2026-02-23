@@ -78,7 +78,7 @@ When you convert a Git Sync project to Local Vault, Insomnia stores the project 
 To convert a project’s storage type:
 
 1. In the Insomnia application, from the **PROJECTS** panel, hover over a project.
-2. Select the dropdown arrow, and click **Settings**.
+2. Click the dropdown arrow, and click **Settings**.
 3. In **Type** field, click **Change**.
 4. Select the storage type.
 5. Click **Update**.
