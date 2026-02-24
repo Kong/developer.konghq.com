@@ -1,5 +1,6 @@
+{% if include.heading_level %}{% assign level = include.heading_level %}{% else %}{% assign level = heading_level %}{% endif -%}
 {% for row in include.rows %}
-{% for i in (1..heading_level) %}#{% endfor %} {% if include.item_title %}{{row.title}}{% else %}Entry{% endif %}
+{% for i in (1..level) %}#{% endfor %} {% if include.item_title %}{{row.title}}{% else %}Entry{% endif %}
 {% unless include.compatibility_table -%}
 {% if include.item_title %}{{include.item_title}}{% else %}title{% endif %}: {% if row.url %}[{{row.title | liquify}}]({{row.url}}){% else %}{{row.title | liquify}}{% endif %}
 {% endunless -%}
