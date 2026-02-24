@@ -327,7 +327,7 @@ rows:
 
 #### Audit logs
 
-The following table describes the predefined roles for [audit logs](konnect-platform/audit-logs/):
+The following table describes the predefined roles for [audit logs](/konnect-platform/audit-logs/):
 
 <!--vale off-->
 {% konnect_roles_table %}
