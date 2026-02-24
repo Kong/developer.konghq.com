@@ -1,5 +1,5 @@
 ---
-title: "Configure an AWS managed cache for Dedicated Cloud Gateways control plane"
+title: "Configure an AWS managed cache for a Dedicated Cloud Gateway control plane"
 content_type: how_to
 permalink: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
 breadcrumbs:
@@ -10,7 +10,7 @@ works_on:
   - konnect
 automated_tests: false
 tldr:
-  q: How do I configure an AWS managed cache for my Dedicated Cloud Gateway control plane?
+  q: How do I configure an AWS managed cache for my Dedicated Cloud Gateway control plane group?
   a: |
     After your Dedicated Cloud Gateway AWS network is ready, send a `POST` request to the `/cloud-gateways/add-ons` endpoint to create your AWS managed cache. {{site.konnect_short_name}} will automatically create a Redis partial for you for control plane managed caches. [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) in a Redis-backed plugin, specifying the {{site.konnect_short_name}} managed cache as the shared Redis configuration (for example: `konnect-managed-a188516a-b1a6-4fad-9eda-f9b1be1b7159`).
 related_resources:
@@ -32,7 +32,7 @@ next_steps:
     url: /dedicated-cloud-gateways/production-readiness/
 ---
 
-An AWS managed cache for Dedicated Cloud Gateways is a Redis-compatible datastore that powers all Redis-enabled plugins. This is fully-managed by Kong in the regions of your choice, so you don't have to host Redis infastructure. Managed cache allows you get up and running faster with [Redis-backed plugins](/gateway/entities/partial/#use-partials), such as Proxy Caching, Rate Limiting, AI Rate Limiting, and ACME. 
+An AWS managed cache for Dedicated Cloud Gateways is a Redis-compatible datastore that powers all Redis-enabled plugins. This is fully-managed by Kong in the regions of your choice, so you don't have to host Redis infrastructure. Managed cache allows you get up and running faster with [Redis-backed plugins](/gateway/entities/partial/#use-partials), such as Proxy Caching, Rate Limiting, AI Rate Limiting, and ACME. 
 
 ## Set up an AWS managed cache on a single control plane
 
@@ -54,7 +54,7 @@ region: global
    export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
    ```
 
-1. Create a managed cache using the Cloud Gateways add-ons API. This step is required for both control planes and control plane groups:
+1. Create a managed cache using the Cloud Gateways add-ons API:
 
    {% capture create_addon %}
    <!--vale off-->
@@ -102,7 +102,7 @@ region: global
 
 ## Configure Redis for plugins
 
-For control plane managed caches, you don't need to manually configure a Redis partial. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. [Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup Redis-supported plugins. Select the automatically created Konnect Managed Redis configuration. You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
+For control plane managed caches, you don't need to manually configure a Redis partial. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. [Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Dedicated Cloud Gateway.

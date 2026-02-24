@@ -63,6 +63,10 @@ faqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateways control plane
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
 ---
 
 {% include_cached /sections/azure-peering.md %}
