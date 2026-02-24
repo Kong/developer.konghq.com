@@ -5,12 +5,10 @@ metadata:
   tags:
     - dedicated-cloud-gateways
     - gateway-manager
-- dedicated-cloud-gateways
-- gateway-manager
-- data-plane-nodes
-- aws
-- azure
-- google-cloud
+    - data-plane-nodes
+    - aws
+    - azure
+    - google-cloud
   products:
     - gateway
   works_on:
