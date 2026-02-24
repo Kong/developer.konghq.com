@@ -1,5 +1,5 @@
 ---
-title: Configure an outbound DNS resolver for Dedicated Cloud Gateway
+title: Configure an AWS outbound DNS resolver for Dedicated Cloud Gateway
 description: 'Forward DNS queries from your Dedicated Cloud Gateway to custom DNS servers using an outbound resolver.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/outbound-dns-resolver/
@@ -10,7 +10,9 @@ products:
 
 works_on:
     - konnect
-
+tags:
+  - aws
+  - network
 tldr:
   q: How do I configure an outbound DNS resolver for my Dedicated Cloud Gateway?
   a: Set up a Route 53 inbound resolver endpoint, then call the {{site.konnect_short_name}} API to forward specific domains to custom DNS servers.

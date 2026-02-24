@@ -22,7 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Design documents (also called documents) hold API specifications, API requests, and tests. 
+                    Design documents hold API specifications, API requests, and tests. 
                     
                     Documents have three main capabilities:  
                 - type: text
@@ -114,15 +114,6 @@ rows:
               align: left
               text: Learn more about testing APIs
               url: /insomnia/test/
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {:.info}
-                      > Unit tests are planned for deprecation in a future release.
-                      > [Migrate to scripts](/insomnia/scripts/)
-
 
 
   - header:
