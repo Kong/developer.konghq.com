@@ -1,5 +1,5 @@
 ---
-title: Configure private hosted zones for Dedicated Cloud Gateway
+title: Configure AWS private hosted zones for Dedicated Cloud Gateway
 description: 'Enable private DNS resolution for your Dedicated Cloud Gateway using either a private hosted zone or an Outbound DNS Resolver.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/private-hosted-zones/
@@ -11,7 +11,9 @@ api_specs:
   - konnect/cloud-gateways
 works_on:
     - konnect
-
+tags:
+  - aws
+  - network
 tldr:
   q: How do I configure a Private Hosted Zone for my Dedicated Cloud Gateway?
   a: Use the AWS CLI to authorize VPC association, then call the {{site.konnect_short_name}} API to attach the hosted zone for private DNS resolution.
