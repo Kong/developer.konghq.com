@@ -232,7 +232,7 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 #### Application auth strategies
 
-The following table describes the predefined roles for application auth strategies:
+The following table describes the predefined roles for [application auth strategies](/dev-portal/auth-strategies/):
 
 <!--vale off-->
 {% table %}
@@ -262,7 +262,7 @@ rows:
 
 #### Auth servers
 
-The following table describes the predefined roles for authorization servers:
+The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
 
 <!--vale off-->
 {% table %}
@@ -327,7 +327,7 @@ rows:
 
 #### Audit logs
 
-The following table describes the predefined roles for audit logs:
+The following table describes the predefined roles for [audit logs](konnect-platform/audit-logs/):
 
 <!--vale off-->
 {% konnect_roles_table %}
@@ -337,7 +337,7 @@ schema: audit_logs
 
 #### {{site.konnect_catalog}}
 
-The following table describes the predefined roles for {{site.konnect_catalog}}:
+The following table describes the predefined roles for [{{site.konnect_catalog}}](/catalog/):
 
 <!--vale off--> 
 {% table %}
@@ -543,7 +543,7 @@ rows:
 
 #### Dashboards
 
-The following table describes the predefined roles for {{site.observability}} dashboards:
+The following table describes the predefined roles for [{{site.observability}} dashboards](/observability/#dashboard):
 
 <!--vale off-->
 {% table %}
@@ -576,7 +576,7 @@ rows:
 
 #### DCR
 
-The following table describes the predefined roles for dynamic client registration (DCR):
+The following table describes the predefined roles for [dynamic client registration (DCR)](/dev-portal/dynamic-client-registration/):
 
 <!--vale off-->
 {% table %}
@@ -615,7 +615,7 @@ schema: identity
 
 #### MCP registry
 
-The following table describes the predefined roles for MCP registries:
+The following table describes the predefined roles for [MCP registries](/catalog/mcp-registry/):
 
 <!--vale off-->
 {% table %}
@@ -750,7 +750,7 @@ rows:
 
 #### Networks 
 
-The following table describes the predefined roles for networks:
+The following table describes the predefined roles for [Dedicated Cloud Gateway](/dedicated-cloud-gateways/) networks:
 
 <!--vale off-->
 {% table %}
@@ -786,7 +786,7 @@ rows:
 
 #### Portals
 
-The following table describes the predefined roles for Dev Portal:
+The following table describes the predefined roles for [Dev Portal](/dev-portal/):
 
 <!--vale off-->
 {% table %}
@@ -873,7 +873,7 @@ rows:
 
 #### Reports
 
-The following table describes the predefined roles for {{site.observability}} reports:
+The following table describes the predefined roles for [{{site.observability}}](/observability/) reports:
 
 <!--vale off-->
 {% table %}
