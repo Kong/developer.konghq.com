@@ -15,7 +15,10 @@ tags:
 automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering?
-  a: After you've configured a virtual network (VNET) in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for VNET peering.
+  a: |
+    Using a virtual network (VNET) in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. 
+    You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for VNET peering.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
@@ -69,7 +72,7 @@ next_steps:
 
 ## Validate
 
-Once your VNET peering configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
+After your VNET peering configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.

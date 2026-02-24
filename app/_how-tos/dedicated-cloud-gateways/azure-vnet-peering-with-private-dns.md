@@ -15,7 +15,11 @@ tags:
 automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering and private DNS?
-  a: After you configure a virtual network, virtual network link, and private DNS zone in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. Configure private DNS for your Azure network in {{site.konnect_short_name}}. You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your private hosted zone.
+  a: |
+    Using a virtual network, virtual network link, and private DNS zone in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. 
+    Configure private DNS for your Azure network in {{site.konnect_short_name}}. 
+    You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your private hosted zone.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
@@ -91,7 +95,7 @@ next_steps:
 
 ## Validate
 
-Once your private DNS configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
+After your private DNS configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.
