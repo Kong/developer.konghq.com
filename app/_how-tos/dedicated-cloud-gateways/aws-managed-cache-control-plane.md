@@ -62,13 +62,10 @@ You can configure AWS managed caches for control planes and control plane groups
 {% capture list_cp %}
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/control-planes
+url: /v2/control-planes?filter%5Bcloud_gateway%5D=true
 status_code: 201
-method: POST
+method: GET
 region: global
-body:
-    filter:
-      cloud_gateway: true
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
@@ -123,7 +120,7 @@ body:
    {% endcapture %}
    {{ get_addon | indent: 3}}
 
-   This can take about 15 minutes.
+   This can take about 15 minutes. 
 
 ## Configure Redis for plugins
 
@@ -162,7 +159,6 @@ status_code: 200
 method: GET
 region: global
 {% endkonnect_api_request %}
-{% endcapture %}
 
 In the response, locate your `rate-limiting-advanced` plugin and confirm that `config.strategy` is set to `redis` and that the partials array contains your managed Redis partial:
 
