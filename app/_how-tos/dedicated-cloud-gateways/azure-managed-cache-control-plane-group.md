@@ -112,12 +112,14 @@ An Azure managed cache for Dedicated Cloud Gateways is a Redis-compatible datast
 1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
+   <!--vale off-->
    {% konnect_api_request %}
    url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
    status_code: 200
    method: GET
    region: global
    {% endkonnect_api_request %}
+   <!--vale on-->
    {% endcapture %}
    {{ get_addon | indent: 3}}
 
@@ -132,6 +134,7 @@ You must manually create a [Redis partial](/gateway/entities/partial/) configura
 1. Create a Redis partial configuration:
 
 {% capture create_redis_partial %}
+<!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/partials
 status_code: 201
@@ -161,6 +164,7 @@ body:
     ssl: true
     username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
 {% endkonnect_api_request %}
+<!--vale on-->
 {% endcapture %}
 {{ create_redis_partial | indent: 3 }}
 1. Repeat the previous step for all the control planes in your control plane group.
@@ -194,12 +198,14 @@ default_lookup_tags:
 ## Validate
 
 Verify that the Rate Limiting Advanced plugin is using the managed cache partial configuration:
+<!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
 status_code: 200
 method: GET
 region: global
 {% endkonnect_api_request %}
+<!--vale on-->
 
 In the response, locate your `rate-limiting-advanced` plugin and confirm that `config.strategy` is set to `redis` and that the partials array contains your managed Redis partial:
 

@@ -89,12 +89,14 @@ region: global
 1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
+   <!--vale off-->
    {% konnect_api_request %}
    url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
    status_code: 200
    method: GET
    region: global
    {% endkonnect_api_request %}
+   <!--vale on-->
    {% endcapture %}
    {{ get_addon | indent: 3}}
 
@@ -128,12 +130,14 @@ default_lookup_tags:
 ## Validate
 
 Verify that the Rate Limiting Advanced plugin is using the managed cache partial configuration:
+<!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
 status_code: 200
 method: GET
 region: global
 {% endkonnect_api_request %}
+<!--vale on-->
 
 In the response, locate your `rate-limiting-advanced` plugin and confirm that `config.strategy` is set to `redis` and that the partials array contains your managed Redis partial:
 
