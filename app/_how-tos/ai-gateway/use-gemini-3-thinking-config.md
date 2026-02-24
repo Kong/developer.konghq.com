@@ -113,6 +113,7 @@ variables:
     value: $GCP_PROJECT_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
 {% endentity_examples %}
 
 ## Use the OpenAI SDK with `thinkingConfig`
