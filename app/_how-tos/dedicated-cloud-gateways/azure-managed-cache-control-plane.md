@@ -1,7 +1,7 @@
 ---
 title: "Configure an AWS managed cache for Dedicated Cloud Gateways control plane"
 content_type: how_to
-permalink: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+permalink: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
 breadcrumbs:
   - /dedicated-cloud-gateways/
 products:
