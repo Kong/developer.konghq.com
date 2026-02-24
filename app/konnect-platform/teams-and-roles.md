@@ -234,6 +234,7 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 The following table describes the predefined roles for application auth strategies:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -257,11 +258,13 @@ rows:
     permissions: |
       * Read and list auth strategies.
 {% endtable %}
+<!--vale on-->
 
 #### Auth servers
 
 The following table describes the predefined roles for authorization servers:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -285,6 +288,7 @@ rows:
 
 The following table describes the predefined roles for [Catalog APIs](/catalog/apis/). Read, edit, and delete access is granted per-API. Only the create and list permissions are granted at the org level.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -319,19 +323,23 @@ rows:
     permissions: |
       * Read, list, and grant access to APIs.
 {% endtable %}
+<!--vale on-->
 
 #### Audit logs
 
 The following table describes the predefined roles for audit logs:
 
+<!--vale off-->
 {% konnect_roles_table %}
 schema: audit_logs
 {% endkonnect_roles_table %}
+<!--vale on-->
 
 #### {{site.konnect_catalog}}
 
 The following table describes the predefined roles for {{site.konnect_catalog}}:
- 
+
+<!--vale off--> 
 {% table %}
 columns:
   - title: Role
@@ -403,11 +411,13 @@ rows:
       * List and read scorecards.
       * List criteria templates.
 {% endtable %}
+<!--vale on-->
 
 #### Control planes
 
 The following table describes the predefined roles for control planes:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -529,11 +539,13 @@ rows:
     permissions: |
       * Read and list control planes and all configurations within them.
 {% endtable %}
+<!--vale on-->
 
 #### Dashboards
 
 The following table describes the predefined roles for {{site.observability}} dashboards:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -560,11 +572,13 @@ rows:
     permissions: |
       * List and read dashboards.
 {% endtable %}
+<!--vale on-->
 
 #### DCR
 
 The following table describes the predefined roles for dynamic client registration (DCR):
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -587,20 +601,23 @@ rows:
     permissions: |
       * Read DCR providers
 {% endtable %}
+<!--vale on-->
 
 #### Identity
 
 The following table describes the predefined roles for identity:
 
+<!--vale off-->
 {% konnect_roles_table %}
 schema: identity
 {% endkonnect_roles_table %}
-
+<!--vale on-->
 
 #### MCP registry
 
 The following table describes the predefined roles for MCP registries:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -633,11 +650,13 @@ rows:
       * List and read MCP registries.
       * List and read MCP server versions.
 {% endtable %}
+<!--vale on-->
 
 #### Mesh control planes
 
-The following table describes the predefined roles for Mesh:
+The following table describes the predefined roles for {{site.mesh_product_name}}:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -664,11 +683,13 @@ rows:
     permissions: |
       * Read and list Mesh control planes.
 {% endtable %}
+<!--vale on-->
 
 #### {{site.metering_and_billing}}
 
 The following table describes the predefined roles for [{{site.metering_and_billing}}](/metering-and-billing/):
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -725,11 +746,13 @@ rows:
       * Read and list billing profiles.
       * Read and list entitlements.
 {% endtable %}
+<!--vale on-->
 
 #### Networks 
 
 The following table describes the predefined roles for networks:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -759,11 +782,13 @@ rows:
       * Read, list, and connect data plane groups for networks.
       * Read and list transit gateways.
 {% endtable %}
+<!--vale on-->
 
 #### Portals
 
 The following table describes the predefined roles for Dev Portal:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -844,11 +869,13 @@ rows:
       * Read and list APIs (permission is granted per API)
       * Grant API access
 {% endtable %}
+<!--vale on-->
 
 #### Reports
 
 The following table describes the predefined roles for {{site.observability}} reports:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -875,6 +902,7 @@ rows:
     permissions: |
       * List and read reports.
 {% endtable %}
+<!--vale on-->
 
 #### API Products (Classic)
 
