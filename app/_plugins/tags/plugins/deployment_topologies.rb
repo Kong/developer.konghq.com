@@ -14,6 +14,8 @@ module Jekyll
           context['type'] = table
           context['rows'] = rows(release(site))
           context['columns'] = columns(site)
+          context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+
           Liquid::Template.parse(template, { line_numbers: true }).render(context)
         end
       end
