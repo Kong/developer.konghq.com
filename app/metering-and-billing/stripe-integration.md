@@ -184,7 +184,7 @@ To connect an existing Stripe customer to an {{site.metering_and_billing}} custo
 1. In the **Name** field, enter `Stripe`.
 1. If you are sending invoices to customers, enter their email in the **Primary Email** field.
 1. Expand the Billing Profile settings.
-1. In the **Stripe Customer ID** field, enter the customer's ID from Stripe. For example: `cus_U12IM6XWEHchbP`
+1. In the **Stripe Customer ID** field, enter the customer's ID from Stripe. For example: `cus_U12Ixxxxxx`
 1. In the **Payment Method ID** field, enter the payment method ID for the customer in Stripe. For example: `pm_1T30Kp4bZcDnpr9o3eBRrh7B`
    
    You can find the payment method by navigating to the customer in Stripe, clicking the action menu next to the payment method, and clicking **Copy ID**.
