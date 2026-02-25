@@ -4,7 +4,7 @@
 {% endif %}
 
 {% if entity_example.formatted_examples.size > 1 %}
-{% navtabs "entity-example" %}
+{% navtabs "entity-example" {{heading_level}} %}
 {% for formatted_example in entity_example.formatted_examples %}
 {% navtab {{ site.data.entity_examples.config.formats[formatted_example.format].label }} slug={{ formatted_example.format }} %}
   {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=render_context %}
