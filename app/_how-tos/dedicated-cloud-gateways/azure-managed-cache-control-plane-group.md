@@ -180,7 +180,7 @@ body:
 1. Click **View advanced parameters**.
 1. In the **Strategy** dropdown menu, select "redis".
 1. In the **Shared Redis Configuration** dropdown menu, select your {{site.konnect_short_name}}-managed configuration. For example: `konnect-managed`
-1. In the **Sync Rate** field, enter `0`.
+1. In the **Sync Rate** field, enter `5`.
 1. Click **Save**.
 1. Repeat steps 1 - 11 for each control plane in your control plane group.
    
