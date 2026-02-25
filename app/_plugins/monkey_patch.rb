@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require 'jekyll-include-cache'
 
 module Jekyll
   module Tags
@@ -35,6 +36,32 @@ module Jekyll
         ensure
           context.registers[:current_include_path] = previous
         end
+      end
+    end
+  end
+end
+
+module JekyllIncludeCache
+  # Monkey-patch jekyll-include-cache include_cached tag so that it takes into account the
+  # page output format (e.g. markdown vs html) when caching includes.
+  class Tag
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      site = context.registers[:site]
+      page = context.registers[:page]
+      path = path(context)
+
+      params = @params ? parse_params(context) : {}
+      params.merge!('output_format' => page['output_format'] || site.config['output_format'])
+
+      key = key(path, params)
+      return unless path
+
+      if JekyllIncludeCache.cache.key?(key)
+        Jekyll.logger.debug 'Include cache hit', path
+        JekyllIncludeCache.cache[key]
+      else
+        Jekyll.logger.debug 'Include cache miss:', path
+        JekyllIncludeCache.cache[key] = super
       end
     end
   end
