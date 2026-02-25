@@ -18,5 +18,7 @@ Plugin slug: {{row.slug}}
 {{column.title | liquify}}: |{% for value in row.values %}
     * {{value}}{% endfor %}
 {% endfor %}
+{%- elsif type == 'priorities' -%}
+{{include.columns[0].title | liquify}}: {{row.values[0]}}
 {% endif -%}
 {% endfor -%}
