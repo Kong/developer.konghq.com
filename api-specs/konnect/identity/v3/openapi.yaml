@@ -4030,6 +4030,22 @@ components:
                         required:
                           - name
                           - description
+                      debug_session_creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Debug Session Creator
+                          description:
+                            type: string
+                            example: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                            enum:
+                              - This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                        required:
+                          - name
+                          - description
                       deployer:
                         type: object
                         additionalProperties: false
@@ -4604,6 +4620,9 @@ components:
                     creator:
                       name: Creator
                       description: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                    debug_session_creator:
+                      name: Debug Session Creator
+                      description: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                     deployer:
                       name: Deployer
                       description: 'This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Hub.'

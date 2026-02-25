@@ -457,6 +457,11 @@ rows:
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
     permissions: |
       * Create and list control planes.
+  - role: "`Debug Session Creator`"
+    description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
+    permissions: |
+      * Create, read, list and delete debug sessions.
+      * Read and list control planes and all configurations within them.
   - role: "`Deployer`"
     description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog."
     permissions: |
