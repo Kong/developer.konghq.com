@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl sync konnect](/kongctl/sync/konnect/)
-    description: "Synchronize with Konnect."
+    description: "Synchronize with {{site.konnect_short_name}}."
 {% endtable %}

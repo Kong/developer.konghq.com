@@ -1,6 +1,6 @@
 ---
 title: kongctl create gateway
-description: Create a gateway.
+description: Create Gateway control planes and entities.
 content_type: reference
 layout: reference
 beta: true
@@ -20,8 +20,7 @@ related_resources:
     url: /deck/create/
 ---
 
-Create a gateway.
-
+Create Gateway control planes and entity configurations.
 
 ## Command usage
 

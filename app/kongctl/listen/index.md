@@ -36,5 +36,5 @@ rows:
     description: "Listen to audit log stream."
   - command: |
       [kongctl listen konnect](/kongctl/listen/konnect/)
-    description: "Listen to Konnect events."
+    description: "Listen to {{site.konnect_short_name}} events."
 {% endtable %}

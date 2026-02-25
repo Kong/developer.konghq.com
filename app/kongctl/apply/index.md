@@ -1,7 +1,7 @@
 ---
-title: Applying configuration using kongctl
+title: "Applying {{site.konnect_short_name}} configuration using kongctl"
 short_title: kongctl apply overview
-description: Apply configuration using kongctl.
+description: "Apply {{site.konnect_short_name}} configuration using kongctl."
 
 content_type: reference
 layout: reference
@@ -22,7 +22,7 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-kongctl provides the following tools for applying configuration:
+kongctl provides the following tools for applying configuration in {{site.konnect_short_name}}:
 
 {% table %}
 columns:
@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl apply konnect](/kongctl/apply/konnect/)
-    description: "Apply configuration to Konnect."
+    description: "Apply configuration to {{site.konnect_short_name}}."
 {% endtable %}

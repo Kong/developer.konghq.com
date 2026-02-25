@@ -42,13 +42,13 @@ rows:
     description: "Get authentication strategy details."
   - command: |
       [kongctl get catalog](/kongctl/get/catalog/)
-    description: "Get API catalog details."
+    description: "Get {{site.catalog}} details."
   - command: |
       [kongctl get gateway](/kongctl/get/gateway/)
     description: "Get gateway information."
   - command: |
       [kongctl get konnect](/kongctl/get/konnect/)
-    description: "Get Konnect account information."
+    description: "Get {{site.konnect_short_name}} account information."
   - command: |
       [kongctl get me](/kongctl/get/me/)
     description: "Get current user information."

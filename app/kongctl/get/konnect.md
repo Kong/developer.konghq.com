@@ -1,6 +1,6 @@
 ---
 title: kongctl get konnect
-description: Get Konnect account information.
+description: "Get {{site.konnect_short_name}} account information."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/get/
 ---
 
-Get Konnect account information.
+Get {{site.konnect_short_name}} account information.
 
 
 ## Command usage

@@ -1,6 +1,6 @@
 ---
 title: kongctl get catalog
-description: Get API catalog details.
+description: "Get {{site.catalog}} details."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/get/
 ---
 
-Get API catalog details.
+Get {{site.catalog}} details.
 
 
 ## Command usage

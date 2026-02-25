@@ -1,6 +1,6 @@
 ---
 title: kongctl delete portal
-description: Delete Portal configuration.
+description: Delete Portals and Portal configuration.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/delete/
 ---
 
-Delete Portal configuration.
+Delete Portals and Portal configurations.
 
 
 ## Command usage

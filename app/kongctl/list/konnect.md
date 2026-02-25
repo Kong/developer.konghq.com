@@ -1,6 +1,6 @@
 ---
 title: kongctl list konnect
-description: List Konnect resources.
+description: "List {{site.konnect_short_name}} resources."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/list/
 ---
 
-List Konnect resources.
+List {{site.konnect_short_name}} resources.
 
 
 ## Command usage

@@ -36,5 +36,5 @@ rows:
     description: "Create a gateway."
   - command: |
       [kongctl create konnect](/kongctl/create/konnect/)
-    description: "Create resources in Konnect."
+    description: "Create resources in {{site.konnect_short_name}}."
 {% endtable %}

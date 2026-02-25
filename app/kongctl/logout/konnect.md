@@ -1,6 +1,6 @@
 ---
 title: kongctl logout konnect
-description: Log out from Konnect.
+description: "Log out from {{site.konnect_short_name}}."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/logout/
 ---
 
-Log out from Konnect.
+Log out from {{site.konnect_short_name}}.
 
 
 ## Command usage

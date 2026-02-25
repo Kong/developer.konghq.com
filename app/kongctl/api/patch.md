@@ -20,7 +20,7 @@ related_resources:
     url: /deck/api/
 ---
 
-Partially update resources via API.
+Update resources with `PATCH` using [{{site.konnect_short_name}} APIs](/apis/).
 
 
 ## Command usage

@@ -1,6 +1,6 @@
 ---
 title: kongctl dump tf-import
-description: Export for Terraform import.
+description: Export configurations into Terraform format.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/dump/
 ---
 
-Export for Terraform import.
+Export configurations into Terraform format.
 
 
 ## Command usage

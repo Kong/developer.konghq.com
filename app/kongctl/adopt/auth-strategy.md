@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt authentication strategies.
+Adopt existing authentication strategies.
 
 
 ## Command usage

@@ -1,6 +1,6 @@
 ---
 title: kongctl delete gateway
-description: Delete a gateway.
+description: Delete Gateway control planes and resources.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/delete/
 ---
 
-Delete a gateway.
+Delete Gateway control planes and entity configurations.
 
 
 ## Command usage

@@ -36,7 +36,7 @@ rows:
     description: "Delete a gateway."
   - command: |
       [kongctl delete konnect](/kongctl/delete/konnect/)
-    description: "Delete resources from Konnect."
+    description: "Delete resources from {{site.konnect_short_name}}."
   - command: |
       [kongctl delete portal](/kongctl/delete/portal/)
     description: "Delete Portal configuration."

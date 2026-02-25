@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl login konnect](/kongctl/login/konnect/)
-    description: "Log in to Konnect."
+    description: "Log in to {{site.konnect_short_name}}."
 {% endtable %}

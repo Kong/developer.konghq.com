@@ -1,6 +1,6 @@
 ---
 title: kongctl sync konnect
-description: Synchronize with Konnect.
+description: "Sync configuration with {{site.konnect_short_name}} control planes."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/sync/
 ---
 
-Synchronize with Konnect.
+Sync configuration with {{site.konnect_short_name}} control planes.
 
 
 ## Command usage

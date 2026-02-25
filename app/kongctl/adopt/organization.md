@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt organization settings.
+Adopt existing organization settings.
 
 
 ## Command usage

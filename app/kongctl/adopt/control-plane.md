@@ -1,6 +1,6 @@
 ---
 title: kongctl adopt control-plane
-description: Adopt control plane configuration.
+description: Adopt control plane configurations.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt control plane configuration.
+Adopt existing control plane configurations.
 
 
 ## Command usage

@@ -1,6 +1,6 @@
 ---
 title: kongctl listen konnect
-description: Listen to Konnect events.
+description: "Listen to {{site.konnect_short_name}} events."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/listen/
 ---
 
-Listen to Konnect events.
+Listen to {{site.konnect_short_name}} events.
 
 
 ## Command usage

@@ -36,5 +36,5 @@ rows:
     description: "Tail audit logs."
   - command: |
       [kongctl tail konnect](/kongctl/tail/konnect/)
-    description: "Tail Konnect events."
+    description: "Tail {{site.konnect_short_name}} events."
 {% endtable %}

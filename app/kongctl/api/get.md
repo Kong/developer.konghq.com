@@ -20,7 +20,7 @@ related_resources:
     url: /deck/api/
 ---
 
-Retrieve resources via API.
+Retrieve resources with `GET` using [{{site.konnect_short_name}} APIs](/apis/).
 
 
 ## Command usage

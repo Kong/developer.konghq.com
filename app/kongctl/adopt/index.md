@@ -42,7 +42,7 @@ rows:
     description: "Adopt control plane configuration."
   - command: |
       [kongctl adopt konnect](/kongctl/adopt/konnect/)
-    description: "Adopt Konnect resources."
+    description: "Adopt {{site.konnect_short_name}} resources."
   - command: |
       [kongctl adopt organization](/kongctl/adopt/organization/)
     description: "Adopt organization settings."

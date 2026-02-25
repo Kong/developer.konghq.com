@@ -1,6 +1,6 @@
 ---
 title: kongctl tail konnect
-description: Tail Konnect events.
+description: "Tail {{site.konnect_short_name}} events."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/tail/
 ---
 
-Tail Konnect events.
+Tail {{site.konnect_short_name}} events.
 
 
 ## Command usage

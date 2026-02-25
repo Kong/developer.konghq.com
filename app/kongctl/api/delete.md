@@ -20,7 +20,7 @@ related_resources:
     url: /deck/api/
 ---
 
-Delete resources via API.
+Delete resources with `DELETE` using [{{site.konnect_short_name}} APIs](/apis/).
 
 
 ## Command usage

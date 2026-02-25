@@ -42,7 +42,7 @@ rows:
     description: "List gateways."
   - command: |
       [kongctl list konnect](/kongctl/list/konnect/)
-    description: "List Konnect resources."
+    description: "List {{site.konnect_short_name}} resources."
   - command: |
       [kongctl list organization](/kongctl/list/organization/)
     description: "List organizations."

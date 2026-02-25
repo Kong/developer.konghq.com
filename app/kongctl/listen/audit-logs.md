@@ -20,7 +20,7 @@ related_resources:
     url: /deck/listen/
 ---
 
-Listen to audit log stream.
+Listen to the audit log stream.
 
 
 ## Command usage

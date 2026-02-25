@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl diff konnect](/kongctl/diff/konnect/)
-    description: "Show Konnect configuration diffs."
+    description: "Show {{site.konnect_short_name}} configuration diffs."
 {% endtable %}

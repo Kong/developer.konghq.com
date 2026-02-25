@@ -1,6 +1,6 @@
 ---
 title: kongctl adopt konnect
-description: Adopt Konnect resources.
+description: "Adopt {{site.konnect_short_name}} resources."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt Konnect resources.
+Adopt existing {{site.konnect_short_name}} resources.
 
 
 ## Command usage

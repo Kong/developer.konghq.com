@@ -1,6 +1,6 @@
 ---
 title: kongctl login konnect
-description: Log in to Konnect.
+description: "Log in to {{site.konnect_short_name}}."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/login/
 ---
 
-Log in to Konnect.
+Log in to {{site.konnect_short_name}}.
 
 
 ## Command usage

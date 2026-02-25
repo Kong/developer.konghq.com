@@ -1,6 +1,6 @@
 ---
 title: kongctl get profile
-description: Get user profile.
+description: Get user profiles.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/get/
 ---
 
-Get user profile.
+Get the user profiles.
 
 
 ## Command usage

@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt API resources.
+Adopt existing API resources.
 
 
 ## Command usage

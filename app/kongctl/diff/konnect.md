@@ -1,6 +1,6 @@
 ---
 title: kongctl diff konnect
-description: Show Konnect configuration differences.
+description: "Show {{site.konnect_short_name}} configuration differences."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/diff/
 ---
 
-Show Konnect configuration differences.
+Show {{site.konnect_short_name}} configuration differences.
 
 
 ## Command usage

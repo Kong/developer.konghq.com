@@ -1,6 +1,6 @@
 ---
 title: kongctl delete konnect
-description: Delete resources from Konnect.
+description: "Delete {{site.konnect_short_name}} Gateway and Portal resources."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/delete/
 ---
 
-Delete resources from Konnect.
+Delete {{site.konnect_short_name}} Gateway and Portal resources.
 
 
 ## Command usage

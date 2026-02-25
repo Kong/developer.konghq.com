@@ -1,6 +1,6 @@
 ---
 title: kongctl create konnect
-description: Create resources in Konnect.
+description: "Create resources in {{site.konnect_short_name}}."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/create/
 ---
 
-Create resources in Konnect.
+Create resources in {{site.konnect_short_name}}.
 
 
 ## Command usage

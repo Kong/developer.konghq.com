@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl logout konnect](/kongctl/logout/konnect/)
-    description: "Log out from Konnect."
+    description: "Log out from {{site.konnect_short_name}}."
 {% endtable %}

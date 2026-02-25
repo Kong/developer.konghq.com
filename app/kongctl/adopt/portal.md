@@ -1,6 +1,6 @@
 ---
 title: kongctl adopt portal
-description: Adopt Developer Portal configuration.
+description: Adopt Dev Portal configuration.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/adopt/
 ---
 
-Adopt Developer Portal configuration.
+Adopt existing Dev Portal configurations.
 
 
 ## Command usage

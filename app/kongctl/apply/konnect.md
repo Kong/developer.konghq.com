@@ -1,6 +1,6 @@
 ---
 title: kongctl apply konnect
-description: Apply configuration to Konnect.
+description: "Apply configuration to {{site.konnect_short_name}} control planes."
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/apply/
 ---
 
-Apply configuration to Konnect.
+Apply configuration to {{site.konnect_short_name}} control planes.
 
 
 ## Command usage

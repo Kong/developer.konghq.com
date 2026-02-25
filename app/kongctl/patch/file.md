@@ -1,6 +1,6 @@
 ---
 title: kongctl patch file
-description: Apply patches from file.
+description: Apply patches from a declarative config file.
 content_type: reference
 layout: reference
 beta: true
@@ -20,7 +20,7 @@ related_resources:
     url: /deck/patch/
 ---
 
-Apply patches from file.
+Apply patches from a declarative config file.
 
 
 ## Command usage

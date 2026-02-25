@@ -33,5 +33,5 @@ columns:
 rows:
   - command: |
       [kongctl plan konnect](/kongctl/plan/konnect/)
-    description: "Plan changes for Konnect."
+    description: "Plan changes for {{site.konnect_short_name}}."
 {% endtable %}

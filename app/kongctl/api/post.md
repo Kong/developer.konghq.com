@@ -20,7 +20,7 @@ related_resources:
     url: /deck/api/
 ---
 
-Create resources via API.
+Create resources with `POST` using [{{site.konnect_short_name}} APIs](/apis/).
 
 
 ## Command usage
