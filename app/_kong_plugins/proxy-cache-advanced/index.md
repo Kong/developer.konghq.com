@@ -57,7 +57,7 @@ faqs:
       You can remove the `X-Cache-Key` header from the response by applying a serverless [Post-Function plugin](/plugins/post-function/) in the `header_filter` phase.
 
 notes: |
-  In Serverless gateways only the <code>memory</code> config strategy is supported.
+  In Serverless gateways only the `memory` config strategy is supported.
 
 min_version:
   gateway: '1.0'
