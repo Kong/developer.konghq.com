@@ -1,14 +1,14 @@
 ---
-title: "Integrate Stripe with {{site.metering_and_billing}}"
+title: "Collect payments with Stripe"
 content_type: reference
-description: "Learn how to send invoices to Stripe and calculate Stripe tax with the {{site.metering_and_billing}} Stripe integration."
+description: "Learn how to collect revenue with Stripe Invoicing, Stripe Tax and Stripe Payments with the {{site.metering_and_billing}} Stripe integration."
 layout: reference
 products:
   - metering-and-billing
 tools:
     - konnect-api
 works_on:
-  - konnect
+  - konnect 
 breadcrumbs:
   - /metering-and-billing/
 related_resources:
@@ -18,59 +18,30 @@ related_resources:
     url: /metering-and-billing/subjects/
 ---
 
-You can integrate Stripe with {{site.metering_and_billing}} to:
-* Sync and deliver invoices via Stripe and collect payments.
-* Collect payments via the Stripe payment gateway using multiple payment methods. You can configure a default payment method and currency in a {{site.metering_and_billing}} billing profile.
-* Calculate taxes automatically via Stripe based on location, product, or other criteria.
+You can integrate Stripe Invoicing with Konnect {{site.metering_and_billing}} to:
 
-The following table shows which parts of the metering and billing cycle {{site.metering_and_billing}} and Stripe are responsible for:
-<!--vale off-->
-{% feature_table %}
-item_title: Metering and billing responsibilities
-columns:
-  - title: {{site.metering_and_billing}} handles
-    key: openmeter
-  - title: Stripe handles
-    key: stripe
+* Deliver invoices to customers via Stripe Invoicing
+* Charge credit cards and automate revenue collection via Stripe Payments
+* Enable automatic sales tax calaculation via Stripe tax
+* Support multiple payment methods and currencies including crypto
 
-features:
-  - title: "Usage metering"
-    openmeter: true
-    stripe: false
+## Revenue Lifecycle
 
-  - title: "Products and prices"
-    openmeter: true
-    stripe: false
+The following table shows which parts of the revenue lifecycle is handled by Konnect {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax and Stripe Payments:
 
-  - title: "Subscription management"
-    openmeter: true
-    stripe: false
+| Revenue Lifecycle             | Metering & Billing |          Stripe          |
+| :---------------------------- | :----------------: | :----------------------- |
+| Usage metering                |         ✅         |                          |
+| Products and prices           |         ✅         |                          |
+| Subscription management       |         ✅         |                          |
+| Billing and subscriptions     |         ✅         |                          |
+| Rating and invoice generation |         ✅         |                          |
+| Tax calculations (if enabled) |                    |  ✅ (Stripe Tax)         |
+| Sending invoices to customers |                    |  ✅ (Stripe Invoicing)   |
+| Storing credit card details   |                    |  ✅ (Stripe Payments)    |
+| Payment collection            |                    |  ✅ (Stripe Payments)    |
 
-  - title: "Billing"
-    openmeter: true
-    stripe: false
-
-  - title: "Credit card details"
-    openmeter: false
-    stripe: true
-
-  - title: "Payment collection"
-    openmeter: false
-    stripe: true
-
-  - title: "Tax calculations (if enabled)"
-    openmeter: false
-    stripe: true
-
-  - title: "Sending invoices to customers"
-    openmeter: false
-    stripe: true
-
-  - title: "Synchronizing invoices to Stripe Invoicing for automatic tax calculations and payment collection"
-    openmeter: true
-    stripe: true
-{% endfeature_table %}
-<!--vale on-->
+## How to setup Stripe with {{site.metering_and_billing}}
 
 Configuring {{site.metering_and_billing}} with Stripe involves the following steps:
 1. Install the Stripe app in {{site.metering_and_billing}}.
@@ -110,15 +81,15 @@ When a paid subscription is created, {{site.metering_and_billing}} will enforce 
 When an invoice is sent to your end customer depends on both {{site.metering_and_billing}} and Stripe settings. These two factors determine how long the system waits before finalizing and delivering the invoice.
 
 The {{site.metering_and_billing}} billing profile controls how long to wait for usage events before creating an invoice:
-* **Wait for Late Usage Events:** How long {{site.metering_and_billing}} should delay invoice generation to account for delayed or out-of-order usage. Set to P0D to include only events already received (immediate generation).
+* **Wait for Late Usage Events:** How long {{site.metering_and_billing}} should delay invoice generation to account for delayed or out-of-order usage. Set to `P0D` to include only events already received (immediate generation).
 
   {:.warning}
   > **Important:** Ingest delays can cause incorrect invoice amounts.
-* **Wait Before Sending Invoices:** Additional wait time after the invoice is generated. Set to P0D to send immediately after processing.
+* **Wait Before Sending Invoices:** Additional wait time after the invoice is generated. Set to `P0D` to send immediately after processing.
 
-Stripe applies its own timing rules when finalizing and sending invoices.
-By default, Stripe waits one hour before finalizing an invoice.
-
+{:.info}
+> **Stripe applies its own timing rules** when finalizing and sending invoices.
+By default, Stripe waits one hour before finalizing an invoice.<br/>
 You can adjust this grace period in the [invoice settings](https://docs.stripe.com/invoicing/scheduled-finalization) in Stripe.
 
 ## (Optional) Automatic tax calculation
