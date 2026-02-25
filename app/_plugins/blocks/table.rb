@@ -24,6 +24,7 @@ module Jekyll
       end
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['rows'] }
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
@@ -40,7 +41,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/table.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/table.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/table.html'))
+      end
     end
   end
 end
