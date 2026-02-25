@@ -40,7 +40,7 @@ tags:
   - authentication
 
 notes: | 
-   <b>Serverless Gateways</b>: This plugin is not supported in serverless gateways because the 
+   **Serverless Gateways**: This plugin is not supported in serverless gateways because the 
    TLS handshake does not occur at the Kong layer in this setup. 
 
 min_version:

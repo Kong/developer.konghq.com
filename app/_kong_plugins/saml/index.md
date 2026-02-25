@@ -47,7 +47,7 @@ related_resources:
     url: /gateway/authentication/
 
 notes: |
-  In Serverless gateways only the <code>cookie</code> config session storage is supported.
+  In Serverless gateways only the `cookie` config session storage is supported.
 ---
 
 This plugin provides Security Assertion Markup Language (SAML) v2.0 authentication and authorization between {{site.base_gateway}} and an identity provider.

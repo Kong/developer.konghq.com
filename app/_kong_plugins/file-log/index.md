@@ -35,7 +35,7 @@ search_aliases:
   - file-log
 
 notes: | 
-   <b>Dedicated Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   **Dedicated Cloud Gateways**: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no 
    local nodes in Dedicated or Serverless Cloud Gateways.
   
