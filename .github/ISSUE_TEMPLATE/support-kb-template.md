@@ -1,8 +1,8 @@
 ---
 name: Support KB Template
-about: 'about: Create a docs-related issue with clear context, goals, and requirements'
+about: 'Create a KB migration request issue'
 title: ''
-labels: ''
+labels: 'support'
 assignees: ''
 
 ---
@@ -10,7 +10,7 @@ assignees: ''
 ## Original KB 
 
 <!-- 
-Link to the Orignal KB
+Link to the original KB
 -->
 
 ## Information
