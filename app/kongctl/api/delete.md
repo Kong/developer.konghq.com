@@ -20,7 +20,7 @@ related_resources:
     url: /kongctl/api/
 ---
 
-Delete resources with `DELETE` using [{{site.konnect_short_name}} APIs](/apis/).
+Delete resources with `DELETE` using [{{site.konnect_short_name}} APIs](/api/).
 
 
 ## Command usage

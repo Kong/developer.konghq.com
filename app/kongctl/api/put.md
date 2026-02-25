@@ -20,7 +20,7 @@ related_resources:
     url: /kongctl/api/
 ---
 
-Update resources with `PUT` using [{{site.konnect_short_name}} APIs](/apis/).
+Update resources with `PUT` using [{{site.konnect_short_name}} APIs](/api/).
 
 
 ## Command usage

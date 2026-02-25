@@ -20,7 +20,7 @@ related_resources:
     url: /kongctl/api/
 ---
 
-Retrieve resources with `GET` using [{{site.konnect_short_name}} APIs](/apis/).
+Retrieve resources with `GET` using [{{site.konnect_short_name}} APIs](/api/).
 
 
 ## Command usage

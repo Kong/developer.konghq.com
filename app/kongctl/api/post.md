@@ -20,7 +20,7 @@ related_resources:
     url: /kongctl/api/
 ---
 
-Create resources with `POST` using [{{site.konnect_short_name}} APIs](/apis/).
+Create resources with `POST` using [{{site.konnect_short_name}} APIs](/api/).
 
 
 ## Command usage
