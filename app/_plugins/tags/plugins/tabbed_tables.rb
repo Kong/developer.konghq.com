@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../../monkey_patch'
+
 module Jekyll
   module RenderPlugins
     module TabbedTables # rubocop:disable Style/Documentation
