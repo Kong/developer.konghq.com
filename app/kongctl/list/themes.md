@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl list commands
-    url: /deck/list/
+    url: /kongctl/list/
 ---
 
 List Portal themes.

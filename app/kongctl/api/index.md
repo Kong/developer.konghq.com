@@ -47,3 +47,7 @@ rows:
       [kongctl api put](/kongctl/api/put/)
     description: "Update resources via API."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/api/index.md %}

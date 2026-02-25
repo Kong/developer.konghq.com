@@ -36,50 +36,82 @@ groups:
     sections:
       - title: Adopt Resources
         items:
+            - path: /kongctl/adopt/
             - path: /kongctl/adopt/*/**
+            - path: /kongctl/adopt/*/**/**
       - title: API Requests
         items:
+            - path: /kongctl/api/
             - path: /kongctl/api/*/**
+            - path: /kongctl/api/*/**/**
       - title: Apply Configuration
         items:
+            - path: /kongctl/apply/
             - path: /kongctl/apply/*/**
+            - path: /kongctl/apply/*/**/**
       - title: Create Resources
         items:
+            - path: /kongctl/create/
             - path: /kongctl/create/*/**
+            - path: /kongctl/create/*/**/**
       - title: Delete Resources
         items:
+            - path: /kongctl/delete/
             - path: /kongctl/delete/*/**
+            - path: /kongctl/delete/*/**/**
       - title: View Diffs
         items:
+            - path: /kongctl/diff/
             - path: /kongctl/diff/*/**
       - title: Export Configuration
         items:
+            - path: /kongctl/dump/
             - path: /kongctl/dump/*/**
       - title: Get Resources
         items:
+            - path: /kongctl/get/
             - path: /kongctl/get/*/**
+            - path: /kongctl/get/*/**/**
+      - title: Lint Files
+        items:
+            - path: /kongctl/lint/
       - title: List Resources
         items:
+            - path: /kongctl/list/
             - path: /kongctl/list/*/**
+            - path: /kongctl/list/*/**/**
       - title: Listen to Events
         items:
+            - path: /kongctl/listen/
             - path: /kongctl/listen/*/**
+            - path: /kongctl/listen/*/**/**
       - title: Login and Logout
         items:
+            - path: /kongctl/login/
             - path: /kongctl/login/*/**
+            - path: /kongctl/logout/
             - path: /kongctl/logout/*/**
       - title: Patch Files
         items:
+            - path: /kongctl/patch/
             - path: /kongctl/patch/*/**
       - title: Plan Configuration Changes
         items:
+            - path: /kongctl/plan/
             - path: /kongctl/plan/*/**
       - title: Manage Processes
         items:
+            - path: /kongctl/ps/
             - path: /kongctl/ps/*/**
       - title: Sync Configuration
         items:
+            - path: /kongctl/sync/
             - path: /kongctl/sync/*/**
       - title: Tail Logs
         items:
+            - path: /kongctl/tail/
             - path: /kongctl/tail/*/**
+            - path: /kongctl/tail/*/**/**
+      - title: Viewer
+        items:
+            - path: /kongctl/view/

@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl plan commands
-    url: /deck/plan/
+    url: /kongctl/plan/
 ---
 
 Plan changes for {{site.konnect_short_name}}.

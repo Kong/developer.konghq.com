@@ -41,3 +41,7 @@ rows:
       [kongctl delete portal](/kongctl/delete/portal/)
     description: "Delete Portal configuration."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/delete/index.md %}

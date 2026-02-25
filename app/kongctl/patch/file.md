@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl patch commands
-    url: /deck/patch/
+    url: /kongctl/patch/
 ---
 
 Apply patches from a declarative config file.

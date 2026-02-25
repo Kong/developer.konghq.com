@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl logout commands
-    url: /deck/logout/
+    url: /kongctl/logout/
 ---
 
 Log out from {{site.konnect_short_name}}.

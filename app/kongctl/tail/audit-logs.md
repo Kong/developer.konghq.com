@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl tail commands
-    url: /deck/tail/
+    url: /kongctl/tail/
 ---
 
 Tail audit logs.

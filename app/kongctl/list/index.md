@@ -53,3 +53,7 @@ rows:
       [kongctl list themes](/kongctl/list/themes/)
     description: "List Portal themes."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/list/index.md %}

@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl ps commands
-    url: /deck/ps/
+    url: /kongctl/ps/
 ---
 
 Stop Kong processes.

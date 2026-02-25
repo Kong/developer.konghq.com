@@ -35,3 +35,7 @@ rows:
       [kongctl login konnect](/kongctl/login/konnect/)
     description: "Log in to {{site.konnect_short_name}}."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/login/index.md %}

@@ -35,3 +35,7 @@ rows:
       [kongctl patch file](/kongctl/patch/file/)
     description: "Apply patches from file."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/patch/index.md %}

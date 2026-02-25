@@ -38,3 +38,7 @@ rows:
       [kongctl tail konnect](/kongctl/tail/konnect/)
     description: "Tail {{site.konnect_short_name}} events."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/tail/index.md %}

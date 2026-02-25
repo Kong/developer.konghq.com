@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl sync commands
-    url: /deck/sync/
+    url: /kongctl/sync/
 ---
 
 Sync configuration with {{site.konnect_short_name}} control planes.

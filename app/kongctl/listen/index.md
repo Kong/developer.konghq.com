@@ -38,3 +38,7 @@ rows:
       [kongctl listen konnect](/kongctl/listen/konnect/)
     description: "Listen to {{site.konnect_short_name}} events."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/listen/index.md %}

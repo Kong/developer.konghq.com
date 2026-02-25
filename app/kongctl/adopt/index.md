@@ -50,3 +50,7 @@ rows:
       [kongctl adopt portal](/kongctl/adopt/portal/)
     description: "Adopt Developer Portal configuration."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/adopt/index.md %}

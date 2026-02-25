@@ -65,3 +65,7 @@ rows:
       [kongctl get regions](/kongctl/get/regions/)
     description: "Get available regions."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/get/index.md %}

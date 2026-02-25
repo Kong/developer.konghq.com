@@ -35,3 +35,7 @@ rows:
       [kongctl logout konnect](/kongctl/logout/konnect/)
     description: "Log out from {{site.konnect_short_name}}."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/logout/index.md %}

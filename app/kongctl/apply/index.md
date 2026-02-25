@@ -35,3 +35,7 @@ rows:
       [kongctl apply konnect](/kongctl/apply/konnect/)
     description: "Apply configuration to {{site.konnect_short_name}}."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/apply/index.md %}

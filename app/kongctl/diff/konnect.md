@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl diff commands
-    url: /deck/diff/
+    url: /kongctl/diff/
 ---
 
 Show {{site.konnect_short_name}} configuration differences.

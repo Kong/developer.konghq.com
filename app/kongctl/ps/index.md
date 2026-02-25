@@ -35,3 +35,7 @@ rows:
       [kongctl ps stop](/kongctl/ps/stop/)
     description: "Stop Kong processes."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/ps/index.md %}

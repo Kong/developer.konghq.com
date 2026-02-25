@@ -35,3 +35,7 @@ rows:
       [kongctl diff konnect](/kongctl/diff/konnect/)
     description: "Show {{site.konnect_short_name}} configuration diffs."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/diff/index.md %}

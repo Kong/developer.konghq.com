@@ -38,3 +38,7 @@ rows:
       [kongctl dump tf-import](/kongctl/dump/tf-import/)
     description: "Export for Terraform import."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/dump/index.md %}

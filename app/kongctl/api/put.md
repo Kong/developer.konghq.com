@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl api commands
-    url: /deck/api/
+    url: /kongctl/api/
 ---
 
 Update resources with `PUT` using [{{site.konnect_short_name}} APIs](/apis/).

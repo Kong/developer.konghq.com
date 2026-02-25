@@ -38,3 +38,7 @@ rows:
       [kongctl create konnect](/kongctl/create/konnect/)
     description: "Create resources in {{site.konnect_short_name}}."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/create/index.md %}

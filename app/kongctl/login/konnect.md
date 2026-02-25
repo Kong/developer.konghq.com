@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl login commands
-    url: /deck/login/
+    url: /kongctl/login/
 ---
 
 Log in to {{site.konnect_short_name}}.

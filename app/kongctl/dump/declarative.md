@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl dump commands
-    url: /deck/dump/
+    url: /kongctl/dump/
 ---
 
 Export declarative configuration.

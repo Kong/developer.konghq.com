@@ -35,3 +35,7 @@ rows:
       [kongctl sync konnect](/kongctl/sync/konnect/)
     description: "Synchronize with {{site.konnect_short_name}}."
 {% endtable %}
+
+## Command usage
+
+{% include_cached /kongctl/help/sync/index.md %}

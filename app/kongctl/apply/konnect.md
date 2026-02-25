@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl apply commands
-    url: /deck/apply/
+    url: /kongctl/apply/
 ---
 
 Apply configuration to {{site.konnect_short_name}} control planes.

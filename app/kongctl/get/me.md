@@ -17,7 +17,7 @@ breadcrumbs:
 
 related_resources:
   - text: kongctl get commands
-    url: /deck/get/
+    url: /kongctl/get/
 ---
 
 Get current user information.
