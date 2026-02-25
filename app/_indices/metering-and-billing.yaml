@@ -56,3 +56,4 @@ sections:
       - title: Invoicing
         description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
         url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+      - path: /metering-and-billing/stripe-integration/
