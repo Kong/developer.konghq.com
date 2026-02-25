@@ -1,5 +1,5 @@
 
-{% navtabs "gateway-version" %}
+{% navtabs "gateway-version" {{heading_level}} %}
 {% assign heading = heading_level | plus: 1 %}
 
 {% for table in tables %}
