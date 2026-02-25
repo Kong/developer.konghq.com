@@ -22,10 +22,5 @@ Any supporting details to help solve the issue:
 -->
 
 
-## Due date (optional)
-
-<!-- 
-When should these docs be ready by? 
--->
 
 
