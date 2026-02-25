@@ -3,7 +3,8 @@
 {% assign heading = heading_level | plus: 1 %}
 
 {% for table in tables %}
-{% navtab {{table[0]}} %}
+{% assign tab = table[0] %}{% if page.output_format == 'markdown' %}{% assign tab = 'Gateway ' | append: table[0] %}{% endif %}
+{% navtab {{tab}} %}
 {%- assign columns = table[1].columns %}{% assign rows = table[1].rows -%}
 {% if type == 'referenceable_fields' or type == 'priorities' or type == 'deployment_topologies' -%}
 {% if page.output_format == 'markdown' -%}
