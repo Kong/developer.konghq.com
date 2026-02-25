@@ -1,7 +1,7 @@
 ---
 title: "Collect payments with Stripe"
 content_type: reference
-description: "Learn how to collect revenue with Stripe Invoicing, Stripe Tax and Stripe Payments with the {{site.metering_and_billing}} Stripe integration."
+description: "Learn how to collect revenue with Stripe Invoicing, Stripe Tax, and Stripe Payments with the {{site.metering_and_billing}} Stripe integration."
 layout: reference
 products:
   - metering-and-billing
@@ -18,28 +18,29 @@ related_resources:
     url: /metering-and-billing/subjects/
 ---
 
-You can integrate Stripe Invoicing with Konnect {{site.metering_and_billing}} to:
+You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.metering_and_billing}} to:
 
 * Deliver invoices to customers via Stripe Invoicing
 * Charge credit cards and automate revenue collection via Stripe Payments
-* Enable automatic sales tax calaculation via Stripe tax
-* Support multiple payment methods and currencies including crypto
+* Enable automatic sales tax calculation via Stripe tax
+* Support multiple payment methods and currencies including cryptocurrency
 
 ## Revenue Lifecycle
 
-The following table shows which parts of the revenue lifecycle is handled by Konnect {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax and Stripe Payments:
+The following lists show which parts of the revenue lifecycle is handled by {{site.konnect_short_name}} {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax, and Stripe Payments:
 
-| Revenue Lifecycle             | Metering & Billing |          Stripe          |
-| :---------------------------- | :----------------: | :----------------------- |
-| Usage metering                |         ✅         |                          |
-| Products and prices           |         ✅         |                          |
-| Subscription management       |         ✅         |                          |
-| Billing and subscriptions     |         ✅         |                          |
-| Rating and invoice generation |         ✅         |                          |
-| Tax calculations (if enabled) |                    |  ✅ (Stripe Tax)         |
-| Sending invoices to customers |                    |  ✅ (Stripe Invoicing)   |
-| Storing credit card details   |                    |  ✅ (Stripe Payments)    |
-| Payment collection            |                    |  ✅ (Stripe Payments)    |
+Handled by {{site.metering_and_billing}}:
+* Usage metering 
+* Products and prices
+* Subscription management 
+* Billing and subscriptions
+* Rating and invoice generation
+
+Handled by Stripe:
+* Tax calculations with Stripe Tax (if enabled)
+* Sending invoices to customers with Stripe Invoicing
+* Storing credit card details with Stripe Payments
+* Payment collection with Stripe Payments
 
 ## How to setup Stripe with {{site.metering_and_billing}}
 
