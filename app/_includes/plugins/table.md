@@ -11,7 +11,12 @@ Plugin slug: {{row.slug}}
 {{row.values[column.key] | liquify | indent: 2}}{% else %}N/A{% endif -%}
     {%- else -%}
     {% for value in row.values[column.key] %}
-    * `{{value}}`{% endfor %}{% endif %}
+    * {{value}}{% endfor %}{% endif %}
 {% endif %}{% endfor %}
+{%- elsif type == 'referenceable_fields' -%}
+{% for column in include.columns -%}
+{{column.title | liquify}}: |{% for value in row.values %}
+    * {{value}}{% endfor %}
+{% endfor %}
 {% endif -%}
 {% endfor -%}
