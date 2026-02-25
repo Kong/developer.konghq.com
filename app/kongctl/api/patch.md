@@ -25,4 +25,4 @@ Partially update resources via API.
 
 ## Command usage
 
-{% include_cached kongctl/api/patch.md %}
+{% include_cached /kongctl/help/api/patch.md %}

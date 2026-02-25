@@ -25,4 +25,4 @@ List gateways.
 
 ## Command usage
 
-{% include_cached kongctl/list/gateway.md %}
+{% include_cached /kongctl/help/list/gateway.md %}

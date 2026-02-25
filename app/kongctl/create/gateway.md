@@ -25,4 +25,4 @@ Create a gateway.
 
 ## Command usage
 
-{% include_cached kongctl/create/gateway.md %}
+{% include_cached /kongctl/help/create/gateway.md %}

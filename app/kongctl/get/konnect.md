@@ -25,4 +25,4 @@ Get Konnect account information.
 
 ## Command usage
 
-{% include_cached kongctl/get/konnect.md %}
+{% include_cached /kongctl/help/get/konnect.md %}

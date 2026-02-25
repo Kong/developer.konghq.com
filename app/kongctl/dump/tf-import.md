@@ -25,4 +25,4 @@ Export for Terraform import.
 
 ## Command usage
 
-{% include_cached kongctl/dump/tf-import.md %}
+{% include_cached /kongctl/help/dump/tf-import.md %}

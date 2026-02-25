@@ -25,4 +25,4 @@ Delete resources via API.
 
 ## Command usage
 
-{% include_cached kongctl/api/delete.md %}
+{% include_cached /kongctl/help/api/delete.md %}

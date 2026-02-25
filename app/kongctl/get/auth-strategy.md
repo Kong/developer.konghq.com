@@ -25,4 +25,4 @@ Get authentication strategy details.
 
 ## Command usage
 
-{% include_cached kongctl/get/auth-strategy.md %}
+{% include_cached /kongctl/help/get/auth-strategy.md %}

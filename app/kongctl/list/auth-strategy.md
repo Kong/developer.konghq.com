@@ -25,4 +25,4 @@ List authentication strategies.
 
 ## Command usage
 
-{% include_cached kongctl/list/auth-strategy.md %}
+{% include_cached /kongctl/help/list/auth-strategy.md %}

@@ -25,4 +25,4 @@ Listen to audit log stream.
 
 ## Command usage
 
-{% include_cached kongctl/listen/audit-logs.md %}
+{% include_cached /kongctl/help/listen/audit-logs.md %}

@@ -25,4 +25,4 @@ Show Konnect configuration differences.
 
 ## Command usage
 
-{% include_cached kongctl/diff/konnect.md %}
+{% include_cached /kongctl/help/diff/konnect.md %}

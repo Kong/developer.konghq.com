@@ -25,4 +25,4 @@ Create resources via API.
 
 ## Command usage
 
-{% include_cached kongctl/api/post.md %}
+{% include_cached /kongctl/help/api/post.md %}

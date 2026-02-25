@@ -25,4 +25,4 @@ Get gateway information.
 
 ## Command usage
 
-{% include_cached kongctl/get/gateway.md %}
+{% include_cached /kongctl/help/get/gateway.md %}

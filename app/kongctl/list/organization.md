@@ -25,4 +25,4 @@ List organizations.
 
 ## Command usage
 
-{% include_cached kongctl/list/organization.md %}
+{% include_cached /kongctl/help/list/organization.md %}

@@ -25,4 +25,4 @@ Get user profile.
 
 ## Command usage
 
-{% include_cached kongctl/get/profile.md %}
+{% include_cached /kongctl/help/get/profile.md %}

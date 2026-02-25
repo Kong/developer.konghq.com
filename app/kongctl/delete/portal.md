@@ -25,4 +25,4 @@ Delete Portal configuration.
 
 ## Command usage
 
-{% include_cached kongctl/delete/portal.md %}
+{% include_cached /kongctl/help/delete/portal.md %}

@@ -25,4 +25,4 @@ Get current user information.
 
 ## Command usage
 
-{% include_cached kongctl/get/me.md %}
+{% include_cached /kongctl/help/get/me.md %}

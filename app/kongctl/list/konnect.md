@@ -25,4 +25,4 @@ List Konnect resources.
 
 ## Command usage
 
-{% include_cached kongctl/list/konnect.md %}
+{% include_cached /kongctl/help/list/konnect.md %}

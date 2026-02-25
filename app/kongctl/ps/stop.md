@@ -20,9 +20,9 @@ related_resources:
     url: /deck/ps/
 ---
 
-Stop Kong processes
+Stop Kong processes.
 
 
 ## Command usage
 
-{% include_cached kongctl/ps/stop.md %}
+{% include_cached /kongctl/help/ps/stop.md %}

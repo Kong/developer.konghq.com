@@ -25,4 +25,4 @@ Get API catalog details.
 
 ## Command usage
 
-{% include_cached kongctl/get/catalog.md %}
+{% include_cached /kongctl/help/get/catalog.md %}

@@ -25,4 +25,4 @@ Delete a gateway.
 
 ## Command usage
 
-{% include_cached kongctl/delete/gateway.md %}
+{% include_cached /kongctl/help/delete/gateway.md %}

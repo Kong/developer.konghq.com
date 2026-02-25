@@ -25,4 +25,4 @@ Tail audit logs.
 
 ## Command usage
 
-{% include_cached kongctl/tail/audit-logs.md %}
+{% include_cached /kongctl/help/tail/audit-logs.md %}

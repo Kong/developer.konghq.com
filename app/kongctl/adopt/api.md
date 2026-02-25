@@ -25,4 +25,4 @@ Adopt API resources.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/api.md %}
+{% include_cached /kongctl/help/adopt/api.md %}

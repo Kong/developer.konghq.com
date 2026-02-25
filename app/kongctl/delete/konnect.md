@@ -25,4 +25,4 @@ Delete resources from Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/delete/konnect.md %}
+{% include_cached /kongctl/help/delete/konnect.md %}

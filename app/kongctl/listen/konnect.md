@@ -25,4 +25,4 @@ Listen to Konnect events.
 
 ## Command usage
 
-{% include_cached kongctl/listen/konnect.md %}
+{% include_cached /kongctl/help/listen/konnect.md %}

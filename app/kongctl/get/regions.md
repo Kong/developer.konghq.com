@@ -25,4 +25,4 @@ Get available regions.
 
 ## Command usage
 
-{% include_cached kongctl/get/regions.md %}
+{% include_cached /kongctl/help/get/regions.md %}

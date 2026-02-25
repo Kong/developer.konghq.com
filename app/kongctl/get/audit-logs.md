@@ -25,4 +25,4 @@ Get audit logs.
 
 ## Command usage
 
-{% include_cached kongctl/get/audit-logs.md %}
+{% include_cached /kongctl/help/get/audit-logs.md %}

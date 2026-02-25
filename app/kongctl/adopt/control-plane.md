@@ -25,4 +25,4 @@ Adopt control plane configuration.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/control-plane.md %}
+{% include_cached /kongctl/help/adopt/control-plane.md %}

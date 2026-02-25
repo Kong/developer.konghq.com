@@ -25,4 +25,4 @@ Adopt Developer Portal configuration.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/portal.md %}
+{% include_cached /kongctl/help/adopt/portal.md %}

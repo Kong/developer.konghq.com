@@ -25,4 +25,4 @@ Get organization details.
 
 ## Command usage
 
-{% include_cached kongctl/get/organization.md %}
+{% include_cached /kongctl/help/get/organization.md %}

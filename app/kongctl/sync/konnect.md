@@ -20,9 +20,9 @@ related_resources:
     url: /deck/sync/
 ---
 
-Synchronize with Konnect
+Synchronize with Konnect.
 
 
 ## Command usage
 
-{% include_cached kongctl/sync/konnect.md %}
+{% include_cached /kongctl/help/sync/konnect.md %}

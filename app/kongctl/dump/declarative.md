@@ -25,4 +25,4 @@ Export declarative configuration.
 
 ## Command usage
 
-{% include_cached kongctl/dump/declarative.md %}
+{% include_cached /kongctl/help/dump/declarative.md %}

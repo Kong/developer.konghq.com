@@ -25,4 +25,4 @@ List Portal themes.
 
 ## Command usage
 
-{% include_cached kongctl/list/themes.md %}
+{% include_cached /kongctl/help/list/themes.md %}

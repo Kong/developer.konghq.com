@@ -25,4 +25,4 @@ Create resources in Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/create/konnect.md %}
+{% include_cached /kongctl/help/create/konnect.md %}

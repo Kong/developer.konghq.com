@@ -25,4 +25,4 @@ Apply patches from file.
 
 ## Command usage
 
-{% include_cached kongctl/patch/file.md %}
+{% include_cached /kongctl/help/patch/file.md %}

@@ -25,4 +25,4 @@ Plan changes for Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/plan/konnect.md %}
+{% include_cached /kongctl/help/plan/konnect.md %}

@@ -25,4 +25,4 @@ Adopt organization settings.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/organization.md %}
+{% include_cached /kongctl/help/adopt/organization.md %}

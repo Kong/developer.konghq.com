@@ -25,4 +25,4 @@ List Portal configurations.
 
 ## Command usage
 
-{% include_cached kongctl/list/portal.md %}
+{% include_cached /kongctl/help/list/portal.md %}

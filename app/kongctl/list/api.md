@@ -25,4 +25,4 @@ List APIs.
 
 ## Command usage
 
-{% include_cached kongctl/list/api.md %}
+{% include_cached /kongctl/help/list/api.md %}

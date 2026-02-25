@@ -25,4 +25,4 @@ Adopt authentication strategies.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/auth-strategy.md %}
+{% include_cached /kongctl/help/adopt/auth-strategy.md %}

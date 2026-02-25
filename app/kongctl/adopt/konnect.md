@@ -25,4 +25,4 @@ Adopt Konnect resources.
 
 ## Command usage
 
-{% include_cached kongctl/adopt/konnect.md %}
+{% include_cached /kongctl/help/adopt/konnect.md %}

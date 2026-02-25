@@ -25,4 +25,4 @@ Log in to Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/login/konnect.md %}
+{% include_cached /kongctl/help/login/konnect.md %}

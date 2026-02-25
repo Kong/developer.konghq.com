@@ -25,4 +25,4 @@ Retrieve resources via API.
 
 ## Command usage
 
-{% include_cached kongctl/api/get.md %}
+{% include_cached /kongctl/help/api/get.md %}

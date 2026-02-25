@@ -20,9 +20,9 @@ related_resources:
     url: /deck/tail/
 ---
 
-Tail Konnect events
+Tail Konnect events.
 
 
 ## Command usage
 
-{% include_cached kongctl/tail/konnect.md %}
+{% include_cached /kongctl/help/tail/konnect.md %}

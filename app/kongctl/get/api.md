@@ -25,4 +25,4 @@ Get API details.
 
 ## Command usage
 
-{% include_cached kongctl/get/api.md %}
+{% include_cached /kongctl/help/get/api.md %}

@@ -25,4 +25,4 @@ Log out from Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/logout/konnect.md %}
+{% include_cached /kongctl/help/logout/konnect.md %}

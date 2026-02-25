@@ -25,4 +25,4 @@ Apply configuration to Konnect.
 
 ## Command usage
 
-{% include_cached kongctl/apply/konnect.md %}
+{% include_cached /kongctl/help/apply/konnect.md %}
