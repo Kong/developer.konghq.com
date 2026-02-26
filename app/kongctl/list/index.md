@@ -1,6 +1,5 @@
 ---
-title: Listing resources using kongctl
-short_title: kongctl list overview
+title: kongctl list
 description: List resources using kongctl.
 
 content_type: reference

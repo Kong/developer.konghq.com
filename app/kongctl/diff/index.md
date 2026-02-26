@@ -1,6 +1,5 @@
 ---
-title: Comparing configurations using kongctl
-short_title: kongctl diff overview
+title: kongctl diff
 description: Compare configurations using kongctl.
 
 content_type: reference

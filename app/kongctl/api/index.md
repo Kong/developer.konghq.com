@@ -1,5 +1,5 @@
 ---
-title: Making API requests using kongctl
+title: kongctl api
 short_title: kongctl api overview
 description: Make API requests using kongctl.
 
@@ -22,7 +22,7 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-kongctl provides the following tools for making {{site.konnect_short_name}} API requests using kongctl:
+Preview changes before applying.
 
 {% table %}
 columns:

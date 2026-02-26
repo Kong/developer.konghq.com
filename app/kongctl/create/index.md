@@ -1,6 +1,5 @@
 ---
-title: Creating resources using kongctl
-short_title: kongctl create overview
+title: kongctl create
 description: Create resources using kongctl.
 
 content_type: reference

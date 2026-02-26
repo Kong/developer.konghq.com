@@ -1,6 +1,5 @@
 ---
-title: Exporting configurations using kongctl
-short_title: kongctl dump overview
+title: kongctl dump
 description: Export configurations using kongctl.
 
 content_type: reference

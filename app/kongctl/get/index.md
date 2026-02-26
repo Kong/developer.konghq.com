@@ -1,6 +1,5 @@
 ---
-title: Retrieving information using kongctl
-short_title: kongctl get overview
+title: kongctl get
 description: Get detailed information about resources using kongctl.
 
 content_type: reference

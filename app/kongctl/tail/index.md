@@ -1,6 +1,5 @@
 ---
-title: Tailing logs using kongctl
-short_title: kongctl tail overview
+title: kongctl tail
 description: Tail logs using kongctl.
 
 content_type: reference

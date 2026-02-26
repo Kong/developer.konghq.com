@@ -1,6 +1,5 @@
 ---
-title: Managing processes using kongctl
-short_title: kongctl ps overview
+title: kongctl ps
 description: Manage processes using kongctl.
 
 content_type: reference

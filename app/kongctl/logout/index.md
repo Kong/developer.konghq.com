@@ -1,6 +1,5 @@
 ---
-title: Logging out with kongctl
-short_title: kongctl logout overview
+title: kongctl logout
 description: Log out with kongctl.
 
 content_type: reference
