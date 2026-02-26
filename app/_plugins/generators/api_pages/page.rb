@@ -37,7 +37,7 @@ module Jekyll
       end
 
       def markdown_content
-        @markdown_content ||= @markdown_content ||= File.read('app/_includes/api_spec/spec.md')
+        @markdown_content ||= File.read('app/_includes/api_spec/spec.md')
       end
 
       def llm
