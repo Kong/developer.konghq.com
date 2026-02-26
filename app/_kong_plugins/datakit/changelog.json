@@ -100,5 +100,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed plugin config validation to catch more invalid usage of the `property` node.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

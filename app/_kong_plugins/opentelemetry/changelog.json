@@ -47,6 +47,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "This plugin now supports variable resource attributes.\n",

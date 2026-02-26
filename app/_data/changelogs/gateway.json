@@ -19787,5 +19787,217 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.11.0.7": {
+    "kong": [
+      {
+        "message": "Bumped lua-resty-healthcheck to version 3.1.1 to remove incorrect deprecation notice on active healthchecks headers.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy**: Added dimension configuration support for Amazon Titan Embed v2 models.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where Gemini (Vertex) models didn't return JSON formatted responses when instructed.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where OpenAI, OpenAI-compatible, and HuggingFace models may have a 0 `completion_tokens` count with SSE streaming responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**opentelemetry**: Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Plugins**: Fixed an issue where Bedrock requests with missing model names in the request path would not be properly validated. Now returns a clear error when model name is required in the path but not provided.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**aws-lambda**: added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Bumped libexpat from 2.7.1 to 2.7.3.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed balancer retry failures caused by expired DNS entries by preloading DNS for targets.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**llm**: Fixed an issue where Gemini embeddings driver did not use correct url.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the token count for Gemini Vertex embeddings API in native format was incorrect.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the token count for Gemini Vertex embeddings API in OpenAI format was incorrect.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**llm**: Fixed an issue where HuggingFace embeddings driver did not handle response correctly.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed intermittent 500 responses from the AI Proxy Advanced plugin when using Azure OpenAI\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where the native format option did not work correctly for non-openai formats.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-semantic-cache**: Fixed an issue where Cohere and Huggingface models did not work with the semantic cache because of the polluted request format.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Kong Manager failed to generate a cookie when OIDC was enabled due to a missing `password` grant type in `auth_methods`.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where Files content analytics extraction is not handled properly for Azure.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**balancer**: Fixed an issue where the unsupported field `sticky_sessions_cookie_path` was blocking configuration syncing on data planes older than version 3.11.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where AWS Bedrock invoke command is not properly proxied.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Clustering** Fixed an issue where consumer groups may cause incremental sync to fail at the first sync of a DP.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**datakit**: Fixed plugin config validation to catch more invalid usage of the `property` node.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Kong incorrectly logged upstream status codes as 000 (or empty) when HTTP/2 clients disconnected during response processing. This occurred when response buffering was enabled. Kong now correctly records the actual upstream status code even when the HTTP/2 client disconnects before receiving the complete response.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed missing `id` and `created` fields in certain drivers.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "Fixed an issue where the prometheus metric `kong_control_plane_connected` was missing when the Data Plane side enabled incremental sync.\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where certificates could not be loaded from non-default workspaces.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka**: Fix issue where Kafka plugin produced records with incorrect `offsetDelta` in the record package.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where `kong health` command would fail to run when kong configuration contains vault references.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where migrations could fail due to missing database relations by repositioning basic-auth and key-auth plugin scripts for correct execution order.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Proxy Advanced**: Fixed an issue where the `max_completion_tokens` parameter was not being set correctly for O1 series models (e.g., `o1`, `o3`, `o4`, `gpt-5`).",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where the `username` and `password` were used for Redis Sentinel and no authentication supported for Redis, causing `NOAUTH Authentication Required` errors.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**OpenTelemetry**: Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the postinstall script changed kong.logrotate permissions; it now resets to 644.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**SAML**: Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**AI Proxy**: Fixed an issue where using ai-proxy-advanced in conjunction with a logging plugin (such as file-log) resulting in missing information on the last entry of the balancer \"tries\" section.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-aws-guardrails**: Fixed an issue where the ai-aws-guardrails metrics could not be recorded.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**file-log**: Fixed an issue where the configuration with leading or trailing spaces in the `path` field could cause upgrade failures.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**core**: Improved performance of deleting expired rows for Postgres versions below 12.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

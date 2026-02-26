@@ -297,6 +297,58 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed balancer retry failures caused by expired DNS entries by preloading DNS for targets.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the token count for Gemini Vertex embeddings API in native format was incorrect.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the token count for Gemini Vertex embeddings API in OpenAI format was incorrect.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed intermittent 500 responses from the AI Proxy Advanced plugin when using Azure OpenAI\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the native format option did not work correctly for non-openai formats.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Files content analytics extraction is not handled properly for Azure.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where AWS Bedrock invoke command is not properly proxied.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed missing `id` and `created` fields in certain drivers.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where the `max_completion_tokens` parameter was not being set correctly for O1 series models (e.g., `o1`, `o3`, `o4`, `gpt-5`).",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
