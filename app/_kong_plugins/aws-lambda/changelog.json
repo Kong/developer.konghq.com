@@ -2,7 +2,7 @@
   "3.13.0.0": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-      "type": "feature",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -28,7 +28,7 @@
   "3.12.0.3": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-      "type": "feature",
+      "type": "bugfix",
       "scope": "Plugin"
     },
     {
@@ -54,7 +54,7 @@
   "3.11.0.7": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-      "type": "feature",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -75,7 +75,7 @@
   "3.10.0.8": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-      "type": "feature",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
