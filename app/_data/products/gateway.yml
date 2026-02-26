@@ -1073,7 +1073,7 @@ releases:
               - Confluent Cloud
 
   - release: "3.12"
-    ee-version: "3.12.0.2"
+    ee-version: "3.12.0.3"
     eol: 2026-10-01
     distributions:
       - amazonlinux2:
