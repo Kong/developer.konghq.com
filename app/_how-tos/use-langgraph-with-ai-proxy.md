@@ -8,7 +8,7 @@ related_resources:
     url: /how-to/langchain-ai-proxy/
 
 description: Connect your LangGraph workflows with Kong AI Gateway.
-
+permalink: /how-to/use-langgraph-with-ai-proxy
 products:
     - gateway
     - ai-gateway
