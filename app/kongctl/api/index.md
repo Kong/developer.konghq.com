@@ -22,7 +22,7 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-Preview changes before applying.
+kongctl provides the following tools for making {{site.konnect_short_name}} API requests using kongctl:
 
 {% table %}
 columns:
