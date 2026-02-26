@@ -23,7 +23,7 @@ rows:
                   - "[Event Gateway](/index/event-gateway/)"
                   - "[AI Gateway](/index/ai-gateway/)"
                   - "[Service Mesh](/index/mesh/)"
-                  - "[{{site.kic_product_name}}](/index/kic/)"
+                  - "[{{site.kic_product_name}}](/index/kubernetes-ingress-controller/)"
                   - "[{{site.operator_product_name}}](/index/operator/)"
 
       - blocks:
