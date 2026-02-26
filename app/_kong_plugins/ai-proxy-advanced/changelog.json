@@ -184,6 +184,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed balancer retry failures caused by expired DNS entries by preloading DNS for targets.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where metrics were missing and v2 API was unavailable in Cohere native format.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where GCP tokens would not be proactively refreshed before expiration.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Add `tried_targets` field in serialized analytics logs for record of all tried ai targets.\n",

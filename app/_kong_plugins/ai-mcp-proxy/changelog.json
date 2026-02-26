@@ -133,5 +133,17 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed an issue where path traversal can be done with path parameter.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where PATCHing the tool caused an error.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
   ]
 }

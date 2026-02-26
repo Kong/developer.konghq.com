@@ -25,6 +25,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.3": [
+    {
+      "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Lambda responses with empty or null body caused 500 errors when `is_proxy_integration` is enabled.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "A warning message was added during schema validation on those plugins that contain a function name that does not comply with AWS Lambda's FunctionName pattern.",
