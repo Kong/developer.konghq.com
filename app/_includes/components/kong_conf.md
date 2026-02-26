@@ -6,20 +6,11 @@
 
 {% for param in section.parameters %}
 ### {{param.name}}
-
-{% if param.min_version %}
-* Min Version: {{param.min_version.gateway}}
-{%- endif -%}
-{%- if param.removed_in -%}
-* Removed in: {{param.removed_in.gateway}}
-{%- endif -%}
-{%- if param.defaultValue -%}
-* Default: `{{param.defaultValue | escape}}`
-{%- endif %}
-
-
-{{param.description}}
-
+* Parameter: {{param.name}}
+* Description: |
+{{param.description | indent: 2}}
+* Min Version: {% if param.min_version %}{{param.min_version.gateway}}{% else %}N/A{% endif %}
+* Removed in: {% if param.removed_in %}{{param.removed_in.gateway}}{% else %}N/A{% endif %}
+* Default value: {% if param.defaultValue %}{{param.defaultValue | escape}}{% else %}none{% endif %}
 {% endfor %}
-
 {% endfor %}
