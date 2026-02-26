@@ -76,7 +76,7 @@ metadata:
   namespace: kong
   labels:
     konghq.com/credential: konnect
-    konghq.com/secret: true
+    konghq.com/secret: "true"
 stringData:
   token: "'$KONNECT_TOKEN'"' | kubectl apply -f -
 ```
