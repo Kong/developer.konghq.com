@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue that caused a crash when the NameID Format was set to `Unspecified`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Standardized Redis configuration across plugins. The Redis configuration now follows a common schema shared with other plugins.",
