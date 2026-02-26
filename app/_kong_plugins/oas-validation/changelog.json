@@ -47,6 +47,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for validating `multipart/form-data` requests.",

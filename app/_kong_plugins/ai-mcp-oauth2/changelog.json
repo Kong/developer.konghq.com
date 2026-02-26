@@ -66,5 +66,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed an issue where we didn't clear header for absent claim.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
   ]
 }

@@ -35,5 +35,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed an issue where users could set the `anonymous` field in the OpenID Connect configuration of ACE auth strategies, which is not supported and could lead to unexpected authentication behavior.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
