@@ -1,7 +1,10 @@
 ---
 layout: null
 ---
-
+{% if page.content_type == 'landing_page' %}
+{% include llm/metadata.md %}
+{% include llm/landing_page.md %}
+{% else %}
 # {{page.llm_title | liquify }}
 
 {% include llm/metadata.md %}
@@ -26,4 +29,5 @@ layout: null
 {% if page.next_steps %}
 ## Next Steps
 {% next_steps %}
+{% endif %}
 {% endif %}
