@@ -16,7 +16,7 @@ module Jekyll
                 .reverse
                 .find { |line| line.match?(/^\#{1,6}\s+/) }
 
-      return 2 unless heading
+      return nil unless heading
 
       match = heading.match(/^(\#{1,6})\s+(.*)/)
       match[1].length
