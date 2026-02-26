@@ -20,6 +20,7 @@ module Jekyll
       drop = Drops::KongConfigTable.new(config, release(@site, @page), @mode)
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['config'] = drop
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
@@ -55,7 +56,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/kong_config_table.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/kong_config_table.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/kong_config_table.html'))
+      end
     end
   end
 end
