@@ -1,0 +1,60 @@
+```bash
+Usage:
+  kongctl diff [flags]
+  kongctl diff [command]
+
+Examples:
+  kongctl diff -f api.yaml
+  kongctl diff --plan plan.json
+  kongctl diff -f config.yaml --format json
+  
+  Use "kongctl help diff" for detailed documentation
+
+Available Commands:
+  konnect     Display differences between current and desired Konnect state
+
+
+Flags:
+      --base-dir string             Base directory boundary for !file resolution.
+                                    Defaults to each -f source root (file: its parent dir, dir: the directory itself). For stdin, defaults to CWD.
+                                    - Config path: [ konnect.declarative.base-dir ]
+      --base-url string             Base URL for Konnect API requests.
+                                    - Config path: [ konnect.base-url ]
+                                    - Default   : [ https://us.api.konghq.com ]
+      --color-theme string          Configures the CLI UI/theme (prompt, tables, TUI elements).
+                                    - Config path: [ color-theme ]
+                                    - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                                    - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
+      --config-file string          Path to the configuration file to load.
+                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
+  -f, --filename strings            Filename or directory to files to use to create the resource (can specify multiple)
+      --full-content                Display full content for large fields instead of summary
+  -h, --help                        help for diff
+      --log-file string             Write execution logs to the specified file instead of STDERR.
+                                    - Config path: [ log-file ]
+      --log-level string            Configures the logging level. Execution logs are written to STDERR.
+                                    - Config path: [ log-level ]
+                                    - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+  -o, --output string               Output format (text, json, or yaml) (default "text")
+      --pat string                  Konnect Personal Access Token (PAT) used to authenticate the CLI. 
+                                    Setting this value overrides tokens obtained from the login command.
+                                    - Config path: [ konnect.pat ]
+      --plan string                 Path to existing plan file to display
+  -p, --profile string              Specify the profile to use for this command. (default "default")
+  -R, --recursive                   Process the directory used in -f, --filename recursively
+      --region string               Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
+                                    - Config path: [ konnect.region ]
+      --require-any-namespace       Require explicit namespace on all resources (via kongctl.namespace or _defaults.kongctl.namespace).
+                                    Cannot be used with --require-namespace.
+                                    - Config path: [ konnect.declarative.require-any-namespace ]
+      --require-namespace strings   Require specific namespaces. Accepts comma-separated list or repeated flags.
+                                    Cannot be used with --require-any-namespace.
+                                    Examples:
+                                      --require-namespace=foo                          # Allow only 'foo' namespace
+                                      --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
+                                      --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
+                                    - Config path: [ konnect.declarative.require-namespace ]
+
+Use "kongctl diff [command] --help" for more information about a command.
+
+```
