@@ -105,8 +105,7 @@ entities:
             auth:
               allow_override: false
               gcp_use_service_account: true
-              gcp_service_account_json: |-
-                ${gcp_service_account_json}
+              gcp_service_account_json: ${gcp_service_account_json}
 variables:
   gcp_api_endpoint:
     value: $GCP_API_ENDPOINT
