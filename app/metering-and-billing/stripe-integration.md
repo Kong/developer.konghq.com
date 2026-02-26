@@ -27,22 +27,22 @@ You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.meter
 
 ## Revenue Lifecycle
 
-The following lists show which parts of the revenue lifecycle is handled by {{site.konnect_short_name}} {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax, and Stripe Payments:
+The following lists show which parts of the revenue lifecycle is managed by {{site.konnect_short_name}} {{site.metering_and_billing}}, Stripe Invoicing, Stripe Tax, and Stripe Payments:
 
-Handled by {{site.metering_and_billing}}:
+Managed by {{site.metering_and_billing}}:
 * Usage metering 
 * Products and prices
 * Subscription management 
 * Billing and subscriptions
 * Rating and invoice generation
 
-Handled by Stripe:
+Managed by Stripe:
 * Tax calculations with Stripe Tax (if enabled)
 * Sending invoices to customers with Stripe Invoicing
 * Storing credit card details with Stripe Payments
 * Payment collection with Stripe Payments
 
-## How to setup Stripe with {{site.metering_and_billing}}
+## How to configure Stripe with {{site.metering_and_billing}}
 
 Configuring {{site.metering_and_billing}} with Stripe involves the following steps:
 1. Install the Stripe app in {{site.metering_and_billing}}.
@@ -54,7 +54,7 @@ Configuring {{site.metering_and_billing}} with Stripe involves the following ste
 
 ## Invoicing 
 
-When you configure the Stripe app in {{site.metering_and_billing}}, {{site.konnect_short_name}} uses [Stripe Invoicing](https://stripe.com/invoicing) to synchronize and deliver invoices, automate tax calculations (if configured), and reconcile transactions. 
+When you configure the Stripe app in {{site.metering_and_billing}}, {{site.konnect_short_name}} uses [Stripe Invoicing](https://stripe.com/invoicing) to synchronize and deliver invoices, automate tax calculations (if enabled), and reconcile transactions. 
 
 {{site.metering_and_billing}} supports two payment collection methods with Stripe:
 1. **Charge Automatically (default):** {{site.metering_and_billing}} will tell Stripe to collect charges with the default payment method for the customer. This method works well for self service use cases. To collect charges automatically, you need to have a default payment method set for customer.
@@ -79,9 +79,9 @@ When a paid subscription is created, {{site.metering_and_billing}} will enforce 
 
 ### Invoice timing
 
-When an invoice is sent to your end customer depends on both {{site.metering_and_billing}} and Stripe settings. These two factors determine how long the system waits before finalizing and delivering the invoice.
+The timing of an invoice sent to your end customer is determined by two things: {{site.metering_and_billing}} settings and your Stripe configuration. Together, they control when an invoice is finalized and delivered.
 
-The {{site.metering_and_billing}} billing profile controls how long to wait for usage events before creating an invoice:
+The {{site.metering_and_billing}} billing profile defines how long the system waits for usage data before generating an invoice:
 * **Wait for Late Usage Events:** How long {{site.metering_and_billing}} should delay invoice generation to account for delayed or out-of-order usage. Set to `P0D` to include only events already received (immediate generation).
 
   {:.warning}
