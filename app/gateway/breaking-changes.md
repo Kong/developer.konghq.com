@@ -43,12 +43,12 @@ Breaking changes in the 3.13.0.0 release.
 
 #### Admin API: empty value encoding
 
-Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects. 
-They were previously incorrectly encoded as arrays. 
+Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects.
+They were previously incorrectly encoded as arrays.
 
 #### AI Semantic Prompt Guard: request body size parameter
 
-Replaced the parameter `config.rules.max_request_body_size` with `config.max_request_body_size`. 
+Replaced the parameter `config.rules.max_request_body_size` with `config.max_request_body_size`.
 
 `config.rules.max_request_body_size` is now deprecated and will be removed in a future version.
 
@@ -84,13 +84,13 @@ Breaking changes in the 3.12.0.0 release.
 
 The [Kafka Consume plugin](/plugins/kafka-consume/) can no longer be applied to a Service. This plugin doesn't proxy to a Service, so attaching it to one causes issues.
 
-If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect. 
+If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect.
 * If there is an Upstream configured in the Service, requests will be proxied to the Upstream.
 * If there is no Upstream configured in the Service, requests will not be proxied, and the plugin won't take effect.
 
 #### Konnect Application Auth (internal, {{site.konnect_short_name}}-only plugin): priority change
 
-The priority of the [internal `konnect-application-auth` plugin](/catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960. 
+The priority of the [internal `konnect-application-auth` plugin](/catalog/apis/#allow-developers-to-consume-your-api) changed from 950 to 960.
 This plugin is used for authentication inside {{site.konnect_short_name}} and can't be configured directly.
 This change ensures that the execution sequences of the `konnect-application-auth` plugin and the ACL plugin are correct.
 
@@ -98,7 +98,7 @@ If you're using any custom plugins that have a dependency on the `konnect-applic
 
 #### AI semantic plugins: cache invalidation
 
-The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/), and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins have been updated to use a separate column to store the namespace instead of including it in the table name to avoid truncation. 
+The [AI Semantic Cache](/plugins/ai-semantic-cache/), [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/), and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins have been updated to use a separate column to store the namespace instead of including it in the table name to avoid truncation.
 
 This change invalidates previous caches created by these plugins. If you are using a very long cache TTL, cache warmup is required after this change.
 
@@ -162,9 +162,9 @@ columns:
   - title: Status
     key: status
 rows:
-  - issue: AI Gateway license migration
+  - issue: {{site.ai_gateway}} license migration
     description: |
-      If any [AI Gateway plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week, 
+      If any [{{site.ai_gateway}} plugin](/plugins/?category=ai) has been enabled in a self-managed {{site.base_gateway}} deployment for more than a week,
       upgrades from 3.10 versions to 3.11.0.0 will fail due to a license migration issue. This does not affect {{site.konnect_short_name}} deployments.
       <br><br>
       We recommend upgrading to 3.11.0.1 to fix this issue. If needed, you can use the following temporary workaround:
@@ -190,14 +190,14 @@ rows:
     status: Fixed in 3.11.0.1
   - issue: Incremental config sync doesn't work in stream mode
     description: |
-      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
-      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem.
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).
       <br><br>
       The HTTP subsystem is not affected.
       <br><br>
-      **Workaround**: 
+      **Workaround**:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
-      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`.
     status: Fixed in 3.11.0.3
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |
@@ -273,14 +273,14 @@ columns:
 rows:
   - issue: Incremental config sync doesn't work in stream mode
     description: |
-      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem. 
-      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)). 
+      When running in incremental sync mode ([`incremental_sync=on`](/gateway/configuration/#incremental-sync)), {{site.base_gateway}} can't apply configuration deltas to the stream subsystem.
+      This issue affects versions 3.10.0.0 and above, where incremental sync is enabled alongside stream proxying ([`stream_listen`](/gateway/configuration/#stream-listen)).
       <br><br>
       The HTTP subsystem is not affected.
       <br><br>
-      **Workaround**: 
+      **Workaround**:
       * Incremental config sync is `off` by default. If you haven't enabled incremental config sync, there is no action required.
-      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`. 
+      * If you are using stream proxying and incremental config sync, disable incremental sync by setting `incremental_sync=off`.
     status: Fixed in 3.10.0.6
   - issue: Brotli module missing from ARM64 {{site.base_gateway}} Docker images
     description: |

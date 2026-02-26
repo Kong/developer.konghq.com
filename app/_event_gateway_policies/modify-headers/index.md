@@ -1,7 +1,7 @@
 ---
 title: Modify Headers
 name: Modify Headers
-content_type: reference
+content_type: plugin
 description: Set or remove record headers
 products:
     - event-gateway
@@ -50,6 +50,8 @@ rows:
     description: Remove a specific header and replace it with a custom header of your choice.
   - use_case: "[Example: Add a header based on a condition](/event-gateway/policies/modify-headers/examples/add-header-based-on-condition/)"
     description: If a record fits a specific condition, add a custom header of your choice.
+  - use_case: "[Tutorial: Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)"
+    description: Use a [Schema Validation policy](/event-gateway/policies/schema-validation-produce/) to parse JSON records, and use a nested Modify Headers policy to add a header to specific records.
 {% endtable %}
 <!--vale on-->
 

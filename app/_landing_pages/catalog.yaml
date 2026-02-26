@@ -33,11 +33,11 @@ rows:
                     - Upstream and downstream dependencies
                     - Associated code repositories and CI/CD pipelines
                     - API gateway and service mesh mappings
-                    - Comprehensive API catalog
+                    - Comprehensive API and MCP server catalog
 
   - header:
         type: h2
-        text: "Explore key features"
+        text: "Create your catalog"
     columns:
       - blocks:
         - type: card
@@ -68,6 +68,20 @@ rows:
               cta:
                 text: Learn about {{site.konnect_catalog}} services
                 url: /catalog/services/
+      - blocks:
+          - type: card
+            config:
+              title: MCP Registry (tech preview)
+              description: |
+                Discover and connect MCP servers to {{site.konnect_short_name}} {{site.konnect_catalog}}.
+              icon: /assets/icons/mcp.svg
+              cta:
+                text: Enable in {{site.konnect_short_name}} Labs.
+                url: /catalog/mcp-registry/
+  - header:
+      type: h2
+      text: "Explore more features"
+    columns:
       - blocks:
           - type: card
             config:

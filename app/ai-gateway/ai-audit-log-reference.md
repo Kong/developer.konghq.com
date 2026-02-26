@@ -1,5 +1,5 @@
 ---
-title: "AI Gateway audit log reference"
+title: "{{site.ai_gateway}} audit log reference"
 content_type: reference
 layout: reference
 
@@ -15,12 +15,12 @@ min_version:
   gateway: '3.6'
 breadcrumbs:
   - /ai-gateway/
-description: "Kong AI Gateway provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
+description: "{{site.ai_gateway}} provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
 
 related_resources:
-  - text: Kong AI Gateway
+  - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Kong AI Gateway plugins
+  - text: "{{site.ai_gateway}} plugins"
     url: /plugins/?category=ai
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
@@ -30,9 +30,9 @@ works_on:
   - konnect
 ---
 
-Kong AI Gateway emits structured analytics logs for [AI plugins](/plugins/?category=ai) through the standard [{{site.base_gateway}} logging infrastructure](/gateway/logs/). This means AI-specific logs are written to [the same locations](/gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment.
+{{site.ai_gateway}} emits structured analytics logs for [AI plugins](/plugins/?category=ai) through the standard [{{site.base_gateway}} logging infrastructure](/gateway/logs/). This means AI-specific logs are written to [the same locations](/gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment.
 
-Like other Kong logs, AI Gateway logs are subject to the [global log level](/gateway/logs/#configure-log-levels) configured via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
+Like other Kong logs, {{site.ai_gateway}} logs are subject to the [global log level](/gateway/logs/#configure-log-levels) configured via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (for example, `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
 
 You can also use [logging plugins](/plugins/?category=logging) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
 
@@ -44,6 +44,9 @@ Each AI plugin returns a set of tokens. Log entries include the following detail
 ### AI Proxy core logs
 
 The [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy/) plugins act as the main gateway for forwarding requests to AI providers. Logs here capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
+
+{:.warning}
+> Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
 
 {% table %}
 columns:
@@ -156,7 +159,7 @@ rows:
 
 ### AI Lakera Guard logs {% new_in 3.13 %}
 
-If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), AI Gateway logs include additional fields under the lakera-guard object for each plugin entry. These fields provide insight into inspection behavior. For example, processing latency, request UUIDs, and violation details when requests or responses are blocked.
+If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the lakera-guard object for each plugin entry. These fields provide insight into inspection behavior. For example, processing latency, request UUIDs, and violation details when requests or responses are blocked.
 
 The following fields appear in AI logs when the AI Lakera Guard plugin is enabled:
 
@@ -181,8 +184,8 @@ rows:
       The Lakera project identifier used for the inspection.
   - property: "`ai.proxy.lakera-guard.input_block_detail`"
     description: |
-      An array of violation objects present when Lakera blocks a request.  
-      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,  
+      An array of violation objects present when Lakera blocks a request.
+      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,
       `detected` (boolean), and `detector_type`, such as `moderated_content/hate`.
   - property: "`ai.proxy.lakera-guard.input_block_reason`"
     description: |
@@ -195,7 +198,7 @@ rows:
       The unique identifier assigned by Lakera for the inspected response.
   - property: "`ai.proxy.lakera-guard.output_block_detail`"
     description: |
-      An array of violation objects present when Lakera blocks a response.  
+      An array of violation objects present when Lakera blocks a response.
       The structure matches `input_block_detail`.
   - property: "`ai.proxy.lakera-guard.output_block_reason`"
     description: |
@@ -205,7 +208,7 @@ rows:
 
 ### AI PII Sanitizer logs {% new_in 3.10 %}
 
-If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), AI Gateway logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
+If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
 
 The following fields appear in structured AI logs when the AI PII Sanitizer plugin is enabled:
 
@@ -259,7 +262,7 @@ rows:
 
 ### AI RAG Injector logs {% new_in 3.10 %}
 
-If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), AI Gateway logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider/model details.
+If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider/model details.
 
 The following fields appear in structured AI logs when the AI RAG Injector plugin is enabled:
 
@@ -290,7 +293,7 @@ rows:
 
 ### AI Semantic Cache logs {% new_in 3.8 %}
 
-If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), AI Gateway logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior—such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
+If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), {{site.ai_gateway}} logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior—such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
 
 The following fields appear in AI logs when semantic caching is enabled:
 
@@ -325,7 +328,7 @@ rows:
 
 ### AI LLM as Judge logs {% new_in 3.12 %}
 
-If you're using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge), AI Gateway logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior—such as which models were scored, latency, and the numeric accuracy assigned by the judge.
+If you're using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior—such as which models were scored, latency, and the numeric accuracy assigned by the judge.
 
 The following fields appear in AI logs when the LLM as Judge plugin is enabled:
 
@@ -359,7 +362,7 @@ rows:
 
 ### AI MCP logs {% new_in 3.12 %}
 
-If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), AI Gateway logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage and {% new_in 3.13 %} access control audit entries.
+If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage and {% new_in 3.13 %} access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
@@ -427,7 +430,7 @@ rows:
 
 ### LLM traffic entry
 
-The following example shows a structured AI Gateway log entry:
+The following example shows a structured {{site.ai_gateway}} log entry:
 
 ```json
 {

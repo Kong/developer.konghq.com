@@ -154,7 +154,7 @@ Each section uses the format:
 ## Kong Operator
 
 - [Operator Overview](https://developer.konghq.com/operator/): Kubernetes controller that automates deployment and configuration of Kong Gateway.
-- [Install the Operator](https://developer.konghq.com/operator/install/): Installation instructions and CRD setup.
+- [Install the Operator](https://developer.konghq.com/operator/get-started/gateway-api/install/): Installation instructions and CRD setup.
 
 ---
 

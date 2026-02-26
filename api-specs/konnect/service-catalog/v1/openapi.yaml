@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@2e5e3b7f405ca10a77055d92e8c9cde201927cb2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2e5e3b7f405ca10a77055d92e8c9cde201927cb2'
+  x-oas-source: kong/platform-api@4c8d8b928423c5b5968097bd7ba168a7dcab1b5f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4c8d8b928423c5b5968097bd7ba168a7dcab1b5f'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -893,8 +893,152 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Scorecards
+  '/catalog-services/{serviceId}/api-mappings':
+    parameters:
+      - name: serviceId
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    get:
+      operationId: list-catalog-service-api-mappings
+      summary: List API Mappings for a Service
+      description: Returns a paginated collection of API mappings for the given service.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogServiceApiMappingSort'
+        - $ref: '#/components/parameters/CatalogServiceApiMappingFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServiceApiMappingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Service API Mappings
+    post:
+      operationId: create-catalog-service-api-mapping
+      summary: Create API Mapping for a Service
+      description: Creates a new API mapping for the given service.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCatalogServiceApiMappingBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/CatalogServiceApiMappingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Catalog Service API Mappings
+  '/catalog-services/{serviceId}/api-mappings/{mappingId}':
+    parameters:
+      - name: serviceId
+        in: path
+        description: The `id` of the service.
+        required: true
+        schema:
+          type: string
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+      - name: mappingId
+        in: path
+        description: ID of the catalog service API mapping.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d277faad-ed4e-4c56-a0fb-acce065dee34
+    get:
+      operationId: get-catalog-service-api-mapping
+      summary: Get API Mapping for a Service
+      description: Returns information about a specific API mapping for the given service.
+      responses:
+        '200':
+          $ref: '#/components/responses/CatalogServiceApiMappingResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Service API Mappings
+    delete:
+      operationId: delete-catalog-service-api-mapping
+      summary: Delete API Mapping for a Service
+      description: Deletes a specific API mapping for the given service.
+      responses:
+        '204':
+          description: Catalog service API mapping was deleted successfully.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Service API Mappings
+  '/apis/{apiId}/service-mappings':
+    parameters:
+      - name: apiId
+        in: path
+        description: ID of the API.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: list-service-mappings-for-api
+      summary: List Service Mappings for an API
+      description: Returns a paginated collection of Service mappings for the given API.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/CatalogServiceApiMappingSort'
+        - $ref: '#/components/parameters/CatalogApiServiceMappingFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCatalogServiceApiMappingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Catalog Service API Mappings
 components:
   parameters:
+    CatalogApiServiceMappingFilter:
+      name: filter
+      in: query
+      required: false
+      style: deepObject
+      description: |
+        Filters a collection of catalog API service mappings for a given API. Supported filter attributes are:
+          - `service_id`
+      schema:
+        $ref: '#/components/schemas/CatalogApiServiceMappingFilterParameters'
     CatalogIntegrationFilter:
       name: filter
       description: Filters a collection of integrations.
@@ -960,6 +1104,28 @@ components:
         Default sort is `created_at` in descending order.
       required: false
       in: query
+      schema:
+        $ref: '#/components/schemas/SortQuery'
+    CatalogServiceApiMappingFilter:
+      name: filter
+      in: query
+      required: false
+      style: deepObject
+      description: |
+        Filters a collection of catalog service API mappings for a given Service. Supported filter attributes are:
+          - `api_id`
+      schema:
+        $ref: '#/components/schemas/CatalogServiceApiMappingFilterParameters'
+    CatalogServiceApiMappingSort:
+      name: sort
+      in: query
+      required: false
+      description: |
+        Sorts a collection of catalog service API mappings. Supported sort attributes are:
+          - `created_at`
+          - `updated_at`
+
+        Default sort is `created_at` in descending order.
       schema:
         $ref: '#/components/schemas/SortQuery'
     CatalogServiceFilter:
@@ -4325,6 +4491,50 @@ components:
       required:
         - value
         - unit
+    CatalogServiceApiMapping:
+      description: Represents an API mapping associated with a service in the catalog.
+      type: object
+      properties:
+        id:
+          description: The mapping ID.
+          type: string
+          format: uuid
+        service_id:
+          description: The ID of the service.
+          type: string
+          format: uuid
+        api_id:
+          description: The ID of the API.
+          type: string
+          format: uuid
+        created_at:
+          description: Creation timestamp.
+          type: string
+          format: date-time
+        updated_at:
+          description: Last update timestamp.
+          type: string
+          format: date-time
+      required:
+        - id
+        - service_id
+        - api_id
+        - created_at
+        - updated_at
+    CatalogServiceApiMappingFilterParameters:
+      type: object
+      properties:
+        api_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+      additionalProperties: false
+      title: CatalogServiceApiMappingFilterParameters
+    CatalogApiServiceMappingFilterParameters:
+      type: object
+      properties:
+        service_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+      additionalProperties: false
+      title: CatalogApiServiceMappingFilterParameters
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -5115,8 +5325,6 @@ components:
                   definition:
                     control_plane_id: string
                     gateway_service_id: string
-                integration_data_schema: null
-                resource_id_template: '{{control_plane_id}}:{{gateway_service_id}}'
             discovery:
               resource_integration_data_examples:
                 gateway_svc:
@@ -5176,8 +5384,6 @@ components:
                   type: simple
                   definition:
                     report_id: string
-                integration_data_schema: null
-                resource_id_template: '{{report_id}}'
             discovery:
               resource_integration_data_examples:
                 report:
@@ -5206,8 +5412,6 @@ components:
                     mesh_name: string
                     mesh_service_name: string
                     global_control_plane_id: string
-                integration_data_schema: null
-                resource_id_template: '{{global_control_plane_id}}:{{mesh_name}}'
             discovery:
               resource_integration_data_examples:
                 service_insight:
@@ -6322,6 +6526,13 @@ components:
               successfully_evaluated_at: '2025-07-02T16:02:04.839Z'
               attempted_at: '2025-07-02T16:02:04.839Z'
               created_at: '2025-07-02T15:20:05.786Z'
+    SampleServiceApiMappingResponse:
+      value:
+        id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        service_id: 204d85d2-1bb9-4864-842f-6d97a7cbca2c
+        api_id: e0928050-20d0-448f-947d-624d9901947e
+        created_at: '2025-05-01T00:00:00.000000Z'
+        updated_at: '2025-05-01T00:00:00.000000Z'
     UnauthorizedExample:
       value:
         status: 401
@@ -6465,6 +6676,21 @@ components:
           examples:
             Scorecard:
               $ref: '#/components/examples/UpdateScorecardPayload'
+    CreateCatalogServiceApiMappingBody:
+      description: Request body schema for creating a new API mapping for catalog service.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              api_id:
+                description: The ID of the API Entity to map.
+                type: string
+                format: uuid
+            additionalProperties: false
+            required:
+              - api_id
   responses:
     CatalogServiceResponse:
       description: A response containing a single service object.
@@ -6810,6 +7036,32 @@ components:
           examples:
             Scorecard Criteria Services:
               $ref: '#/components/examples/ListScorecardCriteriaServicesResponse'
+    CatalogServiceApiMappingResponse:
+      description: A response containing a single catalog service API mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CatalogServiceApiMapping'
+          examples:
+            Service API Mapping:
+              $ref: '#/components/examples/SampleServiceApiMappingResponse'
+    ListCatalogServiceApiMappingsResponse:
+      description: A paginated list response for a collection of catalog service API mappings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogServiceApiMapping'
+            additionalProperties: false
+            required:
+              - meta
+              - data
     BadRequest:
       description: Bad Request
       content:
@@ -6959,6 +7211,13 @@ tags:
       Scorecards help you detect issues, like whether there are services in the catalog that don't have an on-call engineer assigned, or if you have GitHub repositories with stale pull requests that aren't getting reviewed or closed.
       From the scorecard, you can view details on either a per-service or per-criteria basis.
       Learn more about scorecards by visiting our [documentation](https://developer.konghq.com/service-catalog/scorecards/).
+  - name: Catalog Service API Mappings
+    description: |
+      Service API mappings represent the link between Service and API entities.
+      Once an API is mapped to a Service, a rich view of the linked APIs will be presented on the APIs tab of the Catalog Service.
+      Similarly, Services mapped to an API will be listed on the API overview page under Catalog.
+      An API may be mapped to multiple services, but it cannot be mapped to the same service twice.
+      If a mapped API is unlinked from a Service, the mapping will be deleted.
 security:
   - konnectAccessToken: []
   - personalAccessToken: []

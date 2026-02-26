@@ -33,7 +33,7 @@ releases:
     releaseDate: "2024-02-01"
     eol: "2025-02-01"
     branch: release-2.6
-  - version: 2.7.20
+  - version: 2.7.22
     release: "2.7"
     releaseDate: "2024-04-19"
     eol: "2026-10-19"
@@ -49,22 +49,22 @@ releases:
     releaseDate: "2024-10-22"
     eol: "2025-10-22"
     branch: release-2.9
-  - version: 2.10.9
+  - version: 2.10.11
     release: "2.10"
     releaseDate: "2025-03-20"
     eol: "2026-03-20"
     branch: release-2.10
-  - version: 2.11.8
+  - version: 2.11.10
     release: "2.11"
     releaseDate: "2025-06-10"
     eol: "2026-06-10"
     branch: release-2.11
-  - version: 2.12.5
+  - version: 2.12.7
     release: "2.12"
     releaseDate: "2025-09-09"
     eol: "2026-09-09"
     branch: release-2.12
-  - version: 2.13.0
+  - version: 2.13.2
     release: "2.13"
     latest: true
     releaseDate: "2025-12-22"

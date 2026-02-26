@@ -1,7 +1,7 @@
 title: "OpenAI SDK: Multi-deployment chat routing"
-description: Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+description: Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-4o and GPT-4-1-mini.
 extended_description: |
-  Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-3.5 and GPT-4.
+  Use separate Routes to map Azure OpenAI SDK requests to specific deployments of GPT-4o and GPT-4-1-mini.
 
   Using OpenAI SDK with the AI Proxy Advanced plugin, you can configure multiple Routes in {{site.base_gateway}} to represent different Azure OpenAI deployments.
   Each Route maps a unique path segment (such as `azure-gpt-3-5` or `azure-gpt-4`) to the corresponding deployment ID and model name.
@@ -19,7 +19,7 @@ extended_description: |
 
   ```python
   client = OpenAI(
-    base_url="http://127.0.0.1:8000/openai/deployments/azure-gpt-4"
+    base_url="http://127.0.0.1:8000/openai/deployments/azure-gpt-4o"
   )
   ```
   {{site.base_gateway}} reads the deployment path, maps it to the appropriate Azure deployment ID and model, and handles authentication automatically.
@@ -28,22 +28,23 @@ extended_description: |
     > For this configuration to work properly, you need a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
     > ```
     > routes:
-    >  - name: azure-chat-gpt-3-5
+    >  - name: azure-chat-gpt-4-1-mini
     >    paths:
-    >      - "~/openai/deployments/azure-gpt-3-5/chat/completions$"
+    >      - "~/openai/deployments/azure-gpt-4-1-mini/chat/completions$"
     >    methods:
     >      - POST
     > ```
     > and:
     > ```
     > routes:
-    >  - name: azure-chat-gpt-4
+    >  - name: azure-chat-gpt-4o
     >    paths:
-    >      - "~/openai/deployments/azure-gpt-4/chat/completions$"
+    >      - "~/openai/deployments/azure-gpt-4o/chat/completions$"
     >    methods:
     >      - POST
     > ```
 
+  For a complete tutorial of this configuration, see the [Azure OpenAI SDK example](/how-to/route-azure-sdk-to-specific-deployments).
 weight: 106
 
 requirements:
@@ -60,10 +61,10 @@ config:
         log_payloads: false
       model:
         provider: "azure"
-        name: "gpt-35-turbo"
+        name: "gpt-4o"
         options:
-          azure_instance: "my-openai-instace"
-          azure_deployment_id: "my-gpt-3-5"
+          zure_instance: ${azure_instance}
+          azure_deployment_id: ${azure_deployment}
   - targets:
     - route_type: llm/v1/chat
       auth:
@@ -74,15 +75,21 @@ config:
         log_payloads: false
       model:
         provider: "azure"
-        name: "gpt-4"
+        name: "gpt-4-1-mini"
         options:
-          azure_instance: "my-openai-instace"
-          azure_deployment_id: "my-gpt-4"
+          azure_instance: ${azure_instance}
+          azure_deployment_id:  ${azure_deployment}
 
 variables:
-  azure:
+  azure_key:
     value: $AZURE_API_KEY
     description: The API key to authenticate requests to Azure.
+  azure_instance:
+    value: $AZURE_INSTANCE
+    description: The name of your Azure OpenAI instance.
+  azure_deployment:
+    value: $AZURE_DEPLOYMENT
+    description: The deployment ID of the Azure OpenAI model you want to use.
 
 
 tools:

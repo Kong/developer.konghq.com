@@ -11,7 +11,7 @@ rows:
   - header:
       type: h1
       text: "{{site.metering_and_billing}}"
-      sub_text: Meter, bill, and monetize the entire AI connectivity data path.
+      sub_text: Meter, bill, and monetize the entire AI connectivity path.
     columns:
       - blocks:
           - type: structured_text
@@ -19,52 +19,149 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides a full system for tracking real-time usage, pricing products, enforcing entitlements, and generating invoices.  
-                    It is designed for AI and API-first businesses that need accurate usage metering, flexible pricing models, and customer-level billing detail.
+                    {{site.konnect_short_name}} {{site.metering_and_billing}} provides:
 
-                    You can meter {{site.base_gateway}} requests, LLM tokens, or any custom event.  
-                    You can create and publish pricing plans, manage subscriptions, and automate revenue collection with payment providers like Stripe and ERPs.
-          - type: button
-            config:
-              text: "Start metering and billing API Gateway requests &rarr;"
-              url: /metering-and-billing/get-started/
+                    * Real-time scalable metering for AI, API, and external usage
+                    * Flexible pricing models, including free, flat fee, usage-based, and tiered
+                    * Subscription management to govern access and automate billing
+                    * Automated invoicing and integration with payment providers and ERPs
 
       - blocks:
           - type: image
             config:
               url: /assets/images/konnect/metering.png
               alt_text: "{{site.metering_and_billing}} Overview"
-
-
+      
+  
   - header:
       type: h2
-      text: "Learn more"
-
+      text: "Get started"
+      sub_text: "Start monetizing your usage with {{site.metering_and_billing}}."
+    column_count: 3
     columns:
       - blocks:
           - type: card
             config:
-              title: Metering
+              title: Start monetizing {{site.base_gateway}} API traffic
               description: |
-                {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
-              icon: /assets/icons/analytics.svg
+                Learn how to meter and bill {{site.base_gateway}} API requests.
+              icon: /assets/icons/KogoBlue.svg
               cta:
-                text: Learn more
-                url: /metering-and-billing/metering/
+                url: /metering-and-billing/get-started/
       - blocks:
           - type: card
             config:
-              title: Product Catalog
+              title: "Monetize Kong AI Gateway LLM traffic"
               description: |
-                {{site.konnect_short_name}} {{site.metering_and_billing}}’s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place.
+                Learn how to meter and bill AI Gateway LLM tokens.
+              icon: /assets/icons/KogoBlue.svg
+              cta:
+                url: /how-to/meter-llm-traffic/
+
+  - header:
+      type: h2
+      text: "Usage metering"
+      sub_text: "Learn how to meter AI, API, and external usage."
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: API gateway metering
+              description: |
+                Real-time usage metering for {{site.base_gateway}} API requests.
+                Monetize API traffic with flexible pricing models.
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/get-started/
+
+      - blocks:
+          - type: card
+            config:
+              title: Generic metering
+              description: |
+                Meter any billable usage, like compute, storage, or application layer.
+                Learn how to ingest usage events.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/?tab=generic-meters#create-a-meter
+      - blocks:
+          - type: card
+            config:
+              title: Common metering examples
+              description: |
+                Examples to meter AI, API, compute, GPUs, and storage usage.
+              icon: /assets/icons/graduation.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/metering/#example-meter-use-cases
+      - blocks:
+          - type: card
+            config:
+              title: Collectors
+              description: |
+                Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/collectors/
+  - header:
+      type: h2
+      text: "Product Catalog"
+      sub_text: "Define your pricing and packaging."
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Features
+              description: |
+                 Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
+              icon: /assets/icons/widgets.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#features
+      - blocks:
+          - type: card
+            config:
+              title: Plans
+              description: |
+                Plans are a collection of rate cards that can be assigned to customers by starting a subscription.
+              icon: /assets/icons/service-hub.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#plans
+
+      - blocks:
+          - type: card
+            config:
+              title: Pricing models
+              description: |
+                Pricing models describe how to price a feature, for example, free, flat fee, usage-based, or tiered.
+              icon: /assets/icons/money.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/product-catalog/#pricing-models
+      - blocks:
+          - type: card
+            config:
+              title: Entitlements
+              description: |
+                Entitlements describe customer access, usage-limits, and configuration to features.
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/
+                url: /metering-and-billing/product-catalog/#entitlements
+
+  - header:
+      type: h2
+      text: "Billing"
+      sub_text: "Manage your customers, subscriptions, and invoicing."
+    columns:
       - blocks:
           - type: card
             config:
-              title: Customers and usage attribution
+              title: Customers
               description: |
                 Customers represent individuals or organizations that subscribe to plans, gain access to features, and are invoiced for their consumption.
               icon: /assets/icons/team.svg
@@ -74,18 +171,38 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Billing, invoicing, and subscriptions
+              title: Subscriptions
               description: |
-                Learn how to set up billing, invoicing, and subscriptions in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+                Subscriptions are a collection of active rate cards that can be assigned to customers.
+              icon: /assets/icons/document.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+      - blocks:
+          - type: card
+            config:
+              title: Billing profiles
+              description: |
+                Billing profiles handle invoicing, payment, and tax settings for a customer.
+              icon: /assets/icons/organization.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+      - blocks:
+          - type: card
+            config:
+              title: Invoicing
+              description: |
+                Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/
+                url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
 
   - header:
       type: h2
       text: "Integrations"
-      sub_text: "Connect {{site.metering_and_billing}} to external payment, CRM, and invoicing systems"
+      sub_text: "Integrate with payment, CRM, and invoicing solutions to automate revenue operations."
 
     column_count: 3
     columns:
@@ -94,7 +211,7 @@ rows:
             config:
               title: Stripe
               description: |
-                Send invoices, calculate tax, and collect payments.
+                Send invoices, calculate tax, and collect payments. Great for self-serve and PLG sales motions.
               icon: /assets/icons/third-party/stripe.svg
               cta:
                 text: View integration
@@ -103,9 +220,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Custom Invoicing
+              title: Custom invoicing
               description: |
-                Implement custom billing flows using your own invoicing and payment systems.
+                Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg
               cta:
                 text: View integration

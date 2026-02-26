@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b0852934fe6d461ff6ea7b8e818446fed2f2e81f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b0852934fe6d461ff6ea7b8e818446fed2f2e81f'
+  x-oas-source: kong/platform-api@95a8ed41c8d27541f6778fc9968e2c8cf785cdc2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/95a8ed41c8d27541f6778fc9968e2c8cf785cdc2'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1991,6 +1991,7 @@ components:
       anyOf:
         - $ref: '#/components/schemas/VirtualClusterReferenceById'
         - $ref: '#/components/schemas/VirtualClusterReferenceByName'
+      x-terraform-preferred: '#/components/schemas/VirtualClusterReferenceById'
     VirtualClusterReferenceById:
       description: Reference a virtual cluster by its unique identifier.
       type: object
@@ -2398,6 +2399,7 @@ components:
             - certificate
             - key
           x-min-runtime-version: '1.1'
+          x-speakeasy-param-computed: false
       required:
         - enabled
     BackendMetadataUpdateIntervalSeconds:
@@ -2733,6 +2735,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/SchemaRegistryReferenceById'
         - $ref: '#/components/schemas/SchemaRegistryReferenceByName'
+      x-terraform-preferred: '#/components/schemas/SchemaRegistryReferenceById'
     SchemaRegistryReferenceById:
       type: object
       properties:
@@ -3362,7 +3365,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3429,7 +3432,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3783,7 +3786,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3832,7 +3835,7 @@ components:
         condition:
           description: A string containing the boolean expression that determines whether the policy is applied.
           type: string
-          example: 'context.topic.name.endsWith("my_suffix") && records.headers["x-flag"] == "a-value"'
+          example: 'context.topic.name.endsWith("my_suffix") && record.headers["x-flag"] == "a-value"'
           default: ''
           maxLength: 1000
           x-expression:
@@ -3973,10 +3976,24 @@ components:
           items:
             $ref: '#/components/schemas/EventGatewayACLOperation'
         resource_names:
-          description: 'If any of these entries match, the resource name matches for this rule.'
-          type: array
-          items:
-            $ref: '#/components/schemas/EventGatewayACLResourceName'
+          description: 'If any of these entries match, the resource name matches for this rule. A maximum of 50 entries are allowed.'
+          oneOf:
+            - type: array
+              maxItems: 50
+              items:
+                $ref: '#/components/schemas/EventGatewayACLResourceName'
+            - type: string
+              x-min-runtime-version: '1.1'
+              example: 'context.auth.token.claims["topics"]'
+              x-expression:
+                type: array
+                fields:
+                  - context.auth.principal.name
+                  - context.auth.type
+                  - context.auth.token.claims
+              description: |
+                This expression should evaluate to an array of glob patterns,
+                equivalent to the `match` values in the array form of `resource_names`.
       required:
         - resource_type
         - action
@@ -4134,6 +4151,7 @@ components:
       anyOf:
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceById'
         - $ref: '#/components/schemas/EncryptionKeyStaticReferenceByName'
+      x-terraform-preferred: '#/components/schemas/EncryptionKeyStaticReferenceById'
     EncryptionKeyStaticReferenceById:
       description: A static encryption key reference by ID.
       type: object
@@ -5129,7 +5147,7 @@ components:
                 maxLength: 255
                 minLength: 1
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the listener.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5157,7 +5175,7 @@ components:
                 maxLength: 255
                 minLength: 1
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the listener.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5248,7 +5266,7 @@ components:
               name:
                 $ref: '#/components/schemas/BackendClusterName'
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the backend cluster.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5284,7 +5302,7 @@ components:
               name:
                 $ref: '#/components/schemas/BackendClusterName'
               description:
-                description: A human-readable description of the virtual cluster.
+                description: A human-readable description of the backend cluster.
                 type: string
                 default: ''
                 maxLength: 512
@@ -5437,9 +5455,14 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/EventGatewayPolicyReference'
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
   responses:
     EventGatewayNodeStatus:
       description: The status of an event gateway node.
@@ -5638,9 +5661,14 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/EventGatewayPolicyReference'
+            type: object
+            properties:
+              policies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventGatewayPolicyReference'
+            required:
+              - policies
     BadRequest:
       description: Bad Request
       content:

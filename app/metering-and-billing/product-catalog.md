@@ -193,7 +193,7 @@ rows:
     description: |
       Allow customers to consume features up to a certain usage limit, e.g., 10 million monthly tokens.
 
-      This is useful for example when the underlying resources are expensive, as is the case for most AI products. Metered entitlements leverage the usage information collected by OpenMeter and give you the ability to do real time usage enforcement as well as historical queries and access checks.
+      This is useful for example when the underlying resources are expensive, as is the case for most AI products. Metered entitlements leverage the usage information collected by {{site.metering_and_billing}} and give you the ability to do real time usage enforcement as well as historical queries and access checks.
   - type: Static
     description: |
       Define customer-specific configurations as a JSON value. e.g. `{ "enabledModels": ["gpt-3", "gpt-4"] }`

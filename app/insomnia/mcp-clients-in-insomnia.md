@@ -11,6 +11,8 @@ products:
 related_resources:
   - text: Use mock servers
     url: /how-to/create-a-cloud-hosted-mock-server/
+  - text: MCP Registry in {{site.konnect_short_name}} (tech preview)
+    url: /catalog/mcp-registry/
 
 faqs:
   - q: What happens when authentication fails?
@@ -65,9 +67,6 @@ faqs:
       This can happen if the project was cloned or opened using an older version of Insomnia that did not support MCP Clients in Git or Cloud projects.
 
       If you cloned or opened a Git or Cloud project before upgrading to Insomnia 12.3, and that project contains MCP Client files, you must re-clone the project after upgrading. This ensures Insomnia loads the MCP Client resources correctly.
-
-      {:.info}
-      > Projects cloned or created using Insomnia 12.3 or later are not affected.     
        
 ---
 Use Insomnia to connect external **Model Context Protocol (MCP)** Servers to access AI-ready tools, prompts, and resources. An **MCP Client** defines this connection and stores authentication and configuration details.
@@ -81,15 +80,12 @@ An MCP Server is an HTTP JSON-RPC endpoint that advertises callable operations:
 
 The Insomnia **MCP Client** discovers these elements, which enables you to invoke, query, or test them directly in the app. Each workspace can include multiple MCP Clients.
 
-{% new_in 12.3 %} MCP Clients are project-scoped resources and can be stored in: 
+MCP Clients are project-scoped resources and can be stored in: 
 - Git projects
 - Cloud projects
 - Local projects
 
 This means that MCP Client configuration is saved as part of the project and can be shared, synced, and versioned in the same way as other project resources.
-
-{:.info}
-> Projects that contain MCP Clients require Insomnia 12.3 or later. If you opened or cloned a Git or Cloud project before upgrading to 12.3, re-clone the project after upgrading so Insomnia can load the MCP Client resources correctly.
 
 ### Create an MCP client
 To create a new MCP Client:

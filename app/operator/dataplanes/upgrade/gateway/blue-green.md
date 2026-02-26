@@ -16,7 +16,7 @@ breadcrumbs:
 ---
 
 {:.warning}
-> This method is only available when running in [hybrid mode](/operator/dataplanes/get-started/hybrid/install/)
+> This method is only available when running in [hybrid mode](/operator/get-started/gateway-api/install/)
 
 Blue/green upgrades can be accomplished when working with the `DataPlane` resource directly.
 

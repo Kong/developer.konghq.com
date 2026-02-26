@@ -1,7 +1,7 @@
 ---
 title: Decrypt
 name: Decrypt
-content_type: reference
+content_type: plugin
 description: Decrypt messages that were previously encrypted using the referenced key
 products:
     - event-gateway
@@ -27,7 +27,7 @@ related_resources:
   - text: Static keys
     url: /event-gateway/entities/static-key/
   - text: Encrypt and decrypt Kafka messages with {{site.event_gateway}}
-    url: /how-to/encrypt-kafka-messages-with-event-gateway/
+    url: /event-gateway/encrypt-kafka-messages-with-event-gateway/
 
 phases:
   - consume

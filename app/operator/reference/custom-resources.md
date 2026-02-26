@@ -301,6 +301,7 @@ Package v1alpha1 contains API Schema definitions for the configuration.konghq.co
 - [KongKeySet](#configuration-konghq-com-v1alpha1-kongkeyset)
 - [KongLicense](#configuration-konghq-com-v1alpha1-konglicense)
 - [KongPluginBinding](#configuration-konghq-com-v1alpha1-kongpluginbinding)
+- [KongReferenceGrant](#configuration-konghq-com-v1alpha1-kongreferencegrant)
 - [KongRoute](#configuration-konghq-com-v1alpha1-kongroute)
 - [KongSNI](#configuration-konghq-com-v1alpha1-kongsni)
 - [KongService](#configuration-konghq-com-v1alpha1-kongservice)
@@ -518,6 +519,25 @@ KongPluginBinding is the schema for Plugin Bindings API which defines a Kong Plu
 | `spec` _[KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)_ |  |
 | `status` _[KongPluginBindingStatus](#configuration-konghq-com-v1alpha1-types-kongpluginbindingstatus)_ |  |
 
+### KongReferenceGrant
+
+
+KongReferenceGrant identifies kinds of resources in other namespaces that are
+trusted to reference the specified kinds of resources in the same namespace
+as the policy.<br /><br />Each KongReferenceGrant can be used to represent a unique trust relationship.
+Additional Reference Grants can be used to add to the set of trusted
+sources of inbound references for the namespace they are defined within.<br /><br />All cross-namespace references in Kong APIs require a KongReferenceGrant.<br /><br />KongReferenceGrant is a form of runtime verification allowing users to assert
+which cross-namespace object references are permitted.
+
+<!-- kong_reference_grant description placeholder -->
+
+| Field | Description |
+| --- | --- |
+| `apiVersion` _string_ | `configuration.konghq.com/v1alpha1`
+| `kind` _string_ | `KongReferenceGrant`
+| `metadata` _k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `spec` _[KongReferenceGrantSpec](#configuration-konghq-com-v1alpha1-types-kongreferencegrantspec)_ | Spec defines the desired state of KongReferenceGrant. |
+
 ### KongRoute
 
 
@@ -647,6 +667,8 @@ RFC 1123 subdomain.
 _Appears in:_
 
 - [ControllerReference](#configuration-konghq-com-v1alpha1-types-controllerreference)
+- [ReferenceGrantFrom](#configuration-konghq-com-v1alpha1-types-referencegrantfrom)
+- [ReferenceGrantTo](#configuration-konghq-com-v1alpha1-types-referencegrantto)
 
 #### IngressClassParametersSpec
 
@@ -714,6 +736,8 @@ Kind refers to a Kubernetes kind.
 _Appears in:_
 
 - [ControllerReference](#configuration-konghq-com-v1alpha1-types-controllerreference)
+- [ReferenceGrantFrom](#configuration-konghq-com-v1alpha1-types-referencegrantfrom)
+- [ReferenceGrantTo](#configuration-konghq-com-v1alpha1-types-referencegrantto)
 
 #### KongCACertificateAPISpec
 
@@ -724,12 +748,32 @@ KongCACertificateAPISpec contains the API specification for the KongCACertificat
 
 | Field | Description |
 | --- | --- |
-| `cert` _string_ | Cert is the PEM-encoded CA certificate. |
-| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. |
+| `cert` _string_ | Cert is the PEM-encoded CA certificate. This field is used when type is 'inline'. |
+| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. Tags will be applied when type is 'inline' or 'secretRef'. This field allows you to attach metadata to the certificate for identification or organization purposes. |
 
 _Appears in:_
 
 - [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+
+#### KongCACertificateSourceType
+
+_Underlying type:_ `string`
+
+KongCACertificateSourceType is the type of source for the CA certificate data.
+
+
+
+
+_Appears in:_
+
+- [KongCACertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcacertificatespec)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` | KongCACertificateSourceTypeInline indicates that the CA certificate data is provided inline in the spec.<br /> |
+| `secretRef` | KongCACertificateSourceTypeSecretRef indicates that the CA certificate data is sourced from a Kubernetes Secret.<br /> |
 
 #### KongCACertificateSpec
 
@@ -740,10 +784,12 @@ KongCACertificateSpec contains the specification for the KongCACertificate.
 
 | Field | Description |
 | --- | --- |
+| `type` _[KongCACertificateSourceType](#configuration-konghq-com-v1alpha1-types-kongcacertificatesourcetype)_ | Type indicates the source of the CA certificate data. Can be 'inline' or 'secretRef'. |
 | `controlPlaneRef` _[ControlPlaneRef](#common-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the Konnect Control Plane that this KongCACertificate should be created in. |
 | `adopt` _[AdoptOptions](#common-konghq-com-v1alpha1-types-adoptoptions)_ | Adopt is the options for adopting a CA certificate from an existing CA certificate in Konnect. |
-| `cert` _string_ | Cert is the PEM-encoded CA certificate. |
-| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. |
+| `secretRef` _[NamespacedRef](#common-konghq-com-v1alpha1-types-namespacedref)_ | SecretRef is a reference to a Kubernetes Secret containing the CA certificate. This field is used when type is 'secretRef'. The Secret must contain a key named 'ca.crt'. The namespace field is optional, but will be restricted by validation until ReferenceGrant support is implemented. |
+| `cert` _string_ | Cert is the PEM-encoded CA certificate. This field is used when type is 'inline'. |
+| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. Tags will be applied when type is 'inline' or 'secretRef'. This field allows you to attach metadata to the certificate for identification or organization purposes. |
 
 _Appears in:_
 
@@ -774,15 +820,35 @@ KongCertificateAPISpec contains the API specification for the KongCertificate.
 
 | Field | Description |
 | --- | --- |
-| `cert` _string_ | Cert is the PEM-encoded certificate. |
-| `cert_alt` _string_ | CertAlt is the PEM-encoded certificate. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. |
-| `key` _string_ | Key is the PEM-encoded private key. |
-| `key_alt` _string_ | KeyAlt is the PEM-encoded private key. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. |
-| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. |
+| `cert` _string_ | Cert is the PEM-encoded certificate. This field is used when type is 'inline'. |
+| `cert_alt` _string_ | CertAlt is the PEM-encoded certificate. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is used when type is 'inline'. |
+| `key` _string_ | Key is the PEM-encoded private key. This field is used when type is 'inline'. |
+| `key_alt` _string_ | KeyAlt is the PEM-encoded private key. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is used when type is 'inline'. |
+| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. Tags will be applied when type is 'inline' or 'secretRef'. This field allows you to attach metadata to the certificate for identification or organization purposes. |
 
 _Appears in:_
 
 - [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+
+#### KongCertificateSourceType
+
+_Underlying type:_ `string`
+
+KongCertificateSourceType is the type of source for the certificate data.
+
+
+
+
+_Appears in:_
+
+- [KongCertificateSpec](#configuration-konghq-com-v1alpha1-types-kongcertificatespec)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `inline` | KongCertificateSourceTypeInline indicates that the certificate data is provided inline in the spec.<br /> |
+| `secretRef` | KongCertificateSourceTypeSecretRef indicates that the certificate data is sourced from a Kubernetes Secret.<br /> |
 
 #### KongCertificateSpec
 
@@ -793,13 +859,16 @@ KongCertificateSpec contains the specification for the KongCertificate.
 
 | Field | Description |
 | --- | --- |
+| `type` _[KongCertificateSourceType](#configuration-konghq-com-v1alpha1-types-kongcertificatesourcetype)_ | Type indicates the source of the certificate data. Can be 'inline' or 'secretRef'. |
 | `controlPlaneRef` _[ControlPlaneRef](#common-konghq-com-v1alpha1-types-controlplaneref)_ | ControlPlaneRef references the Konnect Control Plane that this KongCertificate should be created in. |
 | `adopt` _[AdoptOptions](#common-konghq-com-v1alpha1-types-adoptoptions)_ | Adopt is the options for adopting a certificate from an existing certificate in Konnect. |
-| `cert` _string_ | Cert is the PEM-encoded certificate. |
-| `cert_alt` _string_ | CertAlt is the PEM-encoded certificate. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. |
-| `key` _string_ | Key is the PEM-encoded private key. |
-| `key_alt` _string_ | KeyAlt is the PEM-encoded private key. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. |
-| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. |
+| `secretRef` _[NamespacedRef](#common-konghq-com-v1alpha1-types-namespacedref)_ | SecretRef is a reference to a Kubernetes Secret containing the certificate and key. This field is used when type is 'secretRef'. The Secret must contain keys named 'tls.crt' and 'tls.key'. The namespace field is optional, but will be restricted by validation until ReferenceGrant support is implemented. |
+| `secretRefAlt` _[NamespacedRef](#common-konghq-com-v1alpha1-types-namespacedref)_ | SecretRefAlt is a reference to a Kubernetes Secret containing the alternative certificate and key. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is used when type is 'secretRef'. The Secret must contain keys named 'tls.crt' and 'tls.key'. The namespace field is optional, but will be restricted by validation until ReferenceGrant support is implemented. |
+| `cert` _string_ | Cert is the PEM-encoded certificate. This field is used when type is 'inline'. |
+| `cert_alt` _string_ | CertAlt is the PEM-encoded certificate. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is used when type is 'inline'. |
+| `key` _string_ | Key is the PEM-encoded private key. This field is used when type is 'inline'. |
+| `key_alt` _string_ | KeyAlt is the PEM-encoded private key. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is used when type is 'inline'. |
+| `tags` _[Tags](#common-konghq-com-v1alpha1-types-tags)_ | Tags is an optional set of tags applied to the certificate. Tags will be applied when type is 'inline' or 'secretRef'. This field allows you to attach metadata to the certificate for identification or organization purposes. |
 
 _Appears in:_
 
@@ -1296,7 +1365,7 @@ _Appears in:_
 #### KongLicenseStatus
 
 
-KongLicenseStatus stores the status of the KongLicense being processesed in each controller that reconciles it.
+KongLicenseStatus stores the status of the KongLicense being processed in each controller that reconciles it.
 
 
 
@@ -1375,14 +1444,31 @@ KongPluginBindingTargets contains the targets references.
 
 | Field | Description |
 | --- | --- |
-| `routeRef` _[TargetRefWithGroupKind](#configuration-konghq-com-v1alpha1-types-targetrefwithgroupkind)_ | RouteReference can be used to reference one of the following resouces: - networking.k8s.io/Ingress - gateway.networking.k8s.io/HTTPRoute - gateway.networking.k8s.io/GRPCRoute - configuration.konghq.com/KongRoute |
-| `serviceRef` _[TargetRefWithGroupKind](#configuration-konghq-com-v1alpha1-types-targetrefwithgroupkind)_ | ServiceReference can be used to reference one of the following resouces: - core/Service or /Service - configuration.konghq.com/KongService |
+| `routeRef` _[TargetRefWithGroupKind](#configuration-konghq-com-v1alpha1-types-targetrefwithgroupkind)_ | RouteReference can be used to reference one of the following resources: - networking.k8s.io/Ingress - gateway.networking.k8s.io/HTTPRoute - gateway.networking.k8s.io/GRPCRoute - configuration.konghq.com/KongRoute |
+| `serviceRef` _[TargetRefWithGroupKind](#configuration-konghq-com-v1alpha1-types-targetrefwithgroupkind)_ | ServiceReference can be used to reference one of the following resources: - core/Service or /Service - configuration.konghq.com/KongService |
 | `consumerRef` _[TargetRef](#configuration-konghq-com-v1alpha1-types-targetref)_ | ConsumerReference is used to reference a configuration.konghq.com/Consumer resource. The group/kind is fixed, therefore the reference is performed only by name. |
 | `consumerGroupRef` _[TargetRef](#configuration-konghq-com-v1alpha1-types-targetref)_ | ConsumerGroupReference is used to reference a configuration.konghq.com/ConsumerGroup resource. The group/kind is fixed, therefore the reference is performed only by name. |
 
 _Appears in:_
 
 - [KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)
+
+#### KongReferenceGrantSpec
+
+
+KongReferenceGrantSpec identifies a cross namespace relationship that is trusted
+for Kong APIs.
+
+
+
+| Field | Description |
+| --- | --- |
+| `from` _[ReferenceGrantFrom](#configuration-konghq-com-v1alpha1-types-referencegrantfrom)_ | From describes the trusted namespaces and kinds that can reference the resources described in "To". Each entry in this list MUST be considered to be an additional place that references can be valid from, or to put this another way, entries MUST be combined using OR. |
+| `to` _[ReferenceGrantTo](#configuration-konghq-com-v1alpha1-types-referencegrantto)_ | To describes the resources that may be referenced by the resources described in "From". Each entry in this list MUST be considered to be an additional place that references can be valid to, or to put this another way, entries MUST be combined using OR. |
+
+_Appears in:_
+
+- [KongReferenceGrant](#configuration-konghq-com-v1alpha1-kongreferencegrant)
 
 #### KongRouteAPISpec
 
@@ -1775,6 +1861,7 @@ Namespace refers to a Kubernetes namespace. It must be a RFC 1123 label.
 _Appears in:_
 
 - [ControllerReference](#configuration-konghq-com-v1alpha1-types-controllerreference)
+- [ReferenceGrantFrom](#configuration-konghq-com-v1alpha1-types-referencegrantfrom)
 
 #### ObjectName
 
@@ -1790,6 +1877,7 @@ RFC 1123 labels, or RFC 1035 labels.
 _Appears in:_
 
 - [ControllerReference](#configuration-konghq-com-v1alpha1-types-controllerreference)
+- [ReferenceGrantTo](#configuration-konghq-com-v1alpha1-types-referencegrantto)
 
 #### ObjectReference
 
@@ -1836,11 +1924,47 @@ PluginRef is a reference to a KongPlugin or KongClusterPlugin resource.
 | Field | Description |
 | --- | --- |
 | `name` _string_ | Name is the name of the KongPlugin or KongClusterPlugin resource. |
+| `namespace` _string_ | Namespace is the namespace of the referenced KongPlugin resource. Can only be set when Kind is KongPlugin. |
 | `kind` _*string_ | Kind can be KongPlugin or KongClusterPlugin. If not set, it is assumed to be KongPlugin. |
 
 _Appears in:_
 
 - [KongPluginBindingSpec](#configuration-konghq-com-v1alpha1-types-kongpluginbindingspec)
+
+#### ReferenceGrantFrom
+
+
+ReferenceGrantFrom describes trusted namespaces and kinds.
+
+
+
+| Field | Description |
+| --- | --- |
+| `group` _[Group](#configuration-konghq-com-v1alpha1-types-group)_ | Group is the group of the referent. |
+| `kind` _[Kind](#configuration-konghq-com-v1alpha1-types-kind)_ | Kind is the kind of the referent. |
+| `namespace` _[Namespace](#configuration-konghq-com-v1alpha1-types-namespace)_ | Namespace is the namespace of the referent. |
+
+_Appears in:_
+
+- [KongReferenceGrantSpec](#configuration-konghq-com-v1alpha1-types-kongreferencegrantspec)
+
+#### ReferenceGrantTo
+
+
+ReferenceGrantTo describes what Kinds are allowed as targets of the
+references.
+
+
+
+| Field | Description |
+| --- | --- |
+| `group` _[Group](#configuration-konghq-com-v1alpha1-types-group)_ | Group is the group of the referent. |
+| `kind` _[Kind](#configuration-konghq-com-v1alpha1-types-kind)_ | Kind is the kind of the referent. |
+| `name` _[ObjectName](#configuration-konghq-com-v1alpha1-types-objectname)_ | Name is the name of the referent. When unspecified, this policy refers to all resources of the specified Group and Kind in the local namespace. |
+
+_Appears in:_
+
+- [KongReferenceGrantSpec](#configuration-konghq-com-v1alpha1-types-kongreferencegrantspec)
 
 #### ServiceRef
 
@@ -1852,7 +1976,7 @@ ServiceRef is a reference to a KongService.
 | Field | Description |
 | --- | --- |
 | `type` _string_ | Type can be one of: - namespacedRef |
-| `namespacedRef` _[NameRef](#common-konghq-com-v1alpha1-types-nameref)_ | NamespacedRef is a reference to a KongService. |
+| `namespacedRef` _[NamespacedRef](#common-konghq-com-v1alpha1-types-namespacedref)_ | NamespacedRef is a reference to a KongService. If namespace is not specified, the KongService in the same namespace as the referencing entity. Namespace can be specified to reference a KongService in a different namespace but this requires a KongReferenceGrant in the target namespace allowing the reference. |
 
 _Appears in:_
 
@@ -2356,7 +2480,7 @@ AIGatewaySpec defines the desired state of an AIGateway.
 | Field | Description |
 | --- | --- |
 | `gatewayClassName` _string_ | GatewayClassName is the name of the GatewayClass which is responsible for the AIGateway. |
-| `largeLanguageModels` _[LargeLanguageModels](#gateway-operator-konghq-com-v1alpha1-types-largelanguagemodels)_ | LargeLanguageModels is a list of Large Language Models (LLMs) to be managed by the AI Gateway.<br /><br />This is a required field because we only support LLMs at the moment. In future iterations we may support other model types. |
+| `largeLanguageModels` _[LargeLanguageModels](#gateway-operator-konghq-com-v1alpha1-types-largelanguagemodels)_ | LargeLanguageModels is a list of Large Language Models (LLMs) to be managed by the {{site.ai_gateway}}.<br /><br />This is a required field because we only support LLMs at the moment. In future iterations we may support other model types. |
 | `cloudProviderCredentials` _[AICloudProviderAPITokenRef](#gateway-operator-konghq-com-v1alpha1-types-aicloudproviderapitokenref)_ | CloudProviderCredentials is a reference to an object (e.g. a Kubernetes Secret) which contains the credentials needed to access the APIs of cloud providers.<br /><br />This is the global configuration that will be used by DEFAULT for all model configurations. A secret configured this way MAY include any number of key-value pairs equal to the number of providers you have, but used this way the keys MUST be named according to their providers (e.g. "openai", "azure", "cohere", e.t.c.). For example:<br /><br />  apiVersion: v1   kind: Secret   metadata:     name: devteam-ai-cloud-providers   type: Opaque   data:     openai: *****************     azure: *****************     cohere: *****************<br /><br />See AICloudProviderName for a list of known and valid cloud providers.<br /><br />Note that the keys are NOT case-sensitive (e.g. "OpenAI", "openai", and "openAI" are all valid and considered the same keys) but if there are duplicates endpoints failures conditions will be emitted and endpoints will not be configured until the duplicates are resolved.<br /><br />This is currently considered required, but in future iterations will be optional as we do things like enable configuring credentials at the model level. |
 
 _Appears in:_
@@ -3936,6 +4060,26 @@ Allowed values:
 | `enabled` | ControlPlaneKonnectConsumersSyncStateEnabled indicates that consumer synchronization is enabled.<br /> |
 | `disabled` | ControlPlaneKonnectConsumersSyncStateDisabled indicates that consumer synchronization is disabled.<br /> |
 
+#### ControlPlaneKonnectLicenseStorageState
+
+_Underlying type:_ `string`
+
+ControlPlaneKonnectLicenseStorageState defines the state of Konnect licensing.
+
+
+
+
+_Appears in:_
+
+- [ControlPlaneKonnectLicensing](#gateway-operator-konghq-com-v2beta1-types-controlplanekonnectlicensing)
+
+Allowed values:
+
+| Value | Description |
+| --- | --- |
+| `enabled` | ControlPlaneKonnectLicenseStorageStateEnabled indicates that Konnect license storage is enabled.<br /> |
+| `disabled` | ControlPlaneKonnectLicenseStorageStateDisabled indicates that Konnect license storage is disabled.<br /> |
+
 #### ControlPlaneKonnectLicensing
 
 
@@ -3948,7 +4092,7 @@ ControlPlaneKonnectLicensing defines the configuration for Konnect licensing.
 | `state` _[ControlPlaneKonnectLicensingState](#gateway-operator-konghq-com-v2beta1-types-controlplanekonnectlicensingstate)_ | State indicates whether Konnect licensing is enabled. |
 | `initialPollingPeriod` _*k8s.io/apimachinery/pkg/apis/meta/v1.Duration_ | InitialPollingPeriod is the initial polling period for license checks. |
 | `pollingPeriod` _*k8s.io/apimachinery/pkg/apis/meta/v1.Duration_ | PollingPeriod is the polling period for license checks. |
-| `storageState` _[ControlPlaneKonnectLicensingState](#gateway-operator-konghq-com-v2beta1-types-controlplanekonnectlicensingstate)_ | StorageState indicates whether to store licenses fetched from Konnect to Secrets locally to use them later when connection to Konnect is broken. Only effective when State is set to enabled. |
+| `storageState` _[ControlPlaneKonnectLicenseStorageState](#gateway-operator-konghq-com-v2beta1-types-controlplanekonnectlicensestoragestate)_ | StorageState indicates whether to store licenses fetched from Konnect to Secrets locally to use them later when connection to Konnect is broken. Only effective when State is set to enabled. |
 
 _Appears in:_
 
@@ -4400,7 +4544,7 @@ KonnectOptions contains the options for configuring a Konnect-managed ControlPla
 
 | Field | Description |
 | --- | --- |
-| `authRef` _[KonnectAPIAuthConfigurationRef](#konnect-konghq-com-v1alpha2-types-konnectapiauthconfigurationref)_ | APIAuthConfigurationRef contains the Konnect API authentication configuration. If this field is not set, the operator will not be able to connect the Gateway to Konnect. |
+| `authRef` _[ControlPlaneKonnectAPIAuthConfigurationRef](#konnect-konghq-com-v1alpha2-types-controlplanekonnectapiauthconfigurationref)_ | APIAuthConfigurationRef contains the Konnect API authentication configuration. If this field is not set, the operator will not be able to connect the Gateway to Konnect. |
 | `source` _[EntitySource](#common-konghq-com-v1alpha1-types-entitysource)_ | Source represents the source type of the Konnect entity. |
 | `mirror` _[MirrorSpec](#konnect-konghq-com-v1alpha1-types-mirrorspec)_ | Mirror is the Konnect Mirror configuration. It is only applicable for ControlPlanes that are created as Mirrors. |
 
@@ -5608,8 +5752,7 @@ Package v1alpha2 contains API Schema definitions for the konnect.konghq.com v1al
 
 
 KonnectExtension is the Schema for the KonnectExtension API, and is intended to be referenced as
-extension by the DataPlane, ControlPlane or GatewayConfiguration APIs.
-If one of the above mentioned resources successfully refers a KonnectExtension, the underlying
+extension by the DataPlane, ControlPlane or GatewayConfiguration APIs.<br /><br />If one of the above mentioned resources successfully refers a KonnectExtension, the underlying
 deployment(s) spec gets customized to include the konnect-related configuration.
 
 <!-- konnect_extension description placeholder -->
@@ -5656,6 +5799,40 @@ _Appears in:_
 
 - [KonnectExtensionClientAuth](#konnect-konghq-com-v1alpha2-types-konnectextensionclientauth)
 
+#### ControlPlaneKonnectAPIAuthConfigurationRef
+
+
+ControlPlaneKonnectAPIAuthConfigurationRef is a reference to a KonnectAPIAuthConfiguration resource
+in the control plane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `name` _string_ | Name is the name of the KonnectAPIAuthConfiguration resource. |
+| `namespace` _*string_ | Namespace is the namespace of the KonnectAPIAuthConfiguration resource. If not specified, defaults to the same namespace as the KonnectConfiguration resource. |
+
+_Appears in:_
+
+- [ControlPlaneKonnectConfiguration](#konnect-konghq-com-v1alpha2-types-controlplanekonnectconfiguration)
+- [KonnectExtensionControlPlaneStatus](#konnect-konghq-com-v1alpha2-types-konnectextensioncontrolplanestatus)
+- [KonnectOptions](#gateway-operator-konghq-com-v2beta1-types-konnectoptions)
+
+#### ControlPlaneKonnectConfiguration
+
+
+ControlPlaneKonnectConfiguration is the Schema for the KonnectConfiguration API in the control plane.
+
+
+
+| Field | Description |
+| --- | --- |
+| `authRef` _[ControlPlaneKonnectAPIAuthConfigurationRef](#konnect-konghq-com-v1alpha2-types-controlplanekonnectapiauthconfigurationref)_ | APIAuthConfigurationRef is the reference to the API Auth Configuration that should be used for this Konnect Configuration. |
+
+_Appears in:_
+
+- [KonnectGatewayControlPlaneSpec](#konnect-konghq-com-v1alpha2-types-konnectgatewaycontrolplanespec)
+
 #### DataPlaneClientAuthStatus
 
 
@@ -5698,8 +5875,6 @@ KonnectAPIAuthConfigurationRef is a reference to a KonnectAPIAuthConfiguration r
 _Appears in:_
 
 - [KonnectConfiguration](#konnect-konghq-com-v1alpha2-types-konnectconfiguration)
-- [KonnectExtensionControlPlaneStatus](#konnect-konghq-com-v1alpha2-types-konnectextensioncontrolplanestatus)
-- [KonnectOptions](#gateway-operator-konghq-com-v2beta1-types-konnectoptions)
 
 #### KonnectConfiguration
 
@@ -5717,7 +5892,6 @@ _Appears in:_
 - [KonnectCloudGatewayNetworkSpec](#konnect-konghq-com-v1alpha1-types-konnectcloudgatewaynetworkspec)
 - [KonnectExtensionKonnectSpec](#konnect-konghq-com-v1alpha1-types-konnectextensionkonnectspec)
 - [KonnectGatewayControlPlaneSpec](#konnect-konghq-com-v1alpha1-types-konnectgatewaycontrolplanespec)
-- [KonnectGatewayControlPlaneSpec](#konnect-konghq-com-v1alpha2-types-konnectgatewaycontrolplanespec)
 
 #### KonnectEndpoints
 
@@ -5767,7 +5941,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneAndCertificateRefs
 
 
-KonnectEntityStatusWithControlPlaneAndCertificateRefs represents the status of a Konnect entity with references to a ControlPlane and a Certificate.
+KonnectEntityStatusWithControlPlaneAndCertificateRefs represents the status
+of a Konnect entity with references to a ControlPlane and a Certificate.
 
 
 
@@ -5786,7 +5961,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneAndConsumerRefs
 
 
-KonnectEntityStatusWithControlPlaneAndConsumerRefs represents the status of a Konnect entity with references to a ControlPlane and a Consumer.
+KonnectEntityStatusWithControlPlaneAndConsumerRefs represents the status
+of a Konnect entity with references to a ControlPlane and a Consumer.
 
 
 
@@ -5809,7 +5985,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneAndKeySetRef
 
 
-KonnectEntityStatusWithControlPlaneAndKeySetRef represents the status of a Konnect entity with references to a ControlPlane and a KeySet.
+KonnectEntityStatusWithControlPlaneAndKeySetRef represents the status
+of a Konnect entity with references to a ControlPlane and a KeySet.
 
 
 
@@ -5828,7 +6005,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneAndServiceRefs
 
 
-KonnectEntityStatusWithControlPlaneAndServiceRefs represents the status of a Konnect entity with references to a ControlPlane and a Service.
+KonnectEntityStatusWithControlPlaneAndServiceRefs represents the status
+of a Konnect entity with references to a ControlPlane and a Service.
 
 
 
@@ -5847,7 +6025,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneAndUpstreamRefs
 
 
-KonnectEntityStatusWithControlPlaneAndUpstreamRefs represents the status of a Konnect entity with references to a ControlPlane and an Upstream.
+KonnectEntityStatusWithControlPlaneAndUpstreamRefs represents the status
+of a Konnect entity with references to a ControlPlane and an Upstream.
 
 
 
@@ -5866,7 +6045,8 @@ _Appears in:_
 #### KonnectEntityStatusWithControlPlaneRef
 
 
-KonnectEntityStatusWithControlPlaneRef represents the status of a Konnect entity with a reference to a ControlPlane.
+KonnectEntityStatusWithControlPlaneRef represents the status of a Konnect entity
+with a reference to a ControlPlane.
 
 
 
@@ -5894,7 +6074,8 @@ _Appears in:_
 #### KonnectEntityStatusWithNetworkRef
 
 
-KonnectEntityStatusWithNetworkRef represents the status of a Konnect entity with reference to a Konnect cloud gateway network.
+KonnectEntityStatusWithNetworkRef represents the status of a Konnect entity
+with reference to a Konnect cloud gateway network.
 
 
 
@@ -5973,7 +6154,7 @@ KonnectExtensionControlPlaneStatus contains the Konnect Control Plane status inf
 | `controlPlaneID` _string_ | ControlPlaneID is the Konnect ID of the ControlPlane this KonnectExtension is associated with. |
 | `clusterType` _[KonnectExtensionClusterType](#konnect-konghq-com-v1alpha2-types-konnectextensionclustertype)_ | ClusterType is the type of the Konnect Control Plane. |
 | `endpoints` _[KonnectEndpoints](#konnect-konghq-com-v1alpha2-types-konnectendpoints)_ | Endpoints defines the Konnect endpoints for the control plane. |
-| `authRef` _[KonnectAPIAuthConfigurationRef](#konnect-konghq-com-v1alpha2-types-konnectapiauthconfigurationref)_ | AuthRef is the reference to the KonnectAPIAuthConfiguration used to authenticate with Konnect. For particular KonnectExtension and ControlPlane combination. |
+| `authRef` _[ControlPlaneKonnectAPIAuthConfigurationRef](#konnect-konghq-com-v1alpha2-types-controlplanekonnectapiauthconfigurationref)_ | AuthRef is the reference to the KonnectAPIAuthConfiguration used to authenticate with Konnect. For particular KonnectExtension and ControlPlane combination. |
 
 _Appears in:_
 
@@ -6058,7 +6239,7 @@ KonnectGatewayControlPlaneSpec defines the desired state of KonnectGatewayContro
 | `mirror` _[MirrorSpec](#konnect-konghq-com-v1alpha2-types-mirrorspec)_ | Mirror is the Konnect Mirror configuration. It is only applicable for ControlPlanes that are created as Mirrors. |
 | `source` _[EntitySource](#common-konghq-com-v1alpha1-types-entitysource)_ | Source represents the source type of the Konnect entity. |
 | `members` _[LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#localobjectreference-v1-core) array_ | Members is a list of references to the KonnectGatewayControlPlaneMembers that are part of this control plane group. Only applicable for ControlPlanes that are created as groups. |
-| `konnect` _[KonnectConfiguration](#konnect-konghq-com-v1alpha2-types-konnectconfiguration)_ | KonnectConfiguration contains the Konnect configuration for the control plane. |
+| `konnect` _[ControlPlaneKonnectConfiguration](#konnect-konghq-com-v1alpha2-types-controlplanekonnectconfiguration)_ | KonnectConfiguration contains the Konnect configuration for the control plane. |
 
 _Appears in:_
 

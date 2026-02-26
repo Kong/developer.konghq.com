@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.1.2
+  version: 3.1.5
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
+  x-oas-source: kong/platform-api@408ea0ec3518b52070809011e4600c17c9199642
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/408ea0ec3518b52070809011e4600c17c9199642'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -3828,7 +3828,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer
@@ -4011,6 +4011,11 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignRoleRequest
     PortalAuthenticationSettingsUpdateRequest:
       description: Properties to update a portal's developer auth settings.
@@ -4281,6 +4286,12 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - id
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignedRoleResponse
     ListDomains:
       type: object
@@ -5512,6 +5523,12 @@ components:
       type: string
       example: YOUR_CLIENT_ID
       title: OIDC Identity Provider Login Client Id Property
+    OIDCIdentityProviderClientSecret:
+      description: The Client Secret assigned to your application by the identity provider.
+      type: string
+      example: YOUR_CLIENT_SECRET
+      title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -5552,6 +5569,8 @@ components:
           $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
         client_id:
           $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        client_secret:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
         scopes:
           $ref: '#/components/schemas/OIDCIdentityProviderScopes'
         claim_mappings:
@@ -5623,30 +5642,6 @@ components:
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
-    OIDCIdentityProviderClientSecret:
-      description: The Client Secret assigned to your application by the identity provider.
-      type: string
-      example: YOUR_CLIENT_SECRET
-      title: OIDC Identity Provider Login Client Secret Property
-    ConfigureOIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        client_secret:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
     CreateIdentityProvider:
       description: The identity provider that contains configuration data for creating an authentication integration.
       type: object
@@ -5658,7 +5653,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
     UpdateIdentityProvider:
@@ -5670,7 +5665,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
   examples:
@@ -6690,7 +6685,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer

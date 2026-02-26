@@ -35,9 +35,9 @@ icon: ai-rag-injector.png
 categories:
   - ai
 related_resources:
-  - text: All AI Gateway plugins
+  - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
-  - text: About AI Gateway
+  - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: AI Semantic Cache plugin
     url: /plugins/ai-semantic-cache/
@@ -136,7 +136,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 
 * **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context without custom retrieval logic.
 * **Platform-level control:** Shifts RAG logic from app code to infrastructure, allowing platform teams to enforce global policies, update configurations centrally, and reduce developer overhead.
-* **Improved security:** Vector DB access is limited to the AI Gateway, eliminating the need to expose it to individual dev teams or AI agents.
+* **Improved security:** Vector DB access is limited to the {{site.ai_gateway}}, eliminating the need to expose it to individual dev teams or AI agents.
 * **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
 * **Developer productivity:** Developers can focus on building AI features without needing to manage embeddings, similarity search, or context handling.
 * {% new_in 3.11 %} **Save LLM costs:** When using the AI RAG Injector plugin with the AI Prompt Compressor, you can wrap specific prompt parts in `<LLMLINGUA>` tags within your template to target only those sections for compression, preserving the rest of the prompt unchanged.
@@ -148,7 +148,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model.
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
-1. When a request reaches the AI Gateway, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
+1. When a request reaches the {{site.ai_gateway}}, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
 1. The plugin injects the retrieved content from the vector search result into the request body, and forwards the request to the upstream service.
 
 The following diagram is a simplified overview of how the plugin works.  See the [following section](#rag-generation-process) for a more detailed description.

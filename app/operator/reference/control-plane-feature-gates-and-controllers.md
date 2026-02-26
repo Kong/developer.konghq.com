@@ -22,12 +22,13 @@ related_resources:
   - text: Gateway API reference
     url: /operator/dataplanes/gateway-api/
   - text: Get started with {{ site.operator_product_name }} in {{site.konnect_short_name}}
-    url: /operator/konnect/get-started/install/
+    url: /operator/get-started/gateway-api/install/
 ---
 
 This guide explains how to configure feature gates and controllers for a ControlPlane in {{ site.operator_product_name }}. Feature gates (`spec.featureGates`) allow you to enable or disable specific features, while controllers (`spec.controllers`) allow you to enable or disable specific resource reconciliation.
 
 You can use these for the following use cases:
+
 * [Enable Gateway API support](#enable-gateway-api-support)
 * [Minimal Ingress-only configuration](#minimal-ingress-only-configuration)
 * [Enable experimental features](#enable-experimental-features)
@@ -151,7 +152,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-
 #### {{site.base_gateway}} controllers
 
 The following {{site.base_gateway}} controllers are available in {{ site.operator_product_name }}:
@@ -211,7 +211,6 @@ rows:
     description: Manages Kubernetes Service resources.
 {% endtable %}
 <!--vale on-->
-
 
 #### Gateway API controllers
 

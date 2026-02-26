@@ -62,10 +62,13 @@ autoscales
 autoscaling
 Avro
 aws
+Adyen
 AZs
+Backblaze
 backfilled
 Backfilling
 backfilling
+backoff
 backport
 backported
 backporting
@@ -86,6 +89,7 @@ Bintray
 Bintray
 Bitnami
 Bitnami
+bloblang
 blockquote
 blockquotes
 body_filter
@@ -113,6 +117,7 @@ chatwise
 cidr
 cidrs
 cleartext
+cli
 client_credentials
 client_payload
 client_status
@@ -154,11 +159,13 @@ crds
 created_at
 creationTimestamp
 CRMs
+cron
 cronjob
 CrowdStrike
 cryptocurrency
 Curity
 curity
+cutover
 DAO
 DAO
 dao
@@ -166,7 +173,8 @@ DAOs
 DAOs
 daos
 dashboarding
-Dashscope
+DashScope
+dashscope
 Datadog
 Datadog
 datadog
@@ -243,6 +251,7 @@ Equinix
 Equinix
 Equinix
 Equinix
+ERPs
 etag
 etcd
 event_hook
@@ -268,6 +277,7 @@ firstTimestamp
 flamegraph
 Flatpak
 foogineer
+FQDNs
 full_name
 Gateway
 GatewayClass
@@ -449,6 +459,7 @@ Knatives
 knep
 kong
 kongair
+kongctl
 kong_konnect_api_request
 kong_name
 kong-ip
@@ -549,6 +560,7 @@ misconfiguration
 misconfigurations
 misconfigured
 Mockbin
+mockbin
 modelarmor
 Moesif
 Moesif
@@ -559,6 +571,7 @@ multimodal
 multitenant
 multitenancy
 mutex
+NACLs
 nameserver
 nameservers
 namespace
@@ -600,6 +613,7 @@ nopped
 nopping
 npm
 nrec
+Nvidia
 OAuth
 OAuth
 observability
@@ -678,6 +692,7 @@ proto
 Protobuf
 Protobuf
 protobuf
+proviance
 proxied
 proxy_listen
 proxy_ssl
@@ -687,6 +702,8 @@ Qdrant
 qubit
 querystring
 qux
+Qwen
+qwen
 ratelimit
 rbac
 reachability
@@ -700,6 +717,7 @@ Realtime
 realtime
 reconverge
 redis
+Redpanda
 reentrant
 referenceable
 ReferenceGrant
@@ -786,6 +804,7 @@ snis
 sonarqube
 Splunk
 Splunk
+sse
 ssl
 ssl_cert_key
 ssl_certificate
@@ -883,6 +902,7 @@ transcoded
 transcoder
 transpile
 transpiled
+trendai
 trusted_ips
 truststore
 truthy
@@ -977,6 +997,7 @@ vms
 vnet
 vpc
 vpcs
+VS Code
 Vue
 Vue
 walkthrough

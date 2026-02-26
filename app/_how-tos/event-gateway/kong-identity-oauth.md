@@ -1,6 +1,7 @@
 ---
 title: Set up {{site.event_gateway}} with Kong Identity OAuth
 content_type: how_to
+permalink: /event-gateway/kong-identity-oauth/
 breadcrumbs:
   - /event-gateway/
  
@@ -170,9 +171,9 @@ body:
 For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}.
 In production, we recommend using [SNI routing](/event-gateway/architecture/#hostname-mapping) instead.
 
-## Create an ACL policies for the client
+## Create an ACL policy for the client
 
-Add the ACL policy for the client:
+Add an ACL policy for the client with an allow list for matched operations:
 
 <!--vale off-->
 {% konnect_api_request %}
