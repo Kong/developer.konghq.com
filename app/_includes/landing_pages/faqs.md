@@ -1,1 +1,1 @@
-{% faqs include.config %}
+{%- faqs include.config -%}
