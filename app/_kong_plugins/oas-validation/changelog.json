@@ -88,6 +88,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for the `discriminator` keyword in OpenAPI specs.",
