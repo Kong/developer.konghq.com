@@ -16,6 +16,13 @@ related_resources:
     url: /metering-and-billing/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
+faqs:
+  - q: How is the default payment method set for customers in {{site.metering_and_billing}} when it's integrated with Stripe?
+    a: |
+     When you add a payment method to a customer in {{site.metering_and_billing}}, that method becomes the default. However, if you leave the payment method field in {{site.metering_and_billing}} blank, {{site.metering_and_billing}} will fall back to the default payment method set in Stripe (if any).
+  - q: How do I configure the customer's invoicing email when {{site.metering_and_billing}} is integrated with Stripe?
+    a: |
+     Unfortunately, Stripe doesn't provide an API to set the email address for invoices. So you need to make sure to set the email address for the Stripe customer via the Stripe Dashboard. The email address on the {{site.metering_and_billing}} customer will be ignored with Stripe Invoicing.
 ---
 
 You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.metering_and_billing}} to:
@@ -23,7 +30,7 @@ You can integrate Stripe Invoicing with {{site.konnect_short_name}} {{site.meter
 * Deliver invoices to customers via Stripe Invoicing
 * Charge credit cards and automate revenue collection via Stripe Payments
 * Enable automatic sales tax calculation via Stripe tax
-* Support multiple payment methods and currencies including cryptocurrency
+* Support multiple payment methods and [currencies](https://docs.stripe.com/currencies) including cryptocurrency
 
 ## Revenue Lifecycle
 
@@ -57,16 +64,8 @@ Configuring {{site.metering_and_billing}} with Stripe involves the following ste
 When you configure the Stripe app in {{site.metering_and_billing}}, {{site.konnect_short_name}} uses [Stripe Invoicing](https://stripe.com/invoicing) to synchronize and deliver invoices, automate tax calculations (if enabled), and reconcile transactions. 
 
 {{site.metering_and_billing}} supports two payment collection methods with Stripe:
-1. **Charge Automatically (default):** {{site.metering_and_billing}} will tell Stripe to collect charges with the default payment method for the customer. This method works well for self service use cases. To collect charges automatically, you need to have a default payment method set for customer.
-   
-   {:.info}
-   > **Customer Default Payment Method**
-   > When you add a payment method to a customer in {{site.metering_and_billing}}, that method becomes the default. However, if you leave the payment method field in {{site.metering_and_billing}} blank, {{site.metering_and_billing}} will fall back to the default payment method set in Stripe (if any).
-1. **Send Invoice:** {{site.metering_and_billing}} will tell Stripe to email the invoice to the customer with the payment instructions. This method works well for enterprise clients. To send an invoice, you need to have an email address set for the Stripe customer.
-   
-   {:.info}
-   > **Invoicing Email**<br>
-   > Unfortunately, Stripe does not provide an API to set the email address for invoices. So you need to make sure to set the email address for the Stripe Customer via the Stripe Dashboard. The email address on the {{site.metering_and_billing}} Customer will be ignored with Stripe Invoicing.
+* **Charge Automatically (default):** {{site.metering_and_billing}} will tell Stripe to collect charges with the default payment method for the customer. This method works well for self service use cases. To collect charges automatically, you need to have a default payment method set for customer.
+* **Send Invoice:** {{site.metering_and_billing}} will tell Stripe to email the invoice to the customer with the payment instructions. This method works well for enterprise clients. To send an invoice, you need to have an email address set for the Stripe customer.
 
 You can use one or both methods by setting up one or more billing profiles. This is useful if you have different payment collection methods for different customers. For example, you can have a billing profile for self-service customers with automatic payment collection and a billing profile for enterprise customers with email invoicing. You can set the self-service billing profile as the default and link enterprise customers to the enterprise billing profile. This way your self-service customers are charged automatically and your enterprise clients will receive an email invoice.
 
