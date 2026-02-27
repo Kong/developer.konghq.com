@@ -130,10 +130,34 @@ function deriveProduct(setup, products) {
   // - Object like {"gateway": "3.9"} -> product is the key (e.g., "gateway")
   // - String like "operator" -> product is the string itself
   // - String like "konnect" -> product must be derived from the products list
+  if (!Array.isArray(setup) || setup.length === 0) {
+    throw new Error("deriveProduct: 'setup' must be a non-empty array.");
+  }
+
   const setupEntry = setup[0];
+
+  if (setupEntry == null) {
+    // This can happen if data-test-setup is missing and JSON.parse(null) was used.
+    throw new Error(
+      "deriveProduct: 'setup[0]' is null or undefined. Ensure data-test-setup is present and valid.",
+    );
+  }
+
   if (typeof setupEntry === "object") {
     // e.g., {"gateway": "3.9"} -> "gateway"
-    return Object.keys(setupEntry)[0];
+    const keys = Object.keys(setupEntry);
+    if (keys.length === 0) {
+      throw new Error(
+        "deriveProduct: 'setup[0]' object must have at least one key.",
+      );
+    }
+    return keys[0];
+  }
+
+  if (typeof setupEntry !== "string") {
+    throw new Error(
+      `deriveProduct: Unsupported type for 'setup[0]': ${typeof setupEntry}. Expected object or string.`,
+    );
   }
   // String value
   if (setupEntry === "konnect") {
