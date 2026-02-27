@@ -44,9 +44,10 @@ related_resources:
 
 ## Select a specification
 
-In your workspace, click **Import** and select the source of the import: **File**, **URL**, or **Clipboard**. Based on the source, either choose a file, enter a URL, or copy your API specification.
+In your workspace, click **Import** and select the source of the import: **File**, **URL**, **cURL**, or **Clipboard**. Based on the source, either choose a file, enter a URL, or copy your API specification.
 
-You can also paste a cURL command directly into the import flow. Insomnia automatically detects and converts it into a request.
+{:.info}
+> Insomnia automatically detects cURL commands and converts them into requests.
 
 ## Scan the specification
 
