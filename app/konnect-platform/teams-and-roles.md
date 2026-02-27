@@ -635,9 +635,27 @@ rows:
 The following table describes the predefined roles for identity:
 
 <!--vale off-->
-{% konnect_roles_table %}
-schema: identity
-{% endkonnect_roles_table %}
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: This role grants full write access to the Identity configuration.
+    permissions: |
+      * Read, list, and update organization configurations
+      * Read, list, and update IdP configurations
+      * Create, update, and delete users
+      * Read, list, and revoke user tokens (PATs)
+      * Create, update, and delete teams
+      * Create, update, and delete system accounts
+      * Create, read, list, update, and delete system account tokens
+      * Read, list, update roles for users, teams, and system accounts
+{% endtable %}
 <!--vale on-->
 
 #### MCP registry
