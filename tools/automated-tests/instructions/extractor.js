@@ -125,16 +125,37 @@ async function extractSteps(page) {
   return instructions;
 }
 
-async function writeInstructionsToFile(url, config, platform, instructions) {
-  let runtime = platform;
-  if (runtime === "on-prem") {
-    runtime = "gateway";
+function deriveProduct(setup, products) {
+  // The setup config tells us the product:
+  // - Object like {"gateway": "3.9"} -> product is the key (e.g., "gateway")
+  // - String like "operator" -> product is the string itself
+  // - String like "konnect" -> product must be derived from the products list
+  const setupEntry = setup[0];
+  if (typeof setupEntry === "object") {
+    // e.g., {"gateway": "3.9"} -> "gateway"
+    return Object.keys(setupEntry)[0];
   }
+  // String value
+  if (setupEntry === "konnect") {
+    // For konnect, determine the product from the products list
+    if (products.includes("ai-gateway")) {
+      return "ai-gateway";
+    }
+    if (products.includes("event-gateway")) {
+      return "event-gateway";
+    }
+    return "gateway";
+  }
+  // e.g., "operator"
+  return setupEntry;
+}
 
+async function writeInstructionsToFile(url, config, platform, product, instructions) {
   const instructionsFile = path.join(
     config.instructionsDir,
     url.pathname,
-    `${runtime}.yaml`,
+    platform,
+    `${product}.yaml`,
   );
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
@@ -184,6 +205,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
+      const product = deriveProduct(setup, products);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
       const cleanup = await extractCleanup(page);
@@ -191,6 +213,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         url,
         config,
         platform,
+        product,
         {
           name,
           setup,
