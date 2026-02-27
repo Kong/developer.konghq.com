@@ -27,7 +27,7 @@ related_resources:
 faqs:
   - q: Do SCIM tokens expire?
     a: |
-      Yes. SCIM tokens can expire. However, Insomnia automatically attempts to refresh the token every 90 days. If the automatic refresh fails, Insomnia warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. If it fails, on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view, manually refresh the token.
+      Yes. SCIM tokens can expire. However, Insomnia automatically attempts to refresh the token before it expires. If the automatic refresh fails, Insomnia warns the account owner and co-owners by email and on the SCIM view starting 20 days before the token expires. If it fails, on the [SCIM](https://app.insomnia.rest/app/enterprise/scim) view, manually refresh the token.
 
       To fix an automatic token refresh failure, go to [SCIM](https://app.insomnia.rest/app/enterprise/scim), and click **Refresh Token**. Then, in the **Passphrase** field, enter your passphrase, and click **Refresh Token** again. This manually refreshes your SCIM connector token.
   - q: What happens if Insomnia cannot refresh the SCIM token automatically?
@@ -131,13 +131,15 @@ When a token is close to expiration and cannot be refreshed automatically, Insom
 
 SCIM provisioning uses a connector URL and token generated in Insomnia. The token authorizes your IdP to provision users and teams. When you enable SCIM in Insomnia from the Enterprise Controls, a modal opens for you to generate the token.
 
+When generating the token, you can choose an expiration window. Available options include 30 days, 90 days, 180 days, 1 year, 2 years, or no expiration.
+
 {:.warning}
 > The token is displayed only once when it is generated. Store it securely. If you lose the token, refresh it in Insomnia and update the token in your IdP. To manually refresh the SCIM token, navigate to [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
 
 
 ### Automatic token refresh
 
-SCIM tokens expire based on the configuration in your identity provider. When a token approaches expiration or becomes invalid, Insomnia warns account owners and co-owners.
+SCIM tokens expire based on the expiration window selected when the token is generated in Insomnia.
 
 If the token expires and is not renewed:
 
