@@ -70,7 +70,7 @@ The script will iterate over the list of `how-tos`, check if it needs to generat
 
 * The frontmatter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* One of `gateway`, `ai-gateway`, `event-gateway`, or `operator` is set as `products` in the frontmatter.
+* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
