@@ -153,10 +153,6 @@ rows:
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
                 - text: VNET peering and outbound DNS resolver
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
-                - text: VWAN and private DNS zones
-                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
-                - text: VWAN and outbound DNS resolver
-                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
   - header:
       type: h2
       text: "Service-level private access"
