@@ -349,6 +349,28 @@ columns:
   - title: CRUD permissions
     key: permissions
 rows:
+  - role: "`Discovery Admin`"
+    description: Can read and create discovery ingestion jobs and fully manage suggestion rules, suggested actions and resources.
+    permissions: |
+      * Read and list integration instances.
+      * List integrations.
+      * Read and list integration auth credentials.
+      * Create and read discovery ingestion jobs.
+      * List resource actions.
+      * Read, list, create, edit, delete and test discovery suggestion rules.
+      * Read, list and edit discovery suggested actions.
+      * Read, list, create, edit and ingest resources.
+  - role: "`Discovery Viewer`"
+    description: Access to read-only permissions for discovery.
+    permissions: |
+      * Read and list integration instances.
+      * List integrations.
+      * Read and list integration auth credentials.
+      * Read and create discovery ingestion jobs.
+      * List resource actions.
+      * Read and list discovery suggestion rules.
+      * Read and list discovery suggested actions.
+      * Read and list resources.
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
     permissions: |
