@@ -1,6 +1,5 @@
 ---
-title: Making API requests using kongctl
-short_title: kongctl api overview
+title: kongctl api
 description: Make API requests using kongctl.
 
 content_type: reference

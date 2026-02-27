@@ -1,6 +1,5 @@
 ---
-title: Planning changes using kongctl
-short_title: kongctl plan overview
+title: kongctl plan
 description: Plan changes using kongctl.
 
 content_type: reference

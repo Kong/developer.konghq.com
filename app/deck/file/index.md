@@ -1,6 +1,6 @@
 ---
 title: File manipulation using decK file
-short_title: decK file overview
+short_title: decK file
 description: Manipulate a decK configuration file programmatically. Layer in additional configuration and lint against your governance rules.
 weight: 1000
 

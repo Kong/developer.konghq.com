@@ -138,7 +138,7 @@ rows:
           description: Explore the full set of kongctl commands and options for managing {{site.konnect_short_name}} resources.
           cta:
             text: kongctl CLI reference
-            url: /index/kongctl/#cli-reference
+            url: /index/kongctl/#cli-references
             align: end
 
   - header:
@@ -262,7 +262,7 @@ rows:
     - blocks:
        - type: text
          config: |
-          [View all kongctl commands and options &rarr;](/index/kongctl/#cli-reference)
+          [View all kongctl commands and options &rarr;](/index/kongctl/#cli-references)
 
   - header:
       text: "Frequently asked questions"

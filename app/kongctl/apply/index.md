@@ -1,6 +1,5 @@
 ---
-title: "Applying {{site.konnect_short_name}} configuration using kongctl"
-short_title: kongctl apply overview
+title: kongctl apply
 description: "Apply {{site.konnect_short_name}} configuration using kongctl."
 
 content_type: reference

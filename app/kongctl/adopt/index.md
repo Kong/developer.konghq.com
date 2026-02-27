@@ -1,6 +1,5 @@
 ---
-title: Adopting Kong resources using kongctl
-short_title: kongctl adopt overview
+title: kongctl adopt
 description: Adopt Kong resources using kongctl.
 
 content_type: reference

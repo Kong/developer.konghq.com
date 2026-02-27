@@ -1,6 +1,5 @@
 ---
-title: Authenticating with kongctl
-short_title: kongctl login overview
+title: kongctl login
 description: Authenticate with kongctl.
 
 content_type: reference

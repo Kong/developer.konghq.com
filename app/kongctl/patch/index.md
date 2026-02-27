@@ -1,6 +1,5 @@
 ---
-title: Patching resources using kongctl
-short_title: kongctl patch overview
+title: kongctl patch
 description: Patch resources using kongctl.
 
 content_type: reference

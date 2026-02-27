@@ -1,6 +1,5 @@
 ---
-title: Listening to events using kongctl
-short_title: kongctl listen overview
+title: kongctl listen
 description: Listen to events using kongctl.
 
 content_type: reference

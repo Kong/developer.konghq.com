@@ -1,6 +1,5 @@
 ---
-title: Synchronizing configurations using kongctl
-short_title: kongctl sync overview
+title: kongctl sync
 description: Synchronize configurations using kongctl.
 
 content_type: reference

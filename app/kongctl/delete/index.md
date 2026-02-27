@@ -1,6 +1,5 @@
 ---
-title: Deleting resources using kongctl
-short_title: kongctl delete overview
+title: kongctl delete
 description: Delete resources using kongctl.
 
 content_type: reference
