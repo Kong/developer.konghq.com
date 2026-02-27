@@ -104,12 +104,11 @@ Stripe calculates tax based on:
   {:.info}
   > **Defining tax codes:** To define tax codes for rate cards, you can set default tax codes in the [billing settings in {{site.konnect_short_name}}](https://cloud.konghq.com/us/metering-billing/billing-profiles). You can also specify tax codes per rate card by editing the product catalog when creating a plan.
 
-To enable automatic tax calculation in Stripe, make sure:
+To enable automatic tax calculation in Stripe, make sure you:
 
-* Consult a tax professional to ensure you comply with tax laws.
 * [Configure tax](https://dashboard.stripe.com/settings/tax) on your Stripe account.
 * Review the default [tax settings](https://dashboard.stripe.com/settings/tax) in your Stripe account.
-* [Installed the Stripe app in {{site.metering_and_billing}}](#install-the-stripe-integration-in-sitemetering_and_billing)
+* [Install the Stripe app in {{site.metering_and_billing}}](#install-the-stripe-integration-in-sitemetering_and_billing)
 * Set the Stripe app as the default billing profile
 * Collect tax information from your customers at onboarding (for example: address and VAT number)
 * Optionally use the Stripe Checkout Session to collect tax information from your customers
