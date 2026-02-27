@@ -34,6 +34,7 @@ jobs:
         run: |
           cd tools/kongctl-versions
           npm ci
+          node extract-help.js
           node fetch-versions.js
 
       - name: Create pull request
@@ -41,5 +42,6 @@ jobs:
         with:
           title: Sync kongctl Releases
           commit-message: Sync kongctl Releases
+          branch: sync-kongctl-releases
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}

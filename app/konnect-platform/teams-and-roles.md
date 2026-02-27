@@ -227,152 +227,14 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 {{site.konnect_short_name}} provides the following predefined roles.
 
-#### Analytics
-
-{% include_cached konnect/analytics-roles.md %}
-
-
-#### API Products
-
-{:.warning}
-> **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#catalog-apis) instead. 
-
-The following describes the predefined roles for API Products:
-
-<!-- vale off -->
-{% konnect_roles_table %}
-schema: api_products
-{% endkonnect_roles_table %}
-<!-- vale on -->
-
 {:.info}
 > **Note:** To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
 
-#### Control Planes
+#### Application auth strategies
 
-The following describes the predefined roles for Control Planes:
+The following table describes the predefined roles for [application auth strategies](/dev-portal/auth-strategies/):
 
-<!-- vale off -->
-{% konnect_roles_table %}
-schema: control_planes
-{% endkonnect_roles_table %}
-<!-- vale on -->
-
-#### Audit logs
-
-The following describes the predefined roles for audit logs:
-
-<!-- vale off -->
-{% konnect_roles_table %}
-schema: audit_logs
-{% endkonnect_roles_table %}
-<!-- vale on -->
-
-#### Identity
-
-The following describes the predefined roles for identity:
-
-<!-- vale off -->
-{% konnect_roles_table %}
-schema: identity
-{% endkonnect_roles_table %}
-<!-- vale on -->
-
-#### Mesh control planes
-
-The following describes the predefined roles for Mesh:
-
-<!-- vale off -->
-{% konnect_roles_table %}
-schema: mesh_control_planes
-{% endkonnect_roles_table %}
-<!-- vale on -->
-
-#### {{site.metering_and_billing}}
-
-The following describes the predefined roles for [{{site.metering_and_billing}}](/metering-and-billing/):
-
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-rows:
-  - role: "`Ingest`"
-    description: "Ingests events only (intended only for machines)."
-  - role: "`Admin`"
-    description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
-  - role: "`Viewer`"
-    description: "Can read every resource. Includes billing apps, billing profiles, and notifications."
-  - role: "`Metering Admin`"
-    description: "Can write any metering resources (includes meters and events)."
-  - role: "`Metering Viewer`"
-    description: "Can read any metering resources (includes meters and events)."
-  - role: "`Product Catalog Admin`"
-    description: "Can write any Product Catalog resources (includes plans, features, and rate cards)."
-  - role: "`Product Catalog Viewer`"
-    description: "Can read any Product Catalog resources (includes plans, features, and rate cards)."
-  - role: "`Billing Admin`"
-    description: "Can read and write customer, subscription, entitlement, and invoice resources."
-  - role: "`Billing Viewer`"
-    description: "Can read customer, subscription, entitlement, and invoice resources."
-{% endtable %}
-
-#### Networks 
-
-The following describes the predefined roles for networks:
-
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-rows:
-  - role: "`Network Admin`"
-    description: Access to all read and write permissions related to a network.
-  - role: "`Network Creator`"
-    description: Access to creating networks.
-  - role: "`Network Viewer`"
-    description: Access to read-only permissions to networks.
-{% endtable %}
-
-#### {{site.konnect_catalog}}
-
-The following describes the predefined roles for {{site.konnect_catalog}}:
- 
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-rows:
-  - role: "`Integration Admin`"
-    description: Can view and edit all integrations (install/authorize).
-  - role: "`Integration Viewer`"
-    description: Access to read-only permissions to integrations.
-  - role: "`Scorecard Viewer`"
-    description: Access read-only permissions related to Scorecards.
-  - role: "`Scorecard Admin`"
-    description: Can view and edit a select list of {{site.konnect_catalog}} services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
-  - role: "`Service Admin`"
-    description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
-  - role: "`Service Creator`"
-    description: |
-      Can create new {{site.konnect_catalog}} services, becomes the Service Admin for any service they create, and can view and edit all resources. 
-      Includes read-only access to all integrations and integration instances.
-      <br><br>This role does not grant access to _existing_ services or their configurations. See the `Service Admin` role. 
-      <br><br>This role does not grant write access to integration instances. See the `Integration Admin` role.
-  - role: "`Service Viewer`"
-    description: Can view a select list of services and all resources and discovery rules.
-{% endtable %}
-
-#### Catalog APIs
-
-The following describes the predefined roles for [Catalog APIs](/catalog/apis/). Read, edit, and delete access is granted per-API. Only the create and list permissions are granted at the org level.
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -382,32 +244,556 @@ columns:
   - title: CRUD permissions
     key: permissions
 rows:
-  - role: "`API Creator`"
-    description: Creates APIs at the org level.
+  - role: "`Creator`"
+    description: Create new app auth strategies.
     permissions: |
-      * Create APIs
-  - role: "`API Admin`"
-    description: Controls APIs on a per-API level and can list APIs in an org.
+      * Create auth strategies.
+      * Read and list auth strategies.
+  - role: "`Maintainer`"
+    description: Edit one or all app auth strategies.
     permissions: |
-      * Read, edit, delete, and list APIs
-  - role: "`API Maintainer`"
-    description: Maintains APIs on a per-API level. 
+      * Edit, delete, read, and list auth strategies.
+  - role: "`Viewer`"
+    description: Read-only access to one or all app auth strategies.
     permissions: |
-      * Read, edit, and list APIs
-  - role: "`API Viewer`"
-    description: Reads APIs on a per-API level and can list APIs in an org.
+      * Read and list auth strategies.
+{% endtable %}
+<!--vale on-->
+
+#### Auth servers
+
+The following table describes the predefined roles for [Kong Identity](/kong-identity/) authorization servers:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: Access to all read and write permissions related to an Authorization Server.
     permissions: |
-      * Read and list APIs
-  - role: "`API Publisher`"
-    description: Views APIs and publishes APIs on a per-API level.
+      * Create, edit, delete, read, and list auth servers.
+  - role: "`Viewer`"
+    description: Access to all read permissions related to an Authorization Server.
     permissions: |
-      * Read, list, and publish APIs
+      * Read and list auth servers.
 {% endtable %}
 
-#### Dev Portal
+#### APIs
 
-The following describes the predefined roles for Dev Portal:
+The following table describes the predefined roles for [Catalog APIs](/catalog/apis/). Read, edit, and delete access is granted per-API. Only the create and list permissions are granted at the org level.
 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Creator`"
+    description: Access to create new API in Konnect. The creator becomes an admin of the API they create.
+    permissions: |
+      * Create and list APIs.
+  - role: "`Admin`"
+    description: Admin of an existing API, providing ability to read and edit configuration, view API analytics, and delete the API.
+    permissions: |
+      * Read, edit, delete, and list APIs.
+  - role: "`Maintainer`"
+    description: Access to read and edit configuration of an API and view analytics of an API.
+    permissions: |
+      * Read, edit, and list APIs.
+  - role: "`Viewer`"
+    description: Read-only access to an API configuration and analytics.
+    permissions: |
+      * Read and list APIs.
+  - role: "`Publisher`"
+    description: Access to publish an API to visible portals.
+    permissions: |
+      * Read, list, and publish APIs.
+  - role: "`Registration Approver`"
+    description: Access to approve an API registration request.
+    permissions: |
+      * Read, list, and grant access to APIs.
+{% endtable %}
+<!--vale on-->
+
+#### Audit logs
+
+The following table describes the predefined roles for [audit logs](/konnect-platform/audit-logs/):
+
+<!--vale off-->
+{% konnect_roles_table %}
+schema: audit_logs
+{% endkonnect_roles_table %}
+<!--vale on-->
+
+#### {{site.konnect_catalog}}
+
+The following table describes the predefined roles for [{{site.konnect_catalog}}](/catalog/):
+
+<!--vale off--> 
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Integration Admin`"
+    description: Can view and edit all integrations (install/authorize).
+    permissions: |
+      * Read, list, create, edit, and delete integrations.
+      * Read, list, create, and delete auth credentials.
+  - role: "`Integration Viewer`"
+    description: Access to read-only permissions to integrations.
+    permissions: |
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+  - role: "`Scorecard Viewer`"
+    description: Access read-only permissions related to Scorecards.
+    permissions: |
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+      * List criteria templates.
+      * Read and list scorecards.
+  - role: "`Scorecard Admin`"
+    description: Can view and edit a select list of {{site.konnect_catalog}} services, map resources to those services, manage all resources, and has read-only access to all integrations and integration instances.
+    permissions: |
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+      * List scorecard and criteria templates.
+      * List, read, create, edit, and delete scorecards.
+  - role: "`Service Admin`"
+    description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
+    permissions: |
+      * Read, edit, delete, and list {{site.konnect_catalog}} services.
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+      * Create, edit, read, delete, and list documents.
+      * Create, edit, read, delete, list, and preview API specs.
+      * List and read events.
+      * Create, edit, read, delete, and list resources.
+      * List and read scorecards.
+      * List criteria templates.
+  - role: "`Service Creator`"
+    description: |
+      Can create new {{site.konnect_catalog}} services, becomes the Service Admin for any service they create, and can view and edit all resources. 
+      Includes read-only access to all integrations and integration instances.
+      <br><br>This role does not grant access to _existing_ services or their configurations. See the `Service Admin` role. 
+      <br><br>This role does not grant write access to integration instances. See the `Integration Admin` role.
+    permissions: |
+      * Create and list {{site.konnect_catalog}} services.
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+      * Edit, read, and list resources.
+      * List and read scorecards.
+      * List criteria templates.
+  - role: "`Service Viewer`"
+    description: Can view a select list of services and all resources and discovery rules.
+    permissions: |
+      * Read and list {{site.konnect_catalog}} services.
+      * Read and list integrations.
+      * Read and list integration auth credentials.
+      * Read and list documents.
+      * Read and list API specs.
+      * Read and list events.
+      * Create, edit, read, delete, and list resources.
+      * List and read scorecards.
+      * List criteria templates.
+{% endtable %}
+<!--vale on-->
+
+#### Control planes
+
+The following table describes the predefined roles for control planes:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: "This role grants full write access to all entities within a control plane."
+    permissions: |
+      * Create, read, list, edit, and delete control planes and all configurations within them.
+  - role: "`Certificate Admin`"
+    description: "This role grants full write access to administer certificates."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list certificates.
+      * Create, read, edit, delete, and list CA certificates.
+  - role: "`Cloud Gateway Cluster Admin`"
+    description: "Access to all read and write permissions related to cloud-gateways configurations and custom domains."
+    permissions: |
+      * Create, read, list, and delete Cloud Gateway configurations.
+      * Create, read, list, and delete custom domains.
+  - role: "`Cloud Gateway Cluster Viewer`"
+    description: "Access to read-only permissions to cloud-gateways configurations and custom domains."
+    permissions: |
+      * Read and list Cloud Gateway configurations.
+      * Read and list custom domains.
+  - role: "`Consumer Admin`"
+    description: "This role grants full write access to administer consumers."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Consumers.
+      * Read and list Partials.
+  - role: "`Creator`"
+    description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
+    permissions: |
+      * Create and list control planes.
+  - role: "`Debug Session Creator`"
+    description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
+    permissions: |
+      * Create, read, list and delete debug sessions.
+      * Read and list control planes and all configurations within them.
+  - role: "`Deployer`"
+    description: "This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Catalog."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list Routes.
+  - role: "`Event Gateways Creator`"
+    description: "Access to create a new event gateway in Event Gateway Manager. The creator becomes the owner of the event gateway they create, gaining admin access to the new event gateway. This role does not grant access to existing event gateways, their runtime instances, or their configurations."
+    permissions: |
+      * Create and list Event Gateways.
+  - role: "`Event Gateways Admin`"
+    description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration."
+    permissions: |
+      * Create, edit, read, list, and delete existing Event Gateways and all of their configurations.
+  - role: "`Event Gateways Viewer`"
+    description: "Read-only access to all the configurations of an event gateway and its runtime instances."
+    permissions: |
+      * Read and list Event Gateways and all of their configurations.
+  - role: "`Gateway Service Admin`"
+    description: "This role grants full write access to administer gateway services."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list Partials.
+  - role: "`Key Admin`"
+    description: "Full write access to administer keys."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list keys.
+  - role: "`KNEP Config Admin` (deprecated)"
+    description: "*(Legacy permission for Event Gateways)* Full write access to administer Kong Native Event Proxy (KNEP) declarative configuration."
+    permissions: |
+      * Create, read, list, and delete Kong Native Event Proxy configurations.
+  - role: "`KNEP Node` (deprecated)"
+    description: "*(Legacy permission for Event Gateways)* Read-only access to Kong Native Event Proxy (KNEP) configuration and write access to KNEP nodes."
+    permissions: |
+      * Read and list, and delete Kong Native Event Proxy configurations.
+  - role: "`Plugin Admin`"
+    description: "This role grants full write access to administer plugins."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list Partials.
+  - role: "`Route Admin`"
+    description: "This role grants full write access to administer routes."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list plugins and custom plugins.
+      * Create, read, edit, delete, and list Routes.
+      * Create, read, edit, delete, and list Partials.
+  - role: "`Serverless Cluster Admin`"
+    description: "Access to all read and write permissions related to serverless cloud-gateways configurations."
+    permissions: |
+      * Create, read, list, and delete Serverless Gateway configurations.
+  - role: "`Serverless Cluster Viewer`"
+    description: "Access to read-only permissions related to serverless cloud-gateways configurations."
+    permissions: |
+      * Read and list Serverless Gateway configurations.
+  - role: "`SNI Admin`"
+    description: "This role grants full write access to administer SNIs."
+    permissions: |
+      * List and read control planes.
+      * List and read certificates.
+      * Create, read, edit, delete, and list SNIs.
+  - role: "`Upstream Admin`"
+    description: "This role grants full write access to administer upstreams."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Upstreams.
+      * Create, read, edit, delete, and list Targets.
+      * List certificates.
+  - role: "`Vault Admin`"
+    description: "Full write access to administer Vaults."
+    permissions: |
+      * List and read control planes.
+      * Create, read, edit, delete, and list Vaults.
+      * Create, read, edit, delete, and list config stores.
+  - role: "`Viewer`"
+    description: "This role grants read only access to all entities within a control plane."
+    permissions: |
+      * Read and list control planes and all configurations within them.
+{% endtable %}
+<!--vale on-->
+
+#### Dashboards
+
+The following table describes the predefined roles for [{{site.observability}} dashboards](/observability/#dashboard):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: Allows users to edit, delete, and share a Dashboard in Konnect Analytics.
+    permissions: |
+      * List, read, edit, and delete dashboards.
+  - role: "`Creator`"
+    description: Allows users to create a new Dashboard in Konnect Analytics.
+    permissions: |
+      * Create and list dashboards.
+  - role: "`Editor`"
+    description: Allows users to edit a Dashboard in Konnect Analytics.
+    permissions: |
+      * List, edit, and read dashboards.
+  - role: "`Viewer`"
+    description: Allows users to view a Dashboard in Konnect Analytics.
+    permissions: |
+      * List and read dashboards.
+{% endtable %}
+<!--vale on-->
+
+#### DCR
+
+The following table describes the predefined roles for [dynamic client registration (DCR)](/dev-portal/dynamic-client-registration/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Creator`"
+    description: Create new DCR providers.
+    permissions: |
+      * Create and read DCR providers
+  - role: "`Maintainer`"
+    description: Edit one or all DCR providers.
+    permissions: |
+      * Edit, delete, and read DCR providers
+  - role: "`Viewer`"
+    description: Read-only access to one or all DCR providers.
+    permissions: |
+      * Read DCR providers
+{% endtable %}
+<!--vale on-->
+
+#### Identity
+
+The following table describes the predefined roles for identity:
+
+<!--vale off-->
+{% konnect_roles_table %}
+schema: identity
+{% endkonnect_roles_table %}
+<!--vale on-->
+
+#### MCP registry
+
+The following table describes the predefined roles for [MCP registries](/catalog/mcp-registry/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: Admin of an existing MCP registry, providing ability to read and edit configuration, view MCP registry analytics, and delete the MCP registry.
+    permissions: |
+      * List, read, edit, and delete MCP registries.
+      * Create, edit, list, read, and delete MCP server versions.
+  - role: "`Creator`"
+    description: |
+      Access to create new registries and server versions in Konnect. 
+      The creator becomes an admin of the registry they create.
+    permissions: |
+      * Create and list MCP registries.
+      * Create, edit, list, and read MCP server versions.
+  - role: "`Publisher`"
+    description: Access to publish MCP server versions to a registry.
+    permissions: |
+      * List and read MCP registries.
+      * Create, edit, list, and read MCP server versions.
+  - role: "`Viewer`"
+    description: Read-only access to an MCP registry configuration.
+    permissions: |
+      * List and read MCP registries.
+      * List and read MCP server versions.
+{% endtable %}
+<!--vale on-->
+
+#### Mesh control planes
+
+The following table describes the predefined roles for {{site.mesh_product_name}}:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: "This role grants full write access to the related to Mesh control planes."
+    permissions: |
+      * Create, list, read, update, delete, and connect zones for Mesh control planes.
+  - role: "`Connector`"
+    description: "This role grants a mesh zone to connect to the mesh control plane in Konnect."
+    permissions: |
+      * Connect zones.
+  - role: "`Creator`"
+    description: "This role grants access to create new Mesh control planes."
+    permissions: |
+      * List and create Mesh control planes.
+  - role: "`Viewer`"
+    description: "This role grants access to read-only permissions to Mesh control planes."
+    permissions: |
+      * Read and list Mesh control planes.
+{% endtable %}
+<!--vale on-->
+
+#### {{site.metering_and_billing}}
+
+The following table describes the predefined roles for [{{site.metering_and_billing}}](/metering-and-billing/):
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Ingest`"
+    description: "Ingests events only (intended only for machines)."
+    permissions: |
+      * Ingest events.
+  - role: "`Admin`"
+    description: "Can read and write every resource. Includes billing apps, billing profiles, and notifications."
+    permissions: |
+      * Create, list, read, query, update, and delete every resource.
+  - role: "`Metering Admin`"
+    description: "Can write any metering resources (includes meters and events)."
+    permissions: |
+      * List, read, and query meters.
+      * List events.
+  - role: "`Metering Viewer`"
+    permissions: |
+      * Create, list, read, query, update, and delete meters.
+      * List and ingest events.
+    description: "Can read any metering resources (includes meters and events)."
+  - role: "`Product Catalog Admin`"
+    description: "Can write any Product Catalog resources (includes plans, features, and rate cards)."
+    permissions: |
+      * Create, list, read, and delete features.
+      * Create, list, read, update, delete, publish, and archive plans.
+      * Create, list, read, update, delete, publish, and archive add-ons.
+  - role: "`Product Catalog Viewer`"
+    description: "Can read any Product Catalog resources (includes plans, features, and rate cards)."
+    permissions: |
+      * List and read features.
+      * List and read plans.
+      * List and read add-ons.
+  - role: "`Billing Admin`"
+    description: "Can read and write customer, subscription, entitlement, and invoice resources."
+    permissions: |
+      * Create, list, read, update, delete, and migrate subscriptions and their add-ons.
+      * Create, list, read, update, and delete customers.
+      * Create, list, read, update, delete, and trigger events on invoices.
+      * Create, list, read, update, and delete billing profiles.
+      * Create, list, read, update, and delete entitlements.
+  - role: "`Billing Viewer`"
+    description: "Can read customer, subscription, entitlement, and invoice resources."
+    permissions: |
+      * Read and list subscriptions and their add-ons.
+      * Read and list customers.
+      * Read and list and trigger events on invoices.
+      * Read and list billing profiles.
+      * Read and list entitlements.
+{% endtable %}
+<!--vale on-->
+
+#### Networks 
+
+The following table describes the predefined roles for [Dedicated Cloud Gateway](/dedicated-cloud-gateways/) networks:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Network Admin`"
+    description: Access to all read and write permissions related to a network.
+    permissions: |
+      * Read and list provider accounts.
+      * Read, list, edit, and delete networks.
+      * Attach transit gateways and data plane groups for networks.
+      * Create, edit, read, delete, and list transit gateways.
+      * Create, edit, read, delete, and list private DNS configs.
+  - role: "`Network Creator`"
+    description: Access to creating networks.
+    permissions: |
+      * Deploy, read, and list provider accounts.
+      * Create networks.
+  - role: "`Network Viewer`"
+    description: Access to read-only permissions to networks.
+    permissions: |
+      * Read and list provider accounts.
+      * Read, list, and connect data plane groups for networks.
+      * Read and list transit gateways.
+{% endtable %}
+<!--vale on-->
+
+#### Portals
+
+The following table describes the predefined roles for [Dev Portal](/dev-portal/):
+
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -420,6 +806,7 @@ rows:
   - role: "`Admin`"
     description: |
       Owner of an existing Dev Portal instance. The owner has full write access related to any developers and applications in the organization.
+      <br><br>
 
       {:.warning}
       > This role has the ability to approve, revoke, and delete application registrations.
@@ -444,6 +831,7 @@ rows:
   - role: "`Maintainer`"
     description: |
       Edit, view, and delete Dev Portal applications, and view developers.
+      <br><br>
 
       {:.warning}
       > This role has the ability to approve, revoke, and delete application registrations.
@@ -478,6 +866,7 @@ rows:
   - role: "`API Registration Approver`"
     description: |
       Can approve Dev Portal application registrations.
+      <br><br>
 
       {:.info}
       > This role also requires the Dev Portal Viewer role to view the application registrations within a Dev Portal. 
@@ -485,11 +874,13 @@ rows:
       * Read and list APIs (permission is granted per API)
       * Grant API access
 {% endtable %}
+<!--vale on-->
 
-#### Application auth strategies
+#### Reports
 
-The following describes the predefined roles for application auth strategies:
+The following table describes the predefined roles for [{{site.observability}}](/observability/) reports:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Role
@@ -499,46 +890,34 @@ columns:
   - title: CRUD permissions
     key: permissions
 rows:
-  - role: "`Auth strategy creator`"
-    description: Create new app auth strategies.
+  - role: "`Admin`"
+    description: Allows users to edit and delete a Report in Konnect Analytics.
     permissions: |
-      * Create auth strategy
-      * Read and list auth strategy
-  - role: "`Auth strategy maintainer`"
-    description: Edit one or all app auth strategies.
+      * List, read, edit, and delete reports.
+  - role: "`Creator`"
+    description: Allows users to create a new Report in Konnect Analytics.
     permissions: |
-      * Edit, delete, read, and list auth strategies
-  - role: "`Auth strategy viewer`"
-    description: Read-only access to one or all app auth strategies.
+      * Create and list reports.
+  - role: "`Editor`"
+    description: Allows users to edit a Report in Konnect Analytics.
     permissions: |
-      * Read and list auth strategies
+      * List, edit, and read reports.
+  - role: "`Viewer`"
+    description: Allows users to view a Report in Konnect Analytics.
+    permissions: |
+      * List and read reports.
 {% endtable %}
+<!--vale on-->
 
+#### API Products (Classic)
 
-#### DCR
+{:.warning}
+> **Important:** API Product roles only apply to classic Dev Portals (v2). We recommend [migrating to the new Dev Portal (v3)](/dev-portal/v2-migration/) and using [Catalog API roles](/konnect-platform/teams-and-roles/#apis) instead. 
 
-The following describes the predefined roles for dynamic client registration (DCR):
+The following table describes the predefined roles for API Products:
 
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-  - title: CRUD permissions
-    key: permissions
-rows:
-  - role: "`DCR provider creator`"
-    description: Create new DCR providers.
-    permissions: |
-      * Create and read DCR providers
-  - role: "`DCR provider maintainer`"
-    description: Edit one or all DCR providers.
-    permissions: |
-      * Edit, delete, and read DCR providers
-  - role: "`DCR provider viewer`"
-    description: Read-only access to one or all DCR providers.
-    permissions: |
-      * Read DCR providers
-{% endtable %}
-
+<!-- vale off -->
+{% konnect_roles_table %}
+schema: api_products
+{% endkonnect_roles_table %}
+<!-- vale on -->
