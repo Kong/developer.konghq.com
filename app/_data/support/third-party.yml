@@ -42,7 +42,7 @@ gcp-sm:
   name: Google Cloud Secret Manager
   icon: google-cloud.svg
 conjur:
-  name: CyberArk Conjur Vault
+  name: CyberArk Secrets Manager (Conjur)
   icon: cyberark.svg
 # IDP
 auth0:
