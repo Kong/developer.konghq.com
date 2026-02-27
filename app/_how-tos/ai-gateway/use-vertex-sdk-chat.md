@@ -33,6 +33,7 @@ entities:
 
 tags:
   - ai
+  - ai-sdks
 
 tldr:
   q: How do I use Vertex AI's native format with {{site.ai_gateway}}?

@@ -58,8 +58,8 @@ related_resources:
     url: /mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
     url: /mcp/enforce-acls-on-aggregated-mcp-servers/
-  - text: MCP catalog in {{site.konnect_short_name}} (tech preview)
-    url: https://cloud.konghq.com/global/organization/labs
+  - text: MCP Registry in {{site.konnect_short_name}} (tech preview)
+    url: /catalog/mcp-registry/
 
 examples_groups:
   - slug: basic
