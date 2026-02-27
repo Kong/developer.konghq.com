@@ -1,0 +1,3 @@
+message: "**request-validator**: Added support for specifying JSON schema draft versions."
+type: feature
+scope: Plugin

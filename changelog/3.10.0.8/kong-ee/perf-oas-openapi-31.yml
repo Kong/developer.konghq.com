@@ -1,0 +1,3 @@
+message: "**oas-validation**: Improved performance for OpenAPI 3.1."
+type: performance
+scope: Plugin

@@ -1,0 +1,4 @@
+message: |
+  **aws-lambda**: added a verbose error level logging for better debugging of AWS Lambda invocation issues.
+type: "feature"
+scope: "Plugin"

@@ -1,0 +1,8 @@
+message: >
+  Fixed an issue where Kong incorrectly logged upstream status codes as 000 (or empty) when HTTP/2
+  clients disconnected during response processing. This occurred when response buffering was
+  enabled.
+  Kong now correctly records the actual upstream status code even when the HTTP/2 client disconnects
+  before receiving the complete response.
+type: "bugfix"
+scope: "Core"

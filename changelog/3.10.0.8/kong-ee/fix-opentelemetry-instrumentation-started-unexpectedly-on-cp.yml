@@ -1,0 +1,4 @@
+message: |
+  "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode."
+type: "bugfix"
+scope: Plugin

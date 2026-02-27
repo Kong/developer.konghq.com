@@ -1,0 +1,4 @@
+message: |
+  **oas-validation**: Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.
+type: bugfix
+scope: Plugin

@@ -1,0 +1,4 @@
+message: >
+  Fix issue where `kong health` command would fail to run when kong configuration contains vault references.
+type: bugfix
+scope: Core
