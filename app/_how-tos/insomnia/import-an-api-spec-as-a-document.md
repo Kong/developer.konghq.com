@@ -44,15 +44,18 @@ related_resources:
 
 ## Select a specification
 
-In your workspace, click **Import** and select the source of the import: **File**, **URL**, or **Clipboard**. Based on the source, either choose a file, enter a URL, or copy your API specification.
+In your workspace, click **Import** and select the source of the import: **File**, **URL**, **cURL**, or **Clipboard**. Based on the source, either choose a file, enter a URL, or copy your API specification.
+
+{:.info}
+> Insomnia automatically detects cURL commands and converts them into requests.
 
 ## Scan the specification
 
-Click **Scan**. You can review the resources to import, then click **Import**
+Click **Scan**. You can review the resources to import, then click **Import**.
 
-## Open the document
+## Validate
 
-Open the document created to check your specification. You can see three different views:
+You can now review the imported document. You can see three different views:
 
 * On the left you can see an overview of the specification, with sections that you can expand. You can click the different elements to highlight them in the specification.
 * In the middle, you can see the specification as it was imported. You can also see if there are any warnings or errors.
