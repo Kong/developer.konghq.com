@@ -457,7 +457,7 @@ body:
 
 {% include /konnect/cidr-minimum-requirements.md %}
 
-## Managed cache for Redis
+## Managed cache for Redis (% new_in 3.13 %)
 
 {:.success}
 > **Getting started with managed cache?**<br>
@@ -467,7 +467,8 @@ body:
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/azure-managed-cache-control-plane/)
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateways control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
 
-An managed cache for Dedicated Cloud Gateways is a Redis-compatible datastore that powers all Redis-enabled plugins. This is fully-managed by Kong in the provider and regions of your choice, so you don't have to host Redis infrastructure. Managed cache allows you get up and running faster with [Redis-backed plugins](/gateway/entities/partial/#use-partials), such as Proxy Caching, Rate Limiting, AI Rate Limiting, and ACME. 
+{% include_cached /sections/managed-cache-intro.md %}
+Only AWS and Azure are supported as providers currently.
 
 Managed caches are either created at the control plane or control plane group-level. 
 

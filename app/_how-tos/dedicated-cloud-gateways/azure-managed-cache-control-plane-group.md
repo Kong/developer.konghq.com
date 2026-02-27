@@ -32,20 +32,13 @@ next_steps:
     url: /dedicated-cloud-gateways/production-readiness/
 ---
 
-An Azure managed cache for Dedicated Cloud Gateways is a Redis-compatible datastore that powers all Redis-enabled plugins. This is fully-managed by Kong in the regions of your choice, so you don't have to host Redis infrastructure. Managed cache allows you get up and running faster with [Redis-backed plugins](/gateway/entities/partial/#use-partials), such as Proxy Caching, Rate Limiting, AI Rate Limiting, and ACME. 
+{% include_cached /sections/managed-cache-intro.md %}
 
 ## Set up an Azure managed cache on a control plane group
 
 ### Create a hybrid control plane
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
-1. Click **New**.
-1. Select **New API gateway**.
-1. Select **Self-managed**.
-1. Select **Docker**.
-1. In the **Gateway name** field, enter `hybrid-cp`.
-1. Click **Create**.
-1. Scroll and click **Set up later**.
+{% include_cached /sections/hybrid-cp-setup.md %}
 
 ### Create a Dedicated Cloud control plane group
 
@@ -77,53 +70,7 @@ An Azure managed cache for Dedicated Cloud Gateways is a Redis-compatible datast
 
 ### Create a managed cache for your control plane group
 
-1. Create a managed cache using the Cloud Gateways add-ons API:
-
-   {% capture create_addon %}
-   <!--vale off-->
-   {% konnect_api_request %}
-   url: /v2/cloud-gateways/add-ons
-   status_code: 201
-   method: POST
-   region: global
-   body:
-       name: azure-managed-cache
-       owner:
-           kind: control-plane-group
-           control_plane_group_id: $CONTROL_PLANE_GROUP_ID
-           control_plane_group_geo: us
-       config:
-           kind: managed-cache.v0
-           capacity_config:
-               kind: tiered
-               tier: small
-   {% endkonnect_api_request %}
-   <!--vale on-->
-   {% endcapture %}
-   {{ create_addon | indent: 3}}
-
-   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions in Azure are supported and you can configure the managed cache for multiple regions.
-
-1. Export the ID of your managed cache in the response:
-   ```sh
-   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
-   ```
-
-1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
-
-   {% capture get_addon %}
-   <!--vale off-->
-   {% konnect_api_request %}
-   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
-   status_code: 200
-   method: GET
-   region: global
-   {% endkonnect_api_request %}
-   <!--vale on-->
-   {% endcapture %}
-   {{ get_addon | indent: 3}}
-
-   This can take about 15 minutes. 
+{% include_cached /sections/managed-cache-cpg-setup.md %}
 
 ## Configure Redis for plugins
 
@@ -197,25 +144,4 @@ default_lookup_tags:
 
 ## Validate
 
-Verify that the Rate Limiting Advanced plugin is using the managed cache partial configuration:
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
-status_code: 200
-method: GET
-region: global
-{% endkonnect_api_request %}
-<!--vale on-->
-
-In the response, locate your `rate-limiting-advanced` plugin and confirm that `config.strategy` is set to `redis` and that the partials array contains your managed Redis partial:
-
-```sh
-"partials": [
-    {
-      "id": "dcf411a3-475b-4212-bdf8-ae2b4dfa0a04",
-      "name": "konnect-managed",
-      "path": "config.redis"
-    }
-  ]
-```
-{:.no-copy-code}
+{% include_cached /sections/managed-cache-validate.md %}
