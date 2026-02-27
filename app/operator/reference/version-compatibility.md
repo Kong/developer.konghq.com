@@ -16,8 +16,6 @@ products:
 
 The following table presents the general compatibility of {{site.operator_product_name}} with {{ site.kic_product_name }} minor versions.
 
-## Kubernetes
-
 ## {{ site.kic_product_name }}
 
 {:.info}
