@@ -113,6 +113,7 @@ variables:
     value: $GCP_PROJECT_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
   gcp_location_id:
     value: $GCP_LOCATION_ID
 {% endentity_examples %}

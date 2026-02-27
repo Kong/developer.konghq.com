@@ -5,9 +5,6 @@ Before you begin, you must get the following credentials from Google Cloud:
 - **Location ID**: Your Google Cloud project location identifier
 - **API Endpoint**: The global Vertex AI API endpoint `https://aiplatform.googleapis.com`
 
-After creating the key, convert the contents of `modelarmor-admin-key.json` into a **single-line JSON string**.
-Escape all necessary characters. Quotes (`"`) become `\"` and newlines become `\n`. The result must be a valid one-line JSON string.
-
 Then export your credentials as environment variables:
 
 ```sh
