@@ -14,8 +14,9 @@ permalink: /how-to/route-openai-sdk-to-multiple-providers
 description: Configure separate Kong routes to direct OpenAI SDK requests to different LLM providers based on the base URL.
 
 products:
-  - ai-gateway
   - gateway
+  - ai-gateway
+
 
 works_on:
   - on-prem
@@ -54,6 +55,13 @@ prereqs:
     - title: Mistral
       include_content: prereqs/mistral
       icon_url: /assets/icons/mistral.svg
+  entities:
+    services:
+        - ai-providers-service
+    routes:
+        - mistral-chat
+        - anthropic-chat
+
 
 cleanup:
   inline:
@@ -65,35 +73,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Overview
-
 The [OpenAI Python SDK](https://platform.openai.com/docs/libraries) can talk to any provider that {{site.ai_gateway}} supports. [AI Proxy Advanced](/plugins/ai-proxy-advanced/) translates the OpenAI request format into the provider's native format and handles authentication.
 
 To route requests to different providers, create a separate route for each provider. Each route has its own AI Proxy Advanced plugin instance with the correct provider config and credentials. The SDK switches between providers by changing the `base_url`, and the model name is captured from the URL path using a [template variable](/plugins/ai-proxy-advanced/#dynamic-model-and-options-from-request-parameters).
-
-## Create the Service and Routes
-
-Configure a [Service](/gateway/entities/service/) and a [Route](/gateway/entities/route/) for each provider. The regex path captures the model name from the SDK's request URL:
-
-{% entity_examples %}
-entities:
-  services:
-    - name: ai-providers-service
-      url: http://localhost:8000
-      routes:
-        - name: anthropic-chat
-          paths:
-            - "~/anthropic/(?<model>[^#?/]+)/chat/completions$"
-          methods:
-            - POST
-        - name: mistral-chat
-          paths:
-            - "~/mistral/(?<model>[^#?/]+)/chat/completions$"
-          methods:
-            - POST
-{% endentity_examples %}
-
-When the SDK sends a request to `/anthropic/claude-sonnet-4-20250514/chat/completions`, the route captures `claude-sonnet-4-20250514` into the `model` named group.
 
 ## Configure AI Proxy Advanced for the Anthropic route
 
@@ -114,6 +96,7 @@ entities:
               provider: anthropic
               name: "$(uri_captures.model)"
               options:
+                anthropic_version: '2023-06-01'
                 max_tokens: 512
                 temperature: 1.0
 variables:
@@ -142,6 +125,7 @@ entities:
               options:
                 max_tokens: 512
                 temperature: 1.0
+                mistral_format: openai
 variables:
   mistral_api_key:
     value: $MISTRAL_API_KEY

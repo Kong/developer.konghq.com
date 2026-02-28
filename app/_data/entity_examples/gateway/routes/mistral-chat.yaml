@@ -1,0 +1,7 @@
+name: mistral-chat
+paths:
+  - "~/mistral/(?<model>[^#?/]+)/chat/completions$"
+methods:
+  - POST
+service:
+  name: ai-providers-service
