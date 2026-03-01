@@ -85,7 +85,7 @@ module Jekyll
             {
               'name' => 'kong',
               'namespace' => config['gateway_namespace'],
-              'section_name' => config['section_name']
+              'sectionName' => config['section_name']
             }.compact
           ],
           'rules' => config['matches'].each.map do |match|
