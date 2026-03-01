@@ -12,11 +12,11 @@ async function extractPrereqsBlocks(page) {
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];
-  const blocks = await page.locator("[data-test-prereqs]").all();
+  const blocks = await page.locator("[data-test-prereq]").all();
 
   for (const elem of blocks) {
     if (await elem.isVisible()) {
-      const instruction = await elem.getAttribute("data-test-prereqs");
+      const instruction = await elem.getAttribute("data-test-prereq");
 
       if (instruction === "block") {
         const copy = await elem.locator(".copy-action");
@@ -40,22 +40,37 @@ async function extractPrereqsBlocks(page) {
   return instructions;
 }
 
-async function extractPrereqs(page) {
+async function extractPrereqs(page, platform) {
   const blocks = [];
   // Handle the accordion gracefully, we need to click on each item (visible ones only).
-  const [_prereq, ...prerequisites] = await page
+  let prerequisites = await page
     .locator('[data-test-id="prereqs"] > *')
     .all();
 
-  for (const prereq of prerequisites) {
+  // Filter prerequisites by data-deployment-topology == platform or attribute not set
+  prerequisites = await Promise.all(prerequisites.map(async (prereq) => {
+    const topology = await prereq.getAttribute("data-deployment-topology");
+    return (topology === platform || topology === null) ? prereq : null;
+  })).then(results => results.filter(p => p !== null));
+
+
+  for (const i in prerequisites) {
+    const prereq = prerequisites[i];
     if (await prereq.isVisible()) {
       const trigger = await prereq.locator(".accordion-trigger");
-      if (prerequisites.length >= 1) {
+      if (i >= 1) {
         await trigger.click();
       }
+
+      await prereq.evaluate((el) => {
+        el.style.display = 'block';
+        el.style.visibility = 'visible';
+        el.style.opacity = '1';
+      });
+
+      const extractedBlocks = await extractPrereqsBlocks(prereq);
+      blocks.push(...extractedBlocks);
     }
-    const extractedBlocks = await extractPrereqsBlocks(page);
-    blocks.push(...extractedBlocks);
   }
 
   return { blocks };
@@ -112,7 +127,13 @@ async function extractSteps(page) {
         const copy = await elem.locator(".copy-action");
         await copy.click();
 
-        const copiedText = await copyFromClipboard(page);
+        let copiedText = await copyFromClipboard(page);
+
+        // Make curl requests work for KIC
+        if (copiedText.includes("curl") && copiedText.includes("$PROXY_IP")) {
+          copiedText = "export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')\n" + copiedText;
+        }
+
         instructions.push(copiedText);
       } else {
         // validation-type step
@@ -211,7 +232,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
       const product = deriveProduct(setup, products);
-      const prereqs = await extractPrereqs(page);
+      const prereqs = await extractPrereqs(page, platform);
       const steps = await extractSteps(page);
       const cleanup = await extractCleanup(page);
       const instructionsFile = await writeInstructionsToFile(
