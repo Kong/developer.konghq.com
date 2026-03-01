@@ -39,6 +39,7 @@ module Jekyll
           echo "
           #{format_yaml(to_gatewayapi(config).to_yaml)}" | kubectl apply -f -
           ```
+          {: data-test-step="block" }
         YAML
       end
 
