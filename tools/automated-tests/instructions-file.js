@@ -19,7 +19,9 @@ export async function testeableUrlsFromFiles(config, files) {
       frontmatter.products &&
       (frontmatter.products.includes("gateway") ||
         frontmatter.products.includes("ai-gateway") ||
-        frontmatter.products.includes("event-gateway"));
+        frontmatter.products.includes("event-gateway") ||
+        frontmatter.products.includes("kic") ||
+        frontmatter.products.includes("operator"));
 
     if (isTesteable) {
       const skipHowTo =

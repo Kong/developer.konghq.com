@@ -144,6 +144,11 @@ function deriveProduct(setup, products) {
     if (products.includes("event-gateway")) {
       return "event-gateway";
     }
+
+    if (products[0]) {
+      return products[0];
+    }
+
     return "gateway";
   }
   // e.g., "operator"

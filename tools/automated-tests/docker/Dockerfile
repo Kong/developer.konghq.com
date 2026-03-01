@@ -29,3 +29,19 @@ ENV GOPATH="/go"
 ENV PATH="${GOPATH}/bin:${PATH}"
 
 RUN go install github.com/deviceinsight/kafkactl/v5@latest
+
+# Install kubectl
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/${ARCH}/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Install helm
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# Install k3d
+RUN curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+# Install yq (for kubernetes-resource-property validation)
+RUN ARCH=$(dpkg --print-architecture) && \
+    curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH}" \
+    -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq

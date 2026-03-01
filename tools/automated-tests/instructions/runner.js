@@ -55,7 +55,7 @@ async function checkSetup(setup, runtimeConfig, container) {
   const { runtime: setupIdentifier, version: minVersion } = await getSetupConfig(setup);
 
   // The setup identifier can be:
-  // - A product name (e.g. "gateway") from setup like {"gateway": "3.9"}
+  // - A product name (e.g. "gateway", "operator") from setup like {"gateway": "3.9"} or "operator"
   // - A deployment model name (e.g. "konnect") from setup like "konnect"
   // We check it against both the product and deployment model.
   if (
