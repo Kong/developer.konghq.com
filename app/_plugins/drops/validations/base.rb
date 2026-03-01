@@ -25,6 +25,8 @@ module Jekyll
             KubernetesResource.new(id:, yaml:)
           when 'kubernetes-resource-property'
             KubernetesResourceProperty.new(id:, yaml:)
+          when 'kubernetes-wait-for'
+            KubernetesWaitFor.new(id:, yaml:)
           when 'traffic-generator'
             TrafficGenerator.new(id:, yaml:)
           when 'env-variables'
