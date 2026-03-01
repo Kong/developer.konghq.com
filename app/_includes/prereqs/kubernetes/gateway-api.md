@@ -13,16 +13,18 @@
 1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}:
 
    ```bash
-   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ site.gwapi_version}}/experimental-install.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version}}/experimental-install.yaml
    ```
+   {: data-test-prereq="block" }
 
    {% else %}
 
 2. Install the Gateway API CRDs before installing {{ site.kic_product_name }}.
 
    ```bash
-   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ site.gwapi_version}}/standard-install.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ site.gwapi_version}}/standard-install.yaml
    ```
+   {: data-test-prereq="block" }
 
    {% endif %}
 
@@ -76,6 +78,7 @@ spec:
          from: {{ allowedRoutes }}
 " | kubectl apply -n kong -f -
 ```
+{: data-test-prereq="block" }
 
 {% endcapture %}
 
