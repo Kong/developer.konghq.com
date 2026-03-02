@@ -118,6 +118,8 @@ TOKEN=$(docker exec -it kong-mesh-global wget -q -O - http://localhost:5681/glob
 export PATH=$(pwd)/kong-mesh-2.13.0/bin:$PATH
 ```
 
+## Configure zone ingress
+
 ```sh
 kumactl config control-planes add \
   --address http://localhost:5681 \
