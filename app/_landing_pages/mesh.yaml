@@ -16,6 +16,19 @@ rows:
 
   - columns:
       - blocks:
+          - type: card
+            config:
+              title: "Zero to Hero Learning Path"
+              description: |
+                Follow our curriculum-style guide to mastering Kong Mesh, from basic concepts to advanced multi-zone expert operations.
+              featured: true
+              cta:
+                text: "Start the Journey" 
+                url: /mesh/scenarios/
+
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               blocks:
@@ -157,14 +170,15 @@ rows:
               title: Service reliability
               icon: /assets/icons/refresh.svg
               description: |
-                Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection. Automatically prevent unhealthy or overloaded services from impacting the rest of your mesh.
+                Improve service reliability with built-in policies for health checks, circuit breakers, timeouts, and outlier detection.
               ctas:
                 - text: Mesh Health Check 
                   url: /mesh/policies/meshhealthcheck/
                 - text: Mesh Retry 
                   url: /mesh/policies/meshretry/
-                - text: Mesh Circuit Breaker 
-                  url: /mesh/policies/meshcircuitbreaker/
+                - text: Chaos Engineering 
+                  url: /mesh/scenarios/chaos-engineering/
+
 
 
   - columns:
@@ -198,9 +212,12 @@ rows:
               icon: /assets/icons/load-balance.svg
               description: |
                 Configure ingress (north / south traffic into your Mesh) using built-in or Kong gateway.
-              cta:
-                text: Learn more 
-                url: /mesh/ingress/
+              ctas:
+                - text: Learn more 
+                  url: /mesh/ingress/
+                - text: mTLS Bridge Bridge Service
+                  url: /mesh/scenarios/ingress-mtls-bridge/
+
 
   - header:
       type: h2
