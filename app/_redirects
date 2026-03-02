@@ -201,6 +201,8 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+/catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
+/how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
 
 # Cloud Gateways
 
