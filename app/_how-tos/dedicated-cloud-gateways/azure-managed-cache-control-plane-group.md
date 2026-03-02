@@ -83,7 +83,7 @@ You must manually create a [Redis partial](/gateway/entities/partial/) configura
 {% capture create_redis_partial %}
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/partials
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/partials/
 status_code: 201
 method: POST
 region: us
@@ -91,25 +91,24 @@ body:
   name: konnect-managed
   type: redis-ee
   config:
-    cloud_authentication:
-      auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
-      azure_cache_name: "{vault://env/ADDON_MANAGED_CACHE_AZURE_CACHE_NAME}"
-      azure_region: "{vault://env/ADDON_MANAGED_CACHE_AZURE_REGION}"
-      azure_is_serverless: false
-      azure_assume_role_arn: "{vault://env/ADDON_MANAGED_CACHE_AZURE_ASSUME_ROLE_ARN}"
-    connect_timeout: 2000
-    connection_is_proxied: false
-    database: 0
     host: "{vault://env/ADDON_MANAGED_CACHE_HOST}"
-    keepalive_backlog: 512
-    keepalive_pool_size: 256
     port: "{vault://env/ADDON_MANAGED_CACHE_PORT}"
+    username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
+    ssl: true
+    ssl_verify: true
+    server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
+    database: 0
+    connect_timeout: 2000
     read_timeout: 5000
     send_timeout: 2000
-    server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
-    ssl_verify: true
-    ssl: true
-    username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
+    keepalive_backlog: 512
+    keepalive_pool_size: 256
+    connection_is_proxied: false
+    cloud_authentication:
+      auth_provider: "azure"
+      azure_client_id: "{vault://env/ADDON_MANAGED_CACHE_AZURE_CLIENT_ID}"
+      azure_client_secret: "{vault://env/ADDON_MANAGED_CACHE_AZURE_CLIENT_SECRET}"
+      azure_tenant_id: "{vault://env/ADDON_MANAGED_CACHE_AZURE_TENANT_ID}"
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
