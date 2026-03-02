@@ -173,7 +173,7 @@ export async function resetRuntime(runtimeConfig, container) {
 
 export async function beforeAll(testsConfig, container) {
   log("BeforeAll...");
-  if (testsConfig.before.commands) {
+  if (testsConfig.before?.commands) {
     for (const command of testsConfig.before.commands) {
       await executeCommand(container, command);
     }
@@ -182,7 +182,7 @@ export async function beforeAll(testsConfig, container) {
 
 export async function afterAll(testsConfig, container) {
   log("AfterAll...");
-  if (testsConfig.after.commands) {
+  if (testsConfig.after?.commands) {
     for (const command of testsConfig.after.commands) {
       await executeCommand(container, command);
     }

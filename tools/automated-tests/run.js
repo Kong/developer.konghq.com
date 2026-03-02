@@ -44,6 +44,7 @@ export async function loadConfig() {
 }
 
 (async function main() {
+  let productTestConfig;
   let container;
   let results = [];
   let files = [];
@@ -80,6 +81,8 @@ export async function loadConfig() {
           continue;
         }
 
+        productTestConfig = testsConfig.products[product] || {};
+
         const runtimeConfig = await getRuntimeConfig(deploymentModel, product);
         console.log(
           `Running ${product} tests on ${deploymentModel}...`
@@ -87,7 +90,7 @@ export async function loadConfig() {
 
         container = await setupRuntime(runtimeConfig, docker);
 
-        await beforeAll(testsConfig, container);
+        await beforeAll(productTestConfig, container);
 
         for (const instructionFile of instructionFiles) {
           await resetRuntime(runtimeConfig, container);
@@ -100,7 +103,7 @@ export async function loadConfig() {
           results.push(result);
         }
         await cleanupRuntime(runtimeConfig, container);
-        await afterAll(testsConfig, container);
+        await afterAll(productTestConfig, container);
       }
     }
     await stopContainer(container);
@@ -110,7 +113,7 @@ export async function loadConfig() {
       console.error(error);
     }
 
-    await afterAll(testsConfig, container);
+    await afterAll(productTestConfig, container);
     await stopContainer(container);
     await removeContainer(container);
 
