@@ -43,8 +43,8 @@ Disabling the plugin lets health checks pass again. Keep the plugin between test
 You'll need:
 
 - A multi-region data plane deployment with nodes in at least two regions
-- A DNS-based health check system (such as AWS Route 53) with health checks targeting the public edge DNS endpoint of each region
-- A dedicated health check route in the control plane (for example, `/health`)
+- A DNS-based health check system like AWS Route 53, with health checks targeting the public edge DNS endpoint of each region
+- A dedicated health check route in the control plane, such as `/health`
 - Upstream APIs reachable from each region
 
 ## Pre-Function plugin configuration
@@ -68,7 +68,7 @@ if host == target_host then
 end
 ```
 
-Disable the plugin (don't delete it) to restore normal health check behavior. Keeping the configuration means you won't need to set it up again for future test runs.
+Disable the plugin rather than delete it to restore normal health check behavior. Keeping the configuration means you won't need to set it up again for future test runs.
 
 Here's the full plugin configuration in YAML:
 
@@ -98,7 +98,7 @@ name: pre-function
 
 Each run covers two scenarios — failover and recovery — repeated for each region across each transaction set. Use real production APIs rather than mocks; the results will be more meaningful.
 
-Before starting, establish an RPS (requests per second) baseline and let monitoring normalize. Keep observability plugins (OpenTelemetry, Datadog, HTTP Log) and control plane analytics running throughout.
+Before starting, establish a requests-per-second baseline and let monitoring normalize. Keep observability plugins like OpenTelemetry, Datadog, and HTTP Log running alongside control plane analytics throughout.
 
 Recommended transaction sets:
 
