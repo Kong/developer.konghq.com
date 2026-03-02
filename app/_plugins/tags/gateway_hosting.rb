@@ -20,6 +20,7 @@ module Jekyll
       gateway_hosting = @site.data['gateway_hosting'][slug]
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['gateway_hosting'] = gateway_hosting
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
@@ -28,7 +29,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/gateway_hosting.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/gateway_hosting.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/gateway_hosting.html'))
+      end
     end
   end
 end
