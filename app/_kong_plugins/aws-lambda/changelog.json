@@ -75,7 +75,7 @@
   "3.10.0.8": [
     {
       "message": "added a verbose error level logging for better debugging of AWS Lambda invocation issues.\n",
-      "type": "bugfix",
+      "type": "feature",
       "scope": "Plugin"
     }
   ],
