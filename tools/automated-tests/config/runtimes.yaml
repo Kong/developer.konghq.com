@@ -1,38 +1,39 @@
-gateway:
-  env:
-    WEBHOOK_URL: http://httpbin.konghq.com/anything
-    SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
-    ANTHROPIC_API_KEY: anthropic-api-key
-  versions:
-    - version: "3.13"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.13"
-    - version: "3.12"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.12"
-    - version: "3.11"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.11"
-    - version: "3.10"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.10"
-    - version: "3.9"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.9"
-    - version: "3.8"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.8"
-    - version: "3.4"
-      env:
-        KONG_IMAGE_NAME: kong/kong-gateway
-        KONG_IMAGE_TAG: "3.4"
+on-prem:
   gateway:
+    env:
+      WEBHOOK_URL: http://httpbin.konghq.com/anything
+      SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
+      ANTHROPIC_API_KEY: anthropic-api-key
+    versions: &gateway-versions
+      - version: "3.13"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.13"
+      - version: "3.12"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.12"
+      - version: "3.11"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.11"
+      - version: "3.10"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.10"
+      - version: "3.9"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.9"
+      - version: "3.8"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.8"
+      - version: "3.4"
+        env:
+          KONG_IMAGE_NAME: kong/kong-gateway
+          KONG_IMAGE_TAG: "3.4"
+
     setup:
       commands:
         - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
@@ -56,6 +57,12 @@ gateway:
         - deck gateway reset -f
 
   ai-gateway:
+    env:
+      WEBHOOK_URL: http://httpbin.konghq.com/anything
+      SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
+      ANTHROPIC_API_KEY: anthropic-api-key
+    versions: *gateway-versions
+
     setup:
       commands:
         - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA

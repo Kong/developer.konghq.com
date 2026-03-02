@@ -18,24 +18,71 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 * `instructionsDir`: The path to where the instruction files are located.
 * `baseUrl`: The base URL of the dev site.
 
+### Config: `runtimes.yaml`
+
+The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
+
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`).
+
+Each product can define:
+
+* `versions`: A list of supported versions with version-specific env variables (e.g. `KONG_IMAGE_NAME`, `KONG_IMAGE_TAG`).
+* `env`: Environment variables shared across all versions.
+* `setup`: Commands to run when setting up the product. May include sub-keys like `rbac` and `wasm` for alternative setup modes.
+* `cleanup`: Commands to run after all tests for this product are done.
+* `reset`: Commands to run between each test to reset the environment.
+
+Example structure:
+
+```yaml
+on-prem:
+  gateway:
+    versions: ...
+    env: ...
+    setup: ...
+    cleanup: ...
+    reset: ...
+  ai-gateway:
+    versions: ...
+    env: ...
+    setup: ...
+    cleanup: ...
+    reset: ...
+  operator:
+    setup: ...
+    cleanup: ...
+    reset: ...
+
+konnect:
+  gateway:
+    setup: ...
+    cleanup: ...
+    reset: ...
+  event-gateway:
+    setup: ...
+    cleanup: ...
+    reset: ...
+```
+
 ### Generating instructions files
 
 The script will iterate over the list of `how-tos`, check if it needs to generate instruction files for that file, by testing the following conditions:
 
 * The frontmatter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* `gateway` is set as `products` in the frontmatter (for now, we'll add support for more products in the future).
+* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
 * **Setup**: pulls the value of all the elements with the `data-test-setup` attribute. The value can be:
   * `konnect`
+  * `operator`
   * A json indicating the product and the `min_version`, i.e. `{ gateway: '3.9' }`. This and `konnect` are mutually exclusive.
 * **Steps**: pulls the value of all the elements with the `data-test-step` attribute. These represent both the steps the test needs to execute and `validations` that act as the assertions.
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
   * `data-test-step=json`: When the value is a json object, it represents the configuration of a `validation` step, which the test will treat as an assertion.
 
-After extracting the information, it enerates an instruction file `<url-to-file-path>/gateway.yaml` for on-prem and `<url-to-file-path>/konnect.yml` for konnect (if the page supports it) and stores them in `instructionsDir`.
+After extracting the information, it generates an instruction file at `<url-path>/<deployment-model>/<product>.yaml` (e.g. `how-to/my-guide/on-prem/gateway.yaml`, `how-to/my-guide/konnect/gateway.yaml`) and stores them in `instructionsDir`.
 
 ### How to run it
 
@@ -55,15 +102,16 @@ or by passing the corresponding files, i.e.
 
 ### Running the tests
 
-1. First, it groups the tests by runtime based on the `basename` of the instruction file, e.g. `gateway.yaml`, `konnect.yaml`.
-1. Runs a docker image named after the product with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
-1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding key. It also sets the `ENV` variables defined there in the container. For runtimes that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `<RUNTIME>_VERSION`.
- E.g. for gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `gateway.versions` for the entry `version: '3.9'`.
+1. First, it groups the tests by **deployment model** (from the parent directory name, e.g. `on-prem`, `konnect`) and **product** (from the instruction file basename, e.g. `gateway.yaml`, `operator.yaml`).
+1. Runs a docker image with all the necessary tools, which can be found in `tools/automated-test/docker/Dockerfile` (temporary until we host them somewhere).
+1. Sets up the environment by running in the container the commands defined in `tools/automated-tests/config/runtimes.yaml` under the corresponding `<deployment-model>.<product>` key. It also sets the `ENV` variables defined there in the container. For products that have versions, it will set the corresponding env variables defined under `versions` of the entry matching `GATEWAY_VERSION`.
+ E.g. for on-prem gateway, when running the tests with `GATEWAY_VERSION='3.9'` it will set the env variables defined in `on-prem.gateway.versions` for the entry `version: '3.9'`.
 1. Tests can be scoped to a specific product by setting the `PRODUCTS` env variable, e.g. `PRODUCTS=gateway`.
+1. Tests can be scoped to a specific deployment model by setting the `DEPLOYMENT_MODEL` env variable, e.g. `DEPLOYMENT_MODEL=on-prem`.
 1. Runs the `setup` commands defined in `runtimes.yaml` once, and after each test it resets it by running the commands under `reset`.
 1. For each instruction file (test), it runs its `prereqs` block.
-1. Then, it runs the steps secuentially. In the case of `gateway`, steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
-1. After all the tests for a particular runtime are run, the commands defined in `cleanup` and removes the corresponding container.
+1. Then, it runs the steps sequentially. Steps that are strings are executed as bash commands. Validation steps (defined as json objects), are treated as assertions. They run custom code based on the step's configuration and fail/success depending on the expectation. The validation functions are defined in `tools/automated-tests/instructions/validations.js`.
+1. After all the tests for a particular deployment model + product are run, the commands defined in `cleanup` are executed and the corresponding container is removed.
 
 #### Expected failures
 
@@ -78,21 +126,29 @@ From the root of the repo run:
 
 1. `cd tools/automated-tests`
 1. `npm ci` - installs dependencies
-1. `GATEWAY_VERSION='3.9' RUNTIME='gateway' PRODUCTS='gateway' npm run run-tests`
+1. `GATEWAY_VERSION='3.9' DEPLOYMENT_MODEL='on-prem' PRODUCTS='gateway' npm run run-tests`
 
 By default, it will run all the instruction files, but it also supports running specific tests, i.e.
 
 `GATEWAY_VERSION='3.9' npm run run-tests -- --files='<path-to-instruction-file1>' --files='<path-to-instruction-file2>'`
 
+#### Run on-prem operator tests
+
+`DEPLOYMENT_MODEL='on-prem' PRODUCTS='operator' npm run run-tests`
+
 #### Run unreleased gateway version
 
-`GATEWAY_VERSION='3.12' PRODUCTS=gateway RUNTIME=konnect KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
+`GATEWAY_VERSION='3.12' PRODUCTS=gateway DEPLOYMENT_MODEL=on-prem KONG_IMAGE_TAG=nightly KONG_IMAGE_NAME=kong/kong-gateway-dev npm run run-tests`
+
+#### Run konnect event-gateway tests
+
+`DEPLOYMENT_MODEL='konnect' PRODUCTS='event-gateway' npm run run-tests`
 
 #### Supported Env variables
 
 | Variable | Description | Required | Default Value |
 |----------|-------------|----------|---------------|
-| `GATEWAY_VERSION` | Specifies which gateway version to run the test agains. | true | null |
-| `RUNTIME` | Specifies which runtimes (konnect/gateway) to run, runs all tests by default. | true | null |
-| `PRODUCTS` | Specifies which tests to run. | true | null |
+| `GATEWAY_VERSION` | Specifies which gateway version to run the tests against. Required for products with a version matrix. | conditional | null |
+| `DEPLOYMENT_MODEL` | Specifies which deployment model (`on-prem`/`konnect`) to run, runs all by default. | false | null |
+| `PRODUCTS` | Specifies which products to test (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`). | true | null |
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |

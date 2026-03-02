@@ -15,7 +15,7 @@ import {
 import { stopContainer, removeContainer } from "./docker-helper.js";
 import {
   instructionFileFromConfig,
-  groupInstructionFilesByProductAndRuntime,
+  groupInstructionFilesByDeploymentModelAndProduct,
 } from "./instructions-file.js";
 import "@dotenvx/dotenvx/config";
 
@@ -30,10 +30,6 @@ function checkEnvVariables() {
   }
   if (!process.env.PRODUCTS) {
     console.error("Missing env variable PRODUCTS");
-    process.exit(1);
-  }
-  if (process.env.PRODUCTS === "gateway" && !process.env.PRODUCTS) {
-    console.error("Missing env variable RUNTIME");
     process.exit(1);
   }
 }
@@ -64,32 +60,37 @@ export async function loadConfig() {
 
     checkEnvVariables();
 
-    const filesByProductAndRuntime =
-      await groupInstructionFilesByProductAndRuntime(files);
+    const filesByDeploymentModelAndProduct =
+      await groupInstructionFilesByDeploymentModelAndProduct(files);
 
-    for (const [product, instructionFilesByRuntime] of Object.entries(
-      filesByProductAndRuntime
+    for (const [deploymentModel, instructionFilesByProduct] of Object.entries(
+      filesByDeploymentModelAndProduct
     )) {
-      if (!products.includes(product)) {
+      if (
+        process.env.DEPLOYMENT_MODEL &&
+        process.env.DEPLOYMENT_MODEL !== deploymentModel
+      ) {
         continue;
       }
 
-      for (const [runtime, instructionFiles] of Object.entries(
-        instructionFilesByRuntime
+      for (const [product, instructionFiles] of Object.entries(
+        instructionFilesByProduct
       )) {
-        if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {
+        if (!products.includes(product)) {
           continue;
         }
 
-        const runtimeConfig = await getRuntimeConfig(runtime);
-        console.log(`Running ${product} tests on ${runtime}...`);
+        const runtimeConfig = await getRuntimeConfig(deploymentModel, product);
+        console.log(
+          `Running ${product} tests on ${deploymentModel}...`
+        );
 
-        container = await setupRuntime(runtimeConfig, product, docker);
+        container = await setupRuntime(runtimeConfig, docker);
 
         await beforeAll(testsConfig, container);
 
         for (const instructionFile of instructionFiles) {
-          await resetRuntime(runtimeConfig, product, container);
+          await resetRuntime(runtimeConfig, container);
           const result = await runInstructionsFile(
             instructionFile,
             runtimeConfig,
@@ -98,7 +99,7 @@ export async function loadConfig() {
           logResult(result);
           results.push(result);
         }
-        await cleanupRuntime(runtimeConfig, product, container);
+        await cleanupRuntime(runtimeConfig, container);
         await afterAll(testsConfig, container);
       }
     }

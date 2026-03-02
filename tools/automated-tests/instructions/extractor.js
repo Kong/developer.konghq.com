@@ -125,16 +125,61 @@ async function extractSteps(page) {
   return instructions;
 }
 
-async function writeInstructionsToFile(url, config, platform, instructions) {
-  let runtime = platform;
-  if (runtime === "on-prem") {
-    runtime = "gateway";
+function deriveProduct(setup, products) {
+  // The setup config tells us the product:
+  // - Object like {"gateway": "3.9"} -> product is the key (e.g., "gateway")
+  // - String like "operator" -> product is the string itself
+  // - String like "konnect" -> product must be derived from the products list
+  if (!Array.isArray(setup) || setup.length === 0) {
+    throw new Error("deriveProduct: 'setup' must be a non-empty array.");
   }
 
+  const setupEntry = setup[0];
+
+  if (setupEntry == null) {
+    // This can happen if data-test-setup is missing and JSON.parse(null) was used.
+    throw new Error(
+      "deriveProduct: 'setup[0]' is null or undefined. Ensure data-test-setup is present and valid.",
+    );
+  }
+
+  if (typeof setupEntry === "object") {
+    // e.g., {"gateway": "3.9"} -> "gateway"
+    const keys = Object.keys(setupEntry);
+    if (keys.length === 0) {
+      throw new Error(
+        "deriveProduct: 'setup[0]' object must have at least one key.",
+      );
+    }
+    return keys[0];
+  }
+
+  if (typeof setupEntry !== "string") {
+    throw new Error(
+      `deriveProduct: Unsupported type for 'setup[0]': ${typeof setupEntry}. Expected object or string.`,
+    );
+  }
+  // String value
+  if (setupEntry === "konnect") {
+    // For konnect, determine the product from the products list
+    if (products.includes("ai-gateway")) {
+      return "ai-gateway";
+    }
+    if (products.includes("event-gateway")) {
+      return "event-gateway";
+    }
+    return "gateway";
+  }
+  // e.g., "operator"
+  return setupEntry;
+}
+
+async function writeInstructionsToFile(url, config, platform, product, instructions) {
   const instructionsFile = path.join(
     config.instructionsDir,
     url.pathname,
-    `${runtime}.yaml`,
+    platform,
+    `${product}.yaml`,
   );
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
@@ -184,6 +229,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
+      const product = deriveProduct(setup, products);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
       const cleanup = await extractCleanup(page);
@@ -191,6 +237,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
         url,
         config,
         platform,
+        product,
         {
           name,
           setup,
