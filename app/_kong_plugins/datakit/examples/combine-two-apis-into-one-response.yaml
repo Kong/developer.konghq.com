@@ -27,11 +27,7 @@ config:
     inputs:
       input1: AUTHOR.body
       input2: UUID.body
-    jq: |
-      {
-        author: .input1.slideshow.author,
-        uuid: .input2.uuid,
-      }
+    jq: "{ author: .input1.slideshow.author, uuid: .input2.uuid }"
   - name: EXIT
     type: exit
     inputs:
