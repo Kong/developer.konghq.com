@@ -1,0 +1,5 @@
+<div id="tldr" class="flex flex-col gap-1">
+    <span class="text-base font-bold text-primary">TL;DR</span>
+    <div class="font-semibold content">{{ page.tldr.q | liquify | markdownify }}</div>
+    <div class="tldr-text content">{{ page.tldr.a | liquify | markdownify }}</div>
+</div>
