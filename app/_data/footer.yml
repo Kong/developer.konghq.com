@@ -21,7 +21,7 @@ platform:
       url: https://konghq.com/pricing
 
 platform_docs:
-  title: Platorm Docs
+  title: Platform Docs
   links:
     gateway:
       text: Kong Gateway
