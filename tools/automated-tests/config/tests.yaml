@@ -5,6 +5,7 @@ productionUrl: https://developer.konghq.com
 
 products:
   gateway:
+    extractInstructionsAs: default
     before: &gateway-before
       commands:
         - docker network create kong-quickstart-net >/dev/null 2>&1 || true
@@ -19,5 +20,10 @@ products:
         - docker rm -f redis-stack-server
         - docker rm -f vault
   ai-gateway:
+    extractInstructionsAs: default
     before: *gateway-before
     after: *gateway-after
+  kic:
+    extractInstructionsAs: block
+  operator:
+    extractInstructionsAs: block

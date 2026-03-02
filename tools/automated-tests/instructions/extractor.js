@@ -114,13 +114,18 @@ async function extractSetup(page) {
   return instructions;
 }
 
-async function extractSteps(page) {
+async function extractSteps(page, config) {
   const instructions = [];
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
     if (await elem.isVisible()) {
-      const step = await elem.evaluate((el) => el.dataset.testStep);
+      let step;
+      if (config.extractInstructionsAs && config.extractInstructionsAs !== "default") {
+        step = config.extractInstructionsAs;
+      } else {
+        step = await elem.evaluate((el) => el.dataset.testStep);
+      }
 
       if (step === "block") {
         // copy code block
@@ -215,6 +220,9 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
     const platforms = worksOn.split(",").sort();
 
+    // Fetch product specific config. The first product is always the main one
+    const productConfig = config.products[products[0]] || {};
+
     for (const platform of platforms) {
       const title = await page.locator("h1").textContent();
       const howToUrl = `${config.productionUrl}${url.pathname}`;
@@ -233,7 +241,7 @@ export async function extractInstructionsFromURL(uri, config, context) {
       const setup = await extractSetup(page);
       const product = deriveProduct(setup, products);
       const prereqs = await extractPrereqs(page, platform);
-      const steps = await extractSteps(page);
+      const steps = await extractSteps(page, productConfig);
       const cleanup = await extractCleanup(page);
       const instructionsFile = await writeInstructionsToFile(
         url,
