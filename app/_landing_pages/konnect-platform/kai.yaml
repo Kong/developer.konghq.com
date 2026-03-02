@@ -120,7 +120,7 @@ rows:
                   The same {{site.konnect_short_name}} MCP Server that powers KAi is available for use with external AI assistants and IDE copilots. This allows you to interact with your {{site.konnect_short_name}} resources directly from your development environment.
 
                   With the MCP server, you can:
-                  * Query gateway entities (control planes, services, routes, consumers, plugins)
+                  * Query gateway entities (control planes, Gateway Services, Routes, Consumers, plugins)
                   * Create and analyze debug sessions for performance issues
                   * Search Kong documentation
                   * Analyze API traffic
@@ -151,7 +151,39 @@ rows:
 
             For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
   
+  - header:
+      text: "Example prompts"
+      type: h2
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Use the following example prompts to get started with KAi:
 
+                    **Debugging & performance:**
+                    - Why is my `/api/checkout` endpoint slow? Create a debugging session, focusing on high-latency requests, and summarize where time is being spent.
+                    - Help me diagnose intermittent 502s on my `ROUTE_NAME` Route.
+                    - What is the plugin execution order for my `ROUTE_NAME` Route?
+                    - Why are Consumers in `CONSUMER_GROUP` getting 401s? Walk me through likely causes and how to verify them in {{site.konnect_short_name}}.
+
+                    **Configuration discovery:**
+                    - What plugins affect the `ROUTE_NAME` Route? List them in order and explain what each one does.
+                    - Show me all rate limiting plugins across production control planes.
+                    - List all Routes associated with the `SERVICE_NAME` Gateway Service and tell me which auth and security plugins apply to each.
+
+                    **Security & governance checks:**
+                    - Audit my `CONTROL_PLANE` control plane for common security misconfigurations (for example: auth missing, weak TLS, or overly broad CORS). Suggest prioritized fixes.
+                    - Check if any Routes in my `CONTROL_PLANE` control plane expose endpoints without authentication, and list them.
+                    - Suggest a safe baseline policy set for a public API (rate limiting, authentication, and logging) and show how to apply it to the `SERVICE_NAME` Gateway Service.
+
+                    **Questions about {{site.konnect_short_name}}:**
+                    - How do I set up the plugin `PLUGIN_NAME` in {{site.konnect_short_name}} for a particular use case? Give me the exact steps and the limitations.
+                    - Explain the difference between Gateway Service vs Route in {{site.konnect_short_name}}, with an example from my current control plane.
+                    - What’s the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
+                    - Search the Kong docs for best practices on rate limiting and summarize the key steps for my setup.
   - header:
       text: "Frequently asked questions"
       type: h2
