@@ -1,8 +1,8 @@
 ---
-title: "Cross-regional failover testing for Dedicated Cloud Gateways"
+title: "Testing regional failover"
 content_type: reference
 layout: reference
-description: "A reference runbook for validating cross-regional failover in a multi-region Dedicated Cloud Gateway deployment using a controlled outage simulation."
+description: "Use a controlled outage simulation to confirm that your multi-region Dedicated Cloud Gateway deployment automatically fails over to a healthy region."
 
 products:
     - gateway
@@ -28,55 +28,30 @@ related_resources:
     url: /gateway/traffic-control/health-checks-circuit-breakers/
 ---
 
-This document describes a general approach for validating cross-regional failover in a multi-region Dedicated Cloud Gateway deployment. The core mechanism uses Kong's [Pre-Function plugin](/plugins/pre-function/) to simulate a regional outage, triggering DNS-based failover to a secondary region.
+This page covers how to validate cross-regional failover in a multi-region Dedicated Cloud Gateway deployment. Kong's [Pre-Function plugin](/plugins/pre-function/) simulates a regional outage by forcing health checks to fail, which triggers DNS failover to a secondary region.
 
-While the examples here reference AWS Route 53, the approach can be adapted to any DNS-based health check and failover system. The specifics of load generation tooling, observability backends, and upstream APIs will vary by environment.
+The examples here reference AWS Route 53, but the approach works with any DNS-based health check system. Load generation tooling, observability backends, and upstream APIs will differ across environments.
 
 ## How it works
 
-The simulated outage works by intercepting health check requests at the gateway level. A Pre-Function plugin scoped to the health check route inspects the incoming `Host` header. When the header matches the public edge DNS hostname of the target region, the plugin returns a `400` response. From the perspective of the health checker, the endpoint appears unhealthy and DNS resolution shifts to the alternate region.
+The outage is simulated by intercepting health check requests at the gateway. A Pre-Function plugin scoped to the health check route inspects the incoming `Host` header. When the header matches the public edge DNS hostname of the target region, the plugin returns a `400`. The health checker sees the endpoint as unhealthy and DNS shifts traffic to the alternate region.
 
-Disabling the plugin restores the region to a healthy state. The plugin should be retained between test runs rather than deleted, so it can be re-enabled without reconfiguration.
+Disabling the plugin lets health checks pass again. Keep the plugin between test runs — disable it rather than delete it, so you can re-enable it without starting over.
 
 ## Prerequisites
 
-This approach requires the following to be in place before testing begins:
+You'll need:
 
 - A multi-region data plane deployment with nodes in at least two regions
 - A DNS-based health check system (such as AWS Route 53) with health checks targeting the public edge DNS endpoint of each region
 - A dedicated health check route in the control plane (for example, `/health`)
-- A representative set of upstream APIs reachable from each region — real production APIs are preferred over mocks for meaningful results
-- Observability instrumentation in place (for example, OpenTelemetry, Datadog, HTTP Log plugin) to capture traffic behavior during the test
-- A pre-established RPS (requests per second) baseline to compare against during and after the test
-- Access to control plane analytics to monitor traffic distribution
-
-Recommended transaction sets for load generation:
-
-{% table %}
-columns:
-  - title: Transaction set
-    key: set
-  - title: Requests
-    key: requests
-  - title: Duration
-    key: duration
-rows:
-  - set: Set 1
-    requests: "50,000"
-    duration: 30 minutes
-  - set: Set 2
-    requests: "100,000"
-    duration: 30 minutes
-  - set: Set 3
-    requests: "250,000"
-    duration: 30 minutes
-{% endtable %}
+- Upstream APIs reachable from each region
 
 ## Pre-Function plugin configuration
 
-The Pre-Function plugin runs in the `access` phase and is scoped to the health check route. It inspects the `Host` header of incoming requests and returns a `400` when the header matches the target region's public edge DNS hostname. All other requests pass through unaffected.
+The Pre-Function plugin runs in the `access` phase, scoped to the health check route. It inspects the `Host` header and returns a `400` when the header matches the target region's public edge DNS hostname. All other requests pass through unaffected.
 
-The `target_host` variable must be set to the public edge DNS hostname of the region under test. In {{site.konnect_short_name}}, this hostname is available under **Connect > Regional Networking > Public Edge DNS** for each region.
+Set `target_host` to the public edge DNS hostname of the region you're testing. In {{site.konnect_short_name}}, this is available under **Connect > Regional Networking > Public Edge DNS** for each region.
 
 ```lua
 -- Runs in the 'access' phase on the health check route
@@ -93,9 +68,9 @@ if host == target_host then
 end
 ```
 
-The plugin should be **disabled** (not deleted) to restore normal health check behavior. Retaining the plugin configuration avoids reconfiguration between test runs.
+Disable the plugin (don't delete it) to restore normal health check behavior. Keeping the configuration means you won't need to set it up again for future test runs.
 
-The following is a full plugin configuration in YAML format for reference:
+Here's the full plugin configuration in YAML:
 
 ```yaml
 config:
@@ -121,25 +96,49 @@ name: pre-function
 
 ## Test process
 
-Each test run covers two scenarios: a failover test and a recovery test. Both should be run for each region across each transaction set.
+Each run covers two scenarios — failover and recovery — repeated for each region across each transaction set. Use real production APIs rather than mocks; the results will be more meaningful.
+
+Before starting, establish an RPS (requests per second) baseline and let monitoring normalize. Keep observability plugins (OpenTelemetry, Datadog, HTTP Log) and control plane analytics running throughout.
+
+Recommended transaction sets:
+
+{% table %}
+columns:
+  - title: Transaction set
+    key: set
+  - title: Requests
+    key: requests
+  - title: Duration
+    key: duration
+rows:
+  - set: Set 1
+    requests: "50,000"
+    duration: 30 minutes
+  - set: Set 2
+    requests: "100,000"
+    duration: 30 minutes
+  - set: Set 3
+    requests: "250,000"
+    duration: 30 minutes
+{% endtable %}
 
 ### Failover
 
-A failover test begins with load generation running at the established RPS baseline, with monitoring allowed to normalize before the simulated outage is introduced. Enabling the Pre-Function plugin on the health check route causes the DNS health checker to begin receiving `400` responses, eventually marking the region as unhealthy. At that point, DNS should shift traffic to the alternate region automatically.
+Start with load generation at your RPS baseline and let monitoring normalize. Once things are stable, enable the Pre-Function plugin on the health check route. Health check requests will start returning `400`, and the DNS health checker will eventually mark the region as unhealthy — at which point DNS should shift traffic to the alternate region automatically.
 
-The test continues for the full duration of the transaction set, with observability output and analytics captured throughout. The key signals to monitor are the health check status transition in the DNS provider and the change in traffic distribution across regions.
+Let the test run for the full transaction set duration. Watch for the health check status flipping in your DNS provider and confirm traffic is shifting to the alternate region. Capture observability output and analytics as you go.
 
-The time between enabling the plugin and the DNS provider marking the endpoint unhealthy depends on the configured health check interval and failure threshold.
+How quickly the DNS provider marks the endpoint unhealthy depends on your health check interval and failure threshold settings.
 
 ### Recovery
 
-A recovery test starts with the target region already in an unhealthy state and load generation still running. Disabling the Pre-Function plugin restores healthy responses on the health check route. The DNS provider should begin routing traffic back to the recovered region, and traffic should gradually split across both regions as health checks pass.
+Run the recovery test while the target region is still unhealthy and load generation is active. Disabling the plugin lets health checks pass again, and the DNS provider will start routing traffic back to the recovered region. Traffic should gradually split across both regions as health checks pass.
 
-Analytics can be used to confirm that RPS returns to the pre-test baseline within acceptable performance parameters. As with failover, the transition time depends on the health check interval and threshold settings.
+Use analytics to confirm RPS returns to your baseline. Transition time works the same way as during failover — it depends on your health check interval and threshold settings.
 
 ## Test matrix
 
-Each combination of region and test type should be run once per transaction set. Recommended coverage: 2 regions × 2 test types × 3 transaction sets = 12 total runs.
+Run each combination of region and test type once per transaction set. With 2 regions, 2 test types, and 3 transaction sets, that's 12 runs total.
 
 {% table %}
 columns:
@@ -166,9 +165,9 @@ rows:
 
 ## Route 53 health check parameters
 
-Route 53 aggregates responses from its globally distributed health checkers and applies the following threshold when determining endpoint health:
+Route 53 aggregates responses from its distributed health checkers to determine endpoint health:
 
 - If **more than 18%** of health checkers report an endpoint as healthy, Route 53 considers it **healthy**.
 - If **18% or fewer** health checkers report an endpoint as healthy, Route 53 considers it **unhealthy**.
 
-The speed of transition depends on the health check interval and failure threshold configured in the AWS Console.
+How quickly the transition happens depends on the health check interval and failure threshold you've configured in AWS.
