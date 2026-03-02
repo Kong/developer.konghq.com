@@ -1,6 +1,7 @@
 {%- unless page.skip_llm_metadata -%}
 ## Metadata
-{%- if page.products %}
+
+{% if page.products %}
 - Products: {{page.llm_metadata.products | join: ', '}}
 {%- endif -%}
 {%- if page.tier %}
@@ -40,5 +41,12 @@
 {%- if page.tier and page.tier == 'ai_gateway_enterprise' %}
 - **AI Gateway Enterprise:** This plugin is only available as part of our AI Gateway Enterprise offering.
 {%- endif -%}
+{%- endif -%}
+{%- if page.description -%}
+- Description: |
+{{ page.description | liquify | indent: 2 }}
+{%- endif -%}
+{%- if page.tags != empty and page.tags.size > 0 -%}
+- Tags: {{ page.tags | join: ', ' }}
 {%- endif -%}
 {%- endunless -%}
