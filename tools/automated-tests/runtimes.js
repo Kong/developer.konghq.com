@@ -10,29 +10,38 @@ const log = debug("tests:setup:runtime");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export async function getRuntimeConfig(runtime) {
+export async function getRuntimeConfig(deploymentModel, product) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
   const imageName = `automated-tests`;
 
-  if (configs[runtime]) {
-    let config = { ...configs[runtime], runtime, imageName };
-
-    if (configs[runtime].versions) {
-      const versionFromEnv = process.env[`${runtime.toUpperCase()}_VERSION`];
-      if (versionFromEnv) {
-        config["version"] = versionFromEnv;
-      } else {
-        throw new Error(
-          `Missing env variable ${runtime.toUpperCase()}_VERSION`
-        );
-      }
-    }
-
-    return config;
-  } else {
-    throw new Error(`Unsupported runtime: ${runtime}`);
+  if (!configs[deploymentModel]) {
+    throw new Error(`Unsupported deployment model: ${deploymentModel}`);
   }
+
+  if (!configs[deploymentModel][product]) {
+    throw new Error(
+      `Unsupported product '${product}' for deployment model '${deploymentModel}'`
+    );
+  }
+
+  let config = {
+    ...configs[deploymentModel][product],
+    deploymentModel,
+    product,
+    imageName,
+  };
+
+  if (config.versions) {
+    const versionFromEnv = process.env.GATEWAY_VERSION;
+    if (versionFromEnv) {
+      config["version"] = versionFromEnv;
+    } else {
+      throw new Error(`Missing env variable GATEWAY_VERSION`);
+    }
+  }
+
+  return config;
 }
 
 export async function runtimeEnvironment(runtimeConfig) {
@@ -48,7 +57,7 @@ export async function runtimeEnvironment(runtimeConfig) {
     .forEach(([key, value]) => {
       const variable = key.replace("TESTS_", "");
 
-      if (runtimeConfig.runtime !== "konnect" && variable === "KONNECT_TOKEN") {
+      if (runtimeConfig.deploymentModel !== "konnect" && variable === "KONNECT_TOKEN") {
         return;
       }
       environment[`DECK_${variable}`] = value;
@@ -71,7 +80,7 @@ export async function runtimeEnvironment(runtimeConfig) {
         };
       } else {
         throw new Error(
-          `Missing version config for version: '${version}' in ${runtimeConfig.runtime}`
+          `Missing version config for version: '${version}' in ${runtimeConfig.deploymentModel}/${runtimeConfig.product}`
         );
       }
     }
@@ -82,8 +91,8 @@ export async function runtimeEnvironment(runtimeConfig) {
   return environment;
 }
 
-export async function setupRuntime(runtimeConfig, product, docker) {
-  const runtime = runtimeConfig.runtime;
+export async function setupRuntime(runtimeConfig, docker) {
+  const { deploymentModel, product } = runtimeConfig;
   await fetchImage(docker, runtimeConfig.imageName, log);
 
   const environment = await runtimeEnvironment(runtimeConfig);
@@ -94,9 +103,9 @@ export async function setupRuntime(runtimeConfig, product, docker) {
   environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
-    log(`Setting up ${runtime} version: ${runtimeConfig.version}...`);
+    log(`Setting up ${deploymentModel}/${product} version: ${runtimeConfig.version}...`);
   } else {
-    log(`Setting up ${runtime}...`);
+    log(`Setting up ${deploymentModel}/${product}...`);
   }
   const env = Object.entries(environment).map(
     ([key, value]) => `${key}=${value}`
@@ -135,8 +144,8 @@ export async function setupRuntime(runtimeConfig, product, docker) {
   }
 
   log("Setting things up...");
-  if (runtimeConfig[product].setup.commands) {
-    for (const command of runtimeConfig[product].setup.commands) {
+  if (runtimeConfig.setup.commands) {
+    for (const command of runtimeConfig.setup.commands) {
       await executeCommand(container, command);
     }
   }
@@ -144,19 +153,19 @@ export async function setupRuntime(runtimeConfig, product, docker) {
   return container;
 }
 
-export async function cleanupRuntime(runtimeConfig, product, container) {
+export async function cleanupRuntime(runtimeConfig, container) {
   log("Cleaning up...");
-  if (runtimeConfig[product].cleanup.commands) {
-    for (const command of runtimeConfig[product].cleanup.commands) {
+  if (runtimeConfig.cleanup.commands) {
+    for (const command of runtimeConfig.cleanup.commands) {
       await executeCommand(container, command);
     }
   }
 }
 
-export async function resetRuntime(runtimeConfig, product, container) {
+export async function resetRuntime(runtimeConfig, container) {
   log("Resetting...");
-  if (runtimeConfig[product].reset.commands) {
-    for (const command of runtimeConfig[product].reset.commands) {
+  if (runtimeConfig.reset.commands) {
+    for (const command of runtimeConfig.reset.commands) {
       await executeCommand(container, command);
     }
   }
@@ -164,7 +173,7 @@ export async function resetRuntime(runtimeConfig, product, container) {
 
 export async function beforeAll(testsConfig, container) {
   log("BeforeAll...");
-  if (testsConfig.before.commands) {
+  if (testsConfig.before?.commands) {
     for (const command of testsConfig.before.commands) {
       await executeCommand(container, command);
     }
@@ -173,7 +182,7 @@ export async function beforeAll(testsConfig, container) {
 
 export async function afterAll(testsConfig, container) {
   log("AfterAll...");
-  if (testsConfig.after.commands) {
+  if (testsConfig.after?.commands) {
     for (const command of testsConfig.after.commands) {
       await executeCommand(container, command);
     }

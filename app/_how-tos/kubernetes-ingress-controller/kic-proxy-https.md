@@ -71,6 +71,7 @@ kubectl patch -n kong --type=json gateway kong -p='[
     }
 ]'
 ```
+{: data-test-step="block"}
 
 ## Create an HTTPRoute
 
@@ -90,8 +91,13 @@ section_name: https
 <!--vale on-->
 ## Validate your configuration
 
-Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.
+{% validation kubernetes-wait-for %}
+kind: httproute
+resource: echo
+{% endvalidation %}
 
+
+Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.
 
 {% validation request-check %}
 url: /echo

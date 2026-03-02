@@ -50,7 +50,7 @@ jobs:
         shell: bash
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
-          RUNTIME: konnect
+          DEPLOYMENT_MODEL: konnect
           PRODUCTS: event-gateway
           TESTS_KONNECT_TOKEN: ${{ secrets.KONNECT_TOKEN }}
         run: |

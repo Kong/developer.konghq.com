@@ -12,11 +12,11 @@ async function extractPrereqsBlocks(page) {
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];
-  const blocks = await page.locator("[data-test-prereqs]").all();
+  const blocks = await page.locator("[data-test-prereq]").all();
 
   for (const elem of blocks) {
     if (await elem.isVisible()) {
-      const instruction = await elem.getAttribute("data-test-prereqs");
+      const instruction = await elem.getAttribute("data-test-prereq");
 
       if (instruction === "block") {
         const copy = await elem.locator(".copy-action");
@@ -40,22 +40,37 @@ async function extractPrereqsBlocks(page) {
   return instructions;
 }
 
-async function extractPrereqs(page) {
+async function extractPrereqs(page, platform) {
   const blocks = [];
   // Handle the accordion gracefully, we need to click on each item (visible ones only).
-  const [_prereq, ...prerequisites] = await page
+  let prerequisites = await page
     .locator('[data-test-id="prereqs"] > *')
     .all();
 
-  for (const prereq of prerequisites) {
+  // Filter prerequisites by data-deployment-topology == platform or attribute not set
+  prerequisites = await Promise.all(prerequisites.map(async (prereq) => {
+    const topology = await prereq.getAttribute("data-deployment-topology");
+    return (topology === platform || topology === null) ? prereq : null;
+  })).then(results => results.filter(p => p !== null));
+
+
+  for (const i in prerequisites) {
+    const prereq = prerequisites[i];
     if (await prereq.isVisible()) {
       const trigger = await prereq.locator(".accordion-trigger");
-      if (prerequisites.length >= 1) {
+      if (i >= 1) {
         await trigger.click();
       }
+
+      await prereq.evaluate((el) => {
+        el.style.display = 'block';
+        el.style.visibility = 'visible';
+        el.style.opacity = '1';
+      });
+
+      const extractedBlocks = await extractPrereqsBlocks(prereq);
+      blocks.push(...extractedBlocks);
     }
-    const extractedBlocks = await extractPrereqsBlocks(page);
-    blocks.push(...extractedBlocks);
   }
 
   return { blocks };
@@ -99,20 +114,31 @@ async function extractSetup(page) {
   return instructions;
 }
 
-async function extractSteps(page) {
+async function extractSteps(page, config) {
   const instructions = [];
   const steps = await page.locator("[data-test-step]").all();
 
   for (const elem of steps) {
     if (await elem.isVisible()) {
-      const step = await elem.evaluate((el) => el.dataset.testStep);
+      let step;
+      if (config.extractInstructionsAs && config.extractInstructionsAs !== "default") {
+        step = config.extractInstructionsAs;
+      } else {
+        step = await elem.evaluate((el) => el.dataset.testStep);
+      }
 
       if (step === "block") {
         // copy code block
         const copy = await elem.locator(".copy-action");
         await copy.click();
 
-        const copiedText = await copyFromClipboard(page);
+        let copiedText = await copyFromClipboard(page);
+
+        // Make curl requests work for KIC
+        if (copiedText.includes("curl") && copiedText.includes("$PROXY_IP")) {
+          copiedText = "export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')\n" + copiedText;
+        }
+
         instructions.push(copiedText);
       } else {
         // validation-type step
@@ -125,16 +151,42 @@ async function extractSteps(page) {
   return instructions;
 }
 
-async function writeInstructionsToFile(url, config, platform, instructions) {
-  let runtime = platform;
-  if (runtime === "on-prem") {
-    runtime = "gateway";
+function deriveProduct(setup, products) {
+  // The setup config tells us the product:
+  // - Object like {"gateway": "3.9"} -> product is the key (e.g., "gateway")
+  // - String like "operator" -> product is the string itself
+  // - String like "konnect" -> product must be derived from the products list
+  const setupEntry = setup[0];
+  if (typeof setupEntry === "object") {
+    // e.g., {"gateway": "3.9"} -> "gateway"
+    return Object.keys(setupEntry)[0];
   }
+  // String value
+  if (setupEntry === "konnect") {
+    // For konnect, determine the product from the products list
+    if (products.includes("ai-gateway")) {
+      return "ai-gateway";
+    }
+    if (products.includes("event-gateway")) {
+      return "event-gateway";
+    }
 
+    if (products[0]) {
+      return products[0];
+    }
+
+    return "gateway";
+  }
+  // e.g., "operator"
+  return setupEntry;
+}
+
+async function writeInstructionsToFile(url, config, platform, product, instructions) {
   const instructionsFile = path.join(
     config.instructionsDir,
     url.pathname,
-    `${runtime}.yaml`,
+    platform,
+    `${product}.yaml`,
   );
   const instructionsDir = path.dirname(instructionsFile);
   await fs.mkdir(instructionsDir, { recursive: true });
@@ -168,6 +220,9 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
     const platforms = worksOn.split(",").sort();
 
+    // Fetch product specific config. The first product is always the main one
+    const productConfig = config.products[products[0]] || {};
+
     for (const platform of platforms) {
       const title = await page.locator("h1").textContent();
       const howToUrl = `${config.productionUrl}${url.pathname}`;
@@ -184,13 +239,15 @@ export async function extractInstructionsFromURL(uri, config, context) {
 
       const name = `[${title}](${howToUrl}) [${platform}]`;
       const setup = await extractSetup(page);
-      const prereqs = await extractPrereqs(page);
-      const steps = await extractSteps(page);
+      const product = deriveProduct(setup, products);
+      const prereqs = await extractPrereqs(page, platform);
+      const steps = await extractSteps(page, productConfig);
       const cleanup = await extractCleanup(page);
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
         platform,
+        product,
         {
           name,
           setup,

@@ -52,10 +52,18 @@ async function runConfig(config, container) {
 }
 
 async function checkSetup(setup, runtimeConfig, container) {
-  const { runtime, version: minVersion } = await getSetupConfig(setup);
-  if (runtime !== runtimeConfig.runtime) {
+  const { runtime: setupIdentifier, version: minVersion } = await getSetupConfig(setup);
+
+  // The setup identifier can be:
+  // - A product name (e.g. "gateway", "operator") from setup like {"gateway": "3.9"} or "operator"
+  // - A deployment model name (e.g. "konnect") from setup like "konnect"
+  // We check it against both the product and deployment model.
+  if (
+    setupIdentifier !== runtimeConfig.product &&
+    setupIdentifier !== runtimeConfig.deploymentModel
+  ) {
     throw new Error(
-      "The instructions files setup does not match the current runtime."
+      "The instructions files setup does not match the current product or deployment model."
     );
   }
 
@@ -150,13 +158,13 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       return result;
     }
 
-    if (rbac) {
-      for (const command of runtimeConfig.gateway.setup.rbac.commands) {
+    if (rbac && runtimeConfig.setup?.rbac?.commands) {
+      for (const command of runtimeConfig.setup.rbac.commands) {
         await executeCommand(container, command);
       }
     }
-    if (wasm) {
-      for (const command of runtimeConfig.gateway.setup.wasm.commands) {
+    if (wasm && runtimeConfig.setup?.wasm?.commands) {
+      for (const command of runtimeConfig.setup.wasm.commands) {
         await executeCommand(container, command);
       }
     }
@@ -180,8 +188,8 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
   }
 
-  if (rbac || wasm) {
-    for (const command of runtimeConfig.gateway.setup.commands) {
+  if ((rbac || wasm) && runtimeConfig.setup?.commands) {
+    for (const command of runtimeConfig.setup.commands) {
       await executeCommand(container, command);
     }
   }

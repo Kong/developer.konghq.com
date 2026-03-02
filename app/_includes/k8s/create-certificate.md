@@ -18,6 +18,7 @@ openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
   -addext "extendedKeyUsage = serverAuth" 2> /dev/null;
   openssl x509 -in server.crt -subject -noout
 ```
+{: data-test-step="block"}
 {% endnavtab %}
 {% navtab "OpenSSL 0.9.8" %}
 ```bash
@@ -38,3 +39,4 @@ openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
     ```bash
     kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ include.hostname }} --cert=./server.crt --key=./server.key
     ```
+    {: data-test-step="block"}
