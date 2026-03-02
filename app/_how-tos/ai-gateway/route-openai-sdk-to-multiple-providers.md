@@ -135,7 +135,7 @@ variables:
 
 Create a test script that sends requests to both providers through Kong. The SDK client is identical for both providers. Only the `base_url` and `model` change:
 ```bash
-cat <<EOF > test_multi_provider.py
+cat <<EOF > multi-provider-routing.py
 from openai import OpenAI
 
 kong_url = "http://localhost:8000"
@@ -159,7 +159,7 @@ EOF
 ```
 {: data-deployment-topology="on-prem" data-test-step="block" }
 ```bash
-cat <<EOF > test_multi_provider.py
+cat <<EOF > multi-provider-routing.py
 from openai import OpenAI
 import os
 
@@ -186,7 +186,13 @@ EOF
 
 Run the script:
 ```bash
-python test_multi_provider.py
+python multi-provider-routing.py
 ```
 
-You should see each request routed to the corresponding provider, confirming that a single SDK client can reach different LLM providers by changing the base URL.
+You should see each request routed to the corresponding provider:
+
+```text
+Provider: claude-sonnet-4-20250514, Model: claude-sonnet-4-20250514
+Provider: mistral-small-latest, Model: mistral-small-latest
+```
+{:.no-copy-code}
