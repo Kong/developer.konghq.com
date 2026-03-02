@@ -63,6 +63,8 @@ rows:
               include_content: tools/kongctl/install/linux
             - title: Windows
               include_content: tools/kongctl/install/windows
+            - title: Docker
+              include_content: tools/kongctl/install/docker
             - title: Mise
               include_content: tools/kongctl/install/mise
 
