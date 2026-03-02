@@ -353,9 +353,9 @@ You can optionally choose to expose upstream services only via load balancers (f
 
 </details>
 
-## Cross-regional failover testing
+## Testing regional failover
 
 **Action:**
 Before routing production traffic, validate that your multi-region Dedicated Cloud Gateway deployment automatically fails over to a healthy region when a primary region becomes unavailable.
 
-See [Cross-regional failover testing](/dedicated-cloud-gateways/cross-regional-failover-testing/) for the complete test procedure, plugin configuration, test matrix, and Route 53 health check parameters.
+See [Testing regional failover](/dedicated-cloud-gateways/cross-regional-failover-testing/) for the complete test procedure, plugin configuration, test matrix, and Route 53 health check parameters.

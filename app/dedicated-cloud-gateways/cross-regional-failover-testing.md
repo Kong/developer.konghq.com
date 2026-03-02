@@ -70,7 +70,7 @@ end
 
 Disable the plugin rather than delete it to restore normal health check behavior. Keeping the configuration means you won't need to set it up again for future test runs.
 
-Here's the full plugin configuration in YAML:
+The  plugin configuration:
 
 ```yaml
 config:
