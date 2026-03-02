@@ -128,3 +128,25 @@ resource "konnect_catalog_service" "my_catalogservice" {
 {% endnavtab %}
 {% endnavtabs %}
 
+## Map APIs to a service in {{site.konnect_catalog}}
+
+Explanation of why. If you've already assigned API specs to a service from integrations, [migrate them to APIs](/catalog/migrate-api-specs-to-apis/). 
+
+{% navtabs "map-apis" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. In the Catalog sidebar, click **Services**. 
+1. Click **New service** and configure the details about your service.
+{% endnavtab %}
+{% navtab "API" %}
+{% endnavtab %}
+{% navtab "Terraform" %}
+{% endnavtab %}
+{% endnavtabs %}
+
+for mapping APIs to services the user needs at the minimum the following combo roles on the service and API entities for actions:
+Listing available APIs to link to a service: API viewer, Service viewer
+Creating/deleting APi-service links: API viewer, Service admin
+migration of legacy apis to new APIs: API creator, Service admin
+listing linked services on the API overview page: API viewer, Service viewer
+To perform all the above actions: API admin + creator and Service admin
