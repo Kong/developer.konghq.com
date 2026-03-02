@@ -1,12 +1,12 @@
 ---
-title: "Serverless Gateway"
+title: "Serverless Gateway reference"
 content_type: reference
 layout: reference
 description: | 
     Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned.
 
 breadcrumbs:
-  - /konnect/
+  - /serverless-gateways/
 tags:
   - serverless-gateways
   - hybrid-mode
@@ -46,6 +46,8 @@ faqs:
 
         If no CAA record exists, no changes are needed. For more information, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
 related_resources:
+  - text: Migrate from V0 to V1
+    url: /serverless-gateways/migration/
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
   - text: Control plane and data plane communication
@@ -54,9 +56,13 @@ related_resources:
     url: /gateway/hybrid-mode/
 
 ---
-Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless Gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
-You can manage your Serverless Gateway nodes under **API Gateway** in {{site.konnect_short_name}}.
+Serverless Gateways are lightweight API gateways with a fully hosted control plane in {{site.konnect_short_name}} and automatically-provisioned data plane nodes.
+They are highly available, backed by a service-level agreement (SLA), and designed to handle lightweight production workloads. 
+
+Because you don't need to manage any infrastructure, Serverless Gateways are a strong fit for startups, new projects, and teams that want to run low-to-moderate production traffic, as well as for development, testing, and experimentation. 
+
+You can manage your Serverless Gateway nodes under [**API Gateway**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
 
 ## How do Serverless Gateways work?
 
@@ -68,11 +74,86 @@ When you create a Serverless Gateway, {{site.konnect_short_name}} creates a cont
 ## How do I provision a Serverless Gateway?
 
 To provision a Serverless Gateway, you need to create a serverless control plane and a hosted data plane. 
+
+### {{site.konnect_short_name}} UI
+
+The easiest way to provision a Serverless Gateway is through the {{site.konnect_short_name}} UI, 
+where {{site.konnect_short_name}} creates both a control plane and a data plane in one step.
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click the **New** button, then select **New API Gateway**.
+1. Select Serverless.
+1. Give your Gateway a name and an optional description.
+1. Click **Create** to save.
+
+### {{site.konnect_short_name}} APIs
+
+You can use the {{site.konnect_short_name}} APIs to provision control planes and data planes programmatically.
+
 Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authentication) set in your environment.
-	
-1. Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
+
+{% navtabs 'provision-serverless' %}
+{% navtab "Serverless V1 beta (US region only)" %}
+
+{:.info}
+> **Note**: If you want to migrate an existing V0 control plane to V1, see the [migration guide](/serverless-gateways/migration/).
+
+Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
+
 <!-- vale off -->
-{% capture request1 %}
+{% control_plane_request %}
+  url: /v2/control-planes/
+  status_code: 201
+  method: POST
+  region: us
+  headers:
+      - 'Authorization: Bearer $KONNECT_TOKEN'
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+  body:
+      name: serverless-gateway-control-plane
+      description: A test control plane for Serverless Gateways.
+      cluster_type: CLUSTER_TYPE_SERVERLESS_V1
+      cloud_gateway: true
+      auth_type: pinned_client_certs
+{% endcontrol_plane_request %}
+
+Export the generated control plane ID to an environment variable: 
+
+```sh
+export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+```
+
+<!--vale on -->
+Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+<!--vale off -->
+
+{% konnect_api_request %}
+  url: /v3/cloud-gateways/configurations
+  status_code: 201
+  region: us
+  method: PUT
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Authorization: Bearer $KONNECT_TOKEN'
+  body:
+      control_plane_id: $CONTROL_PLANE_ID
+      control_plane_geo: us
+      dataplane_groups: 
+        - region: us
+          provider: aws
+      kind: serverless.v1
+{% endkonnect_api_request %}
+
+<!--vale on -->
+
+{% endnavtab %}
+{% navtab "Global stable version (V0)" %}
+	
+Create a Serverless Gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
+
+<!-- vale off -->
 {% control_plane_request %}
   url: /v2/control-planes/
   status_code: 201
@@ -88,19 +169,17 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
       cloud_gateway: false
       auth_type: pinned_client_certs
 {% endcontrol_plane_request %}
-{% endcapture %}
-{{ request1 | indent:3 }}
+
+Export the generated control plane ID to an environment variable: 
+
+```
+export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
+```
+
 <!--vale on -->
-
-1. Export the generated control plane ID to an environment variable: 
-
-    ```
-    export CONTROL_PLANE_ID=YOUR-GENERATED-ID-HERE
-    ```
-
-1. Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
+Create a hosted data plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
-{% capture request2 %}
+
 {% konnect_api_request %}
   url: /v3/cloud-gateways/configurations
   status_code: 201
@@ -117,10 +196,10 @@ Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authenticati
         - region: na
       kind: serverless.v0
 {% endkonnect_api_request %}
-{% endcapture %}
-
-{{ request2 | indent:3 }}
 <!--vale on -->
+
+{% endnavtab %}
+{% endnavtabs %}
 
 You can now proxy requests through your Serverless Gateway, and it will use the hosted data plane to process traffic.
 
