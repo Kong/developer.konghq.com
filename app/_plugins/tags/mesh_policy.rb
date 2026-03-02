@@ -27,6 +27,7 @@ module Jekyll
       return '' if policy.data['published'] == false
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['policy'] = policy
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
@@ -35,7 +36,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/mesh_policy.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/mesh_policy.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/mesh_policy.html'))
+      end
     end
   end
 end
