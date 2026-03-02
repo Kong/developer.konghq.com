@@ -57,8 +57,6 @@
       </div>
     </div>
 
-    {% assign policies = site.data.event_gateway_policies | where_exp: "policy", "policy.published != false" %}
-
     <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
 
       <div class="flex flex-col md:col-span-4 w-full gap-16" id="plugin-cards">
