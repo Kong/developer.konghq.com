@@ -108,7 +108,7 @@ status_code: 401
 message: No required TLS certificate was sent
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+indent: 3
 {% endvalidation %}
 
     As you can see, {{ site.base_gateway }} is restricting the request because it doesn't have the necessary authentication information.
@@ -125,7 +125,7 @@ mtls: true
 status_code: 401
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-indent: 4
+indent: 3
 {% endvalidation %}
 
     The results should look like this:

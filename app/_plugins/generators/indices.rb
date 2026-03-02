@@ -223,7 +223,7 @@ module Jekyll
         'groups' => groups,
         'site' => site.config
       }
-      Liquid::Template.parse(template).render(context, registers: { site: site })
+      Liquid::Template.parse(template, { line_numbers: true }).render(context, registers: { site: site })
     end
   end
 end

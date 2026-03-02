@@ -115,46 +115,49 @@ For more information on how {{site.operator_product_name}} handles Secrets, plea
 
 Create a `KongConsumer` resource to represent the user, and reference the `test-user-apikey` Secret we created:
 
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1
-kind: KongConsumer
-metadata:
-  name: test-user
-  namespace: kong
-  annotations:
-    kubernetes.io/ingress.class: kong
-username: test-user
-credentials:
-- test-user-apikey
-' | kubectl apply -f -
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```bash
+  echo '
+  apiVersion: configuration.konghq.com/v1
+  kind: KongConsumer
+  metadata:
+    name: test-user
+    namespace: kong
+    annotations:
+      kubernetes.io/ingress.class: kong
+  username: test-user
+  credentials:
+  - test-user-apikey
+  ' | kubectl apply -f -
+  ```
+{% endon_prem %}
 
-```bash
-echo '
-apiVersion: configuration.konghq.com/v1
-kind: KongConsumer
-metadata:
-  name: test-user
-  namespace: kong
-  annotations:
-    kubernetes.io/ingress.class: kong
-username: test-user
-spec:
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: gateway-control-plane
-credentials:
-- test-user-apikey
-' | kubectl apply -f -
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```bash
+  echo '
+  apiVersion: configuration.konghq.com/v1
+  kind: KongConsumer
+  metadata:
+    name: test-user
+    namespace: kong
+    annotations:
+      kubernetes.io/ingress.class: kong
+  username: test-user
+  spec:
+    controlPlaneRef:
+      type: konnectNamespacedRef
+      konnectNamespacedRef:
+        name: gateway-control-plane
+  credentials:
+  - test-user-apikey
+  ' | kubectl apply -f -
+  ```
 
-{:.info}
-> To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
-{: data-deployment-topology="konnect" }
+  {:.info}
+  > To guarantee a consistent name for the `konnectNamespacedRef`, use [static naming](/operator/konnect/how-to/static-naming/)
+{% endkonnect %}
 
 
 ## Validate

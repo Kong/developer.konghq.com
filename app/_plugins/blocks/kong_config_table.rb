@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class KongConfigTable < Liquid::Block # rubocop:disable Style/Documentation
@@ -19,8 +20,9 @@ module Jekyll
       drop = Drops::KongConfigTable.new(config, release(@site, @page), @mode)
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['config'] = drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -54,7 +56,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/kong_config_table.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/kong_config_table.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/kong_config_table.html'))
+      end
     end
   end
 end

@@ -1,10 +1,9 @@
-{% assign count = include.count %}
-{% unless count %}{% assign count = 1 %}{% endunless %}
-
-{% assign is_https = false %}
-{% if include.mtls %}{% assign is_https = true %}{% endif %}
-{% if include.insecure %}{% assign is_https = true %}{% endif %}
-{% if include.url contains 'https://' %}{% assign is_https = false %}{% endif %}
+{%- assign count = include.count -%}
+{%- unless count %}{% assign count = 1 %}{% endunless -%}
+{%- assign is_https = false -%}
+{%- if include.mtls %}{% assign is_https = true %}{% endif -%}
+{%- if include.insecure %}{% assign is_https = true %}{% endif -%}
+{%- if include.url contains 'https://' %}{% assign is_https = false %}{% endif -%}
 
 ```bash
 {% if include.capture -%}
@@ -23,8 +22,8 @@
 ){% endif -%}
 {% if count > 1 %}; done{% endif %}
 ```
-
 {% if include.message %}
+
 You should see the following response:
 
 ```text
@@ -32,10 +31,7 @@ You should see the following response:
 ```
 {:.no-copy-code}
 {% endif %}
-
-
-{% if include.expected_headers %}
-{% assign header_count = include.expected_headers | size %}
+{% if include.expected_headers %}{% assign header_count = include.expected_headers | size %}
 You should see the following header{% if header_count > 1 %}s{% endif %}:
 
 ```text{% for header in include.expected_headers %}

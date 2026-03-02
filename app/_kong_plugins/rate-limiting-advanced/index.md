@@ -45,12 +45,12 @@ search_aliases:
   - rate-limiting-advanced
 
 notes: |
-  In Konnect, DB-less, and hybrid modes, the <code>cluster</code> config strategy
+  In Konnect, DB-less, and hybrid modes, the `cluster` config strategy
   is not supported.
   <br><br>
-  For DB-less mode, use one of <code>redis</code> or <code>local</code>;
-  for Konnect and hybrid mode, use <code>redis</code>, or <code>local</code> for data
-  planes only. In Serverless gateways only the <code>local</code> config strategy is supported.
+  For DB-less mode, use one of `redis` or `local`;
+  for Konnect and hybrid mode, use `redis`, or `local` for data
+  planes only. In Serverless gateways only the `local` config strategy is supported.
 
 min_version:
   gateway: '1.0'

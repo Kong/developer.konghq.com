@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class Table < Liquid::Block # rubocop:disable Style/Documentation
@@ -23,9 +24,10 @@ module Jekyll
       end
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
           { 'columns' => config['columns'], 'rows' => config['rows'] }
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -39,7 +41,11 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/table.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/table.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/table.html'))
+      end
     end
   end
 end

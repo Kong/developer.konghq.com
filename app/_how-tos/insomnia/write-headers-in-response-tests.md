@@ -48,11 +48,11 @@ Now we can test if a header is returned in the response.
 1. Click **New test** and enter a name for the test, such as "Header in the body". 
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
 1. Enter the following JavaScript to check if there are any headers in the response:
-```javascript
-const response1 = await insomnia.send();
-expect(Object.keys(response1.headers).length).to.be.greaterThan(0);
-const body = JSON.parse(response1.data);
-const item = body[1];
-expect(item).to.be.an('object');
-```
+   ```javascript
+   const response1 = await insomnia.send();
+   expect(Object.keys(response1.headers).length).to.be.greaterThan(0);
+   const body = JSON.parse(response1.data);
+   const item = body[1];
+   expect(item).to.be.an('object');
+   ```
 {% include /how-tos/steps/insomnia-run-tests.md %}

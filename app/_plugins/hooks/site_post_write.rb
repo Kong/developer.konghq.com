@@ -61,6 +61,13 @@ module SupportedVersionAPI # rubocop:disable Style/Documentation
   end
 end
 
+module MarkdownPagesWriter # rubocop:disable Style/Documentation
+  def self.process(site)
+    site.config['markdown_pages_to_render'].each(&:write)
+  end
+end
+
 Jekyll::Hooks.register :site, :post_write do |site, _|
   SupportedVersionAPI.process(site)
+  MarkdownPagesWriter.process(site)
 end

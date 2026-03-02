@@ -1,7 +1,5 @@
 {% assign summary='Azure configuration' %}
-
-{% capture details_content %}
-
+{%- capture details_content -%}
 {% if config.secret %}
 This example requires a few Azure resources. You need an Azure subscription and permissions to create or access these resources:
 
@@ -26,7 +24,5 @@ export AZURE_CLIENT_SECRET='YOUR AZURE APPLICATION CLIENT SECRET'
 ```
 
 Note that the `AZURE_CLIENT_SECRET` variable needs to be passed when creating your Data Plane container.
-{% endcapture %}
-
-
+{%- endcapture -%}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/azure.svg' %}

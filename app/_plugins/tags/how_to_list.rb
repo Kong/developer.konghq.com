@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uri'
+require_relative '../monkey_patch'
 
 module Jekyll
   class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
@@ -16,6 +17,7 @@ module Jekyll
     def render(context) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
       @context = context
       @site = context.registers[:site]
+      @page = context.environments.first['page']
       keys = @param.split('.')
       config = keys.reduce(context) { |c, key| c[key] }
 
@@ -37,17 +39,22 @@ module Jekyll
       end
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['how_tos'] = how_tos
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/how_to_list.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/how_to_list.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/how_to_list.html'))
+      end
     end
 
     def view_more_url(config)

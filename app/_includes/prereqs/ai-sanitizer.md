@@ -23,5 +23,6 @@ Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
 ```bash
 docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
 ```
+
 {:.info}
 > Each image includes a built-in NLP model. Check the [AI Sanitizer documentation](/plugins/ai-sanitizer/#ai-pii-anonymizer-service) for more detail.

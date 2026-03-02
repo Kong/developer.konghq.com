@@ -444,18 +444,21 @@ Prevents users from copying code in a code block.
 
 Displays the code block/text only if the specified deployment type is selected.
 
-Add this tag immediately after a code block.
+Wrap the text/code block with the following blocks:
 <!--vale off-->
-{% raw %}```
-code for konnect
-{: data-deployment-topology="konnect" }
-```{% endraw %}
+```{% raw %}
+{% konnect %}
+content: |
+  code for konnect
+{% endkonnect %}
+{% endraw %}```
 
-{% raw %}```
-code for on-prem
-{: data-deployment-topology="on-prem" }
-```{% endraw %}
-
+```{% raw %}
+{% on_prem %}
+content: |
+  code for on-prem
+{% endon_prem %}
+{% endraw %}```
 <!--vale on-->
 
 ### Notes and warnings

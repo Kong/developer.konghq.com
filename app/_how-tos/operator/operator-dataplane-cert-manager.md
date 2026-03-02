@@ -51,23 +51,28 @@ When you annotate a `Gateway` resource with a cert-manager issuer, cert-manager 
 
 1. Install {{ site.operator_product_name }} using Helm:
 
-   ```bash
-   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-     --create-namespace \
-     --set image.tag={{ site.data.operator_latest.release }} \
-     --set global.webhooks.options.certManager.enabled=true
-   ```
-   {: data-deployment-topology="on-prem" }
+   {% on_prem %}
+   content: |
+     ```bash
+     helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+       --create-namespace \
+       --set image.tag={{ site.data.operator_latest.release }} \
+       --set global.webhooks.options.certManager.enabled=true
+     ```
+   indent: 3
+   {% endon_prem %}
 
-
-   ```bash
-   helm upgrade --install kong-operator kong/kong-operator -n kong-system \
-     --create-namespace \
-     --set image.tag={{ site.data.operator_latest.release }} \
-     --set global.webhooks.options.certManager.enabled=true \
-     --set env.ENABLE_CONTROLLER_KONNECT=true
-   ```
-   {: data-deployment-topology="konnect" }
+   {% konnect %}
+   content: |
+     ```bash
+     helm upgrade --install kong-operator kong/kong-operator -n kong-system \
+       --create-namespace \
+       --set image.tag={{ site.data.operator_latest.release }} \
+       --set global.webhooks.options.certManager.enabled=true \
+       --set env.ENABLE_CONTROLLER_KONNECT=true
+     ```
+   indent: 3
+   {% endkonnect %}
 
 ## Create a cert-manager issuer
 

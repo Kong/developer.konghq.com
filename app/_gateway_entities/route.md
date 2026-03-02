@@ -334,172 +334,30 @@ The `path_handling` parameter accepts `v0` or `v1`.
 Both versions of the algorithm detect "double slashes" when combining paths, replacing them by single
 slashes.
 
-<details>
-<summary>
-<b>Expand this block to see a table showing detailed <code>v0</code> and <code>v1</code> examples</b>
-</summary>
+{% details %}
+summary: |
+  **Expand this block to see a table showing detailed `v0` and `v1` examples**
+content: |
 
-<table>
-  <thead>
-    <tr>
-      <th>service.path</th>
-      <th>route.path</th>
-      <th>request</th>
-      <th>route.strip_path</th>
-      <th>route.path_handling</th>
-      <th>request path</th>
-      <th>upstream path</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>/s</td>
-      <td>/fv0</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/req</td>
-      <td>/s/fv0/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0</td>
-      <td>/s/fv0</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/req</td>
-      <td>/sfv1/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1</td>
-      <td>/sfv1</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0</td>
-      <td>/s</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1</td>
-      <td>/s</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0/</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/req</td>
-      <td>/s/fv0/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv0/</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v0</td>
-      <td>/fv0/</td>
-      <td>/s/fv01/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1/</td>
-      <td>req</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/req</td>
-      <td>/sfv1/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/fv1/</td>
-      <td>blank</td>
-      <td>false</td>
-      <td>v1</td>
-      <td>/fv1/</td>
-      <td>/sfv1/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0/</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/req</td>
-      <td>/s/req</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv0/</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v0</td>
-      <td>/tv0/</td>
-      <td>/s/</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1/</td>
-      <td>req</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/req</td>
-      <td>/sreq</td>
-    </tr>
-    <tr>
-      <td>/s</td>
-      <td>/tv1/</td>
-      <td>blank</td>
-      <td>true</td>
-      <td>v1</td>
-      <td>/tv1/</td>
-      <td>/s</td>
-    </tr>
-  </tbody>
-</table>
-
-</details>
+  | service.path | route.path | request | route.strip_path | route.path_handling | request path | upstream path |
+  |--------------|-----------|---------|------------------|---------------------|--------------|---------------|
+  | /s | /fv0 | req   | false | v0 | /fv0/req | /s/fv0/req |
+  | /s | /fv0 | blank | false | v0 | /fv0     | /s/fv0     |
+  | /s | /fv1 | req   | false | v1 | /fv1/req | /sfv1/req  |
+  | /s | /fv1 | blank | false | v1 | /fv1     | /sfv1      |
+  | /s | /tv0 | req   | true  | v0 | /tv0/req | /s/req     |
+  | /s | /tv0 | blank | true  | v0 | /tv0     | /s         |
+  | /s | /tv1 | req   | true  | v1 | /tv1/req | /s/req     |
+  | /s | /tv1 | blank | true  | v1 | /tv1     | /s         |
+  | /s | /fv0/ | req   | false | v0 | /fv0/req | /s/fv0/req |
+  | /s | /fv0/ | blank | false | v0 | /fv0/    | /s/fv01/   |
+  | /s | /fv1/ | req   | false | v1 | /fv1/req | /sfv1/req  |
+  | /s | /fv1/ | blank | false | v1 | /fv1/    | /sfv1/     |
+  | /s | /tv0/ | req   | true  | v0 | /tv0/req | /s/req     |
+  | /s | /tv0/ | blank | true  | v0 | /tv0/    | /s/        |
+  | /s | /tv1/ | req   | true  | v1 | /tv1/req | /sreq      |
+  | /s | /tv1/ | blank | true  | v1 | /tv1/    | /s         |
+{% enddetails %}
 
 ### Routing performance recommendations
 

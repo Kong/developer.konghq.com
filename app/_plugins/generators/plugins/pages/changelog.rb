@@ -19,6 +19,10 @@ module Jekyll
           @content ||= File.read('app/_includes/plugins/changelog.html')
         end
 
+        def markdown_content
+          @markdown_content ||= File.read('app/_includes/plugins/changelog.md')
+        end
+
         def data
           super
             .except('faqs')

@@ -23,7 +23,7 @@ prereqs:
   inline:
     - title: "Demo app components"
       content: |
-        - [Demo app downloaded from GitHub](https://github.com/kumahq/kuma-counter-demo):
+        - [Demo app downloaded from GitHub](https://github.com/kumahq/kuma-counter-demo)
         - [Redis installed](https://redis.io/docs/latest/operate/oss_and_stack/install/install-stack)
 
 ---
@@ -65,9 +65,9 @@ kumactl generate dataplane-token --tag kuma.io/service=redis --valid-for=720h > 
 kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > kuma-token-app
 ```
 
-{% warning %}
-This action requires [authentication](/mesh/authentication-with-the-api-server/) unless executed against a control plane running on `localhost`.
-{% endwarning %}
+{:.warning}
+>This action requires [authentication](/mesh/authentication-with-the-api-server/) unless executed against a control plane running on `localhost`.
+
 
 ## Create a data plane proxy for each service
 
@@ -210,9 +210,8 @@ EOF
 
 By doing so every request we now make on our demo application at [`127.0.0.1:5000/`](http://127.0.0.1:5000/) is not only working again, but it is automatically encrypted and secure.
 
-{% tip %}
-As usual, you can visualize the Mutual TLS configuration and the Traffic Permission policies we have just applied via the GUI, the HTTP API or `kumactl`.
-{% endtip %}
+{:.tip}
+>As usual, you can visualize the Mutual TLS configuration and the Traffic Permission policies we have just applied via the GUI, the HTTP API or `kumactl`.
 
 ## Explore Traffic Metrics
 

@@ -35,7 +35,7 @@ tags:
 
 tldr:
     q: How do I rate limit a Gateway Service with {{site.base_gateway}}?
-    a: Install the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> and enable it on the <a href="/gateway/entities/service/">Service</a>.
+    a: Install the [Rate Limiting plugin](/plugins/rate-limiting/) and enable it on the [Service](/gateway/entities/service/).
 
 tools:
     - deck

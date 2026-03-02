@@ -29,7 +29,6 @@ prereqs:
             * `ADMIN_NAME`: The name of the RBAC user that will be associated with the Super Admin Role.
             * `USER_TOKEN`: The authentication token to be presented to the Admin API.
             For example:
-
             {% env_variables %}
             KONG_ADMIN_TOKEN: kong
             ADMIN_NAME: tim

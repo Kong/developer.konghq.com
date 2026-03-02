@@ -83,24 +83,30 @@ This sample definition modifies the `SayHello` method available on [grpcb.in](ht
 
 ## Add the Protobuf definition to your Docker container
 
-Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
-{: data-deployment-topology="konnect" }
-```sh
-export KONNECT_DP_CONTAINER='your-dp-container-name'
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+
+  ```sh
+  export KONNECT_DP_CONTAINER='your-dp-container-name'
+  ```
+{% endkonnect %}
 
 Use the following command to add `hello-gateway.proto` to the `/usr/local/kong` directory in your {{site.base_gateway}} Docker container:
 
-```sh
-docker cp hello-gateway.proto kong-quickstart-gateway:/usr/local/kong
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  docker cp hello-gateway.proto kong-quickstart-gateway:/usr/local/kong
+  ```
+{% endon_prem %}
 
-```sh
-docker cp hello-gateway.proto $KONNECT_DP_CONTAINER:/usr/local/kong
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  docker cp hello-gateway.proto $KONNECT_DP_CONTAINER:/usr/local/kong
+  ```
+{% endkonnect %}
 
 ## Create a Gateway Service and a Route
 

@@ -257,17 +257,21 @@ Validate that the Upstream you configured is working by visiting the `/mock` rou
 waiting a few seconds between each time.
 You will see the hostname change between `httpbin` and `httpbun`:
 
-```sh
-curl -s http://localhost:8000/mock/headers \
-  -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  curl -s http://localhost:8000/mock/headers \
+    -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+  ```
+{% endon_prem %}
 
-```sh
-curl -s $KONNECT_PROXY_URL/mock/headers \
-  -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  curl -s $KONNECT_PROXY_URL/mock/headers \
+    -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+  ```
+{% endkonnect %}
 
 ## Enable caching
 
@@ -308,23 +312,27 @@ the returned headers.
 Run the following command to send 2 mock requests. 
 The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
-```sh
-for _ in {1..2}; do \
-  curl -s -i http://localhost:8000/mock/anything \
-    -H 'apikey:top-secret-key'; \
-  echo; sleep 1; \
-done | grep -E 'X-Cache'
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  for _ in {1..2}; do \
+    curl -s -i http://localhost:8000/mock/anything \
+      -H 'apikey:top-secret-key'; \
+    echo; sleep 1; \
+  done | grep -E 'X-Cache'
+  ```
+{% endon_prem %}
 
-```sh
-for _ in {1..2}; do \
-  curl -s -i $KONNECT_PROXY_URL/mock/anything \
-    -H 'apikey:top-secret-key'; \
-  echo; sleep 1; \
-done | grep -E 'X-Cache'
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  for _ in {1..2}; do \
+    curl -s -i $KONNECT_PROXY_URL/mock/anything \
+      -H 'apikey:top-secret-key'; \
+    echo; sleep 1; \
+  done | grep -E 'X-Cache'
+  ```
+{% endkonnect %}
 
 On the initial request, there should be no cached responses, and the headers will indicate this with
 `X-Cache-Status: Miss`:

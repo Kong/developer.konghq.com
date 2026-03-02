@@ -51,11 +51,9 @@ echo "
     token: $CONTROL_PLANE_TOKEN
 " | kubectl apply -f -
 ```
-{% tip %}
 
-The `CONTROL_PLANE_TOKEN` will be created automatically in {{site.konnect_short_name}}
-
-{% endtip %}
+{:.info}
+>The `CONTROL_PLANE_TOKEN` will be created automatically in {{site.konnect_short_name}}
 
 Create the Helm values file:
 
@@ -79,9 +77,8 @@ kuma:
   " > values.yaml
   ```
 
-{% tip %}
-`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
-{% endtip %}
+{:.info}
+>`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
 
 Install {{site.mesh_product_name}}:
 
@@ -118,9 +115,8 @@ experimental:
 " > config.yaml
 ```
 
-{% tip %}
-`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
-{% endtip %}
+{:.info}
+>`CONTROL_PLANE_ID` and `CONTROL_PLANE_URL` were created automatically in {{site.konnect_short_name}} and exported as environment variable in the prerequisites section.
 
 Download {{site.mesh_product_name}} and connect to the zone:
 
@@ -201,9 +197,8 @@ kumactl generate dataplane-token --tag kuma.io/service=redis --valid-for=720h > 
 kumactl generate dataplane-token --tag kuma.io/service=app --valid-for=720h > kuma-token-app
 ```
 
-{% warning %}
-This action requires [authentication](/mesh/authentication-with-the-api-server/#admin-user-token) unless executed against a control-plane running on localhost.
-{% endwarning %}
+{:.warning}
+>This action requires [authentication](/mesh/authentication-with-the-api-server/#admin-user-token) unless executed against a control-plane running on localhost.
 
 ### Create a data plane proxy for each service
 
@@ -287,10 +282,9 @@ By default, service-to-service traffic in the mesh is not encrypted. You can cha
 
 To enable mTLS using a built-in CA:
 
-{% warning %}
+{:.warning}
 Do not enable mTLS in an environment with existing workloads until you define a `MeshTrafficPermission` policy. 
 Without it, service-to-service communication will be blocked.
-{% endwarning %}
 
 ```sh
 cat <<EOF | kumactl apply -f -

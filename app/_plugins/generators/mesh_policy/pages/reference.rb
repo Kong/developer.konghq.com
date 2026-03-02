@@ -11,6 +11,11 @@ module Jekyll
         def layout
           'mesh_policies/reference'
         end
+
+        def markdown_content
+          @markdown_content ||= File.read('app/_includes/mesh_policies/reference.md')
+        end
+
       end
     end
   end

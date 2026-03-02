@@ -119,49 +119,56 @@ The SDK sends `"model": "gpt-4o"` in the request body. Pre-function copies that 
 
 Now, let's create a test script that sends requests with different model names. Each request reaches a different OpenAI model through the same route:
 
-```bash
-cat <<EOF > test_dynamic_model.py
-from openai import OpenAI
+{% on_prem %}
+content: |
+  ```bash
+  cat <<EOF > test_dynamic_model.py
+  from openai import OpenAI
 
-kong_url = "http://localhost:8000"
-kong_route = "anything"
+  kong_url = "http://localhost:8000"
+  kong_route = "anything"
 
-client = OpenAI(
-    api_key="test",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  client = OpenAI(
+      api_key="test",
+      base_url=f"{kong_url}/{kong_route}"
+  )
 
-for model in ["gpt-4o", "gpt-4o-mini"]:
-    response = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
-    )
-    print(f"Requested: {model}, Got: {response.model}")
-EOF
-```
-{: data-deployment-topology="on-prem" data-test-step="block" }
-```bash
-cat <<EOF > test_dynamic_model.py
-from openai import OpenAI
-import os
+  for model in ["gpt-4o", "gpt-4o-mini"]:
+      response = client.chat.completions.create(
+          model=model,
+          messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
+      )
+      print(f"Requested: {model}, Got: {response.model}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
-kong_url = os.environ['KONNECT_PROXY_URL']
-kong_route = "anything"
+{% konnect %}
+content: |
+  ```bash
+  cat <<EOF > test_dynamic_model.py
+  from openai import OpenAI
+  import os
 
-client = OpenAI(
-    api_key="test",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  kong_url = os.environ['KONNECT_PROXY_URL']
+  kong_route = "anything"
 
-for model in ["gpt-4o", "gpt-4o-mini"]:
-    response = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
-    )
-    print(f"Requested: {model}, Got: {response.model}")
-EOF
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
+  client = OpenAI(
+      api_key="test",
+      base_url=f"{kong_url}/{kong_route}"
+  )
+
+  for model in ["gpt-4o", "gpt-4o-mini"]:
+      response = client.chat.completions.create(
+          model=model,
+          messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
+      )
+      print(f"Requested: {model}, Got: {response.model}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
 
 ## Validate the configuration
 

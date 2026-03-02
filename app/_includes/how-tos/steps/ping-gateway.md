@@ -8,13 +8,19 @@ deck gateway ping
 
 If everything is running, then you should get the following response:
 
-```sh
-Successfully connected to Kong!
-Kong version: {{site.data.gateway_latest.ee-version}}
-```
-{: data-deployment-topology="on-prem" .no-copy-code}
+{% on_prem %}
+content: |
+  ```sh
+  Successfully connected to Kong!
+  Kong version: {{site.data.gateway_latest.ee-version}}
+  ```
+  {: .no-copy-code}
+{% endon_prem %}
 
-```
-Successfully Konnected to the Kong organization!
-```
-{: data-deployment-topology="konnect" .no-copy-code}
+{% konnect %}
+content: |
+  ```
+  Successfully Konnected to the Kong organization!
+  ```
+  {: .no-copy-code}
+{% endkonnect %}

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class EntityExample < Liquid::Block
@@ -25,8 +26,9 @@ module Jekyll
       template = File.read(entity_example_drop.template)
 
       output = context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['entity_example'] = entity_example_drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
 
       if example['indent']

@@ -55,20 +55,25 @@ faqs:
 tags:
   - install
   - helm
+
+excerpt: "" # XXX: we need this here so Jekyll doesn't throw a warning
 ---
 
-{: data-deployment-topology="konnect" }
-## Konnect setup
+{% konnect %}
+title: Konnect setup
+step: true
+content: |
+  {:.info}
+  > For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [control plane setup UI](https://cloud.konghq.com/gateway-manager/create-gateway).
 
-{:.info}
-> For UI setup instructions to install {{ site.kic_product_name }} on {{ site.konnect_short_name }}, use the [control plane setup UI](https://cloud.konghq.com/gateway-manager/create-gateway).
+  To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deployment, you need the following items:
 
-To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deployment, you need the following items:
+  1. A {{ site.kic_product_name }} control plane, including the control plane URL.
+  2. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}.
 
-1. A {{ site.kic_product_name }} control plane, including the control plane URL.
-1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}.
-
-{% include k8s/kic-konnect-install.md %}
+  {% capture install %}{% include k8s/kic-konnect-install.md %}{% endcapture %}
+  {{install | indent: 2}}
+{% endkonnect %}
 
 ## Install Kong
 
@@ -83,15 +88,19 @@ The default values file installs {{ site.kic_product_name }} in [Gateway Discove
 
 Run the following command to install {{ site.kic_product_name }}:
 
-{: data-deployment-topology="konnect" }
-```bash
-helm upgrade --install kong kong/ingress -n kong --values ./values.yaml
-```
+{% konnect %}
+content: |
+  ```bash
+  helm upgrade --install kong kong/ingress -n kong --values ./values.yaml
+  ```
+{% endkonnect %}
 
-{: data-deployment-topology="on-prem" }
-```bash
-helm install kong kong/ingress -n kong --create-namespace
-```
+{% on_prem %}
+content: |
+  ```bash
+  helm install kong kong/ingress -n kong --create-namespace
+  ```
+{% endon_prem %}
 
 ## Test connectivity to Kong
 

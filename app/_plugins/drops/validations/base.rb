@@ -9,28 +9,28 @@ module Jekyll
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
 
-        def self.make_for(id:, yaml:)
+        def self.make_for(id:, yaml:, format: 'html')
           case id
           when 'rate-limit-check'
-            RateLimitCheck.new(id:, yaml:)
+            RateLimitCheck.new(id:, yaml:, format:)
           when 'unauthorized-check'
-            UnauthorizedCheck.new(id:, yaml:)
+            UnauthorizedCheck.new(id:, yaml:, format:)
           when 'request-check'
-            RequestCheck.new(id:, yaml:)
+            RequestCheck.new(id:, yaml:, format:)
           when 'grpc-check'
-            GrpcCheck.new(id:, yaml:)
+            GrpcCheck.new(id:, yaml:, format:)
           when 'vault-secret'
-            VaultSecret.new(id:, yaml:)
+            VaultSecret.new(id:, yaml:, format:)
           when 'kubernetes-resource'
-            KubernetesResource.new(id:, yaml:)
+            KubernetesResource.new(id:, yaml:, format:)
           when 'kubernetes-resource-property'
-            KubernetesResourceProperty.new(id:, yaml:)
+            KubernetesResourceProperty.new(id:, yaml:, format:)
           when 'traffic-generator'
-            TrafficGenerator.new(id:, yaml:)
+            TrafficGenerator.new(id:, yaml:, format:)
           when 'env-variables'
-            EnvVariables.new(id:, yaml:)
+            EnvVariables.new(id:, yaml:, format:)
           when 'custom-command'
-            CustomCommand.new(id:, yaml:)
+            CustomCommand.new(id:, yaml:, format:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end
@@ -38,9 +38,10 @@ module Jekyll
 
         attr_reader :id
 
-        def initialize(id:, yaml:) # rubocop:disable Lint/MissingSuper
+        def initialize(id:, yaml:, format: 'html') # rubocop:disable Lint/MissingSuper
           @id = id
           @yaml = yaml
+          @format = format
 
           validate_yaml!
         end
@@ -85,7 +86,11 @@ module Jekyll
         end
 
         def template_file
-          @template_file ||= "app/_includes/how-tos/validations/#{id}/index.html"
+          if @format == 'markdown'
+            "app/_includes/how-tos/validations/#{id}/index.md"
+          else
+            "app/_includes/how-tos/validations/#{id}/index.html"
+          end
         end
 
         def section

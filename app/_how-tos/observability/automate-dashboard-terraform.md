@@ -57,9 +57,10 @@ Managing dashboards with Terraform requires the dashboard ID of the target dashb
 
 1. Export the dashboard ID into an environment variable to be used later: 
 
-  ```
-  export DASHBOARD_ID='fe1b6b51-2e7e-44d6-bfa5-CC93489b3eed'
-  ```
+   ```sh
+   export DASHBOARD_ID='fe1b6b51-2e7e-44d6-bfa5-CC93489b3eed'
+   ```
+
 ## Import the dashboard
 
 Now configure Terraform to import a dashboard from {{site.konnect_short_name}}.
@@ -74,6 +75,7 @@ import {
 ' >> import.tf
 ```
 Be sure to replace the `id` with the `id` you exported for your dashboard.
+
 ## Generate the Terraform configuration
 
 

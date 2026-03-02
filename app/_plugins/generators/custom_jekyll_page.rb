@@ -2,6 +2,8 @@
 
 module Jekyll
   class CustomJekyllPage < Jekyll::Page
+    attr_accessor :markdown_content
+
     def initialize(site:, page:)
       # Configure variables that Jekyll depends on
       @site = site
@@ -14,6 +16,8 @@ module Jekyll
 
       # Set page content
       @content = page.content
+
+      @markdown_content = page.respond_to?(:markdown_content) ? page.markdown_content : page.content
 
       # Inject data into the template
       @data = page.data

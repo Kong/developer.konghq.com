@@ -174,23 +174,27 @@ touch prometheus.yml
 
 Now, add the following to the `prometheus.yml` file to configure Prometheus to scrape {{site.base_gateway}} metrics:
 
-```yaml
-scrape_configs:
- - job_name: 'kong'
-   scrape_interval: 5s
-   static_configs:
-     - targets: ['kong-quickstart-gateway:8001']
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```yaml
+  scrape_configs:
+   - job_name: 'kong'
+     scrape_interval: 5s
+     static_configs:
+       - targets: ['kong-quickstart-gateway:8001']
+  ```
+{% endon_prem %}
 
-```yaml
-scrape_configs:
- - job_name: 'kong'
-   scrape_interval: 5s
-   static_configs:
-     - targets: ['kong-quickstart-gateway:8100']
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```yaml
+  scrape_configs:
+   - job_name: 'kong'
+     scrape_interval: 5s
+     static_configs:
+       - targets: ['kong-quickstart-gateway:8100']
+  ```
+{% endkonnect %}
 
 Now, run a Prometheus server, and pass it the configuration file created in the previous step:
 

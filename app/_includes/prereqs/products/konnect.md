@@ -1,5 +1,5 @@
 {% assign summary='Kong Konnect' %}
-
+{%- if page.output_format == 'markdown' and page.works_on.size > 1 %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.konnect_snippet }}{% endcapture %}{% endif -%}
 {% capture details_content %}
 
 This is a Konnect tutorial and requires a Konnect personal access token.
@@ -30,6 +30,4 @@ This is a Konnect tutorial and requires a Konnect personal access token.
     Copy and paste these into your terminal to configure your session.
 
 {% endcapture %}
-
-
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/gateway.svg' %}

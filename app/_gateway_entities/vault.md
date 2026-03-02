@@ -291,10 +291,10 @@ columns:
   - title: Vault Value
     key: vault
 features:
-  - title: ❌
+  - title: No
     config: 'Bearer {vault://hcv/myservice-auth-token}'
     vault: ABC123
-  - title: ✅
+  - title: Yes
     config: '{vault://hcv/myservice-auth-token}'
     vault: Bearer ABC123
 {% endfeature_table %}

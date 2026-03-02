@@ -48,12 +48,12 @@ Now we can test if a content type is returned in the top-level request body.
 1. Click **New test** and enter a name for the test, such as "Content type in body (top-level)". 
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
 1. Enter the following JavaScript to check if the top-level array is present in the body of the response:
-```javascript
-const response1 = await insomnia.send();
-const body = JSON.parse(response1.data);
-const item = body[1];
-expect(item).to.be.an('object');
-```
+   ```javascript
+   const response1 = await insomnia.send();
+   const body = JSON.parse(response1.data);
+   const item = body[1];
+   expect(item).to.be.an('object');
+   ```
 {% include /how-tos/steps/insomnia-run-tests.md %}
 
 ## Create a nested content type in body test
@@ -63,11 +63,11 @@ Now we can test if a content type is returned in the nested request body.
 1. Click **New test** and enter a name for the test, such as "Content type in body (nested)". 
 1. From the **Select a request** drop down, select the **GET Fetch more details about a flight** request.
 1. Enter the following JavaScript to check if the nested `meal_options` array is present in the body of the response:
-```javascript
-const response1 = await insomnia.send();
-const body = JSON.parse(response1.data);
-expect(body).to.have.property('meal_options'); 
-expect(body.meal_options).to.be.an('array');
-expect(body).to.be.an('object'); 
-```
+   ```javascript
+   const response1 = await insomnia.send();
+   const body = JSON.parse(response1.data);
+   expect(body).to.have.property('meal_options'); 
+   expect(body.meal_options).to.be.an('array');
+   expect(body).to.be.an('object'); 
+   ```
 {% include /how-tos/steps/insomnia-run-tests.md %}

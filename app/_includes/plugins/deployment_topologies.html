@@ -1,1 +1,5 @@
+{% if page.output_format == 'markdown' -%}
+{% include plugins/table.md columns=columns rows=rows type=type %}
+{% else -%}
 {% include plugins/table.html columns=columns rows=rows type=type %}
+{% endif -%}

@@ -46,9 +46,9 @@ prereqs:
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys).
         1. Create a decK variable with the API key:
-        ```sh
-        export OPENAI_AUTH_HEADER='Bearer {api-key}'
-        ```
+           ```sh
+           export OPENAI_AUTH_HEADER='Bearer {api-key}'
+           ```
     icon_url: /assets/icons/openai.svg
 
 cleanup:

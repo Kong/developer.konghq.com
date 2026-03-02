@@ -72,6 +72,8 @@ prereqs:
             DECK_IDENTIFIER: SAML-application-identifier
             DECK_LOGIN_URL: SAML-login-URL
             DECK_CERTIFICATE: certificate-contents
+            section: prereqs
+            indent: 3
             {% endenv_variables %}
 
         {:.warning}
@@ -128,10 +130,14 @@ variables:
 
 ## Validate
 
-To validate that the SAML configuration works, go to `$KONNECT_PROXY_URL/anything` in a browser.
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  To validate that the SAML configuration works, go to `$KONNECT_PROXY_URL/anything` in a browser.
+{% endkonnect %}
 
-To validate that the SAML configuration works, go to `http://localhost:8000/anything` in a browser.
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  To validate that the SAML configuration works, go to `http://localhost:8000/anything` in a browser.
+{% endon_prem %}
 
 When prompted, log in with a user that has access to the SAML application.

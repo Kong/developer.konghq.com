@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 DEFAULTS = {
   'gwapi_version' => 'v1',
@@ -51,7 +52,12 @@ module Jekyll
         YAML
       end
 
-      gen_navtabs(config, { 'gatewayapi' => gateway_api, 'ingress' => ingress })
+      context.stack do
+        context['indentation'] = config['indent'].to_i
+        context['gateway_api'] = gateway_api if gateway_api
+        context['ingress'] = ingress if ingress
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+      end
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% httproute %} block contains a malformed yaml:
@@ -59,6 +65,10 @@ module Jekyll
         #{e.message}
       STRING
       raise ArgumentError, message
+    end
+
+    def template
+      @template ||= File.read(File.expand_path('app/_includes/components/httproute.html'))
     end
 
     def format_yaml(yaml)
@@ -154,31 +164,6 @@ module Jekyll
           end
         }.compact
       }
-    end
-
-    def gen_navtabs(config, tabs) # rubocop:disable  Metrics/MethodLength
-      httproute_tab = <<~TABS
-        {% navtab "Gateway API" %}
-        #{tabs['gatewayapi']}
-        {% endnavtab %}
-      TABS
-
-      ingress_tab = <<~TABS
-        {% navtab "Ingress" %}
-        #{tabs['ingress']}
-        {% endnavtab %}
-      TABS
-
-      tabs = <<~TABS
-        {% navtabs "http-route" %}
-        #{httproute_tab if tabs['gatewayapi']}
-        #{ingress_tab if tabs['ingress']}
-        {% endnavtabs %}
-      TABS
-
-      c = Liquid::Template.parse(tabs).render(@context)
-
-      c.lines.map { |line| ' ' * config['indent'].to_i + line }.join
     end
   end
 end

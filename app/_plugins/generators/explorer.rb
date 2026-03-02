@@ -91,7 +91,7 @@ module Jekyll
         'group_by' => job['group_by'],
         'columns' => job['columns']
       }
-      Liquid::Template.parse(template).render(context)
+      Liquid::Template.parse(template, { line_numbers: true }).render(context)
     end
 
     def render_list(title, prefix, items)

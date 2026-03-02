@@ -114,18 +114,20 @@ The {{ site.kic_product_name }} Helm chart automatically configures all the envi
     helm upgrade --install kong kong/ingress -n kong --create-namespace --values values.yaml
     ```
 
-{: data-deployment-topology="konnect" }
-## Register the plugin schema in Konnect
+{% konnect %}
+title: Register the plugin schema in Konnect
+step: true
+content: |
+  To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
 
-To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
-
-```sh
-curl -X POST \
-  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Bearer $KONNECT_TOKEN" \
-  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
-```
+  ```sh
+  curl -X POST \
+    https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+    --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $KONNECT_TOKEN" \
+    --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+  ```
+{% endkonnect %}
 
 ## Using custom plugins
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'tabbed_tables'
+require_relative '../../monkey_patch'
 
 module Jekyll
   module RenderPlugins
