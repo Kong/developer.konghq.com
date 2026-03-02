@@ -4,6 +4,7 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
+
     versions: &gateway-versions
       - version: "3.13"
         env:
@@ -61,7 +62,6 @@ on-prem:
       WEBHOOK_URL: http://httpbin.konghq.com/anything
       SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
       ANTHROPIC_API_KEY: anthropic-api-key
-    versions: *gateway-versions
 
     setup:
       commands:
