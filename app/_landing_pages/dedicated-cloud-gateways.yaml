@@ -167,9 +167,36 @@ rows:
               text: Learn more
               url: /dedicated-cloud-gateways/aws-resource-endpoints/  
       
-      
-
-
+  - header:
+      type: h2
+      text: "Managed Redis Cache"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: AWS
+              description: |
+                Configure a fully-managed Redis service that is provisioned and operated by Kong in AWS AWS ElastiCache.
+                Use the managed cache in compatible plugins that use Redis.
+              icon: /assets/icons/aws.svg
+              ctas:
+                - text: Single control plane
+                  url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+                - text: Control plane group
+                  url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
+      - blocks:
+          - type: card
+            config:
+              title: Azure
+              description: |
+                Configure a fully-managed Redis service that is provisioned and operated by Kong in Azure Cache for Redis.
+                Use the managed cache in compatible plugins that use Redis.
+              icon: /assets/icons/azure.svg
+              ctas:
+                - text: Single control plane
+                  url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+                - text: Control plane group
+                  url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
   - header:
       type: h2
       text: "Cluster management"

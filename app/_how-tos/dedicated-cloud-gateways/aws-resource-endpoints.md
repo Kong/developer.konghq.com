@@ -68,6 +68,10 @@ faqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
 ---
 
 AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 

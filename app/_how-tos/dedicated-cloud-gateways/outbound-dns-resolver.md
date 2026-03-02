@@ -48,6 +48,10 @@ prereqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
 automated_tests: false
 ---
 

@@ -50,7 +50,13 @@ prereqs:
       export AWS_VPC_REGION='YOUR_VPC_REGION'
       export AWS_VPC_ID='YOUR_VPC_ID'
       ```
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
 automated_tests: false
 ---
 
