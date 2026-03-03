@@ -46,7 +46,6 @@ rows:
             - Commits, branches, merges, and pulls follow standard Git workflows.
             - Repository protections and access controls are enforced by your Git provider.
 
-            Insomnia acts as a Git client inside the application.
 
   - columns:
     - blocks:
