@@ -17,6 +17,8 @@ products:
 works_on:
   - on-prem
   - konnect
+
+llm: false
 ---
 
 The Kong Developer site uses custom page types and Liquid template tags to render content on a page. This page explains how to write the different page types as well as the different template tags you can use on a page.
