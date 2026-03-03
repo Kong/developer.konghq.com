@@ -68,7 +68,7 @@ releases:
     release: "2.13"
     latest: true
     releaseDate: "2025-12-22"
-    eol: "2026-12-22"
+    eol: "2027-12-22"
     branch: release-2.13
   - version: preview
     release: "2.14"
