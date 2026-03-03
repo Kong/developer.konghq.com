@@ -130,23 +130,39 @@ resource "konnect_catalog_service" "my_catalogservice" {
 
 ## Map APIs to a service in {{site.konnect_catalog}}
 
-Explanation of why. If you've already assigned API specs to a service from integrations, [migrate them to APIs](/catalog/migrate-api-specs-to-apis/). 
+APIs can be associated with {{site.konnect_catalog}} services, which allows API consumers and service owners to see which APIs and services are associated with each other. If you've already assigned API specs to a service from integrations, [migrate them to APIs](/catalog/migrate-api-specs-to-apis/). 
 
+{% include_cached /catalog/note-api-spec-snapshot.md %}
+
+To link APIs with a {{site.konnect_catalog}} service, you need the following [{{site.konnect_short_name}} roles](/konnect-platform/teams-and-roles/#catalog) at a minimum for the services and APIs:
+* API viewer
+* Service viewer
+* Service admin
+
+To link APIs to a service, do the following:
 {% navtabs "map-apis" %}
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **Services**. 
-1. Click **New service** and configure the details about your service.
+1. Click a service you want to associate an API with.
+1. Click the **APIs** tab.
+1. Click **Link API**.
+1. Select the APIs you want to link.
+1. Click **Link APIs**.
+
+You will now see the API with your API spec linked to the {{site.konnect_catalog}} service. Users who view APIs will also be able to see any linked {{site.konnect_catalog}} services.
 {% endnavtab %}
 {% navtab "API" %}
-{% endnavtab %}
-{% navtab "Terraform" %}
+
+To map a service to an API, send a `POST` request to the `/catalog-services/{serviceId}/api-mappings` endpoint:
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/catalog-services/$CATALOG_SERVICE_ID/api-mappings
+status_code: 201
+method: POST
+body:
+    api_id: $API_ID
+{% endkonnect_api_request %}
+<!--vale on-->
 {% endnavtab %}
 {% endnavtabs %}
-
-for mapping APIs to services the user needs at the minimum the following combo roles on the service and API entities for actions:
-Listing available APIs to link to a service: API viewer, Service viewer
-Creating/deleting APi-service links: API viewer, Service admin
-migration of legacy apis to new APIs: API creator, Service admin
-listing linked services on the API overview page: API viewer, Service viewer
-To perform all the above actions: API admin + creator and Service admin
