@@ -18,8 +18,8 @@ description: An overview of policies that work with {{site.event_gateway_short}}
 {%- assign policies = site.data.event_gateway_policies | where_exp: "policy", "policy.published != false" -%}
 {% if page.output_format == 'markdown' %}
 {% for policy in policies %}
-## {{ policy.name }}
-Description: {{ policy.description }}
+## {{ policy.name | liquify}}
+Description: {{ policy.description | liquify}}
 Documentation: {{ policy.url }}
 {% endfor %}
 {%- else -%}
