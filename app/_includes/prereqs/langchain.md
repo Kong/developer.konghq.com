@@ -21,4 +21,4 @@ python3 --version
    ```bash
    python3 -m pip install langchain langchain_text_splitters requests
    ```
-   {: data-test-prereqs="block" }
+   {: data-test-prereq="block" }

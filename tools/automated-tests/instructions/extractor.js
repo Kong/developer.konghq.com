@@ -8,7 +8,7 @@ async function copyFromClipboard(page) {
 }
 
 async function extractPrereqsBlocks(page) {
-  // We extract instructions from codeblocks that have data-test-prereqs='block'.
+  // We extract instructions from codeblocks that have data-test-prereq='block'.
   // As an alternative, the prereq (accordion-item) could have the data-test-prereqs set,
   // and we could extract all the codeblocks it contains.
   const instructions = [];

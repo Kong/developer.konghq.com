@@ -72,7 +72,7 @@ prereqs:
            ```sh
            curl http://host.docker.internal:11434/api/generate -d '{ "model": "orca-mini" }' > orca.log 2>&1 &
            ```
-           {: data-test-prereqs="block" }
+           {: data-test-prereq="block" }
 
         3. To set up the AI Proxy plugin, you'll need the upstream URL of your local Llama instance.
 
