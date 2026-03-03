@@ -4,7 +4,19 @@ layout: default
 edit_and_issue_links: false
 description: Discover Kong's tutorials to help you build, secure, and scale your services.
 ---
+{%- if page.output_format == 'markdown' -%}
+{%- assign grouped_how_tos = site.how-tos | where_exp: "how_to", "how_to.published != false" | group_by_exp: "how_to", "how_to.products | first" -%}
+{%- for group in grouped_how_tos %}
+## {{ site.data.products[group.name].name }}
 
+{%- assign how_tos = group.items | sort: "title" -%}
+{% for how_to in how_tos %}
+### {{ how_to.title | liquify }}
+Description: {{ how_to.description | liquify | rstrip}}
+Documentation: {{ how_to.url }}
+{% endfor %}
+{% endfor %}
+{%- else -%}
 <div class="flex flex-col gap-12 w-full">
   <div class="flex justify-between gap-[60px]">
       <div class="flex flex-col gap-6 py-24 self-center">
@@ -48,3 +60,4 @@ description: Discover Kong's tutorials to help you build, secure, and scale your
 
   <div id="search-index-app" data-content-type="how_to"></div>
 </div>
+{% endif %}
