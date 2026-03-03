@@ -15,12 +15,12 @@ module Jekyll
       end
 
       def render(context)
-        page = context.environments.first['page']
+        @page = context.environments.first['page']
 
         # Mark this page as having a plugin schema to load the relevant JS
-        page['plugin_schema'] = true
+        @page['plugin_schema'] = true
 
-        release = page['release']
+        release = @page['release']
         schema_file = Drops::MeshPolicies::SchemaFile.new(release:, type: @params['type'], name: @name)
 
         context.stack do
@@ -32,7 +32,11 @@ module Jekyll
       private
 
       def template
-        @template ||= File.read(File.expand_path('app/_includes/components/kuma_specific/json_schema.html'))
+        if @page['output_format'] == 'markdown'
+          File.read(File.expand_path('app/_includes/components/kuma_specific/json_schema.md'))
+        else
+          File.read(File.expand_path('app/_includes/components/kuma_specific/json_schema.html'))
+        end
       end
     end
   end
