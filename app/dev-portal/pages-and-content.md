@@ -151,7 +151,10 @@ rows:
     regexp: "`^/logout`"
   - path: "`/apps/*`"
     description: Developer applications
-    regexp: "`^/apps`"
+    regexp: "`^/apps(?:\/.*)?`"
+  - path: "`/account/*`"
+    description: Developer account, including Teams
+    regexp: "`^/account(?:\/.*)?`"
   - path: "`/api/v*/`"
     description: Portal API
     regexp: "`^/api\\/v\\d+\\/.*`"
