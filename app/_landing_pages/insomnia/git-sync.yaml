@@ -21,7 +21,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                 **What is Git Sync?**
+                  **What is Git Sync?**
 
                   Git Sync connects Insomnia directly to your Git repository. Your project data stays in your repository. Insomnia does not host or manage it.
 
