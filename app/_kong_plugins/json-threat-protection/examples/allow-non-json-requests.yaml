@@ -28,4 +28,4 @@ tools:
   - terraform
 
 min_version:
-  gateway: "3.14.0"
+  gateway: '3.14'
