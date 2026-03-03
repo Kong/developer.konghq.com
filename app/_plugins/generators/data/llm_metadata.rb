@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'yaml'
 require_relative 'title/base'
 
 module Jekyll
@@ -22,10 +23,22 @@ module Jekyll
       end
 
       def set_metadata
-        @page.data['llm_metadata']['products'] = products
-        @page.data['llm_metadata']['tier'] = tier
-        @page.data['llm_metadata']['tools'] = tools
-        @page.data['skip_llm_metadata'] = true if @page.path.start_with?('_api/')
+        @page.data['llm_frontmatter'] = frontmatter
+      end
+
+      def frontmatter
+        data = {
+          'title' => @page.data['title'],
+          'description' => @page.data['description'],
+          'url' => @page.url,
+          'content_type' => @page.data['content_type']
+        }
+        data['products'] = products if products&.any?
+        data['tier']     = tier     if tier
+        data['tools']    = tools    if tools&.any?
+        data['tags']     = @page.data['tags'] if @page.data.fetch('tags', []).any?
+        data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
+        YAML.dump(data.compact)
       end
 
       def products
