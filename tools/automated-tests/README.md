@@ -22,7 +22,7 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 
 The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
 
-The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`).
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`).
 
 Each product can define:
 

@@ -44,7 +44,7 @@ export async function loadConfig() {
 }
 
 (async function main() {
-  let productTestConfig;
+  let productTestConfig = {};
   let container;
   let results = [];
   let files = [];
