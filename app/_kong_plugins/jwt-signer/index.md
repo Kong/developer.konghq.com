@@ -184,5 +184,8 @@ You can also specify optional and required claims with the following:
 * `config.access_token_introspection_required_claims`
 * `config.channel_token_introspection_required_claims`
 
+## Limitations in {{site.konnect_short_name}}
 
-
+The JWT Signer plugin is available in {{site.konnect_short_name}} with the following limitations:
+* {{site.konnect_short_name}} doesn't support JWKS publishing or any interactions with the [plugin API](/plugins/jwt-signer/api/).
+* You can't reference a [Key Set](/gateway/entities/key-set/) in the `config.access_token_keyset` or `config.channel_token_keyset` fields. You must use a URL instead.
