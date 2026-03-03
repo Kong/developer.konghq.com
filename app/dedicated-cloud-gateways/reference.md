@@ -457,7 +457,7 @@ body:
 
 {% include /konnect/cidr-minimum-requirements.md %}
 
-## Managed cache for Redis (% new_in 3.13 %)
+## Managed cache for Redis {% new_in 3.13 %}
 
 {:.success}
 > **Getting started with managed cache?**<br>
