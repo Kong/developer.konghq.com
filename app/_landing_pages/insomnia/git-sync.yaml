@@ -21,6 +21,8 @@ rows:
             blocks:
               - type: text
                 text: |
+                 **What is Git Sync?**
+
                   Git Sync connects Insomnia directly to your Git repository. Your project data stays in your repository. Insomnia does not host or manage it.
 
                   Changes move between your local environment and your Git provider through standard Git workflows.
@@ -37,6 +39,8 @@ rows:
           config: |
             **How it works**
 
+
+            Insomnia acts as a Git client inside the application.
             - Insomnia stores project resources as YAML files in your repository.
             - Each collaborator clones the repository locally.
             - Commits, branches, merges, and pulls follow standard Git workflows.
@@ -90,10 +94,10 @@ rows:
 
               Git credentials can be configured through:
               - Git Sync settings.
-              - Insomnia Preferences.
+              - Insomnia preferences.
               - Local Git configuration.
 
-              Insomnia does not enforce secret prevention in your repository. Use Private Environments, external vaults, or repository scanners to manage sensitive data.
+              Insomnia does not enforce secret prevention in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
       - blocks:
           - type: text
             config: |
@@ -155,4 +159,4 @@ rows:
                   Before converting, pull the latest repository changes to ensure your local state is current.
               - q: Can administrators restrict available storage types?
                 a: |
-                  Yes. Enterprise administrators can control which storage types are available to users through Enterprise Controls > Storage.
+                  Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.
