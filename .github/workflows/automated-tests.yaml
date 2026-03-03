@@ -47,7 +47,7 @@ jobs:
         working-directory: tools/automated-tests
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
-          RUNTIME: gateway
+          DEPLOYMENT_MODEL: on-prem
           PRODUCTS: ai-gateway,gateway
           GATEWAY_VERSION: ${{ matrix.gateway }}
         run: |

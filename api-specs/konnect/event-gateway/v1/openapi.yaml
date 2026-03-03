@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@5f6e0ecdf21a607b8200d8e7b974631bc5e59c13
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5f6e0ecdf21a607b8200d8e7b974631bc5e59c13'
+  x-oas-source: kong/platform-api@95a8ed41c8d27541f6778fc9968e2c8cf785cdc2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/95a8ed41c8d27541f6778fc9968e2c8cf785cdc2'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3984,7 +3984,7 @@ components:
                 $ref: '#/components/schemas/EventGatewayACLResourceName'
             - type: string
               x-min-runtime-version: '1.1'
-              example: 'context.auth.tokens.claims["topics"]'
+              example: 'context.auth.token.claims["topics"]'
               x-expression:
                 type: array
                 fields:

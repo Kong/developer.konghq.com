@@ -13,6 +13,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where the configuration with leading or trailing spaces in the `path` field could cause upgrade failures.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where an error would occur when there were spaces at the beginning or end of a path.",

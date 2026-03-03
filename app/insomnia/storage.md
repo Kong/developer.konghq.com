@@ -233,7 +233,7 @@ To use Git Sync, either create a new project or edit the settings of an existing
 Configure the credentials for your Git repository using one of the following options:
 * Add the credentials here, in the Git Sync config
 * Add the credentials to your local `git.config` file
-* Configure the credentials in **Preferences** > **Credentials** {% new_in 12.3 %}
+* Configure the credentials in **Preferences** > **Credentials**
 
 
 

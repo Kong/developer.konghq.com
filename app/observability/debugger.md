@@ -129,7 +129,7 @@ To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
-* You should either be a control plane admin or an org admin to use Debugger
+* You should be a Debug Session Creator to use Debugger. Control Plane Admins and Org Admins can also create debug sessions.
 * Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`

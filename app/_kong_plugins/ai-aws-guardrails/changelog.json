@@ -63,5 +63,12 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where the ai-aws-guardrails metrics could not be recorded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }

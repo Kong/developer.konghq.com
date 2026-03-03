@@ -125,6 +125,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where Cohere and Huggingface models did not work with the semantic cache because of the polluted request format.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where AI upstream URL trailing would be empty.",

@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
+  x-oas-source: kong/platform-api@f1fd7b84b0329052d222a3281ea539cb13ee476d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f1fd7b84b0329052d222a3281ea539cb13ee476d'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2250,11 +2250,14 @@ components:
           format: date-time
           nullable: true
           readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
         - type
         - id
         - display_name
+        - created_at
     CredentialListItem:
       type: object
       discriminator:
@@ -2309,12 +2312,15 @@ components:
           format: date-time
           nullable: true
           readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
         - type
         - id
         - display_name
         - credential
+        - created_at
     CredentialCreationResponse:
       type: object
       discriminator:

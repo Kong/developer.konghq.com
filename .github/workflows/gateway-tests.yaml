@@ -57,7 +57,7 @@ jobs:
         working-directory: tools/automated-tests
         env:
           KONG_LICENSE_DATA: ${{ steps.getLicense.outputs.license }}
-          RUNTIME: gateway
+          DEPLOYMENT_MODEL: on-prem
           PRODUCTS: gateway
           GATEWAY_VERSION: next
           KONG_IMAGE_TAG: ${{ env.KONG_IMAGE_TAG }}
