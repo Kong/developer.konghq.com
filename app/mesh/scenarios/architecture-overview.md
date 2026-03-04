@@ -84,8 +84,8 @@ flowchart TD
 
     subgraph Zone1["Zone: Kubernetes (Cloud)"]
         Z1CP[Zone Control Plane]
-        KGO[Kong Gateway Operator]
-        KG[Kong Gateway / Gateway API]
+        KGO[{{site.base_gateway}} Operator]
+        KG[{{site.base_gateway}} / Gateway API]
         
         subgraph SvcA["Check-in Service (K8s)"]
             P1[Envoy Proxy]

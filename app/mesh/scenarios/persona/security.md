@@ -73,7 +73,7 @@ Sarah uses **`MeshSubset`** to allow communication between broad security zones 
 Sarah's security posture extends beyond the mesh boundaries.
 
 ### Gateway Authentication (JWT)
-External requests from the Kong Air mobile app enter through **Kong Gateway**. Sarah configures the gateway to validate passenger JWTs (OpenID Connect) before translating that identity into the mesh.
+External requests from the Kong Air mobile app enter through **{{site.base_gateway}}**. Sarah configures the gateway to validate passenger JWTs (OpenID Connect) before translating that identity into the mesh.
 
 ### Egress Control and Filtering
 When internal services need to fetch weather data from a third-party provider, Sarah uses **ZoneEgress** and `MeshExternalService` to strictly control and log these outbound connections.

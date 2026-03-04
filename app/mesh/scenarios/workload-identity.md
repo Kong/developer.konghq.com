@@ -9,7 +9,7 @@ description: Discover the new Workload Identity model in {{site.mesh_product_nam
 products:
   - mesh
 tldr:
-  q: What is Workload Identity in Kong Mesh?
+  q: What is Workload Identity in {{site.mesh_product_name}}?
   a: |
     Workload Identity decouples identity from the `Mesh` resource. It allows you to:
     1. **Define granular identity** per workload via `MeshIdentity`.

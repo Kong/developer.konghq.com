@@ -69,7 +69,7 @@ graph LR
         ISvc[Istio Service] --> IGW[istio-ingressgateway]
     end
     
-    IGW -.-> KG["Kong Gateway (Gateway API)"]
+    IGW -.-> KG["{{site.base_gateway}} (Gateway API)"]
     
     subgraph KongCluster["{{site.mesh_product_name}} Cluster"]
         KG --> KSvc[{{site.mesh_product_name}} Service]
@@ -80,7 +80,7 @@ graph LR
 {% endmermaid %}
 
 ### Bridging Strategies
-*   **Layer 4 Connectivity**: Routable IP spaces or **Kong Gateway** to expose services.
+*   **Layer 4 Connectivity**: Routable IP spaces or **{{site.base_gateway}}** to expose services.
 *   **Trust Domain Federation**: Use `MeshTrust` to allow {{site.mesh_product_name}} to trust certificates issued by Istio's Citadel, enabling cross-mesh mTLS.
 
 ---

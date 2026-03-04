@@ -9,7 +9,7 @@ description: Learn why some {{site.mesh_product_name}} resources must be applied
 products:
   - mesh
 tldr:
-  q: How do I know where to apply my Kong Mesh resources?
+  q: How do I know where to apply my {{site.mesh_product_name}} resources?
   a: |
     Resources follow a "Source of Truth" requirement. Global-scoped resources (like `Mesh`) must be applied to the Global CP. Policy resources can often be applied to either the Global or Zone CP. On Kubernetes, infrastructure-level identities must live in a dedicated system namespace.
 faqs:

@@ -9,7 +9,7 @@ description: A hands-on guide to applying your first security policy with {{site
 products:
   - mesh
 tldr:
-  q: How do I secure my services with Kong Mesh?
+  q: How do I secure my services with {{site.mesh_product_name}}?
   a: |
     Secure your mesh in three steps:
     1. **Enable mTLS** to encrypt all traffic and enable SPIFFE identity.

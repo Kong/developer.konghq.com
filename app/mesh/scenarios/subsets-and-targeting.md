@@ -11,7 +11,7 @@ products:
 tldr:
   q: Should I use MeshSubsets or MeshServices for routing?
   a: |
-    Understand the two targeting models in Kong Mesh:
+    Understand the two targeting models in {{site.mesh_product_name}}:
     1. **MeshServices** are explicit, first-class resources representing stable endpoint groups. **(Recommended)**
     2. **MeshSubsets** are implicit groups defined by labels on your workloads.
     3. **Migration** from subsets to services enables more robust routing and automatic DNS management.

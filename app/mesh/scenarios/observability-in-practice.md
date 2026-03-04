@@ -11,7 +11,7 @@ products:
 tldr:
   q: How do I gain visibility into my service mesh?
   a: |
-    Kong Mesh enables "zero-code instrumentation" for full stack observability:
+    {{site.mesh_product_name}} enables "zero-code instrumentation" for full stack observability:
     1. **Collect Metrics** via Prometheus and visualize with Grafana.
     2. **Capture Traces** for service-to-service calls using OpenTelemetry.
     3. **Gather Logs** for all mesh traffic with structured logging backends.

@@ -11,7 +11,7 @@ products:
 tldr:
   q: How do I manage a global service mesh across multiple regions?
   a: |
-    Kong Mesh provides a specialized multi-zone fabric to:
+    {{site.mesh_product_name}} provides a specialized multi-zone fabric to:
     1. **Bridge hybrid environments** (Kubernetes and Universal) seamlessly.
     2. **Scale operations** with ZoneIngress for cross-zone connectivity and ZoneEgress for controlled routing.
     3. **Ensure resilience** via Global Control Plane orchestration and KDS synchronization.

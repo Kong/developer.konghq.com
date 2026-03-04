@@ -11,7 +11,7 @@ products:
 tldr:
   q: How do I control traffic to services outside the mesh?
   a: |
-    By default, Kong Mesh allows all outbound traffic. Use **MeshPassthrough** to:
+    By default, {{site.mesh_product_name}} allows all outbound traffic. Use **MeshPassthrough** to:
     1. **Restrict access** by setting `passthroughMode: None`.
     2. **Whitelist destinations** by matching specific domains (e.g., `*.google.com`).
     3. **Enable visibility** by managing the mesh perimeter explicitly.

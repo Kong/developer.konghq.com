@@ -53,7 +53,7 @@ rows:
 
 {% mermaid %}
 graph TD
-    User([User Request]) --> Gateway["Kong Gateway"]
+    User([User Request]) --> Gateway["{{site.base_gateway}}"]
     Gateway --> Route{"MeshHTTPRoute"}
     Route -->|"90% Weight"| Stable["booking-engine-v1 (MeshService)"]
     Route -->|"10% Weight"| Canary["booking-engine-v2 (MeshService)"]

@@ -51,7 +51,7 @@ rows:
 
 {% mermaid %}
 graph TD
-    User([User Request]) --> Gateway["Kong Gateway"]
+    User([User Request]) --> Gateway["{{site.base_gateway}}"]
     
     subgraph "Region: East (Canary Testing)"
         Gateway -->|"90% Weight"| Stable_East["check-in-api (stable)"]

@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh vs. Istio Ambient"
+title: "{{site.mesh_product_name}} vs. Istio Ambient"
 content_type: reference
 layout: how-to
 breadcrumbs:

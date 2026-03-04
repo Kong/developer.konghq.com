@@ -11,7 +11,7 @@ products:
 tldr:
   q: How do I integrate my mesh with an enterprise Certificate Authority?
   a: |
-    Integrate Kong Mesh with **External CA providers** to:
+    Integrate {{site.mesh_product_name}} with **External CA providers** to:
     1. **Automate issuance** via HashiCorp Vault or cert-manager.
     2. **Root identity** in your existing corporate PKI.
     3. **Decouple trust** from the mesh management lifecycle.

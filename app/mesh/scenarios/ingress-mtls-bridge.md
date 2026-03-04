@@ -42,7 +42,7 @@ metadata:
 
 ## 2. The mTLS Connectivity Problem
 
-By default, the Kong Operator and therefore the {{site.base_gateway}} load balances traffic directly to **Pod IPs**. 
+By default, the {{site.operator_product_name}} and therefore the {{site.base_gateway}} load balances traffic directly to **Pod IPs**. 
 
 Because these requests bypass {{site.mesh_product_name}}'s Virtual IPs (VIPs), the sidecar on the Gateway treats them as **passthrough** traffic and sends them as **plaintext**.
 
