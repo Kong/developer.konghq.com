@@ -254,7 +254,7 @@ When you need to replace a credential with a new one, you can rotate the credent
 1. Click the **Credentials** tab.
 1. Click **New Credential**.
 1. Copy and save the secret somewhere safe. You won't see this key again.
-1. Click **Close** to save.
+1. Click **Copy and close** to save.
 1. Test the new credential by using it in the same workflow as the old one.
 1. When you're ready, delete the old credential:
   1. Open the **Credentials** tab.
