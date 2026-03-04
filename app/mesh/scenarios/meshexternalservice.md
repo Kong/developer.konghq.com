@@ -27,7 +27,6 @@ next_steps:
   - text: "Chaos Engineering: Fault Injection"
     url: "/mesh/scenarios/chaos-engineering/"
 ---
-
 ## 1. Why MeshExternalService?
 
 In the previous scenario, we secured the perimeter using `MeshPassthrough`. However, for critical dependencies like **AeroPay** (Kong Air's payment provider) or the core **RDS Database**, we need more than just an "allowlist."
@@ -48,7 +47,7 @@ metadata:
   name: external-services
   namespace: {{site.mesh_system_namespace}}
 spec:
-  template: '{{ .DisplayName }}.ext.kongair.com'
+  template: '{% raw %}{{ .DisplayName }}.ext.kongair.com{% endraw %}'
   selector:
     meshExternalService:
       matchLabels:
