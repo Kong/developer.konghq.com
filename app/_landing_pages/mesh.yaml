@@ -215,7 +215,7 @@ rows:
               ctas:
                 - text: Learn more 
                   url: /mesh/ingress/
-                - text: mTLS Bridge Bridge Service
+                - text: mTLS Bridge Service
                   url: /mesh/scenarios/ingress-mtls-bridge/
 
 

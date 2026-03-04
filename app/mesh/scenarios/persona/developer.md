@@ -25,7 +25,7 @@ apiVersion: kuma.io/v1alpha1
 kind: HostnameGenerator
 metadata:
   name: kong-air-dns
-  namespace: kuma-system
+  namespace: {{site.mesh_system_namespace}}
 spec:
   template: "{% raw %}{{ .DisplayName }}.svc.kongair.mesh{% endraw %}"
   selector:

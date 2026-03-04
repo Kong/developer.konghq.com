@@ -107,7 +107,7 @@ spec:
 ```
 
 
-## 6. Adding Resiliency with MeshHTTPRoute
+## 5. Adding Resiliency with MeshHTTPRoute
 
 Because AeroPay is now a first-class citizen, Devin (the Developer) can apply standard mesh policies to it. If AeroPay is momentarily slow or returns a 5xx error, the mesh can automatically retry.
 
