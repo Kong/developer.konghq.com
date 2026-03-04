@@ -345,6 +345,7 @@ hotfix
 how_to
 href
 http
+httproute
 httpbin
 HTTPie
 HTTPie

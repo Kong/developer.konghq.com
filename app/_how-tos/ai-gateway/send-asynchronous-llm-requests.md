@@ -61,7 +61,7 @@ prereqs:
         {% include _files/ai-gateway/batch.jsonl %}
         EOF
         ```
-        {: data-test-prereqs="block" }
+        {: data-test-prereq="block" }
   entities:
     services:
       - files-service

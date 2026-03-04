@@ -79,7 +79,7 @@ prereqs:
         EOF
 
         ```
-        {: data-test-prereqs="block"}
+        {: data-test-prereq="block"}
   entities:
     services:
       - files-service
