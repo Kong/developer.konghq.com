@@ -26,7 +26,7 @@ module Jekyll
       context.stack do
         context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
-          { 'columns' => config['columns'], 'rows' => config['rows'] }
+          { 'columns' => config['columns'], 'rows' => config['rows'], 'vertical_align' => config['vertical_align'] }
         Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
