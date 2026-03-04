@@ -73,7 +73,7 @@ rows:
 
 ---
 
-## Kong Mesh Architecture
+## {{site.mesh_product_name}} Architecture
 
 {% mermaid %}
 flowchart TD

@@ -57,7 +57,7 @@ Advanced patterns for Kong Air's platform engineers to control the perimeter and
 18. **[Chaos Engineering: Fault Injection](/mesh/scenarios/chaos-engineering/)**: Proactively testing mesh resilience.
 19. **[Advanced Envoy Customization: MeshProxyPatch](/mesh/scenarios/mesh-proxy-patch/)**: The escape hatch for low-level Envoy configuration.
 
-20. **[{{site.mesh_product_name}} vs. Ambient: Beyond Resource Usage](/mesh/scenarios/kong-mesh-vs-ambient/)**: A deep dive into the security and latency trade-offs of sidecarless meshes.
+20. **[{{site.mesh_product_name}} vs. Ambient: Beyond Resource Usage](/mesh/scenarios/kong-mesh-vs-ambient/)**: A deep dive into the security and latency trade-offs of sidecar-less meshes.
 21. **[Istio to {{site.mesh_product_name}}: The Strategic Guide](/mesh/scenarios/istio-to-kong-mesh/)**: Both a technical comparison and a tactical migration roadmap.
 
 ---

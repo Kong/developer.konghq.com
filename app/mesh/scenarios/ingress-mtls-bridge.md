@@ -5,7 +5,7 @@ layout: how-to
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
-description: A complete guide to setting up Kong Gateway as an ingress for a {{site.mesh_product_name}} mesh, ensuring secure mTLS connectivity and solving 502/504 errors.
+description: A complete guide to setting up {{site.base_gateway}} as an ingress for a {{site.mesh_product_name}} mesh, ensuring secure mTLS connectivity and solving 502/504 errors.
 products:
   - mesh
 tldr:

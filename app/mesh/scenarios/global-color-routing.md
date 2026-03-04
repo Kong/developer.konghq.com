@@ -48,7 +48,7 @@ rows:
 
 {% mermaid %}
 graph TD
-    Gateway["Kong Gateway (Gateway API)"] -->|HTTPRoute split| MMZS1["check-in-api-all (MMZS)"]
+    Gateway["{{site.base_gateway}} (Gateway API)"] -->|HTTPRoute split| MMZS1["check-in-api-all (MMZS)"]
     MMZS1 -->|color-pinning| App1B["Check-in-blu (Zone A)"]
     App1B -->|agnostic host| MMZS2["flight-control-all (MMZS)"]
     MMZS2 -->|color-pinning| App2B["Flight-Control-blu (Zone A)"]

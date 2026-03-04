@@ -28,7 +28,7 @@ The `Mesh` resource used in this guide is **Global CP only**: it must be applied
 ## 1. Why Use an External CA?
 
 *   **Compliance**: Many organizations mandate that all certificates must be issued by a specific authority (e.g., HashiCorp Vault or a corporate Sub-CA).
-*   **Hardened Security**: External CAs often live on hardware security modules (HSMs) or in highly restricted environments.
+*   **Hardened Security**: External CAs often live on hardware security modules or in highly restricted environments.
 *   **Auditability**: Centralize all certificate issuance logs in a single location rather than having them scattered across local clusters.
 
 ## 2. Configuration Options
