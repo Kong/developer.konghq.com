@@ -115,7 +115,7 @@ The OpenTelemetry plugin attaches additional resource attributes to all telemetr
 
 The OpenTelemetry plugin automatically sets the following resource attributes:
 
-{% include plugins/otel/resource_attributes.html %}
+{% include plugins/otel/resource_attributes.md %}
 
 You can add or override resource attributes by configuring the [`config.resource_attributes`](./reference/#schema--config-resource-attributes) parameter. Custom resource attributes are merged with the default attributes and are included with all exported telemetry data. Some metric backends, such as Prometheus, apply resource attributes to every metric. Be mindful of the impact on cardinality.
 
