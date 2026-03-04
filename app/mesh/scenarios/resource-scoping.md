@@ -123,7 +123,7 @@ If you `kubectl apply` a `MeshIdentity` into an application namespace (e.g., `ko
 
 ## Universal Mode: Simpler Scoping
 
-In Universal mode, there are no Kubernetes namespaces. Resources are identified by their `name` and `mesh` fields only. The tiering (Global vs Zone) is determined purely by **which CP API you point `kumactl` at**.
+In Universal mode, there are no Kubernetes namespaces. Resources are identified by their `name` and `mesh` fields only. The control plane tier (Global vs Zone) is determined purely by **which CP API you point `kumactl` at**.
 
 ```bash
 # Applying to the Global CP

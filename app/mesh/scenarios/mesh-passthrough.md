@@ -165,7 +165,7 @@ spec:
 
 For maximum security, combine `MeshPassthrough` with a **ZoneEgress**.
 1.  **Direct Mode**: Sidecar tries to call the external service directly. `MeshPassthrough` logic happens in the sidecar.
-2.  **Egress Mode**: Sidecar is forced to route external traffic to the `ZoneEgress`. The `MeshPassthrough` policy can be applied at the `ZoneEgress` level to create a centralized "Chokepoint" for the entire zone.
+2.  **Egress Mode**: Sidecar is forced to route external traffic to the `ZoneEgress`. The `MeshPassthrough` policy can be applied at the `ZoneEgress` level to create a centralized "choke point" for the entire zone.
 
 {% tip %}
 Use `MeshPassthrough` at the `Mesh` level to set a global security baseline, then use more specific `MeshService` targetRefs to grant exceptions to specific services that need broader internet access.
