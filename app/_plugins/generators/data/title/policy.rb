@@ -19,6 +19,7 @@ module Jekyll
 
         def llm_title
           return page_title unless @page.data['plugin?']
+          return name if @page.data['example?']
 
           [
             name,
