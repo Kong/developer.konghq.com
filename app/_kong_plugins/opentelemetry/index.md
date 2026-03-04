@@ -127,7 +127,7 @@ In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry pl
 
 The following metrics are exposed:
 
-{% include plugins/otel/metric_tables.html %}
+{% include plugins/otel/metric_tables.md %}
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
