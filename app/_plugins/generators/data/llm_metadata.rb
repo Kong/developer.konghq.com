@@ -28,40 +28,36 @@ module Jekyll
 
       def frontmatter
         data = {
-          'title' => @page.data['title'],
+          'title' => @page.data['llm_title'],
           'description' => @page.data['description'],
           'url' => @page.url,
-          'content_type' => @page.data['content_type']
+          'content_type' => @page.data['content_type'],
+          'third_party' => @page.data['third_party'],
+          'premium_partner' => @page.data['premium_partner'],
+          'ai_gateway_enterprise' => @page.data['ai_gateway_enterprise'],
+          'min_version' => @page.data['min_version'],
+          'tier' => @page.data['tier'],
+          'products' => @page.data['products'],
+          'tools' => @page.data['tools']
         }
-        data['products'] = products if products&.any?
-        data['tier']     = tier     if tier
-        data['tools']    = tools    if tools&.any?
-        data['tags']     = @page.data['tags'] if @page.data.fetch('tags', []).any?
+        data['tags'] = @page.data['tags'] if @page.data.fetch('tags', []).any?
         data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
+        data['works_on']  = @page.data['works_on'] if @page.data.fetch('works_on', []).any?
+
+        data.merge!(plugin_metadata) if plugin_metadata.any?
         YAML.dump(data.compact)
       end
 
-      def products
-        @products ||= @page.data.fetch('products', []).map do |product|
-          @site.data.dig('products', product, 'name')
-        end
-      end
-
-      def tier
-        return unless @page.data['tier']
-
-        @tier ||= begin
-          product = @page.data['products'].first
-
-          @site.data.dig('products', product, 'tiers', @page.data['tier'], 'text')
-        end
-      end
-
-      def tools
-        return unless @page.data['tools']
-
-        @tools ||= @page.data.fetch('tools', []).map do |tool|
-          @site.data.dig('tools', tool, 'name')
+      def plugin_metadata
+        if @page.data['plugin?'] && @page.data['overview?']
+          {
+            'topologies' => @page.data['topologies'],
+            'publisher' => @page.data['publisher'],
+            'compatible_protocols' => @page.data['compatible_protocols'],
+            'categories' => @page.data['categories']
+          }
+        else
+          {}
         end
       end
     end
