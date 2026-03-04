@@ -234,3 +234,32 @@ sequenceDiagram
 To use an unsupported IdP with DCR, you must implement an API that conforms to the [{{site.konnect_short_name}} Dev Portal DCR Handler spec](https://github.com/Kong/konnect-portal-dcr-handler/blob/main/openapi/openapi.yaml). Kong provides an example reference implementation in the [{{site.konnect_short_name}} Dev Portal DCR Handler repository](https://github.com/Kong/konnect-portal-dcr-handler). This is an example HTTP DCR bridge implementation and is not meant to be deployed in production. We encourage you to use this implementation as a guide to create your own implementation.
 
 Any request that does not return a `2xx` status code is considered a failure and will halt the application creation process in your {{site.konnect_short_name}} Dev Portal.
+
+### Managing credentials
+
+As a developer, you can manage your application credentials through your applications page without needing a Portal admin's assistance. 
+You can maintain multiple active credentials, allowing you to assign different credentials to each service consuming your application and revoke credentials as needed.
+
+{:.warning}
+> Maintaining multiple credentials for one application is currently available only for HTTP DCR bridge.
+
+Portal admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and Portal admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
+
+#### Rotate a credential
+
+When you need to replace a credential with a new one, you can rotate the credential manually through an application's configuration page:
+
+1. In your Dev Portal, click your profile and select **My applications**.
+1. Open an application.
+1. Click the **Credentials** tab.
+1. Click **New Credential**.
+1. Copy and save the secret somewhere safe. You won't see this key again.
+1. Click **Close** to save.
+1. Test the new credential by using it in the same workflow as the old one.
+1. When you're ready, delete the old credential:
+  1. Open the **Credentials** tab.
+  1. Click the action menu for the old credential.
+  1. Select **Revoke**.
+  1. Type in "revoke" and click **Revoke** to confirm.
+
+To manage credentials using the Portal API, see the [`/portals/{portalId}/applications/{applicationId}/credentials`](/api/konnect/portal-management/v3/#/operations/get-application-credentials) endpoint.
