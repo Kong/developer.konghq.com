@@ -33,6 +33,37 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.14.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this release.
+
+### 3.14.0.0
+
+Breaking changes in the 3.14.0.0 release.
+
+#### OpenID Connect: consumer claims data types
+
+The `config.consumer_claim` field in the [OpenID Connect plugin](/plugins/openid-connect/) has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims). 
+The parameter now accepts an array of arrays instead of an array of strings. 
+
+Old format example:
+
+```yaml
+config:
+  consumer_claim:
+    - email
+```
+New format example:
+
+```yaml
+config:
+  consumer_claims:
+    - ["email"]
+```
+
+We recommend updating your configurations, as the old `config.consumer_claim` field is deprecated and will be removed in a future version.
+
+
 ## 3.13.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
