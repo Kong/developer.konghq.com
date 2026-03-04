@@ -19,6 +19,7 @@
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
+/mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -86,7 +87,7 @@
 /mesh/production/upgrades-tuning/fine-tuning    /mesh/performance-tuning/
 /mesh/production/cp-deployment/zone-ingress     /mesh/zone-ingress/
 /mesh/production/secure-deployment/api-server-auth  /mesh/authentication-with-the-api-server/
-/mesh/production/upgrades-tuning/upgrade-notes  /mesh/upgrade-notes/
+/mesh/production/upgrades-tuning/upgrade-notes  /mesh/version-specific-upgrade-notes/
 /mesh/production/upgrades-tuning/upgrades      /mesh/upgrade/
 /mesh/production/cp-deployment/zoneproxy-auth   /mesh/zone-proxy-auth/
 /mesh/meshtrafficpermission     /mesh/policies/meshtrafficpermission/
