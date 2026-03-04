@@ -5,7 +5,7 @@ layout: how-to
 breadcrumbs:
   - /mesh/
   - /mesh/scenarios/
-description: A comprehensive technical and strategic guide for platform engineers comparative features and migrating complex service mesh environments from Istio to {{site.mesh_product_name}} with zero downtime.
+description: A comprehensive technical and strategic guide for platform engineers comparing features and migrating complex service mesh environments from Istio to {{site.mesh_product_name}} with zero downtime.
 products:
   - mesh
 next_steps:

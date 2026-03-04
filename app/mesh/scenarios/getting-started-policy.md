@@ -111,7 +111,7 @@ spec:
     - targetRef:
         kind: Mesh
       default:
-        action: Allow' | kubectl apply -f -
+        action: Allow
 ```
 {% endnavtab %}
 {% navtab "Universal" %}

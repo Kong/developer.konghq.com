@@ -12,8 +12,8 @@ tldr:
   q: How do I perform a canary release in one zone without affecting others?
   a: |
     Use **scoped MeshHTTPRoute** policies to:
-    1. **Target specific zones** using the `kuma.io/zone` tag in the `targetRef`.
-    2. **Shift traffic locally** between stable and canary `MeshMultiZoneService` resources.
+    1. **Target specific zones** by routing to zone-specific `MeshMultiZoneService` resources (for example, `check-in-api-east` and `check-in-api-west`).
+    2. **Shift traffic locally** between zone-local `stable` and `canary` `MeshMultiZoneService` resources.
     3. **Maintain failover** so that if a local canary fails, traffic automatically recovers to a stable version in another region.
 prereqs:
   inline:
@@ -276,6 +276,7 @@ metadata:
   namespace: kong-air-production
 spec:
   targetRef:
+    kind: MeshService
     name: passenger-portal
   to:
     - targetRef:

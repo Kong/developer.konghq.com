@@ -34,7 +34,7 @@ Ambient claims to be faster by removing sidecars, but this only applies to simpl
 | :--- | :--- | :--- |
 | **L7 Hop Count** | 0 extra hops (local) | **1 extra network hop** (per direction) |
 | **Logic Placement** | Inside the Pod | On a separate node or shared proxy |
-| **Latency Consistency**| Highly Predictable | Variable (dependant on node-to-node network) |
+| **Latency Consistency**| Highly Predictable | Variable (dependent on node-to-node network) |
 
 {% warning %}
 Because Way point proxies are separate from your application Pods, L7 traffic must leave the node, travel to a Way point, be processed, and then travel back to the destination. In many cases, this **negates the latency gains** touted by side-carless architectures.
