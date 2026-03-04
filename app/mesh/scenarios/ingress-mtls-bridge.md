@@ -9,7 +9,7 @@ description: A complete guide to setting up {{site.base_gateway}} as an ingress 
 products:
   - mesh
 tldr:
-  q: How do I bridge Kong Gateway into my service mesh?
+  q: How do I bridge {{site.base_gateway}} into my service mesh?
   a: |
     Connect your ingress to the mesh by:
     1. **Annotating the Gateway** pod with `kuma.io/gateway: enabled`.
@@ -19,15 +19,15 @@ next_steps:
   - text: "Chaos Engineering: Fault Injection"
     url: "/mesh/scenarios/chaos-engineering/"
 ---
-For **Kong Air**, the journey from the public internet to their private mesh must be seamless and secure. Kong Air uses Kong Gateway as their primary ingress, and ensuring mTLS is maintained from the gateway to the internal `check-in-api` is a critical requirement.
+For **Kong Air**, the journey from the public internet to their private mesh must be seamless and secure. Kong Air uses {{site.base_gateway}} as their primary ingress, and ensuring mTLS is maintained from the gateway to the internal `check-in-api` is a critical requirement.
 
 ## 1. Gateway Deployment
 
-When deploying Kong Gateway as an ingress, you must mark the Pods so {{site.mesh_product_name}} knows they are acting as a gateway.
+When deploying {{site.base_gateway}} as an ingress, you must mark the Pods so {{site.mesh_product_name}} knows they are acting as a gateway.
 
 ### The `kuma.io/gateway: enabled` Annotation
 
-Add the following annotation to your Kong Gateway Pod template:
+Add the following annotation to your {{site.base_gateway}} Pod template:
 
 ```yaml
 metadata:
@@ -42,7 +42,7 @@ metadata:
 
 ## 2. The mTLS Connectivity Problem
 
-By default, the Kong Operator and therefore the Kong Gateway load balances traffic directly to **Pod IPs**. 
+By default, the Kong Operator and therefore the {{site.base_gateway}} load balances traffic directly to **Pod IPs**. 
 
 Because these requests bypass {{site.mesh_product_name}}'s Virtual IPs (VIPs), the sidecar on the Gateway treats them as **passthrough** traffic and sends them as **plaintext**.
 

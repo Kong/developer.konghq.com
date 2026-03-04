@@ -67,5 +67,5 @@ Before you dive into the hands-on scenarios, familiarize yourself with these thr
 * **Kuma Distribution Service (KDS)**: The high-speed protocol used to synchronize policies and service state between a **Global CP** and its **Zone CPs**.
 
 {% tip %}
-**Getting Started**: Because Kong Mesh scales across clouds and data centers, understanding where to apply each resource is critical. We strongly recommend reading the [Understanding Resource Scoping](/mesh/scenarios/resource-scoping/) guide before applying your first policy.
+**Getting Started**: Because {{site.mesh_product_name}} scales across clouds and data centers, understanding where to apply each resource is critical. We strongly recommend reading the [Understanding Resource Scoping](/mesh/scenarios/resource-scoping/) guide before applying your first policy.
 {% endtip %}

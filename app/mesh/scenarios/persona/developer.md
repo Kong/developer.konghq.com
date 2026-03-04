@@ -238,9 +238,9 @@ spec:
 
 ## 5. Gateway Integration
 
-Finally, Devin connects **Kong Gateway** to the mesh. This allows external passengers to enter the "Ticket Booking" service while benefiting from the same mTLS security and observability as internal traffic.
+Finally, Devin connects **{{site.base_gateway}}** to the mesh. This allows external passengers to enter the "Ticket Booking" service while benefiting from the same mTLS security and observability as internal traffic.
 
-*   **Ingress**: Kong Gateway acts as the entry point for the "Kong Air" mobile app.
+*   **Ingress**: {{site.base_gateway}} acts as the entry point for the "Kong Air" mobile app.
 *   **Bridge**: It translates external JWT authentication into the mesh identity, allowing Devin's services to see which passenger is making the request.
 
 ---

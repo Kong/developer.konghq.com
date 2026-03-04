@@ -9,9 +9,9 @@ description: A comprehensive guide to the {{site.mesh_product_name}} TargetRef p
 products:
   - mesh
 tldr:
-  q: How do I manage policies in Kong Mesh?
+  q: How do I manage policies in {{site.mesh_product_name}}?
   a: |
-    Kong Mesh uses a unified **TargetRef** system to simplify policy management:
+    {{site.mesh_product_name}} uses a unified **TargetRef** system to simplify policy management:
     1. **Target once** using `targetRef` to select workloads, services, or the entire mesh.
     2. **Define rules** within the same policy resource.
     3. **Override globally** with specific local rules using the built-in policy hierarchy.
@@ -26,7 +26,7 @@ Instead of fragmented resources, you define your intent once in a single policy 
 {{site.mesh_product_name}} uses the `targetRef` system to provide precise control over traffic and proxy configuration. 
 
 ### Why TargetRef?
-The `targetRef` pattern is a standard established by the **Kubernetes Gateway API**. Kong Mesh adopts this system for two primary reasons:
+The `targetRef` pattern is a standard established by the **Kubernetes Gateway API**. {{site.mesh_product_name}} adopts this system for two primary reasons:
 1. **Consistency**: By using the same pattern as the Gateway API, your service mesh policies feel familiar if you are already managing ingress traffic via Gateway resources.
 2. **Ease of Use**: It eliminates the need for complex label matching in every policy. You target a resource once, and the mesh handles the underlying connectivity.
 

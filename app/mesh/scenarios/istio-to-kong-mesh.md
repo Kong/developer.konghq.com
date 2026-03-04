@@ -1,5 +1,5 @@
 ---
-title: "Istio to Kong Mesh: Migration Guide"
+title: "Istio to {{site.mesh_product_name}}: Migration Guide"
 content_type: reference
 layout: how-to
 breadcrumbs:
@@ -49,13 +49,13 @@ In Istio, configuration is globally scoped by default. A single `VirtualService`
 {{site.mesh_product_name}} uses **Enforcement Scoping**. When you apply a policy to a `MeshService`, the Control Plane only sends those updates to the relevant proxies.
 
 ### Endpoint Visibility: Reachable Services
-While both meshes provide ways to limit endpoint distribution, {{site.mesh_product_name}} automates this via `autoReachableServices`. Istio requires the high-maintenance `Sidecar` CRD whitelist approach, where missing an entry leads to runtime failures (404/503).
+While both meshes provide ways to limit endpoint distribution, {{site.mesh_product_name}} automates this via `autoReachableServices`. Istio requires the high-maintenance `Sidecar` CRD allow list approach, where missing an entry leads to runtime failures (404/503).
 
 ### What about Istio Ambient?
 Ambient mode aims to reduce the "sidecar tax," but introduces trade-offs:
 *   **Security**: Shared "ztunnels" on nodes increase the blast radius compared to {{site.mesh_product_name}}'s per-pod isolation.
-*   **Latency**: L7 features require "Waypoint" proxies, adding extra network hops.
-*   **Complexity**: Operates as a three-tier system (ztunnel, Waypoint, CNI) instead of {{site.mesh_product_name}}'s single-proxy model.
+*   **Latency**: L7 features require "Way point" proxies, adding extra network hops.
+*   **Complexity**: Operates as a three-tier system (ztunnel, Way point, CNI) instead of {{site.mesh_product_name}}'s single-proxy model.
 
 ---
 
