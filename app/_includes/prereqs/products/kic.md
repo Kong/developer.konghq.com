@@ -99,12 +99,8 @@
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
    EOF
    ```
-<<<<<<< HEAD
    {: data-test-prereq="block" }
-{% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
-=======
-{%- assign additional_flags = additional_flags | append:' --values ./values.yaml' -%}
->>>>>>> 8eece6750 (chore(llms): whitespace control)
+{% assign additional_flags = additional_flags | append:' --values ./values.yaml' -%}
 {% endif %}
 1. Install {{ site.kic_product_name }} using Helm:
 
