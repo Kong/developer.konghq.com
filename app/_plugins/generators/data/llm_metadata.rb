@@ -37,8 +37,8 @@ module Jekyll
           'ai_gateway_enterprise' => @page.data['ai_gateway_enterprise'],
           'min_version' => @page.data['min_version'],
           'tier' => @page.data['tier'],
-          'products' => @page.data['products'],
-          'tools' => @page.data['tools']
+          'products' => resolve_names(@page.data['products'], 'products'),
+          'tools' => resolve_names(@page.data['tools'], 'tools')
         }
         data['tags'] = @page.data['tags'] if @page.data.fetch('tags', []).any?
         data['canonical'] = @page.data['canonical?'] unless @page.data['canonical?'].nil?
@@ -46,6 +46,12 @@ module Jekyll
 
         data.merge!(plugin_metadata) if plugin_metadata.any?
         YAML.dump(data.compact)
+      end
+
+      def resolve_names(slugs, data_key)
+        return if Array(slugs).empty?
+
+        Array(slugs).map { |slug| @site.data.dig(data_key, slug, 'name') || slug }
       end
 
       def plugin_metadata
