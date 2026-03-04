@@ -13,7 +13,7 @@ module Jekyll
         end
 
         def llm_title
-          "How to: #{page_title}"
+          page_title
         end
       end
     end
