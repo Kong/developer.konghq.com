@@ -67,7 +67,7 @@ rows:
                   KAi also has access to Kong's documentation and support knowledge base, so it can provide guidance on configuration, architecture, and troubleshooting.
 
                   Like other AI chatbots, KAi uses sessions. 
-                  KAi can remember context within a session while the data is retained, but doesn't share context between sessions. 
+                  KAi can remember context within a session, but doesn't share context between sessions. 
                   You can have a maximum of three current sessions with KAi.
 
       - blocks:
@@ -78,7 +78,7 @@ rows:
                 subgraph backends["<b>Backends & data sources</b>"]
                   direction LR
                   LLM["LLM backend"]
-                  MCP["<a href="/konnect-platform/konnect-mcp/">Konnect MCP Server</a>"]
+                  MCP["Konnect MCP Server"]
                   KB["Kong Docs & support knowledge base"]
                 end
 
@@ -92,6 +92,7 @@ rows:
 
                 User --> kai
                 kai --> backends
+                click MCP "/konnect-platform/konnect-mcp/"
 
   - header:
       text: "How to interact with KAi in the UI"
