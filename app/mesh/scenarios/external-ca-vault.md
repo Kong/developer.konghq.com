@@ -58,7 +58,7 @@ spec:
           expiration: 1d # Required by Konnect
       conf:
         fromCp: # Required: control plane requests the cert
-          address: http://vault.default:8200
+          address: https://vault.default:8200
           role: mesh-dp
           auth:
             token:
@@ -84,7 +84,7 @@ mtls:
         expiration: 1d # Required by Konnect
     conf:
       fromCp: # Required: control plane requests the cert
-        address: http://vault.default:8200
+        address: https://vault.default:8200
         role: mesh-dp
         auth:
           token:
