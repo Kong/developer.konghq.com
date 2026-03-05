@@ -75,6 +75,34 @@ on-prem:
       commands:
         - deck gateway reset -f
 
+  operator:
+    setup:
+      commands:
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+    cleanup:
+      commands:
+        - k3d cluster delete operator-test
+    reset:
+      commands:
+        - k3d cluster delete operator-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" operator-test --wait
+        - kubectl config use-context k3d-operator-test
+
+  kic:
+    setup:
+      commands:
+        - helm repo add kong https://charts.konghq.com
+        - helm repo update
+    cleanup:
+      commands:
+        - k3d cluster delete kic-test
+    reset:
+      commands:
+        - k3d cluster delete kic-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" kic-test --wait
+        - kubectl config use-context k3d-kic-test
+
 konnect:
   gateway:
     setup:
