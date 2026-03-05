@@ -247,7 +247,7 @@ Dev Portal admins can view credential IDs by opening an application in {{site.ko
 
 #### Rotate a credential
 
-When you need to replace a credential with a new one, you can rotate the credential manually through an application's configuration page:
+When developers need to replace a credential with a new one, they can rotate the credential manually through an application's configuration page in their Dev Portal:
 
 1. In your Dev Portal, click your profile and select **My applications**.
 1. Open an application.
@@ -263,4 +263,6 @@ When you need to replace a credential with a new one, you can rotate the credent
    1. Enter `revoke`.
    1. Click **Revoke**.
 
-To manage credentials using the Portal API, see the [`/portals/{portalId}/applications/{applicationId}/credentials`](/api/konnect/portal-management/v3/#/operations/get-application-credentials) endpoint.
+Developers can also manage their application credentials using the [Portal API](/api/konnect/portal-management/v3/).
+
+To make sure that their developers have access to the credential API endpoints, Dev Portal admins must ensure that the HTTP DCR bridge supports credential rotation based on the provided API spec.
