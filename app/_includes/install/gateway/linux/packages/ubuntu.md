@@ -5,17 +5,13 @@
     {%- assign name = codename | capitalize -%}
     {%- assign available_flavors = available_flavors | push: name-%}
 {%- endfor -%}
-<div>
-{% capture code %}
+
 ```bash
 curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/gpg.{{ include.gpg_key }}.key" |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-{{ include.release.major_minor_version }}-archive-keyring.gpg > /dev/null
 curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/config.deb.txt?distro=ubuntu&codename={{ default_flavor.codename }}" | sudo tee /etc/apt/sources.list.d/kong-gateway-{{ include.release.major_minor_version }}.list > /dev/null
 sudo apt-get update && sudo apt-get install -y kong-enterprise-edition={{include.release.ee_version}}
 ```
-{% endcapture %}
-{{ code | markdownify }}
-</div>
 
-<p class="text-secondary text-sm">
-    <strong>Note:</strong> {{site.base_gateway}} is packaged for {{available_flavors | join: ", "}}. The snippet above assumes you are running {{default_flavor.codename | capitalize}}. Replace it with your release. To check the name of your release, run <code class="language-plaintext highlighter-rouge">lsb_release -sc</code>.
-</p>
+{% html_tag type="p" css_classes="text-secondary text-sm" %}
+**Note:** {{site.base_gateway}} is packaged for {{available_flavors | join: ", "}}. The snippet above assumes you are running {{default_flavor.codename | capitalize}}. Replace it with your release. To check the name of your release, run `lsb_release -sc`.
+{% endhtml_tag %}
