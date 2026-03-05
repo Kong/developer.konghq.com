@@ -43,7 +43,7 @@ Breaking changes in the 3.14.0.0 release.
 
 #### SHA1 algorithm removal
 
-The SHA1 algorithm has been deprecated or removed in a few places and the default algorithm has changed to SHA256.
+The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
 
 For the [Event Hooks entity](/gateway/entities/event-hook/), this is a breaking change. 
 Event hook calls are now signed with HMAC-SHA256 instead of HMAC-SHA1.
