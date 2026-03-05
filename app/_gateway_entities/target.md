@@ -72,10 +72,6 @@ When a DNS record has `ttl=0`, the hostname is added as a single target, with th
 
 {% include_cached /gateway/failover-targets.md %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Target
 
 {% entity_example %}
@@ -84,3 +80,7 @@ data:
   target: httpbun.com:80
   weight: 100
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

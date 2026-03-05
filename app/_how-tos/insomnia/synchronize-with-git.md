@@ -28,11 +28,45 @@ tldr:
     q: How can I push content from Insomnia to a Git repository?
     a: Create a remote Git repository and an Insomnia project with Git Sync. Select the Git provider and connect to the repository. In the project, click the button at the bottom of the left pane to see the Git Sync menu and push your changes.
 
+faqs:
+  - q: Why can I only see public repositories after connecting GitHub?
+    a: |
+      If you can see only public repositories but not private repositories, review your [GitHub App installation settings](https://github.com/apps/insomnia-desktop/installations/select_target).
+
+      Insomnia uses the GitHub App integration. The app must be granted access to private repositories during installation.
+
+      To verify repository access:
+
+      1. Navigate to [Insomnia GitHub App](https://github.com/apps/insomnia-desktop).
+      2. Click **Configure**.
+      3. Select your account or organization.
+      4. Under **Repository access**, confirm that:
+         - **All repositories** is selected, or
+         - The required private repositories are explicitly included.
+      5. If you make changes, click **Save**.
+
+      {:.info}
+      > After updating the installation settings, disconnect and reconnect GitHub in Insomnia if the repositories still don't appear.
+  - q: Which Personal Access Token should I use for Git Sync?
+    a: |
+      If you authenticate using a Personal Access Token (PAT), use a **fine-grained** PAT.
+
+      Navigate to [Github Personal access tokens](https://github.com/settings/personal-access-tokens) and ensure that the token is configured to allow access to the repositories you want to sync.    
+  - q: Why do I get a 403 error when committing?
+    a: |  
+      A **403 Forbidden** error usually indicates that Insomnia does not have access to the target repository.
+
+      If you use GitHub, navigate to [Github applications](https://github.com/apps/insomnia-desktop) to ensure that the Insomnia GitHub App is installed and has access to the repository.
+      
+      {:.warning}
+      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.    
+
 related_resources:
   - text: Storage options in Insomnia
     url: /insomnia/storage/
   - text: Version control in Insomnia
     url: /insomnia/version-control/
+  
 ---
 
 ## Create a project
@@ -72,7 +106,7 @@ related_resources:
 If your Git repository already contains Insomnia content, you will be prompted to import the content to your project. You can also create the Git Sync project now and add a repository later. 
 
 {:.info}
-> If the repository contains legacy Insomnia content (from versions prior to 11.0), Insomnia will convert this content to the new format introduced in newer versions.
+> If the repository contains legacy Insomnia content prior to 11.0, Insomnia will convert this content to the new format introduced in newer versions.
 
 ## Commit and push the content to your repository
 

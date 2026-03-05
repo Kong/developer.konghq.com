@@ -1,155 +1,155 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ]
+      },
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
+      "type": "object",
       "properties": {
-        "enable_multi_language_detection": {
-          "default": false,
-          "description": "Enables multi-language detection mode. Must be used with 'source_language'.",
-          "type": "boolean"
-        },
-        "gcp_service_account_json": {
-          "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "gcp_use_service_account": {
-          "default": false,
-          "description": "Use service account auth for GCP-based providers and models.",
-          "type": "boolean"
-        },
-        "guarding_mode": {
-          "default": "INPUT",
-          "description": "The guardrail mode to use for the request",
-          "enum": [
-            "BOTH",
-            "INPUT",
-            "OUTPUT"
-          ],
-          "type": "string"
-        },
-        "location_id": {
-          "description": "GCP Location ID for the GCP Model Armor subscription.",
-          "type": "string"
-        },
-        "project_id": {
-          "description": "GCP Project ID for the GCP Model Armor subscription.",
-          "type": "string"
-        },
-        "request_failure_message": {
-          "default": "Request was filtered by GCP Model Armor",
-          "description": "The message to return when a failure occurs on the request phase.",
-          "type": "string"
-        },
-        "response_buffer_size": {
-          "default": 100,
-          "description": "The amount of bytes receiving from upstream to be buffered before sending to the model armor service. This only applies to the response content guard.",
-          "type": "number"
-        },
-        "response_failure_message": {
-          "default": "Response was filtered by GCP Model Armor",
-          "description": "The message to return when a failure occurs on the response phase.",
-          "type": "string"
-        },
-        "reveal_failure_categories": {
-          "default": false,
-          "description": "Whether to reveal failure categories in the response to the caller.",
-          "type": "boolean"
-        },
-        "source_language": {
-          "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled.",
-          "type": "string"
-        },
-        "stop_on_error": {
-          "default": true,
-          "description": "Stop processing if an error occurs.",
-          "type": "boolean"
-        },
-        "template_id": {
-          "description": "GCP Model Armor Template ID to enforce.",
-          "type": "string"
-        },
         "text_source": {
-          "default": "last_message",
-          "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
+          "type": "string",
           "enum": [
             "concatenate_all_content",
             "concatenate_user_content",
             "last_message"
           ],
-          "type": "string"
+          "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
+          "default": "last_message"
+        },
+        "gcp_use_service_account": {
+          "type": "boolean",
+          "description": "Use service account auth for GCP-based providers and models.",
+          "default": false
+        },
+        "source_language": {
+          "type": "string",
+          "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled."
         },
         "timeout": {
-          "default": 10000,
+          "type": "number",
           "description": "Connection timeout with the GCP Model Armor service",
-          "type": "number"
+          "default": 10000
+        },
+        "response_failure_message": {
+          "type": "string",
+          "description": "The message to return when a failure occurs on the response phase.",
+          "default": "Response was filtered by GCP Model Armor"
+        },
+        "project_id": {
+          "type": "string",
+          "description": "GCP Project ID for the GCP Model Armor subscription."
+        },
+        "location_id": {
+          "type": "string",
+          "description": "GCP Location ID for the GCP Model Armor subscription."
+        },
+        "response_buffer_size": {
+          "type": "number",
+          "description": "The amount of bytes receiving from upstream to be buffered before sending to the model armor service. This only applies to the response content guard.",
+          "default": 100
+        },
+        "template_id": {
+          "type": "string",
+          "description": "GCP Model Armor Template ID to enforce."
+        },
+        "enable_multi_language_detection": {
+          "type": "boolean",
+          "description": "Enables multi-language detection mode. Must be used with 'source_language'.",
+          "default": false
+        },
+        "stop_on_error": {
+          "type": "boolean",
+          "description": "Stop processing if an error occurs.",
+          "default": true
+        },
+        "reveal_failure_categories": {
+          "type": "boolean",
+          "description": "Whether to reveal failure categories in the response to the caller.",
+          "default": false
+        },
+        "request_failure_message": {
+          "type": "string",
+          "description": "The message to return when a failure occurs on the request phase.",
+          "default": "Request was filtered by GCP Model Armor"
+        },
+        "gcp_service_account_json": {
+          "type": "string",
+          "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "x-referenceable": true,
+          "x-encrypted": true
+        },
+        "guarding_mode": {
+          "type": "string",
+          "enum": [
+            "BOTH",
+            "INPUT",
+            "OUTPUT"
+          ],
+          "description": "The guardrail mode to use for the request",
+          "default": "INPUT"
         }
       },
       "required": [
         "location_id",
         "project_id",
         "template_id"
-      ],
-      "type": "object"
+      ]
     },
     "consumer": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
     },
     "consumer_group": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
-    },
-    "protocols": {
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ],
-      "description": "A set of strings representing HTTP protocols.",
-      "items": {
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ],
-        "type": "string"
-      },
-      "type": "array"
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
     },
     "route": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
     },
     "service": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
     }
   },
   "required": [

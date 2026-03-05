@@ -541,10 +541,6 @@ The Route configuration to proxy TLS traffic is unique to every deployment, but 
 * Create a Route with the `tls_passthrough` protocol and assign an SNI. 
 * Create a Service, associated with the Route, with the protocol set to `tcp`.
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Route
 
 {% entity_example %}
@@ -554,3 +550,7 @@ data:
   paths:
     - "/mock"
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

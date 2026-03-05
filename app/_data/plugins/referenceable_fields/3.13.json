@@ -35,7 +35,10 @@
     "config.storage_config.redis.cloud_authentication.azure_client_secret",
     "config.storage_config.redis.cloud_authentication.azure_tenant_id",
     "config.storage_config.redis.cloud_authentication.gcp_service_account_json",
+    "config.storage_config.redis.host",
     "config.storage_config.redis.password",
+    "config.storage_config.redis.port",
+    "config.storage_config.redis.server_name",
     "config.storage_config.redis.username",
     "config.storage_config.vault.token"
   ],
@@ -319,7 +322,10 @@
     "config.brute_force_protection.redis.cloud_authentication.azure_client_secret",
     "config.brute_force_protection.redis.cloud_authentication.azure_tenant_id",
     "config.brute_force_protection.redis.cloud_authentication.gcp_service_account_json",
+    "config.brute_force_protection.redis.host",
     "config.brute_force_protection.redis.password",
+    "config.brute_force_protection.redis.port",
+    "config.brute_force_protection.redis.server_name",
     "config.brute_force_protection.redis.username"
   ],
   "confluent": [
@@ -660,7 +666,10 @@
     "config.redis.cloud_authentication.azure_client_secret",
     "config.redis.cloud_authentication.azure_tenant_id",
     "config.redis.cloud_authentication.gcp_service_account_json",
+    "config.redis.host",
     "config.redis.password",
+    "config.redis.port",
+    "config.redis.server_name",
     "config.redis.username"
   ],
   "rate-limiting-advanced": [
@@ -744,7 +753,10 @@
     "config.redis.cloud_authentication.azure_client_secret",
     "config.redis.cloud_authentication.azure_tenant_id",
     "config.redis.cloud_authentication.gcp_service_account_json",
+    "config.redis.host",
     "config.redis.password",
+    "config.redis.port",
+    "config.redis.server_name",
     "config.redis.username"
   ],
   "saml": [

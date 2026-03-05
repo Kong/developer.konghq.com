@@ -2,7 +2,8 @@ import debug from "debug";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const debugLog = debug("debug");
+const debugCmd = debug("debug:request");
+const debugLog = debug("debug:response");
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function fetchImage(docker, imageName, log) {
@@ -59,6 +60,7 @@ export async function executeCommand(container, cmd) {
         ([key, value]) => `${key}=${value}`,
       );
 
+      debugCmd(cmd);
       const execCommand = await container.exec({
         Cmd: ["bash", "-c", cmd],
         AttachStdout: true,

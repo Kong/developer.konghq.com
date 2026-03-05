@@ -39,6 +39,7 @@ module Jekyll
           echo "
           #{format_yaml(to_gatewayapi(config).to_yaml)}" | kubectl apply -f -
           ```
+          {: data-test-step="block" }
         YAML
       end
 
@@ -84,7 +85,7 @@ module Jekyll
             {
               'name' => 'kong',
               'namespace' => config['gateway_namespace'],
-              'section_name' => config['section_name']
+              'sectionName' => config['section_name']
             }.compact
           ],
           'rules' => config['matches'].each.map do |match|

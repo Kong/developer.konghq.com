@@ -121,10 +121,6 @@ The [`write_timeout`](#schema-service-write-timeout) parameter defines the idle 
 
 {{ retry }}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Gateway Service
 
 {% entity_example %}
@@ -133,3 +129,7 @@ data:
   name: example-service
   url: "http://httpbin.konghq.com"
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}
