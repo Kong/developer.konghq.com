@@ -26,6 +26,7 @@ jobs:
         with:
           files: |
             app/_kong_plugins/*/examples/**
+            app/_schemas/gateway/plugins/**
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
         with:

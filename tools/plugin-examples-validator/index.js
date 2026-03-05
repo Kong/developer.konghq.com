@@ -9,7 +9,7 @@ import addFormats from "ajv-formats";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 const SCHEMAS_DIR = path.join(ROOT, "app/_schemas/gateway/plugins");
-const EXAMPLES_GLOB = "app/_kong_plugins/*/examples/*.yaml";
+const EXAMPLES_GLOB = "app/_kong_plugins/*/examples/*.{yaml,yml}";
 
 function findLatestSchemaVersion() {
   const dirs = fs
@@ -134,8 +134,16 @@ async function validate() {
     try {
       parsed = YAML.parse(content, { uniqueKeys: false });
     } catch (e) {
-      console.log(`SKIP: YAML parse error in ${filePath}: ${e.message}`);
-      skipped++;
+      console.log(`ERROR: YAML parse error in ${filePath}: ${e.message}`);
+      errors.push({
+        file: filePath,
+        errors: [
+          {
+            instancePath: "/",
+            message: `YAML parse error: ${e.message}`,
+          },
+        ],
+      });
       continue;
     }
 
