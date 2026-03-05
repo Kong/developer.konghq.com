@@ -1,7 +1,7 @@
 ---
 title: Forward to Virtual Cluster
 name: Forward to Virtual Cluster
-content_type: reference
+content_type: plugin
 description: Forward messages from a Kafka client to a virtual cluster
 products:
     - event-gateway

@@ -214,8 +214,8 @@ rows:
                 Send invoices, calculate tax, and collect payments. Great for self-serve and PLG sales motions.
               icon: /assets/icons/third-party/stripe.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/stripe"
+                text: Configure the Stripe app
+                url: "/metering-and-billing/stripe-integration/"
 
       - blocks:
           - type: card

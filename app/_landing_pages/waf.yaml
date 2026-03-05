@@ -1,0 +1,155 @@
+metadata:
+  title: "{{site.base_gateway}} Web Application Firewall"
+  short_title: "WAF"
+  content_type: landing_page
+  description: |
+    Learn how {{site.base_gateway}} provides web application firewall style protections through plugins such as Injection Protection, Request Validator, JSON Threat Protection, XML Threat Protection, Bot Detection, IP Restriction, and rate limiting.
+  tags:
+    - security
+    - rate-limiting
+  breadcrumbs:
+    - /gateway/
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.base_gateway}} WAF capabilities"
+      sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}}"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "WAF plugins"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
+
+
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: SQL injection protection
+              description: |
+                Detect and block SQL injection and other code injection patterns before they reach your upstream services.
+              icon: /assets/icons/lock.svg
+              ctas:
+                - text: Configure SQL injection protection
+                  url: /plugins/injection-protection/examples/sql/
+
+
+      - blocks:
+          - type: card
+            config:
+              title: Brute force protection
+              description: |
+                Protect against credential stuffing, password spraying, and brute force attacks targeting Basic Authentication endpoints.
+              icon: /assets/icons/key.svg
+              ctas:
+                - text: Configure Basic Auth brute force protection
+                  url: /plugins/basic-auth/examples/brute-force-protection-memory/
+
+
+      - blocks:
+          - type: card
+            config:
+              title: XSS and JavaScript injection protection
+              description: |
+                Detect and block cross-site scripting (XSS) and JavaScript injection patterns in incoming requests.
+
+              icon: /assets/icons/code.svg
+              ctas:
+                - text: Configure Javascript injection protection
+                  url: /plugins/injection-protection/examples/javascript/
+
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Form field manipulation protection 
+              description: |
+                Validate body schemas for `application/json` using {{site.base_gateway}} schema or JSON Schema Draft validators.
+
+              icon: /assets/icons/monitor.svg
+              ctas:
+                - text: Configure Bot Detection
+                  url: /plugins/request-validator/examples/validate-path-parameter/
+
+      - blocks:
+          - type: card
+            config:
+              title: IP allow and deny lists
+              description: |
+                Control access with allow and deny lists of IPs and CIDR blocks, configurable at multiple scopes. 
+              icon: /assets/icons/firewall.svg
+              ctas:
+                - text: Configure IP Restriction
+                  url: /plugins/ip-restriction/
+
+      - blocks:
+          - type: card
+            config:
+              title: XML and JSON threat protection
+              description: |
+                Configure an XML or JSON threat protection policy to catch requests that exceed configured limits.
+              icon: /assets/icons/api.svg
+              ctas:
+                - text: Configure XML Threat Protection
+                  url: /plugins/xml-threat-protection/
+                - text: Configure JSON Threat Protection
+                  url: /plugins/json-threat-protection/  
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Rate limiting traffic
+              description: |
+                Apply rate limiting rules on incoming traffic.
+              icon: /assets/icons/gateway.svg
+              ctas:
+                - text: Configure request throttling
+                  url: /plugins/rate-limiting-advanced/examples/throttle-requests/
+      - blocks: 
+        - type: card
+          config:
+            title: Request size limits
+            description: |
+              Block incoming requests where the body is greater than a specific size.
+            icon: /assets/icons/firewall.svg
+            ctas:
+              - text: Configure Request Size Limiting
+                url: /plugins/request-size-limiting/examples/limit-in-bytes/
+      - blocks:
+          - type: card
+            config:
+              title: Response Transformer 
+              description: |
+                Transform the response sent by the upstream server on the fly before returning it to the client.
+              icon: /assets/icons/plugins/transformation.svg
+              ctas:
+                - text: Configure Response Transformer
+                  url: /plugins/response-transformer/examples/add-header/
+  - header:
+      type: h2
+      text: "Other security-related resources"
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - security
+              products:
+                - gateway
+              quantity: 5
+              allow_empty: true

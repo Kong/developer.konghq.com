@@ -1,7 +1,7 @@
 ---
 title: Modify Headers
 name: Modify Headers
-content_type: reference
+content_type: plugin
 description: Set or remove record headers
 products:
     - event-gateway

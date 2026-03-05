@@ -10,4 +10,4 @@ contexts:
         - localhost:9094
 EOF
 ```
-{: data-test-prereqs="block" }
+{: data-test-prereq="block" }

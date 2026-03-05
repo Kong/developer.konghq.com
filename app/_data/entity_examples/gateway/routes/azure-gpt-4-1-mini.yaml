@@ -1,0 +1,7 @@
+name: azure-gpt-4-1-mini
+paths:
+  - "~/openai/deployments/gpt-4.1-mini/chat/completions$"
+methods:
+  - POST
+service:
+  name: azure-openai-service

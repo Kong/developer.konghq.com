@@ -71,13 +71,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: MCP catalog (tech preview)
+              title: MCP Registry (tech preview)
               description: |
                 Discover and connect MCP servers to {{site.konnect_short_name}} {{site.konnect_catalog}}.
               icon: /assets/icons/mcp.svg
               cta:
                 text: Enable in {{site.konnect_short_name}} Labs.
-                url: https://cloud.konghq.com/global/organization/labs
+                url: /catalog/mcp-registry/
   - header:
       type: h2
       text: "Explore more features"

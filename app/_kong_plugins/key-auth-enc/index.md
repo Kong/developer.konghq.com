@@ -42,11 +42,10 @@ search_aliases:
 
 
 notes: |
-  This plugin is not available in Konnect:
-  - Konnect automatically encrypts key authentication credentials at rest, so
+  This plugin is not available in Konnect.
+  Konnect automatically encrypts key authentication credentials at rest, so
   encryption via this plugin is not necessary.
-  Use the regular [Key Auth](/plugins/key-auth/) plugin instead.
-  - This setting determines the length of time a credential remains valid.
+  Use the regular [Key Auth](/plugins/key-auth/) plugin for API key authentication instead.
 
 min_version:
   gateway: '1.0'
@@ -57,9 +56,11 @@ The Key Authentication Encrypted plugin adds encrypted API key authentication to
 
 This plugin extends the functionality of the [Key Authentication](/plugins/key-auth/) plugin by allowing API keys to be stored in encrypted form within the {{site.base_gateway}} datastore.
 
-
 {:.warning}
 > **Important**: Before configuring this plugin, you must [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). 
+
+{:.info}
+> {{ page.notes }}
 
 ## Request behavior matrix
 

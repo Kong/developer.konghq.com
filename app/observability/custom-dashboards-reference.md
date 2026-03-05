@@ -22,6 +22,10 @@ related_resources:
     url: /observability/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
+faqs:
+  - q: Why can't my users create dashboards even though they have the Dashboard Creator, Admin, or Editor role?
+    a: | 
+      {% include konnect/faqs/roles.md %}
 ---
 
 Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs. This functionality is available in [{{site.konnect_short_name}} Analytics](https://cloud.konghq.com/us/analytics/summary).

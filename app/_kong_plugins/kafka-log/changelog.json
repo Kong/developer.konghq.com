@@ -23,6 +23,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where certificates could not be loaded from non-default workspaces.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",

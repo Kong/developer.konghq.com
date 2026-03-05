@@ -9,7 +9,7 @@ This how-to requires some Kubernetes services to be available in your cluster. T
 kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml -n kong
 {%- endfor %}
 ```
-{: data-test-prereqs="block" }
+{: data-test-prereq="block" }
 {% endif %}
 {% if include.data.routes %}
 
@@ -26,6 +26,14 @@ skip_host: true
 
 {% endif %}
 
+{% if include.data.services %}
+Wait until the pods for the services are ready:
+
+```bash
+kubectl wait --for=condition=Ready pod --all -n kong --timeout=300s
+```
+{: data-test-prereq="block" }
+{% endif %}
 {% endcapture %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/widgets.svg' %}

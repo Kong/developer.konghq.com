@@ -207,7 +207,7 @@ curl -X POST \
    type: plugin
    data:
      name: myheader
-     plugin: custom-plugin-myeader
+     plugin: custom-plugin-myheader
      config:
        header_value: my-first-plugin
 

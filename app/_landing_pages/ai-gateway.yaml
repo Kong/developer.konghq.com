@@ -455,7 +455,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+                      {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
   - columns:
       - blocks:
         - type: plugin

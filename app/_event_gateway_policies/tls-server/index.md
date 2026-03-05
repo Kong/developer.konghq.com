@@ -1,7 +1,7 @@
 ---
 title: TLS Server
 name: TLS Server
-content_type: reference
+content_type: plugin
 description: Configure TLS settings for a server
 products:
     - event-gateway

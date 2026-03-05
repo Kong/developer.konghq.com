@@ -1,0 +1,7 @@
+name: azure-gpt-4o
+paths:
+  - "~/openai/deployments/gpt-4o/chat/completions$"
+methods:
+  - POST
+service:
+  name: azure-openai-service

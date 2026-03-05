@@ -171,12 +171,14 @@ FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
 The following language-specific images are currently available:
 
 * `-en` (English)
+* `-es` (Spanish)
 * `-fr` (French)
 * `-de` (German)
 * `-it` (Italian)
 * `-ja` (Japanese)
-* `-pt` (Portuguese)
 * `-ko` (Korean)
+* `-pt` (Portuguese)
+* `-tr` (Turkish)
 
 {:.info}
 > The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.

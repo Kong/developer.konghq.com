@@ -108,14 +108,16 @@
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
    EOF
    ```
+   {: data-test-prereq="block" }
 {% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
 {% endif %}
 
 1. Install {{ site.kic_product_name }} using Helm:
 
    ```bash
-   helm install kong kong/ingress -n kong --create-namespace{{ additional_flags }}
+   helm install kong kong/ingress -n kong --create-namespace{{ additional_flags }} --wait 
    ```
+   {: data-test-prereq="block" }
 
 {% unless prereqs.kubernetes.skip_proxy_ip %}
 1. Set `$PROXY_IP` as an environment variable for future commands:

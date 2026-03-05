@@ -45,11 +45,22 @@ notes: |
 
 min_version:
   gateway: '1.0'
+
+faqs:
+  - q: Can the mTLS plugin read a certificate from a header?
+    a: |
+      No, the mTLS authentication plugin can't read certificates from headers.
+      The mTLS plugin is only designed for traditional TLS termination. For reading client certificates from headers, use the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
+      
 ---
 
 The MTLS Auth plugin lets you add mutual TLS authentication based on a client-supplied or a server-supplied certificate, 
 and on the configured trusted certificate authority (CA) list.
 
+If you need to read client certificates from headers, see the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
+
+{:.warning}
+> **Important:** To use this plugin, you must add [certificate authority (CA) Certificates](/gateway/entities/ca-certificate/). Set them up before configuring the plugin.
 
 ## How does the mTLS plugin work?
 

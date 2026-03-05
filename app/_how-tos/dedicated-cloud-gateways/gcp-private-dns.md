@@ -9,6 +9,9 @@ products:
   - gateway
 works_on:
   - konnect
+tags:
+  - google-cloud
+  - network
 automated_tests: false
 tldr:
   q: How do I set up a Google Cloud private DNS with my Dedicated Cloud Gateway?

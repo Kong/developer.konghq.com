@@ -346,6 +346,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.7": [
+    {
+      "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where using ai-proxy-advanced in conjunction with a logging plugin (such as file-log) resulting in missing information on the last entry of the balancer \"tries\" section.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Deprecated `preserve` mode in `config.route_type`. Use `config.llm_format` instead. The `preserve` mode setting will be removed in a future release.",
