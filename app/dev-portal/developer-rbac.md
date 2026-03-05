@@ -90,6 +90,11 @@ To assign roles to developers, you need to create a team and add them to it:
   
    * **API Consumer**: This role allows developers on the team to make calls to the selected APIs.
    * **API Viewer**: This role gives developers on the team read-only access to the selected APIs' documentation.
+1. To enable [app sharing](/dev-portal/self-service/#share-applications-with-a-team), do the following:
+   1. Click the **Settings** tab.
+   1. Enable **Allow team to own applications**.
+      
+      Developers will now see an option to select that any new applications are a team owned application and assign it to their associated teams. They can also transfer ownership of existing apps to their teams. For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
 {% endnavtab %}
 {% navtab "API" %}
 1. Assign a developer to a team by sending a `POST` request to the [`/portals/{portalId}/teams/{teamId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/add-developer-to-portal-team):
