@@ -68,6 +68,12 @@
         </div>
       {% endif %}
 
+      {% if page.products contains 'mesh' %}
+        {% if page.works_on contains 'on-prem' %}
+        <div class="invisible" data-deployment-topology="on-prem" data-test-setup="mesh"></div>
+        {% endif %}
+      {% endif %}
+
       {% for product in prereqs.products %}
         {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
         {% if page.works_on  and product != 'operator' %}
