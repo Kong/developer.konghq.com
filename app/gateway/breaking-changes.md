@@ -41,6 +41,18 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 Breaking changes in the 3.14.0.0 release.
 
+#### SHA1 algorithm removal
+
+The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
+
+For the [Event Hooks entity](/gateway/entities/event-hook/), this is a breaking change. 
+Event hook calls are now signed with HMAC-SHA256 instead of HMAC-SHA1.
+
+For the following plugins, the SHA1 algorithm is still supported in existing configurations, but we strongly recommend updating your configurations whenever possible:
+* [Basic Auth plugin](/plugins/basic-auth/): Uses SHA256 by default in new configurations.
+* [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
+* [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
+
 #### OpenID Connect: consumer claims data types
 
 The `config.consumer_claim` field in the [OpenID Connect plugin](/plugins/openid-connect/) has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims). 
