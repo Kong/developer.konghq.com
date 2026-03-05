@@ -29,7 +29,7 @@ Follow Kong Air as they build their foundation, securing their first services an
 2.  **[Architecture Overview](/mesh/scenarios/architecture-overview/)**: Control Plane vs. Data Plane and the Envoy proxy.
 3.  **[Resource Scoping: Where to Apply Policies](/mesh/scenarios/resource-scoping/)**: Global CP vs. Zone CP ownership and the system namespace rule: read this before applying your first resource.
 4.  **[Getting Started: Your First Policy](/mesh/scenarios/getting-started-policy/)**: A hands-on guide to installation and your first mTLS block.
-5.  **[How to Use {{site.mesh_product_name}} Policies](/mesh/scenarios/using-policies/)**: Deep dive into the `targetRef` system (To, From, Default).
+5.  **[How to Use {{site.mesh_product_name}} Policies](/mesh/scenarios/using-policies/)**: Deep dive into the `targetRef` system (To, Rules, Default).
 6.  **[Traffic Splitting with MeshServices](/mesh/scenarios/traffic-splitting-meshservices/)**: Implementing rollouts using the modern resource model.
 7.  **[Understanding MeshSubsets](/mesh/scenarios/subsets-and-targeting/)**: Mastering global vs. service-specific targeting.
 
