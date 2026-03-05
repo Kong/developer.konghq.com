@@ -39,6 +39,7 @@ releases:
     eol: "2026-10-19"
     branch: release-2.7
     lts: true
+    extensionMonths: 6
   - version: 2.8.8
     release: "2.8"
     releaseDate: "2024-06-24"
@@ -68,7 +69,7 @@ releases:
     release: "2.13"
     latest: true
     releaseDate: "2025-12-22"
-    eol: "2028-06-22"
+    eol: "2027-12-22"
     branch: release-2.13
     lts: true
   - version: preview
