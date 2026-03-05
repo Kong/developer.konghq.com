@@ -1,29 +1,280 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
+      "type": "object",
       "properties": {
-        "access_logs_endpoint": {
-          "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+        "logs_endpoint": {
           "type": "string",
+          "description": "An HTTP URL endpoint where internal logs are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "x-referenceable": true
         },
-        "batch_flush_delay": {
-          "description": "The delay, in seconds, between two consecutive batches.",
-          "type": "integer"
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enable_latency_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
+              "default": false
+            },
+            "enable_upstream_health_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
+              "default": false
+            },
+            "endpoint": {
+              "type": "string",
+              "description": "An HTTP URL endpoint where metrics are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "x-referenceable": true
+            },
+            "push_interval": {
+              "type": "number",
+              "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
+              "default": 60
+            },
+            "enable_consumer_attribute": {
+              "type": "boolean",
+              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
+              "default": false
+            },
+            "enable_request_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
+              "default": false
+            },
+            "enable_bandwidth_metrics": {
+              "type": "boolean",
+              "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
+              "default": false
+            }
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend."
+        },
+        "resource_attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-lua-required": true
+          }
         },
         "batch_span_count": {
-          "description": "The number of spans to be sent in a single batch.",
-          "type": "integer"
+          "type": "integer",
+          "description": "The number of spans to be sent in a single batch."
         },
-        "connect_timeout": {
-          "default": 1000,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+        "http_response_header_for_traceid": {
+          "type": "string"
+        },
+        "propagation": {
+          "type": "object",
+          "properties": {
+            "default_format": {
+              "type": "string",
+              "enum": [
+                "aws",
+                "b3",
+                "b3-single",
+                "datadog",
+                "gcp",
+                "instana",
+                "jaeger",
+                "ot",
+                "w3c"
+              ],
+              "description": "The default header format to use when extractors did not match any format in the incoming headers and `inject` is configured with the value: `preserve`. This can happen when no tracing header was found in the request, or the incoming tracing header formats were not included in `extract`.",
+              "default": "w3c"
+            },
+            "extract": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "aws",
+                  "b3",
+                  "datadog",
+                  "gcp",
+                  "instana",
+                  "jaeger",
+                  "ot",
+                  "w3c"
+                ]
+              },
+              "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID."
+            },
+            "clear": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Header names to clear after context extraction. This allows to extract the context from a certain header and then remove it from the request, useful when extraction and injection are performed on different header formats and the original header should not be sent to the upstream. If left empty, no headers are cleared."
+            },
+            "inject": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "aws",
+                  "b3",
+                  "b3-single",
+                  "datadog",
+                  "gcp",
+                  "instana",
+                  "jaeger",
+                  "ot",
+                  "preserve",
+                  "w3c"
+                ]
+              },
+              "description": "Header formats used to inject tracing context. The value `preserve` will use the same header format as the incoming request. If multiple values are specified, all of them will be used during injection. If left empty, Kong will not inject any tracing context information in outgoing requests."
+            }
+          },
+          "default": {
+            "default_format": "w3c"
+          }
+        },
+        "sampling_strategy": {
+          "type": "string",
+          "enum": [
+            "parent_drop_probability_fallback",
+            "parent_probability_fallback"
+          ],
+          "description": "The sampling strategy to use for OTLP `traces`. Set `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise. Set `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.",
+          "default": "parent_drop_probability_fallback"
+        },
+        "queue": {
+          "type": "object",
+          "properties": {
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            },
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 200
+            },
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            },
+            "max_entries": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be waiting on the queue.",
+              "default": 10000
+            },
+            "max_bytes": {
+              "type": "integer",
+              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            }
+          },
+          "default": {
+            "max_batch_size": 200
+          }
+        },
+        "batch_flush_delay": {
+          "type": "integer",
+          "description": "The delay, in seconds, between two consecutive batches."
+        },
+        "send_timeout": {
+          "type": "integer",
           "maximum": 2147483646,
           "minimum": 0,
-          "type": "integer"
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 5000
+        },
+        "sampling_rate": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "description": "Tracing sampling rate for configuring the probability-based sampler. When set, this value supersedes the global `tracing_sampling_rate` setting from kong.conf."
+        },
+        "traces_endpoint": {
+          "type": "string",
+          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "x-referenceable": true
+        },
+        "access_logs_endpoint": {
+          "type": "string",
+          "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "x-referenceable": true
+        },
+        "connect_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 1000
+        },
+        "read_timeout": {
+          "type": "integer",
+          "maximum": 2147483646,
+          "minimum": 0,
+          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+          "default": 5000
         },
         "header_type": {
-          "default": "preserve",
+          "type": "string",
           "enum": [
             "aws",
             "b3",
@@ -37,290 +288,39 @@
             "preserve",
             "w3c"
           ],
-          "type": "string"
-        },
-        "headers": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend.",
-          "type": "object"
-        },
-        "http_response_header_for_traceid": {
-          "type": "string"
-        },
-        "logs_endpoint": {
-          "description": "An HTTP URL endpoint where internal logs are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
-          "type": "string",
-          "x-referenceable": true
-        },
-        "metrics": {
-          "properties": {
-            "enable_bandwidth_metrics": {
-              "default": false,
-              "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
-              "type": "boolean"
-            },
-            "enable_consumer_attribute": {
-              "default": false,
-              "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
-              "type": "boolean"
-            },
-            "enable_latency_metrics": {
-              "default": false,
-              "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
-              "type": "boolean"
-            },
-            "enable_request_metrics": {
-              "default": false,
-              "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
-              "type": "boolean"
-            },
-            "enable_upstream_health_metrics": {
-              "default": false,
-              "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
-              "type": "boolean"
-            },
-            "endpoint": {
-              "description": "An HTTP URL endpoint where metrics are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
-              "type": "string",
-              "x-referenceable": true
-            },
-            "push_interval": {
-              "default": 60,
-              "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
-              "type": "number"
-            }
-          },
-          "type": "object"
-        },
-        "propagation": {
-          "default": {
-            "default_format": "w3c"
-          },
-          "properties": {
-            "clear": {
-              "description": "Header names to clear after context extraction. This allows to extract the context from a certain header and then remove it from the request, useful when extraction and injection are performed on different header formats and the original header should not be sent to the upstream. If left empty, no headers are cleared.",
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "default_format": {
-              "default": "w3c",
-              "description": "The default header format to use when extractors did not match any format in the incoming headers and `inject` is configured with the value: `preserve`. This can happen when no tracing header was found in the request, or the incoming tracing header formats were not included in `extract`.",
-              "enum": [
-                "aws",
-                "b3",
-                "b3-single",
-                "datadog",
-                "gcp",
-                "instana",
-                "jaeger",
-                "ot",
-                "w3c"
-              ],
-              "type": "string"
-            },
-            "extract": {
-              "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID.",
-              "items": {
-                "enum": [
-                  "aws",
-                  "b3",
-                  "datadog",
-                  "gcp",
-                  "instana",
-                  "jaeger",
-                  "ot",
-                  "w3c"
-                ],
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "inject": {
-              "description": "Header formats used to inject tracing context. The value `preserve` will use the same header format as the incoming request. If multiple values are specified, all of them will be used during injection. If left empty, Kong will not inject any tracing context information in outgoing requests.",
-              "items": {
-                "enum": [
-                  "aws",
-                  "b3",
-                  "b3-single",
-                  "datadog",
-                  "gcp",
-                  "instana",
-                  "jaeger",
-                  "ot",
-                  "preserve",
-                  "w3c"
-                ],
-                "type": "string"
-              },
-              "type": "array"
-            }
-          },
-          "type": "object"
-        },
-        "queue": {
-          "default": {
-            "max_batch_size": 200
-          },
-          "properties": {
-            "concurrency_limit": {
-              "default": 1,
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "enum": [
-                -1,
-                1
-              ],
-              "type": "integer"
-            },
-            "initial_retry_delay": {
-              "default": 0.01,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "type": "number"
-            },
-            "max_batch_size": {
-              "default": 200,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "maximum": 1000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "max_bytes": {
-              "description": "Maximum number of bytes that can be waiting on a queue, requires string content.",
-              "type": "integer"
-            },
-            "max_coalescing_delay": {
-              "default": 1,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "maximum": 3600,
-              "minimum": 0,
-              "type": "number"
-            },
-            "max_entries": {
-              "default": 10000,
-              "description": "Maximum number of entries that can be waiting on the queue.",
-              "maximum": 1000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "max_retry_delay": {
-              "default": 60,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "type": "number"
-            },
-            "max_retry_time": {
-              "default": 60,
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "type": "number"
-            }
-          },
-          "type": "object"
-        },
-        "read_timeout": {
-          "default": 5000,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-          "maximum": 2147483646,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "resource_attributes": {
-          "additionalProperties": {
-            "type": "string",
-            "x-lua-required": true
-          },
-          "type": "object"
-        },
-        "sampling_rate": {
-          "description": "Tracing sampling rate for configuring the probability-based sampler. When set, this value supersedes the global `tracing_sampling_rate` setting from kong.conf.",
-          "maximum": 1,
-          "minimum": 0,
-          "type": "number"
-        },
-        "sampling_strategy": {
-          "default": "parent_drop_probability_fallback",
-          "description": "The sampling strategy to use for OTLP `traces`. Set `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise. Set `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.",
-          "enum": [
-            "parent_drop_probability_fallback",
-            "parent_probability_fallback"
-          ],
-          "type": "string"
-        },
-        "send_timeout": {
-          "default": 5000,
-          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-          "maximum": 2147483646,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "traces_endpoint": {
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
-          "type": "string",
-          "x-referenceable": true
+          "default": "preserve"
         }
-      },
-      "type": "object"
-    },
-    "consumer": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "protocols": {
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ],
-      "description": "A set of strings representing protocols.",
-      "items": {
-        "description": "A string representing a protocol, such as HTTP or HTTPS.",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "type": "string"
-      },
-      "type": "array"
+      }
     },
     "route": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
     },
     "service": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+    },
+    "consumer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
     }
   }
 }

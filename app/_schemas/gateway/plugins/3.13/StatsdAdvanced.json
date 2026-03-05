@@ -1,47 +1,62 @@
 {
   "properties": {
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp",
+          "ws",
+          "wss"
+        ],
+        "description": "A string representing a protocol, such as HTTP or HTTPS."
+      },
+      "description": "A set of strings representing protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
     "config": {
+      "type": "object",
       "properties": {
-        "allow_status_codes": {
-          "description": "List of status code ranges that are allowed to be logged in metrics.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "hostname_in_prefix": {
+          "type": "boolean",
+          "description": "Include the `hostname` in the `prefix` for each metric name.",
+          "default": false
         },
-        "consumer_identifier_default": {
-          "default": "custom_id",
-          "description": "The default consumer identifier for metrics. This will take effect when a metric's consumer identifier is omitted. Allowed values are `custom_id`, `consumer_id`, `username`.",
+        "service_identifier_default": {
+          "type": "string",
           "enum": [
-            "consumer_id",
-            "custom_id",
-            "username"
+            "service_host",
+            "service_id",
+            "service_name",
+            "service_name_or_host"
           ],
-          "type": "string"
+          "description": "The default service identifier for metrics. This will take effect when a metric's service identifier is omitted. Allowed values are `service_name_or_host`, `service_id`, `service_name`, `service_host`.",
+          "default": "service_name_or_host"
         },
         "host": {
-          "default": "localhost",
+          "type": "string",
           "description": "A string representing a host name, such as example.com.",
-          "type": "string"
-        },
-        "hostname_in_prefix": {
-          "default": false,
-          "description": "Include the `hostname` in the `prefix` for each metric name.",
-          "type": "boolean"
+          "default": "localhost"
         },
         "metrics": {
-          "description": "List of Metrics to be logged.",
+          "type": "array",
           "items": {
+            "type": "object",
             "properties": {
-              "consumer_identifier": {
-                "enum": [
-                  "consumer_id",
-                  "custom_id",
-                  "username"
-                ],
-                "type": "string"
-              },
               "name": {
+                "type": "string",
                 "enum": [
                   "cache_datastore_hits_total",
                   "cache_datastore_misses_total",
@@ -58,22 +73,10 @@
                   "status_count_per_workspace",
                   "unique_users",
                   "upstream_latency"
-                ],
-                "type": "string"
-              },
-              "sample_rate": {
-                "type": "number"
-              },
-              "service_identifier": {
-                "enum": [
-                  "service_host",
-                  "service_id",
-                  "service_name",
-                  "service_name_or_host"
-                ],
-                "type": "string"
+                ]
               },
               "stat_type": {
+                "type": "string",
                 "enum": [
                   "counter",
                   "gauge",
@@ -81,185 +84,182 @@
                   "meter",
                   "set",
                   "timer"
-                ],
-                "type": "string"
+                ]
+              },
+              "sample_rate": {
+                "type": "number"
+              },
+              "consumer_identifier": {
+                "type": "string",
+                "enum": [
+                  "consumer_id",
+                  "custom_id",
+                  "username"
+                ]
+              },
+              "service_identifier": {
+                "type": "string",
+                "enum": [
+                  "service_host",
+                  "service_id",
+                  "service_name",
+                  "service_name_or_host"
+                ]
               },
               "workspace_identifier": {
+                "type": "string",
                 "enum": [
                   "workspace_id",
                   "workspace_name"
-                ],
-                "type": "string"
+                ]
               }
             },
             "required": [
               "name",
               "stat_type"
-            ],
-            "type": "object"
+            ]
           },
-          "type": "array"
-        },
-        "port": {
-          "default": 8125,
-          "description": "An integer representing a port number between 0 and 65535, inclusive.",
-          "maximum": 65535,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "prefix": {
-          "default": "kong",
-          "description": "String to prefix to each metric's name.",
-          "type": "string"
-        },
-        "queue": {
-          "properties": {
-            "concurrency_limit": {
-              "default": 1,
-              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-              "enum": [
-                -1,
-                1
-              ],
-              "type": "integer"
-            },
-            "initial_retry_delay": {
-              "default": 0.01,
-              "description": "Time in seconds before the initial retry is made for a failing batch.",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "type": "number"
-            },
-            "max_batch_size": {
-              "default": 1,
-              "description": "Maximum number of entries that can be processed at a time.",
-              "maximum": 1000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "max_bytes": {
-              "description": "Maximum number of bytes that can be waiting on a queue, requires string content.",
-              "type": "integer"
-            },
-            "max_coalescing_delay": {
-              "default": 1,
-              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-              "maximum": 3600,
-              "minimum": 0,
-              "type": "number"
-            },
-            "max_entries": {
-              "default": 10000,
-              "description": "Maximum number of entries that can be waiting on the queue.",
-              "maximum": 1000000,
-              "minimum": 1,
-              "type": "integer"
-            },
-            "max_retry_delay": {
-              "default": 60,
-              "description": "Maximum time in seconds between retries, caps exponential backoff.",
-              "maximum": 1000000,
-              "minimum": 0.001,
-              "type": "number"
-            },
-            "max_retry_time": {
-              "default": 60,
-              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-              "type": "number"
-            }
-          },
-          "type": "object"
-        },
-        "service_identifier_default": {
-          "default": "service_name_or_host",
-          "description": "The default service identifier for metrics. This will take effect when a metric's service identifier is omitted. Allowed values are `service_name_or_host`, `service_id`, `service_name`, `service_host`.",
-          "enum": [
-            "service_host",
-            "service_id",
-            "service_name",
-            "service_name_or_host"
-          ],
-          "type": "string"
+          "description": "List of Metrics to be logged."
         },
         "udp_packet_size": {
-          "default": 0,
-          "description": "Combine UDP packet up to the size configured. If zero (0), don't combine the UDP packet. Must be a number between 0 and 65507 (inclusive).",
+          "type": "number",
           "maximum": 65507,
           "minimum": 0,
-          "type": "number"
+          "description": "Combine UDP packet up to the size configured. If zero (0), don't combine the UDP packet. Must be a number between 0 and 65507 (inclusive).",
+          "default": 0
         },
-        "use_tcp": {
-          "default": false,
-          "description": "Use TCP instead of UDP.",
-          "type": "boolean"
+        "consumer_identifier_default": {
+          "type": "string",
+          "enum": [
+            "consumer_id",
+            "custom_id",
+            "username"
+          ],
+          "description": "The default consumer identifier for metrics. This will take effect when a metric's consumer identifier is omitted. Allowed values are `custom_id`, `consumer_id`, `username`.",
+          "default": "custom_id"
         },
         "workspace_identifier_default": {
-          "default": "workspace_id",
-          "description": "The default workspace identifier for metrics. This will take effect when a metric's workspace identifier is omitted. Allowed values are `workspace_id`, `workspace_name`.   ",
+          "type": "string",
           "enum": [
             "workspace_id",
             "workspace_name"
           ],
-          "type": "string"
+          "description": "The default workspace identifier for metrics. This will take effect when a metric's workspace identifier is omitted. Allowed values are `workspace_id`, `workspace_name`.   ",
+          "default": "workspace_id"
+        },
+        "queue": {
+          "type": "object",
+          "properties": {
+            "max_batch_size": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be processed at a time.",
+              "default": 1
+            },
+            "max_coalescing_delay": {
+              "type": "number",
+              "maximum": 3600,
+              "minimum": 0,
+              "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+              "default": 1
+            },
+            "max_entries": {
+              "type": "integer",
+              "maximum": 1000000,
+              "minimum": 1,
+              "description": "Maximum number of entries that can be waiting on the queue.",
+              "default": 10000
+            },
+            "max_bytes": {
+              "type": "integer",
+              "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+            },
+            "max_retry_time": {
+              "type": "number",
+              "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
+              "default": 60
+            },
+            "initial_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Time in seconds before the initial retry is made for a failing batch.",
+              "default": 0.01
+            },
+            "max_retry_delay": {
+              "type": "number",
+              "maximum": 1000000,
+              "minimum": 0.001,
+              "description": "Maximum time in seconds between retries, caps exponential backoff.",
+              "default": 60
+            },
+            "concurrency_limit": {
+              "type": "integer",
+              "enum": [
+                -1,
+                1
+              ],
+              "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+              "default": 1
+            }
+          }
+        },
+        "port": {
+          "type": "integer",
+          "maximum": 65535,
+          "minimum": 0,
+          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+          "default": 8125
+        },
+        "prefix": {
+          "type": "string",
+          "description": "String to prefix to each metric's name.",
+          "default": "kong"
+        },
+        "allow_status_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of status code ranges that are allowed to be logged in metrics."
+        },
+        "use_tcp": {
+          "type": "boolean",
+          "description": "Use TCP instead of UDP.",
+          "default": false
         }
-      },
-      "type": "object"
+      }
     },
     "consumer": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
-    },
-    "protocols": {
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ],
-      "description": "A set of strings representing protocols.",
-      "items": {
-        "description": "A string representing a protocol, such as HTTP or HTTPS.",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "tcp",
-          "tls",
-          "tls_passthrough",
-          "udp",
-          "ws",
-          "wss"
-        ],
-        "type": "string"
-      },
-      "type": "array"
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
     },
     "route": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
     },
     "service": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
     }
   }
 }

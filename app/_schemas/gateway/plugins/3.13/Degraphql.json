@@ -1,53 +1,53 @@
 {
   "properties": {
-    "config": {
-      "properties": {
-        "graphql_server_path": {
-          "default": "/graphql",
-          "description": "The GraphQL endpoint serve path",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "protocols": {
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ],
-      "description": "A set of strings representing HTTP protocols.",
+      "type": "array",
       "items": {
+        "type": "string",
         "enum": [
           "grpc",
           "grpcs",
           "http",
           "https"
-        ],
-        "type": "string"
+        ]
       },
-      "type": "array"
+      "description": "A set of strings representing HTTP protocols.",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ]
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "graphql_server_path": {
+          "type": "string",
+          "description": "The GraphQL endpoint serve path",
+          "default": "/graphql"
+        }
+      }
     },
     "route": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
     },
     "service": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "type": "object",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "type": "object"
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
     }
   }
 }
