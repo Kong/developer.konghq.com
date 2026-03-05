@@ -182,7 +182,7 @@ rows:
             icon: /assets/icons/git.svg
             cta:
               text: Learn more
-              url: /insomnia/storage/#git-sync
+              url: /insomnia/git-sync/
 
   - header:
       type: h2
