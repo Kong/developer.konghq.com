@@ -3,7 +3,7 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
 
 {:.info}
-> You can’t use the Redis partial configuration in custom plugins. Instead, use [env referenceable fields](gateway/entities/vault/#store-secrets-as-environment-variables) directly.
+> You can’t use the Redis partial configuration in custom plugins. Instead, use [env referenceable fields](/gateway/entities/vault/#store-secrets-as-environment-variables) directly.
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Dedicated Cloud Gateway.
