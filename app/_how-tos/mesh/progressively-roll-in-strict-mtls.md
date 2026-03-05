@@ -62,7 +62,7 @@ spec:
 
 ## Port-forward the two demo apps
 
-In order to interact with the two `demo-app` Pods we created in the prerequisites, we need to enable port-forwarding.
+To interact with the two `demo-app` Pods we created in the prerequisites, we need to enable port-forwarding.
 
 1. Run the following command to port-forward the [first Service](#install-kong-mesh-with-demo-configuration):
    ```sh
@@ -196,6 +196,7 @@ spec:
 1. In a new terminal window, run the following command to get the encrypted request metrics for the data plane proxy in the `kong-mesh-demo-migration` namespace:
 
    ```sh
+   export KV_DPP_NAME_2=$(curl -s http://localhost:5681/meshes/default/dataplanes/_overview\?name\=kv | jq -c '.items[] | select( .labels["k8s.kuma.io/namespace"]=="kong-mesh-demo-migration")' | jq -r '.name')
    for i in {1..2}; do
     sleep 30
     curl -s http://localhost:5681/meshes/default/dataplanes/$KV_DPP_NAME_2/stats | grep http.localhost_5050.rbac.allowed
