@@ -33,7 +33,7 @@ Follow Kong Air as they build their foundation, securing their first services an
 6.  **[Traffic Splitting with MeshServices](/mesh/scenarios/traffic-splitting-meshservices/)**: Implementing rollouts using the modern resource model.
 7.  **[Understanding MeshSubsets](/mesh/scenarios/subsets-and-targeting/)**: Mastering global vs. service-specific targeting.
 
-## Phase 2: Scaling & Security
+## Phase 2: Observability & Security
 See how Kong Air protects passenger data and gains visibility into every flight-critical request.
 
 8.  **[Observability in Practice](/mesh/scenarios/observability-in-practice/)**: Metrics, Traces, and Logs.
