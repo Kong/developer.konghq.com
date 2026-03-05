@@ -3,7 +3,9 @@
 {% for i in (1..level) %}#{% endfor %} {% if include.item_title %}{{include.item_title}}: {% endif %}{% if row.url %}[{{row.title | liquify}}]({{row.url}}){% else %}{{row.title | liquify}}{% endif %}
 {% if row.subtitle %}subtitle: {{row.subtitle | liquify}}{% endif -%}
 {% for column in include.columns %}{% assign value = row[column.key] -%}
-{% if include.compatibility_table %}{{include.item_title}} {{column.title}}{% else %}{{column.title}}{% endif %}: {% if value == true %}Supported{% elsif value == false %}Not Supported{% else %}|
-{{ value | liquify | indent: 2}}{% endif %}
+{% assign rendered = value | liquify | strip -%}
+{% if include.compatibility_table %}{{include.item_title}} {{column.title}}{% else %}{{column.title}}{% endif %}: {% if value == true %}Supported{% elsif value == false %}Not Supported{% elsif rendered contains "
+" %}|
+{{rendered | indent: 2}}{% else %}{{rendered}}{% endif %}
 {% endfor -%}
 {% endfor %}
