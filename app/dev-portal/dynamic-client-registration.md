@@ -237,13 +237,13 @@ Any request that does not return a `2xx` status code is considered a failure and
 
 ### Managing credentials
 
-As a developer, you can manage your application credentials through your applications page without needing a Portal admin's assistance. 
-You can maintain multiple active credentials, allowing you to assign different credentials to each service consuming your application and revoke credentials as needed.
+Dev Portal developers can manage their application credentials through their applications page without needing a Dev Portal admin's assistance. 
+Developers can maintain multiple active credentials, allowing them to assign different credentials to each service consuming their application and revoke credentials as needed.
 
 {:.warning}
 > Maintaining multiple credentials for one application is currently available only for HTTP DCR bridge.
 
-Portal admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and Portal admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
+Dev Portal admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and Dev Portal admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
 
 #### Rotate a credential
 
@@ -257,9 +257,10 @@ When you need to replace a credential with a new one, you can rotate the credent
 1. Click **Copy and close** to save.
 1. Test the new credential by using it in the same workflow as the old one.
 1. When you're ready, delete the old credential:
-  1. Open the **Credentials** tab.
-  1. Click the action menu for the old credential.
-  1. Select **Revoke**.
-  1. Type in "revoke" and click **Revoke** to confirm.
+   1. Click the **Credentials** tab.
+   1. Click the action menu for the old credential.
+   1. Select **Revoke**.
+   1. Enter `revoke`.
+   1. Click **Revoke**.
 
 To manage credentials using the Portal API, see the [`/portals/{portalId}/applications/{applicationId}/credentials`](/api/konnect/portal-management/v3/#/operations/get-application-credentials) endpoint.
