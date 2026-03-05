@@ -242,12 +242,14 @@ Any request that does not return a `2xx` status code is considered a failure and
 ### Managing credentials
 
 Dev Portal developers can manage their application credentials through their applications page without needing a Dev Portal admin's assistance. 
-Developers can maintain multiple active credentials, allowing them to assign different credentials to each service consuming their application and revoke credentials as needed.
+Developers can maintain multiple active credentials, allowing them to assign different credentials to each service consuming their application and revoke credentials as needed. The number of active credentials supported per application is determined by the identity provider configured in the HTTP DCR bridge.
 
 {:.warning}
 > Maintaining multiple credentials for one application is currently available only for HTTP DCR bridge.
 
 Dev Portal admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and Dev Portal admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
+
+Developers can view credential IDs by opening an application in their Dev Portal, and checking its **Credentials** tab. Application credentials values are not visible after creation. Developers can revoke credentials directly from the **Credentials** tab.
 
 #### Rotate a credential
 
