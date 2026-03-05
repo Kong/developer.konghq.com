@@ -49,10 +49,9 @@ For the [Event Hooks entity](/gateway/entities/event-hook/), this is a breaking 
 Event hook calls are now signed with HMAC-SHA256 instead of HMAC-SHA1.
 
 For the following plugins, the SHA1 algorithm is still supported in existing configurations, but we strongly recommend updating your configurations whenever possible:
-* [Basic Auth plugin]: Uses SHA256 by default in new configurations.
-* [HMAC Auth plugin]: Uses HMAC-SHA256 by default in new configurations. 
-HMAC-SHA1 is no longer included in the default set of algorithms.
-* [OAuth 2 plugin]: Uses SHA256 for the access token cache key instead of SHA1.
+* [Basic Auth plugin](/plugins/basic-auth/): Uses SHA256 by default in new configurations.
+* [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
+* [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
 
 #### OpenID Connect: consumer claims data types
 
