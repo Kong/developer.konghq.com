@@ -7,9 +7,6 @@ min_version:
 
 weight: 900
 
-min_version:
-  gateway: '3.13'
-
 requirements:
 - xAI account
 
