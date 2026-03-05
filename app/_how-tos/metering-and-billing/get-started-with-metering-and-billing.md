@@ -33,7 +33,7 @@ cleanup:
 tldr:
   q: How can I meter and bill active users in {{site.konnect_short_name}}?
   a: |
-    To meter active users in {{site.konnect_short_name}}, create a generic meter with `UNIQUE_COUNT` aggregation to track unique users per billing period. Then define a feature and plan to invoice customers based on their seat count.
+    To meter active users in {{site.konnect_short_name}}, create a generic meter with `UNIQUE_COUNT` aggregation to track unique users per billing period. Then define a feature and plan to invoice customers based on their seat count. Create a customer that includes usage from subject and assign the customer to your plan. Finally, send an event that includes the subject that is associated with the customer to generate an invoice.
 
 related_resources:
   - text: Product Catalog reference
@@ -48,13 +48,18 @@ related_resources:
     url: /metering-and-billing/get-started/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
     url: /how-to/meter-llm-traffic/
-
+faqs:
+  - q: Why don't I see any events in my customer's invoice?
+    a: |
+      {% include faqs/no-events-in-invoice.md %}
 automated_tests: false
 ---
 
-Generic metering is a flexible way to meter events from a variety of sources. This guide shows you how to use generic metering in {{site.metering_and_billing}} by demonstrating how to track and invoice customers based on the number of unique active users (seats) per month. 
+Generic metering is a flexible way to meter events from a variety of sources. 
+This guide shows you how to use generic metering in {{site.metering_and_billing}} by demonstrating how to track and invoice customers based on the number of unique active users (seats) per month. 
 
-Per-seat billing is a common pricing model for SaaS products where customers are charged based on how many distinct users access the platform in a billing period. By using the `UNIQUE_COUNT` aggregation, you can count unique users accurately even if the same user triggers multiple events.
+Per-seat billing is a common pricing model for SaaS products where customers are charged based on how many distinct users access the platform in a billing period. 
+By using the `UNIQUE_COUNT` aggregation, you can count unique users accurately even if the same user triggers multiple events.
 
 In this guide, you'll:
 
@@ -66,7 +71,9 @@ In this guide, you'll:
 
 ## Create a meter
 
-In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) track and record the consumption of a resource or service over time. For per-seat billing, you'll create a generic meter using the `UNIQUE_COUNT` aggregation. This counts the number of distinct `user_id` values seen within the billing period, so if the same user is active multiple times, they're only counted once.
+In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) track and record the consumption of a resource or service over time. 
+For per-seat billing, you'll create a generic meter using the `UNIQUE_COUNT` aggregation. 
+This counts the number of distinct `user_id` values seen within the billing period, so if the same user is active multiple times, they're only counted once.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. Click **New meter**.
@@ -79,7 +86,9 @@ In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) trac
 
 ## Create a feature
 
-Meters collect raw usage data, but [features](/metering-and-billing/product-catalog/#features) make that data billable. Without a feature, usage is tracked but not invoiced. Now that you're metering active users, you need to associate that meter with a named, customer-facing feature.
+Meters collect raw usage data, but [features](/metering-and-billing/product-catalog/#features) make that data billable. 
+Without a feature, usage is tracked but not invoiced. 
+Now that you're metering active users, you need to associate that meter with a named, customer-facing feature.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
@@ -90,9 +99,12 @@ Meters collect raw usage data, but [features](/metering-and-billing/product-cata
 
 ## Create a plan and rate card
 
-Plans are the core building blocks of your product catalog. They are a collection of rate cards that define the price and access of a feature. Plans can be assigned to customers by starting a subscription.
+Plans are the core building blocks of your [product catalog](/metering-and-billing/product-catalog/). 
+They are a collection of rate cards that define the price and access of a feature. 
+Plans can be assigned to customers by starting a subscription.
 
-A rate card describes the price and usage limits or access control for a feature. Rate cards are made up of the associated feature, price, and optional entitlements.
+A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
+Rate cards are made up of the associated feature, price, and optional entitlements.
 
 In this section, you'll create a Per-Seat plan that charges customers $1 per active user per month:
 
@@ -110,7 +122,8 @@ In this section, you'll create a Per-Seat plan that charges customers $1 per act
 1. In the **Price per unit** field, enter `1`.
 
    {:.info}
-   > We're using $1 here to make it easy to see cost changes in the customer invoice. Change this price in a production instance to match your own pricing model.
+   > We're using $1 here to make it easy to see cost changes in the customer invoice. 
+   > Change this price in a production instance to match your own pricing model.
 1. Click **Next Step**.
 1. Select **Boolean**.
 1. Click **Save Rate Card**.
@@ -119,7 +132,7 @@ In this section, you'll create a Per-Seat plan that charges customers $1 per act
 
 ## Start a subscription
 
-Customers are the entities that pay for consumption. Here you'll create a customer and subscribe them to the Per-Seat plan.
+[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Per-Seat plan.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -127,7 +140,8 @@ Customers are the entities that pay for consumption. Here you'll create a custom
 1. In the **Name** field, enter `Acme Inc`.
 1. In the **Key** field, enter `acme-inc`.
 
-   This value links incoming usage events to this customer. Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
+   This value links incoming usage events to this customer. 
+   Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
 1. For **Include usage from**, select **Subjects**.
 1. Click **Save**.
 1. Click the **Subscription** tab.
@@ -138,8 +152,16 @@ Customers are the entities that pay for consumption. Here you'll create a custom
 
 ## Validate
 
-Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https://cloudevents.io/) format. Each event represents a user interaction in your application. The meter counts each unique `user_id` value once per billing period. To validate, we'll send events for three distinct users: `alice`, `bob`, and `carol`.
+Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https://cloudevents.io/) format. 
+Each event represents a user interaction in your application. 
+The meter counts each unique `user_id` value once per billing period. 
+To validate, we'll send events for three distinct users: `alice`, `bob`, and `carol`.
 
+1. Export the current time:
+   ```sh
+   export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+   ```
+   {{site.metering_and_billing}} only invoices and meters events that are sent _after_ the subscription is created.
 1. Send an event for `alice`:
 {% capture "alice1" %}
 <!--vale off-->
@@ -152,7 +174,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: evt-alice-001
+  id: "$(uuidgen)"
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -174,7 +196,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: evt-bob-001
+  id: '$(uuidgen)'
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -196,7 +218,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: evt-carol-001
+  id: '$(uuidgen)'
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -208,7 +230,7 @@ body:
 {% endcapture %}
 {{ carol | indent: 3 }}
 
-1. Now, send a second event for `alice` to confirm that `UNIQUE_COUNT` deduplicates repeated users:
+1. Now, send a second event for `alice` to confirm that `UNIQUE_COUNT` doesn't duplicate repeated users:
 {% capture "alice2" %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -220,7 +242,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: evt-alice-002
+  id: '$(uuidgen)'
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -241,4 +263,7 @@ Even though four events were sent, the meter counted only three unique users. No
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see `active-users` listed in Lines with a quantity of `3`, reflecting three unique active users. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
+You'll see `active-users` listed in Lines with a quantity of `3`, reflecting three unique active users. 
+
+In this guide, you're using the sandbox for invoices. 
+To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**, like [Stripe](/metering-and-billing/stripe-integration/).

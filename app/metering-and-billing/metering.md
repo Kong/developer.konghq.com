@@ -19,7 +19,17 @@ related_resources:
 faqs:
   - q: Do I need to bill or create plans for my meters?
     a: No, you can use metering on it's own to track customer usage.
+  - q: Why don't I see any events in my customer's invoice?
+    a: |
+      {% include faqs/no-events-in-invoice.md %}
 ---
+
+{:.success}
+> **New to {{site.metering_and_billing}}?**
+> Get started with these tutorials:
+> * [Get started with {{site.metering_and_billing}} generic meters](/how-to/get-started-with-metering-and-billing-generic-meters/)
+> * [Meter and bill {{site.base_gateway}} API requests](/metering-and-billing/get-started/)
+> * [Meter and bill {{site.ai_gateway}} LLM tokens](/how-to/meter-llm-traffic/)
 
 {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.
 
