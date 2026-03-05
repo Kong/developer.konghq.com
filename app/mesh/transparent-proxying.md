@@ -369,7 +369,7 @@ networking:
 
 Here are some reachable backend configuration examples.
 
-Configure a `demo-app` that communicates only with `redis` on port 6379:
+The following configures a `demo-app` that communicates only with `redis` on port 6379:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
