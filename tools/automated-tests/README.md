@@ -22,7 +22,7 @@ There's a config file `config/tests.yaml` with some basic configuration for the 
 
 The `config/runtimes.yaml` file defines the runtime configurations grouped by **deployment model** and **product**.
 
-The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`).
+The top-level keys are deployment models (`on-prem`, `konnect`). Under each deployment model, products are listed (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`, `kic`, `operator`, `mesh`).
 
 Each product can define:
 
@@ -52,6 +52,10 @@ on-prem:
     setup: ...
     cleanup: ...
     reset: ...
+  mesh:
+    setup: ...
+    cleanup: ...
+    reset: ...
 
 konnect:
   gateway:
@@ -70,13 +74,12 @@ The script will iterate over the list of `how-tos`, check if it needs to generat
 
 * The frontmatter doesn't include `automated_tests: false`.
 * The file's content doesn't include `@todo`
-* One of `gateway`, `ai-gateway`, or `event-gateway` is set as `products` in the frontmatter.
+* One of `gateway`, `ai-gateway`, `event-gateway`, `kic`, `operator` or `mesh` is set as `products` in the frontmatter.
 
 Next, it spins up a headless browser and visits the corresponding URL for each `how-to`. For every page, it extracts instructions from data-attributes on the page. These can be about the test's setup or the steps to run:
 
 * **Setup**: pulls the value of all the elements with the `data-test-setup` attribute. The value can be:
   * `konnect`
-  * `operator`
   * A json indicating the product and the `min_version`, i.e. `{ gateway: '3.9' }`. This and `konnect` are mutually exclusive.
 * **Steps**: pulls the value of all the elements with the `data-test-step` attribute. These represent both the steps the test needs to execute and `validations` that act as the assertions.
   * `data-test-step='block'`: indicates that the extractor can copy the associated code snippet and paste it in the instructions file as a bash command.
@@ -144,11 +147,15 @@ By default, it will run all the instruction files, but it also supports running 
 
 `DEPLOYMENT_MODEL='konnect' PRODUCTS='event-gateway' npm run run-tests`
 
+#### Run on-prem mesh tests
+
+`DEPLOYMENT_MODEL='on-prem' PRODUCTS='mesh' npm run run-tests`
+
 #### Supported Env variables
 
 | Variable | Description | Required | Default Value |
 |----------|-------------|----------|---------------|
 | `GATEWAY_VERSION` | Specifies which gateway version to run the tests against. Required for products with a version matrix. | conditional | null |
 | `DEPLOYMENT_MODEL` | Specifies which deployment model (`on-prem`/`konnect`) to run, runs all by default. | false | null |
-| `PRODUCTS` | Specifies which products to test (e.g. `gateway`, `ai-gateway`, `operator`, `event-gateway`). | true | null |
+| `PRODUCTS` | Specifies which products to test (e.g. `gateway`, `ai-gateway`, `operator`, `kic`, `event-gateway`, `mesh`). | true | null |
 | `CONTINUE_ON_ERROR` | Whether to continue running tests after a test fails. | false | null |
