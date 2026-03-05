@@ -10,6 +10,7 @@
      kong-mesh kong-mesh/kong-mesh
    kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
    ```
+   {: data-test-prereq="block" }
 
 1. Apply the demo configuration:
 
@@ -219,3 +220,4 @@
        labels:
          app: kv" | kubectl apply -f -
    ```
+   {: data-test-prereq="block" }
