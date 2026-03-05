@@ -1,3 +1,5 @@
+First, you need to create a hybrid control plane. The Dedicated Cloud control plane group aggregates the hybrid control plane's configurations and passes them on to the Dedicated Cloud Gateway data plane nodes.
+
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click **New**.
 1. Select **New API gateway**.

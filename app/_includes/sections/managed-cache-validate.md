@@ -4,7 +4,6 @@ Verify that the Rate Limiting Advanced plugin is using the managed cache partial
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
 status_code: 200
 method: GET
-region: global
 {% endkonnect_api_request %}
 <!--vale on-->
 

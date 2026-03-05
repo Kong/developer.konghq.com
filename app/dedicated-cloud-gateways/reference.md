@@ -169,13 +169,12 @@ To isolate the Gateway configuration by team while still sharing a Dedicated Clo
 <!--vale off-->
 {% mermaid %}
 flowchart LR
- subgraph CPG["Dedicated Cloud CPG"]
-        CP1("Control Plane:<br>Payments team config")
-        CPP("Control Plane:<br>Platform Global<br>global config")
-        CP2("Control Plane:<br>Orders team config")
-  end
  subgraph ORG["**KONNECT ORG**"]
-        CPG
+    subgraph CPG["Dedicated Cloud CPG"]
+        CP1("Control Plane: Payments team config")
+        CPP("Control Plane: Platform Global global config")
+        CP2("Control Plane: Orders team config")
+    end
   end
 
  subgraph RUNTIME["Dedicated Cloud runtime"]
@@ -465,7 +464,7 @@ body:
 > * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/aws-managed-cache-control-plane/)
 > * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/aws-managed-cache-control-plane-group/)
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/azure-managed-cache-control-plane/)
-> * [Configure an Azure managed cache for a Dedicated Cloud Gateways control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
+> * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
 
 {% include_cached /sections/managed-cache-intro.md %}
 Only AWS and Azure are supported as providers currently.
@@ -519,12 +518,12 @@ region: global
 
    When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions are supported and you can configure the managed cache for multiple regions.
 
-1. Export the ID of your managed cache in the response:
+1. Export the ID of your managed cache from the response:
    ```sh
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
+1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->
@@ -540,7 +539,10 @@ region: global
 
    This can take about 15 minutes. 
 
-For control plane managed caches, you don't need to manually configure a Redis partial. After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. [Use the redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to setup Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
+For control plane managed caches, you don't need to manually configure a Redis partial. 
+After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
+[Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
+You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
 {% endnavtab %}
 {% navtab "Control plane group" %}
 1. Create a managed cache using the Cloud Gateways add-ons API:
@@ -570,12 +572,12 @@ For control plane managed caches, you don't need to manually configure a Redis p
 
    When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions are supported and you can configure the managed cache for multiple regions.
 
-1. Export the ID of your managed cache in the response:
+1. Export the ID of your managed cache from the response:
    ```sh
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
+1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->

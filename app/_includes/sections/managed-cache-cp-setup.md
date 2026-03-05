@@ -1,3 +1,5 @@
+Managed caches are created at the control plane level. To create a managed cache, you must associate it with a control plane. 
+
 1. List your existing Dedicated Cloud Gateway control planes:
 {% capture list_cp %}
 <!--vale off-->
@@ -43,12 +45,12 @@ region: global
 
    When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions are supported and you can configure the managed cache for multiple regions.
 
-1. Export the ID of your managed cache in the response:
+1. Export the ID of your managed cache from the response:
    ```sh
    export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
    ```
 
-1. Check the status of the managed cache. Once its marked as ready, it indicates the cache is ready to use:
+1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->

@@ -176,7 +176,7 @@ rows:
             config:
               title: AWS
               description: |
-                Configure a fully-managed Redis service that is provisioned and operated by Kong in AWS AWS ElastiCache.
+                Configure a fully-managed Redis service that is provisioned and operated by Kong in AWS ElastiCache.
                 Use the managed cache in compatible plugins that use Redis.
               icon: /assets/icons/aws.svg
               ctas:
