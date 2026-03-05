@@ -141,7 +141,7 @@ For information about FIPS, see the [FIPS support policy](/gateway/fips-support/
 
 These versions of {{site.ee_product_name}} have reached the end of full support.
 
-{% include_cached support/old_gateway_support.html %}
+{% include_cached support/old_gateway_support.md %}
 
 {:.info}
 > **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/compatibility/).
