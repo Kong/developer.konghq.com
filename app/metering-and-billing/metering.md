@@ -152,6 +152,8 @@ You will see `kong_konnect_llm_tokens` available from the list of available mete
 1. Configure the meter information as needed.
 1. Send a CloudEvent to start collecting meter usage.
 
+For a complete tutorial, see [Get started with {{site.metering_and_billing}} generic meters](/how-to/get-started-with-metering-and-billing-generic-meters/).
+
 {% endnavtab %}
 {% endnavtabs %}
 
