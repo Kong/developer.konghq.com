@@ -49,6 +49,10 @@ faqs:
     a: "{{site.konnect_short_name}} will make HTTP requests to the IdP for DCR. The details of the request are IdP-specific."
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
     a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
+  - q: Does revoking a credential immediately invalidate it, or can it still be used for some time after revocation?
+    a: |
+      By default, credentials are cached and can be used for a short time period even after they have been revoked. 
+      If you want credentials to be revoked immediately, edit the auth strategy that uses HTTP DCR bridge to set `cache_tokens` to `false`.
 ---
 Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
