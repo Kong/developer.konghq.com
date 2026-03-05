@@ -41,21 +41,6 @@ pages:
         url: /mesh/policies/meshtls/
     min_version:
       mesh: '2.9'
-
-  -
-    path: app/_src/guides/progressively-rolling-in-strict-mtls-kv.md
-    title: 'Progressively rolling in strict mTLS'
-    description: 'Progressively roll in mutual TLS with the MeshTLS policy in {{site.mesh_product_name}} without disrupting traffic.'
-    url: '/mesh/progressively-rolling-in-strict-mtls/'
-    related_resources:
-      - text: MeshTLS policy
-        url: /mesh/policies/meshtls/
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-    min_version:
-      mesh: '2.9'
   -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
