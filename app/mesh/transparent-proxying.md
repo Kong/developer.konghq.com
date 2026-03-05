@@ -17,7 +17,7 @@ related_resources:
     url: /mesh/service-discovery/
 ---
 
-A transparent proxy is a type of server that can intercept network traffic to and from a service without changes to the client application code. In the case of {{site.mesh_product_name}} it is used to capture traffic and redirect it to a data plane to apply policies.
+A transparent proxy is a type of server that can intercept network traffic to and from a service without changes to the client application code. In the case of {{site.mesh_product_name}}, it is used to capture traffic and redirect it to a data plane to apply policies.
 
 {{site.mesh_product_name}} uses [`iptables`](https://linux.die.net/man/8/iptables) and offers additional, experimental support for [`eBPF`](/mesh/cni/#merbridge-cni-with-ebpf).
 
@@ -47,18 +47,18 @@ Here's a high level visualization of how transparent proxying works:
 {% endmermaid %}
 <!-- vale on -->
 
-If you choose to not use transparent proxying, or if you're running on a platform where transparent proxying isn't available, there are some additional consideration:
+If you choose to not use transparent proxying, or if you're running on a platform where transparent proxying isn't available, there are some additional considerations:
 
-* You need to specify inbound and outbound ports on which you want to capture traffic
-* `.mesh` addresses are unavailable
-* You may need to update your application code to use the new capture ports
-* There is no support for a VirtualOutbound
+* You need to specify the inbound and outbound ports that you want to capture traffic on.
+* `.mesh` addresses are unavailable.
+* You may need to update your application code to use the new capture ports.
+* VirtualOutbound is unsupported.
 
-Without manipulating `iptables` to redirect traffic you will need to explicitly tell `kuma-dp` where to listen to capture it. This can require changes to your application code.
+Without manipulating `iptables` to redirect traffic, you will need to explicitly tell `kuma-dp` where to listen to capture it. This can require changes to your application code.
 
 The example below specifies that `kuma-dp` will listen on the address `10.119.249.39:15000`. 
 This in turn creates an Envoy listener for the port. 
-When consuming a service over this address, it will cause traffic to redirect to `127.0.0.1:5000 `where our app is running:
+When consuming a service over this address, it will cause traffic to redirect to `127.0.0.1:5000` where our app is running:
 
 ```yaml
   type: Dataplane
@@ -86,14 +86,14 @@ All incoming and outgoing traffic is automatically intercepted by `kuma-dp` with
 
 On Universal, `kuma-dp` leverages the [data plane proxy specification](/mesh/data-plane-universal/#dataplane-resource-configuration) for receiving incoming requests on a pre-defined port.
 
-In order to enable transparent proxying, the zone control plane must exist on a separate server. 
-Running the zone control plane with PostgreSQL doesn't work with transparent proxying on the same machine.
+To enable transparent proxying, the zone control plane must exist on a separate server. 
+If transparent proxying is on the same machine, you can't run the zone control plane with PostgreSQL.
 
 There are several advantages when using transparent proxying in Universal mode:
 
-* Simpler `Dataplane` resource, since you can omit the `outbound` section.
+* The `Dataplane` resource is simpler because you can omit the `outbound` section.
 * Universal service naming with the `.mesh` [DNS domain](/mesh/dns) instead of explicit outbounds like `https://localhost:10001`.
-* Better service manageability (security, tracing).
+* Better service manageability (for example: security and tracing).
 
 {:.info}
 > If you run `firewalld` to manage firewalls and wrap `iptables`, add the `--store-firewalld` flag to `kumactl install transparent-proxy`. This persists the relevant rules across host restarts. The changes are stored in `/etc/firewalld/direct.xml`. There is no uninstall command for this feature.
@@ -107,7 +107,7 @@ To configure transparent proxying in Universal mode, you must first:
 
 #### Configuring the service host
 
-{{site.mesh_product_name}} comes with [`kumactl` executable](/mesh/cli/#kumactl), which can help you prepare the host for transparent proxying. 
+{{site.mesh_product_name}} comes with the [`kumactl` executable](/mesh/cli/#kumactl), which can help you prepare the host for transparent proxying. 
 
 {:.info}
 > Due to the wide variety of Linux setup options, these steps may vary and may need to be adjusted for the specifics of the particular deployment.
@@ -120,7 +120,7 @@ The host that will run the `kuma-dp` process in transparent proxying mode needs 
    useradd -u 5678 -U kuma-dp
    ```
 
-1. Redirect all the relevant inbound, outbound and DNS traffic to the {{site.mesh_product_name}} data plane proxy:
+1. Redirect all the relevant inbound, outbound, and DNS traffic to the {{site.mesh_product_name}} data plane proxy:
 
    ```sh
    kumactl install transparent-proxy \
@@ -191,6 +191,8 @@ kumactl uninstall transparent-proxy
 ```
 
 ## Configuration
+
+The following sections provide transparent proxy configuration examples.
 
 ### Intercepted traffic
 
@@ -417,7 +419,7 @@ networking:
 {% endnavtab %}
 {% endnavtabs %}
 
-Configure a `demo-app` that doesn't need to communicate with any Service:
+The following configures a `demo-app` that doesn't need to communicate with any Service:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -458,7 +460,7 @@ networking:
 {% endnavtab %}
 {% endnavtabs %}
 
-Configure a `demo-app` that communicates with all `MeshServices` in the `kong-mesh-demo` namespace:
+The following configures a `demo-app` that communicates with all `MeshServices` in the `kong-mesh-demo` namespace:
 
 ```yaml
 apiVersion: apps/v1
@@ -484,10 +486,10 @@ spec:
 
 ### Transparent Proxy with eBPF (experimental)
 
-Starting from {{site.mesh_product_name}} 2.0 you can set up transparent proxy to use eBPF instead of `iptables`.
+In {{site.mesh_product_name}} 2.0 or later, you can set up transparent proxy to use eBPF instead of `iptables`.
 
 {:.warning}
-> To use transparent proxying with eBPF, your environment must use version 5.7 of Kernel or higher and have `cgroup2` available.
+> To use transparent proxying with eBPF, your environment must use Kernel version 5.7 or later and have `cgroup2` available.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
