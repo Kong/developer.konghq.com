@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - uses: kong/setup-kongctl@v1
+      - uses: kong/setup-kongctl@659d5c2b0f4db2e25d63797035358a22907421db # v1
 
       - name: Verify kongctl install
         run: kongctl version --full
