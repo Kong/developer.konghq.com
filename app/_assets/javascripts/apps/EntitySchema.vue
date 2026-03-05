@@ -77,4 +77,9 @@ async function fetchSpec() {
 :deep(.property-field-example-value) {
   @apply border border-brand-saturated/40 !important;
 }
+
+:deep(.default-markdown a[href^="http://"]),
+:deep(.default-markdown a[href^="https://"]) {
+  @apply bg-none pr-0 !important;
+}
 </style>
