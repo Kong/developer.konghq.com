@@ -480,6 +480,7 @@ rows:
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
     permissions: |
       * Create and list control planes.
+      * When creating a control plane, grants the Admin role on newly created Gateway control planes.
   - role: "`Debug Session Creator`"
     description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
     permissions: |
@@ -495,6 +496,7 @@ rows:
     description: "Access to create a new event gateway in Event Gateway Manager. The creator becomes the owner of the event gateway they create, gaining admin access to the new event gateway. This role does not grant access to existing event gateways, their runtime instances, or their configurations."
     permissions: |
       * Create and list Event Gateways.
+      * When creating an Event Gateway, grants the Event Gateways Admin role on newly created Event Gateways.
   - role: "`Event Gateways Admin`"
     description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration."
     permissions: |
@@ -515,14 +517,6 @@ rows:
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list keys.
-  - role: "`KNEP Config Admin` (deprecated)"
-    description: "*(Legacy permission for Event Gateways)* Full write access to administer Kong Native Event Proxy (KNEP) declarative configuration."
-    permissions: |
-      * Create, read, list, and delete Kong Native Event Proxy configurations.
-  - role: "`KNEP Node` (deprecated)"
-    description: "*(Legacy permission for Event Gateways)* Read-only access to Kong Native Event Proxy (KNEP) configuration and write access to KNEP nodes."
-    permissions: |
-      * Read and list, and delete Kong Native Event Proxy configurations.
   - role: "`Plugin Admin`"
     description: "This role grants full write access to administer plugins."
     permissions: |
