@@ -49,6 +49,31 @@ The JSON Threat Protection plugin validates and protects against malicious or ov
 
 Enabling this plugin is recommended for any API that accepts JSON input, especially public APIs with user-submitted data and high-traffic APIs vulnerable to DDoS attacks using large payloads.
 
+## Use cases for the JSON Threat Protection plugin
+
+The following are examples of common configurations for the JSON Threat Protection plugin:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "[Block invalid requests](/plugins/json-threat-protection/examples/threat-protection-policy/)"
+    description: |
+      Define a JSON threat protection policy and block any invalid requests. 
+      If a request doesn't conform to the configured policy, the plugin blocks it from being proxied and returns an error.
+  - usecase: "[Log invalid requests without blocking](/plugins/json-threat-protection/examples/tap-mode/)"
+    description: |
+      Run the plugin in tap mode, which logs non-conforming requests while still letting them pass through the proxy.
+  - usecase: |
+      [Allow non-JSON requests](/plugins/json-threat-protection/examples/allow-non-json-requests) {% new_in 3.14 %}
+    description: Block invalid JSON requests and let non-JSON requests pass through.
+{% endtable %}
+<!--vale on-->
+
 ## How it works
 
 The JSON Threat Protection plugin validates incoming requests with a JSON body against policy limits that you've configured for the plugin, regardless of whether the `Content-Type` header exists or is set to `application/json`. If a request violates the policy limits, you can configure it to either block the request (block mode) or monitor and log it (tap mode).
