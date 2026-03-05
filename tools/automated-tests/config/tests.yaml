@@ -27,3 +27,5 @@ products:
     extractInstructionsAs: block
   operator:
     extractInstructionsAs: block
+  mesh:
+    extractInstructionsAs: block

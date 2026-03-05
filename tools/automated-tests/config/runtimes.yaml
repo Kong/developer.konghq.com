@@ -102,6 +102,20 @@ on-prem:
         - k3d cluster delete kic-test
         - k3d cluster create --k3s-arg "--disable=traefik@server:*" kic-test --wait
         - kubectl config use-context k3d-kic-test
+  mesh:
+    setup:
+      commands:
+        - helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
+        - helm repo update
+
+    cleanup:
+      commands:
+        - k3d cluster delete mesh-test
+    reset:
+      commands:
+        - k3d cluster delete mesh-test
+        - k3d cluster create --k3s-arg "--disable=traefik@server:*" mesh-test --wait
+        - kubectl config use-context k3d-mesh-test
 
 konnect:
   gateway:

@@ -188,6 +188,9 @@ function deriveProduct(setup, products) {
     if (products.includes("event-gateway")) {
       return "event-gateway";
     }
+    if (products.includes("mesh")) {
+      return "mesh";
+    }
     return "gateway";
   }
   // e.g., "operator"
