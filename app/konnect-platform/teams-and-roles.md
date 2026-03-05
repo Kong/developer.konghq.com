@@ -452,7 +452,8 @@ rows:
   - role: "`Admin`"
     description: "This role grants full write access to all entities within a control plane."
     permissions: |
-      * Create, read, list, edit, and delete control planes and all configurations within them.
+      * Read, list, edit, and delete control planes.
+      * Create, read, list, edit, and delete Gateway entity configurations within control planes.
   - role: "`Certificate Admin`"
     description: "This role grants full write access to administer certificates."
     permissions: |
@@ -497,7 +498,8 @@ rows:
   - role: "`Event Gateways Admin`"
     description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration."
     permissions: |
-      * Create, edit, read, list, and delete existing Event Gateways and all of their configurations.
+      * Edit, read, list, and delete existing Event Gateway control planes.
+      * Create, edit, read, list, and delete Event Gateway entity configurations within control planes.
   - role: "`Event Gateways Viewer`"
     description: "Read-only access to all the configurations of an event gateway and its runtime instances."
     permissions: |
