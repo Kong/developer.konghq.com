@@ -6,7 +6,7 @@ networks:
 
 services:
   kafka1:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka1
@@ -25,7 +25,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   kafka2:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka2
@@ -44,7 +44,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   kafka3:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka3
