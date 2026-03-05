@@ -2,33 +2,28 @@
 title: "Testing regional failover"
 content_type: reference
 layout: reference
-description: "Use a controlled outage simulation to confirm that your multi-region Dedicated Cloud Gateway deployment automatically fails over to a healthy region."
+description: "Use a controlled outage simulation to confirm that your multi-region {{site.konnect_short_name}} data plane deployment automatically fails over to a healthy region."
 
 products:
     - gateway
 
 breadcrumbs:
-  - /dedicated-cloud-gateways/
+  - /gateway/
 
 works_on:
   - konnect
 
 tags:
-  - dedicated-cloud-gateways
   - failover
 
 related_resources:
-  - text: Dedicated Cloud Gateways production readiness guide
-    url: /dedicated-cloud-gateways/production-readiness/
   - text: Pre-Function plugin
     url: /plugins/pre-function/
-  - text: Dedicated Cloud Gateways reference
-    url: /dedicated-cloud-gateways/reference/
   - text: Health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
 ---
 
-This page covers how to validate cross-regional failover in a multi-region Dedicated Cloud Gateway deployment. Kong's [Pre-Function plugin](/plugins/pre-function/) simulates a regional outage by forcing health checks to fail, which triggers DNS failover to a secondary region.
+This page covers how to validate cross-regional failover in a multi-region {{site.konnect_short_name}} data plane deployment. The [Pre-Function plugin](/plugins/pre-function/) simulates a regional outage by forcing health checks to fail, which triggers DNS failover to a secondary region.
 
 The examples here reference AWS Route 53, but the approach works with any DNS-based health check system. Load generation tooling, observability backends, and upstream APIs will differ across environments.
 
@@ -51,7 +46,7 @@ You'll need:
 
 The Pre-Function plugin runs in the `access` phase, scoped to the health check route. It inspects the `Host` header and returns a `400` when the header matches the target region's public edge DNS hostname. All other requests pass through unaffected.
 
-Set `target_host` to the public edge DNS hostname of the region you're testing. In {{site.konnect_short_name}}, this is available under **Connect > Regional Networking > Public Edge DNS** for each region.
+Set `target_host` to the public edge DNS hostname of the region you're testing.
 
 ```lua
 -- Runs in the 'access' phase on the health check route
