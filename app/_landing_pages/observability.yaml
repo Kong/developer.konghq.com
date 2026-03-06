@@ -127,18 +127,10 @@ rows:
                     Users only see traffic and metrics for the control planes within their permissions scope.
                     * Organization Admins and users in the Analytics Admin or Analytics Viewer prebuilt teams have access to {{site.observability}} data across the entire organization.
                     * Access to Dashboards and Reports requires additional role assignments, such as Dashboard Viewer or Report Viewer. 
-  - column_count: 3
-    columns:
-      - blocks:
-          - type: card
+          - type: button
             config:
-              title: Teams and roles
-              description: |
-                Configure role-based access to {{site.observability}} features using {{site.konnect_short_name}}'s built-in teams and roles.
-              icon: /assets/icons/team.svg
-              cta:
-                text: Manage teams and roles
-                url: /konnect-platform/teams-and-roles/
+              text: Manage teams and roles
+              url: /konnect-platform/teams-and-roles/
   - header:
       type: h2
       text: "Frequently asked questions"
