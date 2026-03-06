@@ -16,7 +16,8 @@ automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with virtual hub peering and private DNS?
   a: |
-    Using a virtual network, virtual WAN, and private DNS zone in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    In Azure, you'll need a virtual network, virtual WAN and hub, and private DNS zone. 
+    Create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
     When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure virtual hub peering by creating the peering role and assigning it to the service principal. 
     Configure private DNS for your Azure network in {{site.konnect_short_name}}. 
     You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your private hosted zone.
@@ -63,17 +64,10 @@ next_steps:
 
 {% include_cached /sections/azure-vwan-setup.md %}
 
-
 ## Configure private DNS for your Azure network in {{site.konnect_short_name}}
 
 {% include_cached /sections/azure-private-dns-setup.md %}
 
 ## Validate
 
-After your private DNS configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Scroll until you see `Ready` for private DNS.
+{% include_cached /sections/private-dns-validate.md provider="Azure" %}

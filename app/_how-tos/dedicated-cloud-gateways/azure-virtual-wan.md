@@ -16,16 +16,17 @@ automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with virtual WAN?
   a: |
+    In Azure, you'll need a virtual network, virtual WAN and hub. 
     Create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
     When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure virtual hub peering by creating the peering role and assigning it to the service principal. 
     You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for virtual hub peering.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and private DNS
-    url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution
-    url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering and outbound DNS resolution
+    url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering and private DNS
+    url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
 prereqs:
   show_works_on: false
   inline:

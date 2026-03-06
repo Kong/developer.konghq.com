@@ -1,3 +1,5 @@
+After your Azure private networking configuration is ready in {{site.konnect_short_name}}, you can configure outbound DNS.
+
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. Click your Azure Dedicated Cloud Gateway.
 1. In the API Gateways sidebar, click **Networks**.

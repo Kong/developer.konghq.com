@@ -7,7 +7,7 @@ Now that your Dedicated Cloud Gateway Azure network is ready, you can configure 
 1. In the **Tenant ID** field, enter [your Microsoft Entra tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
 1. In the **Subscription ID** field, enter your virtual WAN's subscription ID.
 1. In the **Resource group name** field, enter your virtual WAN's resource group name.
-1. In the **Virtual hub name** field, enter your virtual WAN's name.
+1. In the **Virtual hub name** field, enter your virtual WAN's hub name.
 1. Click **Next**.
 1. Grant access to the Dedicated Cloud Gateway app in Microsoft Entra using the link provided in the setup wizard.
    
@@ -17,9 +17,9 @@ Now that your Dedicated Cloud Gateway Azure network is ready, you can configure 
 
    {{site.konnect_short_name}} requires permission to create and manage peering resources. You must define a role named `Kong Cloud Gateway Peering Creator` with the following permissions:
 
-    * Read and write access to virtual WAN configurations
+    * Read and write access to virtual hub configurations
     * Permission to perform peering actions
 
-1. Assign the role to the service principal so it has permission to peer with your virtual WAN using the command in the UI wizard.
+1. Assign the role to the service principal so it has permission to peer with your virtual hub using the command in the UI wizard.
 1. Select **I've completed the Azure setup steps above.**
 1. Click **Done**.

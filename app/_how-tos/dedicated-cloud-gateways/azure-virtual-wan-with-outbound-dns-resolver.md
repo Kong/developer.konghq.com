@@ -16,17 +16,18 @@ automated_tests: false
 tldr:
   q: How do I configure an Azure Dedicated Cloud Gateway with virtual hub peering and outbound DNS resolution?
   a: |
-    Using a virtual network, virtual WAN, and a private DNS resolver in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    In Azure, you'll need a virtual network, virtual WAN and hub, and outbound DNS resolver. 
+    Create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
     When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure virtual hub peering by creating the peering role and assigning it to the service principal. 
     Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. 
     You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your outbound DNS resolver.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering
-    url: /dedicated-cloud-gateways/azure-peering/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and private DNS
-    url:  /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering
+    url: /dedicated-cloud-gateways/azure-virtual-wan/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering and private DNS
+    url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
 prereqs:
   show_works_on: false
   inline:
@@ -77,37 +78,8 @@ We just need to add additional outbound endpoints.
 
 ### DNS mappings
 
-The following table describes how DNS is mapped in Azure virtual hub peering:
-
-{% table %}
-columns:
-  - title: Mapping Type
-    key: type
-  - title: Description
-    key: description
-  - title: Example
-    key: example
-rows:
-  - type: 1-to-1 Mapping
-    description: Each domain is mapped to a unique IP address.
-    example: "`example.com` → `192.168.1.1`"
-  - type: N-to-1 Mapping
-    description: Multiple domains share the same IP address.
-    example: "`example.com`, `example2.com` → `192.168.1.1`"
-  - type: M-to-N Mapping
-    description: Multiple domains are mapped to multiple IP addresses, without a strict one-to-one relationship.
-    example: >-
-      `example.com` → `192.168.1.2`
-      <br><br>
-      `example3.com` → `192.168.1.1`
-{% endtable %}
+{% include_cached /sections/private-dns-mappings.md %}
 
 ## Validate
 
-Once your outbound DNS resolver configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Scroll until you see `Ready` for your outbound DNS resolver.
+{% include_cached /sections/outbound-dns-validate.md provider="Azure" %}
