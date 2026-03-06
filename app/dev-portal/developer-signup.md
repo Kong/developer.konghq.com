@@ -37,9 +37,13 @@ faqs:
   - q: |
       I created an application in Dev Portal, but I'd like to assign it to my team instead or I want to assign it to a different team. How do I do that?
     a: |
-      To assign an app you created to a team, navigate to your app in Dev Portal, click the **Settings** tab and for App sharing, click **Transfer ownership**.
+      To assign an app you created to a team in the Dev Portal UI:
 
-      Once an application is assigned to a team, ownership can only be transferred to another team you are a member of, it can't be transferred back to an individual developer.
+      1. Navigate to your app in Dev Portal.
+      2. Click the **Settings** tab.
+      3. Under **App sharing**, click **Transfer ownership** and select the team you want to transfer the app to.
+
+      In the Dev Portal UI, once an application is assigned to a team, ownership can only be transferred to another team you are a member of. Transferring ownership back to an individual developer is only supported by the Dev Portal API. For more details, see [Developer self-service and app registration](/dev-portal/self-service/).
 ---
 
 The Dev Portal enables you to quickly get access to your APIs of interest, in a self-serve way. 
