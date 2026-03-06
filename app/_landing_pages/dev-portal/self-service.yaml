@@ -48,7 +48,7 @@ rows:
                        
                        For private Dev Portals, user authentication is enabled by default, and the default application auth strategy is key authentication.
                     1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
-                    1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Access and approvals > Teams >** click the team **> Settings > Allow team to own applications**.
+                    1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your Dev Portal in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
                     1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.

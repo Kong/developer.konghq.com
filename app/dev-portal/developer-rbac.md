@@ -96,7 +96,7 @@ To assign roles to developers, you need to create a team and add them to it:
       
       Developers will now see an option to assign new applications to one of their teams during the creation process. 
       Only teams that are allowed to own applications will be listed. 
-      They can also transfer ownership of existing apps to their teams. 
+      They can also transfer ownership of existing applications to their teams. 
       For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
 {% endnavtab %}
 {% navtab "API" %}
