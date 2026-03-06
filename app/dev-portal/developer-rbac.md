@@ -17,7 +17,7 @@ search_aliases:
 description: "The Dev Portal allows you to manage developers by creating teams and assigning specific roles for each API."
 
 related_resources:
-  - text: Developer self-service and app registration
+  - text: Developer self-service and application registration
     url: /dev-portal/self-service/
   - text: Dev Portal developer sign-up
     url: /dev-portal/developer-signup/
@@ -66,7 +66,7 @@ resource "konnect_portal_team" "my_portalteam" {
 
 ## Manage developer RBAC
 
-You can manage developers, app registrations, and teams from the **Access and approvals** tab in your Dev Portal.
+You can manage developers, application registrations, and teams from the **Access and approvals** tab in your Dev Portal.
 
 To assign roles to developers, you need to create a team and add them to it:
 {% navtabs "assign-roles" %}
@@ -90,11 +90,14 @@ To assign roles to developers, you need to create a team and add them to it:
   
    * **API Consumer**: This role allows developers on the team to make calls to the selected APIs.
    * **API Viewer**: This role gives developers on the team read-only access to the selected APIs' documentation.
-1. To enable [app sharing](/dev-portal/self-service/#share-applications-with-a-team), do the following:
+1. To enable [application sharing](/dev-portal/self-service/#share-applications-with-a-team), do the following:
    1. Click the **Settings** tab.
    1. Enable **Allow team to own applications**.
       
-      Developers will now see an option to select that any new applications are a team owned application and assign it to their associated teams. They can also transfer ownership of existing apps to their teams. For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
+      Developers will now see an option to assign new applications to one of their teams during the creation process. 
+      Only teams that are allowed to own applications will be listed. 
+      They can also transfer ownership of existing apps to their teams. 
+      For more information on the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/).
 {% endnavtab %}
 {% navtab "API" %}
 1. Assign a developer to a team by sending a `POST` request to the [`/portals/{portalId}/teams/{teamId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/add-developer-to-portal-team):
