@@ -498,7 +498,7 @@ rows:
       * Create and list Event Gateways.
       * When creating an Event Gateway, grants the Event Gateways Admin role on newly created Event Gateways.
   - role: "`Event Gateways Admin`"
-    description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration."
+    description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration. This role does not grant access creating new event gateways, their runtime instances, or their configurations."
     permissions: |
       * Edit, read, list, and delete existing Event Gateway control planes.
       * Create, edit, read, list, and delete Event Gateway entity configurations within control planes.
