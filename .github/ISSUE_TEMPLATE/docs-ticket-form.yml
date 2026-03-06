@@ -1,0 +1,52 @@
+name: Docs ticket (form)
+description: Create a docs-related issue with clear context, goals, and requirements
+labels: []
+assignees: []
+body:
+  - type: textarea
+    id: jobs-to-be-done
+    attributes:
+      label: Jobs to be done
+      description: User case or reason for doing this work.
+      placeholder: "Example: Users should be able to log in to Konnect and associate Control Planes with the docs examples."
+    validations:
+      required: false
+
+  - type: textarea
+    id: definition-of-done
+    attributes:
+      label: Definition of done
+      description: The measurable outcome that marks this issue as complete.
+      placeholder: "Example: Write a how-to doc that explains using the GitLab integration in Service Catalog."
+    validations:
+      required: true
+
+  - type: textarea
+    id: information
+    attributes:
+      label: Information
+      description: "Any supporting details to help solve the issue: DRP, Slack links, Google Docs, or related resources."
+    validations:
+      required: false
+
+  - type: input
+    id: due-date
+    attributes:
+      label: Due date
+      description: When should these docs be ready by?
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      description: Rough estimate of effort.
+      options:
+        - S — fixing a broken link, updating wording in an FAQ or paragraph
+        - M — writing a UI how-to for a straightforward product, adding a plugin example
+        - L — adding an API/Terraform how-to, writing a reference page, writing a how-to that involves a known third-party product
+        - XL — adding a how-to that involves certs, uncommon or complicated third-party tools, adding a how-to series
+    validations:
+      required: true
