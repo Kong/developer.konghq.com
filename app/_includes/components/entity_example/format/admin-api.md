@@ -6,6 +6,9 @@
   To create a Consumer Group, call the [Admin API’s `/consumer_groups` endpoint](/api/gateway/admin-ee/#/operations/create-consumer_group).
 {% when 'route' %}
   To create a Route, call the [Admin API’s `/routes` endpoint](/api/gateway/admin-ee/#/operations/create-route).
+
+  {:.info}
+  > {% new_in 3.14 %} By default, Routes only accept requests over HTTPS. To allow requests over HTTP, set `"protocols": ["http", "https"]` in the Route's configuration.
 {% when 'service' %}
   To create a Gateway Service, call the [Admin API’s `/services` endpoint](/api/gateway/admin-ee/#/operations/create-service).
 {% when 'target' %}

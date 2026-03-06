@@ -3,3 +3,6 @@ paths:
   - /batches
 service:
   name: batches-service
+protocols:
+  - http
+  - https

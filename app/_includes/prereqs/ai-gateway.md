@@ -13,6 +13,9 @@ entities:
         name: llm-service
       paths:
         - /chat
+      protocols:
+      - http
+      - https
 
   plugins:
     - name: ai-proxy
