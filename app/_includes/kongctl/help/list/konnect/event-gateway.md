@@ -17,10 +17,11 @@ Examples:
   kongctl get egw
 
 Available Commands:
-  backend-clusters  Manage backend clusters for an Event Gateway
-  listener-policies Manage listener policies for an Event Gateway Listener
-  listeners         Manage listeners for an Event Gateway
-  virtual-clusters  Manage virtual clusters for an Event Gateway
+  backend-clusters        Manage backend clusters for an Event Gateway
+  data-plane-certificates Manage data plane certificates for an Event Gateway
+  listener-policies       Manage listener policies for an Event Gateway Listener
+  listeners               Manage listeners for an Event Gateway
+  virtual-clusters        Manage virtual clusters for an Event Gateway
 
 
 Flags:
