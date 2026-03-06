@@ -3,6 +3,8 @@ on:
   pull_request:
     types: [synchronize, ready_for_review, opened]
   workflow_dispatch:
+permissions:
+  contents: read
 concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
