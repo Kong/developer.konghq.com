@@ -5,8 +5,10 @@ Usage:
 
 Examples:
   kongctl diff -f api.yaml
+  kongctl diff -f api.yaml --mode apply
+  kongctl diff -f api.yaml --mode delete
   kongctl diff --plan plan.json
-  kongctl diff -f config.yaml --format json
+  kongctl diff -f config.yaml --output json
   
   Use "kongctl help diff" for detailed documentation
 
@@ -35,6 +37,7 @@ Flags:
       --log-level string            Configures the logging level. Execution logs are written to STDERR.
                                     - Config path: [ log-level ]
                                     - Allowed    : [ trace|debug|info|warn|error ] (default "error")
+      --mode string                 Diff mode (sync|apply|delete) (default "sync")
   -o, --output string               Output format (text, json, or yaml) (default "text")
       --pat string                  Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                     Setting this value overrides tokens obtained from the login command.
