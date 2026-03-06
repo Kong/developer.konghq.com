@@ -118,9 +118,9 @@ rows:
                 - type: text
                   text: |
                     {{site.konnect_short_name}} {{site.observability}} uses role-based access control to determine what each user can view. 
-                    Users with Analytics-specific [teams and roles](/konnect-platform/teams-and-roles/) have full access to all {{site.observability}} and analytics features.
-                    Users without Analytics-specific roles can still view {{site.observability}} data relevant to them based on their other assigned roles and teams.
-                    For example, users with control plane permissions can see analytics about the control planes they have access to, but no other analytics data.
+                    Users added to one of the predefined Analytics [teams](/konnect-platform/teams-and-roles/#predefined-teams) have full access to all {{site.observability}} and analytics features.
+                    Users not in one of these teams can still view analytics data relevant to them based on their other assigned Konnect roles and teams.
+                    This applies across permission types in Konnect, including control plane permissions, API permissions, and Portal permissions. For example, a user with access to a specific control plane will see analytics data for that control plane only.
 
                     Keep the following in mind when you are determining access and permissions to {{site.observability}}:
                     * Explorer and Debugger are available to all {{site.observability}} users without extra role assignments.
