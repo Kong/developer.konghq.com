@@ -43,7 +43,13 @@ prereqs:
         export AWS_REGION='us-east-2'
         export AWS_VPC_CIDR='10.1.0.0/16'
         ```
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+  - text: Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
 ---
 
 ## Initiate the VPC peering connection
