@@ -1,3 +1,13 @@
+# kongctl
+/kongctl/create/   /kongctl/
+/kongctl/create/*  /kongctl/
+/kongctl/delete/gateway/   /kongctl/delete/
+/kongctl/delete/gateway/*  /kongctl/delete/
+/kongctl/delete/konnect/   /kongctl/delete/
+/kongctl/delete/konnect/*  /kongctl/delete/
+/kongctl/delete/portal/    /kongctl/delete/
+/kongctl/delete/portal/*   /kongctl/delete/
+
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 # Renames
