@@ -21,11 +21,35 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: aha-link
+    attributes:
+      label: AHA link
+      placeholder: "ahalink"
+    validations:
+      required: false
+
+  - type: input
+    id: jira-link
+    attributes:
+      label: Jira link
+      placeholder: "jiralink"
+    validations:
+      required: false
+
+  - type: input
+    id: slack-link
+    attributes:
+      label: Slack link
+      placeholder: "slacklink"
+    validations:
+      required: false
+
   - type: textarea
     id: information
     attributes:
-      label: Information
-      description: "Any supporting details to help solve the issue: DRP, Slack links, Google Docs, or related resources."
+      label: Additional information
+      description: Any other supporting details such as Google Docs links or related resources.
     validations:
       required: false
 
