@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, toRaw, onMounted, watch, computed } from 'vue'
 
 import { SchemaRenderer, parseSpecDocument, parsedDocument } from '@kong/spec-renderer'
 import ApiService from '../services/api.js'
@@ -33,6 +33,12 @@ const schema = computed(() => {
   }
 })
 
+watch(schema, (node) => {
+  if (node) {
+    annotateReferenceable(toRaw(node.data))
+  }
+}, { once: true })
+
 onMounted(async () => {
   await fetchSpec()
 })
@@ -46,6 +52,18 @@ watch((specText), async (newSpecText, oldSpecText) => {
     withCredentials: false,
   })
 })
+
+function annotateReferenceable(obj) {
+  if (Array.isArray(obj)) {
+    obj.forEach(annotateReferenceable)
+  } else if (obj && typeof obj === 'object') {
+    if (obj['x-referenceable'] === true) {
+      const note = 'This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).'
+      obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
+    }
+    Object.values(obj).forEach(annotateReferenceable)
+  }
+}
 
 async function fetchSpec() {
   let response = await versionsAPI.getProductVersionSpec({
