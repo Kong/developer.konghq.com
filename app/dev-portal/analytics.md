@@ -66,7 +66,7 @@ Analyze web traffic, user behavior, and engagement for your Dev Portal with [Goo
 * If Google Tag Manager is set up to track tab clicks, which SDK or language tab do developers prefer?
 * What does the Dev Portal conversion funnel look like?
 
-### Integrate Google Analytics Dev Portal
+### Integrate Google Analytics with Dev Portal
 
 To configure the Google Analytics integration, do the following:
 
@@ -106,9 +106,9 @@ You can verify that the integrations are working as expected by navigating to yo
 {% endnavtab %}
 {% endnavtabs %}
 
-## Integrate Google Tag Manager with Dev Portal
+### Integrate Google Tag Manager with Dev Portal
 
-To configure the Google Analytics integration, do the following:
+To configure the Google Tag Manager integration, do the following:
 
 {% navtabs "analytics-integrations" %}
 {% navtab "UI" %}
