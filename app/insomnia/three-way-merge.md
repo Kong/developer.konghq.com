@@ -2,7 +2,7 @@
 title: Insomnia 3-way merge
 description: Learn how Insomnia handles conflicts during Git sync so you can combine concurrent changes safely.
 breadcrumbs:
-  - /insomnia/
+  - /insomnia/git-sync/
 content_type: reference
 layout: reference
 products:
