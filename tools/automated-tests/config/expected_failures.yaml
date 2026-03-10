@@ -17,7 +17,7 @@ input/instructions/how-to/set-up-ai-proxy-with-ollama/on-prem/gateway.yaml: "Exp
 input/instructions/how-to/use-ai-prompt-template-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/use-ai-prompt-guard-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/use-azure-ai-content-safety/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 400, got: 500."
-input/instructions/how-to/use-ai-semantic-response-guard-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 400."
+input/instructions/how-to/use-ai-semantic-response-guard-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/use-custom-function-for-ai-rate-limiting/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/use-semantic-load-balancing/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
 input/instructions/how-to/use-ai-aws-guardrails-plugin/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 500."
