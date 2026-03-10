@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@44aa18769032e5120f9613187fd41f3264143b6b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/44aa18769032e5120f9613187fd41f3264143b6b'
+  x-oas-source: kong/platform-api@180892651c26e7ffbadbc460887da16e9c0f766c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/180892651c26e7ffbadbc460887da16e9c0f766c'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -726,8 +726,111 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Resource Configurations
+  /cloud-gateways/add-ons:
+    post:
+      operationId: create-add-on
+      summary: Create Add-On
+      description: |
+        Creates a new add-on. Specific add-on types (e.g., managed cache)
+        are defined by the sub-kind configuration.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAddOnRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateAddOnResponse'
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/CloudGatewaysForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/CloudGatewaysConflict'
+      tags:
+        - Add-Ons
+    get:
+      operationId: list-add-ons
+      summary: List Add-Ons
+      description: |
+        Returns a paginated collection of add-ons for an organization.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/AddOnsFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListAddOnsResponse'
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Add-Ons
+  '/cloud-gateways/add-ons/{addOnId}':
+    get:
+      operationId: get-add-on
+      summary: Get Add-On
+      description: Retrieves an add-on by ID.
+      parameters:
+        - $ref: '#/components/parameters/AddOnId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RetrieveAddOnResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Add-Ons
+    delete:
+      operationId: delete-add-on
+      summary: Delete Add-On
+      description: |
+        Deletes an add-on by ID. The request will be rejected if the managed cache partial is still in use by some plugins.
+      parameters:
+        - $ref: '#/components/parameters/AddOnId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Add-Ons
 components:
   parameters:
+    AddOnId:
+      name: addOnId
+      description: ID of the add-on to operate on.
+      required: true
+      in: path
+      schema:
+        $ref: '#/components/schemas/AddOnId'
+    AddOnsFilter:
+      name: filter
+      description: Filters supported for add-ons.
+      required: false
+      in: query
+      schema:
+        $ref: '#/components/schemas/AddOnsFilterParameters'
+      style: deepObject
     ConfigurationId:
       name: configurationId
       in: path
@@ -3077,6 +3180,343 @@ components:
       type: string
       example: The number of minutes that a data plane group can be idle before it is automatically scaled down to zero instances.
       readOnly: true
+    AddOnId:
+      type: string
+      format: uuid
+      example: 550e8400-e29b-41d4-a716-446655440000
+      readOnly: true
+    AddOnConfigResponse:
+      description: Configuration object for different types of add-ons.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/ManagedCacheAddOnConfigResponse'
+      title: AddOnConfigResponse
+    ManagedCacheAddOnConfigResponse:
+      description: Configuration for managed cache add-on.
+      type: object
+      properties:
+        kind:
+          description: Type of add-on configuration.
+          type: string
+          enum:
+            - managed-cache.v0
+          x-terraform-transform-const: true
+        capacity_config:
+          $ref: '#/components/schemas/ManagedCacheCapacityConfig'
+        data_plane_groups:
+          description: List of data-plane groups where the managed cache is deployed.
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagedCacheAddOnDataPlaneGroup'
+        state_metadata:
+          description: |
+            Metadata describing the state of the managed cache add-on.
+          type: object
+          additionalProperties: false
+          properties:
+            cache_config_id:
+              description: Reference to cache configuration for this add-on.
+              type: string
+              format: uuid
+              example: edaf40f9-9fb0-4ffe-bb74-4e763a6bd471
+            cache_server_name:
+              description: Env vault path to cache server name.
+              type: string
+              example: '{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}'
+            cache_host:
+              description: Env vault path to cache hostname.
+              type: string
+              example: '{vault://env/ADDON_MANAGED_CACHE_HOST}'
+            cache_port:
+              description: Env vault path to cache port.
+              type: string
+              example: '{vault://env/ADDON_MANAGED_CACHE_PORT}'
+            cache_username:
+              description: Env vault path to cache username.
+              type: string
+              example: '{vault://env/ADDON_MANAGED_CACHE_USERNAME}'
+            cloud_authentication:
+              description: |
+                Metadata describing the cloud authentication details for managed cache add-on.
+              type: object
+              additionalProperties: false
+              properties:
+                auth_provider:
+                  description: Env vault path to cache auth provider.
+                  type: string
+                  example: '{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}'
+                aws_cache_name:
+                  description: Env vault path to aws cache name.
+                  type: string
+                  example: '{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}'
+                aws_region:
+                  description: Env vault path to aws region.
+                  type: string
+                  example: '{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}'
+                aws_assume_role_arn:
+                  description: Env vault path to aws assume role arn.
+                  type: string
+                  example: '{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}'
+                azure_tenant_id:
+                  description: Env vault path to azure tenant id.
+                  type: string
+                  example: '{vault://env/ADDON_MANAGED_CACHE_AZURE_TENANT_ID}'
+      additionalProperties: false
+      required:
+        - kind
+        - capacity_config
+        - data_plane_groups
+        - state_metadata
+      title: ManagedCacheAddOnConfigResponse
+    ManagedCacheAddOnDataPlaneGroup:
+      description: Object that describes a data-plane group where managed cache add-on is deployed.
+      type: object
+      properties:
+        id:
+          description: ID of the data-plane group.
+          type: string
+          format: uuid
+          example: 1150820b-c69f-4a2a-b9be-bbcdbc5cd618
+        cloud_gateway_network_id:
+          description: Network ID this data-plane group is attached to.
+          type: string
+          format: uuid
+          example: 36ae63d3-efd1-4bec-b246-62aa5d3f5695
+        provider:
+          $ref: '#/components/schemas/ProviderName'
+        region:
+          description: Region of cloud provider the data-plane group is deployed to.
+          type: string
+          example: us-east-1
+        state:
+          description: |
+            The current state of the managed cache add-on in the data-plane group. Possible values:
+            - `initializing` - The add-on is in the process of being initialized/updated and is setting up necessary resources for this data-plane group.
+            - `ready` - The add-on is fully operational for this data-plane group.
+            - `error` - The add-on is in an error state, and is not operational for this data-plane group.
+            - `terminating` - The add-on is in the process of being deleted for this data-plane group.
+          type: string
+          enum:
+            - initializing
+            - ready
+            - error
+            - terminating
+          readOnly: true
+        state_metadata:
+          description: |
+            Metadata describing the state of the managed cache add-on in the data-plane group.
+          type: object
+          additionalProperties: false
+          properties:
+            error_reason:
+              description: |
+                Reason why the managed cache add-on may be in an error state, reported from backing infrastructure.
+              type: string
+              example: |
+                Failed to create managed cache add-on due to invalid configuration.
+      additionalProperties: false
+      required:
+        - id
+        - cloud_gateway_network_id
+        - provider
+        - region
+        - state
+        - state_metadata
+      title: ManagedCacheAddOnDataPlaneGroup
+    AddOnState:
+      description: |
+        The current state of the add-on. Possible values:
+        - `initializing` - The add-on is in the process of being initialized/updated.
+        - `ready` - The add-on is fully operational.
+        - `terminating` - The add-on is in the process of being deleted.
+      type: string
+      enum:
+        - initializing
+        - ready
+        - terminating
+      readOnly: true
+      title: Add-On State
+    AddOnResponse:
+      description: Object containing information about an add-on.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/AddOnId'
+        name:
+          $ref: '#/components/schemas/AddOnName'
+        owner:
+          $ref: '#/components/schemas/AddOnOwner'
+        config:
+          $ref: '#/components/schemas/AddOnConfigResponse'
+        entity_version:
+          description: 'Monotonically-increasing version count of the add-on, to indicate the order of updates to the add-on.'
+          type: integer
+          example: 1
+          readOnly: true
+        state:
+          $ref: '#/components/schemas/AddOnState'
+        created_at:
+          description: RFC-3339 timestamp representation of add-on creation date.
+          type: string
+          format: date-time
+          example: '2025-08-26T06:56:41Z'
+          readOnly: true
+        updated_at:
+          description: RFC-3339 timestamp representation of add-on update date.
+          type: string
+          format: date-time
+          example: '2025-08-26T06:56:41Z'
+          readOnly: true
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - owner
+        - config
+        - entity_version
+        - state
+        - created_at
+        - updated_at
+      title: AddOnResponse
+    CreateAddOnRequest:
+      description: Request schema for creating an add-on.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/AddOnName'
+        owner:
+          $ref: '#/components/schemas/AddOnOwner'
+        config:
+          $ref: '#/components/schemas/CreateAddOnConfig'
+      additionalProperties: false
+      required:
+        - name
+        - owner
+        - config
+      title: CreateAddOnRequest
+    AddOnName:
+      description: Unique human-readable name of the add-on.
+      type: string
+      example: my-add-on
+      maxLength: 70
+      minLength: 1
+      title: AddOnName
+    AddOnOwner:
+      description: Owner for the add-on.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/ControlPlaneAddOnOwner'
+        - $ref: '#/components/schemas/ControlPlaneGroupAddOnOwner'
+      title: AddOnOwner
+    ControlPlaneAddOnOwner:
+      description: Control Plane is the owner for the add-on.
+      type: object
+      properties:
+        kind:
+          description: Type of owner for the add-on.
+          type: string
+          enum:
+            - control-plane
+          x-terraform-transform-const: true
+        control_plane_id:
+          description: ID of the control-plane that owns this add-on.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        control_plane_geo:
+          $ref: '#/components/schemas/ControlPlaneGeo'
+      additionalProperties: false
+      required:
+        - kind
+        - control_plane_id
+        - control_plane_geo
+      title: ControlPlaneAddOnOwner
+    ControlPlaneGroupAddOnOwner:
+      description: Control Plane Group is the owner for the add-on.
+      type: object
+      properties:
+        kind:
+          description: Type of owner for the add-on.
+          type: string
+          enum:
+            - control-plane-group
+          x-terraform-transform-const: true
+        control_plane_group_id:
+          description: ID of the control-plane group that owns this add-on.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        control_plane_group_geo:
+          $ref: '#/components/schemas/ControlPlaneGeo'
+      additionalProperties: false
+      required:
+        - kind
+        - control_plane_group_id
+        - control_plane_group_geo
+      title: ControlPlaneGroupAddOnOwner
+    CreateAddOnConfig:
+      description: Configuration for creating different types of add-ons.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/CreateManagedCacheAddOnConfig'
+      title: CreateAddOnConfig
+    CreateManagedCacheAddOnConfig:
+      description: Configuration for creating a managed cache add-on.
+      type: object
+      properties:
+        kind:
+          description: Type of add-on configuration.
+          type: string
+          enum:
+            - managed-cache.v0
+          x-terraform-transform-const: true
+        capacity_config:
+          $ref: '#/components/schemas/ManagedCacheCapacityConfig'
+      additionalProperties: false
+      required:
+        - kind
+        - capacity_config
+      title: CreateManagedCacheAddOnConfig
+    ManagedCacheCapacityConfig:
+      description: Configuration for managed cache capacity and performance characteristics.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/TieredCapacityConfig'
+      title: ManagedCacheCapacityConfig
+    TieredCapacityConfig:
+      description: Capacity tiers with pre-configured size and performance characteristics.
+      type: object
+      properties:
+        kind:
+          description: Type of capacity configuration.
+          type: string
+          enum:
+            - tiered
+          x-terraform-transform-const: true
+        tier:
+          description: |
+            Capacity tier that determines both cache size and performance characteristics:
+            - micro: ~0.5 GiB capacity
+            - small: ~1 GiB capacity
+            - medium: ~3 GiB capacity
+            - large: ~6 GiB capacity
+            - xlarge: ~12 GiB capacity
+            - 2xlarge: ~25 GiB capacity
+            - 4xlarge: ~52 GiB capacity
+          type: string
+          enum:
+            - micro
+            - small
+            - medium
+            - large
+            - xlarge
+            - 2xlarge
+            - 4xlarge
+      additionalProperties: false
+      required:
+        - kind
+        - tier
+      title: TieredCapacityConfig
     ConfigurationsFilterParameters:
       type: object
       properties:
@@ -3473,6 +3913,127 @@ components:
         - created_at
         - updated_at
       title: Default Resource Configuration
+    AddOnsFilterParameters:
+      description: Filter parameters for add-ons list operation.
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/CloudGatewaysStringFieldFilterOverride'
+        state:
+          $ref: '#/components/schemas/AddOnStateFieldFilter'
+        config.kind:
+          $ref: '#/components/schemas/AddOnConfigKindFieldFilter'
+        owner.control_plane_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        owner.control_plane_geo:
+          $ref: '#/components/schemas/ControlPlaneGeoFieldFilter'
+        owner.control_plane_group_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        owner.control_plane_group_geo:
+          $ref: '#/components/schemas/ControlPlaneGeoFieldFilter'
+      additionalProperties: false
+      title: Add-Ons Filter Parameters
+    AddOnStateFieldFilter:
+      oneOf:
+        - $ref: '#/components/schemas/AddOnStateFieldEqualsFilter'
+        - $ref: '#/components/schemas/AddOnStateFieldNotEqualsFilter'
+        - $ref: '#/components/schemas/AddOnStateFieldOrEqualityFilter'
+      title: AddOnStateFieldFilter
+    AddOnStateFieldEqualsFilter:
+      description: Filter add-on state by exact match.
+      oneOf:
+        - $ref: '#/components/schemas/AddOnState'
+        - $ref: '#/components/schemas/AddOnStateFieldEqualsComparison'
+      title: AddOnStateFieldEqualsFilter
+      x-examples:
+        example-1: ready
+        example-2:
+          eq: ready
+    AddOnStateFieldEqualsComparison:
+      type: object
+      properties:
+        eq:
+          $ref: '#/components/schemas/AddOnState'
+      additionalProperties: false
+      required:
+        - eq
+      title: AddOnStateFieldEqualsComparison
+    AddOnStateFieldNotEqualsFilter:
+      description: Filter add-on state by inequality match.
+      type: object
+      properties:
+        neq:
+          $ref: '#/components/schemas/AddOnState'
+      additionalProperties: false
+      required:
+        - neq
+      title: AddOnStateFieldNotEqualsFilter
+      x-examples:
+        example-1:
+          neq: ready
+    AddOnStateFieldOrEqualityFilter:
+      description: |
+        Filter add-on state by determining if the value is equal to any in a set of values, where the set is a comma-delimited list.
+      type: object
+      properties:
+        oeq:
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: AddOnStateFieldOrEqualityFilter
+      x-examples:
+        example-1:
+          oeq: 'ready,initializing'
+    AddOnConfigKindFieldFilter:
+      description: Filter for add-on config kind field.
+      oneOf:
+        - $ref: '#/components/schemas/AddOnConfigKindFieldEqualsFilter'
+        - $ref: '#/components/schemas/AddOnConfigKindFieldNotEqualsFilter'
+        - $ref: '#/components/schemas/AddOnConfigKindFieldOrEqualityFilter'
+      title: Add-On Config Kind Field Filter
+    AddOnConfigKindFieldEqualsFilter:
+      description: Filter add-on config kind by exact match.
+      oneOf:
+        - $ref: '#/components/schemas/AddOnConfigKind'
+        - $ref: '#/components/schemas/AddOnConfigKindFieldEqualsComparison'
+      title: Add-On Config Kind Field Equals Filter
+    AddOnConfigKindFieldEqualsComparison:
+      type: object
+      properties:
+        eq:
+          $ref: '#/components/schemas/AddOnConfigKind'
+      additionalProperties: false
+      required:
+        - eq
+      title: AddOnConfigKindFieldEqualsComparison
+    AddOnConfigKindFieldNotEqualsFilter:
+      description: Filter add-on config kind by inequality match.
+      type: object
+      properties:
+        neq:
+          $ref: '#/components/schemas/AddOnConfigKind'
+      additionalProperties: false
+      required:
+        - neq
+      title: Add-On Config Kind Field Not Equals Filter
+    AddOnConfigKindFieldOrEqualityFilter:
+      description: Filter add-on config kind by determining if the value is equal to any in a set of values.
+      type: object
+      properties:
+        oeq:
+          description: Comma-delimited list of add-on kinds.
+          type: string
+      additionalProperties: false
+      required:
+        - oeq
+      title: Add-On Config Kind Field Or Equality Filter
+    AddOnConfigKind:
+      description: Type of add-on config.
+      type: string
+      enum:
+        - managed-cache.v0
+      title: Add-On Config Kind
     StringFieldNEQFilter:
       description: Filters on the given string field value by exact match inequality.
       type: object
@@ -3858,6 +4419,29 @@ components:
       x-examples:
         example-1:
           ocontains: 'this-value,or-that-value'
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+      additionalProperties: false
+      x-examples:
+        example-1:
+          oeq: 'some-value,some-other-value'
+          neq: not-this-value
+        example-2:
+          eq: some-value
   examples:
     PermissionDeniedExample:
       value:
@@ -4299,6 +4883,35 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ResourceConfiguration'
+    ListAddOnsResponse:
+      description: A paginated list for a collection of add-ons.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddOnResponse'
+            required:
+              - meta
+              - data
+            title: ListAddOnsResponse
+    CreateAddOnResponse:
+      description: Response format for creating an add-on.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddOnResponse'
+    RetrieveAddOnResponse:
+      description: Response format for retrieving an add-on by ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddOnResponse'
     Unauthorized:
       description: Unauthorized
       content:
@@ -4362,6 +4975,7 @@ tags:
   - name: Networks
   - name: Transit Gateways
   - name: Private DNS
+  - name: Add-Ons
   - name: Provider Accounts
   - name: Custom Domains
   - name: Cloud Gateways Resource Quotas

@@ -127,10 +127,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Consumer Group
 
 {% entity_example %}
@@ -138,3 +134,7 @@ type: consumer_group
 data:
     name: my_group
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

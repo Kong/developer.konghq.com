@@ -10,20 +10,21 @@ const __dirname = path.dirname(__filename);
 
 (async () => {
   try {
+    const baseOutputDir = path.resolve(__dirname, '../../app/_includes/kongctl/help');
+    const docsOutputDir = path.resolve(__dirname, '../../app/kongctl');
+
+    // Keep generated help authoritative by removing stale command includes first.
+    fs.rmSync(baseOutputDir, { recursive: true, force: true });
+    fs.mkdirSync(baseOutputDir, { recursive: true });
+
     // Get top-level commands from `kongctl --help`
     const { stdout: topHelp } = await execAsync('kongctl --help');
     const availableCommands = extractCommands(topHelp);
-
-    const baseOutputDir = path.resolve(__dirname, '../../app/_includes/kongctl/help');
 
     for (const command of availableCommands) {
       // Fetch and save the command-level help: `kongctl <command> --help`
       const { stdout: cmdHelpStdout } = await execAsync(`kongctl ${command} --help`);
       const cmdHelp = extractCommandSpecificHelp(cmdHelpStdout);
-
-      if (!fs.existsSync(baseOutputDir)) {
-        fs.mkdirSync(baseOutputDir, { recursive: true });
-      }
 
       // Create directory for this command and write command-level help to index.md
       const commandDir = path.join(baseOutputDir, command);
@@ -78,8 +79,12 @@ const __dirname = path.dirname(__filename);
       }
     }
 
+    const removedPages = pruneStaleReferencePages(docsOutputDir, baseOutputDir);
+    pruneEmptyDirectories(docsOutputDir);
+    console.log(`Removed ${removedPages} stale kongctl docs pages`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
+    process.exit(1);
   }
 })();
 
@@ -132,4 +137,67 @@ function extractCommands(stdout) {
   }
 
   return availableCommands;
+}
+
+function pruneStaleReferencePages(docsOutputDir, includesOutputDir) {
+  let removedPages = 0;
+  const docs = listFilesRecursive(docsOutputDir).filter((filePath) => filePath.endsWith('.md'));
+
+  for (const docPath of docs) {
+    const content = fs.readFileSync(docPath, 'utf8');
+    const includeMatches = [...content.matchAll(/{%\s*include_cached\s+\/kongctl\/help\/([^\s%]+)\s*%}/g)];
+
+    if (includeMatches.length === 0) {
+      continue;
+    }
+
+    const hasMissingInclude = includeMatches.some((match) => {
+      const includePath = path.resolve(includesOutputDir, match[1]);
+      return !fs.existsSync(includePath);
+    });
+
+    if (hasMissingInclude) {
+      fs.unlinkSync(docPath);
+      removedPages += 1;
+      const relativePath = path.relative(path.resolve(__dirname, '../../'), docPath);
+      console.log(`Removed stale page: ${relativePath}`);
+    }
+  }
+
+  return removedPages;
+}
+
+function listFilesRecursive(rootDir) {
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const entryPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursive(entryPath));
+    } else if (entry.isFile()) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
+function pruneEmptyDirectories(rootDir, currentDir = rootDir) {
+  const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    pruneEmptyDirectories(rootDir, path.join(currentDir, entry.name));
+  }
+
+  if (currentDir === rootDir) {
+    return;
+  }
+
+  if (fs.readdirSync(currentDir).length === 0) {
+    fs.rmdirSync(currentDir);
+  }
 }

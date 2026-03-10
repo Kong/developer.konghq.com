@@ -1,7 +1,6 @@
 ```bash
 Usage:
   kongctl delete [flags]
-  kongctl delete [command]
 
 Aliases:
   delete, d, D, del, rm, DEL, RM
@@ -11,19 +10,6 @@ Examples:
   kongctl delete -f config.yaml
   kongctl delete -f ./configs/ --recursive
   kongctl delete -f config.yaml --dry-run
-  # Delete a Konnect Kong Gateway control plane (Konnect-first)
-  kongctl delete gateway control-plane <id>
-  # Delete a Konnect Kong Gateway control plane (explicit)
-  kongctl delete konnect gateway control-plane <id>
-  # Delete a Konnect portal by ID (Konnect-first)
-  kongctl delete portal 12345678-1234-1234-1234-123456789012
-  # Delete a Konnect portal by name
-  kongctl delete portal my-portal
-
-Available Commands:
-  gateway     Manage Konnect Kong Gateway resources
-  konnect     Manage Konnect resources
-  portal      Delete a Konnect portal
 
 
 Flags:
@@ -69,7 +55,5 @@ Flags:
                                          --require-namespace=foo,bar                      # Allow 'foo' or 'bar' (comma-separated)
                                          --require-namespace=foo --require-namespace=bar  # Allow 'foo' or 'bar' (repeated flags)
                                        - Config path: [ konnect.declarative.require-namespace ]
-
-Use "kongctl delete [command] --help" for more information about a command.
 
 ```

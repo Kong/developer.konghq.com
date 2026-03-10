@@ -27,7 +27,7 @@ tools:
     - admin-api
 schema:
     api: gateway/admin-ee
-    path: /schemas/Event-hooks
+    path: /schemas/Event-Hooks
 
 api_specs:
     - gateway/admin-ee
@@ -156,10 +156,6 @@ These parameters can be used to issue notifications any time an upstream in your
 For information about specific events related to a source, issue a `GET` request to the `/event-hooks/sources/{source}` endpoint. 
 The API returns a list of all of the events associated to a source in the following format: `balancer: health`. 
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up an Event Hook
 
 {% entity_example %}
@@ -172,3 +168,7 @@ data:
   config:
       "url": "$WEBHOOK_URL"
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

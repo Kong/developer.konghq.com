@@ -1,0 +1,119 @@
+metadata:
+  title: "Kong Developer Sitemap"
+  content_type: landing_page
+  description: Sitemap for Kong Developer documentation.
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Developer Sitemap"
+      sub_text: "Documentation index and search pages"
+  - header:
+      type: h2
+      text: "Index pages"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[API Gateway](/index/gateway/)"
+                  - "[Event Gateway](/index/event-gateway/)"
+                  - "[AI Gateway](/index/ai-gateway/)"
+                  - "[Service Mesh](/index/mesh/)"
+                  - "[{{site.kic_product_name}}](/index/kubernetes-ingress-controller/)"
+                  - "[{{site.operator_product_name}}](/index/operator/)"
+
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[{{site.konnect_short_name}}](/index/konnect/)"
+                  - "[{{site.dev_portal}}](/index/dev-portal/)"
+                  - "[{{site.metering_and_billing}}](/index/metering-and-billing/)"
+                  - "[{{site.konnect_catalog}}](/index/catalog/)"
+                  - "[{{site.observability}}](/index/observability/)"
+                  - "[{{site.konnect_short_name}} Reference Platform](/index/konnect-reference-platform/)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[decK](/index/deck/)"
+                  - "[kongctl](/index/kongctl/)"
+                  - "[Insomnia](/index/insomnia/)"
+                  - "[Terraform](/terraform/)"
+                  
+  - header:
+      type: h2
+      text: "Key reference pages"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Gateway plugin hub](/plugins/)"
+                  - "[Insomnia plugin hub](https://insomnia.rest/plugins)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Mesh policy hub](/mesh/policies/)"
+                  - "[{{site.event_gateway_short}} policy hub](/event-gateway/policies/)"
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[API references](/api/)"
+
+  - header:
+      type: h2
+      text: "Changelogs"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Gateway changelog](/gateway/changelog/)"
+                  - "[Mesh changelog](/mesh/changelog/)"
+                  - "[{{site.konnect_short_name}} changelog (all {{site.konnect_short_name}} apps and platform changes)](https://releases.konghq.com/en)"
+
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Insomnia changelog](https://insomnia.rest/changelog)"
+                  - "[decK changelog](https://github.com/Kong/deck/blob/main/CHANGELOG.md)"
+                  - "[Operator changelog](/operator/changelog/)"
+                  - "[{{site.kic_product_name_short}} changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md)"
+
+  - column_count: 3
+    header:
+      type: h2
+      text: "Search pages"
+    columns:
+        - blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                  - "[Search all documentation](/search/)"
+                  - "[Search how-to guides](/how-to/)"

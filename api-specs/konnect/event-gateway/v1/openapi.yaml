@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@95a8ed41c8d27541f6778fc9968e2c8cf785cdc2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/95a8ed41c8d27541f6778fc9968e2c8cf785cdc2'
+  x-oas-source: kong/platform-api@c84412ec45ceb782cf4901750bf4013311bbcb98
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c84412ec45ceb782cf4901750bf4013311bbcb98'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3371,10 +3371,19 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
       required:
         - type
         - config
@@ -3438,10 +3447,19 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
       required:
         - type
         - config
@@ -3519,12 +3537,25 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
-              - record.value.validated
-              - record.value.content
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
       required:
         - type
         - config
@@ -3580,12 +3611,25 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
-              - record.value.validated
-              - record.value.content
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3635,12 +3679,25 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
-              - record.value.validated
-              - record.value.content
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
       required:
         - type
     EventGatewaySkipRecordPolicyCreate:
@@ -3684,12 +3741,25 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
-              - record.value.validated
-              - record.value.content
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
+              - name: record.value.validated
+                type: boolean
+                description: Indicates whether the record value was successfully validated.
+              - name: record.value.content
+                type: object
+                description: The content of the record value.
         parent_policy_id:
           description: 'The unique identifier of the parent schema validation policy, if any.'
           type: string
@@ -3792,10 +3862,19 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
       required:
         - type
         - config
@@ -3841,10 +3920,19 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
-              - context.topic.name
-              - record.headers
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.topic.name
+                type: string
+                description: The name of the topic.
+              - name: record.headers
+                type: object
+                description: An associative array of header key value pairs.
       required:
         - type
         - config
@@ -3934,8 +4022,13 @@ components:
           x-expression:
             type: boolean
             fields:
-              - context.auth.principal.name
-              - context.auth.type
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
       required:
         - type
         - config
@@ -3987,10 +4080,19 @@ components:
               example: 'context.auth.token.claims["topics"]'
               x-expression:
                 type: array
+                items:
+                  type: string
                 fields:
-                  - context.auth.principal.name
-                  - context.auth.type
-                  - context.auth.token.claims
+                  - name: context.auth.principal.name
+                    type: string
+                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+                  - name: context.auth.type
+                    type: string
+                    description: |
+                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+                  - name: context.auth.token.claims
+                    type: object
+                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
               description: |
                 This expression should evaluate to an array of glob patterns,
                 equivalent to the `match` values in the array form of `resource_names`.

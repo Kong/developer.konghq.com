@@ -314,20 +314,16 @@ There are two types of refresh configuration available:
 
 For more information, see [Secret management](/gateway/secrets-management/).
 
-## Schema
-
-The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
-
-{% entity_schema %}
-
 ## Vault provider-specific configuration parameters
 
-When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider.
+When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider. For the entire Vault configuration schema, see the [schema reference](#schema).
 
 You can set up a Vault in one of the following ways:
 * Using the Vault entity
 * Using environment variables, set at {{site.base_gateway}} startup
 * Using parameters in `kong.conf`, set at {{site.base_gateway}} startup
+
+The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
 
 {% navtabs "provider config" %}
 {% navtab "Environment variable" %}
@@ -939,7 +935,11 @@ To access secrets stored in the AWS Secrets Manager, {{site.base_gateway}} needs
 {:.info}
 > **Note:** IAM Identity Center credential provider and process credential provider are not supported.
 
-## Set up a Vault
+## Store values as secrets
+
+You can set up a Vault in one of the following ways.
+
+### Set up a Vault entity
 
 {% entity_example %}
 type: vault
@@ -951,7 +951,7 @@ data:
     prefix: MY_SECRET_
 {% endentity_example %}
 
-## Store secrets as environment variables
+### Store secrets as environment variables
 
 You can store secrets as environment variables instead of configuring a Vault entity or third-party backend vault. 
 
@@ -980,3 +980,7 @@ rows:
 
 {% endtable %}
 <!--vale on-->
+
+## Schema
+
+{% entity_schema %}
