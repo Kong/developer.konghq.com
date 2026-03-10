@@ -133,24 +133,10 @@ rows:
       - blocks:
           - type: faqs
             config:
-              - q: Should I use Git Sync or Cloud Sync?
-                a: Use Git Sync if you require repository-level ownership and governance. Use Cloud Sync if you prefer managed sharing through Insomnia organizations.
               - q: Does Git Sync respect branch protections?
                 a: Yes. Repository branch protections are enforced by your Git provider and cannot be bypassed from Insomnia.
-              - q: What happens if I convert a Git Sync project?
-                a: The project disconnects from the repository. Existing repository data remains unchanged.
               - q: Can I revert commits from the Git Sync UI?
                 a: No. Reverts must be performed using your Git provider or local Git tooling.
-              - q: Can I convert a Git Sync project to another storage type?
-                a: |
-                  Yes. Git Sync projects can be converted to Cloud Sync or Local Vault.
-
-                  When you convert a project:
-                  - It disconnects from the Git repository.
-                  - The existing repository is not deleted or modified.
-                  - Future changes are stored in the selected storage type.
-
-                  Before converting, pull the latest repository changes to ensure your local state is current.
               - q: Can administrators restrict available storage types?
                 a: |
                   Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.

@@ -27,8 +27,6 @@ faqs:
     a: Both allow you to use version control and collaborate with your team. You should use Git Sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
   - q: Can I create branch protections in Insomnia for Cloud Sync?
     a: No.
-  - q: I'm using Git Sync, does Insomnia uphold the branch protections we have in our repository?
-    a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git Sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
     a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
   - q: Can I bulk import across multiple Cloud Sync projects?
