@@ -106,6 +106,7 @@ entities:
       route: example-route
       config:
         global_credentials: true
+        hide_credentials: false
         enable_client_credentials: true
         provision_key: ${key}
 variables:
