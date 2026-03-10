@@ -160,7 +160,7 @@ Before you log in to Insomnia, you can use scratch pad by clicking **Use the loc
 
 ## Cloud Sync
 
-Cloud Sync enables users to store and synchronize their project data in the cloud securely, and use [version control](/insomnia/version-control/).
+Cloud Sync enables users to store and synchronize their project data in the cloud securely, and use version control.
 
 This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
 
@@ -170,6 +170,8 @@ Cloud Sync provides the following abilities on top of the base Insomnia function
 * Share commits across devices or with members of your organization
 * Create and work on separate branches
 * Store MCP Client configuration as part of the project
+
+Branches are object-specific. The branches in a collection are specific to that collection and aren't shared with other collections or workspaces like mock servers or global environments.
 
 Key use case features:
 * **End-to-End Encryption (E2EE):** Ensures data is encrypted during transmission and storage.
@@ -217,7 +219,7 @@ Git Sync allows users to use a third-party Git repository for storing project da
 This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:
-* **Version control:** Leverage Git’s [version control](/insomnia/version-control/) capabilities for your projects.
+* **Version control:** Leverage Git’s version control capabilities for your projects.
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
