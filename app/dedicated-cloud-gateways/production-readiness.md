@@ -350,12 +350,3 @@ You can optionally choose to expose upstream services only via load balancers (f
 1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
 1. In the Observability sidebar, click **Dashboards**.
 1. Set up initial Dedicated Cloud Gateway dashboards.
-
-</details>
-
-## Testing regional failover
-
-**Action:**
-Before routing production traffic, validate that your multi-region Dedicated Cloud Gateway deployment automatically fails over to a healthy region when a primary region becomes unavailable.
-
-See [Testing regional failover](/gateway/cross-regional-failover-testing/) for the complete test procedure, plugin configuration, test matrix, and Route 53 health check parameters.
