@@ -54,7 +54,7 @@ sequenceDiagram
     RSB->>Client: (D) Forward response
 {% endmermaid %}
 
-The upstream never receives the request until {{site.base_gateway}} has buffered the entire request from the client. Similarly, the client never receives the response until {{site.base_gateway}} has buffered the entire response from the upstream. Each buffer is allocated per request, so buffer sizes compound quickly under load.
+With default buffering enabled, the upstream does not receive the request body until {{site.base_gateway}} has buffered it from the client. For responses, {{site.base_gateway}} begins forwarding data to the client only after it has buffered some of the response from the upstream, and may continue streaming as more data arrives. Each buffer is allocated per request, so buffer sizes compound quickly under load.
 
 ## Request buffers
 
