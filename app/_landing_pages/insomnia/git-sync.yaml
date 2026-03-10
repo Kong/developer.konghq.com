@@ -91,12 +91,7 @@ rows:
             config: |
               **Authentication**
 
-              Git credentials can be configured through:
-              - Git Sync settings.
-              - Insomnia preferences.
-              - Local Git configuration.
-
-              Insomnia does not enforce secret prevention in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
+              Git credentials can be configured through Git Sync project settings, Insomnia preferences, or your local Git configuration. For the full setup and security guidance, see [Git Sync credentials](/insomnia/storage/#git-sync).
       - blocks:
           - type: text
             config: |
