@@ -350,3 +350,4 @@ You can optionally choose to expose upstream services only via load balancers (f
 1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
 1. In the Observability sidebar, click **Dashboards**.
 1. Set up initial Dedicated Cloud Gateway dashboards.
+</details>
