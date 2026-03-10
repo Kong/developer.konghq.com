@@ -94,11 +94,11 @@ status_code: 200
 method: PATCH
 body:
   google_analytics_4:
-      enabled: true
-      type: analytics
-      consent_required: false
-      config_data:
-          id: $GOOGLE_ANALYTICS_TRACKING_ID
+    enabled: true
+    type: analytics
+    consent_required: false
+    config_data:
+      id: $GOOGLE_ANALYTICS_TRACKING_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -134,11 +134,11 @@ status_code: 200
 method: PATCH
 body:
   google_tag_manager:
-      enabled: true
-      type: tracking
-      consent_required: false
-      config_data:
-          id: $GOOGLE_TAG_MANAGER_CONTAINER_ID
+    enabled: true
+    type: tracking
+    consent_required: false
+    config_data:
+      id: $GOOGLE_TAG_MANAGER_CONTAINER_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 
