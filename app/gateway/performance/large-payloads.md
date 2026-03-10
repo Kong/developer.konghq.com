@@ -28,7 +28,7 @@ related_resources:
     url: /gateway/nginx-directives/
 ---
 
-{{site.base_gateway}} is optimized for API traffic. Most payloads are small JSON documents in the range of a few bytes to 10 KB. When your deployment handles larger payloads — SOAP/XML responses from legacy services, file uploads, batch operations, or web-oriented traffic like HTML and images — the default buffer configuration needs tuning to maintain throughput and protect against resource exhaustion.
+{{site.base_gateway}} is optimized for API traffic. Most payloads are small JSON documents in the range of a few bytes to 10 KB. When your deployment handles larger payloads (SOAP/XML responses from legacy services, file uploads, batch operations, or web-oriented traffic like HTML and images), the default buffer configuration needs tuning to maintain throughput and protect against resource exhaustion.
 
 ## How buffering works
 
@@ -61,7 +61,7 @@ The upstream never receives the request until {{site.base_gateway}} has buffered
 {{site.base_gateway}} uses the following configuration options to buffer incoming requests:
 
 * `nginx_http_client_header_buffer_size`: size of the buffer used to read HTTP request headers. The default works for most cases.
-* `nginx_http_large_client_header_buffers`: additional buffers dynamically allocated when request headers exceed `nginx_http_client_header_buffer_size`. Format is `number size` — for example, `4 8k` allocates up to 4 buffers of 8 KB each, one at a time. Buffers are freed after the response is sent and the request is logged.
+* `nginx_http_large_client_header_buffers`: additional buffers dynamically allocated when request headers exceed `nginx_http_client_header_buffer_size`. Format is `number size`. For example, `4 8k` allocates up to 4 buffers of 8 KB each, one at a time. Buffers are freed after the response is sent and the request is logged.
 * `nginx_http_client_body_buffer_size`: size of the buffer used to hold the request body.
 * `nginx_http_client_max_body_size`: hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit.
 
@@ -71,7 +71,7 @@ If the total size of the request headers exceeds the combined size of `nginx_htt
 
 There are two separate controls for the request body because they serve different purposes. When the body exceeds `nginx_http_client_body_buffer_size` but is within `nginx_http_client_max_body_size`, {{site.base_gateway}} spills the excess to disk rather than rejecting the request. When the body exceeds `nginx_http_client_max_body_size`, {{site.base_gateway}} returns a `413` error.
 
-Always set `nginx_http_client_max_body_size`. Without it, a large request body — or many concurrent requests with large bodies — can exhaust file system storage. For most APIs that don't handle large bodies, `1m` is a reasonable starting point. Increase it gradually to fit your use case.
+Always set `nginx_http_client_max_body_size`. Without it, a large request body, or many concurrent requests with large bodies, can exhaust file system storage. For most APIs that don't handle large bodies, `1m` is a reasonable starting point. Increase it gradually to fit your use case.
 
 {:.warning}
 > If a plugin reads the request body and the body exceeds `nginx_http_client_body_buffer_size`, the plugin will fail. See the [PDK documentation](/gateway/pdk/reference/) for details.
@@ -93,7 +93,7 @@ upstream sent too big header while reading response header from upstream
 
 Increasing `nginx_http_proxy_buffer_size` resolves this error.
 
-If the response body exceeds the total size of `nginx_http_proxy_buffers`, {{site.base_gateway}} spills the excess to disk. When that happens, increase `nginx_http_proxy_buffers` or disable response buffering for that route. For large responses where {{site.base_gateway}} is not inspecting or modifying the body — more than a few megabytes — disabling buffering is the better option.
+If the response body exceeds the total size of `nginx_http_proxy_buffers`, {{site.base_gateway}} spills the excess to disk. When that happens, increase `nginx_http_proxy_buffers` or disable response buffering for that route. For large responses where {{site.base_gateway}} is not inspecting or modifying the body (more than a few megabytes), disabling buffering is the better option.
 
 ## Disk buffering and performance
 
@@ -106,11 +106,11 @@ a client request body is buffered to a temporary file
 an upstream response is buffered to a temporary file
 ```
 
-Monitor these log messages alongside disk I/O on {{site.base_gateway}} nodes. When they appear consistently, either increase the relevant buffer size or disable buffering for that route. You can also set `nginx_http_proxy_max_temp_file_size` to `0` to prevent {{site.base_gateway}} from spilling response bodies to disk at all — {{site.base_gateway}} will stream the response instead.
+Monitor these log messages alongside disk I/O on {{site.base_gateway}} nodes. When they appear consistently, either increase the relevant buffer size or disable buffering for that route. You can also set `nginx_http_proxy_max_temp_file_size` to `0` to prevent {{site.base_gateway}} from spilling response bodies to disk at all. {{site.base_gateway}} will stream the response instead.
 
 ## Memory considerations
 
-Buffers are allocated per request. At 1,000 concurrent requests, increasing a buffer size by 1 MB adds roughly 1 GB of memory consumption. The actual impact varies depending on traffic shape, network speeds, and OS settings, so test {{site.base_gateway}} under realistic load when tuning buffer sizes. Increasing by a few memory pages at a time — each page being 4 KB — is safer than making large jumps.
+Buffers are allocated per request. At 1,000 concurrent requests, increasing a buffer size by 1 MB adds roughly 1 GB of memory consumption. The actual impact varies depending on traffic shape, network speeds, and OS settings, so test {{site.base_gateway}} under realistic load when tuning buffer sizes. Increasing by a few memory pages at a time (each page being 4 KB) is safer than making large jumps.
 
 ## Disabling buffering
 
@@ -123,7 +123,7 @@ Disabling buffering also helps when optimizing for Time To First Byte (TTFB), si
 
 Disabling buffering only applies to the body. Headers are always buffered, but their size is small enough that this is not a concern.
 
-By default, {{site.base_gateway}} buffers because reading and writing to a network socket requires a syscall. Streaming data in small chunks increases syscall frequency and CPU usage. Buffering reduces that overhead, and for the common case — small API payloads that fit in memory — it is the right trade-off.
+By default, {{site.base_gateway}} buffers because reading and writing to a network socket requires a syscall. Streaming data in small chunks increases syscall frequency and CPU usage. Buffering reduces that overhead, and for the common case of small API payloads that fit in memory, it is the right trade-off.
 
 {:.warning}
 > Disabling buffering exposes the upstream to slow clients, including [Slowloris attacks](https://en.wikipedia.org/wiki/Slowloris_(computer_security)). Use an authentication or authorization plugin to protect the upstream when buffering is disabled.
