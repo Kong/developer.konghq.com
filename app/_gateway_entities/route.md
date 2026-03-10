@@ -522,7 +522,7 @@ type: route
 data:
   name: example-route
   host: "*.tls-example.com"
-  protocol: 
+  protocols: 
     - https
     - tls
   paths:

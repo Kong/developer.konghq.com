@@ -1,6 +1,6 @@
 ---
 title: Install {{site.base_gateway}}
-subtitle: "{{site.base_gateway}} is a low-demand, high-performing API gateway. You can set up {{site.base_gateway}} with Konnect, or install it on various self-managed systems."
+subtitle: "Set up {{site.base_gateway}} with {{site.konnect_short_name}}, or install it on self-managed infrastructure."
 
 description: "Install {{site.base_gateway}} on your preferred platform."
 

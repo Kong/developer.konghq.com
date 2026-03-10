@@ -65,6 +65,10 @@ groups:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
             - path: /kongctl/get/*/**/**
+      - title: Install Assets
+        items:
+           - path: /kongctl/install/
+           - path: /kongctl/install/*/**
       - title: Lint Files
         items:
             - path: /kongctl/lint/

@@ -1,0 +1,2 @@
+{:.info}
+> **Note:** After an API spec is migrated to an API, the API spec is unlinked from the integration and will instead be stored as a snapshot by Kong. Since APIs take a snapshot of the API spec when it's linked, they **do not** update automatically. For example, if you update your ingested spec in AWS, it doesn't automatically pull changes in to the API, you must re-upload the spec manually.
