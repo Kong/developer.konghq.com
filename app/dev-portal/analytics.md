@@ -73,15 +73,7 @@ To configure the Google Analytics integration, do the following:
 {% navtabs "analytics-integrations" %}
 {% navtab "UI" %}
 
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
-1. Click your Dev Portal.
-1. In the Dev Portal sidebar, click **Settings**. 
-1. Click the **Integrations** tab.
-1. Click **Google Analytics 4**.
-1. Click the **Enabled** toggle.
-1. In the **Tracking ID** field, enter the [measurement ID for your Google Analytics data stream](https://support.google.com/analytics/answer/9539598?hl=en).
-1. Optional: Click **Advanced configuration** to configure the data layer name.
-1. Click **Save**.
+{% include /dev-portal/google-analytics-integration.md %}
 
 You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Analytics information there.
 {% endnavtab %}
@@ -113,15 +105,7 @@ To configure the Google Tag Manager integration, do the following:
 {% navtabs "analytics-integrations" %}
 {% navtab "UI" %}
 
-1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
-1. Click your Dev Portal.
-1. In the Dev Portal sidebar, click **Settings**. 
-1. Click the **Integrations** tab.
-1. Click **Google Tag Manager**.
-1. Click the **Enabled** toggle.
-1. In the **Google Tag Manager ID** field, enter your [Google Tag Manager container ID](https://support.google.com/tagmanager/answer/15107467?hl=en#zippy=%2Cin-google-ads%2Cin-google-analytics%2Cin-campaign-manager%2Cin-google-tag-manager).
-1. Optional: Click **Advanced configuration** to configure data layer and other settings.
-1. Click **Save**.
+{% include /dev-portal/google-tag-manager-integration.md %}
 
 You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Tag Manager information there.
 {% endnavtab %}
