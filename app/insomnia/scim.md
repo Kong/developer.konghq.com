@@ -131,17 +131,10 @@ When a token is close to expiration and cannot be refreshed automatically, Insom
 
 SCIM provisioning uses a connector URL and token generated in Insomnia. The token authorizes your IdP to provision users and teams. When you enable SCIM in Insomnia from the Enterprise Controls, a modal opens for you to generate the token.
 
-{:.warning}
-> The token is displayed only once when it is generated. Store it securely. If you lose the token, refresh it in Insomnia and update the token in your IdP. To manually refresh the SCIM token, navigate to [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
-
-
-### Automatic token refresh
-
 When generating the token, you can choose an expiration window. Available options include 30 days, 90 days, 180 days, 1 year, 2 years, or no expiration.
 
 {:.warning}
 > The token is displayed only once when it is generated. Store it securely. If you lose the token, refresh it in Insomnia and update the token in your IdP. To manually refresh the SCIM token, navigate to [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
-
 
 ### Automatic token refresh
 
