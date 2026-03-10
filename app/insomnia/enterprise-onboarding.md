@@ -94,10 +94,8 @@ Once you've signed up for the Insomnia Enterprise plan through the [sales team](
 
 To activate the code, complete the following steps:
 
-1. From the [Insomnia Dashboard](https://app.insomnia.rest/app/home), click **Plan & billing**.
-1. Click **Enter Activate Code**.
+1. In [Insomnia Admin](https://app.insomnia.rest/app/home), click [**Plan & billing**](https://app.insomnia.rest/app/billing), then click **Enter Activation Code**.
 1. In the **Activation code** field, enter your activation code.
-1. Click **Activate Plan**.
    
    Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
 
