@@ -1,142 +1,142 @@
 {
   "properties": {
-    "protocols": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ]
-      },
-      "description": "A set of strings representing HTTP protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
     "config": {
-      "type": "object",
       "properties": {
-        "message_type": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "assistant",
-              "system",
-              "user"
-            ]
-          },
-          "default": [
-            "user"
-          ]
-        },
-        "compressor_type": {
-          "type": "string",
-          "enum": [
-            "rate",
-            "target_token"
-          ],
-          "description": "What compression type to use to compress with",
-          "default": "rate"
-        },
         "compression_ranges": {
-          "type": "array",
+          "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type.",
           "items": {
-            "type": "object",
             "properties": {
-              "value": {
-                "type": "number"
+              "max_tokens": {
+                "type": "integer"
               },
               "min_tokens": {
                 "type": "integer"
               },
-              "max_tokens": {
-                "type": "integer"
+              "value": {
+                "type": "number"
               }
             },
             "required": [
               "max_tokens",
               "min_tokens",
               "value"
-            ]
+            ],
+            "type": "object"
           },
-          "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type."
+          "type": "array"
+        },
+        "compressor_type": {
+          "default": "rate",
+          "description": "What compression type to use to compress with",
+          "enum": [
+            "rate",
+            "target_token"
+          ],
+          "type": "string"
         },
         "compressor_url": {
-          "type": "string",
+          "default": "http://localhost:8080",
           "description": "The url of the compressor",
-          "default": "http://localhost:8080"
-        },
-        "timeout": {
-          "type": "number",
-          "description": "Connection timeout with the compressor",
-          "default": 10000
+          "type": "string"
         },
         "keepalive_timeout": {
-          "type": "number",
+          "default": 60000,
           "description": "The keepalive timeout for the established http connnection",
-          "default": 60000
-        },
-        "stop_on_error": {
-          "type": "boolean",
-          "description": "Stop processing if an error occurs",
-          "default": true
+          "type": "number"
         },
         "log_text_data": {
-          "type": "boolean",
+          "default": false,
           "description": "Log the text data",
-          "default": false
+          "type": "boolean"
+        },
+        "message_type": {
+          "default": [
+            "user"
+          ],
+          "items": {
+            "enum": [
+              "assistant",
+              "system",
+              "user"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "stop_on_error": {
+          "default": true,
+          "description": "Stop processing if an error occurs",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Connection timeout with the compressor",
+          "type": "number"
         }
       },
       "required": [
         "compression_ranges"
-      ]
+      ],
+      "type": "object"
     },
     "consumer": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "type": "object"
     },
     "consumer_group": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups"
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
     },
     "route": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "type": "object"
     },
     "service": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "type": "object"
     }
   },
   "required": [
