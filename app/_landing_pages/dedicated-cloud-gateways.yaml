@@ -101,9 +101,9 @@ rows:
                 {{site.konnect_short_name}} can leverage Azure virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: VNet peering
+                - text: VNET peering
                   url: /dedicated-cloud-gateways/azure-peering/
-                - text: Virtual WAN
+                - text: Virtual WAN (VWAN)
                   url: /dedicated-cloud-gateways/azure-virtual-wan/
   - columns:
       - blocks:
