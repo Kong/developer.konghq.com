@@ -79,6 +79,10 @@ rows:
     reference: "[Create video](https://platform.openai.com/docs/api-reference/videos/create)"
     category: "`video/generation`"
     version: "3.13"
+  - route: "`llm/v1/models`"
+    reference: "[Models](https://platform.openai.com/docs/api-reference/models)"
+    category: "N/A"
+    version: "3.14"
 {% endtable %}
 {% elsif plugin == "AI Proxy Advanced" %}
 {% table %}
@@ -148,6 +152,10 @@ rows:
     reference: "[Create video](https://platform.openai.com/docs/api-reference/videos/create)"
     category: "`video/generation`"
     version: "3.13"
+  - route: "`llm/v1/models`"
+    reference: "[Models](https://platform.openai.com/docs/api-reference/models)"
+    category: "N/A"
+    version: "3.14"
 {% endtable %}
 {% endif %}
 
