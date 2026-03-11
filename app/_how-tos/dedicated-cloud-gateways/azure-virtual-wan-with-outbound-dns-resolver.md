@@ -41,7 +41,7 @@ prereqs:
       include_content: prereqs/azure-cli
       icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
-      include_content: prereqs/dcgw-azure-vnet
+      include_content: prereqs/dcgw-azure-vwan
       icon_url: /assets/icons/azure.svg
     - title: Azure private DNS resolver
       content: |
