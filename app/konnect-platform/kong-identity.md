@@ -16,8 +16,7 @@ breadcrumbs:
   - /konnect/
 
 api_specs:
-    - gateway/admin-ee
-    - konnect/control-planes-config
+    - konnect/kong-identity
 
 related_resources:
   - text: Configure the OIDC plugin with Kong Identity
