@@ -16,7 +16,7 @@ works_on:
 tags:
   - aws
   - azure
-  - gcp
+  - google-cloud
 
 description: |
   Review which {{site.ee_product_name}} features support cloud IAM authentication with AWS, Azure, and GCP, and which authentication methods are available for each provider.
