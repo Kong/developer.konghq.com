@@ -70,7 +70,7 @@ and [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--con
 (such as `"my-company"` or `"kong"`), {{site.base_gateway}} autogenerates JWKS for supported algorithms.
 
 {:.info}
-> When this plugin used in Konnect, key sets are not currently supported. The token signing keys MUST be specified as a URI to a JWKS document. In addition, JWKS of public keys are not auto-generated.
+> When this plugin is used in Konnect, key sets are not currently supported. The token signing keys MUST be specified as a URI to a JWKS document. In addition, JWKS of public keys are not auto-generated.
 
 External JWKS specified with [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) or
 [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset) should also contain private keys with supported `alg`,
