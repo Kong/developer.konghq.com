@@ -1,6 +1,13 @@
 {% capture header %}
-<{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>
-
+{% capture heading %}<{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>{% endcapture%}
+{% if include.config.type == 'h1' %}
+<div class="flex items-center">
+{{heading}}
+{% include components/llm_dropdown.html url=page.url css_classes="ml-auto" %}
+</div>
+{% else %}
+{{heading}}
+{% endif %}
     {% if include.config.type == 'h1' %}
         <div class="flex gap-2 items-center">
         {% if page.tier %}
