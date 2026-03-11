@@ -1,0 +1,23 @@
+
+title: 'Chat route with Ollama'
+description: 'Configure a chat route using a local Qwen 3 model.'
+
+weight: 900
+
+requirements:
+- A local Ollama instance with a Qwen 3 model running
+
+config:
+  route_type: llm/v1/chat
+  model:
+    provider: ollama
+    name: qwen3
+    options:
+      upstream_url: http://lollama-server.local:11434/api/chat
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

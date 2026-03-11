@@ -1,6 +1,6 @@
 ---
-title: Set up AI Proxy with Ollama
-permalink: /how-to/set-up-ai-proxy-with-ollama/
+title: Set up AI Proxy with Ollama and an Anthropic model
+permalink: /how-to/set-up-ai-proxy-with-ollama-anthropic/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -8,7 +8,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama.
+description: Configure the AI Proxy Advanced plugin to create a chat route using the Ollama provider with a model in the Anthropic format.
 
 products:
   - gateway
@@ -19,7 +19,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.14'
 
 plugins:
   - ai-proxy-advanced
@@ -31,11 +31,11 @@ entities:
 
 tags:
   - ai
-  - llama
+  - ollama
 
 tldr:
-  q: How do I use the AI Proxy plugin with Ollama?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Ollama provider, and the llama2 model.
+  q: How do I use the AI Proxy plugin with Ollama and an Anthropic model?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Ollama provider and the Qwen 3 model.
 
 tools:
   - deck
@@ -43,7 +43,7 @@ tools:
 prereqs:
   inline:
     - title: Ollama
-      include_content: prereqs/ollama
+      include_content: prereqs/ollama-anthropic
       icon_url: /assets/icons/ollama.svg
   entities:
     services:
@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up the AI Proxy plugin to route chat requests to Ollama’s Llama2 model by configuring the model options, including the ollama format and the upstream_url pointing to your local Ollama instance.
+Set up the AI Proxy plugin to route chat requests to Ollama’s Qwen 3 model by configuring the model options, including the `upstream_url` pointing to your local Ollama instance:
 
 
 {% entity_examples %}
@@ -73,10 +73,9 @@ entities:
       config:
         route_type: llm/v1/chat
         model:
-          provider: llama2
-          name: llama2
+          provider: ollama
+          name: qwen3
           options:
-            llama2_format: ollama
             upstream_url: ${ollama_upstream_url}
 variables:
   ollama_upstream_url:
