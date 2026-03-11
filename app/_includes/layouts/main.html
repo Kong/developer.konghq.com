@@ -33,7 +33,9 @@
             </div>
             {% endif %}
 
+            {% unless page.llm == false %}
             {% include components/llm_dropdown.html url=page.url css_classes="lg:ml-auto" %}
+            {% endunless %}
         </div>
 
         {% if page.subtitle %}
