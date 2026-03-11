@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@180892651c26e7ffbadbc460887da16e9c0f766c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/180892651c26e7ffbadbc460887da16e9c0f766c'
+  x-oas-source: kong/platform-api@f4fa4e110dc38ef6d97f236649f87277bf2e9ef4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f4fa4e110dc38ef6d97f236649f87277bf2e9ef4'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -739,19 +739,69 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateAddOnRequest'
+            examples:
+              control-plane-owner:
+                $ref: '#/components/examples/CreateAddOnControlPlaneOwnerExample'
+              control-plane-group-owner:
+                $ref: '#/components/examples/CreateAddOnControlPlaneGroupOwnerExample'
       responses:
         '201':
           $ref: '#/components/responses/CreateAddOnResponse'
         '400':
-          $ref: '#/components/responses/CloudGatewaysBadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                Cache Tier Unavailable:
+                  $ref: '#/components/examples/CreateAddOnCacheTierUnavailableBadRequestExample'
+                Duplicate Add-On Kind:
+                  $ref: '#/components/examples/CreateAddOnDuplicateKindBadRequestExample'
+                Invalid Control Plane ID:
+                  $ref: '#/components/examples/CreateAddOnInvalidControlPlaneIdBadRequestExample'
+                Invalid Control Plane Group ID:
+                  $ref: '#/components/examples/CreateAddOnInvalidControlPlaneGroupIdBadRequestExample'
+                Unsupported Cloud Provider:
+                  $ref: '#/components/examples/CreateAddOnUnsupportedProviderBadRequestExample'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+              examples:
+                Unauthorized:
+                  $ref: '#/components/examples/AddOnUnauthorizedExample'
         '403':
-          $ref: '#/components/responses/CloudGatewaysForbidden'
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/AddOnForbiddenExample'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                Add-On Functionality Not Available:
+                  $ref: '#/components/examples/CreateAddOnFunctionalityNotFoundExample'
+                Control Plane Not Found:
+                  $ref: '#/components/examples/CreateAddOnControlPlaneNotFoundExample'
         '409':
-          $ref: '#/components/responses/CloudGatewaysConflict'
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+              examples:
+                Add-On Name Conflict:
+                  $ref: '#/components/examples/CreateAddOnNameConflictExample'
       tags:
         - Add-Ons
     get:
@@ -767,13 +817,38 @@ paths:
         '200':
           $ref: '#/components/responses/ListAddOnsResponse'
         '400':
-          $ref: '#/components/responses/CloudGatewaysBadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                Invalid Control Plane ID:
+                  $ref: '#/components/examples/ListAddOnsInvalidControlPlaneIdBadRequestExample'
+                Invalid Control Plane Group ID:
+                  $ref: '#/components/examples/ListAddOnsInvalidControlPlaneGroupIdBadRequestExample'
+                Invalid Control Plane Geo:
+                  $ref: '#/components/examples/ListAddOnsInvalidControlPlaneGeoBadRequestExample'
+                Invalid Control Plane Group Geo:
+                  $ref: '#/components/examples/ListAddOnsInvalidControlPlaneGroupGeoBadRequestExample'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+              examples:
+                Unauthorized:
+                  $ref: '#/components/examples/AddOnUnauthorizedExample'
         '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/AddOnForbiddenExample'
       tags:
         - Add-Ons
   '/cloud-gateways/add-ons/{addOnId}':
@@ -787,11 +862,32 @@ paths:
         '200':
           $ref: '#/components/responses/RetrieveAddOnResponse'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+              examples:
+                Unauthorized:
+                  $ref: '#/components/examples/AddOnUnauthorizedExample'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/AddOnForbiddenExample'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                Not Found:
+                  $ref: '#/components/examples/AddOnNotFoundExample'
       tags:
         - Add-Ons
     delete:
@@ -805,13 +901,41 @@ paths:
         '204':
           description: No Content
         '400':
-          $ref: '#/components/responses/CloudGatewaysBadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                Linked Plugins Exist:
+                  $ref: '#/components/examples/DeleteAddOnLinkedPluginsBadRequestExample'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+              examples:
+                Unauthorized:
+                  $ref: '#/components/examples/AddOnUnauthorizedExample'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/AddOnForbiddenExample'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                Not Found:
+                  $ref: '#/components/examples/AddOnNotFoundExample'
       tags:
         - Add-Ons
 components:
@@ -1780,6 +1904,31 @@ components:
         - transit_gateway_id
         - ram_share_arn
       title: AWS Transit Gateway Attachment Config
+    AwsTransitGatewayAttachmentConfigForResponse:
+      type: object
+      properties:
+        kind:
+          enum:
+            - aws-transit-gateway-attachment
+          title: AWS Transit Gateway Attachment Type
+        transit_gateway_id:
+          description: AWS Transit Gateway ID to create attachment to.
+          type: string
+          title: Transit Gateway ID
+        ram_share_arn:
+          description: Resource Share ARN to verify request to create transit gateway attachment.
+          type: string
+          title: RAM Share ARN
+        attachment_id:
+          description: ID of the AWS Transit Gateway attachment.
+          type: string
+          title: AWS Transit Gateway Attachment ID
+      additionalProperties: false
+      required:
+        - kind
+        - transit_gateway_id
+        - ram_share_arn
+      title: AWS Transit Gateway Attachment Config
     AwsVpcPeeringGatewayAttachmentConfig:
       type: object
       properties:
@@ -1792,6 +1941,28 @@ components:
         peer_vpc_id:
           type: string
         peer_vpc_region:
+          type: string
+      additionalProperties: false
+      required:
+        - kind
+        - peer_account_id
+        - peer_vpc_id
+        - peer_vpc_region
+      title: AWS VPC Peering Attachment Config
+    AwsVpcPeeringGatewayAttachmentConfigForResponse:
+      type: object
+      properties:
+        kind:
+          enum:
+            - aws-vpc-peering-attachment
+          title: AWS VPC Peering Attachment Config
+        peer_account_id:
+          type: string
+        peer_vpc_id:
+          type: string
+        peer_vpc_region:
+          type: string
+        peering_connection_id:
           type: string
       additionalProperties: false
       required:
@@ -2485,7 +2656,7 @@ components:
         cidr_blocks:
           $ref: '#/components/schemas/TransitGatewayCIDRBlocks'
         transit_gateway_attachment_config:
-          $ref: '#/components/schemas/AwsTransitGatewayAttachmentConfig'
+          $ref: '#/components/schemas/AwsTransitGatewayAttachmentConfigForResponse'
         id:
           $ref: '#/components/schemas/TransitGatewayId'
         state:
@@ -2548,7 +2719,7 @@ components:
         cidr_blocks:
           $ref: '#/components/schemas/TransitGatewayCIDRBlocks'
         transit_gateway_attachment_config:
-          $ref: '#/components/schemas/AwsVpcPeeringGatewayAttachmentConfig'
+          $ref: '#/components/schemas/AwsVpcPeeringGatewayAttachmentConfigForResponse'
         id:
           $ref: '#/components/schemas/TransitGatewayId'
         state:
@@ -3512,6 +3683,9 @@ components:
             - xlarge
             - 2xlarge
             - 4xlarge
+      example:
+        kind: tiered
+        tier: small
       additionalProperties: false
       required:
         - kind
@@ -4528,6 +4702,192 @@ components:
           - field: dataplane_groups.0.autoscale.base_rps
             rule: is_integer
             reason: dataplane_groups.0.autoscale.base_rps must be an integer number
+    CreateAddOnControlPlaneOwnerExample:
+      summary: Create a managed cache add-on owned by a control plane
+      value:
+        name: my-cache-add-on
+        owner:
+          kind: control-plane
+          control_plane_id: 123e4567-e89b-12d3-a456-426614174000
+          control_plane_geo: us
+        config:
+          kind: managed-cache.v0
+          capacity_config:
+            kind: tiered
+            tier: small
+    CreateAddOnControlPlaneGroupOwnerExample:
+      summary: Create a managed cache add-on owned by a control plane group
+      value:
+        name: my-cache-add-on-group
+        owner:
+          kind: control-plane-group
+          control_plane_group_id: 123e4567-e89b-12d3-a456-426614174001
+          control_plane_group_geo: us
+        config:
+          kind: managed-cache.v0
+          capacity_config:
+            kind: tiered
+            tier: small
+    ListAddOnsInvalidControlPlaneIdBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:3847291650183746291'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: 'filter[owner.control_plane_id][oeq]'
+            rule: is_uuid
+            reason: '"filter[owner.control_plane_id][oeq]" must be a valid GUID'
+            source: query
+    ListAddOnsInvalidControlPlaneGroupIdBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:5920384716482910573'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: 'filter[owner.control_plane_group_id][oeq]'
+            rule: is_uuid
+            reason: '"filter[owner.control_plane_group_id][oeq]" must be a valid GUID'
+            source: query
+    ListAddOnsInvalidControlPlaneGeoBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:7163849025716384920'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: 'filter[owner.control_plane_geo][neq]'
+            rule: enum
+            reason: '"filter[owner.control_plane_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            source: query
+            choices:
+              - us
+              - eu
+              - au
+              - me
+              - in
+              - sg
+    ListAddOnsInvalidControlPlaneGroupGeoBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:9284736150294837561'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: 'filter[owner.control_plane_group_geo][neq]'
+            rule: enum
+            reason: '"filter[owner.control_plane_group_geo][neq]" must be one of [us, eu, au, me, in, sg]'
+            source: query
+            choices:
+              - us
+              - eu
+              - au
+              - me
+              - in
+              - sg
+    DeleteAddOnLinkedPluginsBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:16584985546322141095'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: id
+            rule: invalid
+            reason: 'Managed cache add-on has 1 linked plugin(s) that must be removed before deletion. Cache config ID: ''301e4655-96bd-48f8-ae65-2ce2c2459f90''.'
+            source: path
+    CreateAddOnCacheTierUnavailableBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: config.capacity_config.tier
+            rule: invalid
+            reason: Cache tier 'medium' is not available.
+            source: body
+    CreateAddOnDuplicateKindBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: owner.control_plane_group_id
+            rule: invalid
+            reason: Control plane group '43f05344-681f-4881-ac29-9a46c544fb81' already has an add-on of kind 'managed-cache.v0'. Only one add-on of a kind is allowed per control plane group.
+            source: body
+    CreateAddOnInvalidControlPlaneIdBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:12395978209700448850'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: owner.control_plane_id
+            rule: is_uuid
+            source: body
+            reason: control_plane_id must be a UUID
+    CreateAddOnInvalidControlPlaneGroupIdBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:14582039471628394750'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: owner.control_plane_group_id
+            rule: is_uuid
+            source: body
+            reason: control_plane_group_id must be a UUID
+    CreateAddOnUnsupportedProviderBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: owner
+            rule: invalid
+            reason: Data plane group with ID '43f05344-681f-4881-ac29-9a46c544fb81' has unsupported provider 'gcp'. Provider is not supported for managed cache add-ons.
+            source: body
+    CreateAddOnFunctionalityNotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:16702783886103429947'
+        detail: Add-on functionality is not available
+    CreateAddOnControlPlaneNotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:1195136281317684685'
+        detail: 'Invalid owner: Control plane ''123e4567-e89b-12d3-a456-426614174000'' not found in geo ''us'''
+    CreateAddOnNameConflictExample:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:8358517352623967169'
+        detail: Add on property 'name' must be unique per org.
+    AddOnNotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:3180784359748741888'
+        detail: The requested resource was not found.
+    AddOnUnauthorizedExample:
+      value:
+        status: 401
+        title: Unauthorized
+        instance: 'kong:trace:9108763905133773926'
+        detail: You must be authenticated to perform this action.
+    AddOnForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2909730654778726250'
+        detail: You do not have permission to perform this action.
     UnauthorizedExample:
       value:
         status: 401
