@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.2.0
+  version: 3.2.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
+  x-oas-source: kong/platform-api@2bb0f6a3f6ed57f4954992dc4ddfd2716e9fdf45
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2bb0f6a3f6ed57f4954992dc4ddfd2716e9fdf45'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4388,7 +4388,7 @@ components:
           format: email
           nullable: true
         reply_to_email:
-          description: The email address to use in the 'Reply-To' field.
+          description: 'The email address to use in the ''Reply-To'' field. If set to null, ''Reply-To'' header is omitted.'
           type: string
           format: email
           nullable: true
@@ -4410,7 +4410,7 @@ components:
           format: email
           nullable: true
         reply_to_email:
-          description: The email address to use in the 'Reply-To' field.
+          description: The email address to use in the 'Reply-To' field. 'Reply-To' header is omitted if omitted or null.
           type: string
           format: email
           nullable: true
@@ -4430,14 +4430,17 @@ components:
         from_name:
           description: The name displayed in the 'From' field of emails.
           type: string
+          nullable: true
         from_email:
           description: The email address used in the 'From' field.
           type: string
           format: email
+          nullable: true
         reply_to_email:
-          description: The email address used in the 'Reply-To' field.
+          description: The email address used in the 'Reply-To' field. 'Reply-To' header is omitted when null.
           type: string
           format: email
+          nullable: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
