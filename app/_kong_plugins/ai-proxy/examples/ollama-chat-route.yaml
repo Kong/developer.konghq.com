@@ -13,7 +13,7 @@ config:
     provider: ollama
     name: qwen3
     options:
-      upstream_url: http://lollama-server.local:11434/api/chat
+      upstream_url: http://lollama-server.local:11434
 
 tools:
   - deck
