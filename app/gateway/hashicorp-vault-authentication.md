@@ -15,7 +15,7 @@ works_on:
 
 tags:
   - vault
-  - hashicorp
+  - hashicorp-vault
 
 description: |
   Review which authentication methods {{site.ee_product_name}} supports when connecting to HashiCorp Vault as a secrets backend.

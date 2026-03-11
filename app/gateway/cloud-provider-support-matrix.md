@@ -14,7 +14,6 @@ works_on:
   - konnect
 
 tags:
-  - cloud
   - aws
   - azure
   - gcp
