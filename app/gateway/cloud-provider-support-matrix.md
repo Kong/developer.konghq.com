@@ -1,5 +1,5 @@
 ---
-title: "Cloud provider integration support for {{site.base_gateway}}"
+title: "Cloud provider integration support for {{site.ee_product_name}}"
 content_type: reference
 layout: reference
 
@@ -20,7 +20,7 @@ tags:
   - gcp
 
 description: |
-  Review which {{site.base_gateway}} features support cloud IAM authentication with AWS, Azure, and GCP, and which authentication methods are available for each provider.
+  Review which {{site.ee_product_name}} features support cloud IAM authentication with AWS, Azure, and GCP, and which authentication methods are available for each provider.
 
 related_resources:
   - text: Amazon RDS authentication with AWS IAM
@@ -43,14 +43,14 @@ related_resources:
     url: /gateway/third-party-support/
 ---
 
-{{site.base_gateway}} integrates with major cloud providers to support cloud-native IAM authentication
+{{site.ee_product_name}} integrates with major cloud providers to support cloud-native IAM authentication
 in place of static credentials. This lets you use AWS IAM, Azure Microsoft Entra ID, or GCP IAM
-to authenticate {{site.base_gateway}} with cloud-hosted backing services such as databases, caches,
+to authenticate {{site.ee_product_name}} with cloud-hosted backing services such as databases, caches,
 secret stores, object storage, and serverless functions.
 
 ## Feature support matrix
 
-The following table shows which {{site.base_gateway}} features support cloud provider IAM authentication.
+The following table shows which {{site.ee_product_name}} features support cloud provider IAM authentication.
 
 <!--vale off-->
 {% table %}
@@ -85,9 +85,9 @@ rows:
     azure: "✅"
     gcp: "N/A"
   - feature: "[Data plane resilience](/gateway/cp-outage/)"
-    aws: "✅ (For any kind of S3-compatible interfaces)"
-    azure: "✅"
-    gcp: "✅ (Cloud Storage)"
+    aws: "✅ (also for S3-compatible interfaces)"
+    azure: "✅ (Azure blob storage)"
+    gcp: "✅ (Google Cloud Storage)"
   - feature: "[AI plugins](/ai-gateway/)"
     aws: "✅"
     azure: "✅"
@@ -105,9 +105,9 @@ For example, the AWS Secrets Manager vault backend is exclusive to AWS.
 ## Authentication methods support matrix
 
 Each cloud provider offers different IAM authentication mechanisms.
-The following tables list which authentication methods {{site.base_gateway}} supports for each cloud provider.
+The following tables list which authentication methods {{site.ee_product_name}} supports for each cloud provider.
 
-Unless otherwise noted, each supported authentication method can be used with **any** {{site.base_gateway}} feature that integrates with that cloud provider, as listed in the [feature support matrix](#feature-support-matrix) above.
+Unless otherwise noted, each supported authentication method can be used with **any** {{site.ee_product_name}} feature that integrates with that cloud provider, as listed in the [feature support matrix](#feature-support-matrix) above.
 
 ### AWS IAM
 
@@ -148,7 +148,9 @@ columns:
 rows:
   - method: "[Static Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete)"
     supported: "✅"
-  - method: "[Workload Identity](https://cloud.google.com/kubernetes-engine/docs/concepts/workload-identity) (Compute Engine, GKE)"
+  - method: "[Service Account Credential](https://docs.cloud.google.com/iam/docs/service-account-creds) (Compute Engine)"
+    supported: "✅"
+  - method: "[Workload Identity](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) (GKE)"
     supported: "✅"
   - method: "[Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) / [Workforce Identity Federation](https://cloud.google.com/iam/docs/workforce-identity-federation)"
     supported: "❌"
