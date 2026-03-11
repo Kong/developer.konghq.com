@@ -74,7 +74,7 @@ rows:
 
               All operations follow your repository’s existing rules and protections.
 
-              When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/git-sync/three-way-merge/) for details.
+              When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
       - blocks:
           - type: text
             config: |
