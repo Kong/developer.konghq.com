@@ -93,6 +93,11 @@ faqs:
         and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
         the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
         on the HashiCorp Vault server and retrieve a client token.
+      - {% new_in 3.14 %} If you're using the `gcp_iam` auth method, {{site.base_gateway}} generates a signed JWT using the GCP service account configured in `config.gcp_service_account` and exchanges it for a HashiCorp Vault token via the GCP login path (`config.gcp_login_path`). The role is specified by `config.gcp_auth_role`.
+      - {% new_in 3.14 %} If you're using the `gcp_gce` (GCP Compute Engine) auth method, {{site.base_gateway}} uses the instance identity token from the GCE metadata server and exchanges it for a HashiCorp Vault token via the GCP login path (`config.gcp_login_path`). The role is specified by `config.gcp_auth_role`.
+      - {% new_in 3.14 %} If you're using the `azure` auth method, {{site.base_gateway}} uses the Azure Managed Identity token and exchanges it for a HashiCorp Vault token via the Azure login path (`config.azure_login_path`). The role is specified by `config.azure_auth_role`.
+      - {% new_in 3.14 %} If you're using the `aws_ec2` auth method, {{site.base_gateway}} uses the EC2 instance identity document and a nonce (`config.aws_auth_nonce`) to authenticate with HashiCorp Vault via the AWS login path (`config.aws_login_path`). The role is specified by `config.aws_auth_role`.
+      - {% new_in 3.14 %} If you're using the `aws_iam` auth method, {{site.base_gateway}} signs an AWS STS `GetCallerIdentity` request using IAM credentials (`config.aws_access_key_id` and `config.aws_secret_access_key`, or the default credential provider chain) and exchanges it for a HashiCorp Vault token via the AWS login path (`config.aws_login_path`). The role is specified by `config.aws_auth_role`.
       
       By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
 
@@ -707,9 +712,9 @@ rows:
       * **kong.conf parameter:** `vault_hcv_auth_method`
       * **Environment variable:** `KONG_VAULT_HCV_AUTH_METHOD`
     description: |
-      Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, `approle`, or `oauth2`.
+      Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, `approle`, `cert`, `jwt`, `gcp_iam`, `gcp_gce`, `azure`, `aws_ec2`, or `aws_iam`.
 
-      For OAuth2, the IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
+      For `jwt`, the IdP SSL certificate must be present in the Lua SSL trusted certificate when using HTTPS.
   - field: |
       Kubernetes Role <br>{% new_in 3.1 %}
     parameter: |
@@ -835,6 +840,126 @@ rows:
       * **Environment variable:** `KONG_VAULT_HCV_OAUTH2_AUDIENCES`
     description: |
       Comma-separated list of OAuth2 audiences.
+  - field: |
+      GCP Auth Role <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.gcp_auth_role`
+      * **kong.conf parameter:** `vault_hcv_gcp_auth_role`
+      * **Environment variable:** `KONG_VAULT_HCV_GCP_AUTH_ROLE`
+    description: |
+      The configured role name in HashiCorp Vault for GCP auth. Required when `auth_method` is `gcp_iam` or `gcp_gce`.
+  - field: |
+      GCP Login Path <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.gcp_login_path`
+      * **kong.conf parameter:** `vault_hcv_gcp_login_path`
+      * **Environment variable:** `KONG_VAULT_HCV_GCP_LOGIN_PATH`
+    description: |
+      The login path for GCP auth in HashiCorp Vault. Used with both `gcp_iam` and `gcp_gce` auth methods. Defaults to `/v1/auth/gcp/login`.
+  - field: |
+      GCP Service Account <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.gcp_service_account`
+      * **kong.conf parameter:** `vault_hcv_gcp_service_account`
+      * **Environment variable:** `KONG_VAULT_HCV_GCP_SERVICE_ACCOUNT`
+    description: |
+      The GCP service account email or identifier used for authentication. Required when `auth_method` is `gcp_iam`.
+  - field: |
+      GCP JWT Expiration <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.gcp_jwt_exp`
+      * **kong.conf parameter:** `vault_hcv_gcp_jwt_exp`
+      * **Environment variable:** `KONG_VAULT_HCV_GCP_JWT_EXP`
+    description: |
+      The expiration time for the GCP JWT token in seconds. Must be between 0 and 900. Required when `auth_method` is `gcp_iam`.
+  - field: |
+      Azure Auth Role <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.azure_auth_role`
+      * **kong.conf parameter:** `vault_hcv_azure_auth_role`
+      * **Environment variable:** `KONG_VAULT_HCV_AZURE_AUTH_ROLE`
+    description: |
+      The configured role name in HashiCorp Vault for Azure auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `azure` and the `token_policies` have permissions to read the secrets. Required when `auth_method` is `azure`.
+  - field: |
+      Azure Login Path <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.azure_login_path`
+      * **kong.conf parameter:** `vault_hcv_azure_login_path`
+      * **Environment variable:** `KONG_VAULT_HCV_AZURE_LOGIN_PATH`
+    description: |
+      The login path for Azure auth in HashiCorp Vault. Defaults to `/v1/auth/azure/login`.
+  - field: |
+      AWS Auth Role <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_auth_role`
+      * **kong.conf parameter:** `vault_hcv_aws_auth_role`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_AUTH_ROLE`
+    description: |
+      The configured role name in HashiCorp Vault for AWS auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `aws` and the `token_policies` have permissions to read the secrets. Required when `auth_method` is `aws_ec2` or `aws_iam`.
+  - field: |
+      AWS Login Path <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_login_path`
+      * **kong.conf parameter:** `vault_hcv_aws_login_path`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_LOGIN_PATH`
+    description: |
+      The login path for AWS auth in HashiCorp Vault. Used with both `aws_ec2` and `aws_iam` auth methods. Defaults to `/v1/auth/aws/login`.
+  - field: |
+      AWS Auth Region <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_auth_region`
+      * **kong.conf parameter:** `vault_hcv_aws_auth_region`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_AUTH_REGION`
+    description: |
+      The AWS region for the AWS auth method. Required when `auth_method` is `aws_iam`.
+  - field: |
+      AWS Auth Nonce <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_auth_nonce`
+      * **kong.conf parameter:** `vault_hcv_aws_auth_nonce`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_AUTH_NONCE`
+    description: |
+      The nonce used for the AWS EC2 auth method. Required when `auth_method` is `aws_ec2`.
+  - field: |
+      AWS Access Key ID <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_access_key_id`
+      * **kong.conf parameter:** `vault_hcv_aws_access_key_id`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_ACCESS_KEY_ID`
+    description: |
+      The AWS access key ID for AWS IAM authentication. If not provided, the default credentials provider chain is used. Must be set together with `aws_secret_access_key`.
+  - field: |
+      AWS Secret Access Key <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_secret_access_key`
+      * **kong.conf parameter:** `vault_hcv_aws_secret_access_key`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_SECRET_ACCESS_KEY`
+    description: |
+      The AWS secret access key for AWS IAM authentication. If not provided, the default credentials provider chain is used. Must be set together with `aws_access_key_id`.
+  - field: |
+      AWS STS Endpoint URL <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_sts_endpoint_url`
+      * **kong.conf parameter:** `vault_hcv_aws_sts_endpoint_url`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_STS_ENDPOINT_URL`
+    description: |
+      The AWS STS endpoint URL used by {{site.base_gateway}} when signing the `GetCallerIdentity` request for AWS IAM authentication. If not provided, defaults to the standard STS endpoint for the specified region. This setting only affects the STS endpoint that {{site.base_gateway}} itself contacts — it does not influence which STS endpoint HashiCorp Vault uses on its side.
+  - field: |
+      AWS Assume Role ARN <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_assume_role_arn`
+      * **kong.conf parameter:** `vault_hcv_aws_assume_role_arn`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_ASSUME_ROLE_ARN`
+    description: |
+      The ARN of the AWS IAM role to assume for authentication. Must be set together with `aws_role_session_name`.
+  - field: |
+      AWS Role Session Name <br>{% new_in 3.14 %}
+    parameter: |
+      * **Vault entity:** `vaults.config.aws_role_session_name`
+      * **kong.conf parameter:** `vault_hcv_aws_role_session_name`
+      * **Environment variable:** `KONG_VAULT_HCV_AWS_ROLE_SESSION_NAME`
+    description: |
+      The session name to use when assuming an AWS IAM role. Defaults to `kong`. Must be set together with `aws_assume_role_arn`.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
