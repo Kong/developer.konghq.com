@@ -1,7 +1,7 @@
 ---
-title: Get started with {{site.metering_and_billing}} generic meters
-permalink: /how-to/get-started-with-metering-and-billing-generic-meters/
-description: Learn how to meter and bill AI agent runs using generic metering in {{site.konnect_short_name}} {{site.metering_and_billing}}.
+title: Meter and bill active users with {{site.metering_and_billing}} generic meters
+permalink: /how-to/meter-and-bill-active-users/
+description: Learn how to meter and bill active users using generic metering in {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 
 breadcrumbs:
@@ -14,7 +14,6 @@ works_on:
     - konnect
 
 tags:
-    - get-started
     - metering
     - billing
 
@@ -33,9 +32,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 tldr:
-  q: How can I meter and bill AI agent runs in {{site.konnect_short_name}}?
+  q: How can I meter and bill active users in {{site.konnect_short_name}}?
   a: |
-    To meter AI agent runs in {{site.konnect_short_name}}, create a generic meter with the **Count agent runs** template and `COUNT` aggregation to count agent run events per billing period. Then define a feature and plan to invoice customers based on their usage. Create a customer that includes usage from a subject and assign the customer to your plan. Finally, send events with the subject associated with the customer to generate an invoice.
+    To meter active users in {{site.konnect_short_name}}, create a generic meter with `UNIQUE_COUNT` aggregation to track unique users per billing period. Then define a feature and plan to invoice customers based on their seat count. Create a customer that includes usage from subject and assign the customer to your plan. Finally, send an event that includes the subject that is associated with the customer to generate an invoice.
 
 related_resources:
   - text: Product Catalog reference
@@ -57,63 +56,46 @@ faqs:
 automated_tests: false
 ---
 
-Generic metering is a flexible way to meter events from a variety of sources.
-This guide shows you how to use generic metering in {{site.metering_and_billing}} by demonstrating how to track and invoice customers based on the number of AI agent runs per month.
+Generic metering is a flexible way to meter events from a variety of sources. 
+This guide shows you how to use generic metering in {{site.metering_and_billing}} by demonstrating how to track and invoice customers based on the number of unique active users (seats) per month. 
 
-Pay-per-run billing is a common pricing model for AI products where customers are charged for each time an agent executes.
-By using the `COUNT` aggregation grouped by `agent_name`, you can track total runs and break down usage by agent type.
+Per-seat billing is a common pricing model for SaaS products where customers are charged based on how many distinct users access the platform in a billing period. 
+By using the `UNIQUE_COUNT` aggregation, you can count unique users accurately even if the same user triggers multiple events.
 
 In this guide, you'll:
 
-* Create a generic meter that counts agent runs
+* Create a generic meter that counts unique active users
 * Create a feature to make that usage billable
-* Create a usage-based plan
+* Create a per-seat plan with usage-based pricing
 * Start a subscription for a customer
 * Send usage events and validate the invoice
 
 ## Create a meter
 
-In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) track and record the consumption of a resource or service over time.
-For billing per agent run, you'll use the built-in **Count agent runs** template, which pre-configures a `COUNT` meter that increments once per `agent_run` event and groups results by `agent_name`.
+In {{site.metering_and_billing}}, [meters](/metering-and-billing/metering/) track and record the consumption of a resource or service over time. 
+For per-seat billing, you'll create a generic meter using the `UNIQUE_COUNT` aggregation. 
+This counts the number of distinct `user_id` values seen within the billing period, so if the same user is active multiple times, they're only counted once.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. Click **New meter**.
-1. Click the **Templates** dropdown menu.
-1. Select **Count agent runs**.
+1. In the **Name** field, enter `Active users total`.
+1. In the **Description** field, enter `Active Users`.
+1. In the **Event Type Filter** field, enter `user_activity`.
+1. From the **Aggregation** dropdown menu, select "UNIQUE COUNT".
+1. In the **Value property** field, enter `$.user_id`.
 1. Click **Save**.
-
-The template creates a meter with the following configuration:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Value
-    key: value
-rows:
-  - field: Key
-    value: "`agent_runs_total`"
-  - field: Event type filter
-    value: "`agent_run`"
-  - field: Aggregation
-    value: "`COUNT`"
-  - field: Group by
-    value: "`agent_name`"
-{% endtable %}
-<!--vale on-->
 
 ## Create a feature
 
 Meters collect raw usage data, but [features](/metering-and-billing/product-catalog/#features) make that data billable. 
 Without a feature, usage is tracked but not invoiced. 
-Now that you're metering agent runs, you need to associate that meter with a feature.
+Now that you're metering active users, you need to associate that meter with a named, customer-facing feature.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
-1. In the **Name** field, enter `agent-runs`.
-1. From the **Meter** dropdown menu, select "Count Agent Runs".
+1. In the **Name** field, enter `active-users`.
+1. From the **Meter** dropdown menu, select "Active users total".
 1. Click **Save**.
 
 ## Create a plan and rate card
@@ -125,23 +107,23 @@ Plans can be assigned to customers by starting a subscription.
 A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
 Rate cards are made up of the associated feature, price, and optional entitlements.
 
-In this section, you'll create an Agent Runs plan that charges customers $1 per agent run per month:
+In this section, you'll create a Per-Seat plan that charges customers $1 per active user per month:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click the **Plans** tab.
 1. Click **Create Plan**.
-1. In the **Name** field, enter `Agent Runs`.
-1. From the **Billing cadence** dropdown menu, select "1 month".
+1. In the **Name** field, enter `Per-Seat`.
+1. From the **Billing cadence** dropdown menu, select **1 month**.
 1. Click **Save**.
 1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "agent-runs".
+1. From the **Feature** dropdown menu, select "active-users".
 1. Click **Next Step**.
-1. From the **Pricing model** dropdown menu, select "Usage based".
+1. From the **Pricing model** dropdown menu, select **Usage based**.
 1. In the **Price per unit** field, enter `1`.
 
    {:.info}
-   > We're using $1 here to make it easy to see cost changes in the customer invoice.
+   > We're using $1 here to make it easy to see cost changes in the customer invoice. 
    > Change this price in a production instance to match your own pricing model.
 1. Click **Next Step**.
 1. Select **Boolean**.
@@ -151,7 +133,7 @@ In this section, you'll create an Agent Runs plan that charges customers $1 per 
 
 ## Start a subscription
 
-[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Agent Runs plan.
+[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Per-Seat plan.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -165,22 +147,24 @@ In this section, you'll create an Agent Runs plan that charges customers $1 per 
 1. Click **Save**.
 1. Click the **Subscription** tab.
 1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select `Agent Runs`.
+1. From the **Subscribed Plan** dropdown, select `Per-Seat`.
 1. Click **Next Step**.
 1. Click **Start Subscription**.
 
 ## Validate
 
-Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https://cloudevents.io/) format.
-Each event represents one agent run. The meter counts every event, so three events equal three runs.
+Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https://cloudevents.io/) format. 
+Each event represents a user interaction in your application. 
+The meter counts each unique `user_id` value once per billing period. 
+To validate, we'll send events for three distinct users: `alice`, `bob`, and `carol`.
 
 1. Export the current time:
    ```sh
    export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
    ```
    {{site.metering_and_billing}} only invoices and meters events that are sent _after_ the subscription is created.
-1. Send a run event for the `summarizer` agent:
-{% capture "run1" %}
+1. Send an event for `alice`:
+{% capture "alice1" %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
@@ -190,21 +174,65 @@ headers:
   - 'Content-Type: application/cloudevents+json'
 body:
   specversion: "1.0"
-  type: agent_run
+  type: user_activity
+  id: "$(uuidgen)"
+  source: acme-platform
+  time: $EVENT_TIME
+  datacontenttype: application/json
+  subject: acme-inc
+  data:
+    user_id: alice
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ alice1 | indent: 3 }}
+
+1. Send an event for `bob`:
+{% capture "bob" %}
+{% konnect_api_request %}
+url: /v3/openmeter/events
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/cloudevents+json'
+body:
+  specversion: "1.0"
+  type: user_activity
   id: '$(uuidgen)'
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
   subject: acme-inc
   data:
-    agent_name: summarizer
+    user_id: bob
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ bob | indent: 3 }}
+
+1. Send an event for `carol`:
+{% capture "carol" %}
+{% konnect_api_request %}
+url: /v3/openmeter/events
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/cloudevents+json'
+body:
+  specversion: "1.0"
+  type: user_activity
+  id: '$(uuidgen)'
+  source: acme-platform
+  time: $EVENT_TIME
+  datacontenttype: application/json
+  subject: acme-inc
+  data:
+    user_id: carol
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
-{{ run1 | indent: 3 }}
+{{ carol | indent: 3 }}
 
-1. Send a second run event for the `summarizer` agent:
-{% capture "run2" %}
+1. Now, send a second event for `alice` to confirm that `UNIQUE_COUNT` doesn't duplicate repeated users:
+{% capture "alice2" %}
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
@@ -214,44 +242,20 @@ headers:
   - 'Content-Type: application/cloudevents+json'
 body:
   specversion: "1.0"
-  type: agent_run
+  type: user_activity
   id: '$(uuidgen)'
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
   subject: acme-inc
   data:
-    agent_name: summarizer
+    user_id: alice
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
-{{ run2 | indent: 3 }}
+{{ alice2 | indent: 3 }}
 
-1. Send a run event for the `translator` agent:
-{% capture "run3" %}
-<!--vale off-->
-{% konnect_api_request %}
-url: /v3/openmeter/events
-status_code: 200
-method: POST
-headers:
-  - 'Content-Type: application/cloudevents+json'
-body:
-  specversion: "1.0"
-  type: agent_run
-  id: '$(uuidgen)'
-  source: acme-platform
-  time: $EVENT_TIME
-  datacontenttype: application/json
-  subject: acme-inc
-  data:
-    agent_name: translator
-{% endkonnect_api_request %}
-<!--vale on-->
-{% endcapture %}
-{{ run3 | indent: 3 }}
-
-Now check the invoice:
+Even though four events were sent, the meter counted only three unique users. Now check the invoice:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -260,7 +264,7 @@ Now check the invoice:
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
 
-You'll see `agent-runs` listed in Lines with a quantity of `3`, reflecting three agent runs (two for `summarizer` and one for `translator`).
+You'll see `active-users` listed in Lines with a quantity of `3`, reflecting three unique active users. 
 
-In this guide, you're using the sandbox for invoices.
+In this guide, you're using the sandbox for invoices. 
 To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**, like [Stripe](/metering-and-billing/stripe-integration/).
