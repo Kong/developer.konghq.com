@@ -17,7 +17,7 @@ To complete this tutorial, make sure you have Ollama installed and running local
 
    {% capture var %}
    {% env_variables %}
-   DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434/api/chat'
+   DECK_OLLAMA_UPSTREAM_URL: 'http://host.docker.internal:11434{{include.path}}'
    {% endenv_variables %}
    {% endcapture %}
 
