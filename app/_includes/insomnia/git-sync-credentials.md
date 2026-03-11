@@ -4,4 +4,4 @@ Configure the credentials for your Git repository using one of the following opt
 * Add the credentials to your `~/.gitconfig` file
 * Configure the credentials in **Preferences** > **Credentials**
 
-Insomnia does not enforce secret prevention in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
+Insomnia does not enforce secret protection in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
