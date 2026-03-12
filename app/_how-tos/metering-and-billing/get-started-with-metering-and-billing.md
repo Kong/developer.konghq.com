@@ -112,7 +112,7 @@ Now that you're metering agent runs, you need to associate that meter with a fea
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click **Create Feature**.
-1. In the **Name** field, enter `agent-runs`.
+1. In the **Name** field, enter `Agent Runs`.
 1. From the **Meter** dropdown menu, select "Count Agent Runs".
 1. Click **Save**.
 
@@ -125,23 +125,23 @@ Plans can be assigned to customers by starting a subscription.
 A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
 Rate cards are made up of the associated feature, price, and optional entitlements.
 
-In this section, you'll create an Agent Runs plan that charges customers $1 per agent run per month:
+In this section, you'll create an Premium Plan plan that charges customers $1 per agent run per month:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Product Catalog**.
 1. Click the **Plans** tab.
 1. Click **Create Plan**.
-1. In the **Name** field, enter `Agent Runs`.
+1. In the **Name** field, enter `Premium Plan`.
 1. From the **Billing cadence** dropdown menu, select "1 month".
 1. Click **Save**.
 1. Click **Add Rate Card**.
-1. From the **Feature** dropdown menu, select "agent-runs".
+1. From the **Feature** dropdown menu, select "Agent Runs".
 1. Click **Next Step**.
 1. From the **Pricing model** dropdown menu, select "Usage based".
 1. In the **Price per unit** field, enter `1`.
 
    {:.info}
-   > We're using $1 here to make it easy to see cost changes in the customer invoice.
+   > We're using $1 here to make it easy to see invoice amount changes in the customer invoice.
    > Change this price in a production instance to match your own pricing model.
 1. Click **Next Step**.
 1. Select **Boolean**.
@@ -151,7 +151,7 @@ In this section, you'll create an Agent Runs plan that charges customers $1 per 
 
 ## Start a subscription
 
-[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Agent Runs plan.
+[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Premium Plan plan.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
@@ -165,7 +165,7 @@ In this section, you'll create an Agent Runs plan that charges customers $1 per 
 1. Click **Save**.
 1. Click the **Subscription** tab.
 1. Click **Create a Subscription**.
-1. From the **Subscribed Plan** dropdown, select `Agent Runs`.
+1. From the **Subscribed Plan** dropdown, select `Premium Plan`.
 1. Click **Next Step**.
 1. Click **Start Subscription**.
 
@@ -173,6 +173,9 @@ In this section, you'll create an Agent Runs plan that charges customers $1 per 
 
 Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https://cloudevents.io/) format.
 Each event represents one agent run. The meter counts every event, so three events equal three runs.
+
+{:.warning}
+> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} dedupes events with the same `id`.
 
 1. Export the current time:
    ```sh
@@ -191,7 +194,7 @@ headers:
 body:
   specversion: "1.0"
   type: agent_run
-  id: '$(uuidgen)'
+  id: 8655CDD7-0775-4AEA-AF8C-89C47EBC8828
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -215,7 +218,7 @@ headers:
 body:
   specversion: "1.0"
   type: agent_run
-  id: '$(uuidgen)'
+  id: 3EC7EFD0-5B78-47A4-AE9E-15965675CF95
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -239,7 +242,7 @@ headers:
 body:
   specversion: "1.0"
   type: agent_run
-  id: '$(uuidgen)'
+  id: 48FC220C-C124-4B73-B378-7DC5CF88DD1A
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json

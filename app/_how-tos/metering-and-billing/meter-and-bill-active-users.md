@@ -123,7 +123,7 @@ In this section, you'll create a Per-Seat plan that charges customers $1 per act
 1. In the **Price per unit** field, enter `1`.
 
    {:.info}
-   > We're using $1 here to make it easy to see cost changes in the customer invoice. 
+   > We're using $1 here to make it easy to see invoice amount changes in the customer invoice. 
    > Change this price in a production instance to match your own pricing model.
 1. Click **Next Step**.
 1. Select **Boolean**.
@@ -158,6 +158,9 @@ Each event represents a user interaction in your application.
 The meter counts each unique `user_id` value once per billing period. 
 To validate, we'll send events for three distinct users: `alice`, `bob`, and `carol`.
 
+{:.warning}
+> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} dedupes events with the same `id`.
+
 1. Export the current time:
    ```sh
    export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -175,7 +178,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: "$(uuidgen)"
+  id: 57B5F342-B8D5-49AE-9D6C-350C1D92155C
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -183,11 +186,13 @@ body:
   data:
     user_id: alice
 {% endkonnect_api_request %}
+<!--vale on-->
 {% endcapture %}
 {{ alice1 | indent: 3 }}
 
 1. Send an event for `bob`:
 {% capture "bob" %}
+<!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
 status_code: 200
@@ -197,7 +202,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: '$(uuidgen)'
+  id: F388B902-7A82-4C40-BC89-448CFA5DDC1B
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -205,11 +210,13 @@ body:
   data:
     user_id: bob
 {% endkonnect_api_request %}
+<!--vale on-->
 {% endcapture %}
 {{ bob | indent: 3 }}
 
 1. Send an event for `carol`:
 {% capture "carol" %}
+<!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
 status_code: 200
@@ -219,7 +226,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: '$(uuidgen)'
+  id: 46C16EE0-6174-4336-A539-AEC3AD1E0485
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
@@ -243,7 +250,7 @@ headers:
 body:
   specversion: "1.0"
   type: user_activity
-  id: '$(uuidgen)'
+  id: 2843D4B1-C8F8-408E-9F28-6D4EB44E5A8B
   source: acme-platform
   time: $EVENT_TIME
   datacontenttype: application/json
