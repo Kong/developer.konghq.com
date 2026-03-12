@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@2d934da57b631cf395103da16f430107a7542da5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2d934da57b631cf395103da16f430107a7542da5'
+  x-oas-source: kong/platform-api@c638fa722e06b3a49feecc6be15a5ef679fbd09c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c638fa722e06b3a49feecc6be15a5ef679fbd09c'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -4751,15 +4751,9 @@ components:
         - name
         - value
     EventGatewayPolicyReference:
-      description: A reference to an Event Gateway policy.
-      type: object
-      properties:
-        id:
-          description: The unique identifier of the policy.
-          type: string
-          format: uuid
-      required:
-        - id
+      description: The unique identifier of the policy.
+      type: string
+      format: uuid
     CursorMetaPage:
       type: object
       properties:
