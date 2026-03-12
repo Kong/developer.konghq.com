@@ -2,7 +2,7 @@ To complete this tutorial, make sure you have Ollama installed and running local
 
 1. Visit the [Ollama download page](https://ollama.com/download) and download the installer for your operating system. Follow the installation instructions for your platform.
 
-1. Start Ollama:
+1. If Ollama isn't already running, start Ollama:
    ```sh
    ollama start
    ```
