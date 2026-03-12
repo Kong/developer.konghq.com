@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.2.0
+  version: 3.3.0
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
+  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -868,6 +868,18 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/integrations:
+    get:
+      operationId: get-portal-integrations
+      summary: Get Portal Integration Configurations
+      description: Returns the portal's integration configurations.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+      security:
+        - {}
+      tags:
+        - Portal
   /api/v3/pages:
     get:
       operationId: list-portal-pages
@@ -3759,6 +3771,17 @@ components:
           nullable: true
       additionalProperties: false
       title: PortalCustomization
+    PortalIntegrations:
+      description: Configuration data for Dev Portal integrations
+      type: object
+      properties:
+        google_tag_manager:
+          $ref: '#/components/schemas/GoogleTagManagerIntegration'
+        google_analytics_4:
+          $ref: '#/components/schemas/GoogleAnalytics4Integration'
+      default: {}
+      additionalProperties: false
+      title: Portal Integrations
     PageId:
       description: The unique identifier of the page
       type: string
@@ -4017,6 +4040,120 @@ components:
       required:
         - title
         - items
+    GoogleTagManagerIntegration:
+      description: Google Tag Manager integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - tracking
+        config_data:
+          description: Configuration data for the Google Tag Manager integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Tag Manager container ID
+              type: string
+              example: GTM-XXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^GTM-[A-Za-z0-9]+$'
+              x-validation-message: 'must be a valid GTM container ID (format: GTM-XXXXXX)'
+            l:
+              description: Optional dataLayer variable name
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            preview:
+              description: Preview environment name
+              type: string
+              example: preview
+              maxLength: 100
+              nullable: true
+            cookies_win:
+              description: Forces GTM cookies to take precedence when true
+              type: boolean
+              nullable: true
+            debug:
+              description: Enables debug mode when true
+              type: boolean
+              nullable: true
+            npa:
+              description: No Personal Advertising - disables advertising features when true
+              type: boolean
+              nullable: true
+            data_layer:
+              description: Custom dataLayer name (alternative to "l" property)
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            env_name:
+              description: Environment name for environment-specific container
+              type: string
+              example: production
+              maxLength: 100
+              nullable: true
+            auth_referrer_policy:
+              description: Referrer policy for analytics requests
+              type: string
+              example: no-referrer
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
+    GoogleAnalytics4Integration:
+      description: Google Analytics integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - analytics
+        config_data:
+          description: Configuration data for the Google Analytics integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Analytics measurement ID
+              type: string
+              example: G-XXXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^G-[A-Za-z0-9-]+$'
+              x-validation-message: 'must be a valid Google Analytics ID (format: G-XXXXXXX)'
+            l:
+              description: The datalayer's name you want data to be associated with
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
     CreateApiRegistrationPayload:
       description: The payload to create a registration.
       type: object
@@ -5368,6 +5505,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomization'
+    PortalIntegrationsResponse:
+      description: Response for portal integration configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIntegrations'
     CreateAPIRegistration:
       description: Registration creation response.
       content:
