@@ -41,6 +41,14 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 Breaking changes in the 3.14.0.0 release.
 
+#### Route protocol defaults change
+
+The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`. 
+This ensures that all Routes are secure by default.
+
+New Routes will have this default value, while existing Routes are unaffected. 
+If you have any automation that creates Routes, update your configuration to ensure you're setting the required protocol explicitly.
+
 #### SHA1 algorithm removal
 
 The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
