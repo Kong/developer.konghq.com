@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@c84412ec45ceb782cf4901750bf4013311bbcb98
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c84412ec45ceb782cf4901750bf4013311bbcb98'
+  x-oas-source: kong/platform-api@2d934da57b631cf395103da16f430107a7542da5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/2d934da57b631cf395103da16f430107a7542da5'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2039,11 +2039,13 @@ components:
           sasl_plain: '#/components/schemas/VirtualClusterAuthenticationSaslPlainSensitiveDataAware'
           sasl_scram: '#/components/schemas/VirtualClusterAuthenticationSaslScram'
           oauth_bearer: '#/components/schemas/VirtualClusterAuthenticationOauthBearer'
+          client_certificate: '#/components/schemas/VirtualClusterAuthenticationClientCertificate'
       oneOf:
         - $ref: '#/components/schemas/VirtualClusterAuthenticationAnonymous'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationSaslPlainSensitiveDataAware'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationSaslScram'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationOauthBearer'
+        - $ref: '#/components/schemas/VirtualClusterAuthenticationClientCertificate'
     VirtualClusterAuthenticationScheme:
       discriminator:
         propertyName: type
@@ -2052,11 +2054,13 @@ components:
           sasl_plain: '#/components/schemas/VirtualClusterAuthenticationSaslPlain'
           sasl_scram: '#/components/schemas/VirtualClusterAuthenticationSaslScram'
           oauth_bearer: '#/components/schemas/VirtualClusterAuthenticationOauthBearer'
+          client_certificate: '#/components/schemas/VirtualClusterAuthenticationClientCertificate'
       oneOf:
         - $ref: '#/components/schemas/VirtualClusterAuthenticationAnonymous'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationSaslPlain'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationSaslScram'
         - $ref: '#/components/schemas/VirtualClusterAuthenticationOauthBearer'
+        - $ref: '#/components/schemas/VirtualClusterAuthenticationClientCertificate'
     VirtualClusterAuthenticationAnonymous:
       type: object
       properties:
@@ -2067,6 +2071,53 @@ components:
           x-terraform-transform-const: true
       required:
         - type
+    VirtualClusterAuthenticationClientCertificate:
+      description: Client certificate (mTLS) authentication scheme for the virtual cluster.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_certificate
+          x-terraform-transform-const: true
+      example:
+        type: client_certificate
+      additionalProperties: false
+      required:
+        - type
+      x-min-runtime-version: '1.1'
+    TLSTrustBundleName:
+      description: The unique name of the TLS trust bundle.
+      type: string
+      maxLength: 255
+      minLength: 1
+      x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+    TLSTrustBundleReference:
+      description: |
+        A reference to a TLS trust bundle resource.
+
+        Either `id` or `name` must be provided. Following changes to the trust bundle name won't affect the
+        reference, as the system will create the entities relationship by `id`.
+      anyOf:
+        - $ref: '#/components/schemas/TLSTrustBundleReferenceById'
+        - $ref: '#/components/schemas/TLSTrustBundleReferenceByName'
+    TLSTrustBundleReferenceById:
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the TLS trust bundle.
+          type: string
+          format: uuid
+          minLength: 1
+      required:
+        - id
+    TLSTrustBundleReferenceByName:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TLSTrustBundleName'
+      required:
+        - name
     VirtualClusterAuthenticationSaslPlainSensitiveDataAware:
       description: SASL/PLAIN authentication scheme for the virtual cluster.
       type: object
@@ -2978,6 +3029,34 @@ components:
             If false, only TLS connections are allowed. If true, both TLS and plaintext connections are allowed.
           type: boolean
           default: false
+        client_authentication:
+          description: |
+            Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
+            requests or requires clients to present a certificate during the TLS handshake.
+          type: object
+          properties:
+            mode:
+              description: |
+                * required - Reject TLS connections without a valid client certificate.
+                * requested - Request a client certificate during the TLS handshake, but allow connections without one (falls back to other configured authentication methods). If a certificate is presented but cannot be verified, the connection is closed.
+              type: string
+              enum:
+                - required
+                - requested
+            tls_trust_bundles:
+              description: |
+                References to TLS trust bundle resources used to verify client certificates. Evaluated in order;
+                verification stops at the first trust bundle that successfully validates the client certificate
+                chain. If no trust bundle validates the certificate chain, the connection is closed when mode is
+                `required`.
+              type: array
+              items:
+                $ref: '#/components/schemas/TLSTrustBundleReference'
+              minItems: 1
+          required:
+            - mode
+            - tls_trust_bundles
+          x-min-runtime-version: '1.1'
       required:
         - certificates
     EventGatewayTLSListenerPolicyConfig:
@@ -2996,6 +3075,34 @@ components:
             If false, only TLS connections are allowed. If true, both TLS and plaintext connections are allowed.
           type: boolean
           default: false
+        client_authentication:
+          description: |
+            Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
+            requests or requires clients to present a certificate during the TLS handshake.
+          type: object
+          properties:
+            mode:
+              description: |
+                * required - Reject TLS connections without a valid client certificate.
+                * requested - Request a client certificate during the TLS handshake, but allow connections without one (falls back to other configured authentication methods). If a certificate is presented but cannot be verified, the connection is closed.
+              type: string
+              enum:
+                - required
+                - requested
+            tls_trust_bundles:
+              description: |
+                References to TLS trust bundle resources used to verify client certificates. Evaluated in order;
+                verification stops at the first trust bundle that successfully validates the client certificate
+                chain. If no trust bundle validates the certificate chain, the connection is closed when mode is
+                `required`.
+              type: array
+              items:
+                $ref: '#/components/schemas/TLSTrustBundleReference'
+              minItems: 1
+          required:
+            - mode
+            - tls_trust_bundles
+          x-min-runtime-version: '1.1'
       required:
         - certificates
     TLSCertificateSensitiveDataAware:

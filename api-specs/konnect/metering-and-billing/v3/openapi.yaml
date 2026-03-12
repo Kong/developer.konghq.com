@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@fff8d6357a54702356158b3bf2b5b80db22fc823
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fff8d6357a54702356158b3bf2b5b80db22fc823'
+  x-oas-source: kong/platform-api@c8eac024b35f852ead801629059f98afee40b567
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c8eac024b35f852ead801629059f98afee40b567'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4438,7 +4438,7 @@ components:
         The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
 tags:
   - name: OpenMeter Billing
-    description: 'Billing manages the billing profiles, and invoices for customers.'
+    description: 'Billing manages the billing profiles, currencies, cost bases, and invoices for customers.'
   - name: OpenMeter Apps
     description: 'Apps enable you to extend and customize billing and usage workflows by integrating with external systems and services. Apps can automate and enhance your billing ecosystem by supporting capabilities such as synchronizing usage data with third-party platforms, calculating taxes, generating and delivering invoices, handling payment collection, and other billing-related tasks.'
   - name: OpenMeter Entitlements
