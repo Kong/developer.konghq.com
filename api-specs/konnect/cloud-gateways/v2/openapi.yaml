@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@f4fa4e110dc38ef6d97f236649f87277bf2e9ef4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f4fa4e110dc38ef6d97f236649f87277bf2e9ef4'
+  x-oas-source: kong/platform-api@fc5007a42006704a75e5ab4d701a50c2edf7da81
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fc5007a42006704a75e5ab4d701a50c2edf7da81'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -2082,6 +2082,37 @@ components:
         - resource_group_name
         - vnet_name
       title: Azure VNET Peering Attachment Config
+    AzureVHubPeeringAttachmentConfig:
+      type: object
+      properties:
+        kind:
+          enum:
+            - azure-vhub-peering-attachment
+          title: Azure Virtual Hub Peering Attachment Type
+        tenant_id:
+          description: Tenant ID of the Azure Virtual Hub resource.
+          type: string
+          title: Tenant ID
+        subscription_id:
+          description: Subscription ID of the Azure Virtual Hub resource.
+          type: string
+          title: Subscription ID
+        resource_group_name:
+          description: Resource Group Name of the Azure Virtual Hub resource.
+          type: string
+          title: Resource Group Name
+        vhub_name:
+          description: Name of the Azure Virtual Hub resource.
+          type: string
+          title: Virtual Hub Name
+      additionalProperties: false
+      required:
+        - kind
+        - tenant_id
+        - subscription_id
+        - resource_group_name
+        - vhub_name
+      title: Azure Virtual Hub Peering Attachment Config
     GCPVPCPeeringAttachmentConfig:
       type: object
       properties:
@@ -2892,6 +2923,66 @@ components:
         - created_at
         - updated_at
       title: Azure Transit Gateway
+    AzureVHubPeeringGatewayResponse:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/AzureVHubPeeringAttachmentConfig'
+        id:
+          $ref: '#/components/schemas/TransitGatewayId'
+        state:
+          $ref: '#/components/schemas/TransitGatewayState'
+        state_metadata:
+          description: |
+            Metadata describing the backing state of the transit gateway and why it may be in an erroneous state.
+          type: object
+          additionalProperties: false
+          properties:
+            reported_status:
+              description: Reported status of the transit gateway from backing infrastructure.
+              type: string
+              example: ERROR
+            reason:
+              description: |
+                Reason why the transit gateway may be in an erroneous state, reported from backing infrastructure.
+              type: string
+              example: |
+                Transit Gateway Attachment configuration could not find a resource with the provided ram share arn.
+          readOnly: true
+          title: TransitGatewayStateMetadata
+        entity_version:
+          description: |
+            Monotonically-increasing version count of the transit gateway, to indicate the order of updates to the
+            transit gateway.
+          type: integer
+          example: 1
+          readOnly: true
+        created_at:
+          description: An RFC-3339 timestamp representation of transit gateway creation date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        updated_at:
+          description: An RFC-3339 timestamp representation of transit gateway update date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - name
+        - transit_gateway_attachment_config
+        - id
+        - dns_config
+        - state
+        - entity_version
+        - created_at
+        - updated_at
+      title: Azure Virtual Hub Peering Gateway
     GCPVPCPeeringGatewayResponse:
       type: object
       properties:
@@ -2957,6 +3048,7 @@ components:
         - $ref: '#/components/schemas/AwsTransitGatewayResponse'
         - $ref: '#/components/schemas/AwsVpcPeeringGatewayResponse'
         - $ref: '#/components/schemas/AzureTransitGatewayResponse'
+        - $ref: '#/components/schemas/AzureVHubPeeringGatewayResponse'
         - $ref: '#/components/schemas/GCPVPCPeeringGatewayResponse'
         - $ref: '#/components/schemas/AwsResourceEndpointGatewayResponse'
     CreateAwsTransitGateway:
@@ -3017,6 +3109,19 @@ components:
         - name
         - transit_gateway_attachment_config
       title: Azure Transit Gateway
+    CreateAzureVHubPeeringGateway:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TransitGatewayName'
+        dns_config:
+          $ref: '#/components/schemas/TransitGatewayDnsConfig'
+        transit_gateway_attachment_config:
+          $ref: '#/components/schemas/AzureVHubPeeringAttachmentConfig'
+      required:
+        - name
+        - transit_gateway_attachment_config
+      title: Azure Virtual Hub Peering Gateway
     CreateGCPVPCPeeringTransitGateway:
       type: object
       properties:
@@ -3038,6 +3143,7 @@ components:
         - $ref: '#/components/schemas/CreateAwsVpcPeeringGateway'
         - $ref: '#/components/schemas/CreateAwsResourceEndpointGateway'
         - $ref: '#/components/schemas/CreateAzureTransitGateway'
+        - $ref: '#/components/schemas/CreateAzureVHubPeeringGateway'
         - $ref: '#/components/schemas/CreateGCPVPCPeeringTransitGateway'
       title: CreateTransitGatewayRequest
     PatchAwsResourceEndpointGateway:
