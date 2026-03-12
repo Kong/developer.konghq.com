@@ -4,6 +4,7 @@ Now that your Dedicated Cloud Gateway Azure network is ready, you can configure 
 1. Click your Azure Dedicated Cloud Gateway.
 1. In the API Gateways sidebar, click **Networks**.
 1. From the action menu next to your Azure network, select "Configure private networking".
+1. Click **Virtual hub peering**.
 1. In the **Tenant ID** field, enter [your Microsoft Entra tenant ID](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
 1. In the **Subscription ID** field, enter your virtual WAN's subscription ID.
 1. In the **Resource group name** field, enter your virtual WAN's resource group name.
