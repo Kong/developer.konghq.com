@@ -195,6 +195,8 @@ This service takes the following optional environment variables at startup:
 * `POST /llm/v1/sanitize`: Sanitize specified types of PII information, including credentials, and custom patterns
 * `POST /llm/v1/sanitize_credentials`: Only for sanitizing credentials
 
+See the [AI PII Sanitizer OpenAPI specification](/plugins/ai-sanitizer/api/) for complete details.
+
 ### Available anonymization modes
 
 You can anonymize data in requests using the following redact modes:

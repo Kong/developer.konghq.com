@@ -140,6 +140,8 @@ The compressor service exposes both REST and JSON-RPC endpoints. You can use the
 
 * **POST `/`**: JSON-RPC endpoint that supports the `llm.v1.compressPrompt` method. Use this to invoke compression programmatically over JSON-RPC.
 
+See the [AI Prompt Compressor OpenAPI specification](/plugins/ai-prompt-compressor/api/) for complete details.
+
 ## Prompt compression options
 
 The AI Prompt Compressor plugin offers flexible compression controls to fit different use cases. You can choose between full-prompt compression, conditional strategies, or selectively compressing only parts of the prompt:
