@@ -624,6 +624,10 @@ For a complete tutorial on how to set up HashiCorp Vault as a Kong Vault backend
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and certificate authentication](/how-to/configure-hashicorp-vault-with-cert-auth/)
 * [Set up HashiCorp Vault with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/hashicorp/)
 * [Set up HashiCorp Vault with {{ site.base_gateway }} and OAuth2](/how-to/configure-hashicorp-vault-with-oauth2/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and GCP workload identity](/how-to/configure-hashicorp-vault-with-gcp-workload-identity/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/)
+* [Set up HashiCorp Vault with {{ site.base_gateway }} and AWS EC2 authentication](/how-to/configure-hashicorp-vault-with-aws-ec2-auth/)
 
 The following table lists the available configuration parameters for a HashiCorp Vault:
 
