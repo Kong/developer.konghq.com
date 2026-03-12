@@ -2,6 +2,7 @@ metadata:
   title: "Kong Developer Sitemap"
   content_type: landing_page
   description: Sitemap for Kong Developer documentation.
+  llm: false
 
 rows:
   - header:
