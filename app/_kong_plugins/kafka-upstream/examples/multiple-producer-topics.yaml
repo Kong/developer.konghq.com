@@ -1,4 +1,5 @@
-description: |
+description: 'Send messages to multiple Kafka topics'
+extended_description: |
   As of {{site.base_gateway}} 3.10, the Kafka Upstream plugin supports sending messages to multiple Kafka topics specified by the client through a query parameter. 
   To control which topics clients can target, you can configure an allowlist of permitted topic names.
   
