@@ -1,4 +1,5 @@
-description: |
+description: Verify registered claims
+extended_description: |
   {{site.base_gateway}} can perform verification on registered claims, as defined in [RFC 7519](https://tools.ietf.org/html/rfc7519). To perform verification on a claim, add it to the [`config.claims_to_verify`](/plugins/jwt/reference/#schema--config-claims-to-verify) property.
 
   The following claims are supported:
