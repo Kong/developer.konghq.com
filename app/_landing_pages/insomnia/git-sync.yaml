@@ -73,6 +73,8 @@ rows:
               - Resolve conflicts.
 
               All operations follow your repository’s existing rules and protections.
+
+              When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
       - blocks:
           - type: text
             config: |
@@ -91,12 +93,7 @@ rows:
             config: |
               **Authentication**
 
-              Git credentials can be configured through:
-              - Git Sync settings.
-              - Insomnia preferences.
-              - Local Git configuration.
-
-              Insomnia does not enforce secret prevention in your repository. Use [private environments](/insomnia/environments/), external vaults, or repository scanners to manage sensitive data.
+              Git credentials can be configured through Git Sync project settings, Insomnia preferences, or your local Git configuration. For the full setup and security guidance, see [Git Sync credentials](/insomnia/storage/#git-sync).
       - blocks:
           - type: text
             config: |
@@ -138,24 +135,10 @@ rows:
       - blocks:
           - type: faqs
             config:
-              - q: Should I use Git Sync or Cloud Sync?
-                a: Use Git Sync if you require repository-level ownership and governance. Use Cloud Sync if you prefer managed sharing through Insomnia organizations.
               - q: Does Git Sync respect branch protections?
                 a: Yes. Repository branch protections are enforced by your Git provider and cannot be bypassed from Insomnia.
-              - q: What happens if I convert a Git Sync project?
-                a: The project disconnects from the repository. Existing repository data remains unchanged.
               - q: Can I revert commits from the Git Sync UI?
                 a: No. Reverts must be performed using your Git provider or local Git tooling.
-              - q: Can I convert a Git Sync project to another storage type?
-                a: |
-                  Yes. Git Sync projects can be converted to Cloud Sync or Local Vault.
-
-                  When you convert a project:
-                  - It disconnects from the Git repository.
-                  - The existing repository is not deleted or modified.
-                  - Future changes are stored in the selected storage type.
-
-                  Before converting, pull the latest repository changes to ensure your local state is current.
               - q: Can administrators restrict available storage types?
                 a: |
                   Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.
