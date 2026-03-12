@@ -175,7 +175,7 @@ Send usage events to {{site.metering_and_billing}} using the [CloudEvents](https
 Each event represents one agent run. The meter counts every event, so three events equal three runs.
 
 {:.warning}
-> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} dedupes events with the same `id`.
+> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} deduplicates events with the same `id`.
 
 1. Export the current time:
    ```sh

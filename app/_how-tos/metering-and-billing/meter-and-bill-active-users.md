@@ -159,7 +159,7 @@ The meter counts each unique `user_id` value once per billing period.
 To validate, we'll send events for three distinct users: `alice`, `bob`, and `carol`.
 
 {:.warning}
-> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} dedupes events with the same `id`.
+> **Important:** When you send events, they must have a unique `id`. {{site.metering_and_billing}} deduplicates events with the same `id`.
 
 1. Export the current time:
    ```sh
