@@ -228,13 +228,22 @@ rows:
   - mode: |
       [`listener`](./examples/listener/)
     description: |
-      Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
-      `conversion-only` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.<br/><br/>
+      Similar to `conversion-listener`, but instead of defining its own tools, it binds multiple `conversion-only` or `upstream-server` tools using the [`config.server.tag`](./reference/#schema--config-server-tag) property.
+      `conversion-only` or `upstream-server` plugins define `tags` at the plugin level, and the listener connects to them to expose the tools on a Route for incoming MCP requests.<br/><br/>
 
-      This mode must be used together with other AI MCP Proxy plugins configured with the `conversion-only` mode.
+      This mode must be used together with other AI MCP Proxy plugins configured with the `conversion-only` or `upstream-server` mode.
     usecase: |
       Use when you need a single MCP endpoint that aggregates tools from multiple `conversion-only` plugins.
       Typical in multi-service or multi-team environments that expose a unified MCP interface.
+  - mode: |
+      [`upstream-server`](./examples/pupstream-server/) {% new_in 3.14 %}
+    description: |
+      Aggregates multiple upstream MCP servers but does **not** accept incoming MCP requests.
+      `tags` can be defined at the plugin level and are used by `listener` plugins to expose the tools.<br/><br/>
+
+      This mode must be used together with other AI MCP Proxy plugins configured with the `listener` mode.
+    usecase: |
+      Use when you need a single MCP endpoint that aggregates multiple backend tools.
 {% endtable %}
 <!-- vale on -->
 
@@ -247,10 +256,10 @@ This way, consumers only interact with tools appropriate to their role, while ma
 {:.info}
 > **ACL in `listener` mode**
 >
-> Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged conversion-listener or conversion-only plugins.
+> Listener mode does not support direct ACL configuration. Instead, it inherits ACL rules from tagged conversion-listener, conversion-only, or upstream-server plugins.
 >
 > To use ACLs with `listener` mode:
-> 1. Configure conversion-listener or conversion-only plugins with ACL rules and tags.
+> 1. Configure conversion-listener, conversion-only, or upstream-server plugins with ACL rules and tags.
 > 2. Configure listener mode to aggregate tools by matching tags.
 > 3. Set `include_consumer_groups: true` on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
 >
