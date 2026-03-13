@@ -63,15 +63,13 @@ With default buffering enabled, the upstream does not receive the request body u
 * `nginx_http_client_header_buffer_size`: size of the buffer used to read HTTP request headers. The default works for most cases.
 * `nginx_http_large_client_header_buffers`: additional buffers dynamically allocated when request headers exceed `nginx_http_client_header_buffer_size`. Format is `number size`. For example, `4 8k` allocates up to 4 buffers of 8 KB each, one at a time. Buffers are freed after the response is sent and the request is logged.
 * `nginx_http_client_body_buffer_size`: size of the buffer used to hold the request body.
-* `nginx_http_client_max_body_size`: hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit.
+* `nginx_http_client_max_body_size`: hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit. Always set this value. Without it, large request bodies or many concurrent requests with large bodies can exhaust file system storage. For most APIs, `1m` is a reasonable starting point; increase it gradually to fit your use case.
 
 ### When request buffers are exceeded
 
 If the total size of the request headers exceeds the combined size of `nginx_http_client_header_buffer_size` and `nginx_http_large_client_header_buffers`, {{site.base_gateway}} returns a `414` or `400` error.
 
 There are two separate controls for the request body because they serve different purposes. When the body exceeds `nginx_http_client_body_buffer_size` but is within `nginx_http_client_max_body_size`, {{site.base_gateway}} spills the excess to disk rather than rejecting the request. When the body exceeds `nginx_http_client_max_body_size`, {{site.base_gateway}} returns a `413` error.
-
-Always set `nginx_http_client_max_body_size`. Without it, a large request body, or many concurrent requests with large bodies, can exhaust file system storage. For most APIs that don't handle large bodies, `1m` is a reasonable starting point. Increase it gradually to fit your use case.
 
 {:.warning}
 > If a plugin reads the request body and the body exceeds `nginx_http_client_body_buffer_size`, the plugin will fail. See the [PDK documentation](/gateway/pdk/reference/) for details.
@@ -121,9 +119,9 @@ For large payloads where buffering is impractical, you can disable it per route:
 
 Disabling buffering also helps when optimizing for Time To First Byte (TTFB), since the client starts receiving data as soon as the upstream begins sending it rather than waiting for the full response to be buffered.
 
-Disabling buffering only applies to the body. Headers are always buffered, but their size is small enough that this is not a concern.
+Disabling buffering only applies to the body. Headers are always buffered. At typical sizes this adds negligible overhead.
 
-By default, {{site.base_gateway}} buffers because reading and writing to a network socket requires a syscall. Streaming data in small chunks increases syscall frequency and CPU usage. Buffering reduces that overhead, and for the common case of small API payloads that fit in memory, it is the right trade-off.
+By default, {{site.base_gateway}} buffers because reading and writing to a network socket requires a syscall. Streaming data in small chunks increases syscall frequency and CPU usage. Buffering reduces that overhead, which is the right default for small API payloads that fit in memory.
 
 {:.warning}
 > Disabling buffering exposes the upstream to slow clients, including [Slowloris attacks](https://en.wikipedia.org/wiki/Slowloris_(computer_security)). Use an authentication or authorization plugin to protect the upstream when buffering is disabled.
