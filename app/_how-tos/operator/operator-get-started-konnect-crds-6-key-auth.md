@@ -49,11 +49,11 @@ data:
   other_plugins: rate-limit-5-min,proxy-cache-all-endpoints
 {% endentity_example %}
 
-1. Test that the API is secure by sending a request using `curl -i $PROXY_IP/anything`:
+1. Test that the API is secure by sending a request using `curl -i $PROXY_IP/echo`:
 
 {% validation unauthorized-check %}
 indent: 4
-url: /anything
+url: /echo
 konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
@@ -67,10 +67,11 @@ on_prem_url: $PROXY_IP
     WWW-Authenticate: Key realm="kong"
     Content-Length: 45
     X-Kong-Response-Latency: 1
-    Server: kong/{{site.latest_gateway_oss_version}}
+    Server: kong/{{site.data.gateway_latest.ee-version}}-enterprise-edition
 
     {
-      "message":"No API key found in request"
+      "message":"No API key found in request",
+      "request_id":"89e4883a53a0af51b322204ad1zfa16a"
     }
     ```
 
@@ -117,7 +118,7 @@ data:
 
 {% validation request-check %}
 indent: 4
-url: /anything
+url: /echo
 headers:
   - 'apikey:hello_world'
 status_code: 200

@@ -57,7 +57,7 @@ data:
     - GET
     - HEAD
     content_type:
-    - application/json
+    - text/plain; charset=utf-8
     cache_ttl: 300
     strategy: memory
 
@@ -71,7 +71,7 @@ Send six requests to the same endpoint and inspect the cache status. The first r
 
 {% validation rate-limit-check %}
 iterations: 6
-url: '/anything'
+url: '/echo'
 headers:
   - 'apikey:example-key'
 on_prem_url: $PROXY_IP
