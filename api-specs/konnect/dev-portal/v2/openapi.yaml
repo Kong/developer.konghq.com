@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
+  x-oas-source: kong/platform-api@9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -2298,6 +2298,12 @@ components:
           format: date-time
           nullable: true
           readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
       additionalProperties: false
       required:
         - type
@@ -2390,6 +2396,12 @@ components:
           description: Client secret value (only returned on creation)
           type: string
         created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
