@@ -1,5 +1,5 @@
 ---
-title: "Tuning {{site.base_gateway}} for large payloads"
+title: "Tune {{site.base_gateway}} for large payloads"
 content_type: reference
 layout: reference
 
@@ -60,10 +60,26 @@ With default buffering enabled, the upstream does not receive the request body u
 
 {{site.base_gateway}} uses the following configuration options to buffer incoming requests:
 
-* `nginx_http_client_header_buffer_size`: size of the buffer used to read HTTP request headers. The default works for most cases.
-* `nginx_http_large_client_header_buffers`: additional buffers dynamically allocated when request headers exceed `nginx_http_client_header_buffer_size`. Format is `number size`. For example, `4 8k` allocates up to 4 buffers of 8 KB each, one at a time. Buffers are freed after the response is sent and the request is logged.
-* `nginx_http_client_body_buffer_size`: size of the buffer used to hold the request body.
-* `nginx_http_client_max_body_size`: hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit. Always set this value. Without it, large request bodies or many concurrent requests with large bodies can exhaust file system storage. For most APIs, `1m` is a reasonable starting point; increase it gradually to fit your use case.
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: "`nginx_http_client_header_buffer_size`"
+    description: Size of the buffer used to read HTTP request headers. The default works for most cases.
+  - option: "`nginx_http_large_client_header_buffers`"
+    description: |
+      Additional buffers dynamically allocated when request headers exceed `nginx_http_client_header_buffer_size`. Format is `number size`. For example, `4 8k` allocates up to 4 buffers of 8 KB each, one at a time. Buffers are freed after the response is sent and the request is logged.
+  - option: "`nginx_http_client_body_buffer_size`"
+    description: Size of the buffer used to hold the request body.
+  - option: "`nginx_http_client_max_body_size`"
+    description: |
+      Hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit. Always set this value. Without it, large request bodies or many concurrent requests with large bodies can exhaust file system storage. For most APIs, `1m` is a reasonable starting point; increase it gradually to fit your use case.
+{% endtable %}
+<!-- vale on -->
 
 ### When request buffers are exceeded
 
@@ -78,8 +94,21 @@ There are two separate controls for the request body because they serve differen
 
 {{site.base_gateway}} uses two configuration options to buffer upstream responses:
 
-* `nginx_http_proxy_buffer_size`: size of the buffer used to hold the response status line and HTTP headers. The default works for most cases.
-* `nginx_http_proxy_buffers`: buffers dynamically allocated to hold the response body. Format is `number size`. The first number sets the maximum number of buffers that can be allocated. Increase it as needed while keeping the default `4k` for the buffer size to avoid cache inefficiencies.
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: "`nginx_http_proxy_buffer_size`"
+    description: Size of the buffer used to hold the response status line and HTTP headers. The default works for most cases.
+  - option: "`nginx_http_proxy_buffers`"
+    description: |
+      Buffers dynamically allocated to hold the response body. Format is `number size`. The first number sets the maximum number of buffers that can be allocated. Increase it as needed while keeping the default `4k` for the buffer size to avoid cache inefficiencies.
+{% endtable %}
+<!-- vale on -->
 
 ### When response buffers are exceeded
 
