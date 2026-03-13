@@ -36,7 +36,7 @@ When the header matches the public edge DNS hostname of the target region, the p
 The health checker sees the endpoint as unhealthy and the DNS shifts traffic to the alternate region.
 
 After you simulate an outage, you disable the Pre-Function plugin to test recovery by allowing health checks to pass again. 
-Do not delete the plugin between test runs, disable instead so you can re-enable it for subsequent tests without having to start over.
+Do not delete the plugin between test runs, disable it instead so you can re-enable it for subsequent tests without having to start over.
 
 ## Route 53 health check parameters
 
@@ -65,7 +65,7 @@ All other requests pass through unaffected.
 Set `target_host` to the public edge DNS hostname of the region you're testing.
 
 <!--vale off-->
-{% entity_example %}
+{% entity_examples %}
 type: plugin
 data:
   name: pre-function-healthcheck-failover
@@ -88,7 +88,9 @@ data:
     header_filter: []
     log: []
     rewrite: []
-{% endentity_example %}
+formats:
+  - deck
+{% endentity_examples %}
 <!--vale on-->
 
 ## Test process
