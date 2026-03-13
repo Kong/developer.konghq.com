@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
+  x-oas-source: kong/platform-api@9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -5893,6 +5893,12 @@ components:
           readOnly: true
         created_at:
           description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
