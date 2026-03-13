@@ -14,7 +14,6 @@ To add Secret Manager as a Vault backend to {{site.base_gateway}}, you must conf
     2. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
     3. Save the JSON file you downloaded.
     4. From the [IAM & Admin settings](https://console.cloud.google.com/iam-admin/), click the edit icon next to the service account to grant access to the [`Secret Manager Secret Accessor` role for your service account](https://cloud.google.com/secret-manager/docs/access-secret-version#required_roles).
-icon_url: /assets/icons/google-cloud.svg
 {% endif %}
 
 Set the environment variables needed to authenticate to Google Cloud:
