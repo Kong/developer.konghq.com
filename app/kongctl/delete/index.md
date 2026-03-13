@@ -21,25 +21,7 @@ related_resources:
     url: /kongctl/get-started/
 ---
 
-kongctl provides the following tools for deleting resources:
-
-{% table %}
-columns:
-  - title: Command
-    key: command
-  - title: Description
-    key: description
-rows:
-  - command: |
-      [kongctl delete gateway](/kongctl/delete/gateway/)
-    description: "Delete a gateway."
-  - command: |
-      [kongctl delete konnect](/kongctl/delete/konnect/)
-    description: "Delete resources from {{site.konnect_short_name}}."
-  - command: |
-      [kongctl delete portal](/kongctl/delete/portal/)
-    description: "Delete Portal configuration."
-{% endtable %}
+Deletes all resources defined in the declarative configuration files from {{site.konnect_short_name}}.
 
 ## Command usage
 

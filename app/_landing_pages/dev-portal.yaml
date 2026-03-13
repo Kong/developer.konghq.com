@@ -231,6 +231,30 @@ rows:
 
   - header:
       type: h2
+      text: "Dev Portal integrations"
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Google Analytics
+              description: |
+                Learn how to configure Google Analytics 4 to track events on your {{site.konnect_short_name}} Dev Portal.
+              icon:  /assets/icons/third-party/google-analytics.png
+              cta:
+                url: "/dev-portal/google-analytics/"
+      - blocks:
+          - type: card
+            config:
+              title: Google Tag Manager
+              description: |
+                Learn how to add the Google Tag Manager script to all pages of your {{site.konnect_short_name}} Dev Portal.
+              icon:  /assets/icons/third-party/google-tag-manager.svg
+              cta:
+                url: "/dev-portal/google-tag-manager/"
+  
+  - header:
+      type: h2
       text: "References"
   - columns:
       - blocks:

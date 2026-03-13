@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a18ff9873e1e6e98439610fb7083542dbb7614f6
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a18ff9873e1e6e98439610fb7083542dbb7614f6'
+  x-oas-source: kong/platform-api@dd6768fac3d42ec145f8cdc7dd57b9a37ec46c08
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dd6768fac3d42ec145f8cdc7dd57b9a37ec46c08'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -427,6 +427,7 @@ components:
             - CLUSTER_TYPE_CONTROL_PLANE_GROUP
             - CLUSTER_TYPE_SERVERLESS
             - CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY
+            - CLUSTER_TYPE_SERVERLESS_V1
         auth_type:
           description: The auth type value of the cluster associated with the Runtime Group.
           type: string
@@ -521,6 +522,7 @@ components:
                 - CLUSTER_TYPE_CONTROL_PLANE_GROUP
                 - CLUSTER_TYPE_SERVERLESS
                 - CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY
+                - CLUSTER_TYPE_SERVERLESS_V1
               readOnly: true
             auth_type:
               description: The auth type value of the cluster associated with the Runtime Group.

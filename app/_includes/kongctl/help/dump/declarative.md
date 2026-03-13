@@ -14,6 +14,10 @@ Flags:
       --config-file string         Path to the configuration file to load.
                                    - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
       --default-namespace string   Default namespace to include in declarative output (_defaults.kongctl.namespace).
+      --filter-id string           Filter resources by ID (exact match).
+                                   Mutually exclusive with --filter-name.
+      --filter-name string         Filter resources by name. Use '*' wildcards for substring matching (e.g., '*portal*').
+                                   Mutually exclusive with --filter-id.
   -h, --help                       help for declarative
       --include-child-resources    Include child resources in the dump.
       --log-file string            Write execution logs to the specified file instead of STDERR.

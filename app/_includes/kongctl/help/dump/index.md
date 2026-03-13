@@ -24,6 +24,15 @@ Examples:
   
   # Export all organization teams
   kongctl dump declarative --resources=organization.teams
+  
+  # Filter by name (exact match)
+  kongctl dump declarative --resources=portal --filter-name=my-dev-portal
+  
+  # Filter by name (substring match using wildcards)
+  kongctl dump declarative --resources=portal --filter-name='*dev*'
+  
+  # Filter by ID
+  kongctl dump declarative --resources=portal --filter-id=abc12345-def6-7890-abcd-ef1234567890
 
 Available Commands:
   declarative Export resources as kongctl declarative configuration

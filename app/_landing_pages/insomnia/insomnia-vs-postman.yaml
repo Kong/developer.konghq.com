@@ -111,7 +111,7 @@ rows:
                   insomnia: true
                   postman: false
                 - title: |
-                    [Local Git-driven workflows](/insomnia/version-control/)
+                    [Local Git-driven workflows](/insomnia/git-sync/)
                   subtitle: Use offline Git workflows for versioning and collaboration.
                   insomnia: true
                   postman: false

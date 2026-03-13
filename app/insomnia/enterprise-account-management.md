@@ -43,7 +43,7 @@ faqs:
 
 To upgrade your account to the Enterprise plan:
 1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
-1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
+1. In [Insomnia Admin](https://app.insomnia.rest/app/home), click **Plan & billing**, then click **Enter Activation Code** at the bottom and enter your activation code.
 
 {:.info}
 > **Notes**:

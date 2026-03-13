@@ -15,8 +15,8 @@ products:
 related_resources:
   - text: Security at Insomnia
     url: /insomnia/manage-insomnia/#security
-  - text: About version control in Insomnia
-    url: /insomnia/version-control/
+  - text: Storage options
+    url: /insomnia/storage/
   - text: Insomnia terminology
     url: /insomnia/terminology/
 faqs:
