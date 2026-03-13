@@ -9,7 +9,10 @@ After your Azure private networking configuration is ready in {{site.konnect_sho
 1. In the **Tenant ID** field, enter your [tenant ID from Microsoft Entra](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
 1. In the **Subscription ID** field, enter the subscription ID for your private DNS zone.
 1. In the **Resource group ID** field, enter the resource group ID that your private DNS zone is in.
-1. In the **Virtual network link name** field, enter the name of the virtual network link.
+1. In the **Virtual network link name** field, enter a unique name for the virtual network link.
+   
+   {:.important}
+   > Your virtual network link name must be unique and cannot match an existing virtual network link name. When you configure private DNS for a Dedicated Cloud Gateway, {{site.konnect_short_name}} automatically creates a virtual network link in Azure using the name you specify here.
 1. In the **Private DNS zone name** field, enter the name of your private DNS zone in Azure.
 1. Create a DNS link creator role with the Azure CLI using the command in the UI wizard.
 1. Assign the role to the service principal with the Azure CLI using the command in the UI wizard.
