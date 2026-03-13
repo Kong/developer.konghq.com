@@ -77,7 +77,7 @@ rows:
     description: Size of the buffer used to hold the request body.
   - option: "`nginx_http_client_max_body_size`"
     description: |
-      Hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit. Always set this value. Without it, large request bodies or many concurrent requests with large bodies can exhaust file system storage. For most APIs, `1m` is a reasonable starting point; increase it gradually to fit your use case.
+      Hard limit on the request body size. Requests exceeding this limit are rejected with a `413` error. Defaults to `0`, which disables the limit. Always set this value. Without it, large request bodies or many concurrent requests with large bodies can exhaust file system storage. For most APIs, `1m` is a reasonable starting point. Increase it gradually to fit your use case.
 {% endtable %}
 <!-- vale on -->
 
