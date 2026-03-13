@@ -73,3 +73,10 @@ jobs:
           node full.js --host http://localhost:8888
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}

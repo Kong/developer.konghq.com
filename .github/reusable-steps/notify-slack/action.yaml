@@ -1,0 +1,40 @@
+name: Notify Slack
+description: Sends a Slack notification with workflow status via incoming webhook
+inputs:
+  webhook-url:
+    description: Slack incoming webhook URL
+    required: true
+  status:
+    description: Job status (use ${{ job.status }})
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@af78098f536edbc4de71162a307590698245be95 # v3.0.1
+      with:
+        webhook: ${{ inputs.webhook-url }}
+        webhook-type: incoming-webhook
+        payload: |
+          text: "${{ github.workflow }} #${{ github.run_number }} finished with status: ${{ inputs.status }}"
+          attachments:
+            - color: "${{ inputs.status == 'success' && '#2eb886' || '#a30200' }}"
+              blocks:
+                - type: section
+                  text:
+                    type: mrkdwn
+                    text: "Workflow was triggered via ${{ github.event_name }}"
+                - type: section
+                  text:
+                    type: mrkdwn
+                    text: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} #${{ github.run_number }}>"
+                - type: section
+                  fields:
+                    - type: mrkdwn
+                      text: "*Status*\n${{ inputs.status == 'success' && ':white_check_mark: Success' || ':x: Failure' }}"
+                    - type: mrkdwn
+                      text: "*Commit*\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> (${{ github.ref_name }})"
+                - type: context
+                  elements:
+                    - type: mrkdwn
+                      text: ":github: ${{ github.repository }}"

@@ -59,3 +59,10 @@ jobs:
       - name: Publish Test Report
         uses: './.github/reusable-steps/publish-test-report'
         if: always()
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
