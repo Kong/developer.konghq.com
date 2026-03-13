@@ -42,5 +42,17 @@
       "type": "bugfix",
       "scope": "Plugin"
     }
+  ],
+  "3.12.0.2": [
+    {
+      "message": "Fixed an issue where the anonymous consumer was not being set properly when authentication failed.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where observability headers could not be set correctly in some unhappy paths.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
   ]
 }
