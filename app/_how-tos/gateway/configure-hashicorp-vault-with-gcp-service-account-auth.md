@@ -47,7 +47,7 @@ tldr:
       Then in {{site.base_gateway}}:
       * Configure a Vault entity with `config.auth_method` set to `gcp_iam`.
       * Set `config.gcp_auth_role` to the Vault role name.
-      * Set `config.gcp_service_account` to the GCP service account email that Kong will authenticate as.
+      * Set `config.gcp_service_account` to the GCP service account email that {{site.base_gateway}}will authenticate as.
       * Set `config.gcp_jwt_exp` to the JWT expiration time in seconds (maximum 900).
 
 tools:
@@ -55,41 +55,64 @@ tools:
 
 prereqs:
   inline:
-    - title: GCP service account for Kong
+    - title: GCP service account for {{site.base_gateway}}
       content: |
-        To complete this tutorial, you need a GCP project with the `iam.googleapis.com` API enabled and a GCP service account that Kong will use to authenticate to HashiCorp Vault.
+        To complete this tutorial, you need a GCP project with the `iam.googleapis.com` API enabled and a GCP service account that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
 
-        1. Create a service account for Kong in your GCP project. Note its email address.
+        1. In the [Google Cloud console](https://console.cloud.google.com/), create a service account key and grant IAM permissions:
+           1. In the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts), click your project.
+           1. Click **Create service account**.
+           1. Enter a name for your service account.
+           1. Copy and export the service account email:
+              ```sh
+              export GCP_SERVICE_ACCOUNT_EMAIL="YOUR SERVICE ACCOUNT EMAIL"
+              ```
+           1. Click **Create and continue**.
+           1. From the **Select a role** dropdown menu, select "Service Account Token Creator". 
+              For more information about this role, see [Roles for service account authentication](https://docs.cloud.google.com/iam/docs/service-account-permissions#token-creator-role).
+           1. Click **Continue**.
+           1. In the **Service account users role** field, enter your service account email.
+           1. In the **Service account admins role** field, enter your service account email. 
+              
+              {:.warning}
+              > **Scope the role to the service account only**: You must scope the Service Account Token Creator to the service account itself instead of project-wide. HashiCorp explicitly warns that a [project-wide grant allows the service account to impersonate any other service account in the project](https://developer.hashicorp.com/vault/docs/auth/gcp#permissions-for-authenticating-against-vault).
+           1. Click **Done**.
+          1. Click the service account you just created.
+          2. From the **Keys** tab, create a new key from the add key menu and select JSON for the key type.
+          3. Save the JSON file you downloaded.
+          1. Set the environment variables needed to authenticate to Google Cloud:
+             ```sh
+             export DECK_GCP_SERVICE_ACCOUNT="/path/to/service-account.json"
+             export KONG_LUA_SSL_TRUSTED_CERTIFICATE='system'
+             ```
 
-        1. Grant `roles/iam.serviceAccountTokenCreator` to the service account, scoped to **itself only** (not project-wide). HashiCorp explicitly warns that a project-wide grant allows the service account to impersonate any other service account in the project.
+             {{site.base_gateway}} uses Application Default Credentials to sign JWTs when authenticating to Vault. Note that these variables need to be passed when creating your Data Plane container.
 
-        1. Create and download a JSON key for the Kong service account.
-
-        1. Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of the JSON key file. Kong uses Application Default Credentials to sign JWTs when authenticating to Vault:
-           ```sh
-           export GOOGLE_APPLICATION_CREDENTIALS="/path/to/kong-sa-key.json"
-           ```
-
-        1. Export the service account email:
-           ```sh
-           export DECK_GCP_SERVICE_ACCOUNT="kong@YOUR-PROJECT.iam.gserviceaccount.com"
-           ```
       icon_url: /assets/icons/google-cloud.svg
     - title: GCP credentials for the Vault server
       content: |
         HashiCorp Vault must call GCP IAM APIs to verify incoming service account JWTs. You need a separate GCP service account for the Vault server with `roles/iam.serviceAccountKeyAdmin`.
-
-        1. Create a service account for the Vault server in your GCP project.
-
-        1. Grant `roles/iam.serviceAccountKeyAdmin` to the Vault server service account.
-
-        1. Create and download a JSON key for the Vault server service account.
-
-        1. Export the path to the JSON key file:
-           ```sh
-           export VAULT_GCP_CREDENTIALS_FILE="/path/to/vault-server-sa-key.json"
-           ```
-      icon_url: /assets/icons/hashicorp.svg
+        1. In the [Google Cloud console](https://console.cloud.google.com/), create a Vault server service account and grant IAM permissions:
+           1. In the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts), click your project.
+           1. Click **Create service account**.
+           1. Enter a name for your Vault server service account.
+           1. Click **Create and continue**.
+           1. From the **Select a role** dropdown menu, select "Service Account Key Admin". 
+              For more information about this role, see [Roles for service account authentication](https://docs.cloud.google.com/iam/docs/service-account-permissions#token-creator-role).
+           1. Click **Continue**.
+           1. Click **Done**.
+          1. Click the service account you just created.
+          2. From the **Keys** tab, create a new key from the add key menu and select JSON for the key type.
+          3. Save the JSON file you downloaded.
+          1. Export the Vault server service account JSON:
+             ```sh
+             export VAULT_GCP_CREDENTIALS_FILE="/path/to/vault-server-sa-key.json"
+             ```
+      icon_url: /assets/icons/google-cloud.svg
+  gateway:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+  konnect:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
 
 cleanup:
   inline:
@@ -104,7 +127,7 @@ cleanup:
         ```sh
         unset VAULT_ADDR
         unset VAULT_GCP_CREDENTIALS_FILE
-        unset GOOGLE_APPLICATION_CREDENTIALS
+        unset DECK_GCP_SERVICE_ACCOUNT
         ```
       icon_url: /assets/icons/hashicorp.svg
     - title: Destroy the {{site.base_gateway}} container
@@ -114,9 +137,9 @@ cleanup:
 faqs:
   - q: My Vault role uses `roles/iam.serviceAccountTokenCreator` granted at the project level — is that a problem?
     a: |
-      Yes. HashiCorp explicitly warns that granting `roles/iam.serviceAccountTokenCreator` at the project level allows the service account to impersonate **any** service account in the project, which is a significant security risk. Scope this role to the Kong service account itself only.
-  - q: Do I need to set `GOOGLE_APPLICATION_CREDENTIALS` on every Kong node?
-    a: Yes. Each Kong Gateway node needs access to the GCP service account credentials to sign the JWT used in the `gcp_iam` auth flow. Set `GOOGLE_APPLICATION_CREDENTIALS` to the path of the JSON key file on every node, or use a secrets management solution to distribute the key.
+      Yes. HashiCorp explicitly warns that granting `roles/iam.serviceAccountTokenCreator` at the project level allows the service account to impersonate **any** service account in the project, which is a significant security risk. Scope this role to the {{site.base_gateway}} service account itself only.
+  - q: Do I need to set `DECK_GCP_SERVICE_ACCOUNT` on every {{site.base_gateway}}node?
+    a: Yes. Each {{site.base_gateway}} node needs access to the GCP service account credentials to sign the JWT used in the `gcp_iam` auth flow. Set `DECK_GCP_SERVICE_ACCOUNT` to the path of the JSON key file on every node, or use a secrets management solution to distribute the key.
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
   - q: |
@@ -155,6 +178,7 @@ ui = true
 
 Then, create the HashiCorp Vault policy file `rw-secrets.hcl` in the `./vault` directory:
 ```
+# Full access to everything — use with caution!
 path "*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
@@ -162,12 +186,12 @@ path "*" {
 
 ### Configure the Vault and store a secret
 
-1. Start HashiCorp Vault:
+1. In a new terminal, start HashiCorp Vault:
    ```sh
    vault server -config=./vault/config.hcl
    ```
 
-1. In a new terminal, set the Vault address:
+1. In your previous terminal, set the Vault address:
    ```sh
    export VAULT_ADDR="http://localhost:8200"
    ```
@@ -220,9 +244,9 @@ path "*" {
    ```sh
    vault login -method=gcp \
      role="kong-role" \
-     service_account="$DECK_GCP_SERVICE_ACCOUNT" \
+     service_account="$GCP_SERVICE_ACCOUNT_EMAIL" \
      jwt_exp="15m" \
-     credentials=@$GOOGLE_APPLICATION_CREDENTIALS
+     credentials=@"$DECK_GCP_SERVICE_ACCOUNT"
    ```
 
 1. Enable the K/V secrets engine:
@@ -284,6 +308,13 @@ variables:
 ## Validate
 
 To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command within the Data Plane container.
+
+<!--
+```sh
+docker cp /path/to/service-account.json kong-quickstart-gateway:/tmp/kong-sa.json
+docker exec kong-quickstart-gateway bash -c "export GOOGLE_APPLICATION_CREDENTIALS=/tmp/kong-sa.json && kong vault get '{vault://hashicorp-vault/headers/request/header}'"
+```
+-->
 
 {% validation vault-secret %}
 secret: '{vault://hashicorp-vault/headers/request/header}'
