@@ -5,7 +5,7 @@ inputs:
     description: Slack incoming webhook URL
     required: true
   status:
-    description: Job status (use ${{ job.status }})
+    description: Job status
     required: true
 runs:
   using: composite
