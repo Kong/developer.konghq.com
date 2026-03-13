@@ -14,7 +14,7 @@ description: A brief description of the support article content.
 products:
   - gateway
 
-# OPTIONAL: Where this solution works
+# REQUIRED for Gateway support articles (when products includes "gateway"); OPTIONAL otherwise
 # accepted values: on-prem, konnect
 works_on:
   - on-prem
