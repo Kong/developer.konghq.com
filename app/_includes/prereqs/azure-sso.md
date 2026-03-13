@@ -1,3 +1,3 @@
 You need:
-* A Microsoft Entra subscription that can enable the Microsoft Entra SAML Toolkit SSO
+* A Microsoft Entra subscription
 * Cloud Application Administrator or Application Administrator permissions
