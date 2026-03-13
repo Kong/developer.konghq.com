@@ -3,3 +3,5 @@ paths:
   - /anything
 service: 
   name: example-service
+protocols:
+  - http

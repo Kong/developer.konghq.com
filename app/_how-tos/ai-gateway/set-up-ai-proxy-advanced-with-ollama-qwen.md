@@ -1,14 +1,14 @@
 ---
-title: Set up AI Proxy with Ollama
-permalink: /how-to/set-up-ai-proxy-with-ollama/
+title: Set up AI Proxy Advanced with Ollama and a Qwen model
+permalink: /how-to/set-up-ai-proxy-advanced-with-ollama-qwen/
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: AI Proxy Advanced
-    url: /plugins/ai-proxy/
+    url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI Proxy Advanced plugin to create a chat route using Ollama.
+description: Configure the AI Proxy Advanced plugin to create a chat route using the Ollama provider with a Qwen model.
 
 products:
   - gateway
@@ -19,7 +19,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.14'
 
 plugins:
   - ai-proxy-advanced
@@ -31,11 +31,11 @@ entities:
 
 tags:
   - ai
-  - llama
+  - ollama
 
 tldr:
-  q: How do I use the AI Proxy plugin with Ollama?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Ollama provider, and the llama2 model.
+  q: How do I use the AI Proxy Advanced plugin with Ollama and a Qwen model?
+  a: Create a Gateway Service and a Route, then enable the AI Proxy Advanced plugin and configure it with the Ollama provider and the qwen3 model.
 
 tools:
   - deck
@@ -43,7 +43,7 @@ tools:
 prereqs:
   inline:
     - title: Ollama
-      include_content: prereqs/ollama
+      include_content: prereqs/ollama-qwen
       icon_url: /assets/icons/ollama.svg
   entities:
     services:
@@ -63,21 +63,21 @@ cleanup:
 
 ## Configure the plugin
 
-Set up the AI Proxy plugin to route chat requests to Ollama’s Llama2 model by configuring the model options, including the ollama format and the `upstream_url` pointing to your local Ollama instance.
+Set up the AI Proxy Advanced plugin to route chat requests to Ollama’s Qwen 3 model by configuring the model options, including the `upstream_url` pointing to your local Ollama instance:
 
 
 {% entity_examples %}
 entities:
   plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
-        route_type: llm/v1/chat
-        model:
-          provider: llama2
-          name: llama2
-          options:
-            llama2_format: ollama
-            upstream_url: ${ollama_upstream_url}
+        targets:
+            - route_type: llm/v1/chat
+              model:
+                provider: ollama
+                name: qwen3
+                options:
+                    upstream_url: ${ollama_upstream_url}
 variables:
   ollama_upstream_url:
     value: $OLLAMA_UPSTREAM_URL
