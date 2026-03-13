@@ -125,6 +125,13 @@ rows:
             icon: /assets/icons/cerebras.svg
             cta:
               url: /ai-gateway/ai-providers/cerebras/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Ollama
+            icon: /assets/icons/ollama.svg
+            cta:
+              url: /ai-gateway/ai-providers/ollama/
   - columns:
       - blocks:
           - type: structured_text
