@@ -339,12 +339,12 @@
   },
   {
     "id": "830b5dd0-6914-44fc-ae5d-cc8efcf77c04",
-    "title": "Konnect API Builder",
+    "title": "Konnect API Catalog",
     "latestVersion": {
       "name": "v3",
       "id": "f1a1134c-797d-4712-bcd4-47c1b79e8099"
     },
-    "description": "Manage APIs to be published in Konnect Developer Portals (beta).",
+    "description": "The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
