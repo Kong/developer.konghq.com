@@ -127,7 +127,7 @@ metrics:
   - name: kong.ee.license.features
     description: |
       Indicates whether the data plane can read or write entities under the current license. 
-      Each capability (<code>ee_entity_read</code> and <code>ee_entity_write</code>) is reported as its own metric, where 1 means allowed and 0 means not allowed.
+      Each capability (`ee_entity_read` and `ee_entity_write`) is reported as its own metric, where 1 means allowed and 0 means not allowed.
     unit: "1"
     type: Gauge
     attributes:
@@ -202,7 +202,7 @@ access_logs:
   - kong.auth.authenticated_entity.*
 
 resource_attributes:
-  service.name: Name of the service exposing the signal. This is optional, the default value is <code>kong</code>.
+  service.name: Name of the service exposing the signal. This is optional, the default value is `kong`.
   service.version: Gateway version of the node exposing the signal.
   service.instance.id: ID of the node exposing the signal.
 
@@ -210,59 +210,47 @@ attributes:
   kong.service.name: Name of the Gateway Service.
   kong.route.name: Name of the Route.
   kong.auth.consumer.name: Name of the authenticated Consumer.
-  kong.response.source:  |
+  kong.response.source: |
     Origin of the current response. Possible values:
-    <ul>
-      <li><code>upstream</code> if the response originated by successfully contacting the upstream service</li>
-      <li><code>kong</code> otherwise</li>
-    </ul>
+      - `upstream` if the response originated by successfully contacting the upstream service
+      - `kong` otherwise
   kong.workspace.name: Name of the Workspace.
   http.request.method: Method used in the HTTP request.
   kong.shared_dict.name: Name of the shared dict.
   kong.subsystem: |
     Nginx subsystem that produced the metric. Possible values:
-    <ul>
-      <li><code>http</code></li>
-      <li><code>stream</code></li>
-    </ul>
+      - `http`
+      - `stream`
   kong.connection.state: |
     State of the client connection. Possible values:
-    <ul>
-      <li><code>accepted</code></li>
-      <li><code>handled</code></li>
-      <li><code>total</code></li>
-      <li><code>active</code></li>
-      <li><code>reading</code></li>
-      <li><code>writing</code></li>
-      <li><code>waiting</code></li>
-    </ul>
+      - `accepted`
+      - `handled`
+      - `total`
+      - `active`
+      - `reading`
+      - `writing`
+      - `waiting`
   kong.pid: Worker process ID.
   kong.timer.state: |
     State of the timer. Possible values:
-    <ul>
-      <li><code>pending</code></li>
-      <li><code>running</code></li>
-    </ul>
+      - `pending`
+      - `running`
   kong.upstream.name: Name of the Upstream.
   kong.target.address: Address of the Target.
   server.address: Address of the server.
   kong.upstream.state: |
     Health of the Upstream Target. Possible values:
-    <ul>
-      <li><code>healthy</code></li>
-      <li><code>unhealthy</code></li>
-      <li><code>dns_error</code></li>
-    </ul>
+      - `healthy`
+      - `unhealthy`
+      - `dns_error`
   kong.dp.host.name: Host name fo the data plane.
   kong.dp.node.id: ID of the data plane node.
   kong.dp.host.ip: IP address of the data plane host.
   kong.dp.node.version: Version of the data plane node.
   kong.ee.license.feature: |
     Enterprise feature. Possible values:
-    <ul>
-      <li><code>ee_entity_read</code></li>
-      <li><code>ee_entity_write</code></li>
-    </ul>
+      - `ee_entity_read`
+      - `ee_entity_write`
   client.address: IP address of the client.
   url.query: Query in the request URL.
   url.full: Full URL ued in the request.
@@ -286,60 +274,34 @@ attributes:
   kong.latency.receive:
   kong.latency.total: *latency_total
   kong.latency.socket:
-  kong.route.created_at: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-created-at"><code>created_at</code></a> parameter.
-  kong.route.http_redirect_status_code: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-http-redirect-status-code"><code>http_redirect_status_code</code></a> parameter.
-  kong.route.id: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-id"><code>id</code></a> parameter.
-  kong.route.tags: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-tags"><code>tags</code></a> parameter.
-  kong.route.path_handling: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-path-handling"><code>path_handling</code></a> parameter.
-  kong.route.paths: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-paths"><code>paths</code></a> parameter.
-  kong.route.preserve_host: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-preserve-host"><code>preserve_host</code></a> parameter.
-  kong.route.protocols: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-protocols"><code>protocols</code></a> parameter.
-  kong.route.regex_priority: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-regex-priority"><code>regex_priority</code></a> parameter.
-  kong.route.request_buffering: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-request-buffering"><code>request_buffering</code></a> parameter.
-  kong.route.response_buffering: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-response-buffering"><code>response_buffering</code></a> parameter.
-  kong.route.service.id: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-service-id"><code>service.id</code></a> parameter.
-  kong.route.strip_path: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-strip-path"><code>strip_path</code></a> parameter.
-  kong.route.updated_at: |
-    Value of the Route's <a href="/gateway/entities/route/#schema-route-updated-at"><code>updated_at</code></a> parameter.
+  kong.route.created_at: "Value of the Route's [`created_at`](/gateway/entities/route/#schema-route-created-at) parameter."
+  kong.route.http_redirect_status_code: "Value of the Route's [`http_redirect_status_code`](/gateway/entities/route/#schema-route-http-redirect-status-code) parameter."
+  kong.route.id: "Value of the Route's [`id`](/gateway/entities/route/#schema-route-id) parameter."
+  kong.route.tags: "Value of the Route's [`tags`](/gateway/entities/route/#schema-route-tags) parameter."
+  kong.route.path_handling: "Value of the Route's [`path_handling`](/gateway/entities/route/#schema-route-path-handling) parameter."
+  kong.route.paths: "Value of the Route's [`paths`](/gateway/entities/route/#schema-route-paths) parameter."
+  kong.route.preserve_host: "Value of the Route's [`preserve_host`](/gateway/entities/route/#schema-route-preserve-host) parameter."
+  kong.route.protocols: "Value of the Route's [`protocols`](/gateway/entities/route/#schema-route-protocols) parameter."
+  kong.route.regex_priority: "Value of the Route's [`regex_priority`](/gateway/entities/route/#schema-route-regex-priority) parameter."
+  kong.route.request_buffering: "Value of the Route's [`request_buffering`](/gateway/entities/route/#schema-route-request-buffering) parameter."
+  kong.route.response_buffering: "Value of the Route's [`response_buffering`](/gateway/entities/route/#schema-route-response-buffering) parameter."
+  kong.route.service.id: "Value of the Route's [`service.id`](/gateway/entities/route/#schema-route-service-id) parameter."
+  kong.route.strip_path: "Value of the Route's [`strip_path`](/gateway/entities/route/#schema-route-strip-path) parameter."
+  kong.route.updated_at: "Value of the Route's [`updated_at`](/gateway/entities/route/#schema-route-updated-at) parameter."
   kong.route.ws_id: Workspace ID of the Route.
-  kong.service.connect_timeout: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-connect-timeout"><code>connect_timeout</code></a> parameter.
-  kong.service.created_at: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-created-at"><code>created_at</code></a> parameter.
-  kong.service.enabled: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-enabled"><code>enabled</code></a> parameter.
-  kong.service.host: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-host"><code>host</code></a> parameter.
-  kong.service.id: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-id"><code>id</code></a> parameter.
-  kong.service.port: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-port"><code>port</code></a> parameter.
-  kong.service.protocol: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-protocol"><code>protocol</code></a> parameter.
-  kong.service.read_timeout: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-read-timeout"><code>read_timeout</code></a> parameter.
-  kong.service.retries: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-retries"><code>retries</code></a> parameter.
-  kong.service.updated_at: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-updated-at"><code>updated_at</code></a> parameter.
-  kong.service.write_timeout: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-write-timeout"><code>write_timeout</code></a> parameter.
+  kong.service.connect_timeout: "Value of the Gateway Service's [`connect_timeout`](/gateway/entities/service/#schema-service-connect-timeout) parameter."
+  kong.service.created_at: "Value of the Gateway Service's [`created_at`](/gateway/entities/service/#schema-service-created-at) parameter."
+  kong.service.enabled: "Value of the Gateway Service's [`enabled`](/gateway/entities/service/#schema-service-enabled) parameter."
+  kong.service.host: "Value of the Gateway Service's [`host`](/gateway/entities/service/#schema-service-host) parameter."
+  kong.service.id: "Value of the Gateway Service's [`id`](/gateway/entities/service/#schema-service-id) parameter."
+  kong.service.port: "Value of the Gateway Service's [`port`](/gateway/entities/service/#schema-service-port) parameter."
+  kong.service.protocol: "Value of the Gateway Service's [`protocol`](/gateway/entities/service/#schema-service-protocol) parameter."
+  kong.service.read_timeout: "Value of the Gateway Service's [`read_timeout`](/gateway/entities/service/#schema-service-read-timeout) parameter."
+  kong.service.retries: "Value of the Gateway Service's [`retries`](/gateway/entities/service/#schema-service-retries) parameter."
+  kong.service.updated_at: "Value of the Gateway Service's [`updated_at`](/gateway/entities/service/#schema-service-updated-at) parameter."
+  kong.service.write_timeout: "Value of the Gateway Service's [`write_timeout`](/gateway/entities/service/#schema-service-write-timeout) parameter."
   kong.service.ws_id: Workspace ID of the Gateway Service
-  kong.service.tags: |
-    Value of the Gateway Service's <a href="/gateway/entities/service/#schema-service-tags"><code>tags</code></a> parameter.
+  kong.service.tags: "Value of the Gateway Service's [`tags`](/gateway/entities/service/#schema-service-tags) parameter."
   kong.upstream.try.*:
   kong.upstream.status_code: Status code of the Upstream.
   kong.upstream.uri: URI of the Upstream.

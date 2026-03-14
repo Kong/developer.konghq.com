@@ -16,14 +16,15 @@ body:
     default_page_visibility: public
 {% endkonnect_api_request %}
 {% endcapture %}
-
 {{ portal | indent: 3 }}
    <!--vale on-->
 1. Export your Dev Portal ID and URL from the output:
+
    ```sh
    export PORTAL_ID='YOUR-DEV-PORTAL-ID'
    export PORTAL_URL='YOUR-DEV-PORTAL-DOMAIN'
    ```
+
 1. [Create a page in your Dev Portal](/api/konnect/portal-management/v3/#/operations/create-portal-page) so published APIs will display:
 <!--vale off-->
 {% capture pages %}
@@ -47,6 +48,5 @@ body:
      ---
 {% endkonnect_api_request %}
 {% endcapture %}
-
 {{ pages | indent: 3 }}
    <!--vale on-->

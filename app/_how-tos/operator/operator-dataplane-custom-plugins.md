@@ -82,35 +82,38 @@ docker push $YOUR_REGISTRY_ADDRESS/myheader:1.0.0
 
 In this example, the plugin is available in the public registry (Docker Hub) as `kong/plugin-example:1.0.0`. The following steps use the same source.
 
-{: data-deployment-topology="konnect" }
-## Register the plugin schema in Konnect
+{% konnect %}
+title: Register the plugin schema in Konnect
+step: true
+content: |
+  To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
 
-To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane.
+  First, get your control plane ID:
 
-First, get your control plane ID:
+  <!--vale off-->
+  {% konnect_api_request %}
+  url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
+  status_code: 200
+  method: GET
+  extract_body:
+    - name: data[0].id
+      variable: CONTROL_PLANE_ID
+  capture: CONTROL_PLANE_ID
+  jq: ".data[0].id"
+  indent: 2
+  {% endkonnect_api_request %}
+  <!--vale on-->
 
-<!--vale off-->
-{% konnect_api_request %}
-url: /v2/control-planes?filter%5Bname%5D%5Beq%5D=gateway-control-plane
-status_code: 200
-method: GET
-extract_body:
-  - name: data[0].id
-    variable: CONTROL_PLANE_ID
-capture: CONTROL_PLANE_ID
-jq: ".data[0].id"
-{% endkonnect_api_request %}
-<!--vale on-->
+  Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
 
-Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
-
-```sh
-curl -X POST \
-  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Bearer $KONNECT_TOKEN" \
-  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
-```
+  ```sh
+  curl -X POST \
+    https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+    --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $KONNECT_TOKEN" \
+    --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+  ```
+{% endkonnect %}
 
 ## Install the plugin
 

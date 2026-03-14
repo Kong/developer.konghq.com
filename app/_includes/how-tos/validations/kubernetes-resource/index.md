@@ -1,0 +1,1 @@
+{% include how-tos/validations/kubernetes-resource/snippet.md config=config %}
