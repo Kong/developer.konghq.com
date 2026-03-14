@@ -33,6 +33,8 @@ sections:
       - path: /mesh/deploy-mesh-self-managed/
       - path: /mesh/deploy-universal-self-managed/
       - path: /mesh/use-mesh-cli/
+      - path: /mesh/scenarios/
+
 
   - title: How Mesh Works
     items:
@@ -133,6 +135,34 @@ sections:
       - path: /mesh/performance-tuning/
       - path: /mesh/vulnerability-patching-process/
       - path: /mesh/support-policy/
+  
+  - title: Scenarios & Learning Paths
+    items:
+      - path: /mesh/scenarios/
+      - path: /mesh/scenarios/introduction/
+      - path: /mesh/scenarios/architecture-overview/
+      - path: /mesh/scenarios/getting-started-policy/
+      - path: /mesh/scenarios/using-policies/
+      - path: /mesh/scenarios/subsets-and-targeting/
+      - path: /mesh/scenarios/observability-in-practice/
+      - path: /mesh/scenarios/workload-identity/
+      - path: /mesh/scenarios/external-ca-vault/
+      - path: /mesh/scenarios/multi-zone-architecture/
+      - path: /mesh/scenarios/multi-tenancy-strategies/
+      - path: /mesh/scenarios/global-canary-releases/
+      - path: /mesh/scenarios/mesh-passthrough/
+      - path: /mesh/scenarios/ingress-mtls-bridge/
+      - path: /mesh/scenarios/chaos-engineering/
+      - path: /mesh/scenarios/mesh-proxy-patch/
+      - path: /mesh/scenarios/kong-mesh-vs-ambient/
+      - path: /mesh/scenarios/istio-to-kong-mesh/
+
+  - title: Persona Guides
+    items:
+      - path: /mesh/scenarios/persona/developer/
+      - path: /mesh/scenarios/persona/operator/
+      - path: /mesh/scenarios/persona/security/
+
 
   - title: Hidden paths
     hidden: true
