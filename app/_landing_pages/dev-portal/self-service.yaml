@@ -14,7 +14,7 @@ rows:
 
   - header:
       type: h1
-      text: "Developer self-service and app registration"
+      text: "Developer self-service and application registration"
       sub_text: Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.
 
   - columns:
@@ -48,6 +48,7 @@ rows:
                        
                        For private Dev Portals, user authentication is enabled by default, and the default application auth strategy is key authentication.
                     1. Configure an [application authentication strategy](/dev-portal/auth-strategies/) by navigating to **Settings > Security**.
+                    1. Optional: Enable [application sharing](#share-applications-with-a-team) for developer teams by navigating to your Dev Portal in {{site.konnect_short_name}} and going to **Access and approvals > Teams**. Click the team, go to **Settings** and enable **Allow team to own applications**.
                     1. Link an [API to a Gateway Service](/catalog/apis/#gateway-service-link).
                        
                        This is required to enforce auth strategies.
@@ -190,7 +191,36 @@ rows:
 
                   Applications and API keys are specific to a [geographic region](/konnect-platform/geos/). 
                   When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
-  
+  - header:
+      type: h3
+      text: "Share applications with a team"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can assign an application to a team so that all members of that team share ownership of the application.
+                  Any team member can edit, manage, and use the application.
+                  Apps shared by a team appear in each member's apps in the Dev Portal.
+                  Team membership and roles are managed via [Dev Portal teams and roles](/dev-portal/developer-rbac/).
+
+                  This is useful in cases such as when a developer leaves your organization. 
+                  With team application sharing, the team retains uninterrupted access to the application.
+
+                  Important considerations:
+                  * Once an application is assigned to a team, ownership can only be transferred back to an individual developer via the {{site.konnect_short_name}} API.
+                  * All members of the team that owns an application receive full ownership access. 
+                  * Applications can only be transferred to teams that have [API Consumer](/dev-portal/developer-rbac/) access for every API currently registered by the application. 
+                    Similarly, you can only register APIs to team-owned applications if everyone in the team has access to the API. 
+                    This is true even if an individual team member has broader access through other teams.
+
+                  To enable team application sharing, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
+                  
+                  For more information about how to configure Dev Portal developer teams, see [Dev Portal RBAC](/dev-portal/developer-rbac/). 
+                  For more information about the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
+
   - header:
       type: h2
       text: "Learn more"
