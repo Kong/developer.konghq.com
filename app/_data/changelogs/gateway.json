@@ -20149,5 +20149,27 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.11.0.8": {
+    "kong": [
+      {
+        "message": "Fixed an issue where a SQL injection vulnerability existed in the clustering RPC procedure, ensuring safer SQL operations (CVE-2026-1907).\n",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped OpenSSL from 3.4.1 to 3.5.5 to address the issue: CVE-2025-15467.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Apply Nginx patch for a man-in-the-middle upstream response injection (CVE-2026-1642)",
+        "type": "bugfix",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
