@@ -44,6 +44,16 @@
                   "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
                   "type": "boolean"
                 },
+                "gcp_metadata_url": {
+                  "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "gcp_oauth_token_url": {
+                  "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
                 "gcp_service_account_json": {
                   "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                   "type": "string",
@@ -133,6 +143,14 @@
                           "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role.",
                           "type": "string"
                         },
+                        "batch_bucket_prefix": {
+                          "description": "S3 URI prefix (s3://bucket/prefix/) where Bedrock will get input files from and store results to for native batch API.",
+                          "type": "string"
+                        },
+                        "batch_role_arn": {
+                          "description": "AWS role arn used for calling batch API. Try to get the value from request if ommited.",
+                          "type": "string"
+                        },
                         "embeddings_normalize": {
                           "default": false,
                           "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
@@ -194,6 +212,7 @@
                     "gemini",
                     "huggingface",
                     "mistral",
+                    "ollama",
                     "openai"
                   ],
                   "type": "string"
@@ -220,7 +239,8 @@
             "image/generation",
             "realtime/generation",
             "text/embeddings",
-            "text/generation"
+            "text/generation",
+            "video/generation"
           ],
           "type": "string"
         },
@@ -333,7 +353,7 @@
                   "type": "boolean"
                 },
                 "ssl_verify": {
-                  "default": false,
+                  "default": true,
                   "description": "whether to verify ssl for the pgvector database",
                   "type": "boolean"
                 },
@@ -590,7 +610,7 @@
                   "type": "boolean"
                 },
                 "ssl_verify": {
-                  "default": false,
+                  "default": true,
                   "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                   "type": "boolean"
                 },
@@ -611,7 +631,7 @@
               "type": "string"
             },
             "threshold": {
-              "description": "the default similarity threshold for accepting semantic search results (float)",
+              "description": "the default similarity threshold for accepting semantic search results (float). Higher threshold means more results are considered similar.",
               "type": "number"
             }
           },

@@ -2,10 +2,23 @@
   "properties": {
     "config": {
       "properties": {
-        "access_logs_endpoint": {
-          "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
-          "type": "string",
-          "x-referenceable": true
+        "access_logs": {
+          "properties": {
+            "custom_attributes_by_lua": {
+              "additionalProperties": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "description": "A key-value map that dynamically modifies access log fields using Lua code.",
+              "type": "object"
+            },
+            "endpoint": {
+              "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            }
+          },
+          "type": "object"
         },
         "batch_flush_delay": {
           "description": "The delay, in seconds, between two consecutive batches.",
@@ -56,6 +69,11 @@
         },
         "metrics": {
           "properties": {
+            "enable_ai_metrics": {
+              "default": false,
+              "description": "A boolean value that determines if AI metrics should be collected. If enabled, `gen_ai.*`, `mcp.*`, `kong.gen_ai.*`, `kong.gen_ai.a2a.*` and `kong.mcp.*` metrics will be exported. To enable latency metrics for AI metrics, `enable_latency_metrics` must also be set to `true`. To enable `error.type` attribute for AI metrics, `enable_request_metrics` must also be set to `true`.",
+              "type": "boolean"
+            },
             "enable_bandwidth_metrics": {
               "default": false,
               "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
