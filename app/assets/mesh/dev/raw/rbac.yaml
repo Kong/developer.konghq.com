@@ -125,6 +125,7 @@ rules:
       - meshmultizoneservices
       - meshservices
       - meshtrusts
+      - meshzoneaddresses
       - workloads
     verbs:
       - get
