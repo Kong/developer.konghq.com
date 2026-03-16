@@ -84,7 +84,7 @@ rows:
     type: External
   - category: Cloud
     method: "[AWS](https://developer.hashicorp.com/vault/docs/auth/aws)"
-    description: Authenticate using AWS IAM credentials, including the AWS EC2/IAM auth method supported by Hashicorp Vault.
+    description: Authenticate using AWS IAM credentials, including the AWS EC2/IAM auth method supported by HashiCorp Vault.
     ee: "✅ (3.14+)"
     konnect: "✅ (3.14+)"
     type: External
