@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: read
+  checks: read
+  actions: read
 
 jobs:
   check:
