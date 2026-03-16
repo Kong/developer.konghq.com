@@ -1,6 +1,6 @@
 ---
-title: ''
-name: ''
+title: AI Custom Guardrail
+name: AI Custom Guardrail
 
 content_type: plugin
 
@@ -15,39 +15,35 @@ works_on:
     - on-prem
     - konnect
 
-# min_version:
-#     gateway: '3.4'
+min_version:
+    gateway: '3.14'
 
-# topologies:
-#   on_prem:
-#     - hybrid
-#     - db-less
-#     - traditional
-#   konnect_deployments:
-#     - hybrid
-#     - cloud-gateways
-#     - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
-# tags:
-#   - traffic-control
+tags:
+  - ai
 
-# search_aliases:
-#   - plugin-name-in-code eg rate-limiting-advanced
-#   - common aliases, eg OIDC or RLA
-#   - related terms, eg LLM for AI plugins
-  
-######## third-party plugin params, not needed for kong bundled plugins
-# third_party: true
-# source_code_url: ''
-# support_url: ''
-########
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
+  - moderation
 
-# premium_partner: true # can be a kong plugin or a third-party plugin
+icon: ai-custom-guardrail.png
 
-icon: plugin-slug.png # e.g. acme.svg or acme.png
-
-# categories:
-#    - traffic-control
+categories:
+   - ai
 
 # related_resources:
 #   - text: How-to guide for the plugin
