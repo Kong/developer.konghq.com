@@ -78,6 +78,11 @@
           "description": "Tells Azure to reject the request if any blocklist filter is hit.",
           "type": "boolean"
         },
+        "log_blocked_content": {
+          "default": false,
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "type": "boolean"
+        },
         "output_type": {
           "default": "FourSeverityLevels",
           "description": "See https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter#content-filtering-categories",
@@ -98,7 +103,7 @@
           "type": "boolean"
         },
         "ssl_verify": {
-          "default": false,
+          "default": true,
           "description": "Whether to verify the certificate presented by the Azure Content Safety service when using HTTPS.",
           "type": "boolean"
         },

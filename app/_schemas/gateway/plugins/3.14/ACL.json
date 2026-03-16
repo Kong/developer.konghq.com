@@ -39,15 +39,19 @@
         "grpc",
         "grpcs",
         "http",
-        "https"
+        "https",
+        "ws",
+        "wss"
       ],
-      "description": "A set of strings representing HTTP protocols.",
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
       "items": {
         "enum": [
           "grpc",
           "grpcs",
           "http",
-          "https"
+          "https",
+          "ws",
+          "wss"
         ],
         "type": "string"
       },

@@ -24,6 +24,7 @@
           "type": "boolean"
         },
         "claim_to_header": {
+          "description": "Map top-level token claims to upstream headers. Mutually exclusive with upstream_headers.",
           "items": {
             "properties": {
               "claim": {
@@ -93,6 +94,59 @@
           "x-encrypted": true,
           "x-referenceable": true
         },
+        "consumer_by": {
+          "default": [
+            "custom_id",
+            "username"
+          ],
+          "description": "Consumer fields used for mapping: - `id`: try to find the matching Consumer by `id` - `username`: try to find the matching Consumer by `username` - `custom_id`: try to find the matching Consumer by `custom_id`.",
+          "items": {
+            "enum": [
+              "custom_id",
+              "id",
+              "username"
+            ],
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "consumer_claim": {
+          "description": "The claim used for consumer mapping. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "items": {
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "consumer_groups_claim": {
+          "description": "The claim used for consumer groups mapping. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "items": {
+            "type": "string"
+          },
+          "minLength": 1,
+          "type": "array"
+        },
+        "consumer_groups_optional": {
+          "default": false,
+          "description": "Do not terminate the request if consumer groups mapping fails.",
+          "type": "boolean"
+        },
+        "consumer_optional": {
+          "default": false,
+          "description": "Do not terminate the request if consumer mapping fails.",
+          "type": "boolean"
+        },
+        "credential_claim": {
+          "default": [
+            "sub"
+          ],
+          "description": "The claim used to derive virtual credentials (e.g. to be consumed by the rate-limiting plugin), in case the consumer mapping is not used. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "headers": {
           "additionalProperties": {
             "type": "string"
@@ -127,7 +181,7 @@
           "type": "boolean"
         },
         "introspection_endpoint": {
-          "description": "The introspection endpoint URL.",
+          "description": "The Token Introspection Endpoint. If not provided, the plugin will attempt to use JWKS to verify the token. If the token is opaque, this field must be provided.",
           "type": "string"
         },
         "introspection_format": {
@@ -139,6 +193,20 @@
           ],
           "type": "string"
         },
+        "jwks_cache_ttl": {
+          "default": 3600,
+          "description": "The cache TTL in seconds for JWKS.",
+          "type": "integer"
+        },
+        "jwks_endpoint": {
+          "description": "The JWKS endpoint URL for fetching the authorization server's public keys. If not provided, the plugin will attempt to discover it from the authorization server metadata.",
+          "type": "string"
+        },
+        "jwt_claims_leeway": {
+          "default": 0,
+          "description": "The leeway in seconds for JWT claims validation (exp, nbf). This allows tokens that are slightly expired or not yet valid due to clock skew.",
+          "type": "integer"
+        },
         "keepalive": {
           "default": true,
           "description": "Enable HTTP keepalive for requests.",
@@ -147,6 +215,20 @@
         "max_request_body_size": {
           "default": 1048576,
           "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+          "type": "integer"
+        },
+        "metadata_cache_ttl": {
+          "default": 3600,
+          "description": "The cache TTL in seconds for discovered authorization server metadata.",
+          "type": "integer"
+        },
+        "metadata_discovery_endpoint": {
+          "description": "Custom OAuth 2.0 authorization server metadata discovery URL. If provided, the plugin will use this URL directly instead of trying standard well-known discovery paths. The custom endpoint URL should end with either '/.well-known/openid-configuration' or '/.well-known/oauth-authorization-server'.",
+          "type": "string"
+        },
+        "metadata_discovery_retry": {
+          "default": 3,
+          "description": "The number of retry attempts for metadata discovery requests per URL.",
           "type": "integer"
         },
         "metadata_endpoint": {
@@ -160,6 +242,11 @@
         "no_proxy": {
           "description": "Comma-separated list of hosts to exclude from proxy.",
           "type": "string"
+        },
+        "passthrough_credentials": {
+          "default": false,
+          "description": "Keep the credentials used for authentication in the request. If multiple credentials are sent with the same request, the plugin will keep those that were used for successful authentication.",
+          "type": "boolean"
         },
         "resource": {
           "description": "The resource identifier.",
@@ -195,12 +282,148 @@
           "default": true,
           "description": "Verify server certificate in mTLS.",
           "type": "boolean"
+        },
+        "token_exchange": {
+          "description": "Configuration details about token exchange that should happen before reaching upstream MCP server",
+          "properties": {
+            "cache": {
+              "properties": {
+                "enabled": {
+                  "default": true,
+                  "description": "Whether to cache exchanged token",
+                  "type": "boolean"
+                },
+                "ttl": {
+                  "default": 3600,
+                  "description": "The default cache TTL to store exchanged token. If the exchange endpoint does not provide 'expires_in' data when token is exchanged this TTL value will be used to cache it.",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "client_auth": {
+              "default": "client_secret_basic",
+              "description": "The type of authentication method to use with the exchange endpoint. Use 'inherit' to use the same client_id, and secret as in introspection_endpoint.",
+              "enum": [
+                "client_secret_basic",
+                "client_secret_post",
+                "inherit",
+                "none"
+              ],
+              "type": "string"
+            },
+            "client_id": {
+              "description": "The client ID for authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+              "type": "string",
+              "x-referenceable": true
+            },
+            "client_secret": {
+              "description": "The client secret for authentication. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+              "type": "string",
+              "x-encrypted": true,
+              "x-referenceable": true
+            },
+            "enabled": {
+              "default": false,
+              "description": "Whether Token Exchange should be enabled",
+              "type": "boolean"
+            },
+            "request": {
+              "properties": {
+                "actor_token": {
+                  "description": "Static actor token value (when source is config).",
+                  "type": "string"
+                },
+                "actor_token_header": {
+                  "description": "Header name containing actor token (when source is header).",
+                  "type": "string"
+                },
+                "actor_token_source": {
+                  "default": "none",
+                  "description": "Where to obtain actor token.",
+                  "enum": [
+                    "config",
+                    "header",
+                    "none"
+                  ],
+                  "type": "string"
+                },
+                "actor_token_type": {
+                  "default": "urn:ietf:params:oauth:token-type:access_token",
+                  "description": "The token type identifier of actor token.",
+                  "type": "string"
+                },
+                "audience": {
+                  "description": "Audiences used in the token exchange request.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minLength": 1,
+                  "type": "array"
+                },
+                "requested_token_type": {
+                  "default": "urn:ietf:params:oauth:token-type:access_token",
+                  "description": "The desired output token type.",
+                  "type": "string"
+                },
+                "resource": {
+                  "description": "The absolute URI of target MCP service where token will be used.",
+                  "type": "string"
+                },
+                "scopes": {
+                  "description": "Scopes used in the token exchange request.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minLength": 1,
+                  "type": "array"
+                },
+                "subject_token_type": {
+                  "default": "urn:ietf:params:oauth:token-type:access_token",
+                  "description": "The type of token to be exchanged.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "token_endpoint": {
+              "description": "The token exchange endopint.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "token_endpoint"
+          ],
+          "type": "object"
+        },
+        "upstream_headers": {
+          "description": "Map token claims to upstream headers using path-based access. Each entry specifies a header name and a path (array of strings) to traverse the token claims. Mutually exclusive with claim_to_header.",
+          "items": {
+            "properties": {
+              "header": {
+                "description": "The name of the header.",
+                "type": "string"
+              },
+              "path": {
+                "description": "The path of the header value.",
+                "items": {
+                  "type": "string"
+                },
+                "minLength": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "header",
+              "path"
+            ],
+            "type": "object"
+          },
+          "type": "array"
         }
       },
       "required": [
         "authorization_servers",
-        "client_id",
-        "introspection_endpoint",
         "resource"
       ],
       "type": "object"

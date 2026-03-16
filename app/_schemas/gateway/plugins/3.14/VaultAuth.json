@@ -12,7 +12,7 @@
           "type": "string"
         },
         "hide_credentials": {
-          "default": false,
+          "default": true,
           "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin will strip the credential from the request (i.e. the header or querystring containing the key) before proxying it.",
           "type": "boolean"
         },

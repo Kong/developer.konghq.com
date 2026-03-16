@@ -71,7 +71,7 @@
           "type": "string"
         },
         "hide_credentials": {
-          "default": false,
+          "default": true,
           "description": "An optional boolean value telling the plugin to hide the credential to the upstream server. It will be removed by Kong before proxying the request.",
           "type": "boolean"
         },
@@ -120,7 +120,7 @@
           "type": "number"
         },
         "verify_ldap_host": {
-          "default": false,
+          "default": true,
           "description": "Set to `true` to authenticate LDAP server. The server certificate will be verified according to the CA certificates specified by the `lua_ssl_trusted_certificate` directive.",
           "type": "boolean"
         }

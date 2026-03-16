@@ -89,6 +89,16 @@
                   "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
                   "type": "boolean"
                 },
+                "gcp_metadata_url": {
+                  "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
+                "gcp_oauth_token_url": {
+                  "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
+                },
                 "gcp_service_account_json": {
                   "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                   "type": "string",
@@ -156,10 +166,15 @@
               "additionalProperties": true,
               "description": "For internal use only. ",
               "nullable": true,
-              "type": "object"
+              "type": "object",
+              "x-speakeasy-type-override": "any"
             },
             "model": {
               "properties": {
+                "model_alias": {
+                  "description": "The model name parameter from the request that this model should map to.",
+                  "type": "string"
+                },
                 "name": {
                   "description": "Model name to execute.",
                   "type": "string"
@@ -200,6 +215,14 @@
                         },
                         "aws_sts_endpoint_url": {
                           "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role.",
+                          "type": "string"
+                        },
+                        "batch_bucket_prefix": {
+                          "description": "S3 URI prefix (s3://bucket/prefix/) where Bedrock will get input files from and store results to for native batch API.",
+                          "type": "string"
+                        },
+                        "batch_role_arn": {
+                          "description": "AWS role arn used for calling batch API. Try to get the value from request if ommited.",
                           "type": "string"
                         },
                         "embeddings_normalize": {
@@ -243,8 +266,17 @@
                       "properties": {
                         "international": {
                           "default": true,
-                          "description": "        Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\n        It is recommended to set this to `true` when using international version of dashscope.\n        ",
+                          "description": "Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\nIt is recommended to set this to `true` when using international version of dashscope.\n",
                           "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "databricks": {
+                      "properties": {
+                        "workspace_instance_id": {
+                          "description": "Workspace Instance ID ('dbc-xxx-yyy') for Databricks model serving.",
+                          "type": "string"
                         }
                       },
                       "type": "object"
@@ -354,11 +386,15 @@
                     "cerebras",
                     "cohere",
                     "dashscope",
+                    "databricks",
+                    "deepseek",
                     "gemini",
                     "huggingface",
                     "llama2",
                     "mistral",
+                    "ollama",
                     "openai",
+                    "vllm",
                     "xai"
                   ],
                   "type": "string"

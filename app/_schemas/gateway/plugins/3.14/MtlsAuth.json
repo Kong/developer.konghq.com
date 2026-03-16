@@ -91,6 +91,14 @@
           ],
           "type": "string"
         },
+        "san_dirname_matcher": {
+          "default": [],
+          "description": "Specifies a list of Subject Alternative Name (SAN) DirectoryName attributes to use for consumer lookup. Applicable only when `skip_consumer_lookup` is false. Supported formats: OID, Long Name, or Short Name. Examples: `commonName` (Long Name), `CN` (Short Name), `2.5.4.3` (OID). If left empty (default), all attributes present in the SAN DirectoryName extension are used. The matcher is case sensitive.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "send_ca_dn": {
           "default": false,
           "description": "Sends the distinguished names (DN) of the configured CA list in the TLS handshake message.",
@@ -102,6 +110,7 @@
           "type": "boolean"
         },
         "ssl_verify": {
+          "default": true,
           "description": "This option enables verification of the certificate presented by the server of the OCSP responder's URL and by the server of the CRL Distribution Point.",
           "type": "boolean"
         }
@@ -116,15 +125,19 @@
         "grpc",
         "grpcs",
         "http",
-        "https"
+        "https",
+        "ws",
+        "wss"
       ],
-      "description": "A set of strings representing HTTP protocols.",
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
       "items": {
         "enum": [
           "grpc",
           "grpcs",
           "http",
-          "https"
+          "https",
+          "ws",
+          "wss"
         ],
         "type": "string"
       },

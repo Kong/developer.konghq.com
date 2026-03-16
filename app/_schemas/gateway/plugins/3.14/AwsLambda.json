@@ -151,6 +151,11 @@
           "description": "An optional value that defines whether Kong should send large bodies that are buffered to disk",
           "type": "boolean"
         },
+        "ssl_verify": {
+          "default": true,
+          "description": "Set to `true` to verify the TLS certificate when connecting to AWS services.",
+          "type": "boolean"
+        },
         "timeout": {
           "default": 60000,
           "description": "An optional timeout in milliseconds when invoking the function.",

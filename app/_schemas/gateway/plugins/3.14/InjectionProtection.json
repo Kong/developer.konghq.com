@@ -54,6 +54,7 @@
               "java_exception",
               "js",
               "sql",
+              "sql_low_sensitivity",
               "ssi",
               "xpath_abbreviated",
               "xpath_extended"

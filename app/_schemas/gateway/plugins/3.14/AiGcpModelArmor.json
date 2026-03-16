@@ -7,6 +7,16 @@
           "description": "Enables multi-language detection mode. Must be used with 'source_language'.",
           "type": "boolean"
         },
+        "gcp_metadata_url": {
+          "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
+        "gcp_oauth_token_url": {
+          "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+          "type": "string",
+          "x-referenceable": true
+        },
         "gcp_service_account_json": {
           "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
           "type": "string",
@@ -31,6 +41,11 @@
         "location_id": {
           "description": "GCP Location ID for the GCP Model Armor subscription.",
           "type": "string"
+        },
+        "log_blocked_content": {
+          "default": false,
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "type": "boolean"
         },
         "project_id": {
           "description": "GCP Project ID for the GCP Model Armor subscription.",
