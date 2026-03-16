@@ -43,6 +43,7 @@
           "type": "array"
         },
         "access_token_endpoints_ssl_verify": {
+          "default": true,
           "description": "Whether to verify the TLS certificate if any of `access_token_introspection_endpoint`, `access_token_jwks_uri`, or `access_token_keyset` is an HTTPS URI.",
           "type": "boolean"
         },
@@ -491,6 +492,7 @@
           "type": "array"
         },
         "channel_token_endpoints_ssl_verify": {
+          "default": true,
           "description": "Whether to verify the TLS certificate if any of `channel_token_introspection_endpoint`, `channel_token_jwks_uri`, or `channel_token_keyset` is an HTTPS URI.",
           "type": "boolean"
         },

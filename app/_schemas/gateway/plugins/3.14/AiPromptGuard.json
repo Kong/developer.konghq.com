@@ -36,7 +36,8 @@
             "image/generation",
             "realtime/generation",
             "text/embeddings",
-            "text/generation"
+            "text/generation",
+            "video/generation"
           ],
           "type": "string"
         },

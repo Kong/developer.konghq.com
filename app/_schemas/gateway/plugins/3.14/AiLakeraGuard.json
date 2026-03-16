@@ -24,6 +24,11 @@
           "type": "string",
           "x-referenceable": true
         },
+        "log_blocked_content": {
+          "default": false,
+          "description": "Whether to log prompts and responses that are blocked by the guardrail.",
+          "type": "boolean"
+        },
         "project_id": {
           "description": "Project ID to apply filters from. If null, it will use the subscription's default project. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "type": "string",

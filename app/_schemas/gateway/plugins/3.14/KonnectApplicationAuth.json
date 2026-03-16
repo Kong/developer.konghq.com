@@ -232,7 +232,7 @@
                       },
                       "cache_token_exchange": {
                         "default": true,
-                        "description": "Cache the token exchange endpoint requests.",
+                        "description": "Cache the legacy token exchange endpoint requests.",
                         "type": "boolean"
                       },
                       "cache_tokens": {
@@ -340,9 +340,9 @@
                       "client_id": {
                         "description": "The client id(s) that the plugin uses when it calls authenticated endpoints on the identity provider. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -358,22 +358,22 @@
                               "type": "string"
                             },
                             "d": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "dp": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "dq": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "e": {
                               "type": "string"
@@ -382,10 +382,10 @@
                               "type": "string"
                             },
                             "k": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "key_ops": {
                               "items": {
@@ -403,40 +403,40 @@
                               "type": "string"
                             },
                             "oth": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "p": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "q": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "qi": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "r": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "t": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "use": {
                               "type": "string"
@@ -470,9 +470,9 @@
                       "client_secret": {
                         "description": "The client secret. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -706,7 +706,7 @@
                             "type": "boolean"
                           },
                           "ssl_verify": {
-                            "default": false,
+                            "default": true,
                             "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                             "type": "boolean"
                           },
@@ -743,10 +743,14 @@
                         },
                         "type": "array"
                       },
-                      "consumer_claim": {
-                        "description": "The claim used for consumer mapping. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+                      "consumer_claims": {
+                        "description": "The claims used for consumer mapping. Each entry represents a claim path inside the token payload. The paths are evaluated in order, and the first matching claim is used.",
                         "items": {
-                          "type": "string"
+                          "description": "A path of strings representing the location of the claim in a nested object. For example, to map to `user.info.id`, set `[ \"user\", \"info\", \"id\" ]`.",
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
                         },
                         "type": "array"
                       },
@@ -829,6 +833,31 @@
                         "description": "The downstream access token JWK header.",
                         "type": "string"
                       },
+                      "downstream_headers": {
+                        "description": "The downstream claim to header mappings.",
+                        "items": {
+                          "properties": {
+                            "header": {
+                              "description": "The name of the header.",
+                              "type": "string"
+                            },
+                            "path": {
+                              "description": "The path of the header value.",
+                              "items": {
+                                "type": "string"
+                              },
+                              "minLength": 1,
+                              "type": "array"
+                            }
+                          },
+                          "required": [
+                            "header",
+                            "path"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "downstream_headers_claims": {
                         "description": "The downstream header claims. If multiple values are set, it means the claim is inside a nested object of the token payload.",
                         "items": {
@@ -902,8 +931,9 @@
                       "extra_jwks_uris": {
                         "description": "JWKS URIs whose public keys are trusted (in addition to the keys found with the discovery).",
                         "items": {
-                          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-                          "type": "string"
+                          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "string",
+                          "x-referenceable": true
                         },
                         "type": "array"
                       },
@@ -943,7 +973,7 @@
                         "type": "array"
                       },
                       "hide_credentials": {
-                        "default": false,
+                        "default": true,
                         "description": "Remove the credentials used for authentication from the request. If multiple credentials are sent with the same request, the plugin will remove those that were used for successful authentication.",
                         "type": "boolean"
                       },
@@ -1029,8 +1059,9 @@
                         "type": "boolean"
                       },
                       "introspection_endpoint": {
-                        "description": "The introspection endpoint. If set it overrides the value in `introspection_endpoint` returned by the discovery endpoint.",
-                        "type": "string"
+                        "description": "The introspection endpoint. If set it overrides the value in `introspection_endpoint` returned by the discovery endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                        "type": "string",
+                        "x-referenceable": true
                       },
                       "introspection_endpoint_auth_method": {
                         "description": "The introspection endpoint authentication method: : `client_secret_basic`, `client_secret_post`, `client_secret_jwt`, `private_key_jwt`, `tls_client_auth`, `self_signed_tls_client_auth`, or `none`: do not authenticate",
@@ -1062,9 +1093,9 @@
                       "introspection_headers_values": {
                         "description": "Extra header values passed to the introspection endpoint. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -1108,15 +1139,22 @@
                         "type": "string"
                       },
                       "issuer": {
-                        "description": "The discovery endpoint (or the issuer identifier). When there is no discovery endpoint, please also configure `config.using_pseudo_issuer=true`.",
-                        "type": "string"
+                        "description": "The discovery endpoint (or the issuer identifier). When there is no discovery endpoint, please also configure `config.using_pseudo_issuer=true`. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                        "type": "string",
+                        "x-referenceable": true
                       },
                       "issuers_allowed": {
                         "description": "The issuers allowed to be present in the tokens (`iss` claim).",
                         "items": {
-                          "type": "string"
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                          "type": "string",
+                          "x-referenceable": true
                         },
                         "type": "array"
+                      },
+                      "jwks_endpoint": {
+                        "description": "Overrides the `jwks_uri` returned by discovery. Use when the IdP exposes a non-standard JWKS endpoint.",
+                        "type": "string"
                       },
                       "jwt_session_claim": {
                         "default": "sid",
@@ -1584,7 +1622,7 @@
                             "type": "boolean"
                           },
                           "ssl_verify": {
-                            "default": false,
+                            "default": true,
                             "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                             "type": "boolean"
                           },
@@ -1723,9 +1761,9 @@
                         ],
                         "description": "The scopes passed to the authorization and token endpoints.",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array"
                       },
@@ -1848,12 +1886,11 @@
                         "type": "string"
                       },
                       "session_memcached_ssl": {
-                        "default": false,
                         "description": "If set to true, uses SSL to connect to memcached",
                         "type": "boolean"
                       },
                       "session_memcached_ssl_verify": {
-                        "default": false,
+                        "default": true,
                         "description": "If set to true, verifies the validity of the memcached server SSL certificate",
                         "type": "boolean"
                       },
@@ -1937,7 +1974,7 @@
                         "type": "boolean"
                       },
                       "ssl_verify": {
-                        "default": false,
+                        "default": true,
                         "description": "Verify identity provider server certificate. If set to `true`, the plugin uses the CA certificate set in the `kong.conf` config parameter `lua_ssl_trusted_certificate`.",
                         "type": "boolean"
                       },
@@ -1977,8 +2014,109 @@
                         ],
                         "type": "string"
                       },
+                      "token_exchange": {
+                        "description": "Details on how to accept tokens from other identity providers.",
+                        "properties": {
+                          "cache": {
+                            "description": "Cache support for token exchange",
+                            "properties": {
+                              "enabled": {
+                                "default": true,
+                                "description": "Whether to enable caching.",
+                                "type": "boolean"
+                              },
+                              "ttl": {
+                                "description": "Cache ttl in seconds used when caching exchanged tokens, use it to override `conf.cache_ttl`. Token expiry will be used if shorter than this value.",
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "request": {
+                            "description": "Parameters used in the token exchange request.",
+                            "properties": {
+                              "audience": {
+                                "description": "Audiences used in the token exchange request. Values defined here override those defined in `config.audience`.",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "empty_audience": {
+                                "default": false,
+                                "description": "Use empty audiences. Use this field to override audiences defined in `config.audience`.",
+                                "type": "boolean"
+                              },
+                              "empty_scopes": {
+                                "default": false,
+                                "description": "Use empty scopes. Use this field to override scopes defined in `config.scopes`.",
+                                "type": "boolean"
+                              },
+                              "scopes": {
+                                "description": "Scopes used in the token exchange request. Values defined here override those defined in `config.scopes`.",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "subject_token_issuers": {
+                            "description": "Trusted token issuers from which the upstream may accept tokens to be exchanged. If a JWT bearer matches all the conditions of a subject token issuer item, the token will be exchanged.",
+                            "items": {
+                              "properties": {
+                                "conditions": {
+                                  "description": "A tokens will only be exchange when it matches all these criteria. To exchanging tokens issued from a different issuer, conditions must not be defined; On the contrary, to exchange tokens issued from the target issuer itself, conditions must be defined.",
+                                  "properties": {
+                                    "has_audience": {
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    },
+                                    "has_scopes": {
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    },
+                                    "missing_audience": {
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    },
+                                    "missing_scopes": {
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "issuer": {
+                                  "description": "Tokens of whose iss claim matches this value will be exchanged.",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "issuer"
+                              ],
+                              "type": "object"
+                            },
+                            "minLength": 1,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "subject_token_issuers"
+                        ],
+                        "type": "object"
+                      },
                       "token_exchange_endpoint": {
-                        "description": "The token exchange endpoint.",
+                        "description": "Endpoint used to perform the legacy token exchange.",
                         "type": "string"
                       },
                       "token_headers_client": {
@@ -2081,6 +2219,31 @@
                       "upstream_access_token_jwk_header": {
                         "description": "The upstream access token JWK header.",
                         "type": "string"
+                      },
+                      "upstream_headers": {
+                        "description": "The upstream claim to header mappings.",
+                        "items": {
+                          "properties": {
+                            "header": {
+                              "description": "The name of the header.",
+                              "type": "string"
+                            },
+                            "path": {
+                              "description": "The path of the header value.",
+                              "items": {
+                                "type": "string"
+                              },
+                              "minLength": 1,
+                              "type": "array"
+                            }
+                          },
+                          "required": [
+                            "header",
+                            "path"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
                       },
                       "upstream_headers_claims": {
                         "description": "The upstream header claims. Only top level claims are supported.",

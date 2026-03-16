@@ -33,7 +33,7 @@
           "type": "boolean"
         },
         "https_verify": {
-          "default": false,
+          "default": true,
           "description": "Set to `true` to authenticate the Azure Functions server.",
           "type": "boolean"
         },

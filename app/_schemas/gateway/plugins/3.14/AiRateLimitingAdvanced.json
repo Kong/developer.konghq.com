@@ -13,7 +13,7 @@
         },
         "dictionary_name": {
           "default": "kong_rate_limiting_counters",
-          "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle.",
+          "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle. The dictionary must be defined in the nginx configuration using `lua_shared_dict` directive (e.g., `lua_shared_dict kong_rate_limiting_counters 12m`).",
           "type": "string"
         },
         "disable_penalty": {
@@ -60,7 +60,6 @@
           "type": "string"
         },
         "llm_format": {
-          "default": "openai",
           "description": "LLM input and output format and schema to use",
           "enum": [
             "anthropic",
@@ -73,7 +72,7 @@
           "type": "string"
         },
         "llm_providers": {
-          "description": "The provider config. Takes an array of `name`, `limit` and `window size` values.",
+          "description": "The provider config. Takes an array of `name`, `limit` and `window size` values. Mutually exclusive with `policies`.",
           "items": {
             "properties": {
               "limit": {
@@ -124,6 +123,102 @@
         "path": {
           "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
           "type": "string"
+        },
+        "policies": {
+          "description": "Policy-based rate limiting. Each policy defines match conditions and limits. Mutually exclusive with `llm_providers`.",
+          "items": {
+            "properties": {
+              "id": {
+                "description": "UUID reference to a reusable ai_rate_limiting_policies DAO entity. Mutually exclusive with inline limits.",
+                "type": "string"
+              },
+              "limits": {
+                "description": "Rate limits to enforce when this policy matches.",
+                "items": {
+                  "properties": {
+                    "limit": {
+                      "description": "The rate limit threshold for this window.",
+                      "type": "number"
+                    },
+                    "tokens_count_strategy": {
+                      "default": "total_tokens",
+                      "description": "What to count for this limit. Supported strategies: total_tokens, prompt_tokens, completion_tokens, cost.",
+                      "enum": [
+                        "completion_tokens",
+                        "cost",
+                        "prompt_tokens",
+                        "total_tokens"
+                      ],
+                      "type": "string"
+                    },
+                    "window_size": {
+                      "description": "The window size in seconds.",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "limit",
+                    "window_size"
+                  ],
+                  "type": "object"
+                },
+                "minLength": 1,
+                "type": "array"
+              },
+              "match": {
+                "description": "Array of match conditions (AND logic). If omitted, this policy acts as a fallback for unmatched requests.",
+                "items": {
+                  "properties": {
+                    "key": {
+                      "description": "Sub-key for consumer (id|username|custom_id), consumer_group (id|name), or header (header name).",
+                      "type": "string"
+                    },
+                    "partition_by": {
+                      "default": false,
+                      "description": "If true, the matched value contributes to the composite rate limit counter key.",
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "description": "The attribute to match against.",
+                      "enum": [
+                        "consumer",
+                        "consumer_group",
+                        "header",
+                        "ip",
+                        "model",
+                        "path",
+                        "provider"
+                      ],
+                      "type": "string"
+                    },
+                    "values": {
+                      "description": "Values to match. If omitted, matches any value of this type.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "window_type": {
+                "default": "sliding",
+                "description": "The time window type for this policy.",
+                "enum": [
+                  "fixed",
+                  "sliding"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
         },
         "redis": {
           "properties": {
@@ -354,7 +449,7 @@
               "type": "boolean"
             },
             "ssl_verify": {
-              "default": false,
+              "default": true,
               "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
               "type": "boolean"
             },
@@ -410,9 +505,6 @@
           "type": "string"
         }
       },
-      "required": [
-        "llm_providers"
-      ],
       "type": "object"
     },
     "consumer": {
@@ -440,15 +532,19 @@
         "grpc",
         "grpcs",
         "http",
-        "https"
+        "https",
+        "ws",
+        "wss"
       ],
-      "description": "A set of strings representing HTTP protocols.",
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
       "items": {
         "enum": [
           "grpc",
           "grpcs",
           "http",
-          "https"
+          "https",
+          "ws",
+          "wss"
         ],
         "type": "string"
       },
@@ -474,8 +570,5 @@
       },
       "type": "object"
     }
-  },
-  "required": [
-    "config"
-  ]
+  }
 }

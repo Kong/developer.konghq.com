@@ -12,8 +12,16 @@
               "minimum": 1,
               "type": "integer"
             },
+            "content_encoding": {
+              "description": "Sets the HTTP Content-Encoding applied to the Solace message payload (for example, gzip). If unset, the request Content-Encoding header is used when available.",
+              "type": "string"
+            },
+            "content_type": {
+              "description": "Sets the HTTP Content-Type applied to the Solace message payload. If unset, the request Content-Type header is used when available.",
+              "type": "string"
+            },
             "default_content": {
-              "description": "When not using `forward_method`, `forward_uri`, `forward_headers` or `forward_body`, this sets the message content.",
+              "description": "When not using `forward_method`, `forward_uri`, `forward_headers`, `forward_body` or `forward_body_raw_only`, this sets the message content.",
               "type": "string"
             },
             "delivery_mode": {
@@ -59,6 +67,11 @@
             "forward_body": {
               "default": false,
               "description": "Include the request body and the body arguments in the message.",
+              "type": "boolean"
+            },
+            "forward_body_raw_only": {
+              "default": false,
+              "description": "Forward only the raw request body without wrapping it in a JSON payload or adding extra fields.",
               "type": "boolean"
             },
             "forward_headers": {
@@ -108,6 +121,48 @@
               "default": 0,
               "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
               "type": "integer"
+            },
+            "user_properties": {
+              "description": "User defined properties to be included in the message. Separate static properties from header mappings.",
+              "properties": {
+                "headers": {
+                  "description": "Header settings for user properties (mapping, inclusion and exclusion).",
+                  "properties": {
+                    "exclude_headers": {
+                      "description": "Headers that must not be forwarded into user properties. This is used to exclude sensitive headers such as authorization from being forwarded as user properties, or to avoid duplication when a header is mapped to a user property but you don't want the original header to be included as well.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "include_headers": {
+                      "description": "Headers to include as user properties even without explicit mapping.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "mappings": {
+                      "additionalProperties": {
+                        "type": "string",
+                        "x-lua-required": true
+                      },
+                      "description": "Header-to-user_property mapping (key = HTTP header name, value = target user property name).",
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "predefined_properties": {
+                  "additionalProperties": {
+                    "type": "string",
+                    "x-lua-required": true
+                  },
+                  "description": "Predefined user properties to set on every message (key = property name, value = property value).",
+                  "type": "object"
+                }
+              },
+              "type": "object"
             }
           },
           "required": [
@@ -211,16 +266,16 @@
             },
             "properties": {
               "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
                 "x-lua-required": true,
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix). \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "ssl_validate_certificate": {
-              "default": false,
+              "default": true,
               "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
               "type": "boolean"
             },
