@@ -102,6 +102,9 @@ entities:
         name: fallback_service
       paths:
         - /
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 
 Since all URIs are prefixed by the root character `/`, 

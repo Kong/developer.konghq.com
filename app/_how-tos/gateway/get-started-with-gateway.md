@@ -121,6 +121,9 @@ entities:
         name: example_service
       paths:
         - /mock
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 
 ### Validate the Gateway Service and Route by proxying a request

@@ -3,3 +3,6 @@ paths:
   - /rerank
 service:
   name: rerank-service
+protocols:
+  - http
+  - https
