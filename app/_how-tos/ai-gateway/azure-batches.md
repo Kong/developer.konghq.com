@@ -59,14 +59,14 @@ prereqs:
         6. Deploy your model in [Azure AI Foundry](https://ai.azure.com/):
            1. Go to **My assets → Models and deployments → Deploy model**.
 
-            {:.warning}
-            > Use a `globalbatch` or `datazonebatch` deployment type for batch operations since standard deployments (`GlobalStandard`) cannot process batch files.
+              {:.warning}
+              > Use a `globalbatch` or `datazonebatch` deployment type for batch operations since standard deployments (`GlobalStandard`) cannot process batch files.
 
            2. Export the API key and deployment ID:
-           ```bash
-           export DECK_AZURE_OPENAI_API_KEY='YOUR_AZURE_OPENAI_MODEL_API_KEY'
-           export DECK_AZURE_DEPLOYMENT_ID='YOUR_AZURE_OPENAI_DEPLOYMENT_NAME'
-           ```
+              ```bash
+              export DECK_AZURE_OPENAI_API_KEY='YOUR_AZURE_OPENAI_MODEL_API_KEY'
+              export DECK_AZURE_DEPLOYMENT_ID='YOUR_AZURE_OPENAI_DEPLOYMENT_NAME'
+              ```
     - title: Batch .jsonl file
       content: |
         To complete this tutorial, create a `batch.jsonl` to generate asynchronous batched LLM responses. We use `/v1/chat/completions` because it handles chat-based generation requests, instructing the LLM to produce conversational completions in batch mode.

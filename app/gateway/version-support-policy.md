@@ -52,26 +52,13 @@ For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version
 > Starting from 3.10, we will have 1 LTS release every year, in March* of that year.
 > <br><br>
 > Example of planned LTS schedule for next 4 years:
-> <table>
->  <thead>
->    <th>LTS Version</th>
->    <th>Planned release date</th>
->  </thead>
->  <tbody>
->    <tr>
->      <td>3.14</td>
->      <td>March 2026</td>
->    </tr>
->    <tr>
->      <td>3.18</td>
->      <td>March 2027</td>
->    </tr>
->    <tr>
->      <td>3.22</td>
->      <td>March 2028</td>
->    </tr>
->  </tbody>
-> </table>
+>
+> | LTS Version | Planned release date |
+> |---|---|
+> | 3.14 | March 2026 |
+> | 3.18 | March 2027 |
+> | 3.22 | March 2028 |
+>
 > Each LTS is supported for 3 years from the date of release. 
 > This will allow adjacent LTS releases to have a support overlap of 2 years in which customers can plan their upgrades.
 > <br><br>
@@ -154,7 +141,7 @@ For information about FIPS, see the [FIPS support policy](/gateway/fips-support/
 
 These versions of {{site.ee_product_name}} have reached the end of full support.
 
-{% include_cached support/old_gateway_support.html %}
+{% include_cached support/old_gateway_support.md %}
 
 {:.info}
 > **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/compatibility/).

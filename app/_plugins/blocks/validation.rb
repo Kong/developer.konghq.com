@@ -13,6 +13,7 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
 
@@ -24,11 +25,13 @@ module Jekyll
       end
 
       config = YAML.load(contents)
-      drop = Drops::Validations::Base.make_for(yaml: config, id: @name)
+      drop = Drops::Validations::Base.make_for(yaml: config, id: @name, format: @format)
 
       output = context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file)).render(context)
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+
+        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
       end
 
       if config['indent']

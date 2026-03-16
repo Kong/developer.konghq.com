@@ -149,4 +149,3 @@ To complete this tutorial, you must have a Guardrail policy created in your AWS 
     export DECK_GUARDRAILS_ID=0abcs5r0q3abcd
     export DECK_GUARDRAILS_VERSION=DRAFT
     ```
-

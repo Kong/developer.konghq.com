@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
+require_relative '../monkey_patch'
 
 module Jekyll
   class IncludeSVGTag < Liquid::Tag

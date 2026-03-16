@@ -128,18 +128,23 @@ entities:
 
 Open a new terminal window and export the variables that the Gemini CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from Gemini CLI will route:
 
-```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
-export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
+  export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+  ```
+{% endon_prem %}
 
-```sh
-export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
-export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-```
-If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  export GOOGLE_GEMINI_BASE_URL="http://localhost:8000/anything"
+  export GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+  ```
+
+  If you're using a different {{site.konnect_short_name}} proxy URL, be sure to replace `http://localhost:8000` with your proxy URL.
+{% endkonnect %}
 
 
 ## Validate the configuration
