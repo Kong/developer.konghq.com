@@ -52,46 +52,45 @@ secret stores, object storage, and serverless functions.
 The following table shows which {{site.ee_product_name}} features support cloud provider IAM authentication.
 
 <!--vale off-->
-{% table %}
+{% feature_table %}
+item_title: Feature Support Matrix
 columns:
-  - title: Feature
-    key: feature
   - title: AWS IAM
     key: aws
   - title: Azure Microsoft Entra
     key: azure
   - title: GCP IAM
     key: gcp
-rows:
-  - feature: "PostgreSQL database ([AWS](/gateway/amazon-rds-authentication-with-aws-iam/), [Azure](/gateway/azure-pg-authentication-with-azure-managed-identity/), [GCP](/gateway/gcp-postgres-authentication/))"
-    aws: "✅"
-    azure: "✅"
-    gcp: "✅"
-  - feature: "Redis ([see plugin docs](/plugins/rate-limiting-advanced/#using-cloud-authentication-with-redis))"
-    aws: "✅"
-    azure: "✅"
-    gcp: "✅"
-  - feature: "[AWS Secrets Manager vault](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)"
-    aws: "✅"
+features:
+  - title: "PostgreSQL database ([AWS](/gateway/amazon-rds-authentication-with-aws-iam/), [Azure](/gateway/azure-pg-authentication-with-azure-managed-identity/), [GCP](/gateway/gcp-postgres-authentication/))"
+    aws: true
+    azure: true
+    gcp: true
+  - title: "Redis ([see plugin docs](/plugins/rate-limiting-advanced/#using-cloud-authentication-with-redis))"
+    aws: true
+    azure: true
+    gcp: true
+  - title: "[AWS Secrets Manager vault](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/)"
+    aws: true
     azure: "N/A"
     gcp: "N/A"
-  - feature: "[Google Cloud Secret Manager vault](/how-to/configure-google-cloud-secret-as-a-vault-backend/)"
+  - title: "[Google Cloud Secret Manager vault](/how-to/configure-google-cloud-secret-as-a-vault-backend/)"
     aws: "N/A"
     azure: "N/A"
-    gcp: "✅"
-  - feature: "[Azure Key Vault](/gateway/entities/vault/?tab=azure)"
+    gcp: true
+  - title: "[Azure Key Vault](/gateway/entities/vault/?tab=azure)"
     aws: "N/A"
-    azure: "✅"
+    azure: true
     gcp: "N/A"
-  - feature: "[Data plane resilience](/gateway/cp-outage/)"
-    aws: "✅ (also for S3-compatible interfaces)"
-    azure: "✅ (Azure blob storage)"
-    gcp: "✅ (Google Cloud Storage)"
-  - feature: "[AI plugins](/ai-gateway/)"
-    aws: "✅"
-    azure: "✅"
-    gcp: "✅"
-{% endtable %}
+  - title: "[Data plane resilience](/gateway/cp-outage/)"
+    aws: true
+    azure: true
+    gcp: true
+  - title: "[AI plugins](/ai-gateway/)"
+    aws: true
+    azure: true
+    gcp: true
+{% endfeature_table %}
 <!--vale on-->
 
 {:.info}
@@ -111,68 +110,65 @@ Unless otherwise noted, each supported authentication method can be used with **
 ### AWS IAM
 
 <!--vale off-->
-{% table %}
+{% feature_table %}
+item_title: Authentication method
 columns:
-  - title: Authentication method
-    key: method
   - title: Supported
     key: supported
-rows:
-  - method: "[Access Key + Secret Key pair](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)"
-    supported: "✅"
-  - method: "[EC2 IAM Role](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)"
-    supported: "✅"
-  - method: "[ECS Task IAM Role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)"
-    supported: "✅"
-  - method: "[IAM Role for Service Account (IRSA in EKS)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)"
-    supported: "✅"
-  - method: "[EKS Pod Identity](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html)"
-    supported: "✅"
-  - method: "[Assume Role](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) (based on any of the above methods)"
-    supported: "✅"
-  - method: "[Identity Federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html)"
-    supported: "❌"
-{% endtable %}
+features:
+  - title: "[Access Key + Secret Key pair](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)"
+    supported: true
+  - title: "[EC2 IAM Role](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)"
+    supported: true
+  - title: "[ECS Task IAM Role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)"
+    supported: true
+  - title: "[IAM Role for Service Account (IRSA in EKS)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)"
+    supported: true
+  - title: "[EKS Pod Identity](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html)"
+    supported: true
+  - title: "[Assume Role](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) (based on any of the above methods)"
+    supported: true
+  - title: "[Identity Federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html)"
+    supported: false
+{% endfeature_table %}
 <!--vale on-->
 
 ### GCP IAM
 
 <!--vale off-->
-{% table %}
+{% feature_table %}
+item_title: Authentication method
 columns:
-  - title: Authentication method
-    key: method
   - title: Supported
     key: supported
-rows:
-  - method: "[Static Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete)"
-    supported: "✅"
-  - method: "[Service Account Credential](https://docs.cloud.google.com/iam/docs/service-account-creds) (Compute Engine)"
-    supported: "✅"
-  - method: "[Workload Identity](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) (GKE)"
-    supported: "✅"
-  - method: "[Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) / [Workforce Identity Federation](https://cloud.google.com/iam/docs/workforce-identity-federation)"
-    supported: "❌"
-{% endtable %}
+features:
+  - title: "[Static Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete)"
+    supported: true
+  - title: "[Service Account Credential](https://docs.cloud.google.com/iam/docs/service-account-creds) (Compute Engine)"
+    supported: true
+  - title: "[Workload Identity](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) (GKE)"
+    supported: true
+  - title: "[Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) / [Workforce Identity Federation](https://cloud.google.com/iam/docs/workforce-identity-federation)"
+    supported: false
+{% endfeature_table %}
 <!--vale on-->
 
 ### Azure Microsoft Entra
 
 <!--vale off-->
-{% table %}
+{% feature_table %}
+item_title: Authentication method
 columns:
-  - title: Authentication method
-    key: method
   - title: Supported
     key: supported
-rows:
-  - method: "[Client Secret Credential](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow) (Service Principal)"
-    supported: "✅"
-  - method: "[Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) (Virtual Machine, Service Fabric, AKS, etc.)"
-    supported: "✅"
-  - method: "[Workload Identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) (AKS)"
-    supported: "✅"
-  - method: "[Workload Identity Federation](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation)"
-    supported: "❌"
-{% endtable %}
+features:
+  - title: "[Client Secret Credential](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow) (Service Principal)"
+    supported: true
+  - title: "[Managed Identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview) (Virtual Machine, Service Fabric, AKS, etc.)"
+    supported: true
+  - title: "[Workload Identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview) (AKS)"
+    supported: true
+  - title: "[Workload Identity Federation](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation)"
+    supported: false
+{% endfeature_table %}
 <!--vale on-->
