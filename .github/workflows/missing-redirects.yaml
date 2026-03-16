@@ -41,13 +41,20 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-
+      - name: Wait for Pages changed to be neutral
+        uses: fountainhead/action-wait-for-check@5a908a24814494009c4bb27c242ea38c93c593be # v1.2.0
+        id: waitForCheck
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Pages changed - kongdeveloper"
+          timeoutSeconds: 1200
       - name: Wait for Netlify site to be ready
         uses: jakepartusch/wait-for-netlify-action@f1e137043864b9ab9034ae3a5adc1c108e3f1a48 # v1.4
         id: waitForNetlify
         with:
           site_name: "kongdeveloper"
-          max_timeout: 900
+          max_timeout: 1200
 
       - name: Check for missing redirects
         run: |
