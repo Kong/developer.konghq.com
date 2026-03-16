@@ -1,3 +1,6 @@
 name: mcp-aggregation
 paths:
   - /mcp/aggregation
+protocols:
+  - http
+  - https

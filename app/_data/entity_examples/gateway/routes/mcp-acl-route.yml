@@ -3,3 +3,6 @@ paths:
   - /mcp
 service:
   name: mcp-acl-service
+protocols:
+  - http
+  - https
