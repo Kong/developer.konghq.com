@@ -7,7 +7,7 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 ## Upgrade to `2.14.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Observability: Prometheus metrics migration from Summary to Histogram
@@ -77,7 +77,7 @@ If you are using `OPAPolicy`, two choices:
 1. (recommended) Migrate to `MeshOPA` resources. `TargetRef` policies are mature and this is the recommended path forward.
 2. Disable `dynconfig` for OPA by setting: `KMESH_OPA_EXPERIMENTAL_USE_DYNAMIC_CONFIG=false` in the environment variables of the data plane.
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Strict Inbound Port Filtering Enabled by Default
@@ -283,7 +283,7 @@ status:
 
 ## Upgrade to `2.12.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Removal of `/status/zones` endpoints
@@ -328,7 +328,7 @@ During installation, we create a `ClusterRole` with permissions for Kong Mesh re
 
 Running Kong Mesh on Windows is no longer supported. If you are using Windows, please migrate to a Linux-based environment.
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Helm upgrades to 2.11.8 require explicit `namespaceAllowList: []` in values.yaml
@@ -470,7 +470,7 @@ Control Plane Tokens were deprecated in 2.0.x.
 They are now removed and only zone tokens are supported to auth to zonal control-planes to global.
 To generate and use zone tokens checkout the dedicated [docs](https://docs.konghq.com/mesh/latest/features/kds-auth/).
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### API Server behaviour changes
@@ -591,7 +591,7 @@ Authentication between the control plane and dataplanes is now only checked at c
 
 ## Upgrade to `2.9.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### MeshAccessLog
@@ -827,7 +827,7 @@ Please use the `kuma.io/mesh` label instead.
 
 ## Upgrade to `2.8.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### MeshFaultInjection responseBandwidth.limit
@@ -888,7 +888,7 @@ you'll need:
 
 See [Kong/kong-mesh-ecs#40](https://github.com/Kong/kong-mesh-ecs/pull/40) for an example.
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### MeshMetric and cluster stats merging
@@ -1108,7 +1108,7 @@ This change was introduced so that control plane does not have capability to rea
 
 ## Upgrade to `2.6.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Policy
@@ -1201,7 +1201,7 @@ Please migrate to the new postgres driver `pgx` by setting `DriverName=pgx` conf
 
 ## Upgrade to `2.5.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Transparent-proxy and CNI v1 removal
@@ -1257,7 +1257,7 @@ As a side effect, on kubernetes policies synced will be persisted in the `kuma-s
 
 ## Upgrade to `2.4.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Configuration change
@@ -1273,7 +1273,7 @@ After a period of depreciation, the service field in now removed. The service na
 
 ## Upgrade to `2.3.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### **Breaking changes**
@@ -1323,7 +1323,7 @@ This only affects users who rely on generated certificates having a common name 
 
 ## Upgrade to `2.2.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Universal
@@ -1447,7 +1447,7 @@ to the address which service is binding to.
 
 ## Upgrade to `2.1.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### **Breaking changes**
@@ -1487,7 +1487,7 @@ This should not impact the system in any significant way other than logs like `r
 Control Plane Tokens are deprecated. It will be removed in a future release.
 You can use the Zone Token instead to authenticate any zonal control plane.
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Built-in gateway
@@ -1544,7 +1544,7 @@ If you need to enable this setting, you can use ProxyTemplate to patch `envoy.fi
 
 ## Upgrade to `1.8.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Kumactl
@@ -1570,7 +1570,7 @@ To make migration easier you can temporarily disable this new behavior by settin
 
 ## Upgrade to `1.7.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Kumactl
@@ -1601,7 +1601,7 @@ grpc: # DEPRECATED
 
 ## Upgrade to `1.6.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Helm
@@ -1657,7 +1657,7 @@ Some examples can be found in the Inspect API docs.
 
 ## Upgrade to `1.5.x`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Any type
@@ -1683,7 +1683,7 @@ Kuma always generate the corresponding metrics.
 
 ## Upgrade to `1.4.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 Starting with this version, the default API server authentication method is user
@@ -1694,7 +1694,7 @@ certificates. This can be done by setting the `KUMA_API_SERVER_AUTHN_TYPE` varia
 
 ## Upgrade to `1.3.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 Starting with this version `Mesh` resource will limit the maximal number of mtls backends to 1, so please make sure your `Mesh` has correct backend applied before the upgrade.
@@ -1705,7 +1705,7 @@ Kuma 1.3.0 has additional mechanism for tracking data plane proxies and zone sta
 
 ## Upgrade to `1.2.1`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 When Global is upgraded to `1.2.1` and Zone CP is still `1.2.0`, ZoneIngresses will always be listed as offline.
@@ -1713,7 +1713,7 @@ After Zone CPs are upgraded to `1.2.1`, the status will work again. ZoneIngress 
 
 ## Upgrade to `1.2.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 One of the changes introduced by Kuma 1.2.0 is renaming `Remote Control Planes` to `Zone Control Planes` and `Dataplane Ingress` to `Zone Ingress`. 
@@ -1861,7 +1861,7 @@ Changes in values in Kuma's HELM chart
 
 ## Upgrade to `1.1.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 The major change in this release is the migration to XDSv3 for the `kuma-cp` to `envoy` data plane proxy communication. The
@@ -1876,7 +1876,7 @@ This version removes the deprecated `--dataplane` flag in `kumactl generate data
 
 ## Upgrade to `1.0.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 This release introduces a number of breaking changes. If Kuma is being deployed in production we strongly suggest to backup the current configuration, tear down the whole cluster and zones, and install in a clean setup. However, we enumerate the details of these changes below.
@@ -1951,7 +1951,7 @@ This release introduces a number of breaking changes. If Kuma is being deployed 
 
 ## Upgrade to `0.7.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 Support for `kuma.io/sidecar-injection` annotation. On Kubernetes change the namespace resources that host Kuma mesh services with the aforementioned annotation and delete the label. 
@@ -2015,7 +2015,7 @@ This release changes the way that Distributed and Hybrid Kuma Control planes are
 
 ## Upgrade to `0.6.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 Passive Health Check were removed in favor of Circuit Breaking.
@@ -2107,7 +2107,7 @@ metrics:
 
 ## Upgrade to `0.5.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Suggested Upgrade Path on Kubernetes
@@ -2235,7 +2235,7 @@ tracing:
 
 ## Upgrade to `0.4.0`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### Suggested Upgrade Path on Kubernetes
@@ -2322,7 +2322,7 @@ Although the old format is still supported, it is recommended to migrate since t
 
 ## Upgrade to `0.3.1`
 
-> [!NOTE]
+{:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
 ### List of breaking changes
