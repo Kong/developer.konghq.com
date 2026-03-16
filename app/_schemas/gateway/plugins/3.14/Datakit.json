@@ -275,6 +275,12 @@
                         "minLength": 1,
                         "type": "string"
                       },
+                      "raw_body": {
+                        "description": "The raw, non-decoded HTTP response body",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
                       "status": {
                         "description": "HTTP response status code",
                         "maxLength": 255,
@@ -289,6 +295,7 @@
                     "type": "string"
                   },
                   "ssl_verify": {
+                    "default": true,
                     "description": "Whether to verify the TLS certificate when making HTTPS requests.",
                     "type": "boolean"
                   },
@@ -484,6 +491,318 @@
                 "type": "object"
               },
               {
+                "description": "Decode JWT without signature verification",
+                "properties": {
+                  "input": {
+                    "description": "JWT token (with or without Bearer prefix)",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string",
+                    "x-lua-required": true
+                  },
+                  "output": {
+                    "description": "jwt_decode node output",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "outputs": {
+                    "description": "jwt_decode node outputs",
+                    "properties": {
+                      "header": {
+                        "description": "Decoded JWT header (alg, kid, typ)",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "payload": {
+                        "description": "Decoded JWT payload (claims)",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "signature": {
+                        "description": "Raw signature (base64url encoded)",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": {
+                    "enum": [
+                      "jwt_decode"
+                    ],
+                    "type": "string",
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "title": "jwt_decode",
+                "type": "object"
+              },
+              {
+                "description": "Create and sign a JWT",
+                "properties": {
+                  "algorithm": {
+                    "description": "Signing algorithm",
+                    "enum": [
+                      "ES256",
+                      "ES384",
+                      "ES512",
+                      "EdDSA",
+                      "HS256",
+                      "HS384",
+                      "HS512",
+                      "PS256",
+                      "PS384",
+                      "PS512",
+                      "RS256",
+                      "RS384",
+                      "RS512"
+                    ],
+                    "type": "string"
+                  },
+                  "expires_in": {
+                    "default": 300,
+                    "description": "Seconds until token expires (for exp claim)",
+                    "type": "integer"
+                  },
+                  "input": {
+                    "description": "jwt_sign node input",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "inputs": {
+                    "description": "jwt_sign node inputs",
+                    "properties": {
+                      "claims": {
+                        "description": "Dynamic claims to include",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "key": {
+                        "description": "Signing key (PEM, JWK JSON string, or HMAC secret)",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "kid": {
+                    "description": "Key ID for header",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string",
+                    "x-lua-required": true
+                  },
+                  "not_before": {
+                    "default": 0,
+                    "description": "Seconds until token becomes valid (for nbf claim)",
+                    "type": "integer"
+                  },
+                  "output": {
+                    "description": "jwt_sign node output",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "outputs": {
+                    "description": "jwt_sign node outputs",
+                    "properties": {
+                      "claims": {
+                        "description": "Complete claims used",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "header": {
+                        "description": "JWT header",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "token": {
+                        "description": "Signed JWT",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "static_claims": {
+                    "additionalProperties": {
+                      "x-speakeasy-type-override": "any"
+                    },
+                    "default": {},
+                    "description": "Static claims always included",
+                    "type": "object"
+                  },
+                  "typ": {
+                    "default": "JWT",
+                    "description": "Token type for header",
+                    "type": "string"
+                  },
+                  "type": {
+                    "enum": [
+                      "jwt_sign"
+                    ],
+                    "type": "string",
+                    "x-terraform-transform-const": true
+                  }
+                },
+                "required": [
+                  "algorithm"
+                ],
+                "title": "jwt_sign",
+                "type": "object"
+              },
+              {
+                "description": "Verify JWT signature and validate claims",
+                "properties": {
+                  "allowed_algorithms": {
+                    "default": [],
+                    "description": "Allowed signing algorithms (empty = any supported)",
+                    "items": {
+                      "enum": [
+                        "ES256",
+                        "ES384",
+                        "ES512",
+                        "EdDSA",
+                        "HS256",
+                        "HS384",
+                        "HS512",
+                        "PS256",
+                        "PS384",
+                        "PS512",
+                        "RS256",
+                        "RS384",
+                        "RS512"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "audiences": {
+                    "default": [],
+                    "description": "Allowed audiences (empty = any)",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "input": {
+                    "description": "jwt_verify node input",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "inputs": {
+                    "description": "jwt_verify node inputs",
+                    "properties": {
+                      "key": {
+                        "description": "Verification key: JWKS, JWK, PEM string, or HMAC secret",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "token": {
+                        "description": "JWT token (with or without Bearer prefix)",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "issuers": {
+                    "default": [],
+                    "description": "Allowed issuers (empty = any)",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "leeway": {
+                    "default": 0,
+                    "description": "Allowed clock skew in seconds for exp/nbf validation",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "A label that uniquely identifies the node within the plugin configuration so that it can be used for input/output connections. Must be valid `snake_case` or `kebab-case`.",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string",
+                    "x-lua-required": true
+                  },
+                  "output": {
+                    "description": "jwt_verify node output",
+                    "maxLength": 255,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "outputs": {
+                    "description": "jwt_verify node outputs",
+                    "properties": {
+                      "claims": {
+                        "description": "JWT payload claims",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "header": {
+                        "description": "JWT header",
+                        "maxLength": 255,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "required_claims": {
+                    "default": [],
+                    "description": "Claims that must be present",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "type": {
+                    "enum": [
+                      "jwt_verify"
+                    ],
+                    "type": "string",
+                    "x-terraform-transform-const": true
+                  },
+                  "validate_exp": {
+                    "default": true,
+                    "description": "Validate expiration claim",
+                    "type": "boolean"
+                  },
+                  "validate_nbf": {
+                    "default": true,
+                    "description": "Validate not-before claim",
+                    "type": "boolean"
+                  }
+                },
+                "title": "jwt_verify",
+                "type": "object"
+              },
+              {
                 "description": "Get or set a property",
                 "properties": {
                   "content_type": {
@@ -569,9 +888,13 @@
                   "values": {
                     "additionalProperties": true,
                     "description": "An object with string keys and freeform values",
-                    "type": "object"
+                    "type": "object",
+                    "x-speakeasy-type-override": "any"
                   }
                 },
+                "required": [
+                  "values"
+                ],
                 "title": "static",
                 "type": "object"
               },
@@ -886,7 +1209,7 @@
                       "type": "boolean"
                     },
                     "ssl_verify": {
-                      "default": false,
+                      "default": true,
                       "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                       "type": "boolean"
                     },
@@ -911,17 +1234,17 @@
             },
             "vault": {
               "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "maxLength": 4095,
                 "minLength": 1,
                 "type": "string",
                 "x-lua-required": true,
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
+              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "maxLength": 64,
               "minLength": 1,
-              "type": "object",
-              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              "type": "object"
             }
           },
           "type": "object"

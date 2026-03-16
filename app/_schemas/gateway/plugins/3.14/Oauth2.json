@@ -42,7 +42,7 @@
           "type": "boolean"
         },
         "hide_credentials": {
-          "default": false,
+          "default": true,
           "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service.",
           "type": "boolean"
         },

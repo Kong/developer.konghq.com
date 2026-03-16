@@ -39,7 +39,7 @@
           "type": "object"
         },
         "hide_credentials": {
-          "default": false,
+          "default": true,
           "description": "An optional boolean value telling the plugin to hide the credential to the upstream API server. It will be removed by Kong before proxying the request.",
           "type": "boolean"
         },
