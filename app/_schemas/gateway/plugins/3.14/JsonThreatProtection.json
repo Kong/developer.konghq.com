@@ -7,6 +7,11 @@
           "description": "Allow or disallow duplicate object entry name.",
           "type": "boolean"
         },
+        "allow_non_json_requests": {
+          "default": false,
+          "description": "Allow non-json requests to bypass the rules",
+          "type": "boolean"
+        },
         "enforcement_mode": {
           "default": "block",
           "description": "Enforcement mode of the security policy.",

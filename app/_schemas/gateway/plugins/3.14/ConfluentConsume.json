@@ -129,16 +129,16 @@
                     "basic": {
                       "properties": {
                         "password": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                           "type": "string",
                           "x-encrypted": true,
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                          "x-referenceable": true
                         },
                         "username": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                           "type": "string",
                           "x-encrypted": true,
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                          "x-referenceable": true
                         }
                       },
                       "required": [
@@ -210,18 +210,18 @@
                         },
                         "token_headers": {
                           "additionalProperties": {
+                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                             "type": "string",
-                            "x-referenceable": true,
-                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                            "x-referenceable": true
                           },
                           "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "object"
                         },
                         "token_post_args": {
                           "additionalProperties": {
+                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                             "type": "string",
-                            "x-referenceable": true,
-                            "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                            "x-referenceable": true
                           },
                           "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "object"
@@ -291,7 +291,7 @@
                           "type": "string"
                         },
                         "ssl_verify": {
-                          "default": false,
+                          "default": true,
                           "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
                           "type": "boolean"
                         },
@@ -332,7 +332,7 @@
         "security": {
           "properties": {
             "ssl_verify": {
-              "default": false,
+              "default": true,
               "description": "Enables verification of the certificate presented by the server.",
               "type": "boolean"
             }
@@ -361,16 +361,16 @@
                           "basic": {
                             "properties": {
                               "password": {
+                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                                 "type": "string",
                                 "x-encrypted": true,
-                                "x-referenceable": true,
-                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                                "x-referenceable": true
                               },
                               "username": {
+                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                                 "type": "string",
                                 "x-encrypted": true,
-                                "x-referenceable": true,
-                                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                                "x-referenceable": true
                               }
                             },
                             "required": [
@@ -442,18 +442,18 @@
                               },
                               "token_headers": {
                                 "additionalProperties": {
+                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                                   "type": "string",
-                                  "x-referenceable": true,
-                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                                  "x-referenceable": true
                                 },
                                 "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                                 "type": "object"
                               },
                               "token_post_args": {
                                 "additionalProperties": {
+                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                                   "type": "string",
-                                  "x-referenceable": true,
-                                  "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                                  "x-referenceable": true
                                 },
                                 "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                                 "type": "object"
@@ -523,7 +523,7 @@
                                 "type": "string"
                               },
                               "ssl_verify": {
-                                "default": false,
+                                "default": true,
                                 "description": "Whether to verify the certificate presented by the IdP when using HTTPS.",
                                 "type": "boolean"
                               },

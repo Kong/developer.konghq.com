@@ -34,7 +34,7 @@
           "type": "integer"
         },
         "https_verify": {
-          "default": false,
+          "default": true,
           "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
           "type": "boolean"
         },

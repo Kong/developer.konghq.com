@@ -35,7 +35,7 @@ tags:
 
 tldr:
   q: How do I use the AI Proxy plugin with Ollama?
-  a: Create a Gateway Service and a Route, then enable the AI Proxy  plugin and configure it with the Ollama provider, and the llama2 model.
+  a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Ollama provider, and the llama2 model.
 
 tools:
   - deck
@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up the AI Proxy Advanced plugin to route chat requests to Ollama’s Llama2 model by configuring the model options, including the ollama format and the upstream_url pointing to your local Ollama instance.
+Set up the AI Proxy plugin to route chat requests to Ollama’s Llama2 model by configuring the model options, including the ollama format and the `upstream_url` pointing to your local Ollama instance.
 
 
 {% entity_examples %}

@@ -96,8 +96,9 @@
                   "type": "integer"
                 },
                 "host": {
-                  "description": "A string representing a host name, such as example.com.",
-                  "type": "string"
+                  "description": "A string representing a host name, such as example.com. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
                 },
                 "password": {
                   "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
@@ -107,14 +108,16 @@
                 },
                 "port": {
                   "default": 6379,
-                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                  "description": "An integer representing a port number between 0 and 65535, inclusive. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                   "maximum": 65535,
                   "minimum": 0,
-                  "type": "integer"
+                  "type": "integer",
+                  "x-referenceable": true
                 },
                 "server_name": {
-                  "description": "A string representing an SNI (server name indication) value for TLS.",
-                  "type": "string"
+                  "description": "A string representing an SNI (server name indication) value for TLS. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
                 },
                 "ssl": {
                   "default": false,
@@ -122,7 +125,7 @@
                   "type": "boolean"
                 },
                 "ssl_verify": {
-                  "default": false,
+                  "default": true,
                   "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
                   "type": "boolean"
                 },
@@ -156,7 +159,7 @@
           "type": "object"
         },
         "hide_credentials": {
-          "default": false,
+          "default": true,
           "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin will strip the credential from the request (i.e. the `Authorization` header) before proxying it.",
           "type": "boolean"
         },

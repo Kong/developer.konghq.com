@@ -117,6 +117,7 @@
           "type": "integer"
         },
         "ssl_verify": {
+          "default": true,
           "description": "When using TLS, this option enables verification of the certificate presented by the server.",
           "type": "boolean"
         },

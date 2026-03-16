@@ -331,7 +331,7 @@
               "type": "boolean"
             },
             "ssl_verify": {
-              "default": false,
+              "default": true,
               "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
               "type": "boolean"
             },
