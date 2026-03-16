@@ -110,6 +110,7 @@ module Jekyll
 
       page.data['title'] = "#{type} Explorer"
       page.data['layout'] = 'indices'
+      page.data['llm'] = false
       page.content = content
       page
     end
@@ -140,6 +141,7 @@ module Jekyll
 
       page.data['title'] = "#{type.titlecase} Explorer Index"
       page.data['layout'] = 'indices'
+      page.data['llm'] = false
       page.content = render_list("#{type.titlecase} Index", "#{type}/", counts)
 
       page
@@ -150,6 +152,7 @@ module Jekyll
 
       page.data['title'] = 'Explorer Index'
       page.data['layout'] = 'indices'
+      page.data['llm'] = false
       page.content = render_list('Explorer Index', '', jobs.map { |job| job['type'] })
 
       page
