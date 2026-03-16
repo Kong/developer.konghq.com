@@ -935,6 +935,10 @@ To access secrets stored in the AWS Secrets Manager, {{site.base_gateway}} needs
 {:.info}
 > **Note:** IAM Identity Center credential provider and process credential provider are not supported.
 
+### HashiCorp Vault cloud authentication
+
+{% include /gateway/hashicorp-vault-authentication.md %}
+
 ## Store values as secrets
 
 You can set up a Vault in one of the following ways.
