@@ -167,4 +167,8 @@ The [AI load balancer](/ai-gateway/load-balancing/) supports circuit breakers to
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}

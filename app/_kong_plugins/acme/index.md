@@ -222,5 +222,8 @@ The ACME plugin supports external account binding (EAB) with the [`config.eab_ki
 
 If you're using [ZeroSSL](https://zerossl.com/), the provider's external account can be registered automatically, without specifying the KID or HMAC key.
 
+## Using cloud authentication with Redis {% new_in 3.13 %}
 
-{% include plugins/redis-cloud-auth.md %}
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name %}

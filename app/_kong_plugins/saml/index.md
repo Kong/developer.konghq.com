@@ -129,6 +129,12 @@ can be stored in Redis, Memcached, or in the cookie itself.
 > **Note**: The lifetime of the session that is created by the IdP needs
 to be configured in the plugin.
 
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}
+
 ## Troubleshooting the SAML plugin
 
 You may have a valid certificate specified in the `idp_certificate` field, but you get the following error:
@@ -151,5 +157,3 @@ Remove the header and footer before including the certificate in the `idp_certif
 ```
 <certificate contents>
 ```
-
-{% include plugins/redis-cloud-auth.md %}

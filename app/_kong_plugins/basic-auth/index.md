@@ -114,4 +114,8 @@ Keep the following limitations in mind when you configure brute force protection
 * If the Redis connection fails, the brute force protection will error out.
 * Each backend has different impacts on performance. In-memory has the best performance, PostgreSQL the poorest, and Redis is better than PostgreSQL. 
 
-{% include plugins/redis-cloud-auth.md %}
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name %}

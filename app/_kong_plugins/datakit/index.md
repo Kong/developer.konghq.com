@@ -38,6 +38,8 @@ min_version:
 
 tags:
   - transformations
+
+toc_depth: 4
 ---
 
 The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs.
@@ -1655,6 +1657,12 @@ The [`cache` node](#cache-node) requires a `resources.cache` resource definition
 
 {% include /plugins/caching/strategies.md slug=page.slug name=page.name %}
 
+#### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}
+
 ### Vault resource {% new_in 3.12 %}
 
 Vaults can be referenced using a `resources.vault` definition.
@@ -1948,5 +1956,3 @@ a result of `NODE_SKIPPED`.
 consumption to aid development and testing. Backwards-incompatible changes to
 the report format _may_ be included with any new release of
 {{site.base_gateway}}.
-
-{% include plugins/redis-cloud-auth.md %}

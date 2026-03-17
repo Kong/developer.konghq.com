@@ -88,4 +88,12 @@ To enforce these rules, the plugin:
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the plugin returns a `400 Bad Request` to the client without exposing that the Semantic Response Guard blocked it.
 
-{% include plugins/redis-cloud-auth.md %}
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}

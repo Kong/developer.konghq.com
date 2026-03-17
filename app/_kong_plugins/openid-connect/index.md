@@ -601,6 +601,12 @@ curl -X GET "http://localhost:8000?client_id=2"
 {:.info}
 > **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
 
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
@@ -626,8 +632,6 @@ You can filter the log with the keyword `openid-connect`.
 If one of these other applications is causing issues, looking into using the following:
   * [Port maps](/gateway/configuration/#port-maps)
   * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
-
-{% include plugins/redis-cloud-auth.md %}
 
 ## Supported identity providers
 

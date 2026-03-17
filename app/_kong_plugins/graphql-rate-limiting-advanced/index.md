@@ -68,6 +68,12 @@ This is different from the cost strategy ([`config.cost_strategy`](/plugins/grap
 {:.warning}
 > A `cluster` strategy with a sync rate of `-1` should not be used in production with hybrid mode, DB-less mode, or Konnect, as it creates security risks.
 
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}
+
 ## Introspection endpoint
 
 The [introspection](https://graphql.org/learn/introspection/) endpoint is generated based on the [Gateway Service path](/gateway/entities/service/), so you must define a path in the Gateway Service itself, 
@@ -396,5 +402,3 @@ You can use the Admin API to:
 
 To access these endpoints, [enable the plugin](/plugins/graphql-rate-limiting-advanced/examples/) first.
 The GraphQL cost management endpoints will appear once the plugin has been enabled.
-
-{% include plugins/redis-cloud-auth.md %}

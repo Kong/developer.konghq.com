@@ -72,7 +72,11 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name %}
 
 ## Headers sent to the client
 

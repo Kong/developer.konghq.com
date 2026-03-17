@@ -66,6 +66,12 @@ Otherwise, the Consumer is used if an authentication plugin has been configured.
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name %}
+
 ## Limit by IP address
 
 {% include_cached /plugins/rate-limiting/limit-by-ip.md %}
@@ -118,5 +124,3 @@ The headers are in the form of `X-RateLimit-Remaining-LIMIT_NAME`, for example:
 X-RateLimit-Remaining-Videos: 3
 X-RateLimit-Remaining-Images: 0
 ```
-
-{% include plugins/redis-cloud-auth.md %}
