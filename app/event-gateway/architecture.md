@@ -105,12 +105,12 @@ To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname
 
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
 Each broker exposes port `9092`, and the proxy is listening on the IP `10.0.0.1`.
-The proxy exposes three different servers for each host in the cluster.
+The proxy exposes a different server for each host in the cluster.
 Depending on your use requirements, you can expose the brokers to the proxy in the following ways:
 
 ### Port mapping
 
-The proxy exposes exactly three configurable ports:
+The proxy exposes the following ports:
 
 ```
 10.0.0.1:9092 → kafka1:9092 (bootstrap port)
@@ -149,7 +149,7 @@ data:
 
 ### SNI mapping
 
-The proxy exposes three different hostnames using SNI.
+The proxy exposes multiple hostnames using SNI.
 This lets you expose multiple servers on the same port. In this case, the mapping looks like this:
   
 ```
@@ -191,7 +191,7 @@ data:
 {% endif_version %}
 
 {% if_version gte:1.1.x %}
-Alternatively, you can configure `broker_host_format` to `per_cluster_suffix`, so that you can use one wildcard SAN for all virtual clusters. In this case the mapping looks like this:
+Alternatively, you can configure `broker_host_format` to `shared_suffix`, so that you can use one wildcard SAN for all virtual clusters. In this case the mapping looks like this:
 
 ```
 bootstrap-my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)
@@ -221,7 +221,7 @@ name: forward-sni
 data:
   sni_suffix: .acme
   advertised_port: 9092
-  broker_host_format: per_cluster_suffix
+  broker_host_format: shared_suffix
   type: sni
 {% endentity_example %}
 {% endif_version %}
