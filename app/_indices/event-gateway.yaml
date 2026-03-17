@@ -34,6 +34,7 @@ sections:
       - path: /event-gateway/configure-sni-routing/
       - path: /event-gateway/kong-identity-oauth/
       - path: /event-gateway/filter-records-by-classification/
+      - path: /event-gateway/configure-backend-cluster-auth/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
