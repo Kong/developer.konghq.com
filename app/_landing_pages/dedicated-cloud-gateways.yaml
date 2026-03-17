@@ -103,8 +103,10 @@ rows:
                 {{site.konnect_short_name}} can leverage Azure virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: VNet peering
+                - text: VNET peering
                   url: /dedicated-cloud-gateways/azure-peering/
+                - text: Virtual WAN (VWAN)
+                  url: /dedicated-cloud-gateways/azure-virtual-wan/
   - columns:
       - blocks:
         - type: structured_text
@@ -149,11 +151,14 @@ rows:
                 Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and an outbound DNS resolver.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: Private DNS zones
+                - text: VNET peering and private DNS zones
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
-                - text: Outbound DNS resolver
+                - text: VNET peering and outbound DNS resolver
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
-      
+                - text: VWAN and private DNS zones
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
+                - text: VWAN and outbound DNS resolver
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
   - header:
       type: h2
       text: "Managed Redis Cache"
