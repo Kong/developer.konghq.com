@@ -30,6 +30,8 @@ related_resources:
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
   - text: GCP PostgreSQL authentication
     url: /gateway/gcp-postgres-authentication/
+  - text: Vault reference
+    url: /gateway/entities/vault/
   - text: AWS Lambda plugin
     url: /plugins/aws-lambda/
   - text: Azure Functions plugin
@@ -49,27 +51,27 @@ secret stores, object storage, and serverless functions.
 
 ## Feature support
 
-The following table shows which {{site.base_gateway}} features support cloud provider IAM authentication.
+The following shows which {{site.base_gateway}} features support cloud provider IAM authentication.
 
 * PostgreSQL database ([AWS](/gateway/amazon-rds-authentication-with-aws-iam/), [Azure](/gateway/azure-pg-authentication-with-azure-managed-identity/), [GCP](/gateway/gcp-postgres-authentication/))
 * Redis ([see plugin docs](/plugins/rate-limiting-advanced/#using-cloud-authentication-with-redis))
-* Vault ([AWS](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/), [Azure](/how-to/configure-google-cloud-secret-as-a-vault-backend/), and [GCP](/gateway/entities/vault/?tab=azure))
+* [Vault](/gateway/entities/vault/) ([AWS](/how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/), [GCP](/how-to/configure-google-cloud-secret-as-a-vault-backend/), and [Azure](/gateway/entities/vault/?tab=azure))
 * [Data plane resilience](/gateway/cp-outage/)
 * [AI plugins](/ai-gateway/)
 
   {:.info}
-  > **Note:** AI plugins support many more AI models and service providers beyond AWS, Azure, and GCP.
+  > **Note:** AI plugins support more AI models and service providers beyond AWS, Azure, and GCP.
   > See the [{{site.ai_gateway_name}} overview](/ai-gateway/) for a full list of supported providers.
 
 ## Authentication methods support
 
 Each cloud provider offers different IAM authentication mechanisms.
-The following tables list which authentication methods {{site.base_gateway}} supports for each cloud provider.
+The following table lists which authentication methods {{site.base_gateway}} supports for each cloud provider.
 
-Unless otherwise noted, each supported authentication method can be used with **any** {{site.base_gateway}} feature that integrates with that cloud provider, as listed in the [feature support matrix](#feature-support-matrix) above.
+Unless otherwise noted, each supported authentication method can be used with **any** {{site.base_gateway}} feature that integrates with that cloud provider, as listed in the [feature support matrix](#feature-support).
 
 {:.warning}
-> **Important:** Identity Federation isn't supported for an authentication method for any cloud provider.
+> **Important:** Identity Federation isn't supported as an authentication method for any cloud provider.
 
 {% table %}
 columns:

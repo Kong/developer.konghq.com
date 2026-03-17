@@ -21,6 +21,8 @@ related_resources:
     url: /deck/gateway/sensitive-data/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
     url: /gateway/control-plane-resource-limits/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 
 faqs:

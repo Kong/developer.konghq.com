@@ -99,6 +99,7 @@ sections:
       - path: /gateway/cp-outage/
       - path: /gateway/incremental-config-sync/
       - path: /how-to/build-a-custom-docker-image/
+      - path: /gateway/cloud-provider-support-matrix/
 
   - title: Upgrade and Migration
     items:

@@ -8,7 +8,7 @@ Internal authentication methods handle authentication entirely within HashiCorp 
 External authentication relies on an identity managed by an external provider or infrastructure platform, such as Kubernetes, AWS IAM, or Azure Microsoft Entra ID.
 Authentication via a cloud provider uses JWT authentication. 
 For details on which specific cloud IAM authentication mechanisms are supported, see the
-[cloud provider support matrix](/gateway/cloud-provider-support-matrix/).
+[cloud provider support matrix](/gateway/cloud-provider-support-matrix/#feature-support).
 
 ### Supported authentication methods
 
