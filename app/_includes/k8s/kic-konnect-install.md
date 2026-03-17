@@ -1,5 +1,6 @@
+{%- if include.is_prereq %}{% assign heading = 4 %}{% else %}{% assign heading = 3 %}{%- endif -%}
 {% unless include.is_prereq %}
-### Create a KIC in {{ site.konnect_short_name }} Control Plane
+{% for i in (1..heading) %}#{% endfor %} Create a KIC in {{ site.konnect_short_name }} Control Plane
 {% endunless %}
 
 Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER` Control Plane:
@@ -23,7 +24,7 @@ CONTROL_PLANE_ID=$(echo $CONTROL_PLANE_DETAILS | jq -r .id)
 CONTROL_PLANE_TELEMETRY=$(echo $CONTROL_PLANE_DETAILS | jq -r '.config.telemetry_endpoint | sub("https://";"")')
 ```
 
-### Create mTLS certificates
+{% for i in (1..heading) %}#{% endfor %} Create mTLS certificates
 
 {{ site.kic_product_name }} talks to {{ site.konnect_short_name }} over a connected secured with TLS certificates.
 
@@ -59,7 +60,7 @@ kubectl create secret tls konnect-client-tls -n kong --cert=./tls.crt --key=./tl
 ```
 
 {% unless include.skip_values_file %}
-### Create a values.yaml
+{% for i in (1..heading) %}#{% endfor %} Create a values.yaml
 
 {{ site.kic_product_name }} must be configured to send it's configuration to {{ site.konnect_short_name }}. Create a `values.yaml` file by copying and pasting the following command into your terminal:
 
