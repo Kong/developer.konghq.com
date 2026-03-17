@@ -2,7 +2,7 @@
 title: "Testing regional failover"
 content_type: reference
 layout: reference
-description: "Use a controlled outage simulation to confirm that your multi-region {{site.konnect_short_name}} data plane deployment automatically fails over to a healthy region."
+description: "Simulate a regional outage to verify that your multi-region {{site.konnect_short_name}} data plane automatically fails over to a healthy region."
 
 products:
     - gateway
@@ -95,8 +95,7 @@ formats:
 
 ## Test process
 
-Each run covers two scenarios, failover and recovery, repeated for each region across each transaction set. 
-Use real production APIs rather than mocks, the results will be more meaningful.
+Each run covers failover and recovery for each region. Use real production APIs rather than mocks.
 
 Before starting, establish a requests-per-second baseline and let monitoring normalize. Keep observability plugins like OpenTelemetry, Datadog, and HTTP Log running alongside control plane analytics throughout.
 
@@ -130,8 +129,7 @@ For example, a transaction set would look like the following for set 1 for the U
 
 ### Failover
 
-Start with load generation at your RPS baseline and let monitoring normalize. 
-After things are stable, enable the Pre-Function plugin on the health check route. 
+Start load generation at your RPS baseline. After things are stable, enable the Pre-Function plugin on the health check route. 
 Health check requests will start returning `400`, and the DNS health checker will eventually mark the region as unhealthy. 
 DNS should shift traffic to the alternate region automatically.
 
@@ -147,11 +145,11 @@ Test recovery while the target region is still unhealthy and load generation is 
 Disable the plugin to let health checks pass again, and the DNS provider will start routing traffic back to the recovered region. 
 Traffic should gradually split across both regions as health checks pass.
 
-Use analytics to confirm RPS returns to your baseline. Transition time works the same way as during failover— it depends on your health check interval and threshold settings.
+Use analytics to confirm RPS returns to your baseline.
 
 ## Test matrix
 
-Run each combination of region and test type once per transaction set. With two regions, two test types, and three transaction sets, that's 12 runs total.
+Run each combination of region and test type once per transaction set.
 
 <!--vale off-->
 {% table %}
