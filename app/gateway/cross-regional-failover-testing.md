@@ -65,7 +65,7 @@ All other requests pass through unaffected.
 Set `target_host` to the public edge DNS hostname of the region you're testing.
 
 <!--vale off-->
-{% entity_examples %}
+{% entity_example %}
 type: plugin
 data:
   name: pre-function-healthcheck-failover
@@ -90,7 +90,7 @@ data:
     rewrite: []
 formats:
   - deck
-{% endentity_examples %}
+{% endentity_example %}
 <!--vale on-->
 
 ## Test process
