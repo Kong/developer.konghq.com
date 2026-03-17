@@ -66,7 +66,7 @@ These tools are managed services and Kong provides compatibility with the curren
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{ tab_name }} %}
-  {% include_cached support/gateway-third-party.html release=release %}
+{% include_cached support/gateway-third-party.html release=release %}
 {% endnavtab %}
 {% endunless %}
 {% endfor %}

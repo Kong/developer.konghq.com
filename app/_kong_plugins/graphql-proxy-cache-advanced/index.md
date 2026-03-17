@@ -47,7 +47,7 @@ related_resources:
 
 notes: | 
   This plugin's API doesn't work in hybrid mode, as it targets data that only exists on data planes, 
-  and data planes can't use Kong's Admin API. In Serverless gateways only the <code>memory</code> config 
+  and data planes can't use Kong's Admin API. In Serverless gateways only the `memory` config 
   strategy is supported.
 
 min_version:

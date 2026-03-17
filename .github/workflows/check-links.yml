@@ -34,7 +34,7 @@ jobs:
     needs: [check]
     if: needs.check.outputs.result == 'false' && !contains(github.event.pull_request.title, '[skip ci]')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
@@ -48,14 +48,14 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: "Pages changed - kongdeveloper"
-          timeoutSeconds: 900
+          timeoutSeconds: 1200
       - name: Wait for Netlify site to be ready
         if: steps.waitForCheck.outputs.conclusion == 'neutral'
         uses: jakepartusch/wait-for-netlify-action@f1e137043864b9ab9034ae3a5adc1c108e3f1a48 # v1.4
         id: waitForNetlify
         with:
           site_name: "kongdeveloper"
-          max_timeout: 120
+          max_timeout: 1200
       - name: Run link checker
         run: |
           cd tools/broken-link-checker

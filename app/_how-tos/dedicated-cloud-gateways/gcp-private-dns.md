@@ -36,11 +36,11 @@ prereqs:
     - title: gcloud
       content: |
         To use this tutorial, you must [install gcloud](https://cloud.google.com/sdk/docs/install).
-         
-         Authenticate with gcloud:
-         ```sh
-         gcloud auth login
-         ```
+
+        Authenticate with gcloud:
+        ```sh
+        gcloud auth login
+        ```
     - title: "GCP permissions"
       content: |
         This tutorial requires a GCP account with the [DNS Peer](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.peer) (`roles/dns.peer`) and [DNS Administrator](https://cloud.google.com/iam/docs/roles-permissions/dns#dns.admin) (`roles/dns.admin`) roles, and the following [custom permissions](https://cloud.google.com/iam/docs/custom-roles-permissions-support):
