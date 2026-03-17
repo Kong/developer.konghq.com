@@ -97,6 +97,7 @@ base_gateway: Kong Gateway
 ai_gateway: AI Gateway
 ai_gateway_name: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
+ee_product_name_official: Kong API Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
 mesh_product_name: Kong Mesh

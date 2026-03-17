@@ -27,6 +27,8 @@ related_resources:
     url: /gateway/performance/establish-a-benchmark/
   - text: "{{site.base_gateway}} performance benchmark test suite"
     url: https://github.com/Kong/kong-gateway-performance-benchmark/tree/main
+  - text: "Tuning {{site.base_gateway}} for large payloads"
+    url: /gateway/performance/large-payloads/
 
 next_steps:
   - text: Re-run {{site.base_gateway}} benchmark
