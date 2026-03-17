@@ -347,7 +347,7 @@ rows:
   - header:
       type: h2
       text: Key references
-  - column_count: 3
+  - column_count: 4
     columns:
       - blocks:
         - type: card
@@ -417,6 +417,18 @@ rows:
             ctas:
               - text: See reference
                 url: /event-gateway/entities/
+                align: end
+
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.event_gateway}} changelog"
+            description: |
+              Changelog for supported {{site.event_gateway}} versions.
+            icon: /assets/icons/service-document.svg
+            ctas:
+              - text: See changelog
+                url: /event-gateway/changelog/
                 align: end
 
   - header:
