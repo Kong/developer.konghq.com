@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
   - text: "{{site.base_gateway}} Amazon RDS database authentication with AWS IAM"
     url: /gateway/amazon-rds-authentication-with-aws-iam/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 faqs:
     - q: "I'm getting a `Error: [PostgreSQL error] failed to bootstrap database: ERROR: permission denied for schema public (32)` when {{site.base_gateway}} tries to connect to the Cloud SQL PostgreSQL. How do I resolve this?"
