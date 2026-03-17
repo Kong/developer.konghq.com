@@ -57,6 +57,15 @@ rows:
               icon: /assets/icons/KogoBlue.svg
               cta:
                 url: /how-to/meter-llm-traffic/
+      - blocks:
+          - type: card
+            config:
+              title: Best practices
+              description: |
+                Learn best practices for naming meters, defining group by fields, and configuring value properties.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /metering-and-billing/metering/#best-practices
 
   - header:
       type: h2
@@ -106,6 +115,7 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/collectors/
+      
   - header:
       type: h2
       text: "Product Catalog"

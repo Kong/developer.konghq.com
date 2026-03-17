@@ -52,6 +52,62 @@ Each generic meter is comprised from the following attributes:
 * Aggregation type: The [aggregation type](#aggregation-types) to use for the meter.
 * Group by: (Optional) A map of JSON paths to group the metered data by.
 
+## Best practices
+
+### Slug
+
+The slug uniquely identifies a meter and cannot be changed after creation. It must contain only lowercase letters, numbers, and underscores, with a maximum of 63 characters.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Recommendation
+    key: recommendation
+  - title: Examples
+    key: examples
+rows:
+  - recommendation: "Use prefixes to set context"
+    examples: '`http_server_`, `task_`'
+  - recommendation: "Use suffixes to indicate units"
+    examples: '`_total`, `_seconds`'
+  - recommendation: "Use SI units"
+    examples: '`_seconds`, `_bytes`'
+  - recommendation: "Use plural forms"
+    examples: '`requests`, `seconds`'
+{% endtable %}
+<!--vale on-->
+
+Avoid including group-by information in slugs, using ambiguous suffixes like `_s`, or using numbers as identifiers.
+
+### Group by
+
+Use group by to segment similar consumption patterns without creating separate meters. For example, track LLM token usage across multiple models with a single meter by grouping on the model field.
+
+Avoid dynamic group by values that are difficult to manage or have unbounded cardinality.
+
+### Value property
+
+The value property uses JSONPath to extract the aggregation value from event data. It is required for all aggregation types except `COUNT`.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Recommendation
+    key: recommendation
+  - title: Examples
+    key: examples
+rows:
+  - recommendation: "Use valid JSONPath syntax"
+    examples: '`$.tokens_total`, `$.duration_seconds`'
+  - recommendation: "Include unit suffixes"
+    examples: '`_total`, `_seconds`, `_ms`'
+  - recommendation: "Use plural naming"
+    examples: '`$.tokens`, `$.bytes`'
+  - recommendation: "Report in consistent units"
+    examples: "Always use seconds, not a mix of seconds and milliseconds"
+{% endtable %}
+<!--vale on-->
+
 ## Aggregation types
 
 Aggregation types determine how usage data is aggregated for generic meters.
