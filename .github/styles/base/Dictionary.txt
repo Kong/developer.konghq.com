@@ -445,6 +445,7 @@ keyrings
 keyset
 keyspace
 keystore
+keystores
 kiali
 Kibana
 kibibytes
