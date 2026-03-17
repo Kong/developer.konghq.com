@@ -83,6 +83,8 @@ rows:
                   url: /dedicated-cloud-gateways/transit-gateways/
                 - text: VPC peering
                   url: /dedicated-cloud-gateways/aws-vpc-peering/
+                - text: AWS resource endpoints (REP)
+                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
       - blocks:
           - type: card
             config:
@@ -151,21 +153,6 @@ rows:
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
                 - text: Outbound DNS resolver
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
-  - header:
-      type: h2
-      text: "Service-level private access"
-  - column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: AWS resource endpoints
-            icon: /assets/icons/aws.svg
-            description: |
-              AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
-            cta:
-              text: Learn more
-              url: /dedicated-cloud-gateways/aws-resource-endpoints/  
       
   - header:
       type: h2
