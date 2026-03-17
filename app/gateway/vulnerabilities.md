@@ -1,7 +1,7 @@
 ---
-title: "{{site.base_gateway}} vulnerability patching process"
+title: "{{site.ee_product_name_official}} vulnerability patching process"
 
-description: Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or third-party code, and how to report any security issues.
+description: Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.ee_product_name_official}} or third-party code, and how to report any security issues.
 
 content_type: policy
 layout: reference
@@ -31,19 +31,19 @@ works_on:
   - konnect
 ---
 
-{{site.base_gateway}} is primarily delivered as [DEB, RPM, and APK](/gateway/version-support-policy/#supported-versions) installable artifacts. 
+{{site.ee_product_name_official}} is primarily delivered as [DEB, RPM, and APK](/gateway/version-support-policy/#supported-versions) installable artifacts. 
 Kong also offers Docker images with the artifacts preinstalled as a convenience to customers. 
 At the time of release, all artifacts and images are patched, scanned and are free of publicly-known vulnerabilities. 
 
 ## Types of vulnerabilities
 
 Generally, there may be three types of vulnerabilities:
-* In {{site.base_gateway}} code
-* In third-party code that {{site.base_gateway}} directly links (such as OpenSSL, glibc, libxml2)
-* In third-party code that is part of the convenience Docker image (such as Python, Perl, cURL, etc). This code is not part of {{site.base_gateway}}.
+* In {{site.ee_product_name_official}} code
+* In third-party code that {{site.ee_product_name_official}} directly links (such as OpenSSL, glibc, libxml2)
+* In third-party code that is part of the convenience Docker image (such as Python, Perl, cURL, etc). This code is not part of {{site.ee_product_name_official}}.
 
-Vulnerabilities reported in {{site.base_gateway}} code will be assessed by Kong and if the vulnerability is validated, a [CVSS 3.0](https://www.first.org/cvss/) score will be assigned. 
-Based on the CVSS score, Kong will aim to produce patches for all applicable {{site.base_gateway}} versions currently under support within the SLAs below. 
+Vulnerabilities reported in {{site.ee_product_name_official}} code will be assessed by Kong and if the vulnerability is validated, a [CVSS 3.0](https://www.first.org/cvss/) score will be assigned. 
+Based on the CVSS score, Kong will aim to produce patches for all applicable {{site.ee_product_name_official}} versions currently under support within the SLAs below. 
 The SLA clock starts from the day the CVSS score is assigned.
 
 For a CVSS 3.0 Critical vulnerability (CVSS > 9.0), Kong will provide a workaround/recommendation as soon as possible.
@@ -77,8 +77,8 @@ rows:
 <!--vale on-->
 
 
-Vulnerabilities reported in third party-code that {{site.base_gateway}} links directly must have confirmed CVE numbers assigned. 
-Kong will aim to produce patches for all applicable {{site.base_gateway}} versions currently under support within the SLA reproduced in the table below. 
+Vulnerabilities reported in third party-code that {{site.ee_product_name_official}} links directly must have confirmed CVE numbers assigned. 
+Kong will aim to produce patches for all applicable {{site.ee_product_name_official}} versions currently under support within the SLA reproduced in the table below. 
 The SLA clock for these vulnerabilities starts from the day the upstream (third party) announces availability of patches.  
 
 <!--vale off-->
@@ -108,7 +108,7 @@ rows:
 
 
 Vulnerabilities reported in third-party code that is part of the convenience Docker images are only addressed by Kong as part of the regularly scheduled release process. 
-These vulnerabilities are not exploitable during normal {{site.base_gateway}} operations. 
+These vulnerabilities are not exploitable during normal {{site.ee_product_name_official}} operations. 
 Kong always applies all available patches when releasing a Docker image, but by definition images accrue vulnerabilities over time. 
 
 All customers using containers are strongly urged to generate their own images using their secure corporate approved base images.
