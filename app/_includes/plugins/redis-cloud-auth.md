@@ -12,8 +12,6 @@ Each provider also supports an instance and cluster configuration.
 {:.warning}
 > **Important:** {{site.base_gateway}} open source plugins do not support any Redis cloud provider cluster configurations.
 
-To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
-
 {% navtabs "providers" %}
 {% navtab "AWS instance" %}
 
@@ -39,21 +37,21 @@ You need:
   }
   ```
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      host: $INSTANCE_ADDRESS
-      username: $INSTANCE_USERNAME
-      port: 6379
-      cloud_authentication:
-        auth_provider: aws
-        aws_cache_name: $AWS_CACHE_NAME
-        aws_is_serverless: false
-        aws_region: $AWS_REGION
-        aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY
 ```
 
 Replace the following with your actual values:
@@ -88,23 +86,23 @@ You need:
   }
   ```
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 6379
-      username: $CLUSTER_USERNAME
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
       port: 6379
-      cloud_authentication:
-        auth_provider: aws
-        aws_cache_name: $AWS_CACHE_NAME
-        aws_is_serverless: false
-        aws_region: $AWS_REGION 
-        aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_ACCESS_SECRET_KEY 
+    username: $CLUSTER_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: $AWS_CACHE_NAME
+      aws_is_serverless: false
+      aws_region: $AWS_REGION 
+      aws_access_key_id: $AWS_ACCESS_KEY_ID
+      aws_secret_access_key: $AWS_ACCESS_SECRET_KEY 
 ```
 
 Replace the following with your actual values:
@@ -121,19 +119,19 @@ You need:
 * A running Redis instance on an [Azure Managed Redis instance](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
 * Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      host: $INSTANCE_ADDRESS
-      username: $INSTANCE_USERNAME
-      port: 6379
-      cloud_authentication:
-        auth_provider: azure
-        azure_client_id: $AZURE_CLIENT_ID
-        azure_client_secret: $AZURE_CLIENT_SECRET
-        azure_tenant_id: $AZURE_TENANT_ID
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    username: $INSTANCE_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Azure Managed Redis instance address.
@@ -149,21 +147,21 @@ You need:
 * A running Redis instance on an [Azure Managed Redis cluster](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication) with Entra authentication configured
 * Add the [user/service principal/identity to the "Microsoft Entra Authentication Redis user" list](https://learn.microsoft.com/en-us/azure/redis/entra-for-authentication#add-users-or-system-principal-to-your-cache) for the Azure Managed Redis instance
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 6379
-      username: $CLUSTER_USERNAME
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
       port: 6379
-      cloud_authentication:
-        auth_provider: azure
-        azure_client_id: $AZURE_CLIENT_ID
-        azure_client_secret: $AZURE_CLIENT_SECRET
-        azure_tenant_id: $AZURE_TENANT_ID
+    username: $CLUSTER_USERNAME
+    port: 6379
+    cloud_authentication:
+      auth_provider: azure
+      azure_client_id: $AZURE_CLIENT_ID
+      azure_client_secret: $AZURE_CLIENT_SECRET
+      azure_tenant_id: $AZURE_TENANT_ID
 ```
 Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Azure Managed Redis cluster address.
@@ -181,16 +179,16 @@ You need:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      host: $INSTANCE_ADDRESS
-      port: 6379
-      cloud_authentication:
-        auth_provider: gcp
-        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+  strategy: redis
+  redis:
+    host: $INSTANCE_ADDRESS
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 Replace the following with your actual values:
 * `$INSTANCE_ADDRESS`: The Memorystore instance address.
@@ -204,18 +202,18 @@ You need:
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
 
+To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 ```yaml
 config:
-  storage: redis
-  storage_config:
-    redis:
-      cluster_nodes:
-      - ip: $CLUSTER_ADDRESS
-        port: 6379 
-      port: 6379
-      cloud_authentication:
-        auth_provider: gcp
-        gcp_service_account_json: $GCP_SERVICE_ACCOUNT
+  strategy: redis
+  redis:
+    cluster_nodes:
+    - ip: $CLUSTER_ADDRESS
+      port: 6379 
+    port: 6379
+    cloud_authentication:
+      auth_provider: gcp
+      gcp_service_account_json: $GCP_SERVICE_ACCOUNT
 ```
 Replace the following with your actual values:
 * `$CLUSTER_ADDRESS`: The Memorystore cluster address.
