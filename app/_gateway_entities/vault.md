@@ -21,6 +21,8 @@ related_resources:
     url: /deck/gateway/sensitive-data/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
     url: /gateway/control-plane-resource-limits/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 
 faqs:
@@ -934,6 +936,10 @@ To access secrets stored in the AWS Secrets Manager, {{site.base_gateway}} needs
 
 {:.info}
 > **Note:** IAM Identity Center credential provider and process credential provider are not supported.
+
+### HashiCorp Vault cloud authentication
+
+{% include /gateway/hashicorp-vault-authentication.md %}
 
 ## Store values as secrets
 
