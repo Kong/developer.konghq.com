@@ -432,7 +432,6 @@ Trusted origins in Kong Identity allow you to configure the allowed origins that
 Trusted origins can help with the following use cases:
 * Testing login in a development environment using `localhost`
 * Allowing in-browser tools to request tokens without CORS issues
-* Allowing Dev Portal to interact with Kong Identity to get tokens
 
 {% navtabs "trusted-origins" %}
 {% navtab "UI" %}
@@ -461,7 +460,6 @@ body:
   audience: api://default
   trusted_origins:
     - $YOUR_APP_URI
-    - $YOUR_DEV_PORTAL_URL
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endnavtab %}
