@@ -48,10 +48,10 @@ sequenceDiagram
     end
     participant Upstream
 
-    Client->>RB: (A) Request
-    RB->>Upstream: (B) Forward request
-    Upstream->>RSB: (C) Response
-    RSB->>Client: (D) Forward response
+    Client->>RB: Request
+    RB->>Upstream: Forward request
+    Upstream->>RSB: Response
+    RSB->>Client: Forward response
 {% endmermaid %}
 
 With default buffering enabled, the upstream does not receive the request body until {{site.base_gateway}} has buffered it from the client. For responses, {{site.base_gateway}} begins forwarding data to the client only after it has buffered some of the response from the upstream, and may continue streaming as more data arrives. Each buffer is allocated per request, so buffer sizes compound quickly under load.
@@ -116,11 +116,12 @@ If the response headers from the upstream exceed `nginx_http_proxy_buffer_size`,
 
 ```
 upstream sent too big header while reading response header from upstream
-```
 
 Increasing `nginx_http_proxy_buffer_size` resolves this error.
 
-If the response body exceeds the total size of `nginx_http_proxy_buffers`, {{site.base_gateway}} spills the excess to disk. When that happens, increase `nginx_http_proxy_buffers` or disable response buffering for that route. For large responses where {{site.base_gateway}} is not inspecting or modifying the body (more than a few megabytes), disabling buffering is the better option.
+If the response body exceeds the total size of `nginx_http_proxy_buffers`, {{site.base_gateway}} spills the excess to disk. 
+When that happens, increase `nginx_http_proxy_buffers` or disable response buffering for that Route. 
+For large responses where {{site.base_gateway}} is not inspecting or modifying the body (more than a few megabytes), disabling buffering is the better option.
 
 ## Disk buffering and performance
 
@@ -131,9 +132,11 @@ When {{site.base_gateway}} spills to disk, performance degrades for all concurre
 ```
 a client request body is buffered to a temporary file
 an upstream response is buffered to a temporary file
-```
 
-Monitor these log messages alongside disk I/O on {{site.base_gateway}} nodes. When they appear consistently, either increase the relevant buffer size or disable buffering for that route. You can also set `nginx_http_proxy_max_temp_file_size` to `0` to prevent {{site.base_gateway}} from spilling response bodies to disk at all. {{site.base_gateway}} will stream the response instead.
+Monitor these log messages alongside disk I/O on {{site.base_gateway}} nodes. 
+When they appear consistently, either increase the relevant buffer size or disable buffering for that Route. 
+You can also set `nginx_http_proxy_max_temp_file_size` to `0` to prevent {{site.base_gateway}} from spilling response bodies to disk at all. 
+{{site.base_gateway}} will stream the response instead.
 
 ## Memory considerations
 
@@ -141,19 +144,19 @@ Buffers are allocated per request. At 1,000 concurrent requests, increasing a bu
 
 ## Disabling buffering
 
-For large payloads where buffering is impractical, you can disable it per route:
+For large payloads where buffering is impractical, you can disable it per Route:
 
 * `request_buffering: false`: {{site.base_gateway}} streams the request body to the upstream as the client sends it.
 * `response_buffering: false`: {{site.base_gateway}} streams the response body to the client as the upstream sends it.
 
 Disabling buffering also helps when optimizing for Time To First Byte (TTFB), since the client starts receiving data as soon as the upstream begins sending it rather than waiting for the full response to be buffered.
 
-Disabling buffering only applies to the body. Headers are always buffered. At typical sizes this adds negligible overhead.
+Disabling buffering only applies to the body. Headers are always buffered. At typical sizes, this adds negligible overhead.
 
 By default, {{site.base_gateway}} buffers because reading and writing to a network socket requires a syscall. Streaming data in small chunks increases syscall frequency and CPU usage. Buffering reduces that overhead, which is the right default for small API payloads that fit in memory.
 
 {:.warning}
-> Disabling buffering exposes the upstream to slow clients, including [Slowloris attacks](https://en.wikipedia.org/wiki/Slowloris_(computer_security)). Use an authentication or authorization plugin to protect the upstream when buffering is disabled.
+> Disabling buffering exposes the upstream to slow clients, including [Slowloris attacks](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/). Use an authentication or authorization plugin to protect the upstream when buffering is disabled.
 
 ## Security considerations
 
@@ -162,6 +165,9 @@ By default, {{site.base_gateway}} buffers because reading and writing to a netwo
 Avoid reading or modifying large request or response bodies inside {{site.base_gateway}} plugins. Processing large bodies adds latency and reduces throughput for all requests, regardless of payload size.
 
 ## Configuration reference
+
+
+The following table shows which Nginx directives the kong.conf buffering options map to:
 
 <!-- vale off -->
 {% table %}
