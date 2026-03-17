@@ -441,18 +441,18 @@
             },
             "token_headers": {
               "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "description": "Extra headers to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"
             },
             "token_post_args": {
               "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "type": "string",
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
               "description": "Extra post arguments to be passed in the token endpoint request. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "type": "object"

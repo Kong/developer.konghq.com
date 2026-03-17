@@ -16,8 +16,6 @@ products:
 
 The following table presents the general compatibility of {{site.operator_product_name}} with {{ site.kic_product_name }} minor versions.
 
-## Kubernetes
-
 ## {{ site.kic_product_name }}
 
 {:.info}
@@ -53,8 +51,6 @@ Users should expect all the combinations marked with true to work and to be supp
 {% version_compatibility_table %}
 product: "Kubernetes"
 versions:
-  - 1.25
-  - 1.26
   - 1.27
   - 1.28
   - 1.29
@@ -62,9 +58,12 @@ versions:
   - 1.31
   - 1.32
   - 1.33
+  - 1.34
+  - 1.35
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   2.0.x: [1.28, 1.29, 1.30, 1.31, 1.32, 1.33]
+  2.1.x: [1.30, 1.31, 1.32, 1.33, 1.34, 1.35]
 {% endversion_compatibility_table %}
 
 ### Gateway API
@@ -81,15 +80,23 @@ versions:
   - 1.1.0
   - 1.2.0
   - 1.3.0
+  - 1.4.0
 compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   2.0.x: [1.0.0, 1.1.0, 1.2.0, 1.3.0]
+  2.1.x: [1.0.0, 1.1.0, 1.2.0, 1.3.0, 1.4.0]
 {% endversion_compatibility_table %}
 
 [gateway-api]: https://github.com/kubernetes-sigs/gateway-api
 [gateway-api-supported-versions]:https://gateway-api.sigs.k8s.io/concepts/versioning/#supported-versions
 
 ### `kubernetes-configuration` CRDs
+
+{:.info}
+> **Note:**
+> {{ site.operator_product_name }} 2.0.0+ moved the CRD definitions to its repository.
+> With that `kubernetes-configuration` CRDs are not relevant for {{ site.operator_product_name }} 2.0.0+
+> and the compatibility table below is only relevant for {{ site.gateway_operator_product_name }} versions below 2.0.0.
 
 Starting with 1.5, {{ site.operator_product_name }} works with [`kubernetes-configuration`][kcfg] CRDs.
 These CRDs are backwards compatible with CRDs from gateway-operator 1.4 and older unless stated otherwise in the release notes in [kuberentes-configuration CHANGELOG.md][kcfg_changelog].

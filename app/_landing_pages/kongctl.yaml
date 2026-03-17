@@ -63,6 +63,8 @@ rows:
               include_content: tools/kongctl/install/linux
             - title: Windows
               include_content: tools/kongctl/install/windows
+            - title: Docker
+              include_content: tools/kongctl/install/docker
             - title: Mise
               include_content: tools/kongctl/install/mise
 
@@ -130,6 +132,15 @@ rows:
           cta:
             text: kongctl configuration 
             url: /kongctl/config/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: CLI reference
+          description: Explore the full set of kongctl commands and options for managing {{site.konnect_short_name}} resources.
+          cta:
+            text: kongctl CLI reference
+            url: /index/kongctl/#cli-references
             align: end
 
   - header:
@@ -248,6 +259,12 @@ rows:
                         - diff
                         - --plan
                         - plan.json
+
+  - columns:
+    - blocks:
+       - type: text
+         config: |
+          [View all kongctl commands and options &rarr;](/index/kongctl/#cli-references)
 
   - header:
       text: "Frequently asked questions"

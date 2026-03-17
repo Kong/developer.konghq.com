@@ -60,10 +60,6 @@ Any plugin that supports Redis configuration can reference those settings using 
 {:.info}
 > In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Partial
 
 {% entity_example %}
@@ -211,3 +207,7 @@ Here is an example schema for a custom plugin using a Partial:
 >
 > To include the Partial's data within the plugin configuration, you must pass a special option parameter,
 > such as: `kong.db.plugins:select(plugin_id, { expand_partials = true })`.
+
+## Schema
+
+{% entity_schema %}

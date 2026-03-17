@@ -113,28 +113,27 @@ To manage dashboard visibility, Organization Admins can assign roles to users th
 ### Permissions
 <!-- vale off-->
 For more details, see the [teams and roles](/konnect-platform/teams-and-roles/) documentation.
-{% table %}
+{% feature_table %}
+item_title: Action
 columns:
-  - title: Action
-    key: action
   - title: Org Admin
     key: org_admin
   - title: Dashboard Viewer
     key: dashboard_viewer
-rows:
-  - action: View dashboard
-    org_admin: ✅
-    dashboard_viewer: ✅
-  - action: Create dashboard
-    org_admin: ✅
-    dashboard_viewer: ❌
-  - action: Edit dashboard
-    org_admin: ✅
-    dashboard_viewer: ❌
-  - action: Delete dashboard
-    org_admin: ✅
-    dashboard_viewer: ❌
-{% endtable %}
+features:
+  - title: View dashboard
+    org_admin: true
+    dashboard_viewer: true
+  - title: Create dashboard
+    org_admin: true
+    dashboard_viewer: false
+  - title: Edit dashboard
+    org_admin: true
+    dashboard_viewer: false
+  - title: Delete dashboard
+    org_admin: true
+    dashboard_viewer: false
+{% endfeature_table %}
 <!--vale on -->
 Dashboard permissions control access to the dashboard object only. They don't grant access to the underlying data. Data visibility is enforced separately and must be explicitly scoped by the dashboard creator, for example by using preset filters to limit which control planes or data sets a user can see.
 

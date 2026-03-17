@@ -349,6 +349,28 @@ columns:
   - title: CRUD permissions
     key: permissions
 rows:
+  - role: "`Discovery Admin`"
+    description: Can read and create discovery ingestion jobs and fully manage suggestion rules, suggested actions and resources.
+    permissions: |
+      * Read and list integration instances.
+      * List integrations.
+      * Read and list integration auth credentials.
+      * Create and read discovery ingestion jobs.
+      * List resource actions.
+      * Read, list, create, edit, delete and test discovery suggestion rules.
+      * Read, list and edit discovery suggested actions.
+      * Read, list, create, edit and ingest resources.
+  - role: "`Discovery Viewer`"
+    description: Access to read-only permissions for discovery.
+    permissions: |
+      * Read and list integration instances.
+      * List integrations.
+      * Read and list integration auth credentials.
+      * Read and create discovery ingestion jobs.
+      * List resource actions.
+      * Read and list discovery suggestion rules.
+      * Read and list discovery suggested actions.
+      * Read and list resources.
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
     permissions: |
@@ -430,7 +452,8 @@ rows:
   - role: "`Admin`"
     description: "This role grants full write access to all entities within a control plane."
     permissions: |
-      * Create, read, list, edit, and delete control planes and all configurations within them.
+      * Read, list, edit, and delete control planes.
+      * Create, read, list, edit, and delete Gateway entity configurations within control planes.
   - role: "`Certificate Admin`"
     description: "This role grants full write access to administer certificates."
     permissions: |
@@ -457,6 +480,7 @@ rows:
     description: "Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create."
     permissions: |
       * Create and list control planes.
+      * When creating a control plane, grants the Admin role on newly created Gateway control planes.
   - role: "`Debug Session Creator`"
     description: "This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane."
     permissions: |
@@ -472,10 +496,12 @@ rows:
     description: "Access to create a new event gateway in Event Gateway Manager. The creator becomes the owner of the event gateway they create, gaining admin access to the new event gateway. This role does not grant access to existing event gateways, their runtime instances, or their configurations."
     permissions: |
       * Create and list Event Gateways.
+      * When creating an Event Gateway, grants the Event Gateways Admin role on newly created Event Gateways.
   - role: "`Event Gateways Admin`"
     description: "Owner of an existing event gateway. The owners have all write access related to an event gateway, the gateway's runtime instances, and its configuration."
     permissions: |
-      * Create, edit, read, list, and delete existing Event Gateways and all of their configurations.
+      * Edit, read, list, and delete existing Event Gateway control planes.
+      * Create, edit, read, list, and delete Event Gateway entity configurations within control planes.
   - role: "`Event Gateways Viewer`"
     description: "Read-only access to all the configurations of an event gateway and its runtime instances."
     permissions: |
@@ -491,14 +517,6 @@ rows:
     permissions: |
       * List and read control planes.
       * Create, read, edit, delete, and list keys.
-  - role: "`KNEP Config Admin` (deprecated)"
-    description: "*(Legacy permission for Event Gateways)* Full write access to administer Kong Native Event Proxy (KNEP) declarative configuration."
-    permissions: |
-      * Create, read, list, and delete Kong Native Event Proxy configurations.
-  - role: "`KNEP Node` (deprecated)"
-    description: "*(Legacy permission for Event Gateways)* Read-only access to Kong Native Event Proxy (KNEP) configuration and write access to KNEP nodes."
-    permissions: |
-      * Read and list, and delete Kong Native Event Proxy configurations.
   - role: "`Plugin Admin`"
     description: "This role grants full write access to administer plugins."
     permissions: |
@@ -613,9 +631,27 @@ rows:
 The following table describes the predefined roles for identity:
 
 <!--vale off-->
-{% konnect_roles_table %}
-schema: identity
-{% endkonnect_roles_table %}
+{% table %}
+columns:
+  - title: Role
+    key: role
+  - title: Description
+    key: description
+  - title: CRUD permissions
+    key: permissions
+rows:
+  - role: "`Admin`"
+    description: This role grants full write access to the Identity configuration.
+    permissions: |
+      * Read, list, and update organization configurations
+      * Read, list, and update IdP configurations
+      * Create, update, and delete users
+      * Read, list, and revoke user tokens (PATs)
+      * Create, update, and delete teams
+      * Create, update, and delete system accounts
+      * Create, read, list, update, and delete system account tokens
+      * Read, list, update roles for users, teams, and system accounts
+{% endtable %}
 <!--vale on-->
 
 #### MCP registry

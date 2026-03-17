@@ -58,10 +58,6 @@ Admins can be managed using the Admin API or Kong Manager and are used in the fo
 
 Admins can only interact with entities from within their Workspace. Depending on the admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other admins. 
 
-## Schema
-
-{% entity_schema %}
-
 ## Invite an admin
 
 Inviting an admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/#/operations/post-admins). 
@@ -82,3 +78,7 @@ You can copy the generated invite link from the Kong Manager UI and provide it d
 
 By default, the invite link expires after 259,200 seconds (3 days). 
 You can customize this time frame by adjusting the [`admin_invitation_expiry`](/gateway/configuration/#admin-invitation-expiry) parameter in `kong.conf`.
+
+## Schema
+
+{% entity_schema %}

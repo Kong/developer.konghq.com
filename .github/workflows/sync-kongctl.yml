@@ -16,12 +16,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           egress-policy: audit
 
       - name: Create GitHub App Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
         id: app-token
         with:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
@@ -30,10 +30,20 @@ jobs:
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
+      - uses: kong/setup-kongctl@659d5c2b0f4db2e25d63797035358a22907421db # v1
+
+      - name: Verify kongctl install
+        run: kongctl version --full
+
+      - name: Clean kongctl setup artifacts
+        run: |
+          find . -maxdepth 1 -mindepth 1 -type d -name 'kongctl-*-linux' -exec rm -rf {} +
+
       - name: Fetch versions
         run: |
           cd tools/kongctl-versions
           npm ci
+          node extract-help.js
           node fetch-versions.js
 
       - name: Create pull request
@@ -44,3 +54,7 @@ jobs:
           branch: sync-kongctl-releases
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}
+          add-paths: |
+            app/_includes/kongctl/help/**
+            app/kongctl/**
+            app/_data/tools/kongctl.yml

@@ -43,7 +43,7 @@ related_resources:
   - text: Configure the Upstream OAuth plugin with Kong Identity
     url: /how-to/configure-kong-identity-upstream-oauth/
 notes: |
-  In Serverless gateways only the <code>memory</code> cache strategy is supported.
+  In Serverless gateways only the `memory` cache strategy is supported.
 ---
 
 The Upstream OAuth plugin allows {{site.base_gateway}} to support OAuth flows between {{site.base_gateway}} and the upstream API.

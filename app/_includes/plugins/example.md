@@ -5,4 +5,4 @@
 
 {% assign targets = site.data.entity_examples.config.targets %}
 
-{% include plugin_config_example.md title=page_title targets=targets entity='plugin' target_label='Select an entity' %}
+{% include plugin_config_example.md title=title targets=targets entity='plugin' target_label='Select an entity' %}

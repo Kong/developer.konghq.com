@@ -1,0 +1,5 @@
+```bash
+curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/config.rpm.txt?distro=amzn&codename=$(rpm --eval '%{amzn}')" | sudo tee /etc/yum.repos.d/kong-gateway-{{ include.release.major_minor_version }}.repo > /dev/null
+sudo yum -q makecache -y --disablerepo='*' --enablerepo='kong-gateway-{{ include.release.major_minor_version }}'
+sudo yum install -y kong-enterprise-edition-{{include.release.ee_version}}
+```

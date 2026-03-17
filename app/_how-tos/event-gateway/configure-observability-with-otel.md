@@ -448,7 +448,7 @@ Then produce a message through the virtual cluster:
 command: |
   kafkactl -C kafkactl.yaml --context vc produce my-test-topic --value="test message"
 expected:
-  message: "message produced (partition=0	offset=1)"
+  message: "message produced (partition=0	offset=0)"
   return_code: 0
 render_output: false
 {% endvalidation %}

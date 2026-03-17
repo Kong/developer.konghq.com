@@ -11,6 +11,16 @@
 * chore(deps): security update [#15577](https://github.com/kumahq/kuma/pull/15577) [#15641](https://github.com/kumahq/kuma/pull/15641) [#15657](https://github.com/kumahq/kuma/pull/15657) @kumahq
 
 
+## 2.9.12
+> Released on 2026/02/26
+
+* chore(deps): bump kumahq/kuma from 2.9.11 to 2.9.12 [#9217](https://github.com/Kong/kong-mesh/pull/9217) [#9227](https://github.com/Kong/kong-mesh/pull/9227) @kong-mesh
+
+### Includes [kumahq/kuma@2.9.12](https://github.com/kumahq/kuma/releases/tag/2.9.12) changelog
+
+* chore(deps): security update [#15683](https://github.com/kumahq/kuma/pull/15683) @lukidzi
+
+
 ## 2.10.11
 > Released on 2026/02/25
 

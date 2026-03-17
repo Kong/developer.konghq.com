@@ -124,44 +124,50 @@ render_output: false
 
 Use the following command to create a file named `app.py` containing a LangChain Python script:
 
-```bash
-cat <<EOF > app.py
-from langchain_openai import ChatOpenAI
+{% on_prem %}
+content: |
+  ```bash
+  cat <<EOF > app.py
+  from langchain_openai import ChatOpenAI
 
-kong_url = "http://127.0.0.1:8000"
-kong_route = "anything"
+  kong_url = "http://127.0.0.1:8000"
+  kong_route = "anything"
 
-llm = ChatOpenAI(
-    base_url=f"{kong_url}/{kong_route}",
-    model="gpt-4o",
-    api_key="my-api-key"
-)
+  llm = ChatOpenAI(
+      base_url=f"{kong_url}/{kong_route}",
+      model="gpt-4o",
+      api_key="my-api-key"
+  )
 
-response = llm.invoke("What are you?")
-print(f"$ ChainAnswer:> {response.content}")
-EOF
-```
-{: data-deployment-topology="on-prem" data-test-step="block" }
+  response = llm.invoke("What are you?")
+  print(f"$ ChainAnswer:> {response.content}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
-```bash
-cat <<EOF > app.py
-from langchain_openai import ChatOpenAI
-import os
+{% konnect %}
+content: |
+  ```bash
+  cat <<EOF > app.py
+  from langchain_openai import ChatOpenAI
+  import os
 
-kong_url = os.environ['KONNECT_PROXY_URL']
-kong_route = "anything"
+  kong_url = os.environ['KONNECT_PROXY_URL']
+  kong_route = "anything"
 
-llm = ChatOpenAI(
-    base_url=f"{kong_url}/{kong_route}",
-    model="gpt-4o",
-    api_key="my-api-key"
-)
+  llm = ChatOpenAI(
+      base_url=f"{kong_url}/{kong_route}",
+      model="gpt-4o",
+      api_key="my-api-key"
+  )
 
-response = llm.invoke("What are you?")
-print(f"$ ChainAnswer:> {response.content}")
-EOF
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
+  response = llm.invoke("What are you?")
+  print(f"$ ChainAnswer:> {response.content}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
 
 With the `base_url` parameter, we can override the OpenAI base URL that LangChain uses by default with the URL to our {{site.base_gateway}} Route. This way, we can proxy requests and apply {{site.base_gateway}} plugins, while also using LangChain integrations and tools.
 

@@ -41,9 +41,9 @@ search_aliases:
   - ai-rate-limiting-advanced
 
 notes: |
-  In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
-  is not supported. Use <code>redis</code> instead. In Serverless gateways only the
-  <code>local</code> config strategy is supported.
+  In DB-less, hybrid mode, and Konnect, the `cluster` config strategy
+  is not supported. Use `redis` instead. In Serverless gateways only the
+  `local` config strategy is supported.
 
 related_resources:
   - text: Enforce AI rate limits in with a custom function
