@@ -9,7 +9,6 @@ This tutorial requires a Databricks instance. You can create one with the [expre
 1. Click **Developer**.
 1. Click **Manage**.
 1. Click **Generate new token**.
-1. In the **Comment** field, enter `Kong`.
 1. In the **API scope(s)** dropdown list, select `TODO`.
 1. Click **Generate**.
 1. Copy the token and export it to your environment:
