@@ -26,7 +26,7 @@ module Jekyll
       return 4 if @context['prereqs']
 
       closest = closest_heading
-      current_level = closest || @context['heading_level'] || 2
+      current_level = closest || @context['heading_level'] || @context['include']&.[]('heading_level') || 2
 
       current_level += 1
       current_level += 1 if @context['tab_id']
