@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-- [mise](https://mise.jdx.dev/getting-started.html)
+- [mise](https://mise.jdx.dev/getting-started.html).
     - Optionally configure your shell to [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise) automatically.
     - You may need to run `mise trust` when first opening a new repository.
 - [libyaml](https://github.com/yaml/libyaml).
