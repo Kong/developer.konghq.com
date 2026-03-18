@@ -18,7 +18,7 @@ related_resources:
     url: /metering-and-billing/billing-invoicing-subscriptions/
 ---
 
-{{site.konnect_short_name}} {{site.metering_and_billing}} is a real-time metering and billing engine that helps you track usage, enforce limits, manage subscriptions, and automate invoicing in one platform. Ingest events through a simple API, define meters with flexible aggregations, and connect usage data to billing, entitlements, and customer-facing dashboards.
+{{site.konnect_short_name}} {{site.metering_and_billing}} is a real-time metering and billing engine that helps you track usage, enforce limits, manage subscriptions, and automate invoicing in one platform. Ingest events through a simple API, define meters with flexible aggregations, and connect usage data to billing, entitlements, and customer-facing dashboards. Launch new products and iterate on pricing without code changes.
 
 ## Features
 
