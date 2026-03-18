@@ -1,0 +1,34 @@
+description: 'Emit separate usage events for AI input and output tokens on AI Gateway requests, billed to the authenticated Kong consumer.'
+extended_description: |
+  This example enables AI token metering. For each AI Gateway request, the plugin emits two events: one for input (prompt) tokens and one for output (completion) tokens. Pricing input and output independently requires separate events, which this configuration produces.
+
+  Collecting events alone does not produce invoices — to aggregate token usage and generate invoices, you need either [{{site.konnect_short_name}} Metering & Billing](/konnect/metering-billing/) or a self-hosted [OpenMeter](https://openmeter.io/) instance.
+
+title: 'Meter AI input and output tokens'
+
+weight: 998
+
+requirements:
+  - 'The [AI Proxy plugin](/plugins/ai-proxy/) is configured on the same Gateway Service or Route.'
+  - 'An authentication plugin is configured so that a Kong consumer is present on each request. Requests without a consumer will have their subject set to `unknown`.'
+  - 'A {{site.konnect_short_name}} system account token (`spat_`) or OpenMeter API key to use as the `auth_token`.'
+
+config:
+  http_endpoint: https://us.api.konghq.com/v3/openmeter/events
+  auth_token: ${auth-token}
+  enable_api_requests: false
+  enable_ai_llm: true
+  subject:
+    in: consumer
+
+variables:
+  auth-token:
+    value: $AUTH_TOKEN
+    description: A Konnect system account token (`spat_`) or OpenMeter API key.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
