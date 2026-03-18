@@ -63,8 +63,6 @@ Rules are evaluated top-down, first match wins:
 
 | Rule | Meaning |
 |------|---------|
-| `local all all trust` | Local unix socket connections are trusted without authentication |
-| `host all postgres all trust` | The `postgres` superuser can connect from any host without authentication (for admin/maintenance) |
 | `host all all all oauth ...` | All other TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
 
 ### 4. Create a database role matching the token identity
