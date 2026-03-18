@@ -2,6 +2,7 @@
 title: AI Custom Guardrail
 name: AI Custom Guardrail
 
+tier: ai_gateway_enterprise
 content_type: plugin
 
 publisher: kong-inc
