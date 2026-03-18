@@ -321,7 +321,7 @@ This ACL policy grants full access to all topics with the prefix in the `topic-p
 > This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
 > <br><br>
 > Note that this script is for demo purposes only and hard-codes client ID, client secret, and scope.
-For production, we recommended securing sensitive data.
+> For production, we recommend securing sensitive data.
 
 `kafkactl` will generate tokens using a script. Let's create the script:
 
