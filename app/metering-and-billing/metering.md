@@ -123,6 +123,9 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+{% include /plugins/metering-and-billing/konnect-use-case-table.md %}
+For more information, see the [Metering & Billing plugin](/plugins/metering-and-billing/).
+
 ## Create a meter
 
 To configure a meter in {{site.konnect_short_name}}, do the following:
