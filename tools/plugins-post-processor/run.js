@@ -66,6 +66,23 @@ function processSchema(obj) {
   return processed;
 }
 
+function sortProperties(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => sortProperties(item));
+  }
+
+  return Object.keys(obj)
+    .sort()
+    .reduce((sorted, key) => {
+      sorted[key] = sortProperties(obj[key]);
+      return sorted;
+    }, {});
+}
+
 (async function main() {
   const argv = minimist(process.argv.slice(2), {
     string: ["schemas-path", "version"],
@@ -130,7 +147,7 @@ function processSchema(obj) {
         const schemaContent = fs.readFileSync(inputFilePath, "utf8");
         const schema = JSON.parse(schemaContent);
 
-        const processedSchema = processSchema(schema);
+        const processedSchema = sortProperties(processSchema(schema));
 
         fs.writeFileSync(
           outputFilePath,

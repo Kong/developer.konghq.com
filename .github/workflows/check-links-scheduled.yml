@@ -41,7 +41,7 @@ jobs:
         run: bundle install --jobs 4 --retry 3
 
       # Configure Node to build assets
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: "24"
       - name: Cache node modules
@@ -73,3 +73,10 @@ jobs:
           node full.js --host http://localhost:8888
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}

@@ -5,3 +5,6 @@ methods:
   - POST
 service:
   name: azure-openai-service
+protocols:
+  - http
+  - https

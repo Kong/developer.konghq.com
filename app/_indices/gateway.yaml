@@ -92,6 +92,7 @@ sections:
       - path: /gateway/entities/license/
       - path: /gateway/install/
       - path: /gateway/resource-sizing-guidelines/
+      - path: /gateway/performance/large-payloads/
       - path: /gateway/sbom/
       - path: /gateway/security/
       - path: /gateway/secure-the-admin-api/
@@ -99,6 +100,7 @@ sections:
       - path: /gateway/cp-outage/
       - path: /gateway/incremental-config-sync/
       - path: /how-to/build-a-custom-docker-image/
+      - path: /gateway/cloud-provider-support-matrix/
 
   - title: Upgrade and Migration
     items:

@@ -107,190 +107,195 @@ render_output: false
 
 Use the following command to create a file named `research-agent.py` containing an Agno Python script:
 
-```bash
-cat <<EOF > research-agent.py
+{% on_prem %}
+content: |
+  ```bash
+  cat <<EOF > research-agent.py
 
-import os
+  import os
 
-from textwrap import dedent
+  from textwrap import dedent
 
-from agno.agent import Agent
-from agno.models.openai import OpenAILike
-from agno.tools.duckduckgo import DuckDuckGoTools
-from agno.tools.newspaper4k import Newspaper4kTools
-from agno.models.openai.chat import Message
+  from agno.agent import Agent
+  from agno.models.openai import OpenAILike
+  from agno.tools.duckduckgo import DuckDuckGoTools
+  from agno.tools.newspaper4k import Newspaper4kTools
+  from agno.models.openai.chat import Message
 
-import os
+  import os
 
-model = OpenAILike(
-    base_url="http://localhost:8000/anything",
-    name="gpt-4.1",
-    id="gpt-4.1",
-    api_key=os.getenv("DECK_OPENAI_API_KEY")
-)
-
-
-research_agent = Agent(
-    model=model,
-    tools=[DuckDuckGoTools(fixed_max_results=2), Newspaper4kTools(article_length=500)],
-    description=dedent("""\
-        You are a historical analyst with deep expertise in ancient and medieval history.
-        Your expertise includes:
-
-        - Synthesizing academic research and primary sources
-        - Analyzing military, economic, and political systems
-        - Identifying root causes of societal collapse or transformation
-        - Evaluating the role of leadership, ideology, and religion
-        - Presenting competing historical perspectives
-        - Providing clear, source-backed historical narratives
-        - Explaining long-term implications and legacy
-    """),
-    instructions=dedent("""\
-        1. Research Phase 📚
-          - Locate academic analyses, historical summaries, and expert commentary
-          - Identify internal and external factors contributing to the fall
-          - Note military conflicts, economic instability, and political fragmentation
-
-        2. Analysis Phase 🔍
-          - Weigh the long-term structural issues versus short-term triggers
-          - Consider geopolitical pressures, internal weaknesses, and cultural shifts
-          - Highlight contributions of leadership decisions and external actors
-
-        3. Reporting Phase 📝
-          - Write a compelling executive summary and clear narrative
-          - Structure by thematic causes (military, political, economic, religious)
-          - Include quotes or viewpoints from notable historians
-          - Present lessons learned or possible historical counterfactuals
-
-        4. Review Phase ✔️
-          - Validate all claims against reputable sources
-          - Ensure neutrality and historical rigor
-          - Provide a bibliography or references list
-    """),
-    expected_output=dedent("""\
-        # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
-
-        ## Executive Summary
-        {Short summary}
-
-        ## Introduction
-        {Short historical background}
-
-        ## Causes of Decline
-        {Two causes}
-
-        ---
-        Report by Historical Analysis AI
-        Published: {current_date}
-        Last Updated: {current_time}
-        """),
-    markdown=True,
-)
+  model = OpenAILike(
+      base_url="http://localhost:8000/anything",
+      name="gpt-4.1",
+      id="gpt-4.1",
+      api_key=os.getenv("DECK_OPENAI_API_KEY")
+  )
 
 
-if __name__ == "__main__":
-    prompt = "What were the main causes of the fall of the Byzantine Empire?"
-    print("The Agent Chronicler is compiling historical manuscripts ...\n")
-    research_agent.print_response(
-        prompt,
-        stream=True,
-    )
-EOF
-```
-{: data-deployment-topology="on-prem" data-test-step="block" }
+  research_agent = Agent(
+      model=model,
+      tools=[DuckDuckGoTools(fixed_max_results=2), Newspaper4kTools(article_length=500)],
+      description=dedent("""\
+          You are a historical analyst with deep expertise in ancient and medieval history.
+          Your expertise includes:
+
+          - Synthesizing academic research and primary sources
+          - Analyzing military, economic, and political systems
+          - Identifying root causes of societal collapse or transformation
+          - Evaluating the role of leadership, ideology, and religion
+          - Presenting competing historical perspectives
+          - Providing clear, source-backed historical narratives
+          - Explaining long-term implications and legacy
+      """),
+      instructions=dedent("""\
+          1. Research Phase 📚
+            - Locate academic analyses, historical summaries, and expert commentary
+            - Identify internal and external factors contributing to the fall
+            - Note military conflicts, economic instability, and political fragmentation
+
+          2. Analysis Phase 🔍
+            - Weigh the long-term structural issues versus short-term triggers
+            - Consider geopolitical pressures, internal weaknesses, and cultural shifts
+            - Highlight contributions of leadership decisions and external actors
+
+          3. Reporting Phase 📝
+            - Write a compelling executive summary and clear narrative
+            - Structure by thematic causes (military, political, economic, religious)
+            - Include quotes or viewpoints from notable historians
+            - Present lessons learned or possible historical counterfactuals
+
+          4. Review Phase ✔️
+            - Validate all claims against reputable sources
+            - Ensure neutrality and historical rigor
+            - Provide a bibliography or references list
+      """),
+      expected_output=dedent("""\
+          # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
+
+          ## Executive Summary
+          {Short summary}
+
+          ## Introduction
+          {Short historical background}
+
+          ## Causes of Decline
+          {Two causes}
+
+          ---
+          Report by Historical Analysis AI
+          Published: {current_date}
+          Last Updated: {current_time}
+          """),
+      markdown=True,
+  )
 
 
-```bash
-cat <<EOF > research-agent.py
-import os
+  if __name__ == "__main__":
+      prompt = "What were the main causes of the fall of the Byzantine Empire?"
+      print("The Agent Chronicler is compiling historical manuscripts ...\n")
+      research_agent.print_response(
+          prompt,
+          stream=True,
+      )
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
-from textwrap import dedent
+{% konnect %}
+content: |
+  ```bash
+  cat <<EOF > research-agent.py
+  import os
 
-from agno.agent import Agent
-from agno.models.openai import OpenAILike
-from agno.tools.duckduckgo import DuckDuckGoTools
-from agno.tools.newspaper4k import Newspaper4kTools
-from agno.models.openai.chat import Message
+  from textwrap import dedent
 
-
-model = OpenAILike(
-    base_url=os.getenv("KONG_PROXY_URL"),
-    name="gpt-4.1",
-    id="gpt-4.1",
-    api_key=os.getenv("DECK_OPENAI_API_KEY"),
-)
-
-
-research_agent = Agent(
-    model=model,
-    tools=[DuckDuckGoTools(), Newspaper4kTools()],
-    description=dedent("""\
-        You are a historical analyst with deep expertise in ancient and medieval history.
-        Your expertise includes:
-
-        - Synthesizing academic research and primary sources
-        - Analyzing military, economic, and political systems
-        - Identifying root causes of societal collapse or transformation
-        - Evaluating the role of leadership, ideology, and religion
-        - Presenting competing historical perspectives
-        - Providing clear, source-backed historical narratives
-        - Explaining long-term implications and legacy
-    """),
-    instructions=dedent("""\
-        1. Research Phase 📚
-          - Locate academic analyses, historical summaries, and expert commentary
-          - Identify internal and external factors contributing to the fall
-          - Note military conflicts, economic instability, and political fragmentation
-
-        2. Analysis Phase 🔍
-          - Weigh the long-term structural issues versus short-term triggers
-          - Consider geopolitical pressures, internal weaknesses, and cultural shifts
-          - Highlight contributions of leadership decisions and external actors
-
-        3. Reporting Phase 📝
-          - Write a compelling executive summary and clear narrative
-          - Structure by thematic causes (military, political, economic, religious)
-          - Include quotes or viewpoints from notable historians
-          - Present lessons learned or possible historical counterfactuals
-
-        4. Review Phase ✔️
-          - Validate all claims against reputable sources
-          - Ensure neutrality and historical rigor
-          - Provide a bibliography or references list
-    """),
-    expected_output=dedent("""\
-        # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
-
-        ## Executive Summary
-        {Short summary}
-
-        ## Introduction
-        {Short historical background}
-
-        ## Causes of Decline
-        {Two causes}
-
-        ---
-        Report by Historical Analysis AI
-        Published: {current_date}
-        Last Updated: {current_time}
-        """),
-    markdown=True,
-    show_tool_calls=True,
-    add_datetime_to_instructions=True,
-)
+  from agno.agent import Agent
+  from agno.models.openai import OpenAILike
+  from agno.tools.duckduckgo import DuckDuckGoTools
+  from agno.tools.newspaper4k import Newspaper4kTools
+  from agno.models.openai.chat import Message
 
 
-if __name__ == "__main__":
-    prompt = "What were the main causes of the fall of the Byzantine Empire?"
-    print("The Agent Chronicler is compiling historical manuscripts ...\n")
-    research_agent.print_response(
-        prompt,
-        stream=True,
-    )
-EOF
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
+  model = OpenAILike(
+      base_url=os.getenv("KONG_PROXY_URL"),
+      name="gpt-4.1",
+      id="gpt-4.1",
+      api_key=os.getenv("DECK_OPENAI_API_KEY"),
+  )
+
+
+  research_agent = Agent(
+      model=model,
+      tools=[DuckDuckGoTools(), Newspaper4kTools()],
+      description=dedent("""\
+          You are a historical analyst with deep expertise in ancient and medieval history.
+          Your expertise includes:
+
+          - Synthesizing academic research and primary sources
+          - Analyzing military, economic, and political systems
+          - Identifying root causes of societal collapse or transformation
+          - Evaluating the role of leadership, ideology, and religion
+          - Presenting competing historical perspectives
+          - Providing clear, source-backed historical narratives
+          - Explaining long-term implications and legacy
+      """),
+      instructions=dedent("""\
+          1. Research Phase 📚
+            - Locate academic analyses, historical summaries, and expert commentary
+            - Identify internal and external factors contributing to the fall
+            - Note military conflicts, economic instability, and political fragmentation
+
+          2. Analysis Phase 🔍
+            - Weigh the long-term structural issues versus short-term triggers
+            - Consider geopolitical pressures, internal weaknesses, and cultural shifts
+            - Highlight contributions of leadership decisions and external actors
+
+          3. Reporting Phase 📝
+            - Write a compelling executive summary and clear narrative
+            - Structure by thematic causes (military, political, economic, religious)
+            - Include quotes or viewpoints from notable historians
+            - Present lessons learned or possible historical counterfactuals
+
+          4. Review Phase ✔️
+            - Validate all claims against reputable sources
+            - Ensure neutrality and historical rigor
+            - Provide a bibliography or references list
+      """),
+      expected_output=dedent("""\
+          # The Fall of the Byzantine Empire: A Tapestry of Decline and Siege ⚔️
+
+          ## Executive Summary
+          {Short summary}
+
+          ## Introduction
+          {Short historical background}
+
+          ## Causes of Decline
+          {Two causes}
+
+          ---
+          Report by Historical Analysis AI
+          Published: {current_date}
+          Last Updated: {current_time}
+          """),
+      markdown=True,
+      show_tool_calls=True,
+      add_datetime_to_instructions=True,
+  )
+
+
+  if __name__ == "__main__":
+      prompt = "What were the main causes of the fall of the Byzantine Empire?"
+      print("The Agent Chronicler is compiling historical manuscripts ...\n")
+      research_agent.print_response(
+          prompt,
+          stream=True,
+      )
+  EOF
+  ```
+  {:  data-test-step="block" }
+{% endkonnect %}
 
 With the `base_url` parameter, we can override the OpenAI base URL that LangChain uses by default with the URL to our {{site.base_gateway}} Route. This way, we can proxy requests and apply {{site.base_gateway}} plugins, while also using Agno integrations and tools.
 
@@ -308,6 +313,5 @@ render_output: false
 
 The response should look like this:
 
-<img src="/assets/images/ai-gateway/agno-response.png"/>
 
-
+![Example of a response from Agno](/assets/images/ai-gateway/agno-response.png)

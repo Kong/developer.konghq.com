@@ -1,17 +1,31 @@
 {
   "properties": {
     "config": {
-      "type": "object",
       "properties": {
+        "client_errors_severity": {
+          "default": "info",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "type": "string"
+        },
         "custom_fields_by_lua": {
-          "type": "object",
           "additionalProperties": {
             "type": "string"
           },
-          "description": "Lua code as a key-value map"
+          "description": "Lua code as a key-value map",
+          "type": "object"
         },
         "facility": {
-          "type": "string",
+          "default": "user",
+          "description": "The facility is used by the operating system to decide how to handle each log message.",
           "enum": [
             "auth",
             "authpriv",
@@ -34,11 +48,10 @@
             "user",
             "uucp"
           ],
-          "description": "The facility is used by the operating system to decide how to handle each log message.",
-          "default": "user"
+          "type": "string"
         },
         "log_level": {
-          "type": "string",
+          "default": "info",
           "enum": [
             "alert",
             "crit",
@@ -49,38 +62,10 @@
             "notice",
             "warning"
           ],
-          "default": "info"
-        },
-        "successful_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
-        },
-        "client_errors_severity": {
-          "type": "string",
-          "enum": [
-            "alert",
-            "crit",
-            "debug",
-            "emerg",
-            "err",
-            "info",
-            "notice",
-            "warning"
-          ],
-          "default": "info"
+          "type": "string"
         },
         "server_errors_severity": {
-          "type": "string",
+          "default": "info",
           "enum": [
             "alert",
             "crit",
@@ -91,14 +76,45 @@
             "notice",
             "warning"
           ],
-          "default": "info"
+          "type": "string"
+        },
+        "successful_severity": {
+          "default": "info",
+          "enum": [
+            "alert",
+            "crit",
+            "debug",
+            "emerg",
+            "err",
+            "info",
+            "notice",
+            "warning"
+          ],
+          "type": "string"
         }
-      }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "protocols": {
-      "type": "array",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing protocols.",
       "items": {
-        "type": "string",
+        "description": "A string representing a protocol, such as HTTP or HTTPS.",
         "enum": [
           "grpc",
           "grpcs",
@@ -111,45 +127,29 @@
           "ws",
           "wss"
         ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
+        "type": "string"
       },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "type": "array"
     },
     "route": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "type": "object"
     },
     "service": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
+      "type": "object"
     }
   }
 }

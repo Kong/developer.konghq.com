@@ -1,5 +1,5 @@
 {% assign summary='Create a KonnectCloudGatewayNetwork resource' %}
-
+{%- if page.output_format == 'markdown' and page.works_on.size > 1 %}{% capture summary %}{{ summary | prepend: ": " | prepend: site.llm_copy.konnect_snippet }}{% endcapture %}{% endif -%}
 {% capture details_content %}
 
 {% include prereqs/provider-account-id.md %}
@@ -31,7 +31,5 @@ spec:
 > ```
 > curl -s -H 'Content-Type: application/json' -H "Authorization: Bearer $KONNECT_TOKEN" -XGET https://global.api.konghq.com/v2/cloud-gateways/networks| jq
 > ```
-
 {% endcapture %}
-
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}

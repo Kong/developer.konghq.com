@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class Raise < Liquid::Tag
     def initialize(tag_name, param, _tokens)
@@ -9,7 +11,7 @@ module Jekyll
     end
 
     def render(context)
-      message = Liquid::Template.parse(@param).render(context)
+      message = Liquid::Template.parse(@param, { line_numbers: true }).render(context)
       raise "#{message} via #{context.registers[:page]['path']}"
     end
   end

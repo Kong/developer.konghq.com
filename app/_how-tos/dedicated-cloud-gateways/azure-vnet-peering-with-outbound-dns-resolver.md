@@ -34,16 +34,10 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
     - title: Microsoft Entra
-      content: |
-        To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
-
-        Copy your Entra tenant ID from your dashboard.
+      include_content: prereqs/entra-tenant
+      icon_url: /assets/icons/azure.svg
     - title: Microsoft Azure CLI
-      content: |
-        [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
-        ```sh
-        az login
-        ```
+      include_content: prereqs/azure-cli
       icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
       include_content: prereqs/dcgw-azure-vnet
@@ -63,6 +57,10 @@ faqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
 ---
 
 {% include_cached /sections/azure-peering.md %}
@@ -80,49 +78,12 @@ We just need to add additional outbound endpoints.
 
 ## Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Click **Outbound DNS resolver**.
-1. In the **Outbound Resolver name** field, enter the name of your private DNS resolver in Azure.
-1. In the **Domain name** field, enter your domain.
-1. In the **Target IP address** field, enter the IP addresses of your outbound endpoint subnets.
-1. Click **Save**.
+{% include_cached /sections/azure-outbound-dns-setup.md %}
 
 ### DNS mappings
 
-The following table describes how DNS is mapped in Azure VNET peering:
-
-{% table %}
-columns:
-  - title: Mapping Type
-    key: type
-  - title: Description
-    key: description
-  - title: Example
-    key: example
-rows:
-  - type: 1-to-1 Mapping
-    description: Each domain is mapped to a unique IP address.
-    example: "`example.com` → `192.168.1.1`"
-  - type: N-to-1 Mapping
-    description: Multiple domains share the same IP address.
-    example: "`example.com`, `example2.com` → `192.168.1.1`"
-  - type: M-to-N Mapping
-    description: Multiple domains are mapped to multiple IP addresses, without a strict one-to-one relationship.
-    example: >-
-      `example.com` → `192.168.1.2`
-      <br><br>
-      `example3.com` → `192.168.1.1`
-{% endtable %}
+{% include_cached /sections/private-dns-mappings.md %}
 
 ## Validate
 
-Once your outbound DNS resolver configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Scroll until you see `Ready` for your outbound DNS resolver.
+{% include_cached /sections/outbound-dns-validate.md provider="Azure" %}

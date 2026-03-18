@@ -26,6 +26,8 @@ related_resources:
     url: /gateway/performance/benchmarks/
   - text: Cluster reference
     url: /gateway/traditional-mode/#about-kong-gateway-clusters
+  - text: "Tuning {{site.base_gateway}} for large payloads"
+    url: /gateway/performance/large-payloads/
 ---
 
 {{site.base_gateway}} is designed to handle large volumes of request

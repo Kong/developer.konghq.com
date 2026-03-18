@@ -1,9 +1,34 @@
 {
   "properties": {
+    "config": {
+      "properties": {
+        "proto": {
+          "description": "Describes the gRPC types and methods.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "protocols": {
-      "type": "array",
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing protocols.",
       "items": {
-        "type": "string",
+        "description": "A string representing a protocol, such as HTTP or HTTPS.",
         "enum": [
           "grpc",
           "grpcs",
@@ -16,54 +41,29 @@
           "ws",
           "wss"
         ],
-        "description": "A string representing a protocol, such as HTTP or HTTPS."
+        "type": "string"
       },
-      "description": "A set of strings representing protocols.",
-      "default": [
-        "grpc",
-        "grpcs",
-        "http",
-        "https"
-      ]
-    },
-    "config": {
-      "type": "object",
-      "properties": {
-        "proto": {
-          "type": "string",
-          "description": "Describes the gRPC types and methods."
-        }
-      }
-    },
-    "service": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched."
-    },
-    "consumer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer."
+      "type": "array"
     },
     "route": {
-      "type": "object",
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
       "properties": {
         "id": {
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "service": {
       "additionalProperties": false,
-      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used."
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     }
   }
 }

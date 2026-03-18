@@ -2,4 +2,5 @@ name: listener-route
 paths:
   - /mcp-listener
 protocols:
-- http
+  - http
+  - https

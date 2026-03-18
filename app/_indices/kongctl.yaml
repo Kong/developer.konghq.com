@@ -49,16 +49,9 @@ groups:
             - path: /kongctl/apply/
             - path: /kongctl/apply/*/**
             - path: /kongctl/apply/*/**/**
-      - title: Create Resources
-        items:
-            - path: /kongctl/create/
-            - path: /kongctl/create/*/**
-            - path: /kongctl/create/*/**/**
       - title: Delete Resources
         items:
             - path: /kongctl/delete/
-            - path: /kongctl/delete/*/**
-            - path: /kongctl/delete/*/**/**
       - title: View Diffs
         items:
             - path: /kongctl/diff/
@@ -72,6 +65,10 @@ groups:
             - path: /kongctl/get/
             - path: /kongctl/get/*/**
             - path: /kongctl/get/*/**/**
+      - title: Install Assets
+        items:
+           - path: /kongctl/install/
+           - path: /kongctl/install/*/**
       - title: Lint Files
         items:
             - path: /kongctl/lint/

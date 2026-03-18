@@ -83,6 +83,8 @@ rows:
                   url: /dedicated-cloud-gateways/transit-gateways/
                 - text: VPC peering
                   url: /dedicated-cloud-gateways/aws-vpc-peering/
+                - text: AWS resource endpoints (REP)
+                  url: /dedicated-cloud-gateways/aws-resource-endpoints/
       - blocks:
           - type: card
             config:
@@ -101,8 +103,10 @@ rows:
                 {{site.konnect_short_name}} can leverage Azure virtual network peering to create virtual networks, ingest data from your provider's services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: VNet peering
+                - text: VNET peering
                   url: /dedicated-cloud-gateways/azure-peering/
+                - text: Virtual WAN (VWAN)
+                  url: /dedicated-cloud-gateways/azure-virtual-wan/
   - columns:
       - blocks:
         - type: structured_text
@@ -147,29 +151,44 @@ rows:
                 Dedicated Cloud Gateways in Azure support private name resolution through Azure private DNS zones and an outbound DNS resolver.
               icon: /assets/icons/azure.svg
               ctas:
-                - text: Private DNS zones
+                - text: VNET peering and private DNS zones
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
-                - text: Outbound DNS resolver
+                - text: VNET peering and outbound DNS resolver
                   url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+                - text: VWAN and private DNS zones
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
+                - text: VWAN and outbound DNS resolver
+                  url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
   - header:
       type: h2
-      text: "Service-level private access"
-  - column_count: 3
+      text: "Managed Redis Cache"
     columns:
       - blocks:
-        - type: card
-          config:
-            title: AWS resource endpoints
-            icon: /assets/icons/aws.svg
-            description: |
-              AWS resource endpoints with Dedicated Cloud Gateway enables secure, one-way connectivity from {{site.konnect_short_name}}’s managed infrastructure to your upstream services without requiring VPC peering or Transit Gateway. 
-            cta:
-              text: Learn more
-              url: /dedicated-cloud-gateways/aws-resource-endpoints/  
-      
-      
-
-
+          - type: card
+            config:
+              title: AWS
+              description: |
+                Configure a fully-managed Redis service that is provisioned and operated by Kong in AWS ElastiCache.
+                Use the managed cache in compatible plugins that use Redis.
+              icon: /assets/icons/aws.svg
+              ctas:
+                - text: Single control plane
+                  url: /dedicated-cloud-gateways/aws-managed-cache-control-plane/
+                - text: Control plane group
+                  url: /dedicated-cloud-gateways/aws-managed-cache-control-plane-group/
+      - blocks:
+          - type: card
+            config:
+              title: Azure
+              description: |
+                Configure a fully-managed Redis service that is provisioned and operated by Kong in Azure Cache for Redis.
+                Use the managed cache in compatible plugins that use Redis.
+              icon: /assets/icons/azure.svg
+              ctas:
+                - text: Single control plane
+                  url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+                - text: Control plane group
+                  url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
   - header:
       type: h2
       text: "Cluster management"
