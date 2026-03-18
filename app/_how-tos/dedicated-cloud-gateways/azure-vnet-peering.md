@@ -33,16 +33,11 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
     - title: Microsoft Entra
-      content: |
-        To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
-
-        Copy your Entra tenant ID from your dashboard.
+      include_content: prereqs/entra-tenant
+      icon_url: /assets/icons/azure.svg
     - title: Microsoft Azure CLI
-      content: |
-        [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
-        ```sh
-        az login
-        ```
+      include_content: prereqs/azure-cli
+      icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
       content: |
         To configure VNET peering in {{site.konnect_short_name}}, you'll need a [virtual network configured in Azure](https://learn.microsoft.com/en-us/azure/virtual-network/quickstart-create-virtual-network?tabs=portal). 

@@ -1,8 +1,8 @@
 ---
-title: Configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution
-description: 'Learn how to configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution.'
+title: Configure an Azure Dedicated Cloud Gateway with virtual hub peering and outbound DNS resolution
+description: 'Learn how to configure an Azure Dedicated Cloud Gateway with virtual hub peering and outbound DNS resolution.'
 content_type: how_to
-permalink: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+permalink: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
 breadcrumbs:
   - /dedicated-cloud-gateways/
 products:
@@ -14,19 +14,20 @@ tags:
   - network
 automated_tests: false
 tldr:
-  q: How do I configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution?
+  q: How do I configure an Azure Dedicated Cloud Gateway with virtual hub peering and outbound DNS resolution?
   a: |
-    Using a virtual network and a private DNS resolver in Azure, you can create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
-    When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure VNET peering by creating the peering role and assigning it to the service principal. 
+    In Azure, you'll need a virtual network, virtual WAN and hub, and outbound DNS resolver. 
+    Create a Dedicated Cloud Gateway in {{site.konnect_short_name}} with Azure as the network provider. 
+    When the Azure network is `Ready` in {{site.konnect_short_name}}, you can configure virtual hub peering by creating the peering role and assigning it to the service principal. 
     Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}. 
     You can use your Azure Dedicated Cloud Gateway after it displays as `Ready` for your outbound DNS resolver.
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering
-    url: /dedicated-cloud-gateways/azure-peering/
-  - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and private DNS
-    url:  /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering
+    url: /dedicated-cloud-gateways/azure-virtual-wan/
+  - text: Configure an Azure Dedicated Cloud Gateway with virtual hub peering and private DNS
+    url: /dedicated-cloud-gateways/azure-virtual-wan-with-private-dns/
 prereqs:
   show_works_on: false
   inline:
@@ -40,7 +41,7 @@ prereqs:
       include_content: prereqs/azure-cli
       icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
-      include_content: prereqs/dcgw-azure-vnet
+      include_content: prereqs/dcgw-azure-vwan
       icon_url: /assets/icons/azure.svg
     - title: Azure private DNS resolver
       content: |
@@ -57,23 +58,18 @@ faqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
-  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane
-    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
-  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group
-    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
 ---
 
-{% include_cached /sections/azure-peering.md %}
 
 ## Create an Azure Dedicated Cloud Gateway
 
 {% include_cached /sections/azure-dcgw-network-setup.md %}
 
-## Configure VNET peering in {{site.konnect_short_name}}
+## Configure Azure virtual hub peering in {{site.konnect_short_name}}
 
-{% include_cached /sections/azure-dcgw-vnet-peering-setup.md %}
+{% include_cached /sections/azure-vwan-setup.md %}
 
-An outbound DNS resolver is already created when the VNET peering is set up. 
+An outbound DNS resolver is already created when the virtual hub peering is set up. 
 We just need to add additional outbound endpoints.
 
 ## Configure an outbound DNS resolver for your Azure network in {{site.konnect_short_name}}
