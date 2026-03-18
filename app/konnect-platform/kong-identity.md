@@ -435,13 +435,13 @@ Trusted origins can help with use cases where you want to allow in-browser tools
 {% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Identity**.
 1. Click **New authorization server**.
-1. In the **Name** field, enter a name for your auth server.
-1. In the **Audience** field, enter the audience.
+1. In the **Name** field, enter a name for your auth server. For example, `Kong Identity Auth Server`.
+1. In the **Audience** field, enter the audience. For example, `https://api.example.com/payments`.
    
    {:.info}
    > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
 1. Click **Show advanced configuration**.
-1. In the **Trusted origins** field, enter your trusted origins.
+1. In the **Trusted origins** field, enter your trusted origins URIs. For example, `https://app.example.com`.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
@@ -473,8 +473,8 @@ To configure Kong Identity, do the following:
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click [**Identity**](https://cloud.konghq.com/identity/).
 1. Click **New authorization server**.
-1. In the **Name** field, enter a name.
-1. In the **Audience** field, enter the audience.
+1. In the **Name** field, enter a name for your auth server. For example, `Kong Identity Auth Server`.
+1. In the **Audience** field, enter the audience. For example, `https://api.example.com/payments`.
    
    {:.info}
    > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
