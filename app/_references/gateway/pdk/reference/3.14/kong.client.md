@@ -324,6 +324,92 @@ kong.client.set_authenticated_consumer_group(group)
 
 
 
+## kong.client.set_token([token])
+
+Sets the authenticated token for the current request, e.g.  JWT. This stores
+ the raw token string in the request context, making it accessible to other
+ plugins via `kong.client.get_token()`. Empty string `""` as a token is
+ considered the same as `nil` (clears the token from context).
+
+
+**Phases**
+
+* access, header_filter, response, body_filter, log, ws_handshake, ws_proxy, ws_close
+
+**Parameters**
+
+* **token** (`string|nil`, _optional_):  The token string to store. If `nil` is
+ provided, any existing token and cached decoded values will be cleared.
+
+**Usage**
+
+``` lua
+-- Store the authenticated JWT token after validation
+kong.client.set_token("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U")
+
+-- Clear the token
+kong.client.set_token(nil)
+```
+
+
+
+## kong.client.get_token()
+
+Returns the authenticated token for the current request.  In case no
+ authenticated token is stored with `kong.client.set_token` this
+ function will return `nil`.
+
+
+**Phases**
+
+* access, header_filter, response, body_filter, log, ws_handshake, ws_proxy, ws_close
+
+**Usage**
+
+``` lua
+local token = kong.client.get_token()
+```
+
+
+
+## kong.client.get_jwt_token_header()
+
+Returns the decoded header of the authenticated JWT token for the current request.
+ The token must be a signed JWT in compact serialization format with a JSON-encoded header.
+ Returns `nil` and an error message if no token is stored or if decoding fails.
+
+
+**Phases**
+
+* access, header_filter, response, body_filter, log, ws_handshake, ws_proxy, ws_close
+
+**Usage**
+
+``` lua
+local header, err = kong.client.get_jwt_token_header()
+```
+
+
+
+## kong.client.get_jwt_token_payload()
+
+Returns the decoded payload of the authenticated JWT token for the current request.
+ The token must be a signed JWT in compact serialization format with a JSON-encoded payload.
+ Returns `nil` and an error message if no token is stored or if decoding fails.
+
+
+**Phases**
+
+* access, header_filter, response, body_filter, log, ws_handshake, ws_proxy, ws_close
+
+**Usage**
+
+``` lua
+local payload, err = kong.client.get_jwt_token_payload()
+```
+
+
+
 ## kong.client.get_consumer_groups()
 
 Retrieves the authenticated consumer groups for the current request.
