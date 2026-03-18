@@ -33,60 +33,60 @@ config:
       Ocp-Apim-Subscription-Key: '$(conf.params.content_safety_key)'
     body:
       categories: '[{ \"name\": \"Hate\", \"rejection_level\": 2}, { \"name\": \"Violence\", \"rejection_level\": 2}]'
-    response:
-      block: '$(check_response.block)'
-      block_message: '$(check_response.block_message)'
-    functions:
-      check_response: |
-        [[return function(resp, conf)
-              local res = {
-                block = true,
-                block_message = "content passed safety check",
-              }
+  response:
+    block: '$(check_response.block)'
+    block_message: '$(check_response.block_message)'
+  functions:
+    check_response: |
+      [[return function(resp, conf)
+            local res = {
+              block = true,
+              block_message = "content passed safety check",
+            }
 
-              if
-                ((type(resp.categoriesAnalysis) ~= "table") or (#resp.categoriesAnalysis == 0))
-                and ((type(resp.blocklistsMatch) ~= "table") or (#resp.blocklistsMatch == 0))
-              then
-                return res, "content safety introspection is invalid"
+            if
+              ((type(resp.categoriesAnalysis) ~= "table") or (#resp.categoriesAnalysis == 0))
+              and ((type(resp.blocklistsMatch) ~= "table") or (#resp.blocklistsMatch == 0))
+            then
+              return res, "content safety introspection is invalid"
+            end
+
+            local reason = ""
+            local ok = true
+
+            for _, v in ipairs(resp.categoriesAnalysis or EMPTY_T) do
+              local category_name = v.category
+              local failure_level = nil
+              for _, category in ipairs(conf.params.categories or {}) do
+                if category.name == category_name then
+                  failure_level = category.rejection_level
+                  break
+                end
               end
 
-              local reason = ""
-              local ok = true
-
-              for _, v in ipairs(resp.categoriesAnalysis or EMPTY_T) do
-                local category_name = v.category
-                local failure_level = nil
-                for _, category in ipairs(conf.params.categories or {}) do
-                  if category.name == category_name then
-                    failure_level = category.rejection_level
-                    break
-                  end
+              if failure_level and (v.severity >= failure_level) then
+                -- hack to prevent adding '; ' to the end of a single-cat failure
+                if not ok then
+                  reason = reason .. "; "
                 end
 
-                if failure_level and (v.severity >= failure_level) then
-                  -- hack to prevent adding '; ' to the end of a single-cat failure
-                  if not ok then
-                    reason = reason .. "; "
-                  end
-
-                  ok = false
-                  reason = reason .. "breached category [" .. category_name .. "] at level " .. failure_level
-                end -- else just ignore it, we didn't define a failure threshold
-              end
-
-              for _, v in ipairs(resp.blocklistsMatch or EMPTY_T) do
-                local blocklist_name = v.blocklistName or "unknown_name"
-
                 ok = false
-                reason = reason .. "breached blocklist [" .. blocklist_name .. "]"
-              end
+                reason = reason .. "breached category [" .. category_name .. "] at level " .. failure_level
+              end -- else just ignore it, we didn't define a failure threshold
+            end
 
-              return {
-                block = not ok,
-                block_message = reason,
-              }
-            end]]
+            for _, v in ipairs(resp.blocklistsMatch or EMPTY_T) do
+              local blocklist_name = v.blocklistName or "unknown_name"
+
+              ok = false
+              reason = reason .. "breached blocklist [" .. blocklist_name .. "]"
+            end
+
+            return {
+              block = not ok,
+              block_message = reason,
+            }
+          end]]
   guarding_mode: BOTH
 
 tools:
