@@ -44,6 +44,7 @@ requirements:
 - Azure OpenAI Service account
 
 config:
+  route_type: llm/v1/chat
   auth:
     azure_use_managed_identity: true
   model:

@@ -16,7 +16,8 @@ config:
   attribute: cn
   cache_ttl: 60
   header_type: ldap
-  consumer_by: username
+  consumer_by:
+    - username
 
 variables:
   host:

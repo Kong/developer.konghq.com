@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'nokogiri'
+require_relative '../monkey_patch'
 
 module Jekyll
   class IncludeSVGTag < Liquid::Tag
@@ -25,6 +26,14 @@ module Jekyll
       svg['width'] = @params['width'] if @params['width']
       svg['height'] = @params['height'] if @params['height']
 
+      reserved = %w[file_path width height]
+      @params.each do |key, value|
+        next if reserved.include?(key)
+        next unless key.match?(/\Aaria-[\w-]+\z/) || %w[role class focusable id].include?(key)
+
+        svg[key] = value
+      end
+
       doc.to_s
     end
 
@@ -36,7 +45,7 @@ module Jekyll
       params['file_path'] = parts.shift
 
       parts.each do |part|
-        if part =~ /(\w+)=(.+)/
+        if part =~ /([\w-]+)=(.+)/
           key = Regexp.last_match(1)
           value = Regexp.last_match(2).gsub(/^["']|["']$/, '') # strip surrounding quotes
           params[key] = value

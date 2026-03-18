@@ -106,7 +106,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-east-1.vpce-svc-03eda50387fcc5e06
     dns: ap.svc.konghq.com
   - geo: EU
@@ -140,7 +140,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-east-2.vpce-svc-03da89378358921bc
     dns: ap.svc.konghq.com
   - geo: EU
@@ -174,7 +174,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-west-2.vpce-svc-078156c9cc9048988
     dns: ap.svc.konghq.com
   - geo: EU
@@ -208,7 +208,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-central-1.vpce-svc-0c3f0574080bdd859
     dns: ap.svc.konghq.com
   - geo: EU
@@ -242,7 +242,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-west-1.vpce-svc-08edf59f8bc1d2262
     dns: ap.svc.konghq.com
   - geo: EU
@@ -276,7 +276,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-west-2.vpce-svc-0500cb14757738225
     dns: ap.svc.konghq.com
   - geo: EU
@@ -310,7 +310,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-east-1.vpce-svc-0c7b67a477740b8cb
     dns: ap.svc.konghq.com
   - geo: EU
@@ -344,7 +344,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-southeast-1.vpce-svc-08f76d27d29b02a09
     dns: ap.svc.konghq.com
   - geo: EU
@@ -378,7 +378,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-southeast-2.vpce-svc-055ba6ff5a3f551c9
     dns: ap.svc.konghq.com
   - geo: EU
@@ -412,7 +412,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-northeast-1.vpce-svc-05a555912c88c3403
     dns: ap.svc.konghq.com
   - geo: EU
@@ -446,7 +446,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-northeast-3.vpce-svc-0774c82210d1e3a54
     dns: ap.svc.konghq.com
   - geo: EU

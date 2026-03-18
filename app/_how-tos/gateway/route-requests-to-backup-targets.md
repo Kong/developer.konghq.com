@@ -78,6 +78,9 @@ entities:
       - "/anything"
       service:
         name: example-service
+      protocols:
+      - http
+      - https
 {% endentity_examples %}
 
 ## Configure the Upstream Targets

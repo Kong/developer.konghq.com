@@ -49,7 +49,7 @@ jobs:
           egress-policy: audit
 
       - name: Create GitHub App Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
         id: app-token
         with:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}

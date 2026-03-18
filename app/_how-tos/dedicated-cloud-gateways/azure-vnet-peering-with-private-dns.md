@@ -34,16 +34,10 @@ prereqs:
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
     - title: Microsoft Entra
-      content: |
-        To approve the Dedicated Cloud Gateway app, you need a Microsoft Entra admin account with the [Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#application-administrator) role.
-
-        Copy your Entra tenant ID from your dashboard.
+      include_content: prereqs/entra-tenant
+      icon_url: /assets/icons/azure.svg
     - title: Microsoft Azure CLI
-      content: |
-        [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) and authenticate:
-        ```sh
-        az login
-        ```
+      include_content: prereqs/azure-cli
       icon_url: /assets/icons/azure.svg
     - title: Azure virtual network
       include_content: prereqs/dcgw-azure-vnet
@@ -62,6 +56,10 @@ faqs:
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane/
+  - text: Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group
+    url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
 ---
 
 {% include_cached /sections/azure-peering.md %}
@@ -74,31 +72,10 @@ next_steps:
 
 {% include_cached /sections/azure-dcgw-vnet-peering-setup.md %}
 
-
 ## Configure private DNS for your Azure network in {{site.konnect_short_name}}
 
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Click **Private hosted zone**.
-1. In the **Name** field, enter the fully qualified domain name for your private hosted zone in Azure.
-1. In the **Tenant ID** field, enter your [tenant ID from Microsoft Entra](https://learn.microsoft.com/en-us/entra/fundamentals/how-to-find-tenant).
-1. In the **Subscription ID** field, enter the subscription ID for your private DNS zone.
-1. In the **Resource group ID** field, enter the resource group ID that your private DNS zone is in.
-1. In the **VNet link name** field, enter the name of the virtual network link.
-1. Create a DNS link creator role with the Azure CLI using the command in the UI wizard.
-1. Assign the role to the service principal so it has permission to peer with your virtual network with the Azure CLI using the command in the UI wizard.
-1. [Link your private DNS zone to your virtual network](https://learn.microsoft.com/en-us/azure/dns/private-dns-getstarted-portal#link-the-virtual-network) using the command provided by the private DNS wizard in the UI.
-1. Select **I confirm that I completed all required steps and understand that incorrect configuration can cause DNS resolution issues.**
-1. Click **Connect**.
+{% include_cached /sections/azure-private-dns-setup.md %}
 
 ## Validate
 
-After your private DNS configuration displays as ready, you can begin using your Dedicated Cloud Gateway. To verify that it's ready, do the following:
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Click your Azure Dedicated Cloud Gateway.
-1. In the API Gateways sidebar, click **Networks**.
-1. From the action menu next to your Azure network, select "Configure private DNS".
-1. Scroll until you see `Ready` for private DNS.
+{% include_cached /sections/private-dns-validate.md provider="Azure" %}

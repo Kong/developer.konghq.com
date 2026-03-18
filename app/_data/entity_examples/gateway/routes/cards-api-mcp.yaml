@@ -3,3 +3,5 @@ paths:
   - /cards-api
 service:
   name: deck-of-cards
+protocols:
+  - https

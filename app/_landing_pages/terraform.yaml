@@ -4,6 +4,8 @@ metadata:
   description: This page is an introduction to the Terraform providers for {{site.konnect_short_name}}, {{site.base_gateway}} and {{ site.mesh_product_name }}.
   tags:
     - terraform
+  tools:
+    - terraform
 
 rows:
   - header:

@@ -3,3 +3,6 @@ paths:
   - /files
 service:
   name: files-service
+protocols:
+  - http
+  - https

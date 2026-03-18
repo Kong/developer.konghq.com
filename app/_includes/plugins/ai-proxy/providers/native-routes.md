@@ -10,28 +10,20 @@ By default, the AI Proxy plugin uses OpenAI-compatible request formats. Set `con
 
 The following native {{ provider.name }} APIs are supported:
 
-<table>
-  <thead>
-    <tr>
-      <th>LLM format</th>
-      <th>Supported APIs</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for format in provider.native_formats %}
-    <tr>
-      <td><code>{{ format.llm_format }}</code></td>
-      <td>
-        <ul>
-        {% for api in format.supported_apis %}
-        <li><code>{{ api }}</code></li>
-        {% endfor %}
-        </ul>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% table %}
+columns:
+  - title: LLM format
+    key: llm_format
+  - title: Supported APIs
+    key: supported_apis
+rows:
+{% for format in provider.native_formats %}
+  - llm_format: "`{{ format.llm_format }}`"
+    supported_apis: |
+{% for api in format.supported_apis %}      - `{{ api }}`
+{% endfor %}
+{% endfor %}
+{% endtable %}
 {% endif %}
 
 {% if provider.limitations.provider_specific.size > 0 or provider.limitations.statistics_logging.size > 0 %}
