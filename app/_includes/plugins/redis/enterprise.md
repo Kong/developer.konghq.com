@@ -25,7 +25,7 @@ You need:
 
 To configure cloud authentication with Redis, add the following parameters to your plugin configuration:
 
-{% if include.name == 'Rate Limiting Advanced' or include.name == 'GraphQL Proxy Cache Advanced' or include.name == 'GraphQL Rate Limiting Advanced' or include.name == 'Proxy Cache Advanced' or include.name == 'Service Protection' %}
+{% if include.name == 'Rate Limiting Advanced' or include.name == 'GraphQL Proxy Cache Advanced' or include.name == 'GraphQL Rate Limiting Advanced' or include.name == 'Proxy Caching Advanced' or include.name == 'Service Protection' %}
 ```yaml
 config:
   strategy: redis
