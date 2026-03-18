@@ -80,6 +80,7 @@ extract_body:
   - name: 'issuer'
     variable: ISSUER_URL
 {% endkonnect_api_request %}
+<!--vale on-->
 
 Export the auth server ID and issuer URL:
 ```sh
