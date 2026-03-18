@@ -83,7 +83,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/oss.md name=page.name %}
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=3 %}
 
 ## Limit by IP address
 

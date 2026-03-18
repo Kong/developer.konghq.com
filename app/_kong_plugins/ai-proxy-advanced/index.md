@@ -171,4 +171,4 @@ The [AI load balancer](/ai-gateway/load-balancing/) supports circuit breakers to
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

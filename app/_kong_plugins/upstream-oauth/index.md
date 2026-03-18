@@ -117,4 +117,4 @@ The plugin supports the following caching [strategies](/plugins/upstream-oauth/r
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

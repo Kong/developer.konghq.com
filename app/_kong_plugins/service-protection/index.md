@@ -64,4 +64,4 @@ If you want to apply global rate limits or apply rate limits to Routes and Consu
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}

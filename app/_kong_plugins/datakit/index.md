@@ -1661,7 +1661,7 @@ The [`cache` node](#cache-node) requires a `resources.cache` resource definition
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=4 %}
 
 ### Vault resource {% new_in 3.12 %}
 

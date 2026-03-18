@@ -258,7 +258,7 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
 
 ## Access control and metadata filtering {% new_in 3.13 %}
 

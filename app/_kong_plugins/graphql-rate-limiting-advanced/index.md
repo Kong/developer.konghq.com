@@ -72,7 +72,7 @@ This is different from the cost strategy ([`config.cost_strategy`](/plugins/grap
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/enterprise.md name=page.name %}
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
 
 ## Introspection endpoint
 

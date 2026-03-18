@@ -70,7 +70,7 @@ Otherwise, the Consumer is used if an authentication plugin has been configured.
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
 
-{% include_cached /plugins/redis/oss.md name=page.name %}
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=3 %}
 
 ## Limit by IP address
 
