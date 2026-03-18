@@ -209,3 +209,17 @@ KONG_PG_SSL_VERIFY=on
 | `pg_oauth_resource` | - | string | OAuth resource parameter. |
 
 > All parameters also have `pg_ro_oauth_*` variants for read-only replica connections.
+
+## SSL Requirements
+
+OAUTHBEARER transmits tokens over the connection, so SSL is mandatory. When `pg_oauth_auth=on`, Kong automatically forces `pg_ssl=on` and `pg_ssl_required=on`.
+
+**PostgreSQL must be configured with SSL enabled.** If PostgreSQL does not have SSL configured, the connection will fail. Ensure your PostgreSQL server has the following in `postgresql.conf`:
+
+```ini
+ssl = on
+ssl_cert_file = '<path_to_server_certificate>'
+ssl_key_file = '<path_to_server_private_key>'
+```
+
+Cloud-managed PostgreSQL services typically have SSL enabled by default.
