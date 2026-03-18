@@ -62,7 +62,7 @@ Once your parameters are defined, you must set the request and response configur
 
 ### Request
 
-The [`config.request`](./reference/#schema--config-request) field is used to configure the request that will be sent to your guardrail service. You can set the URL, request body, headers, query parameters, and authentication. You cna use the parameters defined under [`config.params`](./reference/#schema--config-params) using the following syntax: `$(conf.params.<PARAM_KEY>)`.
+The [`config.request`](./reference/#schema--config-request) field is used to configure the request that will be sent to your guardrail service. You can set the URL, request body, headers, query parameters, and authentication. You can use the parameters defined under [`config.params`](./reference/#schema--config-params) using the following syntax: `$(conf.params.<PARAM_KEY>)`.
 
 ### Response
 
