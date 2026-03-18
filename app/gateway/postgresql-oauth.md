@@ -78,19 +78,38 @@ CREATE ROLE "<matched_identity>" WITH LOGIN;
 
 ## Kong Configuration
 
-### Example 1: Client Credentials Grant
+### Token endpoint vs Discovery endpoint
+
+Kong needs to know where to request tokens. There are two mutually exclusive ways to configure this:
+
+| Parameter | Description |
+|-----------|-------------|
+| `pg_oauth_token_endpoint` | The IdP's token endpoint URL directly. Use this when you know the exact URL. |
+| `pg_oauth_discovery_endpoint` | The IdP's OIDC discovery URL (`.well-known/openid-configuration`). Kong will fetch this document and extract the `token_endpoint` automatically. |
+
+One of the two is **required**. If both are set, `token_endpoint` takes precedence. Discovery mode is useful when you prefer not to hardcode the token endpoint, or when the IdP may change its endpoint URL.
+
+### Token endpoint auth method
+
+`pg_oauth_token_endpoint_auth_method` controls how Kong sends client credentials to the IdP's token endpoint:
+
+| Value | Behavior |
+|-------|----------|
+| `client_secret_post` (default) | Sends `client_id` and `client_secret` in the request body |
+| `client_secret_basic` | Sends credentials via HTTP Basic Authentication header |
+
+Choose the method your IdP supports. Most IdPs support both; some (e.g., certain enterprise IdPs) may only accept one.
+
+### Example 1: Client Credentials Grant (with token_endpoint)
 
 The most common pattern for service-to-service authentication. Kong uses `client_id` + `client_secret` to obtain a token.
 
 ```bash
-# kong.conf or environment variables
-
 KONG_PG_HOST=127.0.0.1
 KONG_PG_PORT=5432
 KONG_PG_DATABASE=kong
 KONG_PG_USER=<db_role>
 
-# Enable OAuth authentication
 KONG_PG_OAUTH_AUTH=on
 KONG_PG_OAUTH_CLIENT_ID=<client_id>
 KONG_PG_OAUTH_CLIENT_SECRET=<client_secret>
@@ -99,13 +118,32 @@ KONG_PG_OAUTH_SCOPE=openid
 KONG_PG_OAUTH_GRANT_TYPE=client_credentials
 
 # pg_ssl and pg_ssl_required are automatically enabled when pg_oauth_auth=on
-# Optionally configure SSL verification
 KONG_PG_SSL_VERIFY=on
 ```
 
-### Example 2: Password Grant
+### Example 2: Client Credentials Grant (with discovery_endpoint)
 
-Used when the IdP requires resource owner credentials (e.g., some legacy setups).
+Same as above, but using OIDC discovery to automatically resolve the token endpoint.
+
+```bash
+KONG_PG_HOST=127.0.0.1
+KONG_PG_PORT=5432
+KONG_PG_DATABASE=kong
+KONG_PG_USER=<db_role>
+
+KONG_PG_OAUTH_AUTH=on
+KONG_PG_OAUTH_CLIENT_ID=<client_id>
+KONG_PG_OAUTH_CLIENT_SECRET=<client_secret>
+KONG_PG_OAUTH_DISCOVERY_ENDPOINT=https://<idp-host>/.well-known/openid-configuration
+KONG_PG_OAUTH_SCOPE=openid
+KONG_PG_OAUTH_GRANT_TYPE=client_credentials
+
+KONG_PG_SSL_VERIFY=on
+```
+
+### Example 3: Password Grant
+
+Used when the IdP requires resource owner credentials.
 
 ```bash
 # kong.conf or environment variables
@@ -130,21 +168,44 @@ KONG_PG_OAUTH_PASSWORD=<password>
 KONG_PG_SSL_VERIFY=on
 ```
 
+### Example 4: Password Grant with ADFS
+
+ADFS (Active Directory Federation Services) typically uses password grant with a `resource` parameter to identify the target application, and may use a public client (no `client_secret`).
+
+```bash
+KONG_PG_HOST=127.0.0.1
+KONG_PG_PORT=5432
+KONG_PG_DATABASE=kong
+KONG_PG_USER=<db_role>
+
+KONG_PG_OAUTH_AUTH=on
+KONG_PG_OAUTH_CLIENT_ID=<client_id>
+KONG_PG_OAUTH_TOKEN_ENDPOINT=https://<adfs-host>/adfs/oauth2/token
+KONG_PG_OAUTH_GRANT_TYPE=password
+KONG_PG_OAUTH_USERNAME=<domain\\user>
+KONG_PG_OAUTH_PASSWORD=<password>
+KONG_PG_OAUTH_RESOURCE=https://<database-resource-uri>
+
+KONG_PG_SSL_VERIFY=on
+```
+
+> Note: `pg_oauth_resource` is only sent with the `password` grant type. `pg_oauth_client_secret` can be omitted for ADFS public clients.
+
 ## All Kong Configuration Parameters
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `pg_oauth_auth` | `off` | Enable OAUTHBEARER authentication |
-| `pg_oauth_client_id` | - | OAuth client ID |
-| `pg_oauth_client_secret` | - | OAuth client secret |
-| `pg_oauth_token_endpoint` | - | IdP token endpoint URL |
-| `pg_oauth_discovery_endpoint` | - | OIDC discovery URL (alternative to token_endpoint) |
-| `pg_oauth_scope` | - | OAuth scope (e.g., `openid`) |
-| `pg_oauth_audience` | - | OAuth audience parameter |
-| `pg_oauth_grant_type` | `client_credentials` | `client_credentials` or `password` |
-| `pg_oauth_token_endpoint_auth_method` | `client_secret_post` | How to send client credentials to IdP |
-| `pg_oauth_username` | - | Username (required for password grant) |
-| `pg_oauth_password` | - | Password (required for password grant) |
-| `pg_oauth_resource` | - | OAuth resource parameter |
+| Parameter | Default | Values | Description |
+|-----------|---------|--------|-------------|
+| `pg_oauth_auth` | `off` | `on` / `off` | Enable OAUTHBEARER authentication. Automatically enables `pg_ssl` and `pg_ssl_required`. |
+| `pg_oauth_client_id` | - | string | OAuth client ID. Required. |
+| `pg_oauth_client_secret` | - | string | OAuth client secret. Required for `client_credentials` grant. |
+| `pg_oauth_token_endpoint` | - | URL | IdP token endpoint URL. One of `token_endpoint` or `discovery_endpoint` is required. |
+| `pg_oauth_discovery_endpoint` | - | URL | OIDC discovery URL (`.well-known/openid-configuration`). Alternative to `token_endpoint`. |
+| `pg_oauth_scope` | - | string | OAuth scope to request (e.g., `openid`). |
+| `pg_oauth_audience` | - | string | OAuth audience parameter. |
+| `pg_oauth_grant_type` | `client_credentials` | `client_credentials` / `password` | OAuth grant type. |
+| `pg_oauth_token_endpoint_auth_method` | `client_secret_post` | `client_secret_post` / `client_secret_basic` | How to send client credentials to the IdP. |
+| `pg_oauth_username` | - | string | Username. Required when `grant_type` is `password`. |
+| `pg_oauth_password` | - | string | Password. Required when `grant_type` is `password`. |
+| `pg_oauth_resource` | - | string | OAuth resource parameter. |
 
 > All parameters also have `pg_ro_oauth_*` variants for read-only replica connections.
