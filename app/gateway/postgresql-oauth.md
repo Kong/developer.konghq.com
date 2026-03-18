@@ -47,7 +47,6 @@ Self-managed PostgreSQL 18 requires an `oauth_validator_libraries` plugin to val
 ### 2. Configure postgresql.conf (self-managed only)
 
 ```ini
-shared_preload_libraries = '<your_validator_plugin>'
 oauth_validator_libraries = '<your_validator_plugin>'
 ```
 
