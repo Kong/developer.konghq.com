@@ -143,9 +143,9 @@ EOF
 ```
 
 Each broker exposes three listeners:
-- `SASL_PLAINTEXT` on port `9082` in docker network — for {{site.event_gateway_short}} SASL/PLAIN connections
-- `SSL` on port `9088` in docker network — for {{site.event_gateway_short}} mTLS connections (client certificate required)
-- `PLAINTEXT` on port `9094`/`9095`/`9096` port-forwarded — for direct local access
+- `SASL_PLAINTEXT` on port `9082` in the Docker network: Used for {{site.event_gateway_short}} SASL/PLAIN connections.
+- `SSL` on port `9088` in the Docker network: Used for {{site.event_gateway_short}} mTLS connections (client certificate required).
+- `PLAINTEXT` on port `9094`/`9095`/`9096` port-forwarded: Used for direct local access.
 
 Start the cluster:
 
@@ -153,7 +153,7 @@ Start the cluster:
 docker compose up -d
 ```
 
-## Create an {{site.event_gateway_short}}
+## Create an {{site.event_gateway_short}} control plane and data plane
 
 Run the [quickstart script](https://get.konghq.com/event-gateway) to provision a local data plane and configure your environment:
 
