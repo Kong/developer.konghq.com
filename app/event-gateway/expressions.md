@@ -113,7 +113,7 @@ rows:
     example: |
       `context.auth.principal.name == 'user1'`
   - variable: "`context.auth.token.claims`"
-    type: "`string`"
+    type: "`map<string, any>`"
     description: |
       Only populated for sasl_oauth_bearer authentication. Contains all claims from the JWT token. Claims can be strings, numbers, booleans, arrays or nested JSON objects.
     availability: |
