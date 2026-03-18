@@ -16,4 +16,4 @@
 
 [dev]
   autoLaunch = false
-  targetPort = 4000
+  targetPort = 3036
