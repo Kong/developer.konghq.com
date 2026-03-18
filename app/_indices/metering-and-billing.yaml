@@ -4,6 +4,7 @@ sections:
   - title: Overview
     items:
       - path: /metering-and-billing/
+      - path: /metering-and-billing/overview/
       - path: /metering-and-billing/metering/
       - path: /metering-and-billing/product-catalog/
       - path: /metering-and-billing/customer/

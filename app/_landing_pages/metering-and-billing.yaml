@@ -26,6 +26,8 @@ rows:
                     * Subscription management to govern access and automate billing
                     * Automated invoicing and integration with payment providers and ERPs
 
+                    [How can Metering & Billing help?](/metering-and-billing/overview/)
+
       - blocks:
           - type: image
             config:
