@@ -1,10 +1,10 @@
 ---
-title: Authenticate {{site.event_gateway}} connections to Kafka
+title: Authenticate {{site.event_gateway}} connections to Kafka using mTLS
 content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
-permalink: /event-gateway/configure-backend-cluster-auth/
+permalink: /event-gateway/configure-mtls-backend-cluster-auth/
 
 products:
     - event-gateway
@@ -16,13 +16,12 @@ tags:
     - event-gateway
     - kafka
 
-description: "Configure SASL/PLAIN and mTLS authentication so that {{site.event_gateway}} can connect to a secured Kafka cluster."
+description: "Configure mTLS authentication so that {{site.event_gateway}} can connect to a secured Kafka cluster."
 
 tldr:
-  q: How do I authenticate {{site.event_gateway}} connections to a secured Kafka cluster?
+  q: How do I authenticate {{site.event_gateway}} connections to a Kafka cluster using mTLS?
   a: |
-    1. **SASL/PLAIN**: Create a backend cluster with `authentication.type: sasl_plain` and supply a `username` and `password`.
-    1. **mTLS**: Create a backend cluster with `tls.enabled: true` and supply a CA bundle and a client certificate and key in `tls.client_identity`.
+    Create a backend cluster with `tls.enabled: true` and supply a CA bundle and a client certificate and key in `tls.client_identity`.
 
 tools:
     - konnect-api
@@ -45,24 +44,22 @@ related_resources:
     url: /event-gateway/entities/backend-cluster/
   - text: Get started with {{site.event_gateway}}
     url: /event-gateway/get-started/
+  - text: Authenticate connections to Kafka using SASL/PLAIN
+    url: /event-gateway/configure-sasl-plain-backend-cluster-auth/
 ---
 
-In this guide you'll configure {{site.event_gateway_short}} to connect to the same Kafka cluster in two different ways: using SASL/PLAIN credentials and using a mutual TLS client certificate. Both are common requirements when Kafka enforces authentication on its listeners.
+In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
 
 {% mermaid %}
 flowchart LR
     C[Kafka Client]
     subgraph EG [" {{site.event_gateway_short}} "]
-        VC1[sasl virtual cluster]
         VC2[mtls virtual cluster]
     end
     subgraph K [Kafka Cluster]
-        L1["SASL_PLAINTEXT :9082"]
         L2["SSL :9088"]
     end
-    C -->|anonymous| VC1
     C -->|anonymous| VC2
-    VC1 -->|SASL/PLAIN| L1
     VC2 -->|mTLS| L2
 {% endmermaid %}
 
@@ -121,31 +118,15 @@ openssl x509 -req -in certs/client.csr -CA certs/ca.crt -CAkey certs/ca.key \
 
 ## Start the secured Kafka cluster
 
-Create the JAAS configuration file that defines the SASL/PLAIN credentials:
-
-```bash
-cat <<'EOF' > kafka_server_jaas.conf
-KafkaServer {
-    org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="gateway"
-    password="gateway-secret"
-    user_gateway="gateway-secret";
-};
-EOF
-```
-
 Create the Docker Compose file:
 
 ```bash
 cat <<'EOF' > docker-compose.yaml
-{% include_cached _files/event-gateway/docker-compose-secured.yaml %}
+{% include_cached _files/event-gateway/docker-compose-mtls.yaml %}
 EOF
 ```
 
-Each broker exposes three listeners:
-- `SASL_PLAINTEXT` on port `9082` in the Docker network: Used for {{site.event_gateway_short}} SASL/PLAIN connections.
-- `SSL` on port `9088` in the Docker network: Used for {{site.event_gateway_short}} mTLS connections (client certificate required).
-- `PLAINTEXT` on port `9094`/`9095`/`9096` port-forwarded: Used for direct local access.
+The broker exposes an `SSL` listener on port `9088` in the Docker network for {{site.event_gateway_short}} mTLS connections (client certificate required), and a `PLAINTEXT` listener on ports `9094`/`9095`/`9096` for direct local access.
 
 Start the cluster:
 
@@ -171,7 +152,7 @@ export EVENT_GATEWAY_ID=your-gateway-id
 
 ## Configure kafkactl
 
-Create a `kafkactl.yaml` config file with contexts for direct Kafka access and each virtual cluster:
+Create a `kafkactl.yaml` config file with contexts for direct Kafka access and the mTLS virtual cluster:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -183,9 +164,6 @@ command: |
         - localhost:9094
         - localhost:9095
         - localhost:9096
-    sasl-vc:
-      brokers:
-        - localhost:19092
     mtls-vc:
       brokers:
         - localhost:19096
@@ -209,128 +187,7 @@ render_output: false
 {% endvalidation %}
 <!--vale on-->
 
-## Part 1: SASL/PLAIN backend cluster auth
-
-Configure {{site.event_gateway_short}} to authenticate to Kafka using a username and password on the `SASL_PLAINTEXT` listener.
-
-### Create the backend cluster
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
-status_code: 201
-method: POST
-body:
-  name: sasl_backend_cluster
-  bootstrap_servers:
-    - kafka1:9082
-    - kafka2:9082
-    - kafka3:9082
-  authentication:
-    type: sasl_plain
-    username: gateway
-    password: gateway-secret
-  insecure_allow_anonymous_virtual_cluster_auth: true
-  tls:
-    enabled: false
-extract_body:
-  - name: id
-    variable: SASL_BACKEND_CLUSTER_ID
-capture: SASL_BACKEND_CLUSTER_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-### Create a virtual cluster
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
-status_code: 201
-method: POST
-body:
-  name: sasl_vc
-  destination:
-    id: $SASL_BACKEND_CLUSTER_ID
-  dns_label: sasl-vc
-  authentication:
-    - type: anonymous
-  acl_mode: passthrough
-extract_body:
-  - name: id
-    variable: SASL_VC_ID
-capture: SASL_VC_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-### Create a listener and policy
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners
-status_code: 201
-method: POST
-body:
-  name: sasl_listener
-  addresses:
-    - 0.0.0.0
-  ports:
-    - 19092-19095
-extract_body:
-  - name: id
-    variable: SASL_LISTENER_ID
-capture: SASL_LISTENER_ID
-jq: ".id"
-{% endkonnect_api_request %}
-<!--vale on-->
-
-<!--vale off-->
-{% konnect_api_request %}
-url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners/$SASL_LISTENER_ID/policies
-status_code: 201
-method: POST
-body:
-  type: forward_to_virtual_cluster
-  name: forward_to_sasl_vc
-  config:
-    type: port_mapping
-    advertised_host: localhost
-    destination:
-      id: $SASL_VC_ID
-{% endkonnect_api_request %}
-<!--vale on-->
-
-### Validate
-
-List the topics through the `sasl-vc` virtual cluster:
-
-<!--vale off-->
-{% validation custom-command %}
-command: |
-  kafkactl -C kafkactl.yaml --context sasl-vc list topics
-expected:
-  return_code: 0
-  message: |
-    TOPIC     PARTITIONS     REPLICATION FACTOR
-    orders    1              1
-render_output: false
-{% endvalidation %}
-<!--vale on-->
-
-```shell
-TOPIC     PARTITIONS     REPLICATION FACTOR
-orders    1              1
-```
-{:.no-copy-code}
-
-{{site.event_gateway_short}} authenticated to Kafka using the `gateway` SASL/PLAIN credentials and forwarded the metadata request successfully.
-
-## Part 2: mTLS backend cluster auth
-
-Configure {{site.event_gateway_short}} to authenticate to Kafka by presenting a client certificate on the `SSL` listener.
-
-### Create the backend cluster
+## Create the backend cluster
 
 The `ca_bundle` and `client_identity.certificate` fields accept PEM-encoded strings.
 The `client_identity.key` field requires a base64-encoded value.
@@ -378,7 +235,7 @@ jq: ".id"
 The `ca_bundle` lets {{site.event_gateway_short}} verify the broker's certificate.
 The `client_identity` holds the certificate and key that {{site.event_gateway_short}} presents to Kafka during the TLS handshake.
 
-### Create a virtual cluster
+## Create a virtual cluster
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -401,7 +258,7 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-### Create a listener and policy
+## Create a listener and policy
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -438,7 +295,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-### Validate
+## Validate
 
 List the topics through the `mtls-vc` virtual cluster:
 
