@@ -31,8 +31,8 @@
 
 | Component | Minimum Version | Notes |
 |-----------|----------------|-------|
-| Kong Enterprise | 3.x+ | Requires pgmoon with OAUTHBEARER SASL support |
-| PostgreSQL | **18** | First version to support OAUTHBEARER authentication |
+| {{site.ee_product_name}} | 3.14+ | First version to support OAUTHBEARER SASL |
+| PostgreSQL | **18+** | First version to support OAUTHBEARER authentication |
 | OAuth Validator | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
 | IdP | - | Any OIDC-compliant identity provider |
 
