@@ -1,4 +1,4 @@
-For {{site.konnect_short_name}}, you can either use the built-in {{site.metering-and-billing}} event ingestion that uses events from Advanced Analytics or use the Metering & Billing plugin.
+For {{site.konnect_short_name}}, you can either use the built-in {{site.metering_and_billing}} event ingestion that uses events from Advanced Analytics or use the Metering & Billing plugin.
 
 {:.danger}
 > **Event duplication:** 
