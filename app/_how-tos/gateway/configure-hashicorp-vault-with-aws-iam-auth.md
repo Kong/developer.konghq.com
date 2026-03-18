@@ -43,26 +43,26 @@ search_aliases:
 tldr:
     q: How do I configure HashiCorp Vault to authenticate using AWS IAM?
     a: |
-      Enable the AWS auth method in HashiCorp Vault, configure it with credentials that can verify IAM identity, and create an IAM role bound to Kong's IAM principal ARN.
+      Enable the AWS auth method in HashiCorp Vault, configure it with credentials that can verify IAM identity, and create an IAM role bound to {{site.base_gateway}}'s IAM principal ARN.
 
       Then in {{site.base_gateway}}:
       * Configure a Vault entity with `config.auth_method` set to `aws_iam`.
       * Set `config.aws_auth_role` to the Vault role name.
       * Set `config.aws_auth_region` to your AWS region.
-      * Optionally set `config.aws_access_key_id` and `config.aws_secret_access_key` for Kong's AWS credentials. If omitted, Kong uses the default AWS credentials provider chain.
+      * Optionally set `config.aws_access_key_id` and `config.aws_secret_access_key` for {{site.base_gateway}}'s AWS credentials. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain.
 
 tools:
     - deck
 
 prereqs:
   inline:
-    - title: AWS IAM principal for Kong
+    - title: AWS IAM principal for {{site.base_gateway}}
       content: |
-        You need an AWS IAM role or user that Kong will use to authenticate to HashiCorp Vault.
+        You need an AWS IAM role or user that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
 
-        Kong's IAM principal does not need any additional IAM policies. The `sts:GetCallerIdentity` action — which Vault uses to verify the identity — is available to all authenticated AWS principals by default.
+        {{site.base_gateway}}'s IAM principal does not need any additional IAM policies. The `sts:GetCallerIdentity` action — which Vault uses to verify the identity — is available to all authenticated AWS principals by default.
 
-        Export Kong's AWS credentials and the ARN of the IAM principal:
+        Export {{site.base_gateway}}'s AWS credentials and the ARN of the IAM principal:
         ```sh
         export DECK_AWS_ACCESS_KEY_ID="KONG-ACCESS-KEY-ID"
         export DECK_AWS_SECRET_ACCESS_KEY="KONG-SECRET-ACCESS-KEY"
@@ -70,7 +70,7 @@ prereqs:
         export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
         ```
 
-        Replace `KONG-ACCESS-KEY-ID` and `KONG-SECRET-ACCESS-KEY` with the credentials for Kong's IAM principal, and `KONG_IAM_PRINCIPAL_ARN` with the ARN of the IAM user or role.
+        Replace `KONG-ACCESS-KEY-ID` and `KONG-SECRET-ACCESS-KEY` with the credentials for {{site.base_gateway}}'s IAM principal, and `KONG_IAM_PRINCIPAL_ARN` with the ARN of the IAM user or role.
       icon_url: /assets/icons/aws.svg
     - title: AWS credentials for the Vault server
       content: |
@@ -108,7 +108,7 @@ cleanup:
 faqs:
   - q: Do I have to provide `aws_access_key_id` and `aws_secret_access_key` in the Vault entity?
     a: |
-      No, these fields are optional. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain, which checks environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`), shared credential files, and EC2 instance profiles in order. Providing them explicitly in the entity is useful when you want to configure Kong's AWS identity independently of the host environment.
+      No, these fields are optional. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain, which checks environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`), shared credential files, and EC2 instance profiles in order. Providing them explicitly in the entity is useful when you want to configure {{site.base_gateway}}'s AWS identity independently of the host environment.
   - q: How does Vault verify the AWS IAM identity without requiring extra IAM permissions?
     a: |
       {{site.base_gateway}} signs an AWS `sts:GetCallerIdentity` request using the configured AWS credentials and sends it to HashiCorp Vault. Vault then forwards the signed request to AWS STS and checks the returned identity against the `bound_iam_principal_arn` configured in the role. The `sts:GetCallerIdentity` action requires no explicit IAM policy — it is available to all authenticated AWS identities by default.
@@ -204,7 +204,7 @@ path "*" {
      secret_key="$VAULT_AWS_SECRET_KEY"
    ```
 
-1. Create an IAM role that binds to Kong's IAM principal:
+1. Create an IAM role that binds to {{site.base_gateway}}'s IAM principal:
    ```sh
    vault write auth/aws/role/kong-role \
      auth_type=iam \

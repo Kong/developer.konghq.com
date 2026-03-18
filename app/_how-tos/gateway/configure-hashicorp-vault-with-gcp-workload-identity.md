@@ -43,7 +43,7 @@ search_aliases:
 tldr:
     q: How do I configure HashiCorp Vault to authenticate using GCP workload identity?
     a: |
-      Run {{site.base_gateway}} on a GCE instance with a service account attached. Enable the GCP auth method in HashiCorp Vault and create a GCE role bound to your Kong service account.
+      Run {{site.base_gateway}} on a GCE instance with a service account attached. Enable the GCP auth method in HashiCorp Vault and create a GCE role bound to your {{site.base_gateway}} service account.
 
       Then in {{site.base_gateway}}:
       * Configure a Vault entity with `config.auth_method` set to `gcp_gce`.
@@ -56,33 +56,42 @@ prereqs:
   inline:
     - title: GCE instance with service account
       content: |
-        {{site.base_gateway}} must be running on a GCE (Google Compute Engine) instance with a service account attached. The GCE instance identity token is automatically provided by the GCE metadata service — no credential files or additional IAM permissions are required on Kong's side.
+        To complete this tutorial, {{site.base_gateway}} must be running on a GCE (Google Compute Engine) instance with a service account that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
+        1. [Enable the following GCP APIs in your project](https://docs.cloud.google.com/endpoints/docs/openapi/enable-api):
+           * `iam.googleapis.com`
+           * `compute.googleapis.com`
+        1. Create a service account to attach to your GCE instance, no additional IAM permissions are necessary.
+        1. Export the service account email attached to your GCE instance:
+           ```sh
+           export GCE_SERVICE_ACCOUNT="kong@YOUR-PROJECT.iam.gserviceaccount.com"
+           ```
+        1. [Attach the service account to your GCE instance](https://docs.cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances). 
 
-        If {{site.base_gateway}} is not running on a GCE instance, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
+        If {{site.base_gateway}} isn't running on a GCE instance, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
 
-        Enable the following GCP APIs in your project:
-        * `iam.googleapis.com`
-        * `compute.googleapis.com`
-
-        Export the service account email attached to your GCE instance:
-        ```sh
-        export DECK_GCE_SERVICE_ACCOUNT="kong@YOUR-PROJECT.iam.gserviceaccount.com"
-        ```
       icon_url: /assets/icons/google-cloud.svg
     - title: GCP credentials for the Vault server
       content: |
         HashiCorp Vault must call the GCP Compute Engine API to verify incoming GCE instance identity tokens. You need a GCP service account for the Vault server with `roles/compute.viewer`.
 
-        1. Create a service account for the Vault server in your GCP project.
+        1. In the [Google Cloud console](https://console.cloud.google.com/), create a service account key:
+           1. In the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts), click your project.
+           1. Click **Create service account**.
+           1. Enter a name for your service account.
+           1. Click **Create and continue**.
+           1. From the **Select a role** dropdown menu, select "Compute Viewer". 
+              For more information about this role, see [Compute Engine roles and permissions](https://docs.cloud.google.com/iam/docs/roles-permissions/compute#compute.viewer).
+           1. Click **Continue**.
+           1. Click **Done**.
+          1. Click the service account you just created.
+          2. From the **Keys** tab, create a new key from the add key menu and select JSON for the key type.
+          3. Save the JSON file you downloaded.
+          1. Set the environment variables needed to authenticate to Google Cloud:
+             ```sh
+             export VAULT_GCP_CREDENTIALS_FILE="/path/to/vault-server-sa-key.json"
+             export KONG_LUA_SSL_TRUSTED_CERTIFICATE='system'
+             ```
 
-        1. Grant `roles/compute.viewer` to the Vault server service account.
-
-        1. Create and download a JSON key for the Vault server service account.
-
-        1. Export the path to the JSON key file:
-           ```sh
-           export VAULT_GCP_CREDENTIALS_FILE="/path/to/vault-server-sa-key.json"
-           ```
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -107,7 +116,7 @@ cleanup:
 faqs:
   - q: What if {{site.base_gateway}} is not running on a GCE instance?
     a: |
-      The `gcp_gce` auth method requires Kong to run on a GCE instance — it relies on the GCE instance metadata service to provide the identity token automatically. If Kong is not on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) (`gcp_iam`) instead, which works from any environment.
+      The `gcp_gce` auth method requires {{site.base_gateway}} to run on a GCE instance — it relies on the GCE instance metadata service to provide the identity token automatically. If {{site.base_gateway}} is not on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) (`gcp_iam`) instead, which works from any environment.
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
   - q: |
@@ -125,7 +134,7 @@ automated_tests: false
 ---
 
 {:.warning}
-> **Important:** This how-to requires {{site.base_gateway}} to be running on a GCE instance with a service account attached. The GCE instance identity token is provided automatically by the instance metadata service — no credential files are needed on the Kong side. If {{site.base_gateway}} is not running on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
+> **Important:** This how-to requires {{site.base_gateway}} to be running on a GCE instance with a service account attached. The GCE instance identity token is provided automatically by the instance metadata service — no credential files are needed on the {{site.base_gateway}} side. If {{site.base_gateway}} is not running on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
 
 ## Configure HashiCorp Vault
 
@@ -202,11 +211,11 @@ path "*" {
      credentials=@$VAULT_GCP_CREDENTIALS_FILE
    ```
 
-1. Create a GCE role that binds to Kong's GCP service account:
+1. Create a GCE role that binds to {{site.base_gateway}}'s GCP service account:
    ```sh
    vault write auth/gcp/role/kong-role \
      type="gce" \
-     bound_service_accounts="$DECK_GCE_SERVICE_ACCOUNT" \
+     bound_service_accounts="$GCE_SERVICE_ACCOUNT" \
      token_policies="rw-secrets"
    ```
 

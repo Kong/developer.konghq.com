@@ -42,7 +42,7 @@ search_aliases:
 tldr:
     q: How do I configure HashiCorp Vault to authenticate using a GCP service account?
     a: |
-      Enable the GCP auth method in HashiCorp Vault, configure it with your Vault server's GCP service account credentials, and create an IAM role bound to Kong's service account.
+      Enable the GCP auth method in HashiCorp Vault, configure it with your Vault server's GCP service account credentials, and create an IAM role bound to {{site.base_gateway}}'s service account.
 
       Then in {{site.base_gateway}}:
       * Configure a Vault entity with `config.auth_method` set to `gcp_iam`.
@@ -232,7 +232,7 @@ path "*" {
      credentials=@$VAULT_GCP_CREDENTIALS_FILE
    ```
 
-1. Create an IAM role that binds to Kong's GCP service account:
+1. Create an IAM role that binds to {{site.base_gateway}}'s GCP service account:
    ```sh
    vault write auth/gcp/role/kong-role \
      type="iam" \

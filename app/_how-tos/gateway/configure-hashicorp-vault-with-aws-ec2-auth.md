@@ -49,7 +49,7 @@ tldr:
       Then in {{site.base_gateway}}:
       * Configure a Vault entity with `config.auth_method` set to `aws_ec2`.
       * Set `config.aws_auth_role` to the Vault role name.
-      * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service — no AWS credentials are required on Kong's side.
+      * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service — no AWS credentials are required on {{site.base_gateway}}'s side.
 
 tools:
     - deck
@@ -58,7 +58,7 @@ prereqs:
   inline:
     - title: EC2 instance with instance profile
       content: |
-        {{site.base_gateway}} must be running on an EC2 instance with an instance profile attached. The EC2 instance identity document is automatically provided by the instance metadata service — no additional IAM permissions are required on Kong's side.
+        {{site.base_gateway}} must be running on an EC2 instance with an instance profile attached. The EC2 instance identity document is automatically provided by the instance metadata service — no additional IAM permissions are required on {{site.base_gateway}}'s side.
 
         If {{site.base_gateway}} is not running on an EC2 instance, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) instead.
 
@@ -108,10 +108,10 @@ cleanup:
 faqs:
   - q: What if {{site.base_gateway}} is not running on an EC2 instance?
     a: |
-      The `aws_ec2` auth method requires Kong to run on an EC2 instance — it relies on the EC2 instance metadata service to provide the instance identity document automatically. If Kong is not on EC2, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) (`aws_iam`) instead, which works from any environment with AWS credentials.
+      The `aws_ec2` auth method requires {{site.base_gateway}} to run on an EC2 instance — it relies on the EC2 instance metadata service to provide the instance identity document automatically. If {{site.base_gateway}} is not on EC2, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) (`aws_iam`) instead, which works from any environment with AWS credentials.
   - q: What is the nonce used for in EC2 authentication?
     a: |
-      The nonce is a unique client-provided value stored alongside the Vault token after the first successful EC2 login. On subsequent logins from the same instance, Vault validates that the same nonce is presented, preventing replay attacks where a stolen instance identity document could be used to authenticate from a different host. Store the nonce securely and use the same value consistently across Kong nodes running on the same instance.
+      The nonce is a unique client-provided value stored alongside the Vault token after the first successful EC2 login. On subsequent logins from the same instance, Vault validates that the same nonce is presented, preventing replay attacks where a stolen instance identity document could be used to authenticate from a different host. Store the nonce securely and use the same value consistently across {{site.base_gateway}} nodes running on the same instance.
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
   - q: |
@@ -129,7 +129,7 @@ automated_tests: false
 ---
 
 {:.warning}
-> **Important:** This how-to requires {{site.base_gateway}} to be running on an EC2 instance with an instance profile attached. The instance identity document is provided automatically by the EC2 instance metadata service — no additional IAM permissions are required on Kong's side. If {{site.base_gateway}} is not running on EC2, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) instead.
+> **Important:** This how-to requires {{site.base_gateway}} to be running on an EC2 instance with an instance profile attached. The instance identity document is provided automatically by the EC2 instance metadata service — no additional IAM permissions are required on {{site.base_gateway}}'s side. If {{site.base_gateway}} is not running on EC2, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) instead.
 
 ## Configure HashiCorp Vault
 
@@ -207,7 +207,7 @@ path "*" {
      secret_key="$VAULT_AWS_SECRET_KEY"
    ```
 
-1. Create an EC2 role that binds to your Kong instance's AMI ID:
+1. Create an EC2 role that binds to your {{site.base_gateway}} instance's AMI ID:
    ```sh
    vault write auth/aws/role/kong-role \
      auth_type=ec2 \
