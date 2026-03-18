@@ -1,4 +1,4 @@
-description: 'Emit separate usage events for AI input and output tokens on AI Gateway requests, billed to the authenticated Kong consumer.'
+description: 'Emit separate usage events for AI input and output tokens on AI Gateway requests, billed to the authenticated Kong Consumer.'
 extended_description: |
   This example enables AI token metering. 
   For each AI Gateway request, the plugin emits two events: one for input (prompt) tokens and one for output (completion) tokens. 

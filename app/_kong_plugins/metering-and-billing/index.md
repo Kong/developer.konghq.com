@@ -5,7 +5,7 @@ name: 'Metering & Billing'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with {{site.konnect_short_name}} {{site.metering-and-billing}}.'
+description: 'Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with {{site.konnect_short_name}} {{site.metering_and_billing}}.'
 
 
 products:
@@ -42,16 +42,16 @@ categories:
    - monetization
 
 related_resources:
-  - text: "{{site.konnect_short_name}} {{site.metering-and-billing}}"
+  - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
   - text: "{{site.konnect_short_name}} metering"
     url: /metering-and-billing/metering/
 ---
 
-The Metering & Billing plugin allows you to meter API requests and AI token usage for usage-based billing for both {{site.base_gateway}} on prem and {{site.konnect_short_name}} deployments. 
+The Metering & Billing plugin allows you to meter API requests and AI token usage for usage-based billing for both {{site.base_gateway}} on-prem and {{site.konnect_short_name}} deployments. 
 The plugin supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. 
 
-If you're using {{site.base_gateway}} on prem and want to meter traffic, you must use the Metering & Billing plugin. 
+If you're using {{site.base_gateway}} on-prem and want to meter traffic, you must use the Metering & Billing plugin. 
 {% include /plugins/metering-and-billing/konnect-use-case-table.md %}
 
 ## How it works
