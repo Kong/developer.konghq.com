@@ -427,11 +427,9 @@ rows:
 
 ## Trusted origins
 
-Trusted origins in Kong Identity allow you to configure the allowed origins that Kong Identity returns in the CORS header. When trusted origins are configured, only these URIs can make CORS requests to the authorization server.
+Trusted origins in Kong Identity let you configure which origins Kong Identity includes in CORS response headers, such as `Access-Control-Allow-Origin`. When trusted origins are configured, Kong Identity returns CORS headers only for requests whose origin matches one of the configured trusted origins.
 
-Trusted origins can help with the following use cases:
-* Testing login in a development environment using `localhost`
-* Allowing in-browser tools to request tokens without CORS issues
+Trusted origins can help with use cases where you want to allow in-browser tools to request tokens without CORS issues.
 
 {% navtabs "trusted-origins" %}
 {% navtab "UI" %}
@@ -443,11 +441,11 @@ Trusted origins can help with the following use cases:
    {:.info}
    > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
 1. Click **Show advanced configuration**.
-1. In the **Trusted origins** field, enter your trusted origins URIs.
+1. In the **Trusted origins** field, enter your trusted origins.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
-Send a POST request to the [`/auth-servers` endpoint](https://developer.konghq.com/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+Send a POST request to the [`/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/auth-servers
@@ -459,7 +457,8 @@ body:
   name: My Auth Server
   audience: api://default
   trusted_origins:
-    - $YOUR_APP_URI
+    - https://app.example.com
+    - http://localhost:3000
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endnavtab %}
