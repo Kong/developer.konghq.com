@@ -69,6 +69,7 @@ next_steps:
   - text: See all {{site.base_gateway}} plugins
     url: /plugins/
 automated_tests: false
+stepper: true
 ---
 
 This getting-started guide shows how you can meter {{site.base_gateway}} API requests and invoice your customers based on their API consumption with {{site.metering_and_billing}} in {{site.konnect_short_name}}.
