@@ -28,17 +28,27 @@ config:
     content_safety_url: ${content_safety_url}
     content_safety_key: ${content_safety_key}
   request:
-    url: '${conf.params.content_safety_url}'
+    url: '$(conf.params.content_safety_url)'
     headers: 
       Ocp-Apim-Subscription-Key: '$(conf.params.content_safety_key)'
     body:
-      categories: '[{ \"name\": \"Hate\", \"rejection_level\": 2}, { \"name\": \"Violence\", \"rejection_level\": 2}]'
+      categories: "$(category_names)"
   response:
     block: '$(check_response.block)'
     block_message: '$(check_response.block_message)'
   functions:
+    category_names: |
+       return function(conf)
+              local category_names = {}
+              for _, v in ipairs(conf.params.categories or {}) do
+                if v.rejection_level >= 2 then
+                  table.insert(category_names, v.name)
+                end
+              end
+              return category_names
+            end
     check_response: |
-      [[return function(resp, conf)
+      return function(resp, conf)
             local res = {
               block = true,
               block_message = "content passed safety check",
@@ -65,14 +75,13 @@ config:
               end
 
               if failure_level and (v.severity >= failure_level) then
-                -- hack to prevent adding '; ' to the end of a single-cat failure
                 if not ok then
                   reason = reason .. "; "
                 end
 
                 ok = false
                 reason = reason .. "breached category [" .. category_name .. "] at level " .. failure_level
-              end -- else just ignore it, we didn't define a failure threshold
+              end
             end
 
             for _, v in ipairs(resp.blocklistsMatch or EMPTY_T) do
@@ -86,7 +95,7 @@ config:
               block = not ok,
               block_message = reason,
             }
-          end]]
+          end
   guarding_mode: BOTH
 
 tools:
