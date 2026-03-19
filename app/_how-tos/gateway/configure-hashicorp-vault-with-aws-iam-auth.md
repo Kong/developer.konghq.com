@@ -19,6 +19,8 @@ related_resources:
     url: /how-to/configure-hashicorp-vault-with-gcp-workload-identity/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: HashiCorp AWS auth method reference
+    url: https://developer.hashicorp.com/vault/api-docs/auth/aws
 
 works_on:
     - on-prem
@@ -55,12 +57,13 @@ tools:
     - deck
 
 prereqs:
+  skip_product: true
   inline:
     - title: AWS IAM principal for {{site.base_gateway}}
       content: |
-        You need an AWS IAM role or user that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
+        You need an [AWS IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) or [user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
 
-        {{site.base_gateway}}'s IAM principal does not need any additional IAM policies. The `sts:GetCallerIdentity` action — which Vault uses to verify the identity — is available to all authenticated AWS principals by default.
+        {{site.base_gateway}}'s IAM principal doesn't need any additional IAM policies. The `sts:GetCallerIdentity` action that Vault uses to verify the identity is available to all authenticated AWS principals by default.
 
         Export {{site.base_gateway}}'s AWS credentials and the ARN of the IAM principal:
         ```sh
@@ -69,12 +72,10 @@ prereqs:
         export DECK_AWS_AUTH_REGION="us-east-1"
         export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
         ```
-
-        Replace `KONG-ACCESS-KEY-ID` and `KONG-SECRET-ACCESS-KEY` with the credentials for {{site.base_gateway}}'s IAM principal, and `KONG_IAM_PRINCIPAL_ARN` with the ARN of the IAM user or role.
       icon_url: /assets/icons/aws.svg
     - title: AWS credentials for the Vault server
       content: |
-        HashiCorp Vault must call AWS IAM APIs to verify incoming authentication requests. The Vault server needs IAM credentials with the following permissions:
+        You need an [AWS IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) for HashiCorp Vault to call the AWS IAM APIs to verify incoming authentication requests. The Vault server needs IAM credentials with the following permissions:
         * `iam:GetUser`
         * `iam:GetRole`
 
@@ -134,63 +135,11 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 
 ### Create configuration files
 
-First, create the primary configuration file `config.hcl` for HashiCorp Vault in the `./vault` directory:
-```
-listener "tcp" {
-  address     = "0.0.0.0:8200"
-  tls_disable = true
-}
-
-storage "file" {
-  path = "./vault/data"
-}
-
-ui = true
-```
-
-Then, create the HashiCorp Vault policy file `rw-secrets.hcl` in the `./vault` directory:
-```
-path "*" {
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-```
+{% include /gateway/hashicorp-vault-create-policies.md %}
 
 ### Configure the Vault and store a secret
 
-1. Start HashiCorp Vault:
-   ```sh
-   vault server -config=./vault/config.hcl
-   ```
-
-1. In a new terminal, set the Vault address:
-   ```sh
-   export VAULT_ADDR="http://localhost:8200"
-   ```
-
-1. Initialize the Vault:
-   ```sh
-   vault operator init -key-shares=1 -key-threshold=1
-   ```
-   This outputs your unseal key and initial root token. Export them as environment variables:
-   ```sh
-   export HCV_UNSEAL_KEY='YOUR-UNSEAL-KEY'
-   export DECK_HCV_TOKEN='YOUR-INITIAL-ROOT-TOKEN'
-   ```
-
-1. Unseal your Vault:
-   ```sh
-   vault operator unseal $HCV_UNSEAL_KEY
-   ```
-
-1. Log in to your Vault:
-   ```sh
-   vault login $DECK_HCV_TOKEN
-   ```
-
-1. Write the policy to access secrets:
-   ```sh
-   vault policy write rw-secrets ./vault/rw-secrets.hcl
-   ```
+{% include /gateway/hashicorp-vault-basic-setup.md %}
 
 1. Enable AWS authentication:
    ```sh
@@ -200,8 +149,9 @@ path "*" {
 1. Configure the AWS auth method with the Vault server's AWS credentials:
    ```sh
    vault write auth/aws/config/client \
-     access_key="$VAULT_AWS_ACCESS_KEY" \
-     secret_key="$VAULT_AWS_SECRET_KEY"
+     secret_key=$VAULT_AWS_ACCESS_KEY \
+     access_key=$VAULT_AWS_SECRET_KEY \
+     use_sts_region_from_client=true
    ```
 
 1. Create an IAM role that binds to {{site.base_gateway}}'s IAM principal:
@@ -273,7 +223,8 @@ variables:
     value: $AWS_SECRET_ACCESS_KEY
 {% endentity_examples %}
 
-`aws_access_key_id` and `aws_secret_access_key` are optional. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain (environment variables, shared credential files, EC2 instance profile).
+{:.info}
+> **Cross-account access:** If {{site.base_gateway}} and your Vault server are in different AWS accounts, configure `aws_assume_role_arn` with the ARN of the role Kong should assume in the target account, and `aws_role_session_name` with a session identifier. If you configure the Vault this way for cross-account access, `aws_access_key_id` and `aws_secret_access_key` are optional.
 
 ## Validate
 

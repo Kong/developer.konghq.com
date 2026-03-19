@@ -19,6 +19,8 @@ related_resources:
     url: /how-to/configure-hashicorp-vault-with-gcp-workload-identity/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: HashiCorp AWS auth method reference
+    url: https://developer.hashicorp.com/vault/api-docs/auth/aws
 
 works_on:
     - on-prem
@@ -55,6 +57,7 @@ tools:
     - deck
 
 prereqs:
+  skip_product: true
   inline:
     - title: EC2 instance with instance profile
       content: |
@@ -128,72 +131,17 @@ next_steps:
 automated_tests: false
 ---
 
-{:.warning}
-> **Important:** This how-to requires {{site.base_gateway}} to be running on an EC2 instance with an instance profile attached. The instance identity document is provided automatically by the EC2 instance metadata service — no additional IAM permissions are required on {{site.base_gateway}}'s side. If {{site.base_gateway}} is not running on EC2, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) instead.
-
 ## Configure HashiCorp Vault
 
 Before you can configure the Vault entity in {{site.base_gateway}}, you must configure HashiCorp Vault to authenticate clients using EC2 instance identity documents and store a secret.
 
 ### Create configuration files
 
-First, create the primary configuration file `config.hcl` for HashiCorp Vault in the `./vault` directory:
-```
-listener "tcp" {
-  address     = "0.0.0.0:8200"
-  tls_disable = true
-}
-
-storage "file" {
-  path = "./vault/data"
-}
-
-ui = true
-```
-
-Then, create the HashiCorp Vault policy file `rw-secrets.hcl` in the `./vault` directory:
-```
-path "*" {
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-```
+{% include /gateway/hashicorp-vault-create-policies.md %}
 
 ### Configure the Vault and store a secret
 
-1. Start HashiCorp Vault:
-   ```sh
-   vault server -config=./vault/config.hcl
-   ```
-
-1. In a new terminal, set the Vault address:
-   ```sh
-   export VAULT_ADDR="http://localhost:8200"
-   ```
-
-1. Initialize the Vault:
-   ```sh
-   vault operator init -key-shares=1 -key-threshold=1
-   ```
-   This outputs your unseal key and initial root token. Export them as environment variables:
-   ```sh
-   export HCV_UNSEAL_KEY='YOUR-UNSEAL-KEY'
-   export DECK_HCV_TOKEN='YOUR-INITIAL-ROOT-TOKEN'
-   ```
-
-1. Unseal your Vault:
-   ```sh
-   vault operator unseal $HCV_UNSEAL_KEY
-   ```
-
-1. Log in to your Vault:
-   ```sh
-   vault login $DECK_HCV_TOKEN
-   ```
-
-1. Write the policy to access secrets:
-   ```sh
-   vault policy write rw-secrets ./vault/rw-secrets.hcl
-   ```
+{% include /gateway/hashicorp-vault-basic-setup.md %}
 
 1. Enable AWS authentication:
    ```sh
