@@ -74,6 +74,15 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include plugins/redis-cloud-auth.md %}
 
+## Rate limiting policies {% new_in 3.14 %}
+
+The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the Consumer, Consumer Group, IP address, header, path, model, and provider level.
+
+{:.info}
+> The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
+
+
+
 ## Headers sent to the client
 
 When this plugin is enabled, {{site.base_gateway}} sends some additional headers back to the client,
