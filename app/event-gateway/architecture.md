@@ -101,7 +101,7 @@ rows:
 When a Kafka client connects to the {{site.event_gateway_short}} proxy, the proxy acts as the Kafka bootstrap server. 
 The bootstrap server informs the Kafka client about all the brokers in the cluster, and the client then handles balancing requests to all brokers.
 
-To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do this: port mapping, or using TLS with SNI. You configure both options on a [listener](/event-gateway/entities/listener/) policy.
+To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do this: port mapping, or using TLS with SNI. You configure both options on a listener policy.
 
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
 Each broker exposes port `9092`, and the proxy is listening on the IP `10.0.0.1`.
@@ -164,34 +164,9 @@ We recommend this method for production.
 
 You must provide a TLS certificate for every host exposed on the {{site.event_gateway_short}}. 
 This can be done through a certificate with a wildcard SAN, a single certificate with multiple SANs, or multiple certificates in the same bundle.
-{% if_version lte:1.0.x %}
-The client must also be able to resolve the hostnames to the IP address of the gateway.
 
-Here is an example configuration:
-
-{% entity_example %}
-type: listener
-data:
-  name: listener
-  addresses:
-  - 0.0.0.0
-  ports:
-  - 9092
-{% endentity_example %}
-
-{% entity_example %}
-type: event_gateway_policy
-policy_type: forward-to-virtual-cluster
-name: forward-sni
-data:
-  sni_suffix: .acme
-  advertised_port: 9092
-  type: sni
-{% endentity_example %}
-{% endif_version %}
-
-{% if_version gte:1.1.x %}
-Alternatively, you can configure `broker_host_format` to `shared_suffix`, so that you can use one wildcard SAN for all virtual clusters. In this case the mapping looks like this:
+#### Shared suffix {% new_in 1.1 %}
+Alternatively, you can set `broker_host_format` to `shared_suffix` in the listener policy, so that you can use one wildcard SAN for all virtual clusters. In this case, the mapping looks like this
 
 ```
 bootstrap-my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)
@@ -202,7 +177,7 @@ broker-3-my-event-gateway.acme:9092 → kafka3:9092
 
 In all cases, the client must also be able to resolve the hostnames to the IP address of the gateway.
 
-Here is an example configuration:
+Here is an example configuration. First, configure a listener with the port that you're using:
 
 {% entity_example %}
 type: listener
@@ -214,6 +189,7 @@ data:
   - 9092
 {% endentity_example %}
 
+Then configure an SNI forwarding policy:
 {% entity_example %}
 type: event_gateway_policy
 policy_type: forward-to-virtual-cluster
@@ -224,4 +200,3 @@ data:
   broker_host_format: shared_suffix
   type: sni
 {% endentity_example %}
-{% endif_version %}
