@@ -60,6 +60,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avalara
 Avro
 aws
 Adyen
