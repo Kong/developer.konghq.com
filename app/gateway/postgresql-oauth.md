@@ -75,17 +75,15 @@ oauth_validator_libraries = '<your_validator_plugin>'
 ### 3. Configure pg_hba.conf
 
 ```
-# TYPE   DATABASE  USER      ADDRESS  METHOD  OPTIONS
-local    all       all                trust
-host     all       postgres  all      trust
-host     all       all       all      oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
+# TYPE   DATABASE  USER      ADDRESS      METHOD  OPTIONS
+host     all       all       0.0.0.0/0   oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
 ```
 
 Rules are evaluated top-down, first match wins:
 
 | Rule | Meaning |
 |------|---------|
-| `host all all all oauth ...` | All other TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
+| `host all all 0.0.0.0/0 oauth ...` | All TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
 
 ### 4. Create a database role matching the token identity
 
