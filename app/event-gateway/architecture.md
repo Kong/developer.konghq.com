@@ -122,30 +122,7 @@ Let's use an example where the proxy exposes the following ports:
 Kafka clients are meant to be configured only with a bootstrap port.
 Mapping ports is easier for getting started, but we don't recommend using this method in production because it's less flexible.
 
-Here is an example configuration. First, configure the listener to listen on the ports you want to use:
-
-{% entity_example %}
-type: listener
-data:
-  name: listener
-  addresses:
-  - 0.0.0.0
-  ports:
-  - 9092-9095
-{% endentity_example %}
-Next, add a listener policy with port mapping:
-{% entity_example %}
-type: event_gateway_policy
-policy_type: forward-to-virtual-cluster
-name: forward-ports
-data:
-  advertised_host: 0.0.0.0
-  bootstrap_port: at_start
-  destination:
-    name: example-virtual-cluster
-  min_broker_id: 1
-  type: port_mapping
-{% endentity_example %}
+For an example configuration, see [Forward via port mapping](/event-gateway/policies/forward-to-virtual-cluster/examples/port-mapping/).
 
 ### SNI mapping
 
@@ -177,26 +154,6 @@ broker-3-my-event-gateway.acme:9092 → kafka3:9092
 
 In all cases, the client must also be able to resolve the hostnames to the IP address of the gateway.
 
-Here is an example configuration. First, configure a listener with the port that you're using:
-
-{% entity_example %}
-type: listener
-data:
-  name: listener
-  addresses:
-  - 0.0.0.0
-  ports:
-  - 9092
-{% endentity_example %}
-
-Then configure an SNI forwarding policy:
-{% entity_example %}
-type: event_gateway_policy
-policy_type: forward-to-virtual-cluster
-name: forward-sni
-data:
-  sni_suffix: .acme
-  advertised_port: 9092
-  broker_host_format: shared_suffix
-  type: sni
-{% endentity_example %}
+For example configurations, see:
+* [Forward via SNI routing](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing/)
+* [Forward via SNI routing with shared suffix](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing-shared-suffix/)
