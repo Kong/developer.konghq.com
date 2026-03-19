@@ -19,6 +19,8 @@ related_resources:
     url: /how-to/configure-hashicorp-vault-with-aws-ec2-auth/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: HashiCorp Google Cloud auth method reference
+    url: https://developer.hashicorp.com/vault/api-docs/auth/gcp
 
 works_on:
     - on-prem
@@ -53,6 +55,7 @@ tools:
     - deck
 
 prereqs:
+  skip_product: true
   inline:
     - title: GCE instance with service account
       content: |
@@ -60,6 +63,12 @@ prereqs:
         1. [Enable the following GCP APIs in your project](https://docs.cloud.google.com/endpoints/docs/openapi/enable-api):
            * `iam.googleapis.com`
            * `compute.googleapis.com`
+        1. Export the bound project, zone, and labels for your GCE instance:
+           ```sh
+           export GCP_PROJECT='YOUR GCP PROJECT'
+           export GCE_ZONE='YOUR GCE INSTANCE ZONE'
+           export GCE_LABEL='YOUR GCE INSTANCE LABELS'
+           ```
         1. Create a service account to attach to your GCE instance, no additional IAM permissions are necessary.
         1. Export the service account email attached to your GCE instance:
            ```sh
@@ -116,7 +125,9 @@ cleanup:
 faqs:
   - q: What if {{site.base_gateway}} is not running on a GCE instance?
     a: |
-      The `gcp_gce` auth method requires {{site.base_gateway}} to run on a GCE instance — it relies on the GCE instance metadata service to provide the identity token automatically. If {{site.base_gateway}} is not on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) (`gcp_iam`) instead, which works from any environment.
+      The `gcp_gce` auth method requires {{site.base_gateway}} to run on a GCE instance. 
+      It relies on the GCE instance metadata service to provide the identity token automatically. 
+      If {{site.base_gateway}} isn't on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) (`gcp_iam`) instead, which works from any environment.
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
   - q: |
@@ -133,72 +144,17 @@ next_steps:
 automated_tests: false
 ---
 
-{:.warning}
-> **Important:** This how-to requires {{site.base_gateway}} to be running on a GCE instance with a service account attached. The GCE instance identity token is provided automatically by the instance metadata service — no credential files are needed on the {{site.base_gateway}} side. If {{site.base_gateway}} is not running on GCE, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
-
 ## Configure HashiCorp Vault
 
 Before you can configure the Vault entity in {{site.base_gateway}}, you must configure HashiCorp Vault to authenticate clients using GCE instance identity tokens and store a secret.
 
 ### Create configuration files
 
-First, create the primary configuration file `config.hcl` for HashiCorp Vault in the `./vault` directory:
-```
-listener "tcp" {
-  address     = "0.0.0.0:8200"
-  tls_disable = true
-}
-
-storage "file" {
-  path = "./vault/data"
-}
-
-ui = true
-```
-
-Then, create the HashiCorp Vault policy file `rw-secrets.hcl` in the `./vault` directory:
-```
-path "*" {
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-}
-```
+{% include /gateway/hashicorp-vault-create-policies.md %}
 
 ### Configure the Vault and store a secret
 
-1. Start HashiCorp Vault:
-   ```sh
-   vault server -config=./vault/config.hcl
-   ```
-
-1. In a new terminal, set the Vault address:
-   ```sh
-   export VAULT_ADDR="http://localhost:8200"
-   ```
-
-1. Initialize the Vault:
-   ```sh
-   vault operator init -key-shares=1 -key-threshold=1
-   ```
-   This outputs your unseal key and initial root token. Export them as environment variables:
-   ```sh
-   export HCV_UNSEAL_KEY='YOUR-UNSEAL-KEY'
-   export DECK_HCV_TOKEN='YOUR-INITIAL-ROOT-TOKEN'
-   ```
-
-1. Unseal your Vault:
-   ```sh
-   vault operator unseal $HCV_UNSEAL_KEY
-   ```
-
-1. Log in to your Vault:
-   ```sh
-   vault login $DECK_HCV_TOKEN
-   ```
-
-1. Write the policy to access secrets:
-   ```sh
-   vault policy write rw-secrets ./vault/rw-secrets.hcl
-   ```
+{% include /gateway/hashicorp-vault-basic-setup.md %}
 
 1. Enable GCP authentication:
    ```sh
@@ -215,6 +171,9 @@ path "*" {
    ```sh
    vault write auth/gcp/role/kong-role \
      type="gce" \
+     bound_projects="$GCP_PROJECT" \
+     bound_zones="$GCE_ZONE" \
+     bound_labels="$GCE_LABEL" \
      bound_service_accounts="$GCE_SERVICE_ACCOUNT" \
      token_policies="rw-secrets"
    ```
@@ -263,6 +222,7 @@ entities:
         protocol: http
         auth_method: gcp_gce
         gcp_auth_role: ${gcp_auth_role}
+        gcp_login_path: /v1/auth/gcp/login
 
 variables:
   hcv_host:
