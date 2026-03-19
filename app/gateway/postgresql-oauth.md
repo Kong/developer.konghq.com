@@ -42,20 +42,12 @@ Based on that, {{site.ee_product_name}} adds support for connecting to PostgreSQ
 
 ## Version Requirements
 
-{% table %}
-columns:
-  - name: Component
-    align: left
-  - name: Minimum Version
-    align: left
-  - name: Notes
-    align: left
-rows:
-  - [ "{{site.ee_product_name}}", "3.14+", "First version to support OAUTHBEARER SASL" ]
-  - [ "PostgreSQL", "**18+**", "First version to support OAUTHBEARER authentication" ]
-  - [ "OAuth Validator", "-", "Required for self-managed PostgreSQL; cloud-managed services may have built-in support" ]
-  - [ "IdP", "-", "Any OIDC-compliant identity provider" ]
-{% endtable %}
+| Component | Minimum Version | Notes |
+|-----------|----------------|-------|
+| {{site.ee_product_name}} | 3.14+ | First version to support OAUTHBEARER SASL |
+| PostgreSQL | **18+** | First version to support OAUTHBEARER authentication |
+| OAuth Validator | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
+| IdP | - | Any OIDC-compliant identity provider |
 
 ## SSL Requirements
 
