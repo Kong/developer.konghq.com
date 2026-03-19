@@ -98,7 +98,7 @@ rows:
     value: "`agent_run`"
   - field: Aggregation
     value: "`COUNT`"
-  - field: Group by
+  - field: Labels to group by
     value: "`agent_name`"
 {% endtable %}
 <!--vale on-->
@@ -161,7 +161,6 @@ In this section, you'll create an Premium Plan plan that charges customers $1 pe
 
    This value links incoming usage events to this customer. 
    Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
-1. For **Include usage from**, select **Subjects**.
 1. Click **Save**.
 1. Click the **Subscription** tab.
 1. Click **Create a Subscription**.
@@ -258,7 +257,6 @@ Now check the invoice:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click the **Invoices** tab.
 1. Click **Acme Inc**.
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.

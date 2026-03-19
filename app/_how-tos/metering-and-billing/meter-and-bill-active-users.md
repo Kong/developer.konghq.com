@@ -143,7 +143,6 @@ In this section, you'll create a Per-Seat plan that charges customers $1 per act
 
    This value links incoming usage events to this customer. 
    Events with `"subject": "acme-inc"` will be attributed to Acme Inc.
-1. For **Include usage from**, select **Subjects**.
 1. Click **Save**.
 1. Click the **Subscription** tab.
 1. Click **Create a Subscription**.
@@ -266,7 +265,6 @@ Even though four events were sent, the meter counted only three unique users. No
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click the **Invoices** tab.
 1. Click **Acme Inc**.
 1. Click the **Invoicing** tab.
 1. Click **Preview Invoice**.
