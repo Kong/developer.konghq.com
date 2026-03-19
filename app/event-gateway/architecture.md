@@ -106,11 +106,11 @@ To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
 Each broker exposes port `9092`, and the proxy is listening on the IP `10.0.0.1`.
 The proxy exposes a different server for each host in the cluster.
-Depending on your use requirements, you can expose the brokers to the proxy in the following ways:
+Depending on your use requirements, you can expose the brokers to the proxy in one of the following ways: with [port mapping](#port-mapping) or with [SNI mapping](#sni-mapping).
 
 ### Port mapping
 
-The proxy exposes the following ports:
+Let's use an example where the proxy exposes the following ports:
 
 ```
 10.0.0.1:9092 → kafka1:9092 (bootstrap port)
@@ -122,7 +122,7 @@ The proxy exposes the following ports:
 Kafka clients are meant to be configured only with a bootstrap port.
 Mapping ports is easier for getting started, but we don't recommend using this method in production because it's less flexible.
 
-Here is an example configuration:
+Here is an example configuration. First, configure the listener to listen on the ports you want to use:
 
 {% entity_example %}
 type: listener
@@ -133,7 +133,7 @@ data:
   ports:
   - 9092-9095
 {% endentity_example %}
-
+Next, add a listener policy with port mapping:
 {% entity_example %}
 type: event_gateway_policy
 policy_type: forward-to-virtual-cluster
@@ -150,7 +150,7 @@ data:
 ### SNI mapping
 
 The proxy exposes multiple hostnames using SNI.
-This lets you expose multiple servers on the same port. In this case, the mapping looks like this:
+This lets you expose multiple servers on the same port. Using our example ports, the mapping looks like this:
   
 ```
 bootstrap.my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)
