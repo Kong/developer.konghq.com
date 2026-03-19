@@ -60,6 +60,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avalara
 Avro
 aws
 Adyen
@@ -194,6 +195,7 @@ dcr
 DECK_
 deck_files
 declaratively
+dedupe
 deduplicate
 deduplication
 degraphql
