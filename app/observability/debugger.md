@@ -64,6 +64,8 @@ For deeper insights, logs can be captured along with traces. When initiating a d
 ## Reading traces and logs 
 Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
 
+All {{site.konnect_short_name}} users can visualize any trace from a JSON file by navigating to **Observability** > **Debugger** and clicking **Upload trace**. This can be useful if you can't grant a user access to creating traces, but you still want them to see the trace. 
+
 ### Summary view
 Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. 
 
