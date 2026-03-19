@@ -6,7 +6,6 @@ products:
   - gateway
 works_on:
   - self-managed
-  - konnect
 description: Configure Kong Gateway to authenticate to PostgreSQL using OAUTHBEARER SASL and an OAuth access token.
 ---
 ## Introduction
