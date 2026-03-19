@@ -4,7 +4,7 @@ description: |
 extended_description: |
   Configure the plugin to block request and response content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
 
-     
+  In this example, we create a `category_names` function to parse the category object, and a `check_response` function to parse the response returned by Azure Content Safety.
 
 title: Block request and response content using Azure Content Safety
 
@@ -24,79 +24,92 @@ variables:
   
 
 config: 
+  guarding_mode: BOTH
+  text_source: "concatenate_all_content"
+
   params:
-    content_safety_url: ${content_safety_url}
-    content_safety_key: ${content_safety_key}
+    content_safety_url: ${{ env "DECK_CONTENT_SAFETY_URL" }}
+    content_safety_key: ${{ env "DECK_CONTENT_SAFETY_KEY" }}
+    categories: "[{ \"name\": \"Hate\", \"rejection_level\": 2}, { \"name\": \"Violence\", \"rejection_level\": 2}]"
+    output_type: "FourSeverityLevels"
+    azure_api_version: '2023-10-01'
+
   request:
-    url: '$(conf.params.content_safety_url)'
-    headers: 
-      Ocp-Apim-Subscription-Key: '$(conf.params.content_safety_key)'
+    url: "$(conf.params.content_safety_url)"
+    headers:
+      Ocp-Apim-Subscription-Key: "$(conf.params.content_safety_key)"
     body:
       categories: "$(category_names)"
+      text: "$(content)"
+      outputType: "$(conf.params.output_type)"
+    queries:
+      api-version: "$(conf.params.azure_api_version)"
+
   response:
-    block: '$(check_response.block)'
-    block_message: '$(check_response.block_message)'
+    block: "$(check_response.block)"
+    block_message: "$(check_response.block_message)"
+
   functions:
     category_names: |
-       return function(conf)
-              local category_names = {}
-              for _, v in ipairs(conf.params.categories or {}) do
-                if v.rejection_level >= 2 then
-                  table.insert(category_names, v.name)
-                end
-              end
-              return category_names
-            end
+      return function(conf)
+        local category_names = {}
+        for _, v in ipairs(conf.params.categories or {}) do
+          if v.rejection_level >= 2 then
+            table.insert(category_names, v.name)
+          end
+        end
+        return category_names
+      end
+
     check_response: |
       return function(resp, conf)
-            local res = {
-              block = true,
-              block_message = "content passed safety check",
-            }
+        local res = {
+          block = true,
+          block_message = "content passed safety check",
+        }
 
-            if
-              ((type(resp.categoriesAnalysis) ~= "table") or (#resp.categoriesAnalysis == 0))
-              and ((type(resp.blocklistsMatch) ~= "table") or (#resp.blocklistsMatch == 0))
-            then
-              return res, "content safety introspection is invalid"
+        if
+          ((type(resp.categoriesAnalysis) ~= "table") or (#resp.categoriesAnalysis == 0))
+          and ((type(resp.blocklistsMatch) ~= "table") or (#resp.blocklistsMatch == 0))
+        then
+          return res, "content safety introspection is invalid"
+        end
+
+        local reason = ""
+        local ok = true
+
+        for _, v in ipairs(resp.categoriesAnalysis or EMPTY_T) do
+          local category_name = v.category
+          local failure_level = nil
+          for _, category in ipairs(conf.params.categories or {}) do
+            if category.name == category_name then
+              failure_level = category.rejection_level
+              break
             end
-
-            local reason = ""
-            local ok = true
-
-            for _, v in ipairs(resp.categoriesAnalysis or EMPTY_T) do
-              local category_name = v.category
-              local failure_level = nil
-              for _, category in ipairs(conf.params.categories or {}) do
-                if category.name == category_name then
-                  failure_level = category.rejection_level
-                  break
-                end
-              end
-
-              if failure_level and (v.severity >= failure_level) then
-                if not ok then
-                  reason = reason .. "; "
-                end
-
-                ok = false
-                reason = reason .. "breached category [" .. category_name .. "] at level " .. failure_level
-              end
-            end
-
-            for _, v in ipairs(resp.blocklistsMatch or EMPTY_T) do
-              local blocklist_name = v.blocklistName or "unknown_name"
-
-              ok = false
-              reason = reason .. "breached blocklist [" .. blocklist_name .. "]"
-            end
-
-            return {
-              block = not ok,
-              block_message = reason,
-            }
           end
-  guarding_mode: BOTH
+
+          if failure_level and (v.severity >= failure_level) then
+            if not ok then
+              reason = reason .. "; "
+            end
+
+            ok = false
+            reason = reason .. "breached category [" .. category_name .. "] at level " .. failure_level
+          end
+        end
+
+        for _, v in ipairs(resp.blocklistsMatch or EMPTY_T) do
+          local blocklist_name = v.blocklistName or "unknown_name"
+
+          ok = false
+          reason = reason .. "breached blocklist [" .. blocklist_name .. "]"
+        end
+
+        return {
+          block = not ok,
+          block_message = reason,
+        }
+      end
 
 tools:
   - deck
@@ -106,4 +119,4 @@ tools:
   - terraform
 
 min_version:
-  gateway: '3.12'
+  gateway: '3.14'
