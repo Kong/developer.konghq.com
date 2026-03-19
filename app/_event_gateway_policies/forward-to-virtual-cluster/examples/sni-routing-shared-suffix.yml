@@ -1,10 +1,11 @@
-title: Forward via SNI routing
+title: Forward via SNI routing with shared suffix
 description: |
   Use SNI routing to forward messages from a Kafka client to a virtual cluster.
-  
+  With shared suffix, a single wildcard certificate covers all virtual clusters.
+
   Example hostnames generated with this configuration:
-  * `bootstrap.my-virtual-cluster.example.mycompany.com`
-  * `broker-1.my-virtual-cluster.example.mycompany.com`
+  * `bootstrap-my-virtual-cluster.example.mycompany.com`
+  * `broker-1-my-virtual-cluster.example.mycompany.com`
 
 weight: 900
 
@@ -14,7 +15,7 @@ config:
   type: sni
   sni_suffix: .example.mycompany.com
   advertised_port: 19095
-  broker_host_format: per_cluster_suffix
+  broker_host_format: shared_suffix
 
 tools:
   - konnect-api
