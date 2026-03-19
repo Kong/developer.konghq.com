@@ -13,9 +13,6 @@ description: |
 products:
     - event-gateway
 
-min_version:
-    event-gateway: '1.0'
-
 versioned: true
 
 breadcrumbs:
