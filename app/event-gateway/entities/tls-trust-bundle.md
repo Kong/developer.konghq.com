@@ -28,7 +28,7 @@ products:
 
 schema:
     api: konnect/event-gateway
-    path: /schemas/EventGatewayTLSTrustBundle
+    path: /schemas/TLSTrustBundleReference
 
 breadcrumbs:
   - /event-gateway/
