@@ -46,7 +46,7 @@ Based on that, {{site.ee_product_name}} adds support for connecting to PostgreSQ
 |-----------|----------------|-------|
 | {{site.ee_product_name}} | 3.14+ | First version to support OAUTHBEARER SASL |
 | PostgreSQL | **18+** | First version to support OAUTHBEARER authentication |
-| OAuth Validator | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
+| [OAuth Validator](https://github.com/percona/pg_oidc_validator) | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
 | IdP | - | Any OIDC-compliant identity provider |
 
 ## SSL Requirements
