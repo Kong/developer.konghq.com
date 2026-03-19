@@ -97,6 +97,7 @@ base_gateway: Kong Gateway
 ai_gateway: AI Gateway
 ai_gateway_name: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
+ee_product_name_official: Kong API Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
 mesh_product_name: Kong Mesh
@@ -169,3 +170,8 @@ operator_kongreferencegrant_api_version: "v1alpha1"
 operator_kongpluginbinding_api_version: "v1alpha1"
 gwapi_version: "1.4.1" 
 render_banner: false
+
+# Copy
+llm_copy:
+  on_prem_snippet: 'On-prem deployments'
+  konnect_snippet: 'Konnect deployments'

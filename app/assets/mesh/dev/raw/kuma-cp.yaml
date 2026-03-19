@@ -852,6 +852,7 @@ coreResources:
     - meshmultizoneservices
     - meshservices
     - meshtrusts
+    - meshzoneaddresses
     - workloads
 # IP address management configuration
 ipam:

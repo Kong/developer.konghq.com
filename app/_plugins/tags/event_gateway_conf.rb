@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require_relative '../monkey_patch'
 
 module Jekyll
   class EventGatewayConf < Liquid::Tag # rubocop:disable Style/Documentation
@@ -11,7 +12,7 @@ module Jekyll
 
       context.stack do
         context['schema'] = @site.data.dig('event-gateway-bootstrap-schema', release(@site, @page).gsub('.', ''))
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
@@ -38,7 +39,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/event_gateway_conf.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/event_gateway_conf.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/event_gateway_conf.html'))
+      end
     end
   end
 end

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.4
+  version: 2.0.5
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
+  x-oas-source: kong/platform-api@a631bb11cbe67e71e09b19cff3536ec784b72ea4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a631bb11cbe67e71e09b19cff3536ec784b72ea4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -505,7 +505,7 @@ components:
       type: boolean
       title: DcrConfigPropertyDisableRefreshSecret
     DcrConfigPropertyAllowMultipleCredentials:
-      description: 'When enabled, indicates that the HTTP DCR provider supports creating and managing multiple credentials per application.'
+      description: 'When enabled, indicates that the DCR provider supports creating and managing multiple credentials per application.'
       type: boolean
       default: false
       title: DcrConfigPropertyAllowMultipleCredentials
@@ -562,8 +562,6 @@ components:
       properties:
         initial_client_id:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - initial_client_id
@@ -576,8 +574,6 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
         initial_client_secret:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientSecret'
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - initial_client_id
@@ -591,8 +587,6 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
         initial_client_secret:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientSecret'
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: DcrConfigAzureAdInRequest
     DcrConfigCurityInResponse:
@@ -631,9 +625,7 @@ components:
     DcrConfigOktaInResponse:
       description: A DCR provider configuration for Okta
       type: object
-      properties:
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
+      properties: {}
       additionalProperties: false
       title: DcrConfigOktaInResponse
     CreateDcrConfigOktaInRequest:
@@ -642,8 +634,6 @@ components:
       properties:
         dcr_token:
           $ref: '#/components/schemas/DcrConfigPropertyDcrToken'
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_token
@@ -654,8 +644,6 @@ components:
       properties:
         dcr_token:
           $ref: '#/components/schemas/DcrConfigPropertyDcrToken'
-        allow_multiple_credentials:
-          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: DcrConfigOktaInRequest
     DcrConfigHttpInResponse:

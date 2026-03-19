@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class KonnectCrd < Liquid::Block # rubocop:disable Style/Documentation
@@ -32,7 +33,7 @@ module Jekyll
       context.stack do
         context['config'] = config
         context['should_create_namespace'] = should_create_namespace
-        Liquid::Template.parse(File.read('app/_includes/konnect_crd.html')).render(context)
+        Liquid::Template.parse(File.read(template_file), { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -44,7 +45,6 @@ module Jekyll
     end
 
     def add_defaults(config)
-
       defaults = {
         'kind' => '@TODO', # Needed to make sure kind is the first item in the YAML output
         'apiVersion' => 'konnect.konghq.com/v1alpha1',
@@ -52,14 +52,20 @@ module Jekyll
           'name' => '@TODO',
           'namespace' => 'kong'
         },
-          'spec' => {}
+        'spec' => {}
       }
 
-      if  config['kind'] == 'KongPlugin'
-        defaults.delete('spec') 
-      end
+      defaults.delete('spec') if config['kind'] == 'KongPlugin'
 
       defaults.deep_merge(config)
+    end
+
+    def template_file
+      if @page['output_format'] == 'markdown'
+        'app/_includes/konnect_crd.md'
+      else
+        'app/_includes/konnect_crd.html'
+      end
     end
   end
 end

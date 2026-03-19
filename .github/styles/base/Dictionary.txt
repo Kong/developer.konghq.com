@@ -797,6 +797,7 @@ shm
 show_in_api
 Sigstore
 slas
+Slowloris
 slsa
 slos
 SLT_Enc

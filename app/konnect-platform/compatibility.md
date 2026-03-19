@@ -59,7 +59,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 {{site.konnect_short_name}} is compatible with the following versions of [{{site.base_gateway}}](/gateway/):
 
-{% include_cached support/konnect_gateway_support.html %}
+{% include_cached support/konnect_gateway_support.md %}
 
 ## {{site.mesh_product_name}} compatibility
 

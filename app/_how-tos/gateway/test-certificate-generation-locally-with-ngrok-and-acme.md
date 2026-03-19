@@ -38,18 +38,18 @@ prereqs:
         1. [Install ngrok](https://ngrok.com/docs/getting-started/#step-1-install).
         1. [Sign up for an ngrok account](https://dashboard.ngrok.com/) and find your [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken). 
         1. Install the authtoken and connect the ngrok agent to your account:
-        ```
-        ngrok config add-authtoken <TOKEN>
-        ```
+           ```sh
+           ngrok config add-authtoken <TOKEN>
+           ```
         1. Run ngrok:
-        ```
-        ngrok http localhost:8000
-        ```
+           ```sh
+           ngrok http localhost:8000
+           ```
         1. Copy the Forwarding URL from the output and strip the `https://`.
         1. In a new terminal window, export it as a decK environment variable:
-        ```sh
-        export DECK_NGROK_HOST='YOUR FORWARDING URL'
-        ```
+           ```sh
+           export DECK_NGROK_HOST='YOUR FORWARDING URL'
+           ```
 
 tools:
   - deck

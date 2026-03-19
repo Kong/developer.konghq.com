@@ -72,6 +72,8 @@ next_steps:
 
 {% include install/gateway.html %}
 
+{% unless page.output_format == 'markdown' %}
 {% include sections/faq.html %}
 
 {% include sections/next_steps.html %}
+{% endunless %}

@@ -1,3 +1,6 @@
+{% if page.output_format == 'markdown' %}
+[{{include.arch | upcase}} {% if include.fips %} - FIPS{% endif %} {{include.release.ee_version}}]({{include.download_url | strip}})
+{%- else -%}
 <div class="card card__bordered">
     <a href="{{include.download_url | strip}}" class="flex w-full gap-4 p-5 justify-between no-icon">
         <div class="flex flex-col gap-1">
@@ -11,3 +14,4 @@
         </div>
     </a>
 </div>
+{% endif %}
