@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.3.0
+  version: 3.3.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d0bcbc2e86d1e5d6df518dbf3a5fa663727c5bf'
+  x-oas-source: kong/platform-api@17b7bf53d5a96412f37263091d79f90534ce60da
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/17b7bf53d5a96412f37263091d79f90534ce60da'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -883,6 +883,29 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Applications
+    patch:
+      operationId: update-application
+      summary: Update Application
+      description: Updates an application.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateApplication'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetApplication'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Applications
     delete:
       operationId: delete-application
       summary: Delete Application by Portal
@@ -1296,6 +1319,8 @@ paths:
             properties:
               name:
                 $ref: '#/components/schemas/StringFieldFilter'
+              can_own_applications:
+                $ref: '#/components/schemas/BooleanFieldFilter'
           style: deepObject
       responses:
         '200':
@@ -1674,6 +1699,16 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
+        - name: filter
+          in: query
+          description: Filter teams returned in the response.
+          required: false
+          schema:
+            type: object
+            properties:
+              can_own_applications:
+                $ref: '#/components/schemas/BooleanFieldFilter'
+          style: deepObject
       responses:
         '200':
           $ref: '#/components/responses/ListPortalTeams'
@@ -3138,6 +3173,13 @@ components:
         - name
         - content
       title: CreatePortalSnippetRequest
+    UpdateApplicationRequest:
+      type: object
+      properties:
+        owner:
+          $ref: '#/components/schemas/ApplicationOwner'
+      additionalProperties: false
+      title: UpdateApplicationRequest
     ListApplicationsResponse:
       type: object
       properties:
@@ -3406,6 +3448,8 @@ components:
           items:
             type: string
           nullable: true
+        owner:
+          $ref: '#/components/schemas/ApplicationOwner'
       additionalProperties: false
       required:
         - id
@@ -3454,6 +3498,8 @@ components:
           description: The number of API registrations that are associated with the application. Registrations of any status are included in the count.
           type: number
           readOnly: true
+        owner:
+          $ref: '#/components/schemas/ApplicationOwner'
       example:
         id: b15e2460-ba40-431d-9df0-4957fcffacda
         labels:
@@ -3963,16 +4009,19 @@ components:
             description: Team with access to Partner APIs
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: false
           - id: af9fd312-a987-4628-b4c5-bb4f4fddd5f7
             name: Internal
             description: Team with access to Internal APIs
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: true
           - id: 4f9fd312-a987-4628-b4c5-bb4f4fddd5f7
             name: Root
             description: Team with access to Internal Systems
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: true
       required:
         - data
         - meta
@@ -4245,9 +4294,14 @@ components:
           example: The Identity Management (IDM) API team.
           maxLength: 250
           writeOnly: true
+        can_own_applications:
+          description: Whether the team is allowed to own applications.
+          type: boolean
+          example: true
       example:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
+        can_own_applications: false
       title: PortalUpdateTeamRequest
     PortalCreateTeamRequest:
       description: Details about a team to create.
@@ -4263,9 +4317,15 @@ components:
           example: The Identity Management (IDM) team.
           maxLength: 250
           writeOnly: true
+        can_own_applications:
+          description: Whether the team is allowed to own applications
+          type: boolean
+          example: true
+          default: false
       example:
         name: IDM - Developers
         description: The Identity Management (IDM) team.
+        can_own_applications: false
       required:
         - name
       title: PortalCreateTeamRequest
@@ -4297,12 +4357,17 @@ components:
           format: date-time
           example: '2022-02-07T17:00:00.52Z'
           readOnly: true
+        can_own_applications:
+          description: Whether the team is allowed to own applications.
+          type: boolean
+          example: false
       example:
         id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
         name: IDM - Developers
         description: The developers for the IDM API.
         created_at: '1992-02-07T17:46:57.52Z'
         updated_at: '2022-08-31T17:00:00.52Z'
+        can_own_applications: false
       title: PortalTeamResponse
     PortalTeamGroupMappingResponse:
       description: A paginated list of portal team group mappings.
@@ -4798,6 +4863,8 @@ components:
           $ref: '#/components/schemas/UuidFieldFilter'
         name:
           $ref: '#/components/schemas/StringFieldFilter'
+        team_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
       properties:
@@ -5794,6 +5861,27 @@ components:
         - name
         - credential_type
         - auth_methods
+    ApplicationOwnerType:
+      description: The type of the owner of the application. Can be `developer` (individual developer) or `team`.
+      type: string
+      enum:
+        - developer
+        - team
+    ApplicationOwnerId:
+      description: 'The ID of the owner of the application. When type is `developer`, this is the developer ID. When type is `team`, this is the team ID.'
+      type: string
+      format: uuid
+    ApplicationOwner:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ApplicationOwnerType'
+        id:
+          $ref: '#/components/schemas/ApplicationOwnerId'
+      additionalProperties: false
+      required:
+        - type
+        - id
     AuthStrategyKeyAuth:
       description: KeyAuth Auth strategy that the application uses.
       type: object
@@ -6215,10 +6303,12 @@ components:
       value:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
+        can_own_applications: true
     CreateTeamExample1:
       value:
         name: IDM - Developers
         description: The Identity Management (IDM) API team.
+        can_own_applications: true
     AddDeveloperToTeamExample1:
       value:
         id: df120cb4-f60b-47bc-a2f8-6a28e6a3c63b
@@ -7131,6 +7221,7 @@ components:
         description: Team with access to APIs in the Gold tier
         created_at: '2022-02-07T17:46:57.52Z'
         updated_at: '2022-09-25T13:00:00.00Z'
+        can_own_applications: false
     AssignedPortalRoleCollectionExample1:
       value:
         meta:
@@ -7167,16 +7258,19 @@ components:
             description: Team with access to Partner APIs
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: false
           - id: af9fd312-a987-4628-b4c5-bb4f4fddd5f7
             name: Internal
             description: Team with access to Internal APIs
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: true
           - id: 4f9fd312-a987-4628-b4c5-bb4f4fddd5f7
             name: Root
             description: Team with access to Internal Systems
             created_at: '2022-02-07T17:46:57.52Z'
             updated_at: '2022-09-25T13:00:00.00Z'
+            can_own_applications: true
     ListRolesExample1:
       value:
         services:
@@ -8194,6 +8288,13 @@ components:
               $ref: '#/components/examples/UpdateApplicationRegistrationRejected'
             Revoked:
               $ref: '#/components/examples/UpdateApplicationRegistrationRevoked'
+    UpdateApplication:
+      description: Update an application.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateApplicationRequest'
     ReplacePortalAuditLogReplayJob:
       description: The request schema to replace a portal audit log replay job.
       content:
