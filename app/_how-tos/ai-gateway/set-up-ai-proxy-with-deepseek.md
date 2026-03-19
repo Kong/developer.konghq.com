@@ -73,17 +73,17 @@ entities:
   plugins:
     - name: ai-proxy
       config:
-        - route_type: llm/v1/chat
-          auth:
-            header_name: Authorization
-            header_value: Bearer ${api_key}
-          model:
-            provider: openai
-            name: deepseek-chat
-            options:
-              upstream_url: https://api.deepseek.com/chat/completions
-              max_tokens: 512
-              temperature: 1.0
+        route_type: llm/v1/chat
+        auth:
+          header_name: Authorization
+          header_value: Bearer ${api_key}
+        model:
+          provider: openai
+          name: deepseek-chat
+          options:
+            upstream_url: https://api.deepseek.com/chat/completions
+            max_tokens: 512
+            temperature: 1.0
 variables:
   api_key:
     value: $DEEPSEEK_API_KEY
