@@ -1,5 +1,19 @@
-# Kong PostgreSQL OAUTHBEARER Authentication
+---
+title: Kong PostgreSQL OAUTHBEARER Authentication
+content_type: reference
+layout: reference
+products:
+  - gateway
+works_on:
+  - self-managed
+  - konnect
+description: Configure Kong Gateway to authenticate to PostgreSQL using OAUTHBEARER SASL and an OAuth access token.
+---
+## Introduction
 
+[PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/)) introduces a native OAuth2 authentication method based on the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism, by using a [server-side validator](https://github.com/percona/pg_oidc_validator).
+
+Based on that, {{site.ee_product_name}} adds support for connecting to PostgreSQL 18 using OAuth2 authentication, starting from version 3.14.
 ## Architecture
 
 ```
@@ -29,12 +43,20 @@
 
 ## Version Requirements
 
-| Component | Minimum Version | Notes |
-|-----------|----------------|-------|
-| {{site.ee_product_name}} | 3.14+ | First version to support OAUTHBEARER SASL |
-| PostgreSQL | **18+** | First version to support OAUTHBEARER authentication |
-| OAuth Validator | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
-| IdP | - | Any OIDC-compliant identity provider |
+{% table %}
+columns:
+  - name: Component
+    align: left
+  - name: Minimum Version
+    align: left
+  - name: Notes
+    align: left
+rows:
+  - [ "{{site.ee_product_name}}", "3.14+", "First version to support OAUTHBEARER SASL" ]
+  - [ "PostgreSQL", "**18+**", "First version to support OAUTHBEARER authentication" ]
+  - [ "OAuth Validator", "-", "Required for self-managed PostgreSQL; cloud-managed services may have built-in support" ]
+  - [ "IdP", "-", "Any OIDC-compliant identity provider" ]
+{% endtable %}
 
 ## PostgreSQL Server Setup
 
