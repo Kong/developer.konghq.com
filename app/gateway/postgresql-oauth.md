@@ -58,25 +58,31 @@ rows:
   - [ "IdP", "-", "Any OIDC-compliant identity provider" ]
 {% endtable %}
 
-## PostgreSQL Server Setup
+## SSL Requirements
 
-> Cloud-managed PostgreSQL services (e.g., AWS RDS, Azure Database, GCP Cloud SQL) may have built-in OAUTHBEARER support with their own IdP integration. In that case, skip steps 1-2 and refer to your cloud provider's documentation.
+OAUTHBEARER transmits tokens over the connection, so SSL is mandatory. When `pg_oauth_auth=on`, Kong automatically forces `pg_ssl=on` and `pg_ssl_required=on`.
 
-### 1. Install an OAuth validator plugin (self-managed only)
+**PostgreSQL must be configured with SSL enabled.** If PostgreSQL does not have SSL configured, the connection will fail.
+
+### 1. Install an OAuth validator plugin
 
 Self-managed PostgreSQL 18 requires an `oauth_validator_libraries` plugin to validate tokens. Install and configure one according to your chosen plugin's documentation.
 
-### 2. Configure postgresql.conf (self-managed only)
+### 2. Configure postgresql.conf
 
 ```ini
-oauth_validator_libraries = '<your_validator_plugin>'
+ssl = on
+ssl_cert_file = '<path_to_server_certificate>'
+ssl_key_file = '<path_to_server_private_key>'
+
+oauth_validator_libraries = 'pg_oidc_validator'
 ```
 
 ### 3. Configure pg_hba.conf
 
 ```
 # TYPE   DATABASE  USER      ADDRESS      METHOD  OPTIONS
-host     all       all       0.0.0.0/0   oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
+host     all       all       all   oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
 ```
 
 Rules are evaluated top-down, first match wins:
@@ -85,6 +91,9 @@ Rules are evaluated top-down, first match wins:
 |------|---------|
 | `host all all 0.0.0.0/0 oauth ...` | All TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
 
+{:.important}
+> The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` Kong configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid
+
 ### 4. Create a database role matching the token identity
 
 The validator plugin determines how to map a token to a PostgreSQL role (e.g., which claim to use, how to match). A role must exist that satisfies the validator's mapping rules. Refer to your validator plugin or cloud provider's documentation for the expected role name format.
@@ -92,6 +101,9 @@ The validator plugin determines how to map a token to a PostgreSQL role (e.g., w
 ```sql
 CREATE ROLE "<matched_identity>" WITH LOGIN;
 ```
+
+{:.important}
+> The `pg_user` Kong configuration parameter (environment variable `KONG_PG_USER`) must be set to this role name. Kong uses `pg_user` as the PostgreSQL username in the connection, and it must match the role that the validator maps from the token. If they don't match, the connection will fail.
 
 ## Kong Configuration
 
@@ -227,16 +239,3 @@ KONG_PG_SSL_VERIFY=on
 
 > All parameters also have `pg_ro_oauth_*` variants for read-only replica connections.
 
-## SSL Requirements
-
-OAUTHBEARER transmits tokens over the connection, so SSL is mandatory. When `pg_oauth_auth=on`, Kong automatically forces `pg_ssl=on` and `pg_ssl_required=on`.
-
-**PostgreSQL must be configured with SSL enabled.** If PostgreSQL does not have SSL configured, the connection will fail. Ensure your PostgreSQL server has the following in `postgresql.conf`:
-
-```ini
-ssl = on
-ssl_cert_file = '<path_to_server_certificate>'
-ssl_key_file = '<path_to_server_private_key>'
-```
-
-Cloud-managed PostgreSQL services typically have SSL enabled by default.
