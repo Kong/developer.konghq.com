@@ -73,15 +73,19 @@ oauth_validator_libraries = 'pg_oidc_validator'
 ### 3. Configure pg_hba.conf
 
 ```
-# TYPE   DATABASE  USER      ADDRESS      METHOD  OPTIONS
-host     all       all       all   oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
+# TYPE   DATABASE  USER      ADDRESS  METHOD  OPTIONS
+local    all       all                trust
+host     all       postgres  all      trust
+host     all       all       all      oauth   issuer=https://<idp-host>/realms/<realm> scope=openid
 ```
 
 Rules are evaluated top-down, first match wins:
 
 | Rule | Meaning |
 |------|---------|
-| `host all all 0.0.0.0/0 oauth ...` | All TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
+| `local all all trust` | Local Unix socket connections are trusted (no authentication) |
+| `host all postgres all trust` | The `postgres` superuser can connect via TCP without authentication |
+| `host all all all oauth ...` | All other TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
 
 {:.important}
 > The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` Kong configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid
