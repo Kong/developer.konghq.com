@@ -42,7 +42,7 @@ All configuration parameters for {{site.event_gateway_short}} data planes can be
 
 To configure a setting using an environment variable, declare an environment variable with the name of the setting. 
 * Parameters specific to your data plane, such as observability and debugging, must be prefixed with `KEG__`
-* Parameters that define the connection between the data plane and the control plane must be prefixed with `KEG__KONNECT__` or `KONNECT_`
+* Parameters that define the connection between the data plane and the control plane must be prefixed with `KONG_KONNECT_`
 
 See each [configuration parameter](#configuration-parameters) for the specific environment variable that you need to set.
 
@@ -50,11 +50,11 @@ For example, to set the log level to error, you would set the following during l
 
 ```sh
 docker run -d \
--e "KONNECT_REGION=us" \
--e "KONNECT_DOMAIN=konghq.com" \
--e "KONNECT_GATEWAY_CLUSTER_ID=your-gateway-id" \
--e "KONNECT_CLIENT_CERT=example-cert" \
--e "KONNECT_CLIENT_KEY=example-key" \
+-e "KONG_KONNECT_REGION=us" \
+-e "KONG_KONNECT_DOMAIN=konghq.com" \
+-e "KONG_KONNECT_GATEWAY_CLUSTER_ID=your-gateway-id" \
+-e "KONG_KONNECT_CLIENT_CERT=example-cert" \
+-e "KONG_KONNECT_CLIENT_KEY=example-key" \
 -e "KEG__OBSERVABILITY__LOG_FLAGS=error" \
 -p 19092-19101:19092-19101 \
 kong/kong-event-gateway:latest
