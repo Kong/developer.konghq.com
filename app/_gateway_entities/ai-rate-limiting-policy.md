@@ -42,7 +42,7 @@ min_version:
 
 AI Rate Limiting Policies allow you to define reusable policies for the [AI Rate Limiting Advanced plugin](/plugins/ai-rate-limiting-advanced/). 
 
-This entity is scoped to a specific [Consumer](/gateway/entities/consumer/), [Consumer Group](/gateway/entities/consumer-group/), or [AI Gateway Service](/gateway/entities/service/) using the [`ref_type`](#schema-ref-type) and [`ref_id`](#schema-ref-id) parameters.
+This entity is scoped to a specific [Consumer](/gateway/entities/consumer/), [Consumer Group](/gateway/entities/consumer-group/), or [{{site.ai_gateway}} Service](/gateway/entities/service/) using the [`ref_type`](#schema-ref-type) and [`ref_id`](#schema-ref-id) parameters.
 
 You can define multiple policies in a single entity, and reference this entity in multiple AI Rate Limiting Advanced plugin instances using the entity ID in the plugin's [`config.policies.id`](/plugins/ai-rate-limiting-advanced/reference/#schema--config-policies-id) field.
 
