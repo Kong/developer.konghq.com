@@ -50,8 +50,6 @@ rows:
     description: "Define plans, add-ons, features, and rate cards."
   - feature: "**Subscriptions**"
     description: "Manage subscriptions with mid-cycle changes, prorating, and alignment."
-  - feature: "**Prepaid credits**"
-    description: "Support paid or promotional credit grants with priority-based burn-down and expiration."
   - feature: "**Notifications**"
     description: "Webhook-based alerts with configurable rules and channels for usage thresholds and billing events."
   - feature: "**Cost analytics**"
