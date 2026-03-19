@@ -190,6 +190,11 @@ export default {
       };
     });
 
+    if (!import.meta.env.VITE_ALGOLIA_APPLICATION_ID || !import.meta.env.VITE_ALGOLIA_API_KEY) {
+      console.log('Search is disabled: missing Algolia configuration (VITE_ALGOLIA_APPLICATION_ID / VITE_ALGOLIA_API_KEY)');
+      return {};
+    }
+
     const searchClient = algoliasearch(
       import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
       import.meta.env.VITE_ALGOLIA_API_KEY
