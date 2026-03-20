@@ -88,7 +88,8 @@ status_code: 201
 method: POST
 body:
     name: demo-control-plane
-capture: CONTROL_PLANE_DETAILS
+capture:
+  - variable: CONTROL_PLANE_DETAILS
 {% endkonnect_api_request %}
 <!--vale on-->
 

@@ -191,8 +191,9 @@ body:
 extract_body:
   - name: id
     variable: LISTENER_ID
-capture: LISTENER_ID
-jq: ".id"
+capture:
+  - variable: LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
