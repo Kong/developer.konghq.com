@@ -79,11 +79,14 @@ rows:
                 1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/).
                 1. In the menu, navigate to **Event Gateway**.
                 1. Click **New Gateway**.
-                1. Fill in the required fields.
+                1. Fill in the fields:
                    * **Name**: A unique name for your control plane.
                    * **Description**: An optional description for your control plane.
                    * **Minimum supported data plane version**: The minimum allowed data plane version for this control plane. 
-                   For example, if you select 1.1, you won't be able to run 1.0 data planes with this control plane, only 1.1 and above.
+                   We recommend setting this to the latest version.
+                  
+                      For example, if you select 1.1, you will be able to use features introduced in 1.1, but
+                      you won't be able to run 1.0 data planes with this control plane.
                 1. Click **Create** to save.
                 1. Select a platform for your data plane.
                 1. Click **Generate Certificate**.

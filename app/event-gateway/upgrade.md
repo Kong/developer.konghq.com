@@ -29,6 +29,8 @@ faqs:
       Setting the minimum version manually lets you make a conscious choice about the data plane versions you want to run. 
       This way, you can intentionally run mixed-version fleets during upgrades, staging, or blue-green rollouts.
 
+      This setting also prevents you from accidentally configuring features that the data planes nodes don't support.
+
   - q: Will `latest` be supported as a minimum supported data plane version?
     a: |
       No. The minimum supported DP version will always be a specific version, not `latest`.
@@ -50,7 +52,7 @@ faqs:
     a: |
       The minimum control plane version can be downgraded with the help of [Kong Support](https://support.konhq.com).
   - q: When should I change the minimum runtime version
-     a: |
+    a: |
        If you don't need to use features that exist on newer versions you don't need to update the minimum runtime version. However, it's recommended to update this version once all your dataplanes have been upgraded and things are stable.
 
 ---

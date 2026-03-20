@@ -59,8 +59,58 @@ For more information about configuring data planes at startup and all options, s
 
 {{site.event_gateway_short}} metrics have been renamed to more closely follow [OpenTelemetry semantic conventions](https://opentelemetry.io/docs/specs/semconv/).
 
+Key changes:
+
+1. Delimiter change: `_` > `.` (Prometheus > OTel convention)
+2. Suffix stripping: `_count`, `_seconds`, `_ms`, and `_active` suffixes removed. The unit is now in metadata only.
+3. Unit normalization: All durations are now in seconds. Previously, the metrics were a mix of seconds and ms.
+4. Label namespacing: Labels now use dotted namespaces (for example, `result` > `kong.keg.result`).
+6. Common labels changed: 
+  * `topic` > `messaging.destination.name` 
+  * `policy_konnect_*` > `kong.konnect.policy.*` and `kong.keg.policy.*`
+
 For example:
 - Old metric: `kong_keg_kafka_backend_connection_error_count`
 - New metric: `kong.keg.kafka.backend.connection.errors`
+
+Removed in 1.1:
+
+{% table %}
+columns:
+  - title: 1.0 Metric
+    key: metric
+  - title: Description
+    key: description
+rows:
+  - metric: "`kong_keg_konnect_request_count`"
+    description: |
+      Konnect request count histogram.
+      Merged into `kong.keg.konnect.request.duration` and gained a `http.response.status_code` label.
+{% endtable %}
+
+New in 1.1:
+
+{% table %}
+columns:
+  - title: 1.1 Metric
+    key: metric
+  - title: Description
+    key: description
+rows:
+  - metric: "`kong.keg.config.errors`"
+    description: Config loading error count.
+  - metric: "`kong.keg.config.loaded`"
+    description: Config version loaded from CP.
+  - metric: "`kong.keg.kafka.connection.errors`"
+    description: Proxied connections that errored.
+  - metric: "`kong.keg.kafka.decrypt.attempts`"
+    description: Decryption attempt count.
+  - metric: "`kong.keg.kafka.encrypt.attempts`"
+    description: Encryption attempt count.
+  - metric: "`kong.keg.kafka.kscheme.attempts`"
+    description: Kscheme script attempt count.
+  - metric: "`kong.keg.kafka.policy.condition.failures`"
+    description: Policy condition execution errors.
+{% endtable %}
 
 For all metrics in 1.1.0, see the [metrics reference](/event-gateway/metrics/1.1/).
