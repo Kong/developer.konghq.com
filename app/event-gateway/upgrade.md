@@ -64,7 +64,7 @@ To upgrade to a new {{site.event_gateway_short}} version, choose one of the foll
 
 ### Prerequisites
 
-* Review [{{site.event_gateway_short}} release notes](/event-gateway/changelogs/)
+* Review [{{site.event_gateway_short}} release notes](/event-gateway/changelog/)
 * Review [{{site.event_gateway_short}} breaking changes](/event-gateway/breaking-changes/)
 
 ### 1. Upgrade data planes
