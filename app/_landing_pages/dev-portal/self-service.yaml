@@ -216,7 +216,7 @@ rows:
                     This is true even if an individual team member has broader access through other teams.
 
                   To enable team application sharing, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
-                  To transfer ownership of an app, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
+                  To transfer ownership of an application to either a developer or team, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
                   
                   For more information about how to configure Dev Portal developer teams, see [Dev Portal RBAC](/dev-portal/developer-rbac/). 
                   For more information about the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
