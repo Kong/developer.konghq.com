@@ -112,7 +112,7 @@ entities:
       
         params:
           api_key: ${key}
-          model: ${model}
+          model: mistral-moderation-2411
       
         request:
           url: https://api.mistral.ai/v1/moderations
@@ -158,9 +158,6 @@ variables:
   key:
     value: $MISTRAL_API_KEY
     description: The API key to access Mistral AI.
-  model:
-    value: $MISTRAL_MODEL
-    description: The Mistral AI model to use for moderation.
 {% endentity_examples %}
 
 ## Test the configuration
