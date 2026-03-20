@@ -98,13 +98,12 @@ content: |
   extract_body:
     - name: data[0].id
       variable: CONTROL_PLANE_ID
-  capture: CONTROL_PLANE_ID
-  jq: ".data[0].id"
+  capture:
+    - variable: CONTROL_PLANE_ID
+      jq: ".data[0].id"
   indent: 2
   {% endkonnect_api_request %}
   <!--vale on-->
-
-  Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
 
   ```sh
   curl -X POST \

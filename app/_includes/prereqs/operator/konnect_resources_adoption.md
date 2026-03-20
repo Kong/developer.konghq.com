@@ -8,8 +8,9 @@ status_code: 201
 method: POST
 body:
     name: gateway-control-plane
-capture: CONTROL_PLANE_ID
-jq: ".id"
+capture:
+  - variable: CONTROL_PLANE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 
 Create a Gateway Service:
@@ -23,8 +24,9 @@ body:
     protocol: http
     host: httpbin.konghq.com
     path: /anything
-capture: SERVICE_ID
-jq: ".id"
+capture:
+  - variable: SERVICE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 
 Create a Route:
@@ -39,8 +41,9 @@ body:
         - /anything
     service:
         id: $SERVICE_ID
-capture: ROUTE_ID
-jq: ".id"
+capture:
+  - variable: ROUTE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 
 Create a Rate Limiting plugin:
@@ -55,6 +58,7 @@ body:
         second: 5
         hour: 1000
         policy: local
-capture: PLUGIN_ID
-jq: ".id"
+capture:
+  - variable: PLUGIN_ID
+    jq: ".id"
 {% endkonnect_api_request %}
