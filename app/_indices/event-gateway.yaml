@@ -7,6 +7,11 @@ sections:
       - path: /event-gateway/architecture/
       - path: /event-gateway/policies/
       - path: /event-gateway/version-support-policy/
+  - title: Installation and Upgrade
+    items:
+      - path: /event-gateway/#install-event-gateway
+      - path: /event-gateway/upgrade/
+      - path: /event-gateway/breaking-changes/
     auto_exclude: true
   - title: Getting started
     items:
