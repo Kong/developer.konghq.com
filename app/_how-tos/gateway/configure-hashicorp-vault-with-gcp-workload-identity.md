@@ -161,12 +161,6 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
    vault auth enable gcp
    ```
 
-1. Configure the GCP auth method with the Vault server's GCP credentials:
-   ```sh
-   vault write auth/gcp/config \
-     credentials=@$VAULT_GCP_CREDENTIALS_FILE
-   ```
-
 1. Create a GCE role that binds to {{site.base_gateway}}'s GCP service account:
    ```sh
    vault write auth/gcp/role/kong-role \
@@ -195,11 +189,16 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 
 ## Set environment variables
 
+Find the internal IP for your VM:
+```sh
+hostname -I
+```
+
 Export the following environment variables before creating the Vault entity:
 
 ```sh
-export DECK_HCV_HOST=host.docker.internal
-export DECK_GCP_AUTH_ROLE=kong-role
+export HCV_HOST="YOUR VM INTERNAL IP"
+export GCP_AUTH_ROLE=kong-role
 ```
 
 In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
@@ -207,7 +206,25 @@ In this tutorial, `host.docker.internal` is used as the host instead of `localho
 ## Create a Vault entity for HashiCorp Vault
 
 Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault GCP workload identity authentication:
-
+{% control_plane_request %}
+url: /vaults
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: hcv
+  prefix: hashicorp-vault
+  description: Storing secrets in HashiCorp Vault
+  config:
+    host: ${hcv_host}
+    kv: v1
+    mount: kong
+    port: 8200
+    protocol: http
+    auth_method: gcp_gce
+    gcp_auth_role: ${gcp_auth_role}
+    gcp_login_path: /v1/auth/gcp/login
+{% endcontrol_plane_request %}
 {% entity_examples %}
 entities:
   vaults:
@@ -215,13 +232,13 @@ entities:
       prefix: hashicorp-vault
       description: Storing secrets in HashiCorp Vault
       config:
-        host: ${hcv_host}
+        host: $HCV_HOST
         kv: v1
         mount: kong
         port: 8200
         protocol: http
         auth_method: gcp_gce
-        gcp_auth_role: ${gcp_auth_role}
+        gcp_auth_role: $GCP_AUTH_ROLE
         gcp_login_path: /v1/auth/gcp/login
 
 variables:

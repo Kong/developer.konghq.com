@@ -54,7 +54,7 @@ tldr:
       * Optionally set `config.aws_access_key_id` and `config.aws_secret_access_key` for {{site.base_gateway}}'s AWS credentials. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain.
 
 tools:
-    - deck
+    - admin-api
 
 prereqs:
   skip_product: true
@@ -67,9 +67,9 @@ prereqs:
 
         Export {{site.base_gateway}}'s AWS credentials and the ARN of the IAM principal:
         ```sh
-        export DECK_AWS_ACCESS_KEY_ID="KONG-ACCESS-KEY-ID"
-        export DECK_AWS_SECRET_ACCESS_KEY="KONG-SECRET-ACCESS-KEY"
-        export DECK_AWS_AUTH_REGION="us-east-1"
+        export AWS_ACCESS_KEY_ID="KONG-ACCESS-KEY-ID"
+        export AWS_SECRET_ACCESS_KEY="KONG-SECRET-ACCESS-KEY"
+        export AWS_AUTH_REGION="us-east-1"
         export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
         ```
       icon_url: /assets/icons/aws.svg
@@ -146,14 +146,6 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
    vault auth enable aws
    ```
 
-1. Configure the AWS auth method with the Vault server's AWS credentials:
-   ```sh
-   vault write auth/aws/config/client \
-     secret_key=$VAULT_AWS_ACCESS_KEY \
-     access_key=$VAULT_AWS_SECRET_KEY \
-     use_sts_region_from_client=true
-   ```
-
 1. Create an IAM role that binds to {{site.base_gateway}}'s IAM principal:
    ```sh
    vault write auth/aws/role/kong-role \
@@ -179,11 +171,16 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 
 ## Set environment variables
 
+Find the internal IP for your VM:
+```sh
+hostname -I
+```
+
 Export the following environment variables before creating the Vault entity:
 
 ```sh
-export DECK_HCV_HOST=host.docker.internal
-export DECK_AWS_AUTH_ROLE=kong-role
+export HCV_HOST="YOUR VM INTERNAL IP"
+export AWS_AUTH_ROLE=kong-role
 ```
 
 In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
@@ -192,36 +189,23 @@ In this tutorial, `host.docker.internal` is used as the host instead of `localho
 
 Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault AWS IAM authentication:
 
-{% entity_examples %}
-entities:
-  vaults:
-    - name: hcv
-      prefix: hashicorp-vault
-      description: Storing secrets in HashiCorp Vault
-      config:
-        host: ${hcv_host}
-        kv: v1
-        mount: kong
-        port: 8200
-        protocol: http
-        auth_method: aws_iam
-        aws_auth_role: ${aws_auth_role}
-        aws_auth_region: ${aws_auth_region}
-        aws_access_key_id: ${aws_access_key_id}
-        aws_secret_access_key: ${aws_secret_access_key}
-
-variables:
-  hcv_host:
-    value: $HCV_HOST
-  aws_auth_role:
-    value: $AWS_AUTH_ROLE
-  aws_auth_region:
-    value: $AWS_AUTH_REGION
-  aws_access_key_id:
-    value: $AWS_ACCESS_KEY_ID
-  aws_secret_access_key:
-    value: $AWS_SECRET_ACCESS_KEY
-{% endentity_examples %}
+{% control_plane_request %}
+url: /vaults
+method: POST
+body:
+  name: hcv
+  prefix: hashicorp-vault
+  description: Storing secrets in HashiCorp Vault
+  config:
+    host: $HCV_HOST
+    kv: v1
+    mount: kong
+    port: 8200
+    protocol: http
+    auth_method: aws_iam
+    aws_auth_role: $AWS_AUTH_ROLE
+    aws_auth_region: $AWS_AUTH_REGION
+{% endcontrol_plane_request %}
 
 {:.info}
 > **Cross-account access:** If {{site.base_gateway}} and your Vault server are in different AWS accounts, configure `aws_assume_role_arn` with the ARN of the role Kong should assume in the target account, and `aws_role_session_name` with a session identifier. If you configure the Vault this way for cross-account access, `aws_access_key_id` and `aws_secret_access_key` are optional.
