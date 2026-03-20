@@ -82,14 +82,13 @@ extract_body:
     variable: AUTH_SERVER_ID
   - name: 'issuer'
     variable: ISSUER_URL
+capture:
+    - variable: AUTH_SERVER_ID
+      jq: '.id'
+    - variable: ISSUER_URL
+      jq: '.issuer'
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the auth server ID and issuer URL:
-```sh
-export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
-export ISSUER_URL='YOUR-ISSUER-URL'
-```
 
 ## Configure the auth server with scopes
 
@@ -111,8 +110,9 @@ body:
 extract_body:
   - name: 'id'
     variable: SCOPE_ID
-capture: SCOPE_ID
-jq: ".id"
+capture:
+    - variable: SCOPE_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -170,14 +170,13 @@ extract_body:
     variable: CLIENT_SECRET
   - name: 'id'
     variable: CLIENT_ID
+capture:
+  - variable: CLIENT_SECRET
+    jq: '.client_secret'
+  - variable: CLIENT_ID
+    jq: '.id'
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
-```
 
 ## Add a backend cluster
 
@@ -202,8 +201,9 @@ body:
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
-capture: BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: BACKEND_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -232,8 +232,9 @@ body:
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
-capture: VIRTUAL_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: VIRTUAL_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -259,8 +260,9 @@ body:
 extract_body:
 - name: id
   variable: LISTENER_ID
-capture: LISTENER_ID
-jq: ".id"
+capture:
+  - variable: LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

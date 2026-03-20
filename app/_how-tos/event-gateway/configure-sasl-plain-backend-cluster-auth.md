@@ -174,8 +174,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_BACKEND_CLUSTER_ID
-capture: SASL_BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+    - variable: SASL_BACKEND_CLUSTER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -199,8 +200,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_VC_ID
-capture: SASL_VC_ID
-jq: ".id"
+capture:
+    - variable: SASL_VC_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -222,8 +224,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_LISTENER_ID
-capture: SASL_LISTENER_ID
-jq: ".id"
+capture:
+    - variable: SASL_LISTENER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
