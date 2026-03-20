@@ -1,0 +1,89 @@
+description: |
+  Configure the AI Custom Guardrail plugin to check requests and responses, and block content matching using Mistral AI.
+
+extended_description: |
+  Configure the AI Custom Guardrail plugin to check requests and responses, and block content matching using Mistral AI.
+
+title: Block request and response content using Mistral AI moderation
+
+weight: 900
+
+requirements:
+  - You have an Mistral AI account.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+variables:
+  token:
+    value: $MISTRAL_API_KEY
+    description: The API key to access Mistral AI.
+  model:
+    value: $MISTRAL_MODEL
+    description: The Mistral AI model to use for moderation.
+  
+
+config: 
+  guarding_mode: BOTH
+  text_source: "concatenate_all_content"
+
+  params:
+    api_key: ${{ env "DECK_MISTRAL_API_KEY" }}
+    model: ${{ env "DECK_MISTRAL_MODEL" }}
+
+  request:
+    url: https://api.mistral.ai/v1/chat/moderations
+    headers:
+      Authorization: "Bearer $(conf.params.api_key)"
+    body:
+      model: "$(conf.params.model)"
+      input: "$(content)"
+
+  response:
+    block: "$(check_response.block)"
+    block_message: "$(check_response.block_message)"
+
+  functions:
+    check_response: |
+      return function(resp, conf)
+        local res = {
+          block = false,
+          block_message = "content passed safety check",
+        }
+
+        -- Validate response structure
+        if type(resp.results) ~= "table" or #resp.results == 0 then
+          return res, "content safety introspection is invalid"
+        end
+
+        local result = resp.results[1]
+
+        if type(result.categories) ~= "table" then
+          return res, "content safety introspection is invalid"
+        end
+
+        local blocked_categories = {}
+
+        for category_name, is_flagged in pairs(result.categories) do
+          if is_flagged == true then
+            table.insert(blocked_categories, category_name)
+          end
+        end
+
+        if #blocked_categories > 0 then
+          return {
+            block = true,
+            block_message = table.concat(blocked_categories, ", "),
+          }
+        end
+
+        return res
+      end
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
