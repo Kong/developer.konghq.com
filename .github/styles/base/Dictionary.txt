@@ -196,6 +196,7 @@ deck_files
 declaratively
 deduplicate
 deduplication
+deepseek
 degraphql
 degraphql_routes
 denylist
