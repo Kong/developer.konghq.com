@@ -197,6 +197,7 @@ deck_files
 declaratively
 dedupe
 deduplicate
+deduplicates
 deduplication
 degraphql
 degraphql_routes

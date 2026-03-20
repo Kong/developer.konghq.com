@@ -47,6 +47,15 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Get started with generic meters
+              description: |
+                Learn how to meter and bill generic meters.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /how-to/get-started-with-metering-and-billing-generic-meters/
+      - blocks:
+          - type: card
+            config:
               title: Start monetizing {{site.base_gateway}} API traffic
               description: |
                 Learn how to meter and bill {{site.base_gateway}} API requests.
