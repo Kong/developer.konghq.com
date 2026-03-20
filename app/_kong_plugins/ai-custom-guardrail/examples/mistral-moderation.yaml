@@ -1,0 +1,80 @@
+description: |
+  Configure the AI Custom Guardrail plugin to check requests and responses, and block content matching using Mistral AI.
+
+extended_description: |
+  Configure the AI Custom Guardrail plugin to check requests and responses, and block content matching using Mistral AI.
+
+title: Block request and response content using Mistral AI moderation
+
+weight: 900
+
+requirements:
+  - You have an Mistral AI account.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+variables:
+  key:
+    value: $MISTRAL_API_KEY
+    description: The API key to access Mistral AI.
+  model:
+    value: $MISTRAL_MODEL
+    description: The Mistral AI model to use for moderation.
+  
+
+config: 
+  guarding_mode: BOTH
+  text_source: "concatenate_all_content"
+
+  params:
+    api_key: ${key}
+    model: ${model}
+
+  request:
+    url: https://api.mistral.ai/v1/moderations
+    headers:
+      Authorization: "Bearer $(conf.params.api_key)"
+    body:
+      model: "$(conf.params.model)"
+      input: "$(content)"
+
+  response:
+    block: "$(check_response.block)"
+    block_message: "$(check_response.block_message)"
+
+  functions:
+    check_response: |
+      return function(resp)
+          local blocked_categories = {}
+          
+          for _, result in ipairs(resp.results) do
+              for category, is_flagged in pairs(result.categories) do
+                  if is_flagged then
+                      table.insert(blocked_categories, category)
+                  end
+              end
+          end
+          
+          local block = #blocked_categories > 0
+          local reason
+
+          if block then
+            reason = "Content moderation failed in the following categories: " .. table.concat(blocked_categories, ", ")
+          else
+            reason = "Content moderation passed"
+          end
+          
+          return {
+              block = block,
+              block_message = reason
+          }
+      end
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
