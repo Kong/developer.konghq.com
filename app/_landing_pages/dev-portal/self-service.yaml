@@ -210,13 +210,13 @@ rows:
                   With team application sharing, the team retains uninterrupted access to the application.
 
                   Important considerations:
-                  * Once an application is assigned to a team, ownership can only be transferred back to an individual developer via the {{site.konnect_short_name}} API.
                   * All members of the team that owns an application receive full ownership access. 
                   * Applications can only be transferred to teams that have [API Consumer](/dev-portal/developer-rbac/) access for every API currently registered by the application. 
                     Similarly, you can only register APIs to team-owned applications if everyone in the team has access to the API. 
                     This is true even if an individual team member has broader access through other teams.
 
                   To enable team application sharing, navigate to your Dev Portal in {{site.konnect_short_name}} and click **Access and approvals > Teams**. Click the relevant team, go to **Settings**, and enable **Allow team to own applications**.
+                  To transfer ownership of an app, navigate to the app and from the **Actions** dropdown menu, select "Transfer ownership".
                   
                   For more information about how to configure Dev Portal developer teams, see [Dev Portal RBAC](/dev-portal/developer-rbac/). 
                   For more information about the developer experience, see [Dev Portal developer sign-up](/dev-portal/developer-signup/#2-create-an-application).
