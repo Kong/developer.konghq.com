@@ -1,7 +1,8 @@
 
 title: 'Chat route with DeepSeek'
 description: 'Configure a chat route using the DeepSeek Chat model.'
-
+min_version:
+  gateway: '3.14'
 weight: 900
 
 requirements:
