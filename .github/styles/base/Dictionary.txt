@@ -60,6 +60,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avalara
 Avro
 aws
 Adyen
@@ -194,6 +195,7 @@ dcr
 DECK_
 deck_files
 declaratively
+dedupe
 deduplicate
 deduplication
 degraphql
@@ -797,6 +799,7 @@ shm
 show_in_api
 Sigstore
 slas
+Slowloris
 slsa
 slos
 SLT_Enc

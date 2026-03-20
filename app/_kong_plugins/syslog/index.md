@@ -41,7 +41,7 @@ faqs:
        Transport receivers may receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
 
 notes: | 
-   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   **Dedicated and Serverless Cloud Gateways**: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no local nodes 
    in Dedicated or Serverless Cloud Gateways.
 

@@ -25,6 +25,11 @@ rows:
                     * Flexible pricing models, including free, flat fee, usage-based, and tiered
                     * Subscription management to govern access and automate billing
                     * Automated invoicing and integration with payment providers and ERPs
+          - type: button
+            config:
+              align: left
+              text: How can Metering & Billing help? &rarr;
+              url: /metering-and-billing/overview/
 
       - blocks:
           - type: image

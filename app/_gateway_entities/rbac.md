@@ -93,8 +93,7 @@ columns:
 rows:
   - user: Admin
     purpose: |
-      An admin belongs to a Workspace and has at least one role with a set of permissions. If an admin is in a Workspace without a role, they can’t see or interact with anything. 
-      <br><br>
+      An admin belongs to a Workspace and has at least one role with a set of permissions. If an admin is in a Workspace without a role, they can’t see or interact with anything. <br><br>
       Admins can manage entities inside Workspaces, including users and their roles.
     use: "Personal administrative accounts for {{site.base_gateway}} and Kong Manager"
     tools: |
@@ -103,8 +102,7 @@ rows:
       * decK
   - user: Super admin
     purpose: | 
-      Specialized admins with the ability to:
-      <br><br>
+      Specialized admins with the ability to:<br><br>
       * Manage all Workspaces
       * Further customize permissions
       * Create entirely new roles
