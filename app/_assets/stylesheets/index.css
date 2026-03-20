@@ -694,6 +694,70 @@
     content: counter(steps-counter) ".";
   }
 
+  /* Stepper */
+  .stepper {
+    counter-reset: stepper-counter;
+  }
+
+  .stepper > .accordion-item,
+  .stepper > .heading-section:has(h2) {
+    @apply border-b-0 pl-10 relative pb-8;
+    counter-increment: stepper-counter;
+  }
+
+  /* Vertical connecting line */
+  .stepper > .accordion-item::before,
+  .stepper > .heading-section:has(h2)::before {
+    @apply absolute left-[0.9375rem] top-8 bottom-0 w-px bg-primary/10 pointer-events-none;
+    content: "";
+  }
+
+  /* Remove line from the last step */
+  .stepper > .accordion-item:last-child::before,
+  .stepper > .heading-section:has(h2):last-child::before {
+    @apply hidden;
+  }
+
+  /* Numbered circle */
+  .stepper > .accordion-item::after,
+  .stepper > .heading-section:has(h2)::after {
+    @apply absolute left-0 top-0 flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-full bg-brand text-white text-sm font-semibold pointer-events-none;
+    content: counter(stepper-counter);
+  }
+
+  /* Hide the default "N." counter prefix */
+  .stepper .how-to-step--title::before {
+    @apply hidden;
+  }
+
+  /* Sub-steps: ordered lists inside stepper steps */
+  .stepper .accordion-panel > ol,
+  .stepper .heading-section > .content > ol,
+  .stepper .navtab-content > ol {
+    @apply ml-0 pl-0 list-none;
+    counter-reset: substep-counter;
+  }
+
+  .stepper .accordion-panel > ol > li,
+  .stepper .heading-section > .content > ol > li,
+  .stepper .navtab-content > ol > li {
+    @apply relative pl-8 pb-4 border-l border-primary/10 ml-[0.6875rem];
+    counter-increment: substep-counter;
+  }
+
+  .stepper .accordion-panel > ol > li:last-child,
+  .stepper .heading-section > .content > ol > li:last-child,
+  .stepper .navtab-content > ol > li:last-child {
+    @apply border-l-0 pb-0;
+  }
+
+  .stepper .accordion-panel > ol > li::before,
+  .stepper .heading-section > .content > ol > li::before,
+  .stepper .navtab-content > ol > li::before {
+    @apply absolute left-[-0.6875rem] top-0 flex items-center justify-center w-[1.375rem] h-[1.375rem] rounded-full border border-brand bg-secondary text-brand text-xs font-semibold;
+    content: counter(substep-counter);
+  }
+
   .top-nav {
     @apply absolute lg:static h-dvh lg:h-full w-screen lg:w-fit left-0 top-0 bg-secondary lg:bg-transparent flex flex-col lg:flex-row items-center lg:gap-5 transform translate-x-[-120%] lg:translate-x-0;
   }
