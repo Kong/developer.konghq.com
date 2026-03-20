@@ -30,7 +30,7 @@ config:
     model: ${{ env "DECK_MISTRAL_MODEL" }}
 
   request:
-    url: https://api.mistral.ai/v1/chat/moderations
+    url: https://api.mistral.ai/v1/moderations
     headers:
       Authorization: "Bearer $(conf.params.api_key)"
     body:
