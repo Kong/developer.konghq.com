@@ -1,0 +1,35 @@
+description: 'Emit a usage event for every API request, billed to the authenticated {{site.base_gateway}} Consumer.'
+extended_description: |
+  This example enables API request metering and uses the authenticated {{site.base_gateway}} Consumer as the billable subject.
+
+  The plugin emits one CloudEvent per request to the configured ingest endpoint. 
+  Collecting events alone doesn't produce invoices. 
+  To aggregate usage and generate invoices, you need either [{{site.konnect_short_name}} Metering & Billing](/metering-and-billing/) or a self-hosted [OpenMeter](https://openmeter.io/) instance.
+
+title: 'Meter API requests by Consumer'
+
+weight: 999
+
+requirements:
+  - 'An authentication plugin (for example, [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/)) is configured on the same Gateway Service or Route so that a Consumer is present on each request. Requests without a Consumer will have their subject set to `unknown`.'
+  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
+
+config:
+  http_endpoint: https://us.api.konghq.com/v3/openmeter/events
+  auth_token: ${auth-token}
+  enable_api_requests: true
+  enable_ai_llm: false
+  subject:
+    in: consumer
+
+variables:
+  auth-token:
+    value: $AUTH_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) or OpenMeter API key.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
