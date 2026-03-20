@@ -96,7 +96,7 @@ Enable the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) with the followi
 
 * The [Mistral Moderation API](https://docs.mistral.ai/capabilities/guardrailing#moderation) URL
 * Your Mistral API key
-* The model to use
+* The Mistral model to use
 * The input content to send to the Mistral Moderation API
 * The function that defines how to parse the response
 
