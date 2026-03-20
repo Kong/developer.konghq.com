@@ -387,10 +387,10 @@ Create a topic bypassing the gateway:
 
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+  kafkactl -C kafkactl.yaml --context direct create topic products-topic
 expected:
   return_code: 0
-  message: "topic created: my-test-topic"
+  message: "topic created: products-topic"
 render_output: false
 {% endvalidation %}
 
@@ -403,7 +403,7 @@ expected:
   return_code: 0
   message: |
     TOPIC             PARTITIONS     REPLICATION FACTOR
-    my-test-topic     1              1
+    products-topic    1              1
 render_output: false
 {% endvalidation %}
 
@@ -411,7 +411,7 @@ The output should look like this:
 
 ```shell
 TOPIC             PARTITIONS     REPLICATION FACTOR
-my-test-topic     1              1
+products-topic    1              1
 ```
 {:.no-copy-code}
 
