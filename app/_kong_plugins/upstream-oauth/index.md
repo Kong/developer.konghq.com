@@ -113,4 +113,8 @@ The plugin supports the following caching [strategies](/plugins/upstream-oauth/r
 * `memory`: A locally stored `lua_shared_dict`. The default dictionary, `kong_db_cache`, is also used by other plugins and {{site.base_gateway}} elements to store unrelated database cache entities.
 * `redis`: Supports Redis, Redis Cluster, and Redis Sentinel deployments.
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
