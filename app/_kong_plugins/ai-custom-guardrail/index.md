@@ -46,9 +46,9 @@ icon: ai-custom-guardrail.png
 categories:
    - ai
 
-# related_resources:
-#   - text: How-to guide for the plugin
-#     url: /how-to/guide/
+related_resources:
+  - text: Use the AI Custom Guardrail plugin with the Mistral AI Moderation API
+    url: /how-to/use-ai-custom-guardrail-with-mistral/
 ---
 
 The AI Custom Guardrail plugin enforces introspection on both inbound requests and outbound responses handled by the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin. It can integrate with any HTTP-based guardrail service. This ensures all data exchanged between clients and upstream LLMs adheres to the configured security standards.
