@@ -57,3 +57,6 @@ The Forward Proxy Advanced plugin can't be used with an [Upstream](/gateway/enti
 As a workaround for load balancing, configure the [`host` field in a Gateway Service](/gateway/entities/service/#schema) to a domain name so that you can use a 
 [DNS-based load balancing](/gateway/traffic-control/load-balancing-reference/#dns-based-load-balancing) technique.
 
+The Forward Proxy Advanced plugin can't be used in this context too:
+- Validate the upstream response with the [OAS Validation](/plugins/oas-validation/) plugin
+- Use the `kong.service.response.get_raw_body()` from the PDK in the `header_filter` phase
