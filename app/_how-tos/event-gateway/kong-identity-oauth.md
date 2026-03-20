@@ -125,7 +125,7 @@ method: POST
 headers:
   - 'Content-Type: application/json'
 body:
-  name: "topic-prefix"
+  name: "topic_prefix"
   value: "products"
   include_in_token: true
   include_in_all_scopes: false
@@ -309,11 +309,11 @@ body:
         - name: describe_configs
         - name: read
         - name: write
-      resource_names: '[context.auth.token.claims["topic-prefix"] + "*"]'
+      resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
 {% endkonnect_api_request %}
 <!--vale on-->
 
-This ACL policy grants full access to all topics with the prefix in the `topic-prefix` claim.
+This ACL policy grants full access to all topics with the prefix in the `topic_prefix` claim.
 
 ## Setup `kafkactl` to use OAuth
 
