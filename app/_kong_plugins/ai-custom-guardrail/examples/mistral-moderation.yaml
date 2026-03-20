@@ -13,7 +13,7 @@ requirements:
   - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
 variables:
-  token:
+  key:
     value: $MISTRAL_API_KEY
     description: The API key to access Mistral AI.
   model:
@@ -26,8 +26,8 @@ config:
   text_source: "concatenate_all_content"
 
   params:
-    api_key: ${{ env "DECK_MISTRAL_API_KEY" }}
-    model: ${{ env "DECK_MISTRAL_MODEL" }}
+    api_key: ${key}
+    model: ${model}
 
   request:
     url: https://api.mistral.ai/v1/moderations

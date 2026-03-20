@@ -28,8 +28,8 @@ config:
   text_source: "concatenate_all_content"
 
   params:
-    content_safety_url: ${{ env "DECK_CONTENT_SAFETY_URL" }}
-    content_safety_key: ${{ env "DECK_CONTENT_SAFETY_KEY" }}
+    content_safety_url: ${content_safety_url}
+    content_safety_key: ${content_safety_key}
     categories: "[{ \"name\": \"Hate\", \"rejection_level\": 2}, { \"name\": \"Violence\", \"rejection_level\": 2}]"
     output_type: "FourSeverityLevels"
     azure_api_version: '2023-10-01'
