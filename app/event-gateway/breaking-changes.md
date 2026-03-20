@@ -57,7 +57,7 @@ For more information about configuring data planes at startup and all options, s
 
 #### Metrics naming convention
 
-{{site.event_gateway_short}} metrics have been renamed to more closely follow OpenTelemetry conventions.
+{{site.event_gateway_short}} metrics have been renamed to more closely follow [OpenTelemetry semantic conventions](https://opentelemetry.io/docs/specs/semconv/).
 
 For example:
 - Old metric: `kong_keg_kafka_backend_connection_error_count`

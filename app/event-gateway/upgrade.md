@@ -1,7 +1,7 @@
 ---
 title: "Upgrading {{site.event_gateway_short}}"
 
-description: "This guide walks you through upgrading {{site.base_gateway}} control planes and data planes."
+description: "This guide walks you through upgrading {{site.event_gateway}} control planes and data planes."
 
 content_type: reference
 layout: reference
@@ -49,6 +49,9 @@ faqs:
   - q: How do I downgrade my control plane version?
     a: |
       The minimum control plane version can be downgraded with the help of [Kong Support](https://support.konhq.com).
+  - q: When should I change the minimum runtime version
+     a: |
+       If you don't need to use features that exist on newer versions you don't need to update the minimum runtime version. However, it's recommended to update this version once all your dataplanes have been upgraded and things are stable.
 
 ---
 
