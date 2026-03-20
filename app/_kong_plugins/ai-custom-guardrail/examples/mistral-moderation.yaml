@@ -43,39 +43,30 @@ config:
 
   functions:
     check_response: |
-      return function(resp, conf)
-        local res = {
-          block = false,
-          block_message = "content passed safety check",
-        }
-
-        -- Validate response structure
-        if type(resp.results) ~= "table" or #resp.results == 0 then
-          return res, "content safety introspection is invalid"
-        end
-
-        local result = resp.results[1]
-
-        if type(result.categories) ~= "table" then
-          return res, "content safety introspection is invalid"
-        end
-
-        local blocked_categories = {}
-
-        for category_name, is_flagged in pairs(result.categories) do
-          if is_flagged == true then
-            table.insert(blocked_categories, category_name)
+      return function(resp)
+          local blocked_categories = {}
+          
+          for _, result in ipairs(resp.results) do
+              for category, is_flagged in pairs(result.categories) do
+                  if is_flagged then
+                      table.insert(blocked_categories, category)
+                  end
+              end
           end
-        end
+          
+          local block = #blocked_categories > 0
+          local reason
 
-        if #blocked_categories > 0 then
+          if block then
+            reason = "Content moderation failed in the following categories: " .. table.concat(blocked_categories, ", ")
+          else
+            reason = "Content moderation passed"
+          end
+          
           return {
-            block = true,
-            block_message = table.concat(blocked_categories, ", "),
+              block = block,
+              block_message = reason
           }
-        end
-
-        return res
       end
 
 tools:
