@@ -102,7 +102,7 @@ rows:
   - metric: "`kong.keg.config.loaded`"
     description: Config version loaded from CP.
   - metric: "`kong.keg.kafka.connection.errors`"
-    description: Proxied connections that errored.
+    description: Proxied connections that have errors.
   - metric: "`kong.keg.kafka.decrypt.attempts`"
     description: Decryption attempt count.
   - metric: "`kong.keg.kafka.encrypt.attempts`"
