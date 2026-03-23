@@ -1,3 +1,9 @@
+{% if include.section == "question" %}
+
+How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
+
+{% elsif include.section == "answer" %}
+
 For cross-region inference, prefix the model ID with a geographic identifier:
 
 ```
@@ -24,3 +30,5 @@ rows:
 {% endtable %}
 
 For a full list of supported cross-region inference profiles, see [Supported Regions and models for inference profiles](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html) in the AWS documentation.
+
+{% endif %}
