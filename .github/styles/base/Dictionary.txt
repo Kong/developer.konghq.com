@@ -476,6 +476,7 @@ KPI
 KPI
 KPIs
 KPIs
+kscheme
 ksearch
 kubeconfig
 kubectl
@@ -495,6 +496,7 @@ Kustomize
 Kustomize
 kustomize
 kustomize
+keystores
 kv
 Lakera
 langchain
