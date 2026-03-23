@@ -106,27 +106,35 @@ In this example, the limits will apply only to requests made by the specified Co
 {:.info}
 > Policies without match conditions act as fallback and match all requests.
 
-You can define policies inline as in the example above, but you can also create reusable policies using the [AI Rate Limiting Policy entity](/gateway/entities/ai-rate-limiting-policy/). For example:
+You can define policies inline as in the example above, but you can also create reusable policies using the [AI Rate Limiting Policy entity](/gateway/entities/ai-rate-limiting-policy/).
 
-{% entity_examples %}
-entities:
-  ai_rate_limiting_policies:
-  - name: my-policy
-    ref_type: consumer
-    ref_id: $CONSUMER_ID
+First, configure the AI Rate Limiting Policy entity:
+
+{% entity_example %}
+type: ai_rate_limiting_policy
+data:
+  name: my-policy
+  ref_type: consumer
+  ref_id: $CONSUMER_ID
+  policies:
+    - window_type: fixed
+      limits:
+        - limit: 100
+          window_size: 60
+        - limit: 1000
+          window_size: 3600
+{% endentity_example %}
+
+Then configure the plugin and reference the policy using its UUID:
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-rate-limiting-advanced
+  config:
     policies:
-      - window_type: fixed
-        limits:
-          - limit: 100
-            window_size: 60
-          - limit: 1000
-            window_size: 3600
-  plugins:
-  - name: ai-rate-limiting-advanced
-    config:
-      policies:
-      - id: $POLICY_UUID
-{% endentity_examples %}
+    - id: $POLICY_UUID
+{% endentity_example %}
 
 {:.warning}
 > When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
