@@ -5,7 +5,7 @@ content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: AI Proxy Advanced
+  - text: AI Proxy
     url: /plugins/ai-proxy/
 
 description: Configure the AI Proxy plugin to create a chat route using Databricks.
@@ -83,8 +83,6 @@ entities:
               workspace_instance_id: ${workspace}
 
 variables:
-  url:
-    value: "$DATABRICKS_INSTANCE_URL"
   key:
     value: "$DATABRICKS_TOKEN"
   workspace:

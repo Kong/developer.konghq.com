@@ -84,8 +84,6 @@ entities:
                 workspace_instance_id: ${workspace}
 
 variables:
-  url:
-    value: "$DATABRICKS_INSTANCE_URL"
   key:
     value: "$DATABRICKS_TOKEN"
   workspace:
