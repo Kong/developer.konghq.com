@@ -8,9 +8,6 @@ tier: ai_gateway_enterprise
 
 products:
     - gateway
-    
-tools:
-  - deck
 
 works_on:
     - on-prem
