@@ -201,13 +201,14 @@ rows:
 
   - header:
       type: h2
-      text: "Cost Analytics"
-      sub_text: "Track and analyze the cost of feature usage."
+      text: "Cost analytics"
+      sub_text: "Track and analyze the internal costs of feature usage."
+    column_count: 3
     columns:
       - blocks:
           - type: card
             config:
-              title: Cost Analytics
+              title: Cost analytics
               description: |
                 Query and visualize the computed cost of feature usage over time, with filtering and dimensional breakdowns.
               icon: /assets/icons/analytics.svg
@@ -217,7 +218,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: LLM Cost Database
+              title: LLM cost database
               description: |
                 Browse the built-in database of per-token pricing for major LLM providers and models. Create price overrides for custom rates.
               icon: /assets/icons/llm.svg

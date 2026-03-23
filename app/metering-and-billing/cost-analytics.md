@@ -19,11 +19,15 @@ related_resources:
 
 ---
 
-{{site.konnect_short_name}} {{site.metering_and_billing}} includes a built-in LLM cost database and cost analytics to help you track the actual cost of metered usage. When a [feature has a unit cost configured](/metering-and-billing/product-catalog/#unit-cost), {{site.metering_and_billing}} computes the total cost by multiplying usage by the per-unit price.
+{{site.konnect_short_name}} {{site.metering_and_billing}} includes a built-in LLM cost database and cost analytics to help you track the actual cost of metered usage. 
+These are useful when you are deciding what to charge for a feature.
+You can use the LLM cost database and cost analytics to determine how much a feature costs your company and use that information to decide how much to charge customers.
 
 ## LLM cost database
 
-The LLM cost database is a built-in, automatically updated catalog of per-token pricing for major LLM providers and models. It allows you to calculate the real cost of LLM token usage without manually maintaining price lists.
+The LLM cost database is a built-in, automatically updated catalog of per-token pricing for major LLM providers and models. 
+The database pulls costs from each provider's pricing information, unless you override it with custom costs.
+It allows you to calculate the real cost of LLM token usage without manually maintaining price lists.
 
 ### Supported providers
 
@@ -78,7 +82,7 @@ rows:
   - type: Cache write
     description: "Tokens written to the provider's prompt cache."
   - type: Reasoning
-    description: "Tokens used for chain-of-thought reasoning in reasoning models (e.g., o1, DeepSeek R1)."
+    description: "Tokens used for chain-of-thought reasoning in reasoning models (for example, o1, DeepSeek R1)."
 {% endtable %}
 
 ### Price sources
@@ -95,51 +99,61 @@ rows:
   - source: System
     description: "Automatically synced from external pricing sources. These prices are kept up to date as providers change their pricing."
   - source: Manual
-    description: "Manually configured by a user. Use manual prices for models or providers not yet in the system database."
+    description: "Manually configured by a user. Use manual prices for models or providers that aren't in the system database."
 {% endtable %}
 
 ### Effective dates
 
-Prices include `effective_from` and `effective_to` timestamps. This allows the database to track historical pricing changes when a provider updates their prices, a new price entry is created with a new effective date, and the previous entry's `effective_to` is set accordingly. Cost calculations use the price that was effective at the time of usage.
+Prices include `effective_from` and `effective_to` timestamps. 
+This allows the database to track historical pricing changes.
+When a provider updates their prices, a new price entry is created with a new effective date, and the previous entry's `effective_to` is set accordingly. 
+Cost calculations use the price that was effective at the time of usage.
 
 ### Browsing the cost database
 
-To view the LLM cost database in {{site.konnect_short_name}}:
+To view the LLM cost database in {{site.konnect_short_name}}, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**
-1. Choose **Cost Analytics** sub-menu.
-1. Click the **LLM Cost**. tab.
+1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
+1. In the Metering & Billing sidebar, click **Cost Analytics**.
+1. Click the **LLM Cost** tab.
 1. Browse or search by provider name or model name.
 
 The table shows each model's input and output token pricing, the price source, and the effective date.
 
 ### Price overrides
 
-You can create per-org price overrides to customize pricing for specific provider and model combinations. Overrides take precedence over system prices when calculating costs.
+You can create per-org price overrides to customize pricing for specific provider and model combinations. 
+Overrides take precedence over system prices when calculating costs.
+A common use cases for overrides is when you've a negotiated rate with a provider that differs from their public pricing.
 
-Common use cases for overrides:
-* You have a negotiated rate with a provider that differs from their public pricing.
+To create a price override, do the following:
 
-To create a price override:
-
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**
-1. Choose **Cost Analytics** sub-menu.
-1. Click the **LLM Cost**. tab.
-1. Find the model you want to override and click **Override** from the actions menu.
+1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
+1. In the Metering & Billing sidebar, click **Cost Analytics**.
+1. Click the **LLM Cost** tab.
+1. Find the model you want to override and select "Override" from the actions menu.
 1. Enter your custom per-token pricing for the relevant token types (input, output, cache read, cache write, reasoning).
 1. Click **Save**.
 
-To view and manage existing overrides, click the **Overrides** tab on the LLM Cost page. You can delete an override to revert to the system price.
+To view and manage existing overrides, click the **Show Overrides** on the LLM Cost page. You can delete an override to revert to the system price.
 
 ## Cost analytics queries
 
-Cost analytics lets you query and visualize the computed cost of feature usage over time. It is available for any feature that has a [unit cost](/metering-and-billing/product-catalog/#unit-cost) configured.
+Cost analytics lets you query and visualize the computed cost of feature usage over time. 
+It is available for any feature that has a [unit cost](/metering-and-billing/product-catalog/#unit-cost) configured.
+{{site.metering_and_billing}} computes the total cost by multiplying usage by the per-unit price.
 
-### Accessing cost analytics
+You can group cost data by customer, subject, or custom dimensions (using the group by dimension, such as model, provider, or region). Each entry shows the metered usage value for the period, the computed cost in the configured currency, and the group by dimensions values. 
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**
-1. Choose **Cost Analytics** sub-menu.
+### View cost analytics
+
+To see cost analytics, do the following:
+
+1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
+1. In the Metering & Billing sidebar, click **Cost Analytics**.
 1. Select a feature from the dropdown. Only features with a unit cost configured are shown.
+
+You will see that feature's cost breakdown by the filters you've selected.
 
 ### Filtering
 
@@ -162,26 +176,8 @@ rows:
     description: "Filter by one or more customers."
   - filter: Subject
     description: "Filter by one or more subjects."
-  - filter: Group By
+  - filter: Group by
     description: "Filter by group by values."
 {% endtable %}
 
-### Grouping
 
-You can group cost data by:
-* **Customer**: see cost broken down by customer.
-* **Subject**: see cost broken down by subject.
-* **Custom dimensions**: group by any meter group-by dimension (e.g., model, provider, region).
-
-### Visualization
-
-Cost analytics provides two views:
-
-* **Chart**: a time-series stacked bar chart showing cost over time, broken down by the selected grouping dimensions.
-* **Table**: a detailed table with columns for customer, subject, group-by dimensions, time period, usage amount, and total cost.
-
-Each row in the results includes:
-
-* **Usage**: the metered usage value for the period.
-* **Cost**: the computed cost (usage multiplied by unit cost), displayed in the configured currency.
-* **Dimensions**: the group-by dimension values for that row.

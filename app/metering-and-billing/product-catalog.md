@@ -101,20 +101,23 @@ You can attach a per-unit cost to a feature to calculate the total cost of usage
 > **Unit Cost is your internal cost:** To invoice customers and collect revenue use [rate cards](#rate-card).
 
 
-There are two types of unit cost:
+There are two types of unit costs: manual and LLM.
 
-#### 1. Manual unit cost
+#### Manual unit cost
 
-A fixed per-unit cost amount in USD. Use this when the cost per unit is constant, for example:
+Manual unit cost is a fixed, per-unit cost amount in USD. 
+Use this when the cost per unit is constant, for example:
 * $0.005 per API request
 * $0.10 per compute minute
 * $1.00 per agent run
 
-#### 2. LLM unit cost
+#### LLM unit cost
 
-Dynamic cost lookup from the built-in [LLM cost database](/metering-and-billing/cost-analytics/#llm-cost-database). The cost per token is automatically resolved based on the LLM provider, model, and token type. This is ideal for AI products where token pricing varies by model.
+LLM unit cost uses the built-in [LLM cost database](/metering-and-billing/cost-analytics/#llm-cost-database) to lookup the cost. 
+The cost per token is automatically resolved based on the LLM provider, model, and token type. 
+This is ideal for AI products where token pricing varies by model.
 
-LLM unit cost supports two configuration modes:
+LLM unit costs can either be static or dynamic:
 
 <!--vale off-->
 {% table %}
@@ -148,13 +151,13 @@ columns:
 rows:
   - static: Provider
     dynamic: Provider property
-    description: "The LLM provider (e.g., `openai`, `anthropic`). Static sets a fixed value; dynamic reads from a meter group-by dimension."
+    description: "The LLM provider (for example, `openai`, `anthropic`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
   - static: Model
     dynamic: Model property
-    description: "The model ID (e.g., `gpt-4`, `claude-3-5-sonnet`). Static sets a fixed value; dynamic reads from a meter group-by dimension."
+    description: "The model ID (for example, `gpt-4`, `claude-3-5-sonnet`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
   - static: Token type
     dynamic: Token type property
-    description: "The token type (e.g., `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value; dynamic reads from a meter group-by dimension."
+    description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
 {% endtable %}
 
 ## Plans
