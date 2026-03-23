@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@17b7bf53d5a96412f37263091d79f90534ce60da
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/17b7bf53d5a96412f37263091d79f90534ce60da'
+  x-oas-source: kong/platform-api@598598bb85b241381bb4cc9f7a88f7b6204b275f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/598598bb85b241381bb4cc9f7a88f7b6204b275f'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -3391,6 +3391,9 @@ components:
             - apikey
         created_at: '2022-12-22T19:09:30.712Z'
         updated_at: '2022-12-22T19:09:30.712Z'
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
       oneOf:
         - $ref: '#/components/schemas/ClientCredentialsApplication'
         - $ref: '#/components/schemas/KeyAuthApplication'
@@ -3517,6 +3520,9 @@ components:
             - apikey
         created_at: '2022-12-22T19:09:30.712Z'
         updated_at: '2022-12-22T19:09:30.712Z'
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
       additionalProperties: false
       required:
         - id
@@ -6791,6 +6797,9 @@ components:
             - apikey
         created_at: '2022-12-22T19:09:30.712Z'
         updated_at: '2022-12-22T19:09:30.712Z'
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
     GetApplicationExampleDcr:
       value:
         id: b15e2460-ba40-431d-9df0-4957fcffacda
@@ -6814,6 +6823,9 @@ components:
           - openid
         created_at: '2022-12-22T19:07:30.712Z'
         updated_at: '2022-12-22T19:07:30.712Z'
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
     GetApplicationExampleOIDC:
       value:
         id: b15e2460-ba40-431d-9df0-4957fcffacda
@@ -6835,6 +6847,9 @@ components:
         granted_scopes: null
         created_at: '2022-12-22T19:07:30.712Z'
         updated_at: '2022-12-22T19:07:30.712Z'
+        owner:
+          id: 8cd9feff-b4da-4a9f-ba49-cbe83c75ff22
+          type: developer
     ListApplicationDevelopersExample1:
       value:
         meta:
