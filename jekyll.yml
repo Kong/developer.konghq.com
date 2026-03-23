@@ -40,6 +40,8 @@ collections:
     output: true
   references:
     output: false
+  support:
+    output: true
 
 defaults:
   - scope:
@@ -69,6 +71,14 @@ defaults:
       auto_generated: true
       content_type: "reference"
       permalink: "/:path/"
+  - scope:
+      path: "_support"
+      type: "support"
+    values:
+      layout: "support"
+      permalink: "/support/:path/"
+      breadcrumbs:
+        - "/support/"
 
 reference_metadata:
   inso-cli:
