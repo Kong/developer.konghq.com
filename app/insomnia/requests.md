@@ -143,7 +143,7 @@ columns:
     key: description
 rows:
   - option: Generate Client Code
-    description: "Generate code based on your request. You can choose from a variety of languages."
+    description: "Generate code based on your request. You can choose from a variety of languages. When a [Stainless](https://www.stainlessapi.com/) SDK is available for the URL you're testing, Insomnia uses Stainless to generate the snippet and will show a Stainless logo on the button."
   - option: Send After Delay
     description: "Send the request after the specified amount of time."
   - option: Repeat On Interval
