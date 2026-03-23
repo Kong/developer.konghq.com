@@ -59,7 +59,7 @@ rows:
       - blocks:
         - type: entity_card
           config:
-            entity: ai-gateway-policy
+            entity: ai-rate-limiting-policy
 
   - header:
       type: h2
