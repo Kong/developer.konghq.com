@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+ai_rate_limiting_policy
 agentic
 Agno
 Agno's
