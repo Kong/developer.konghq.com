@@ -95,7 +95,7 @@ You can review unmanaged users on a domain to identify accounts that you may wan
 1. Select your domain.
 1. From the **Unclaimed Accounts** section, click **Manage**.
 
-You can export unmanaged users for a domain as a CSV by clicking the download button in the **Unclaimed Accounts** section.
+In the **Unclaimed Accounts** section, click the download icon to export unmanaged users for the domain as a CSV file.
 
 To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
 1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
