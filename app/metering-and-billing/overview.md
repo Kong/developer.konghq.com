@@ -74,47 +74,36 @@ The following table describes which features {{site.metering_and_billing}} handl
 columns:
   - title: Capability
     key: capability
-  - title: "{{site.metering_and_billing}} support"
+  - title: "Supported by"
     key: support
-  - title: Third-party providers
-    key: providers
 rows:
   - capability: "[**Usage metering** (ingest, dedupe, real-time usage)](/metering-and-billing/metering/)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Product catalog** (prices, plans, discounts)](/metering-and-billing/product-catalog/)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Subscription management** (start, cancel, billing periods)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing-subscriptions/#discounts-and-commitments)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing-subscriptions/#invoicing)"
-    support: Yes
-    providers: "N/A"
+    support: "{{site.metering_and_billing}}"
   - capability: "**Sales tax calculations** (based on geo and tax code)"
-    support: "N/A"
-    providers: |
-      Integrations:
+    support: |
+      Third-party integrations:
       * [Stripe Tax](/metering-and-billing/stripe-integration/#optional-automatic-tax-calculation)
       * Avalara
       * Anrok
   - capability: "**Invoice delivery** (email, dunning, compliance)"
-    support: "N/A"
-    providers: |
-      Integrations:
+    support: |
+      Third-party integrations:
       * [Stripe Invoicing](/metering-and-billing/stripe-integration/#invoicing)
       * NetSuite
       * Invopop
   - capability: "**Credit card payment** (storing credit cards, payment rails)"
-    support: "N/A"
-    providers: |
-      Integrations:
+    support: |
+      Third-party integrations:
       * [Stripe Payments](/metering-and-billing/stripe-integration/#invoicing)
       * Adyen
       * PayPal
