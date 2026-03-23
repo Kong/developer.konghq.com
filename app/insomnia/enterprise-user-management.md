@@ -61,8 +61,10 @@ Manage teams in [**Enterprise Controls** > **Teams**](https://app.insomnia.rest/
 
 You can also manage teams using SCIM provisioning. For more information, see [SCIM](/insomnia/scim/).
 
-You can rename or delete a team by clicking the team name. When deleting a team, members are removed from any organization where that team was their only link. Members with access through another team assigned to the same organization are not affected.
-
+You can rename or delete a team by clicking the team name. 
+When you delete a team, keep the following in mind:
+* If members were assigned to only that team, they will also be removed from the organization. 
+* If members were assigned to more than one team, they won't be removed from the organization since they're still a member of another team.
 {:.info}
 > Roles are defined on the team level, which means that if the same team is linked to multiple organizations, the team members will have the same role in all linked organizations.
 
