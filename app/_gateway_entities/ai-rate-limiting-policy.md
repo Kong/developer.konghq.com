@@ -49,19 +49,19 @@ You can define multiple policies in a single entity, and reference this entity i
 
 ## Set up an AI Rate Limiting Policy
 
-{% entity_example %}
-type: ai_rate_limiting_policy
-data: 
-  name:
-  ref_type: consumer
-  ref_id: $CONSUMER_ID
-  policies:
-    - window_type:
-      limits:
-        - limit: 100
-          window_size: 60
-        - limit: 1000
-          window_size: 3600
+{% entity_examples %}
+entities:
+  ai_rate_limiting_policies:
+  - name: my-policy
+    ref_type: consumer
+    ref_id: $CONSUMER_ID
+    policies:
+      - window_type: fixed
+        limits:
+          - limit: 100
+            window_size: 60
+          - limit: 1000
+            window_size: 3600
 {% endentity_example %}
 
 ## Schema
