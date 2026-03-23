@@ -112,6 +112,15 @@ rows:
       Cluster, Produce and Consume policies
     example: |
       `context.auth.principal.name == 'user1'`
+  - variable: |
+      `context.auth.token.claims` {% new_in 1.1 %}
+    type: "`map<string, any>`"
+    description: |
+      Only populated for `sasl_oauth_bearer` authentication. Contains all claims from the JWT token. Claims can be strings, numbers, booleans, arrays, or nested JSON objects.
+    availability: |
+      Cluster, Produce, and Consume policies
+    example: |
+      `'test-claim' in context.auth.token.claims`
   - variable: "`context.topic.name`"
     type: "`string`"
     description: |
