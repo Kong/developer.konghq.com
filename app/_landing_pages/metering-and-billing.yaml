@@ -215,6 +215,32 @@ rows:
 
   - header:
       type: h2
+      text: "Cost Analytics"
+      sub_text: "Track and analyze the cost of feature usage."
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Cost Analytics
+              description: |
+                Query and visualize the computed cost of feature usage over time, with filtering and dimensional breakdowns.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#cost-analytics-queries
+      - blocks:
+          - type: card
+            config:
+              title: LLM Cost Database
+              description: |
+                Browse the built-in database of per-token pricing for major LLM providers and models. Create price overrides for custom rates.
+              icon: /assets/icons/llm.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#llm-cost-database
+
+  - header:
+      type: h2
       text: "Integrations"
       sub_text: "Integrate with payment, CRM, and invoicing solutions to automate revenue operations."
 
