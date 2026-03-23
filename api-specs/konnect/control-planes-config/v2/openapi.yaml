@@ -13,9 +13,9 @@ info:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
-  version: 2.0.0
-  x-oas-source: kong/platform-api@e14ca7c68630ed0a05db55021ef9cf4d6ac82bec
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e14ca7c68630ed0a05db55021ef9cf4d6ac82bec'
+  version: 3.13.0
+  x-oas-source: kong/platform-api@4d52bd13dd3fe2d19cdfbfd700717036c1b769d0
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/4d52bd13dd3fe2d19cdfbfd700717036c1b769d0'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -3708,6 +3708,58 @@ paths:
                 $ref: '#/components/schemas/Degraphql_route'
       tags:
         - Degraphql_routes
+  '/control-planes/{controlPlaneId}/core-entities/services/{ServiceId}/graphql-rate-limiting-advanced/costs':
+    get:
+      operationId: list-graphql-rate-limiting-advanced-cost-with-service
+      summary: List all GraphQL Cost Decorations associated with a Service
+      description: List all GraphQL Cost Decorations associated with a Service
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          description: A successful response listing GraphQL Cost Decorations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GraphQLCostDecoration'
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    post:
+      operationId: create-graphql-rate-limiting-advanced-cost-with-service
+      summary: Create a new GraphQL Cost Decoration associated with a Service
+      description: Create a new GraphQL Cost Decoration associated with a Service
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+      requestBody:
+        description: Description of new GraphQL Cost Decoration for creation
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+      responses:
+        '201':
+          description: Successfully created GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+      tags:
+        - GraphQL Cost Decorations
   '/control-planes/{controlPlaneId}/core-entities/services/{ServiceId}/plugins':
     get:
       operationId: list-plugin-with-service
@@ -4429,7 +4481,7 @@ components:
         type: string
     ConsumerIdForNestedEntities:
       description: Consumer ID for nested entities
-      example: f28acbfa-c866-4587-b688-0208ac24df21
+      example: ''
       in: path
       name: ConsumerIdForNestedEntities
       required: true
@@ -5276,6 +5328,92 @@ components:
       required:
         - message
         - status
+    GraphQLCostDecoration:
+      type: object
+      properties:
+        add_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          nullable: true
+        add_constant:
+          type: number
+          default: 1
+          nullable: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          type: integer
+          nullable: true
+        id:
+          description: A string representing a UUID (universally unique identifier).
+          type: string
+          nullable: true
+        mul_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          nullable: true
+        mul_constant:
+          type: number
+          default: 1
+          nullable: true
+        service:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: string
+          x-foreign: true
+        type_path:
+          type: string
+      additionalProperties: false
+      required:
+        - type_path
+    GraphQLCostDecorationWithoutParents:
+      type: object
+      properties:
+        add_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          nullable: true
+        add_constant:
+          type: number
+          default: 1
+          nullable: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          type: integer
+          nullable: true
+        id:
+          description: A string representing a UUID (universally unique identifier).
+          type: string
+          nullable: true
+        mul_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          nullable: true
+        mul_constant:
+          type: number
+          default: 1
+          nullable: true
+        service:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: string
+          x-foreign: true
+        type_path:
+          type: string
+      additionalProperties: false
+      required:
+        - type_path
     HMACAuth:
       type: object
       properties:
@@ -8908,6 +9046,7 @@ tags:
     name: Consumers
   - name: CustomPlugins
   - name: Degraphql_routes
+  - name: GraphQL Cost Decorations
   - name: HMAC-auth credentials
   - name: JWTs
   - description: |
