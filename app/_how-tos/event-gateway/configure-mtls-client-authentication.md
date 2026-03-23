@@ -166,7 +166,7 @@ body:
   addresses:
     - 0.0.0.0
   ports:
-    - 9092-9095
+    - 19092-19095
 extract_body:
   - name: id
     variable: LISTENER_ID
@@ -250,7 +250,7 @@ body:
         key: $SERVER_KEY
     client_authentication:
       mode: required
-      principal_mapping: "context.certificate.subject['CN']"
+      principal_mapping: context.certificate.subject["CN"]
       tls_trust_bundles:
         - id: $BUNDLE_ID
 {% endkonnect_api_request %}
@@ -383,7 +383,7 @@ command: |
         - localhost:9094
     producer:
       brokers:
-        - localhost:9092
+        - localhost:19092
       tls:
         enabled: true
         ca: ./server.crt
@@ -392,7 +392,7 @@ command: |
         insecure: false
     consumer:
       brokers:
-        - localhost:9092
+        - localhost:19092
       tls:
         enabled: true
         ca: ./server.crt
@@ -401,7 +401,7 @@ command: |
         insecure: false
     no_cert:
       brokers:
-        - localhost:9092
+        - localhost:19092
       tls:
         enabled: true
         ca: ./server.crt
