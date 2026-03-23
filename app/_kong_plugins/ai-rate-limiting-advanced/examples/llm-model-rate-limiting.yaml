@@ -16,10 +16,15 @@ weight: 900
 config:
   policies:
   - match: 
+    - type: provider
+      values:
+      - openai
     - type: model
       values:
-      - gpt-4
+      - gpt-4o
     limits:
+      - limit: 100
+        window_size: 60
       - limit: 1000
         window_size: 3600
 
