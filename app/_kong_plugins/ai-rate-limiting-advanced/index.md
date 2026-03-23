@@ -27,7 +27,7 @@ min_version:
   gateway: '3.7'
 
 content_type: plugin
-description: Provides rate limiting for the providers used by any AI plugins.
+description: Provides rate limiting for the AI plugins.
 tags:
   - rate-limiting
   - traffic-control
@@ -53,7 +53,7 @@ related_resources:
 
 ---
 
-The AI Rate Limiting Advanced plugin provides rate limiting for the providers used by any AI plugins. The
+The AI Rate Limiting Advanced plugin provides rate limiting for the any AI plugins. The
 AI Rate Limiting plugin extends the
 [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin.
 
@@ -62,7 +62,7 @@ The same HTTP request can vary greatly in cost depending on the calculation of t
 LLM providers.
 
 A common pattern to protect your AI API is to analyze and assign costs to incoming queries, then rate limit the consumer's
-cost for a given time window and provider.
+cost for a given time window and provider or policy.
 You can also create a generic prompt rate limit using the [request prompt provider](#request-prompt-function).
 
 Kong also provides multiple specialized rate limiting plugins, including rate limiting for service protection and on GraphQL queries.
@@ -74,9 +74,59 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include plugins/redis-cloud-auth.md %}
 
-## Rate limiting policies {% new_in 3.14 %}
+## Policy-based rate limiting {% new_in 3.14 %}
 
-The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the Consumer, Consumer Group, IP address, header, path, model, and provider level.
+The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the Consumer, Consumer Group, IP address, header, path, model, and provider level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up multi-dimensional rate limiting. For example, you can set different rate limiting policies for a specific Consumer and model:
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-rate-limiting-advanced
+  config:
+    policies:
+    - match: 
+      - type: consumer
+        values:
+          - $CONSUMER_UUID
+      - type: model
+        values:
+        - gpt-4o
+      limits:
+        - limit: 100
+          window_size: 60
+        - limit: 1000
+          window_size: 3600
+{% endentity_example %}
+
+In this example, the limits will apply only to requests made by the specified Consumer to the `gpt-4o` model.
+
+{:.info}
+> Policies without match conditions act as fallback and match all requests.
+
+You can define policies inline as in the example above, but you can also create reusable policies using the [AI Rate Limiting Policy entity](/gateway/entities/ai-rate-limiting-policy/). For example:
+
+{% entity_examples %}
+entities:
+  ai_rate_limiting_policies:
+  - name: my-policy
+    ref_type: consumer
+    ref_id: $CONSUMER_ID
+    policies:
+      - window_type: fixed
+        limits:
+          - limit: 100
+            window_size: 60
+          - limit: 1000
+            window_size: 3600
+  plugins:
+  - name: ai-rate-limiting-advanced
+    config:
+      policies:
+      - id: $POLICY_UUID
+{% endentity_example %}
+
+{:.warning}
+> When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
 
 {:.info}
 > The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
@@ -88,15 +138,15 @@ The [`config.policies`](./reference/#schema--config-policies) field allows you t
 When this plugin is enabled, {{site.base_gateway}} sends some additional headers back to the client,
 indicating the allowed limits, how many requests are available, and how long it will take
 until the quota is restored. It also sends the limits in the time frame and the number
-of remaining minutes for each provider.
+of remaining minutes for each provider or policy.
 
 For example:
 
 ```plaintext
-X-AI-RateLimit-Reset: 47
-X-AI-RateLimit-Retry-After: 47
-X-AI-RateLimit-Limit-30-azure: 1000
-X-AI-RateLimit-Remaining-30-azure: 950
+X-AI-RateLimit-Reset: 51
+X-AI-RateLimit-Retry-After: 51
+X-AI-RateLimit-Limit-90-policy-1: 20
+X-AI-RateLimit-Remaining-90-policy-1: 0
 ```
 
 You can optionally hide the limit and remaining headers with the [`config.hide_client_headers`](./reference/#schema--config-hide-client-headers) option.
@@ -118,7 +168,7 @@ code to the client with the following JSON body:
 { "message": "API rate limit exceeded for provider azure, cohere" }
 ```
 
-For each provider, the plugin also indicates how long it will take until the quota is restored:
+For each provider or policy, the plugin also indicates how long it will take until the quota is restored:
 
 ```plaintext
 X-AI-RateLimit-Retry-After-30-azure: 1500
