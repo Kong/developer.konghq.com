@@ -4,7 +4,7 @@ content_type: how_to
 permalink: /event-gateway/kong-identity-oauth/
 breadcrumbs:
   - /event-gateway/
- 
+
 products:
     - event-gateway
 
@@ -17,22 +17,22 @@ tags:
 
 description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity."
 
-tldr: 
+tldr:
   q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity?"
-  a: | 
+  a: |
     1. Create a Kong Identity auth server, scope, claim and client.
     1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
     1. Create an ACL policy to restrict access to a specific client.
 
 tools:
     - konnect-api
-  
+
 prereqs:
   inline:
     - title: Install kafkactl
       position: before
       content: |
-        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters. 
+        Install [kafkactl](https://github.com/deviceinsight/kafkactl?tab=readme-ov-file#installation). You'll need it to interact with Kafka clusters.
         Version >= 5.17.0 is needed to support script driven OAuth token generation.
 
     - title: Start a local Kafka cluster
@@ -57,7 +57,124 @@ related_resources:
     url: /event-gateway/policies/acl/
 ---
 
-{% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
+## Create an auth server in Kong Identity
+
+Before you can configure the authentication plugin, you must first create an auth server in Kong Identity. We recommend creating different auth servers for different environments or subsidiaries. The auth server name is unique per each organization and each {{site.konnect_short_name}} region.
+
+Create an auth server using the [`/v1/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "Appointments Dev"
+  audience: "http://myhttpbin.dev"
+  description: "Auth server for the Appointment dev environment"
+extract_body:
+  - name: 'id'
+    variable: AUTH_SERVER_ID
+  - name: 'issuer'
+    variable: ISSUER_URL
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export the auth server ID and issuer URL:
+```sh
+export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
+export ISSUER_URL='YOUR-ISSUER-URL'
+```
+
+## Configure the auth server with scopes
+
+Configure a scope in your auth server using the [`/v1/auth-servers/$AUTH_SERVER_ID/scopes` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerScope):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/scopes
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "my-scope"
+  description: "Scope to test Kong Identity"
+  default: false
+  include_in_metadata: false
+  enabled: true
+extract_body:
+  - name: 'id'
+    variable: SCOPE_ID
+capture: SCOPE_ID
+jq: ".id"
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Configure the auth server with custom claims
+
+Configure a custom claim to hold a topic prefix, `products`, using the [`/v1/auth-servers/$AUTH_SERVER_ID/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/claims
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: "topic_prefix"
+  value: "products"
+  include_in_token: true
+  include_in_all_scopes: false
+  include_in_scopes:
+  - $SCOPE_ID
+  enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+
+You can also configure dynamic custom claims with [dynamic claim templating](/kong-identity/#dynamic-claim-templates) to generate claims during runtime.
+
+## Create a client in the auth server
+
+The client is the machine-to-machine credential. In this tutorial, {{site.konnect_short_name}} will autogenerate the client ID and secret, but you can alternatively specify one yourself.
+
+Configure the client using the [`/v1/auth-servers/$AUTH_SERVER_ID/clients` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient):
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: Client
+  grant_types:
+    - client_credentials
+  allow_all_scopes: false
+  allow_scopes:
+    - $SCOPE_ID
+  access_token_duration: 3600
+  id_token_duration: 3600
+  response_types:
+    - id_token
+    - token
+extract_body:
+  - name: 'client_secret'
+    variable: CLIENT_SECRET
+  - name: 'id'
+    variable: CLIENT_ID
+{% endkonnect_api_request %}
+<!--vale on-->
+
+Export your client secret and client ID:
+```sh
+export CLIENT_SECRET='YOUR-CLIENT-SECRET'
+export CLIENT_ID='YOUR-CLIENT-ID'
+```
 
 ## Add a backend cluster
 
@@ -108,7 +225,7 @@ body:
       mediation: terminate
       jwks:
         endpoint: $ISSUER_URL/.well-known/jwks
-      
+
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
@@ -139,7 +256,7 @@ body:
 extract_body:
 - name: id
   variable: LISTENER_ID
-capture: LISTENER_ID 
+capture: LISTENER_ID
 jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
@@ -171,7 +288,7 @@ body:
 For demo purposes, we're using port mapping, which assigns each Kafka broker to a dedicated port on the {{site.event_gateway_short}}.
 In production, we recommend using [SNI routing](/event-gateway/architecture/#hostname-mapping) instead.
 
-## Create an ACL policies for the client
+## Create an ACL policy for the client using the token claims
 
 Add the ACL policy for the client:
 
@@ -183,7 +300,6 @@ method: POST
 body:
   type: acls
   name: acl_policy
-  condition: context.auth.principal.name == "$CLIENT_ID"
   config:
     rules:
     - resource_type: topic
@@ -193,22 +309,21 @@ body:
         - name: describe_configs
         - name: read
         - name: write
-      resource_names:
-      - match: '*'
+      resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
 {% endkonnect_api_request %}
 <!--vale on-->
 
-This ACL policy will add full topic access to the client with the matching client id.
+This ACL policy grants full access to all topics with the prefix in the `topic_prefix` claim.
 
-## Setup `kafkactl` to use OAuth 
+## Setup `kafkactl` to use OAuth
 
 {:.warning}
 > This step requires a `kafkactl` version >= 5.17.0. To check your version, run `kafkactl version`.
 > <br><br>
-> Note that this script is for demo purposes only and hard-codes client ID, client secret, and scope. 
-For production, we recommended securing sensitive data. 
+> Note that this script is for demo purposes only and hard-codes client ID, client secret, and scope.
+> For production, we recommend securing sensitive data.
 
-`kafkactl` will generate tokens using a script. Let's create the script: 
+`kafkactl` will generate tokens using a script. Let's create the script:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -272,10 +387,10 @@ Create a topic bypassing the gateway:
 
 {% validation custom-command %}
 command: |
-  kafkactl -C kafkactl.yaml --context direct create topic my-test-topic
+  kafkactl -C kafkactl.yaml --context direct create topic products-topic
 expected:
   return_code: 0
-  message: "topic created: my-test-topic"
+  message: "topic created: products-topic"
 render_output: false
 {% endvalidation %}
 
@@ -288,7 +403,7 @@ expected:
   return_code: 0
   message: |
     TOPIC             PARTITIONS     REPLICATION FACTOR
-    my-test-topic     1              1
+    products-topic    1              1
 render_output: false
 {% endvalidation %}
 
@@ -296,7 +411,7 @@ The output should look like this:
 
 ```shell
 TOPIC             PARTITIONS     REPLICATION FACTOR
-my-test-topic     1              1
+products-topic    1              1
 ```
 {:.no-copy-code}
 

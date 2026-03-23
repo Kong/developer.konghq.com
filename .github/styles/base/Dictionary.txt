@@ -774,6 +774,7 @@ saml
 sandboxed
 sandboxing
 sanitization
+sasl_oauth_bearer
 sbom
 SBOM
 sboms
