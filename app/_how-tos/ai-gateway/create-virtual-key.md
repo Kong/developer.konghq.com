@@ -133,3 +133,4 @@ The third request should return a `429` error with the following message:
 ```json
 {"message":"API rate limit exceeded"}
 ```
+{:.no-copy-code}
