@@ -1,3 +1,9 @@
+{% if include.section == "question" %}
+
+How do I set the FPS parameter for video generation for Amazon Bedrock?
+
+{% elsif include.section == "answer" %}
+
 Use the `extra_body` feature when sending requests in OpenAI format:
 
 ```sh
@@ -12,3 +18,5 @@ Use the `extra_body` feature when sending requests in OpenAI format:
         }
     }'
 ```
+
+{% endif %}

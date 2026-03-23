@@ -1,3 +1,9 @@
+{% if include.section == "question" %}
+
+How can I set model generation parameters when calling Gemini?
+
+{% elsif include.section == "answer" %}
+
 You have several options, depending on the SDK and configuration:
 
 - Use the **Gemini SDK**:
@@ -23,3 +29,5 @@ You have several options, depending on the SDK and configuration:
     - Configure them in the plugin only.
     - Configure them in the client only.
     - Configure them in both—the client-side values will override plugin config.
+
+{% endif %}

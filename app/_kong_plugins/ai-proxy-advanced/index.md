@@ -116,6 +116,14 @@ faqs:
 
       This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
+  - q: |
+      {% include faqs/llm-format.md section='question' plugin='AI Proxy Advanced'%}
+    a: |
+      {% include faqs/llm-format.md section='answer' plugin='AI Proxy Advanced' %}
+  - q: |
+      {% include faqs/llm-format-cross-provider.md section='question' plugin='AI Proxy Advanced' %}
+    a: |
+      {% include faqs/llm-format-cross-provider.md section='answer' plugin='AI Proxy Advanced'%}
 
 ---
 

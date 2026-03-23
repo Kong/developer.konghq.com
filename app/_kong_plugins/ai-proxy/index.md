@@ -82,6 +82,14 @@ faqs:
     a: |
       Yes, but only if [`config.auth.allow_override`](./reference/#schema--config-auth-allow-override) is set to `true` in the plugin configuration.
       When enabled, this allows request-level auth parameters (such as API keys or bearer tokens) to override the static values defined in the plugin.
+  - q: |
+      {% include faqs/llm-format.md section='question' plugin='AI Proxy'%}
+    a: |
+      {% include faqs/llm-format.md section='answer' plugin='AI Proxy' %}
+  - q: |
+      {% include faqs/llm-format-cross-provider.md section='question' plugin='AI Proxy' %}
+    a: |
+      {% include faqs/llm-format-cross-provider.md section='answer' plugin='AI Proxy'%}
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
