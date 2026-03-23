@@ -86,8 +86,8 @@ variables:
 
 Creating a virtual key in the {{site.konnect_short_name}} UI allows you to generate multiple plugins for access control and rate limiting. In this example, we'll set the rate limit for the key to 2 requests per minute for testing purposes.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**AI Gateway**](https://cloud.konghq.com/ai-manager/).
-1. Open your AI Gateway.
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.ai_gateway}}**](https://cloud.konghq.com/ai-manager/).
+1. Open your {{site.ai_gateway}}.
 1. In the sidebar, click **Virtual keys**.
 1. Click **New virtual key**.
 1. In the **Virtual key name** field, enter `example-key`.
