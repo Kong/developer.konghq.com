@@ -8,7 +8,7 @@ related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
 
-description: Configure the AI Proxy plugin to create a chat route using Databricks.
+description: Configure the AI Proxy plugin to create a chat route using Databricks
 
 products:
   - gateway
@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up the AI Proxy plugin to route chat requests to Databricks’s GPT OSS 20B model by configuring the model options, including the Databricks workspace ID.
+Configure the plugin with your Databricks workspace ID and the databricks-gpt-oss-20b model.
 
 
 {% entity_examples %}
