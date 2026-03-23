@@ -626,6 +626,26 @@ providers:
       provider_specific: []
       statistics_logging: []
 
+  - name: 'Ollama'
+    formats: 'Ollama, OpenAI, and Anthropic'
+    url_patterns:
+      - '$UPSTREAM_URL'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/api/chat'
+      route_type: 'llm/v1/chat'
+      model_example: 'llama3.2:1b'
+      min_version: '3.14'
+    embeddings:
+      supported: true
+      streaming: false
+      upstream_path: '/api/embed'
+      route_type: 'llm/v1/embeddings'
+      model_example: 'qwen3-embedding:8b'
+      min_version: '3.14'
+
   - name: 'OpenAI'
     formats: 'GPT-4o, GPT-4.1, and Multi-Modal'
     url_patterns:

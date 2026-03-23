@@ -27,6 +27,8 @@ related_resources:
     url: /gateway/data-plane-reference/
   - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 faqs:
   - q: Is it recommended to have the Control Plane exporting to the backup store (`KONG_CLUSTER_FALLBACK_CONFIG_EXPORT`)?

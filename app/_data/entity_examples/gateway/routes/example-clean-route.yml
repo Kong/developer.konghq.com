@@ -3,3 +3,6 @@ paths:
   - /anything
 service:
   name: example-clean-service
+protocols:
+  - http
+  - https

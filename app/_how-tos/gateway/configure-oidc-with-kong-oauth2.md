@@ -106,6 +106,7 @@ entities:
       route: example-route
       config:
         global_credentials: true
+        hide_credentials: false
         enable_client_credentials: true
         provision_key: ${key}
 variables:
@@ -173,17 +174,13 @@ extract_body:
   - name: 'access_token'
     variable: ACCESS_TOKEN
 status_code: 200
+capture: ACCESS_TOKEN
+jq: ".access_token"
 {% endvalidation%}
 <!-- vale on -->
 
 
 You should see an `access-token` in the response.
-
-Export the token to an environment variable:
-
-```
-export ACCESS_TOKEN='YOUR_ACCESS_TOKEN'
-```
 
 ## Validate the access token flow
 

@@ -6,6 +6,15 @@ The following creates a new Consumer called **{{ include.presenter.data['usernam
 The following creates a new Consumer Group called **{{ include.presenter.data['name'] }}**:
 {% when 'route' %}
 The following creates a new Route called **{{ include.presenter.data['name'] }}** with basic configuration:
+
+{:.info}
+> {% new_in 3.14 %} By default, Routes only accept requests over HTTPS. To allow requests over HTTP, set
+    ```yaml
+    protocols:
+    - http
+    - https
+    ```
+    in the Route's configuration.
 {% when 'service' %}
 The following creates a new Gateway Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'target' %}

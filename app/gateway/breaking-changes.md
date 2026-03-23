@@ -33,6 +33,57 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.14.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this release.
+
+### 3.14.0.0
+
+Breaking changes in the 3.14.0.0 release.
+
+#### Route protocol defaults change
+
+The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`. 
+This ensures that all Routes are secure by default.
+
+New Routes will have this default value, while existing Routes are unaffected. 
+If you have any automation that creates Routes, update your configuration to ensure you're setting the required protocol explicitly.
+
+#### SHA1 algorithm removal
+
+The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
+
+For the [Event Hooks entity](/gateway/entities/event-hook/), this is a breaking change. 
+Event hook calls are now signed with HMAC-SHA256 instead of HMAC-SHA1.
+
+For the following plugins, the SHA1 algorithm is still supported in existing configurations, but we strongly recommend updating your configurations whenever possible:
+* [Basic Auth plugin](/plugins/basic-auth/): Uses SHA256 by default in new configurations.
+* [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
+* [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
+
+#### OpenID Connect: consumer claims data types
+
+The `config.consumer_claim` field in the [OpenID Connect plugin](/plugins/openid-connect/) has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims). 
+The parameter now accepts an array of arrays instead of an array of strings. 
+
+Old format example:
+
+```yaml
+config:
+  consumer_claim:
+    - email
+```
+New format example:
+
+```yaml
+config:
+  consumer_claims:
+    - ["email"]
+```
+
+We recommend updating your configurations, as the old `config.consumer_claim` field is deprecated and will be removed in a future version.
+
+
 ## 3.13.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.

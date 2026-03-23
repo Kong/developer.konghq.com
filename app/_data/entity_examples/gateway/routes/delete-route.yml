@@ -5,3 +5,6 @@ methods:
   - DELETE
 service: 
   name: example-service
+protocols:
+  - http
+  - https

@@ -109,6 +109,9 @@ entities:
         name: llm-service
       paths:
       - /chat
+      protocols:
+      - http
+      - https
 {% endentity_examples %}
 
 ## Enable the AI Proxy plugin

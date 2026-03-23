@@ -31,7 +31,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.4'
+  gateway: '3.14'
 
 tools:
   - deck
@@ -102,8 +102,8 @@ entities:
         - client_secret_post
         auth_methods:
         - password
-        consumer_claim:
-        - preferred_username
+        consumer_claims:
+        - [preferred_username]
         consumer_by:
         - username
 variables:
@@ -118,7 +118,7 @@ variables:
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
 * `auth_methods`:  Specifies that the plugin should use the password grant, for easy testing.
-* `consumer_claim` and `consumer_by` : Looks for a `preferred_username` in the token payload and maps it to the Consumer entity by the entity's `username` value.
+* `consumer_claims` and `consumer_by` : Looks for a `preferred_username` in the token payload and maps it to the Consumer entity by the entity's `username` value. If you're running a version of {{site.base_gateway}} older than 3.14, use [`consumer_claim`](/plugins/openid-connect/reference/3.13/#schema--config-consumer-claim) instead of `consumer_claims`.
 
 {% include_cached plugins/oidc/client-auth.md %}
 
