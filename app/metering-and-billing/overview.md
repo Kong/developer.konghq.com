@@ -68,7 +68,7 @@ The following diagram shows how {{site.konnect_short_name}} {{site.metering_and_
 
 Getting from a usage event to a charged credit card involves many steps. {{site.konnect_short_name}} {{site.metering_and_billing}} covers the core of that pipeline while integrating with specialized vendors for tax, payments, and invoice delivery.
 
-The following table describes which features {{site.metering_and_billing}} handles and which it uses third-party integrations for to complete your revenue pipeline:
+The following table describes which features {{site.metering_and_billing}} handles and which rely on third-party integrations to complete your revenue pipeline:
 <!--vale off-->
 {% table %}
 columns:
