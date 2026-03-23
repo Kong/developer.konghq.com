@@ -248,7 +248,7 @@ features:
     enterprise: true
     supports_konnect: true
   - title: |
-      CyberArk Conjur {% new_in 3.11 %}
+      CyberArk Secrets Manager (Conjur)  {% new_in 3.11 %}
     url: /how-to/configure-cyberark-as-a-vault-backend/
     oss: false
     enterprise: true
@@ -291,10 +291,10 @@ columns:
   - title: Vault Value
     key: vault
 features:
-  - title: ❌
+  - title: No
     config: 'Bearer {vault://hcv/myservice-auth-token}'
     vault: ABC123
-  - title: ✅
+  - title: Yes
     config: '{vault://hcv/myservice-auth-token}'
     vault: Bearer ABC123
 {% endfeature_table %}
@@ -314,20 +314,16 @@ There are two types of refresh configuration available:
 
 For more information, see [Secret management](/gateway/secrets-management/).
 
-## Schema
-
-The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
-
-{% entity_schema %}
-
 ## Vault provider-specific configuration parameters
 
-When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider.
+When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault with a provider. For the entire Vault configuration schema, see the [schema reference](#schema).
 
 You can set up a Vault in one of the following ways:
 * Using the Vault entity
 * Using environment variables, set at {{site.base_gateway}} startup
 * Using parameters in `kong.conf`, set at {{site.base_gateway}} startup
+
+The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
 
 {% navtabs "provider config" %}
 {% navtab "Environment variable" %}
@@ -840,11 +836,11 @@ rows:
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
-{% navtab "Conjur" %}
+{% navtab "CyberArk Secrets Manager" %}
 
-See a tutorial about how to [set up CyberArk Conjur as a Kong Vault backend in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
+See a tutorial about how to [set up CyberArk Secrets Manager (Conjur) as a Kong Vault backend in {{site.base_gateway}}](/how-to/configure-cyberark-as-a-vault-backend/).
 
-The following table lists the available configuration parameters for a CyberArk Conjur Vault:
+The following table lists the available configuration parameters for a CyberArk Secrets Manager Vault:
 
 <!--vale off-->
 {% table %}
@@ -863,21 +859,21 @@ rows:
       * **kong.conf parameter:** `vault_conjur_endpoint_url`
       * **Environment variable:** `KONG_VAULT_CONJUR_ENDPOINT_URL`
     description: |
-      The CyberArk Conjur backend URL to connect with. Accepts `http` or `https` protocols.
+      The CyberArk Secrets Manager backend URL to connect with. Accepts `http` or `https` protocols.
   - field: |
       Authentication method <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.auth_method`
       * **kong.conf parameter:** `vault_conjur_auth_method`
       * **Environment variable:** `KONG_VAULT_CONJUR_AUTH_METHOD`
-    description: "Defines the authentication mechanism for connecting to the CyberArk Conjur Vault service. Accepted value: `api_key`."
+    description: "Defines the authentication mechanism for connecting to the CyberArk Secrets Manager Vault service. Accepted value: `api_key`."
   - field: |
       Account <br>{% new_in 3.11 %}
     parameter: |
       * **Vault entity:** `vaults.config.account`
       * **kong.conf parameter:** `vault_conjur_account`
       * **Environment variable:** `KONG_VAULT_CONJUR_ACCOUNT`
-    description: The Conjur organization account name.
+    description: The CyberArk Secrets Manager organization account name.
   - field: |
       Login <br>{% new_in 3.11 %}
     parameter: |
@@ -939,7 +935,11 @@ To access secrets stored in the AWS Secrets Manager, {{site.base_gateway}} needs
 {:.info}
 > **Note:** IAM Identity Center credential provider and process credential provider are not supported.
 
-## Set up a Vault
+## Store values as secrets
+
+You can set up a Vault in one of the following ways.
+
+### Set up a Vault entity
 
 {% entity_example %}
 type: vault
@@ -951,7 +951,7 @@ data:
     prefix: MY_SECRET_
 {% endentity_example %}
 
-## Store secrets as environment variables
+### Store secrets as environment variables
 
 You can store secrets as environment variables instead of configuring a Vault entity or third-party backend vault. 
 
@@ -980,3 +980,7 @@ rows:
 
 {% endtable %}
 <!--vale on-->
+
+## Schema
+
+{% entity_schema %}

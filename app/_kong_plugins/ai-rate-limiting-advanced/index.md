@@ -41,9 +41,9 @@ search_aliases:
   - ai-rate-limiting-advanced
 
 notes: |
-  In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
-  is not supported. Use <code>redis</code> instead. In Serverless gateways only the
-  <code>local</code> config strategy is supported.
+  In DB-less, hybrid mode, and Konnect, the `cluster` config strategy
+  is not supported. Use `redis` instead. In Serverless gateways only the
+  `local` config strategy is supported.
 
 related_resources:
   - text: Enforce AI rate limits in with a custom function
@@ -72,7 +72,11 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
 
 ## Headers sent to the client
 

@@ -80,8 +80,8 @@ pages:
     related_resources:
       - text: Configure the Kong Mesh CNI
         url: '/mesh/cni/'
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
       - text: Mesh concepts
@@ -146,8 +146,8 @@ pages:
     related_resources:
       - text: Mesh DNS
         url: '/mesh/dns/'
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Kubernetes annotations and labels
         url: /mesh/annotations/
   -
@@ -202,43 +202,14 @@ pages:
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
     url: '/mesh/performance-tuning/'
     related_resources:
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
+      - text: Transparent proxying
+        url: '/mesh/transparent-proxying/'
       - text: Zone egress
         url: /mesh/zone-egress/
       - text: Mesh observability
         url: '/mesh/observability/'
       - text: MeshMultiZoneService
         url: /mesh/meshmultizoneservice/
-  -
-    path: app/_src/production/upgrades-tuning/upgrade-notes.md
-    title: 'Version specific upgrade notes'
-    description: 'Version specific upgrade notes'
-    url: '/mesh/upgrade-notes/'
-    related_resources:
-      - text: Mesh upgrade
-        url: '/mesh/upgrade/'
-      - text: Mesh changelog
-        url: '/mesh/changelog/'
-      - text: Version Support Policy
-        url: /mesh/support-policy/
-
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/production/upgrades-tuning/upgrades.md
-    title: 'Upgrade Kong Mesh'
-    description: 'Reference guide for upgrading {{site.mesh_product_name}} across versions. Covers compatibility rules, upgrade order, and considerations for single-zone and multizone deployments.'
-    url: '/mesh/upgrade/'
-    related_resources:
-      - text: Mesh changelog
-        url: '/mesh/changelog/'
-      - text: Version Support Policy
-        url: /mesh/support-policy/
-      - text: 'Version specific upgrade notes'
-        url: '/mesh/upgrade-notes/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
   -
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
@@ -358,28 +329,6 @@ pages:
         url: /mesh/cli/
       - text: Data plane health
         url: /mesh/dataplane-health/
-  -
-    path: app/_src/networking/transparent-proxying.md
-    title: 'Transparent proxying'
-    description: 'Explains how Transparent Proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.'
-    url: '/mesh/transparent-proxying/'
-    related_resources:
-      - text: Configure transparent proxying
-        url: '/mesh/configure-transparent-proxying/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Mesh Service Discovery
-        url: '/mesh/service-discovery/'
-  -
-    path: app/_src/production/dp-config/transparent-proxying.md
-    title: 'Configure transparent proxying'
-    description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
-    url: '/mesh/configure-transparent-proxying/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
   -
     path: app/_src/quickstart/kubernetes-demo.md
     title: 'Deploy Kong Mesh on Kubernetes'

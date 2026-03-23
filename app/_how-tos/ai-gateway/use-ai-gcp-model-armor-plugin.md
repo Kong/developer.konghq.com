@@ -194,6 +194,7 @@ variables:
   gcp_service_account_json:
     description: GCP service account credentials in JSON format
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
   project_id:
     description: GCP project identifier
     value: $GCP_PROJECT_ID

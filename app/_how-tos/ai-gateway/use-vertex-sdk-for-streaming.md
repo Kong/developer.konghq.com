@@ -34,6 +34,7 @@ entities:
 tags:
   - ai
   - streaming
+  - ai-sdks
 
 tldr:
   q: How do I stream responses from Vertex AI through {{site.ai_gateway}}?
@@ -113,6 +114,7 @@ variables:
     value: $GCP_PROJECT_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
   gcp_location_id:
     value: $GCP_LOCATION_ID
 {% endentity_examples %}

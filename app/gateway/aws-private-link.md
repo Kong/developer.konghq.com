@@ -42,6 +42,7 @@ PrivateLink support is currently available in the following AWS regions:
 * `ap-southeast-1`
 * `ap-southeast-2`
 * `ap-northeast-1`
+* `ap-northeast-2`
 * `ap-northeast-3`
 
 If your AWS region is not listed, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).
@@ -106,7 +107,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-east-1.vpce-svc-03eda50387fcc5e06
     dns: ap.svc.konghq.com
   - geo: EU
@@ -140,7 +141,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-east-2.vpce-svc-03da89378358921bc
     dns: ap.svc.konghq.com
   - geo: EU
@@ -174,7 +175,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.us-west-2.vpce-svc-078156c9cc9048988
     dns: ap.svc.konghq.com
   - geo: EU
@@ -208,7 +209,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-central-1.vpce-svc-0c3f0574080bdd859
     dns: ap.svc.konghq.com
   - geo: EU
@@ -242,7 +243,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-west-1.vpce-svc-08edf59f8bc1d2262
     dns: ap.svc.konghq.com
   - geo: EU
@@ -276,7 +277,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.eu-west-2.vpce-svc-0500cb14757738225
     dns: ap.svc.konghq.com
   - geo: EU
@@ -310,7 +311,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-east-1.vpce-svc-0c7b67a477740b8cb
     dns: ap.svc.konghq.com
   - geo: EU
@@ -344,7 +345,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-southeast-1.vpce-svc-08f76d27d29b02a09
     dns: ap.svc.konghq.com
   - geo: EU
@@ -378,7 +379,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-southeast-2.vpce-svc-055ba6ff5a3f551c9
     dns: ap.svc.konghq.com
   - geo: EU
@@ -412,7 +413,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-northeast-1.vpce-svc-05a555912c88c3403
     dns: ap.svc.konghq.com
   - geo: EU
@@ -436,6 +437,40 @@ rows:
 {% endtable %}
 {% endnavtab %}
 
+{% navtab "ap-northeast-2" %}
+{% table %}
+columns:
+  - title: {{site.konnect_short_name}} Geo
+    key: geo
+  - title: PrivateLink Service Name
+    key: service
+  - title: DNS Name
+    key: dns
+rows:
+  - geo: AU
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-0910a66a8164a201f
+    dns: ap.svc.konghq.com
+  - geo: EU
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-0bf31467f8fdb96c9
+    dns: eu.svc.konghq.com
+  - geo: GLOBAL
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-0145e14a63e9f470c
+    dns: global.svc.konghq.com
+  - geo: IN
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-01e0aaa8f7b5535f6
+    dns: in.svc.konghq.com
+  - geo: ME
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-03f1d6f3611a15fac
+    dns: me.svc.konghq.com
+  - geo: SG
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-0000b04df0b4358dd
+    dns: sg.svc.konghq.com
+  - geo: US
+    service: com.amazonaws.vpce.ap-northeast-2.vpce-svc-09a955c0f6ecfa69c
+    dns: us.svc.konghq.com
+{% endtable %}
+{% endnavtab %}
+
 {% navtab "ap-northeast-3" %}
 {% table %}
 columns:
@@ -446,7 +481,7 @@ columns:
   - title: DNS Name
     key: dns
 rows:
-  - geo: AP
+  - geo: AU
     service: com.amazonaws.vpce.ap-northeast-3.vpce-svc-0774c82210d1e3a54
     dns: ap.svc.konghq.com
   - geo: EU

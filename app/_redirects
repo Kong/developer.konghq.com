@@ -1,3 +1,13 @@
+# kongctl
+/kongctl/create/   /kongctl/
+/kongctl/create/*  /kongctl/
+/kongctl/delete/gateway/   /kongctl/delete/
+/kongctl/delete/gateway/*  /kongctl/delete/
+/kongctl/delete/konnect/   /kongctl/delete/
+/kongctl/delete/konnect/*  /kongctl/delete/
+/kongctl/delete/portal/    /kongctl/delete/
+/kongctl/delete/portal/*   /kongctl/delete/
+
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 # Renames
@@ -19,6 +29,8 @@
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
+/mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
+/mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -69,7 +81,7 @@
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/mesh   /mesh/mesh-multi-tenancy/
 /mesh/production/dp-config/cni      /mesh/cni/
-/mesh/production/dp-config/transparent-proxying     /mesh/configure-transparent-proxying/
+/mesh/production/dp-config/transparent-proxying     /mesh/transparent-proxying/
 /mesh/production/dp-config/ipv6     /mesh/ipv6-support/
 /mesh/production/secure-deployment/api-access-control   /mesh/enterprise/
 /mesh/production/secure-deployment/dp-auth  /mesh/dp-auth/
@@ -86,7 +98,7 @@
 /mesh/production/upgrades-tuning/fine-tuning    /mesh/performance-tuning/
 /mesh/production/cp-deployment/zone-ingress     /mesh/zone-ingress/
 /mesh/production/secure-deployment/api-server-auth  /mesh/authentication-with-the-api-server/
-/mesh/production/upgrades-tuning/upgrade-notes  /mesh/upgrade-notes/
+/mesh/production/upgrades-tuning/upgrade-notes  /mesh/version-specific-upgrade-notes/
 /mesh/production/upgrades-tuning/upgrades      /mesh/upgrade/
 /mesh/production/cp-deployment/zoneproxy-auth   /mesh/zone-proxy-auth/
 /mesh/meshtrafficpermission     /mesh/policies/meshtrafficpermission/
@@ -167,6 +179,7 @@
 
 
 ## Insomnia
+/insomnia/version-control/ /insomnia/storage/
 /insomnia/concepts/ /insomnia/terminology/
 /insomnia/install/ /insomnia/#install-insomnia
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
@@ -205,6 +218,7 @@
 # Cloud Gateways
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
+/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/reference/#managed-cache-for-redis 301
 
 # Observability rename
 /advanced-analytics/*   /observability/:splat   301

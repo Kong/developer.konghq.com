@@ -130,50 +130,56 @@ variables:
 
 Now, let's create a test script. Even though the SDK sends `model="gpt-4o"` in the body, the Pre-function plugin strips it. AI Proxy Advanced's balancer decides which model actually handles the request:
 
-```bash
-cat <<EOF > test_strip_model.py
-from openai import OpenAI
+{% on_prem %}
+content: |
+  ```bash
+  cat <<EOF > test_strip_model.py
+  from openai import OpenAI
 
-kong_url = "http://localhost:8000"
-kong_route = "anything"
+  kong_url = "http://localhost:8000"
+  kong_route = "anything"
 
-client = OpenAI(
-    api_key="test",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  client = OpenAI(
+      api_key="test",
+      base_url=f"{kong_url}/{kong_route}"
+  )
 
-for i in range(4):
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
-    )
-    print(f"Request {i+1}: {response.model}")
-EOF
-```
-{: data-deployment-topology="on-prem" data-test-step="block" }
+  for i in range(4):
+      response = client.chat.completions.create(
+          model="gpt-4o",
+          messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
+      )
+      print(f"Request {i+1}: {response.model}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endon_prem %}
 
-```bash
-cat <<EOF > test_strip_model.py
-from openai import OpenAI
-import os
+{% konnect %}
+content: |
+  ```bash
+  cat <<EOF > test_strip_model.py
+  from openai import OpenAI
+  import os
 
-kong_url = os.environ['KONNECT_PROXY_URL']
-kong_route = "anything"
+  kong_url = os.environ['KONNECT_PROXY_URL']
+  kong_route = "anything"
 
-client = OpenAI(
-    api_key="test",
-    base_url=f"{kong_url}/{kong_route}"
-)
+  client = OpenAI(
+      api_key="test",
+      base_url=f"{kong_url}/{kong_route}"
+  )
 
-for i in range(4):
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
-    )
-    print(f"Request {i+1}: {response.model}")
-EOF
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
+  for i in range(4):
+      response = client.chat.completions.create(
+          model="gpt-4o",
+          messages=[{"role": "user", "content": "What model are you? Reply with only your model name."}]
+      )
+      print(f"Request {i+1}: {response.model}")
+  EOF
+  ```
+  {: data-test-step="block" }
+{% endkonnect %}
 
 ## Validate the configuration
 

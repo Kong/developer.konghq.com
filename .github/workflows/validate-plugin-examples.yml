@@ -1,0 +1,43 @@
+name: Validate Plugin Examples
+on:
+  pull_request:
+    types: [synchronize, ready_for_review, opened]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+jobs:
+  validate:
+    name: Validate plugin examples against schemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 2
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@445b0eb32849cdd5b22a390bf0568af00ed4ca34
+        with:
+          files: |
+            app/_kong_plugins/*/examples/**
+            app/_schemas/gateway/plugins/**
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        with:
+          node-version: "24"
+      - name: Install dependencies
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: tools/plugin-examples-validator
+        run: npm ci
+      - name: Run validation
+        if: steps.changed-files.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+        working-directory: tools/plugin-examples-validator
+        run: npm run validate

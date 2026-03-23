@@ -20,10 +20,6 @@ module Jekyll
           raise ArgumentError, "Missing `url` in {% validation #{id} %}."
         end
 
-        def template_file
-          @template_file ||= 'app/_includes/traffic_generator.html'
-        end
-
         def method
           @method ||= @yaml['method']
         end

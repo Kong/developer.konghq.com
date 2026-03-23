@@ -27,11 +27,8 @@ faqs:
     a: "The main difference is that `MeshExternalService` assigns a custom domain and can be targeted by policies. `MeshPassthrough` doesn't alter the address of the original host and can't be targeted by policies."
 ---
 
-{:.danger}
-> This resource is experimental.
-
 The `MeshExternalService` resource allows services running inside the mesh to consume services that are not part of the mesh.
-You can declare external resources instead of relying on a [`MeshPassthrough`](/mesh/policies/meshpassthrough/) policy or passthrough mode in the mes configuration. 
+You can declare external resources instead of relying on a [`MeshPassthrough`](/mesh/policies/meshpassthrough/) policy or passthrough mode in the mesh configuration. 
 
 {:.warning}
 > Currently you can't configure granular [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policies for `MeshExternalService` resources.

@@ -25,6 +25,11 @@ rows:
                     * Flexible pricing models, including free, flat fee, usage-based, and tiered
                     * Subscription management to govern access and automate billing
                     * Automated invoicing and integration with payment providers and ERPs
+          - type: button
+            config:
+              align: left
+              text: How can Metering & Billing help? &rarr;
+              url: /metering-and-billing/overview/
 
       - blocks:
           - type: image
@@ -39,6 +44,15 @@ rows:
       sub_text: "Start monetizing your usage with {{site.metering_and_billing}}."
     column_count: 3
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Get started with generic meters
+              description: |
+                Learn how to meter and bill generic meters.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /how-to/get-started-with-metering-and-billing-generic-meters/
       - blocks:
           - type: card
             config:
@@ -214,8 +228,8 @@ rows:
                 Send invoices, calculate tax, and collect payments. Great for self-serve and PLG sales motions.
               icon: /assets/icons/third-party/stripe.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/stripe"
+                text: Configure the Stripe app
+                url: "/metering-and-billing/stripe-integration/"
 
       - blocks:
           - type: card

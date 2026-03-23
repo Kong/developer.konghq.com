@@ -1,0 +1,33 @@
+# developer.konghq.com
+
+> Kong's developer documentation for Kong Gateway, Kong Konnect, Kong AI Gateway, Kong Mesh, and more.
+
+This file lists all available documentation pages as Markdown. Each link points to the LLM-optimized Markdown version of the page. Use this file to discover and fetch content for RAG pipelines, AI agents, or LLM context.
+
+---
+
+## API Reference
+
+{% for api in api_pages -%}
+- [{{api.llm_title | liquify}}]({{site.links.web}}{{api.url}}): {{api.description | liquify | oneline | rstrip}}
+{% endfor %}
+
+{% for group in docs -%}
+## {{ group.name }}
+
+{% for p in group.pages -%}
+- [{{ p.llm_title |liquify}}]({{ site.links.web }}{{ p.url }}){% if p.description %}: {{ p.description | liquify | oneline | rstrip}}{% endif %}
+{% endfor %}
+{% endfor %}
+
+## How-To Guides
+
+{% for p in how_to_pages -%}
+- [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
+{% endfor %}
+
+## Plugins
+
+{% for p in plugin_pages -%}
+- [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
+{% endfor %}

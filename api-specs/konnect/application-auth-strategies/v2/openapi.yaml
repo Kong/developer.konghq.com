@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.4
+  version: 2.0.5
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a74fde75d3176908457e8562babb966752b3e350
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a74fde75d3176908457e8562babb966752b3e350'
+  x-oas-source: kong/platform-api@a631bb11cbe67e71e09b19cff3536ec784b72ea4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a631bb11cbe67e71e09b19cff3536ec784b72ea4'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -504,6 +504,11 @@ components:
       description: This flag disable the refresh-secret endpoint on the application flow for the DCR provider.
       type: boolean
       title: DcrConfigPropertyDisableRefreshSecret
+    DcrConfigPropertyAllowMultipleCredentials:
+      description: 'When enabled, indicates that the DCR provider supports creating and managing multiple credentials per application.'
+      type: boolean
+      default: false
+      title: DcrConfigPropertyAllowMultipleCredentials
     DcrConfigAuth0InResponse:
       description: A DCR provider configuration for Auth0
       type: object
@@ -620,6 +625,7 @@ components:
     DcrConfigOktaInResponse:
       description: A DCR provider configuration for Okta
       type: object
+      properties: {}
       additionalProperties: false
       title: DcrConfigOktaInResponse
     CreateDcrConfigOktaInRequest:
@@ -651,6 +657,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_base_url
@@ -667,6 +675,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_base_url
@@ -684,6 +694,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: CreateDcrConfigHttpInRequest
     DcrProviderBase:
@@ -1250,6 +1262,13 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            Always `true` for KEY_AUTH.
+          type: boolean
+          default: true
+          readOnly: true
       additionalProperties: false
       required:
         - id
@@ -1353,6 +1372,13 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            - `true` for Key Auth strategies and when supported for Client Credentials strategies
+            - `false` when not supported for Client Credentials strategies
+          type: boolean
+          readOnly: true
       additionalProperties: false
       required:
         - id

@@ -34,6 +34,7 @@ entities:
 tags:
   - ai
   - gemini
+  - ai-sdks
 
 tldr:
   q: How do I use Gemini's imageConfig with the AI Proxy plugin?
@@ -115,6 +116,7 @@ variables:
     value: $GCP_PROJECT_ID
   gcp_service_account_json:
     value: $GCP_SERVICE_ACCOUNT_JSON
+    literal_block: true
 {% endentity_examples %}
 
 ## Use imageConfig with image generation

@@ -32,12 +32,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
         with:
           egress-policy: audit
 
       - name: Create GitHub App Token
-        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
         id: app-token
         with:
           app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
@@ -50,7 +50,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: '24'
           cache: 'npm'
@@ -88,6 +88,8 @@ jobs:
       - name: Update release date in gateway.yml
         run: |
           sed -i "/^release_dates:/a\\  '${{ inputs.version }}': ${{ inputs.release_date }}" app/_data/products/gateway.yml
+          PATCH_VERSION=$(echo '${{ inputs.version }}' | sed 's/\.[0-9]*\.[0-9]*$//')
+          sed -i "s/ee-version: \"${PATCH_VERSION}\.[^\"]*\"/ee-version: \"${{ inputs.version }}\"/" app/_data/products/gateway.yml
 
       - name: Generate/update changelog file
         run: |
@@ -120,6 +122,7 @@ jobs:
             - Generated changelog entries for plugins
             ${{format('- Updated changelog for Gateway version {0}', inputs.version)}}
             ${{format('- Set release date for version {0} to {1}', inputs.version, inputs.release_date)}}
+            ${{format('- Updated ee-version to {0}', inputs.version)}}
 
           labels: skip-changelog,review:general
           token: ${{ steps.app-token.outputs.token }}

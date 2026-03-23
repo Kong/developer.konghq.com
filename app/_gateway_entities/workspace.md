@@ -183,11 +183,6 @@ deck gateway sync default.yaml --workspace default
 
 decK can't delete Workspaces. However, using `deck gateway reset` in combination with the `--workspace` or `--all-workspaces` flags forces decK to delete the entire configuration inside the Workspace, but not the Workspace itself.
 
-
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Workspace
 
 {% entity_example %}
@@ -196,3 +191,6 @@ data:
   name: "my-workspace"
 {% endentity_example %}
 
+## Schema
+
+{% entity_schema %}

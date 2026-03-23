@@ -389,7 +389,7 @@ command: |
   kafkactl -C kafkactl.yaml --context vc produce blocked-topic --value="test message"
 expected:
   message: "Failed to produce message: kafka server: The client is not authorized to access this topic"
-  return_code: 0
+  return_code: 1
 render_output: false
 {% endvalidation %}
 

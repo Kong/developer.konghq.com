@@ -303,10 +303,6 @@ rows:
 
 {% include_cached /gateway/failover-targets.md %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up an Upstream
 
 {% entity_example %}
@@ -315,3 +311,7 @@ data:
   name: example-upstream
   algorithm: round-robin
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

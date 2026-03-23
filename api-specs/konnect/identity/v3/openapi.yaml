@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.1
+  version: 3.0.2
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@408ea0ec3518b52070809011e4600c17c9199642
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/408ea0ec3518b52070809011e4600c17c9199642'
+  x-oas-source: kong/platform-api@914955e17b86a5fae4138d6962452f15b7aacf76
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/914955e17b86a5fae4138d6962452f15b7aacf76'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -1995,6 +1995,21 @@ components:
       maxLength: 256
       minLength: 1
       pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.'']*[\p{L}\p{N}]$'
+    PersonalAccessTokenCreateRequestWithExpiresAt:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PATName'
+        expires_at:
+          description: An ISO-8601 timestamp representation of entity expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: false
+      additionalProperties: false
+      required:
+        - name
+        - expires_at
     PersonalAccessTokenCreateResponse:
       description: Details of the created personal access token.
       type: object
@@ -3266,6 +3281,8 @@ components:
                   - Upstream Admin
                   - Vault Admin
                   - Viewer
+                  - Registration Approver
+                  - Content Editor
               entity_id:
                 description: The ID of the entity.
                 type: string
@@ -3518,21 +3535,10 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                $ref: '#/components/schemas/PATName'
-              expires_at:
-                description: An ISO-8601 timestamp representation of entity expiration date.
-                type: string
-                format: date-time
-                example: '2022-11-04T20:10:06.927Z'
-                readOnly: false
-            required:
-              - name
-              - expires_at
+            oneOf:
+              - $ref: '#/components/schemas/PersonalAccessTokenCreateRequestWithExpiresAt'
           examples:
-            Example Request Body:
+            With expires_at:
               $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
     PersonalAccessTokenUpdateRequest:
       description: Request body schema for updating personal access tokens.
@@ -4027,6 +4033,22 @@ components:
                             example: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
                             enum:
                               - Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                        required:
+                          - name
+                          - description
+                      debug_session_creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Debug Session Creator
+                          description:
+                            type: string
+                            example: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                            enum:
+                              - This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                         required:
                           - name
                           - description
@@ -4604,6 +4626,9 @@ components:
                     creator:
                       name: Creator
                       description: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                    debug_session_creator:
+                      name: Debug Session Creator
+                      description: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                     deployer:
                       name: Deployer
                       description: 'This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Hub.'

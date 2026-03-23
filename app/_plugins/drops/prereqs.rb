@@ -19,9 +19,37 @@ module Jekyll
         end
       end
 
+      def default_accordion
+        @default_accordion ||= if prereqs['expand_accordion'] == false
+                                 ''
+                               else
+                                 'data-default="0"'
+                               end
+      end
+
+      def render_works_on?
+        return prereqs['show_works_on'] unless prereqs['show_works_on'].nil?
+        return false if @page.data.dig('series', 'position').to_i > 1
+
+        true
+      end
+
+      def konnect_auth_only?
+        @page.data['works_on']&.include?('konnect') && render_works_on? &&
+          !(@page.data['products']&.include?('gateway') || @page.data['products']&.include?('ai-gateway'))
+      end
+
+      def inline_before
+        @inline_before ||= prereqs.fetch('inline', []).select { |i| i['position'] == 'before' }
+      end
+
+      def inline_without_position
+        @inline_without_position ||= prereqs.fetch('inline', []).reject { |i| i.key?('position') }
+      end
+
       def any?
         # Don't treat the "skip" prereqs as actual prereqs
-        filtered_prereqs = prereqs.reject do |k,v|
+        filtered_prereqs = prereqs.reject do |k, v|
           next true if k == 'show_works_on' && v == false
           next true if k == 'skip_product' && v == true
         end

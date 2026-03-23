@@ -35,6 +35,8 @@ The TLS Server policy defines the certificates and keys used by the {{site.event
 {:.info}
 > Note: Only one TLS Server policy can be active on a listener at a time.
 
+## Use cases
+
 Common use cases for the TLS Server policy:
 
 <!--vale off-->

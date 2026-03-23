@@ -249,8 +249,9 @@
                   "type": "object"
                 },
                 "host": {
-                  "description": "A string representing a host name, such as example.com.",
-                  "type": "string"
+                  "description": "A string representing a host name, such as example.com. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
                 },
                 "password": {
                   "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
@@ -260,14 +261,16 @@
                 },
                 "port": {
                   "default": 6379,
-                  "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                  "description": "An integer representing a port number between 0 and 65535, inclusive. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                   "maximum": 65535,
                   "minimum": 0,
-                  "type": "integer"
+                  "type": "integer",
+                  "x-referenceable": true
                 },
                 "server_name": {
-                  "description": "A string representing an SNI (server name indication) value for TLS.",
-                  "type": "string"
+                  "description": "A string representing an SNI (server name indication) value for TLS. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
+                  "type": "string",
+                  "x-referenceable": true
                 },
                 "ssl": {
                   "default": false,

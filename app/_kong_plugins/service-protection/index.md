@@ -60,4 +60,8 @@ You can use this plugin together with other rate limiting plugins to apply granu
 
 If you want to apply global rate limits or apply rate limits to Routes and Consumers, see the [Rate Limiting with {{site.base_gateway}}](/gateway/rate-limiting/) page for additional rate limiting plugins.
 
-{% include plugins/redis-cloud-auth.md %}
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}

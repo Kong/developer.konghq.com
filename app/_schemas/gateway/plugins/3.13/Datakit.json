@@ -569,9 +569,13 @@
                   "values": {
                     "additionalProperties": true,
                     "description": "An object with string keys and freeform values",
-                    "type": "object"
+                    "type": "object",
+                    "x-speakeasy-type-override": "any"
                   }
                 },
+                "required": [
+                  "values"
+                ],
                 "title": "static",
                 "type": "object"
               },
@@ -911,17 +915,17 @@
             },
             "vault": {
               "additionalProperties": {
+                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                 "maxLength": 4095,
                 "minLength": 1,
                 "type": "string",
                 "x-lua-required": true,
-                "x-referenceable": true,
-                "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                "x-referenceable": true
               },
+              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
               "maxLength": 64,
               "minLength": 1,
-              "type": "object",
-              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+              "type": "object"
             }
           },
           "type": "object"

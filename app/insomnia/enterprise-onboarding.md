@@ -92,16 +92,15 @@ If you're new to Insomnia Enterprise, this document will guide you through the f
 
 Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
 
-To activate the code you'll need to follow these steps:
+To activate the code, complete the following steps:
 
-1. In the Insomnia Admin app, click **Upgrade**.
-1. On the [Change subscription plan](https://app.insomnia.rest/app/subscription/update) page, select the Enterprise plan.
-1. Enter your activation code.
-1. Click **Verify activation code**.
+1. From the [Insomnia Admin](https://app.insomnia.rest/app/home) console, click [**Plan & billing**](https://app.insomnia.rest/app/billing) in the sidebar.
+1. Click **Enter Activation Code**.
+1. In the **Activation code** field, enter your activation code.
    
-   Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
-1. Click your email address in the header and make sure that your Enterprise instance is selected.
-1. Click **Enterprise Controls** to access your Enterprise configuration options.
+
+After this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
+
 
 ## 2. Create organizations
 

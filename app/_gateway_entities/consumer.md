@@ -215,10 +215,6 @@ For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konn
 {:.info}
 > **Note:** If you are using KIC to manage your data plane nodes in {{site.konnect_short_name}}, ensure that you configure the [`cluster_telemetry_endpoint`](/gateway/configuration/#cluster-telemetry-endpoint) in the data plane. You can find your specific `cluster_telemetry_endpoint` when setting up a data plane node.
 
-## Consumer schema
-
-{% entity_schema %}
-
 ## Set up a Consumer
 
 {% entity_example %}
@@ -229,3 +225,7 @@ data:
   tags:
     - silver-tier
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

@@ -340,9 +340,9 @@
                       "client_id": {
                         "description": "The client id(s) that the plugin uses when it calls authenticated endpoints on the identity provider. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -358,22 +358,22 @@
                               "type": "string"
                             },
                             "d": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "dp": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "dq": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "e": {
                               "type": "string"
@@ -382,10 +382,10 @@
                               "type": "string"
                             },
                             "k": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "key_ops": {
                               "items": {
@@ -403,40 +403,40 @@
                               "type": "string"
                             },
                             "oth": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "p": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "q": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "qi": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "r": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "t": {
+                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
                               "type": "string",
                               "x-encrypted": true,
-                              "x-referenceable": true,
-                              "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/)."
+                              "x-referenceable": true
                             },
                             "use": {
                               "type": "string"
@@ -470,9 +470,9 @@
                       "client_secret": {
                         "description": "The client secret. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -1062,9 +1062,9 @@
                       "introspection_headers_values": {
                         "description": "Extra header values passed to the introspection endpoint. \nThis field is [encrypted](/gateway/keyring/).",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array",
                         "x-encrypted": true
@@ -1723,9 +1723,9 @@
                         ],
                         "description": "The scopes passed to the authorization and token endpoints.",
                         "items": {
+                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
                           "type": "string",
-                          "x-referenceable": true,
-                          "description": "\nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault)."
+                          "x-referenceable": true
                         },
                         "type": "array"
                       },
