@@ -28,6 +28,7 @@ sections:
       - path: /event-gateway/entities/policy/
       - path: /event-gateway/entities/schema-registry/
       - path: /event-gateway/entities/static-key/
+      - path: /event-gateway/entities/tls-trust-bundle/
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
@@ -39,6 +40,7 @@ sections:
       - path: /event-gateway/configure-sni-routing/
       - path: /event-gateway/kong-identity-oauth/
       - path: /event-gateway/filter-records-by-classification/
+      - path: /event-gateway/configure-mtls-client-authentication/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification
