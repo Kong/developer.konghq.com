@@ -67,11 +67,11 @@ The platform decides which heading level to use based on the heading level prece
 ```
 ## Example heading
 
-{% table/navtabs %}
+{% table %} or {% navtabs %}
 ```
 In this case, each tab or row uses `###` (h3).
 
-#### Note:
+#### Tabs and tables in includes
 
 Normally, heading level inference shouldn't affect the authoring experience, but there is one edge case to consider when using includes.
 Avoid having includes that contain a table or navtabs without a preceding heading before the liquid tag.
@@ -88,7 +88,7 @@ In this case, each tab uses `####` (h4).
 
 ### Konnect and On-prem specific content
 
-There are [two new liquid tags](https://developer.konghq.com/contributing/#render-code-block-text-per-deployment-type) for rendering deployment-type specific content.
+There are [liquid tags](https://developer.konghq.com/contributing/#render-code-block-text-per-deployment-type) for rendering deployment-type specific content.
 
 ## Excluding pages from generation
 
