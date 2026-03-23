@@ -8,6 +8,9 @@ tier: ai_gateway_enterprise
 
 products:
     - gateway
+    
+tools:
+  - deck
 
 works_on:
     - on-prem
@@ -123,7 +126,7 @@ entities:
     config:
       policies:
       - id: $POLICY_UUID
-{% endentity_example %}
+{% endentity_examples %}
 
 {:.warning}
 > When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
