@@ -76,53 +76,45 @@ columns:
     key: capability
   - title: "{{site.metering_and_billing}} support"
     key: support
-  - title: "Integration support"
-    key: integration
   - title: Third-party providers
     key: providers
 rows:
   - capability: "[**Usage metering** (ingest, dedupe, real-time usage)](/metering-and-billing/metering/)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "[**Product catalog** (prices, plans, discounts)](/metering-and-billing/product-catalog/)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "[**Subscription management** (start, cancel, billing periods)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing-subscriptions/#discounts-and-commitments)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing-subscriptions/#invoicing)"
     support: Yes
-    integration: "N/A"
     providers: "N/A"
   - capability: "**Sales tax calculations** (based on geo and tax code)"
     support: "N/A"
-    integration: Yes
     providers: |
+      Integrations:
       * [Stripe Tax](/metering-and-billing/stripe-integration/#optional-automatic-tax-calculation)
       * Avalara
       * Anrok
   - capability: "**Invoice delivery** (email, dunning, compliance)"
     support: "N/A"
-    integration: Yes
     providers: |
+      Integrations:
       * [Stripe Invoicing](/metering-and-billing/stripe-integration/#invoicing)
       * NetSuite
       * Invopop
   - capability: "**Credit card payment** (storing credit cards, payment rails)"
     support: "N/A"
-    integration: Yes
     providers: |
+      Integrations:
       * [Stripe Payments](/metering-and-billing/stripe-integration/#invoicing)
       * Adyen
       * PayPal
