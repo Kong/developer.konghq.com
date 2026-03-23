@@ -52,6 +52,29 @@ automated_tests: false
 
 ## Create a Dockerfile
 
+{% navtabs "method" %}
+{% navtab "Extend the official image" %}
+
+Extend the official `kong/kong-gateway` image to bundle a custom plugin:
+
+```dockerfile
+FROM kong/kong-gateway:latest
+
+USER root
+
+COPY ./my-plugin /usr/local/share/lua/5.1/kong/plugins/my-plugin
+ENV KONG_PLUGINS=bundled,my-plugin
+
+USER kong
+```
+
+Replace `my-plugin` with your plugin directory name.
+
+{% endnavtab %}
+{% navtab "Build from a base image" %}
+
+Use this approach if you need a different base OS or need to patch system-level libraries. The entrypoint script below is used internally by Kong and is provided as a reference.
+
 Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) using any of the following templates:
 
 {% navtabs "Dockerfile" %}
@@ -158,6 +181,9 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
 CMD ["kong", "docker-start"]
 EOF
 ```
+{% endnavtab %}
+{% endnavtabs %}
+
 {% endnavtab %}
 {% endnavtabs %}
 
