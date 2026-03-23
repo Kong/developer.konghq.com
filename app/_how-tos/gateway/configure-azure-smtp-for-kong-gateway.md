@@ -10,7 +10,7 @@ related_resources:
   - text: Enable Basic Auth for Kong Manager
     url: /how-to/enable-basic-auth-on-kong-manager/
 
-description: Learn how to configure Azure Communication Services as the SMTP provider for {{site.base_gateway}} to send emails from Kong Manager or Dev Portal.
+description: Learn how to configure Azure Communication Services as the SMTP provider for {{site.base_gateway}} to send emails from Kong Manager.
 
 products:
   - gateway
@@ -19,7 +19,7 @@ works_on:
   - on-prem
 
 min_version:
-  gateway: '3.4'
+  gateway: '3.14'
 
 entities: []
 
