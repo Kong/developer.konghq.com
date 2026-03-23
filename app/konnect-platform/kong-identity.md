@@ -425,6 +425,45 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## Trusted origins
+
+Trusted origins in Kong Identity let you configure which origins Kong Identity includes in CORS response headers, such as `Access-Control-Allow-Origin`. When trusted origins are configured, Kong Identity returns CORS headers only for requests whose origin matches one of the configured trusted origins.
+
+Trusted origins can help with use cases where you want to allow in-browser tools to request tokens without CORS issues.
+
+{% navtabs "trusted-origins" %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **Identity**.
+1. Click **New authorization server**.
+1. In the **Name** field, enter a name for your auth server. For example, `Kong Identity Auth Server`.
+1. In the **Audience** field, enter the audience. For example, `https://api.example.com/payments`.
+   
+   {:.info}
+   > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
+1. Click **Show advanced configuration**.
+1. In the **Trusted origins** field, enter your trusted origins URIs. For example, `https://app.example.com`.
+1. Click **Create**.
+{% endnavtab %}
+{% navtab "API" %}
+Send a POST request to the [`/auth-servers` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServer):
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers
+status_code: 201
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  name: My Auth Server
+  audience: api://default
+  trusted_origins:
+    - https://app.example.com
+    - http://localhost:3000
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
+
 
 ## Configure Kong Identity
 
@@ -434,8 +473,8 @@ To configure Kong Identity, do the following:
 {% navtab "{{site.konnect_short_name}} UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click [**Identity**](https://cloud.konghq.com/identity/).
 1. Click **New authorization server**.
-1. In the **Name** field, enter a name.
-1. In the **Audience** field, enter the audience.
+1. In the **Name** field, enter a name for your auth server. For example, `Kong Identity Auth Server`.
+1. In the **Audience** field, enter the audience. For example, `https://api.example.com/payments`.
    
    {:.info}
    > **Note:** The value in the **Audience** field is the audience that the token is intended for, like a client ID or the upstream URL of the Gateway Service for the API resource. For example, `https://api.example.com/payments` and `http://myhttpbin.dev`. If you don't have an intended audience, you can put a placeholder value, like `orders-api`, in this field.
