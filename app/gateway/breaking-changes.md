@@ -61,6 +61,25 @@ For the following plugins, the SHA1 algorithm is still supported in existing con
 * [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
 * [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
 
+### Hide credentials by default
+
+`hide_credentials` is now set to `true` by default in the following plugins:
+
+* [Basic Auth](/plugins/basic-auth/)
+* [HMAC Auth](/plugins/hmac-auth/)
+* [Key Auth](/plugins/key-auth/)
+* [Key Auth - Encrypted](/plugins/key-auth-enc/)
+* [LDAP Auth](/plugins/ldap-auth/)
+* [LDAP Auth Advanced](/plugins/ldap-auth-advanced/)
+* [OAuth 2.0 Authentication](/plugins/oauth2/)
+* [OAuth 2.0 Introspection](/plugins/oauth2-introspection/)
+* [OpenID Connect](/plugins/openid-connect/)
+* [Vault Auth](/plugins/vault-auth/)
+
+This mitigates the unnecessary risk of accidental credential exposure.
+
+This change doesn't affect existing plugins, but new plugins will have this setting configured by default. 
+
 #### OpenID Connect: consumer claims data types
 
 The `config.consumer_claim` field in the [OpenID Connect plugin](/plugins/openid-connect/) has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims). 
