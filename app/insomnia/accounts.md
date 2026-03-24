@@ -16,7 +16,7 @@ related_resources:
   - text: Manage Insomnia
     url: /insomnia/manage-insomnia/
   - text: Data security
-    url: /insomnia/data-security/#end-to-end-encryption
+    url: /insomnia/data-security/
   - text: Insomnia Enterprise
     url: /insomnia/enterprise/
   - text: Enterprise user management
