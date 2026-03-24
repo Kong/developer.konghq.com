@@ -38,7 +38,8 @@ Breaking changes in the {{site.event_gateway_short}} 1.1.0 release.
 
 #### Environment variable prefix for data planes
 
-The data plane configuration prefix has changed from `KEG__KONNECT__` or `KONNECT_`to `KONG_KONNECT_`. The old variable environment variables are no longer accepted.
+The data plane configuration prefix has changed from `KEG__KONNECT__` or `KONNECT_` to `KONG_KONNECT_`. 
+The old environment variables are no longer accepted.
 
 For example, to pass configuration settings to a new data plane, you would use:
 
@@ -62,10 +63,10 @@ For more information about configuring data planes at startup and all options, s
 Key changes:
 
 1. Delimiter change: `_` > `.` (Prometheus > OTel convention)
-2. Suffix stripping: `_count`, `_seconds`, `_ms`, and `_active` suffixes removed. The unit is now in metadata only.
-3. Unit normalization: All durations are now in seconds. Previously, the metrics were a mix of seconds and ms.
-4. Label namespacing: Labels now use dotted namespaces (for example, `result` > `kong.keg.result`).
-6. Common labels changed: 
+1. Suffix stripping: `_count`, `_seconds`, `_ms`, and `_active` suffixes removed. The unit is now in metadata only.
+1. Unit normalization: All durations are now in seconds. Previously, the metrics were a mix of seconds and ms.
+1. Label namespacing: Labels now use dotted namespaces (for example, `result` > `kong.keg.result`).
+1. Common labels changed: 
   * `topic` > `messaging.destination.name` 
   * `policy_konnect_*` > `kong.konnect.policy.*` and `kong.keg.policy.*`
 

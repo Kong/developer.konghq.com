@@ -68,57 +68,57 @@ flowchart LR
 Generate a CA, per-broker JKS keystores, and a PEM client certificate for {{site.event_gateway_short}}.
 This requires OpenSSL and `keytool` (included in any JDK installation).
 
-Create the output directory and generate a self-signed CA certificate:
+1. Create the output directory and generate a self-signed CA certificate:
 
-```bash
-mkdir -p certs
-openssl req -new -x509 -nodes -keyout certs/ca.key -out certs/ca.crt \
-  -days 365 -subj "/CN=Kafka-CA"
-```
+    ```bash
+    mkdir -p certs
+    openssl req -new -x509 -nodes -keyout certs/ca.key -out certs/ca.crt \
+      -days 365 -subj "/CN=Kafka-CA"
+    ```
 
-Create the credentials file used as the password for all keystores, then import the CA into a shared truststore that all brokers will reference:
+1. Create the credentials file used as the password for all keystores, then import the CA into a shared truststore that all brokers will reference:
 
-```bash
-echo "changeit" > certs/keystore-credentials
-keytool -import -trustcacerts -alias CARoot \
-  -file certs/ca.crt -keystore certs/truststore.jks \
-  -storepass changeit -noprompt
-```
+    ```bash
+    echo "changeit" > certs/keystore-credentials
+    keytool -import -trustcacerts -alias CARoot \
+      -file certs/ca.crt -keystore certs/truststore.jks \
+      -storepass changeit -noprompt
+    ```
 
-For each broker, generate a key pair, sign it with the CA, and import both the CA certificate and the signed broker certificate into the broker's keystore:
+1. For each broker, generate a key pair, sign it with the CA, and import both the CA certificate and the signed broker certificate into the broker's keystore:
 
-```bash
-for broker in kafka1 kafka2 kafka3; do
-  keytool -genkeypair -alias "$broker" \
-    -keyalg RSA -keysize 2048 -dname "CN=$broker" \
-    -keystore "certs/$broker.keystore.jks" \
-    -storepass changeit -keypass changeit -validity 365
+    ```bash
+    for broker in kafka1 kafka2 kafka3; do
+      keytool -genkeypair -alias "$broker" \
+        -keyalg RSA -keysize 2048 -dname "CN=$broker" \
+        -keystore "certs/$broker.keystore.jks" \
+        -storepass changeit -keypass changeit -validity 365
 
-  keytool -certreq -alias "$broker" \
-    -keystore "certs/$broker.keystore.jks" \
-    -storepass changeit -file "certs/$broker.csr"
-  printf "subjectAltName=DNS:%s" "$broker" > "certs/$broker.ext"
-  openssl x509 -req -in "certs/$broker.csr" \
-    -CA certs/ca.crt -CAkey certs/ca.key -CAcreateserial \
-    -out "certs/$broker.crt" -days 365 -extfile "certs/$broker.ext"
+      keytool -certreq -alias "$broker" \
+        -keystore "certs/$broker.keystore.jks" \
+        -storepass changeit -file "certs/$broker.csr"
+      printf "subjectAltName=DNS:%s" "$broker" > "certs/$broker.ext"
+      openssl x509 -req -in "certs/$broker.csr" \
+        -CA certs/ca.crt -CAkey certs/ca.key -CAcreateserial \
+        -out "certs/$broker.crt" -days 365 -extfile "certs/$broker.ext"
 
-  keytool -import -trustcacerts -alias CARoot \
-    -file certs/ca.crt -keystore "certs/$broker.keystore.jks" \
-    -storepass changeit -noprompt
-  keytool -import -alias "$broker" \
-    -file "certs/$broker.crt" -keystore "certs/$broker.keystore.jks" \
-    -storepass changeit -noprompt
-done
-```
+      keytool -import -trustcacerts -alias CARoot \
+        -file certs/ca.crt -keystore "certs/$broker.keystore.jks" \
+        -storepass changeit -noprompt
+      keytool -import -alias "$broker" \
+        -file "certs/$broker.crt" -keystore "certs/$broker.keystore.jks" \
+        -storepass changeit -noprompt
+    done
+    ```
 
-Generate a PEM client certificate for {{site.event_gateway_short}}:
+1. Generate a PEM client certificate for {{site.event_gateway_short}}:
 
-```bash
-openssl genrsa -out certs/client.key 2048
-openssl req -new -key certs/client.key -out certs/client.csr -subj "/CN=event-gateway"
-openssl x509 -req -in certs/client.csr -CA certs/ca.crt -CAkey certs/ca.key \
-  -CAcreateserial -out certs/client.crt -days 365
-```
+    ```bash
+    openssl genrsa -out certs/client.key 2048
+    openssl req -new -key certs/client.key -out certs/client.csr -subj "/CN=event-gateway"
+    openssl x509 -req -in certs/client.csr -CA certs/ca.crt -CAkey certs/ca.key \
+      -CAcreateserial -out certs/client.crt -days 365
+    ```
 
 ## Start the secured Kafka cluster
 
@@ -196,7 +196,7 @@ render_output: false
 The `ca_bundle` and `client_identity.certificate` fields accept PEM-encoded strings.
 The `client_identity.key` field requires a base64-encoded value.
 
-Build the request body:
+Build the request body with TLS enabled:
 
 <!--vale off-->
 {% validation custom-command %}
@@ -243,6 +243,8 @@ The `client_identity` holds the certificate and key that {{site.event_gateway_sh
 
 ## Create a virtual cluster
 
+Run the following command to create a [virtual cluster](/event-gateway/entities/virtual-cluster/) with `anonymous` authentication:
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
@@ -264,7 +266,9 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a listener and policy
+## Create a listener
+
+Run the following command to create a [listener](/event-gateway/entities/listener/):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -284,6 +288,11 @@ capture: MTLS_LISTENER_ID
 jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Create a listener policy
+
+Add a [Forward to Virtual Cluster](/event-gateway/policies/forward-to-virtual-cluster/) policy,
+which will forward requests based on a defined mapping to our virtual cluster:
 
 <!--vale off-->
 {% konnect_api_request %}
