@@ -13,7 +13,7 @@ extended_description: |
 
   Here's how token exchange works with the OIDC plugin:
 
-  [diagram goes here]
+  {% include_cached plugins/oidc/diagrams/token-exchange.md %}
 
 weight: 700
 
@@ -65,4 +65,4 @@ tools:
   - konnect
   - terraform
 
-group: authentication
+group: other

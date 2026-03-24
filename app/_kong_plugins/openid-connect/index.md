@@ -593,10 +593,7 @@ However, in a token exchange, a client already has a token (the "subject token")
 {{ite.base_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
 The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
 
-{% mermaid %}
-flowchart LR
-
-{% endmermaid %}
+{% include_cached plugins/oidc/diagrams/token-exchange.md %}
 
 The OpenID Connect plugin performs the following checks on the incoming token before triggering the exchange:
 1. Checks the incoming subject token meets the following criteria:
