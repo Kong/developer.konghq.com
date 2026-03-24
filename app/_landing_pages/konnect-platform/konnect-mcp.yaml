@@ -270,7 +270,7 @@ rows:
                   tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
                   description: Create tracing sessions and analyze performance
                 - category: Analytics
-                  tools: "[GetAnalytics](/konnect-platform/konnect-mcp/tools/#getanalytics)"
+                  tools: "DatasourceConfig, QueryExploreTimeRange, QueryAnalytics, QueryLLMAnalytics, QueryMCPAnalytics, QueryAPIRequests, GetConsumerRequests"
                   description: Query API requests and traffic patterns
                 # - category: Alerting
                 #   tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
