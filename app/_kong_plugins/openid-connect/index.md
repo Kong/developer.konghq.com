@@ -600,7 +600,7 @@ flowchart LR
 
 The OpenID Connect plugin performs the following checks on the incoming token before triggering the exchange:
 1. Checks the incoming subject token meets the following criteria:
-  * The isssuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
+  * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
   * The token is not expired  (`exp` claim).
   * Token is not used before its time (`nbf` claim).
 1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered. 
