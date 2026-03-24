@@ -149,6 +149,8 @@ render_output: false
 
 ## Create the backend cluster
 
+Create a [backend cluster](/event-gateway/entities/backend-cluster/) with `sasl_plain` authentication and the credentials you want to use:
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/backend-clusters
@@ -177,6 +179,8 @@ jq: ".id"
 
 ## Create a virtual cluster
 
+Create a [virtual cluster](/event-gateway/entities/virtual-cluster/) with `anonymous` authentication:
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
@@ -198,7 +202,9 @@ jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a listener and policy
+## Create a listener
+
+Run the following command to create a new [listener](/event-gateway/entities/listener/):
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -218,6 +224,11 @@ capture: SASL_LISTENER_ID
 jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Create a listener policy
+
+Add a [Forward to Virtual Cluster](/event-gateway/policies/forward-to-virtual-cluster/) policy,
+which will forward requests based on a defined mapping to our virtual cluster:
 
 <!--vale off-->
 {% konnect_api_request %}

@@ -156,6 +156,8 @@ For this guide, we generate self-signed certificates for testing. In production,
 
 ## Create a listener
 
+Run the following command to create a [listener](/event-gateway/entities/listener/):
+
 <!--vale off-->
 {% konnect_api_request %}
 url: /v1/event-gateways/$EVENT_GATEWAY_ID/listeners
@@ -177,7 +179,7 @@ jq: ".id"
 
 ## Create a TLS trust bundle
 
-A [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/) stores CA certificates used to verify client certificates during the mTLS handshake.
+A [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/) stores CA certificates used to verify client certificates during the mTLS handshake. Create the bundle:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -283,6 +285,9 @@ jq: ".id"
 <!--vale on-->
 
 ## Create a forward-to-virtual-cluster listener policy
+
+Add a [Forward to Virtual Cluster](/event-gateway/policies/forward-to-virtual-cluster/) policy,
+which will forward requests based on a defined mapping to our virtual cluster:
 
 <!--vale off-->
 {% konnect_api_request %}
