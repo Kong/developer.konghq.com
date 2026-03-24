@@ -231,6 +231,9 @@ donut
 doppelganger
 downsample
 downsampled
+downscope
+downscoping
+downscoped
 downstreams
 downtime
 downtimes
