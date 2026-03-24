@@ -218,61 +218,7 @@ unlimited capture for request detection.
 
 ### Log output fields
 
-When `config.logging.log_statistics` is enabled, the plugin writes the following fields to the
-`ai.a2a.rpc[]` array:
-
-{% table %}
-columns:
-  - title: Field
-    key: field
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-rows:
-  - field: "`method`"
-    type: string
-    description: A2A operation name
-  - field: "`binding`"
-    type: string
-    description: "Protocol binding: `jsonrpc` or `rest`"
-  - field: "`latency`"
-    type: number
-    description: End-to-end proxy latency in milliseconds
-  - field: "`id`"
-    type: string
-    description: Request ID (JSON-RPC) or task ID (REST)
-  - field: "`task_id`"
-    type: string
-    description: Task ID extracted from the response
-  - field: "`task_state`"
-    type: string
-    description: "Normalized task state (see [task states](#task-states))"
-  - field: "`context_id`"
-    type: string
-    description: A2A context ID extracted from the response
-  - field: "`error`"
-    type: string
-    description: Error type string when the upstream returned an error
-  - field: "`response_body_size`"
-    type: number
-    description: Response body size in bytes
-  - field: "`streaming`"
-    type: boolean
-    description: "`true` for SSE streaming responses"
-  - field: "`ttfb_latency`"
-    type: number
-    description: Time to first byte in milliseconds (streaming only)
-  - field: "`sse_events_count`"
-    type: number
-    description: "Count of SSE `data:` events received (streaming only)"
-  - field: "`payload.request`"
-    type: string
-    description: "Request body (only when `log_payloads` is enabled)"
-  - field: "`payload.response`"
-    type: string
-    description: "Response body (only when `log_payloads` is enabled)"
-{% endtable %}
+{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
 
 #### Task states
 
@@ -285,36 +231,7 @@ Task state values are normalized to lowercase A2A spec format regardless of the 
 When `config.logging.log_statistics` is enabled and Kong tracing is configured, the plugin creates
 a `kong.a2a` child span with the following attributes:
 
-{% table %}
-columns:
-  - title: Attribute
-    key: attribute
-  - title: Description
-    key: description
-rows:
-  - attribute: "`kong.a2a.operation`"
-    description: A2A operation name
-  - attribute: "`kong.a2a.protocol.version`"
-    description: "Value of the `A2A-Version` request header, or `unknown`"
-  - attribute: "`kong.a2a.task.id`"
-    description: Task ID from the response
-  - attribute: "`kong.a2a.task.state`"
-    description: Normalized task state
-  - attribute: "`kong.a2a.context.id`"
-    description: A2A context ID
-  - attribute: "`kong.a2a.error`"
-    description: Error type string when present
-  - attribute: "`kong.a2a.streaming`"
-    description: "`true` for SSE streaming responses"
-  - attribute: "`kong.a2a.ttfb_latency`"
-    description: Time to first byte in milliseconds (streaming only)
-  - attribute: "`kong.a2a.sse_events_count`"
-    description: Count of SSE events (streaming only)
-  - attribute: "`rpc.system`"
-    description: "`jsonrpc` (JSON-RPC binding only)"
-  - attribute: "`rpc.method`"
-    description: A2A operation name (JSON-RPC binding only)
-{% endtable %}
+{% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
 
 ### Request body size
 

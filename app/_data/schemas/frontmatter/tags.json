@@ -3,6 +3,7 @@
   "type": "string",
   "enum": [
     "1password",
+    "a2a",
     "access-control",
     "account-management",
     "after-response-scripts",
