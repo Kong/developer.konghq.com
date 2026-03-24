@@ -144,6 +144,3 @@ rows:
     encrypted: N
 {% endtable %}
 
-## Compliance
-
-Insomnia is included in Kong's annual SOC 2 Type II audit and undergoes annual third-party penetration testing. Pentest reports and other compliance documents are available on the [Kong Trust Center](https://trust.konghq.com).
