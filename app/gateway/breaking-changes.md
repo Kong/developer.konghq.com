@@ -138,7 +138,7 @@ rows:
       Manually update the custom plugin implementation to verify the server certificate.
 {% endtable %}
 
-To revert to the the old behavior, set `tls_certificate_verify` to `off`.
+To revert to the old behavior, set `tls_certificate_verify` to `off`.
 
 ## 3.13.x breaking changes
 
