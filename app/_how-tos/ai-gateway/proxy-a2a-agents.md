@@ -7,6 +7,7 @@ products:
   - gateway
   - ai-gateway
 
+
 works_on:
   - on-prem
   - konnect
@@ -30,7 +31,7 @@ tags:
   - a2a
 
 tldr:
-  q: "How do I route A2A protocol traffic through Kong AI Gateway?"
+  q: "How do I route A2A protocol traffic through {{site.ai_gateway}}?"
   a: "Create a service pointing to your A2A agent, add a route, and enable the AI A2A Proxy plugin. Kong proxies A2A JSON-RPC traffic and can export A2A metrics and payloads as OpenTelemetry span attributes."
 tools:
   - deck
@@ -118,7 +119,7 @@ prereqs:
             - model_source=openai
             - API_KEY=${OPENAI_API_KEY}
             - TOOL_LLM_URL=https://api.openai.com/v1
-            - TOOL_LLM_NAME=gpt-4o-mini
+            - TOOL_LLM_NAME=gpt-5.1
           ports:
             - "10000:10000"
           networks:
@@ -188,6 +189,7 @@ entities:
   plugins:
     - name: ai-a2a-proxy
       config:
+        max_request_body_size: 0
         logging:
           log_statistics: true
           log_payloads: true
