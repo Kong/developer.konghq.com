@@ -3,7 +3,7 @@ title: "{{site.observability}} Explorer"
 content_type: reference
 layout: reference
 description: | 
-    Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
+    Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
 breadcrumbs:
   - /observability/
 products:
@@ -65,16 +65,15 @@ faqs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.observability}}"
     url: /observability/
-  - text: LLM Reporting
-    url: /observability/llm-reporting/
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
 ---
 
-The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to:
+The Explorer interface displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to:
 * Diagnose performance issues
-* [Monitor LLM token consumption and costs](/observability/llm-reporting/)
+* Monitor LLM token consumption and costs
 * Capture essential usage metrics
+* See how many {{site.base_gateway}} entities your platform or control plane have
 
 The Analytics Explorer also lets you save the output as a custom report.
 
@@ -88,11 +87,25 @@ This toggle lets you enable or disable data collection for your API traffic per 
 - **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}}, 
 and can still be used for custom reports.
 
+## LLM reporting
+
+{{site.observability}} allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency. 
+
+With LLM usage reporting, you can:
+
+* Track token consumption: Monitor the number of tokens processed by the different LLM models you have configured. 
+* Understand costs: Gain visibility into the costs associated with your LLM providers. 
+* Measure latency: Analyze the latency involved in processing LLM requests. 
+
 ## Metrics
 
-Traffic metrics provide insight into which of your Services are being used and how they are responding. 
+Traffic metrics provide insight into which of your services are being used and how they are responding. 
 Within a single report, you have the flexibility to choose one or multiple metrics from the same category.
 
+{% navtabs "metrics" %}
+{% navtab "API usage" %}
+
+The following table shows which API usage metrics you can view:
 <!--vale off-->
 {% table %}
 columns:
@@ -133,6 +146,94 @@ rows:
       The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
 {% endtable %}
 <!--vale on-->
+{% endnavtab %}
+{% navtab "LLM usage" %}
+
+The following table shows which LLM usage metrics you can view:
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "Request Count"
+    category: "Count"
+    description: |
+      Total number of API calls within the selected time frame. This includes requests that were rejected due to rate limiting, failed authentication, and so on.
+  - metric: "Requests per Minute"
+    category: "Rate"
+    description: |
+      Number of API calls per minute within the selected time frame.
+  - metric: "Response Latency"
+    category: "Latency"
+    description: |
+      The time, in milliseconds, it takes to process an API request from start to finish. Users can choose from average (avg) or specific percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that 99 out of 100 requests were completed in under 10 ms from the time the request was received to when the response was sent.
+  - metric: "Upstream Latency"
+    category: "Latency"
+    description: |
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms from the moment the request was sent to the upstream service to when the first byte of the response was received.
+  - metric: "Kong latency"
+    category: "Latency"
+    description: |
+      The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms to be processed in {{site.base_gateway}} before reaching the upstream service.
+  - metric: "Request Size"
+    category: "Size"
+    description: |
+      The size of the request payload received from the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile request size of 100 bytes means that the payload size for every 1 in 100 requests was at least 100 bytes.
+  - metric: "Response Size"
+    category: "Size"
+    description: |
+      The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Platform usage" %}
+
+The following table shows which platform usage metrics you can view:
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "Control plane count"
+    category: "Count"
+    description: |
+      Number of control planes in your organization.
+  - metric: "Data plane node count"
+    category: "Count"
+    description: |
+      Number of data planes in your control plane. 
+      These can also be filtered by data plane node version.
+  - metric: "Gateway Service count"
+    category: "Count"
+    description: |
+      Number of Gateway Services in your control plane.
+  - metric: "Route count"
+    category: "Count"
+    description: |
+      Number of Routes in your control plane or associated with a specific Gateway Service.
+  - metric: "Plugin count"
+    category: "Count"
+    description: |
+      Number of plugins in your control plane. 
+      These can also be filtered by plugin scope and name.
+  - metric: "Consumer count"
+    category: "Count"
+    description: |
+      Number of Consumers in your realm or control plane.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Time intervals
 

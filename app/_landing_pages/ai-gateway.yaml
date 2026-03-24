@@ -311,7 +311,7 @@ rows:
             description: Visualize LLM metrics in {{site.konnect_short_name}}.
             icon: /assets/icons/analytics.svg
             cta:
-              url: /observability/llm-reporting/
+              url: /observability/explorer/
               align: end
       - blocks:
         - type: card

@@ -8,7 +8,6 @@ sections:
   - title: References
     items:
       - path: /observability/explorer/
-      - path: /observability/llm-reporting/
       - title: Analytics teams and roles
         description: Assign users to predefined Analytics teams in Konnect to control access levels.
         url: /konnect-platform/teams-and-roles/
