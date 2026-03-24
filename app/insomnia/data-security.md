@@ -44,7 +44,7 @@ faqs:
 
 ## End-to-end encryption
 
-Insomnia implements end-to-end encryption (E2EE), which means that all encryption keys are generated locally, all encryption is performed before sending any data over the network, and all decryption is performed after receiving data from the network. At no point in the sync process can the Insomnia servers, or an intruder read or access sensitive application project data.
+Insomnia implements end-to-end encryption (E2EE), which means that all encryption keys are generated locally, all encryption is performed before sending any data over the network, and all decryption is performed after receiving data from the network. At no point in the sync process can the Insomnia servers read or access sensitive application project data.
 
 Each user sets their own encryption passphrase, which is never shared or stored. Project data is encrypted with a randomly generated symmetric key, which is then encrypted separately for each user using their public encryption key. Only someone with the matching private key can decrypt the symmetric key. Insomnia stores encrypted workspace data and the encrypted symmetric key for each authorized user — nothing is ever stored in plain text.
 

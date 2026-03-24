@@ -100,7 +100,7 @@ faqs:
 
 ## Create an Insomnia account
 
-To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [Data security](/insomnia/data-security/#end-to-end-encryption).
+To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [End-to-end encryption](/insomnia/data-security/#end-to-end-encryption).
 
 {:.danger}
 > **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase in a password manager, for example.
