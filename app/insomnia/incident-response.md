@@ -10,17 +10,19 @@ breadcrumbs:
 products:
     - insomnia
 related_resources:
+  - text: Data security
+    url: /insomnia/data-security/
   - text: SBOM
     url: /insomnia/sbom/
   - text: Collected data
     url: /insomnia/collected-data/
 faqs:
   - q: Does Insomnia have any compliance certifications?
-    a: Not at the moment.
+    a: Yes. Insomnia is included in Kong's annual SOC 2 Type II audit and holds a CSA STAR Level 1 certification. Reports are available on the [Kong Trust Center](https://trust.konghq.com).
   - q: Where do I download the Software Bill of Materials (SBOM) for Insomnia?
     a: From the [Insomnia GitHub Releases](https://docs.insomnia.rest/insomnia/sbom#:~:text=Navigate%20to%20Insomnia%20GitHub%20Releases) page, download the `sbom.spdx.json` and `sbom.cyclonedx.json` SBOM files.
   - q: Do you have any penetration test results from external parties?
-    a: Not at the moment.
+    a: Yes. Insomnia undergoes annual penetration testing by Cobalt. Reports are available on the [Kong Trust Center](https://trust.konghq.com).
   - q: How often do you release major updates, and or security patches?
     a: We regularly update the Insomnia desktop application. Security, and hotfix patches are handled on a case-by-case basis and can occur at any time.
   - q: Do you maintain documentation when an incident/event occurs?

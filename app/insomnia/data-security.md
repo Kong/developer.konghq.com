@@ -13,6 +13,8 @@ search_aliases:
 products:
     - insomnia
 related_resources:
+  - text: Incident response and vulnerability management
+    url: /insomnia/incident-response/
   - text: Security at Insomnia
     url: /insomnia/manage-insomnia/#security
   - text: Storage options
@@ -41,6 +43,8 @@ faqs:
 ---
 
 Insomnia implements end-to-end encryption (E2EE), which means that all encryption keys are generated locally, all encryption is performed before sending any data over the network, and all decryption is performed after receiving data from the network. At no point in the sync process can the Insomnia servers, or an intruder read or access sensitive application project data.
+
+Each user sets their own encryption passphrase, which is never shared or stored. Project data is encrypted with a randomly generated symmetric key, which is then encrypted separately for each user using their public encryption key. Only someone with the matching private key can decrypt the symmetric key. Insomnia stores encrypted workspace data and the encrypted symmetric key for each authorized user — nothing is ever stored in plain text.
 
 Insomnia data is stored in a pooled model for multi-tenancy. Each row is separated by a tenant identifier within the database. To retrieve data, the Insomnia Admin API request must have the tenant identifier (organization ID) in the request path and an authenticated user who is a member of the target tenant (organization).
 
@@ -137,3 +141,7 @@ rows:
     stored: Y
     encrypted: N
 {% endtable %}
+
+## Compliance
+
+Insomnia is included in Kong's annual SOC 2 Type II audit and undergoes annual third-party penetration testing. Pentest reports and other compliance documents are available on the [Kong Trust Center](https://trust.konghq.com).
