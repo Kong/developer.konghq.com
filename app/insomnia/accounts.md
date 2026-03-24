@@ -116,7 +116,7 @@ Owners and admins can invite users to collaborate on projects by adding them to 
 
 Invited users will receive an email. They will need to log in to Insomnia and accept the invite.
 
-## End-to-end encryption (E2EE)
+## End-to-end encryption
 
 Hobby accounts created from June 4th 2024 onwards have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data so that only the parties involved in the communication can decrypt it.
 
