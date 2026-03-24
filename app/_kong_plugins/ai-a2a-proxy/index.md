@@ -223,20 +223,17 @@ unlimited capture for request detection.
 #### Task states
 
 Task state values are normalized to lowercase A2A spec format regardless of the upstream SDK version:
-`submitted`, `working`, `input-required`, `completed`, `canceled`, `failed`, `rejected`,
-`auth-required`, `unknown`.
+`submitted`, `working`, `input-required`, `completed`, `canceled`, `failed`, `rejected`, `auth-required`, `unknown`.
 
 ### OpenTelemetry span attributes
 
-When `config.logging.log_statistics` is enabled and Kong tracing is configured, the plugin creates
-a `kong.a2a` child span with the following attributes:
+When `config.logging.log_statistics` is enabled and Kong tracing is configured, the plugin creates a `kong.a2a` child span with the following attributes:
 
 {% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
 
 ### Request body size
 
 The plugin reads the request body to detect JSON-RPC A2A requests. Use
-[`config.max_request_body_size`](./reference/#schema--config-max_request_body_size) to control the maximum
-body size parsed for detection (default 1 MB). Set to `0` for no limit. REST requests are detected by path and HTTP method without reading the body, so this setting applies to JSON-RPC detection only.
+[`config.max_request_body_size`](./reference/#schema--config-max_request_body_size) to control the maximum body size parsed for detection (default 1 MB). Set to `0` for no limit. REST requests are detected by path and HTTP method without reading the body, so this setting applies to JSON-RPC detection only.
 
 If a request body exceeds the limit, the plugin logs a warning and skips A2A detection for that request; the request is still proxied upstream.
