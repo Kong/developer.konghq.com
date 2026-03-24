@@ -55,7 +55,7 @@ automated_tests: false
 
 In this guide, you’ll configure the [Grafana LGTM stack](https://github.com/grafana/docker-otel-lgtm) to receive and visualize observability data from {{site.event_gateway_short}}. The LGTM stack bundles Grafana, [Loki](https://grafana.com/oss/loki/) (logs), [Tempo](https://grafana.com/oss/tempo/) (traces), [Prometheus](https://prometheus.io/) (metrics), and a built-in [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) in a single container.
 
-Since {{site.event_gateway_short}} 1.1 can push traces, metrics, and logs directly via OTLP, no intermediate collector or custom configuration is needed.
+Since {{site.event_gateway_short}} 1.1 can push traces, metrics, and logs directly via OTLP to the LGTM stack, you don’t need a separate collector container or any custom collector configuration.
 
 Here’s how it works:
 
@@ -113,7 +113,6 @@ Run the quickstart script to automatically provision a demo {{site.event_gateway
 curl -Ls https://get.konghq.com/event-gateway | bash -s -- \
   -k $KONNECT_TOKEN \
   -N kafka_event_gateway \
-  -e "KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT=0.0.0.0:8080" \
   -e "OTEL_EXPORTER_OTLP_PROTOCOL=grpc" \
   -e "OTEL_EXPORTER_OTLP_ENDPOINT=http://lgtm:4317" \
   -e "OTEL_EXPORTER_OTLP_TIMEOUT=10s" \
@@ -133,10 +132,6 @@ columns:
   - title: Description
     key: desc
 rows:
-  - param: "`KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT`"
-    default: '`["[::1]:8080", "127.0.0.1:8080"]`'
-    new: "`0.0.0.0:8080`"
-    desc: Determines the address and port for the health listener. We override it to bind to all interfaces so the health endpoint is accessible from outside the container.
   - param: "`OTEL_EXPORTER_OTLP_PROTOCOL`"
     default: "`http/binary`"
     new: "`grpc`"
