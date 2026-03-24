@@ -44,6 +44,11 @@ related_resources:
     url: /how-to/set-up-jaeger-with-gen-ai-otel/
 
 prereqs:
+  entities:
+    services:
+      - a2a-currency-agent
+    routes:
+      - a2a-route
   gateway:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
@@ -51,94 +56,89 @@ prereqs:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
   inline:
-    - title: Tracing environment variables
-      icon_url: /assets/icons/opentelemetry.svg
-      content: |
-        Set the following tracing variables before you configure the Data Plane:
+  - title: OpenAI API key
+    include_content: prereqs/openai
+    icon_url: /assets/icons/openai.svg
+  - title: Tracing environment variables
+    position: before
+    content: |
+      Set the following Jaeger tracing variables before you configure the Data Plane:
+      ```sh
+      export KONG_TRACING_INSTRUMENTATIONS=all
+      export KONG_TRACING_SAMPLING_RATE=1.0
+      ```
+  - title: Jaeger
+    icon_url: /assets/icons/third-party/jaeger.svg
+    content: |
+      Deploy a Jaeger instance with Docker in `all-in-one` mode:
 
-        ```sh
-        export KONG_TRACING_INSTRUMENTATIONS=all
-        export KONG_TRACING_SAMPLING_RATE=1.0
-        ```
-    - title: OpenAI API key
-      include_content: prereqs/openai
-      icon_url: /assets/icons/openai.svg
-    - title: Jaeger
-      icon_url: /assets/icons/opentelemetry.svg
-      content: |
-        Deploy a Jaeger instance with Docker in `all-in-one` mode:
+      ```sh
+      docker run --rm --name jaeger \
+        -e COLLECTOR_OTLP_ENABLED=true \
+        -p 16686:16686 \
+        -p 4317:4317 \
+        -p 4318:4318 \
+        -p 5778:5778 \
+        -p 9411:9411 \
+        jaegertracing/jaeger:2.5.0
+      ```
 
-        ```sh
-        docker run --rm --name jaeger \
-          -e COLLECTOR_OTLP_ENABLED=true \
-          -p 16686:16686 \
-          -p 4317:4317 \
-          -p 4318:4318 \
-          -p 5778:5778 \
-          -p 9411:9411 \
-          jaegertracing/jaeger:2.5.0
-        ```
+      The `COLLECTOR_OTLP_ENABLED` environment variable must be set to `true` to enable the OpenTelemetry Collector.
 
-        The `COLLECTOR_OTLP_ENABLED` environment variable must be set to `true` to enable the OpenTelemetry Collector.
+      In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that Jaeger is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you. Export the host as an environment variable in the terminal window you used to set the other {{site.base_gateway}} environment variables:
+      ```sh
+      export DECK_JAEGER_HOST=host.docker.internal
+      ```
+  - title: A2A agent
+    icon_url: /assets/icons/ai.svg
+    content: |
+      You need a running A2A-compliant agent. This guide uses a sample currency conversion agent
+      from the [A2A project](https://github.com/a2aproject/a2a-samples).
 
-        In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that Jaeger is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you. Export the host as an environment variable in the terminal window you used to set the other {{site.base_gateway}} environment variables:
-        ```sh
-        export DECK_JAEGER_HOST=host.docker.internal
-        ```
-    - title: A2A agent
-      icon_url: /assets/icons/ai.svg
-      content: |
-        You need a running A2A-compliant agent. This guide uses a sample currency conversion agent
-        from the [A2A project](https://github.com/a2aproject/a2a-samples).
+      Create a `docker-compose.yaml` file with the following content:
 
-        Create a `docker-compose.yaml` file with the following content:
+      ```yaml
+      services:
+        a2a-agent:
+          container_name: a2a-currency-agent
+          build:
+            context: .
+            dockerfile_inline: |
+              FROM python:3.12-slim
+              WORKDIR /app
+              RUN pip install uv && apt-get update && apt-get install -y git
+              RUN git clone --depth 1 https://github.com/a2aproject/a2a-samples.git /tmp/a2a && \
+                  cp -r /tmp/a2a/samples/python/agents/langgraph/* . && \
+                  rm -rf /tmp/a2a
+              ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+              RUN uv sync --frozen --no-dev
+              EXPOSE 10000
+              CMD ["uv", "run", "app", "--host", "0.0.0.0"]
+          environment:
+            - model_source=openai
+            - API_KEY=${OPENAI_API_KEY}
+            - TOOL_LLM_URL=https://api.openai.com/v1
+            - TOOL_LLM_NAME=gpt-4o-mini
+          ports:
+            - "10000:10000"
+          networks:
+            - kong-net
 
-        ```yaml
-        services:
-          a2a-agent:
-            container_name: a2a-currency-agent
-            build:
-              context: .
-              dockerfile_inline: |
-                FROM python:3.12-slim
-                WORKDIR /app
-                RUN pip install uv && apt-get update && apt-get install -y git
-                RUN git clone --depth 1 https://github.com/a2aproject/a2a-samples.git /tmp/a2a && \
-                    cp -r /tmp/a2a/samples/python/agents/langgraph/* . && \
-                    rm -rf /tmp/a2a
-                ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
-                RUN uv sync --frozen --no-dev
-                EXPOSE 10000
-                CMD ["uv", "run", "app", "--host", "0.0.0.0"]
-            environment:
-              - model_source=openai
-              - API_KEY=${OPENAI_API_KEY}
-              - TOOL_LLM_URL=https://api.openai.com/v1
-              - TOOL_LLM_NAME=gpt-4o-mini
-            ports:
-              - "10000:10000"
-            networks:
-              - kong-net
+      networks:
+        kong-net:
+          external: true
+          name: kong-quickstart-net
+      ```
 
-        networks:
-          kong-net:
-            external: true
-            name: kong-quickstart-net
-        ```
+      Export your OpenAI API key and start the agent:
 
-        Export your OpenAI API key and start the agent:
+      ```sh
+      export OPENAI_API_KEY='your-openai-key'
+      docker compose up --build -d
+      ```
 
-        ```sh
-        export OPENAI_API_KEY='your-openai-key'
-        docker compose up --build -d
-        ```
+      The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle currency conversion queries.
 
-        The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle currency conversion queries.
-  entities:
-    services:
-      - a2a-currency-agent
-    routes:
-      - a2a-route
 cleanup:
   inline:
     - title: Clean up Konnect environment
