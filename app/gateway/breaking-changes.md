@@ -61,7 +61,7 @@ For the following plugins, the SHA1 algorithm is still supported in existing con
 * [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
 * [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
 
-### Hide credentials by default
+#### Hide credentials by default
 
 `hide_credentials` is now set to `true` by default in the following plugins:
 
