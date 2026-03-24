@@ -77,8 +77,14 @@ smtp_username = YOUR_SES_SMTP_USERNAME
 smtp_password = YOUR_SES_SMTP_PASSWORD
 smtp_auth_type = plain
 
-admin_emails_from = verified-sender@example.com
-admin_emails_reply_to = verified-sender@example.com
+admin_emails_from = YOUR_NAME <verified-sender@example.com>
+admin_emails_reply_to = YOUR_NAME <verified-sender@example.com>
+
+# Enable Kong Manager authentication
+admin_gui_auth = basic-auth
+admin_gui_url = http://127.0.0.1:8002
+enforce_rbac = on
+admin_gui_session_conf = { "secret": "test" }
 ```
 
 Replace the following values:
