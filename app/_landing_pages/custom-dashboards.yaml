@@ -32,6 +32,7 @@ rows:
                     Custom dashboards support:
                     * Templates for fast creation
                     * Reusable definitions for automation
+                    * Sharing dashboards with other {{site.konnect_short_name}} users and teams
                     * Access control via RBAC roles
                     * Provisioning through Terraform and the {{site.konnect_short_name}} API
       - blocks:
@@ -95,3 +96,7 @@ rows:
               - q: Can I upload my own template?
                 a: |
                   Uploading your own template is not yet available, but may be considered in a future release.
+              - q: |
+                  {% include faqs/report-dashboard-sharing.md section='question' feature="dashboard" %}
+                a: |
+                  {% include faqs/report-dashboard-sharing.md section='answer' feature="dashboard" %}
