@@ -252,7 +252,7 @@ rows:
                   pro: true
                   ee: true
                 - title: |
-                    [End-to-End Encryption](/insomnia/data-security/)
+                    [End-to-End Encryption](/insomnia/data-security/#end-to-end-encryption)
                   essentials: true
                   pro: true
                   ee: true
