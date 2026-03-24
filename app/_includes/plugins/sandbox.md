@@ -6,21 +6,21 @@ environment and the set of usable modules are restricted.
 
 The limitations can be adjusted with the `untrusted_lua=off|strict|lax|sandbox|on` setting.
 
-### Disallow Custom Code Execution
+### Disallow custom code execution
 
 If no custom code is needed, disable all custom code execution by setting `untrusted_lua=off`.
 This ensures that the Kong node will not attempt to load or execute custom code, such as
 serverless functions used by the `pre-function` and `post-function` plugins. The downside is
 that Lua-based extensibility will not be available.
 
-### Strict Mode (the default)
+### Strict mode (the default)
 
 Strict mode is an allowlist-based execution environment, selected by setting
 `untrusted_lua=strict`. This is also the default value in current Kong releases. In this mode
 you can load and execute custom Lua code with some limitations. Most notably,
 all file I/O and network I/O functionality is disallowed.
 
-#### Environment in Strict Mode
+#### Environment in strict mode
 
 In `strict` mode you are allowed to use:
 
@@ -332,7 +332,7 @@ In `strict` mode you are allowed to use:
   ngx.worker.pids
   ```
 
-#### Available Modules in Strict Mode
+#### Available modules in strict mode
 
 You are also allowed to use the standard `require` function to load modules.
 In the strict mode, the following modules are available:
@@ -458,11 +458,11 @@ In the strict mode, the following modules are available:
   xmlua
   ```
 
-### Lax Mode
+### Lax mode
 
 The lax mode extends the strict mode with network io, and some other functionality.
 
-#### Environment in Lax Mode
+#### Environment in lax mode
 
 Lax mode includes everything in strict mode, plus the following:
 
@@ -598,7 +598,7 @@ Lax mode includes everything in strict mode, plus the following:
   ngx.socket.connect ngx.socket.stream ngx.socket.tcp ngx.socket.udp
   ```
 
-#### Available Modules in Strict Mode
+#### Available modules in lax mode
 
 Lax mode includes everything in strict mode, plus the following:
 
@@ -691,7 +691,7 @@ Lax mode includes everything in strict mode, plus the following:
   resty.session
   ```
   
-### Sandbox Mode (deprecated)
+### Sandbox mode (deprecated)
 
 Sandbox mode is deprecated and may be removed in a future release. Sandbox mode allows (almost)
 full access to Kong PDK (`kong.*`) and Nginx functions (`ngx.*`). It has somewhat limited access
@@ -701,7 +701,7 @@ upgrading from older Kong versions that used the sandbox mode, and thus is backw
 In sandbox mode you are not allowed to use the `require` function to load modules, unless you are
 also using `untrusted_lua_sandbox_requires` and listing the allowed modules there.
 
-### Unrestricted Mode
+### Unrestricted mode
 
 It is also possible to run Kong in unrestricted mode by setting the `untrusted_lua`
 configuration option to `on`. In this mode the access to environment or available modules
@@ -709,6 +709,6 @@ is completely unrestricted, and no protections are applied.
 
 ### Notes
 
-Kong keeps rights to modify the above mentioned allow-lists of envinronment and modules. The most commonly,
-Kong will do additions to the allow-lists, but in case a security vulnerability is found, Kong may
-remove some. In such case, Kong will notify the user about the change.
+{{site.base_gateway}} keeps rights to modify the above mentioned allow-lists of environment and modules. The most commonly,
+{{site.base_gateway}} will do additions to the allow-lists, but in case a security vulnerability is found, {{site.base_gateway}} may
+remove some. In such case, {{site.base_gateway}} will notify the user about the change.
