@@ -1,0 +1,68 @@
+title: Token transformation
+description: |
+   Use the OpenID Connect plugin to switch an external token with limited scope for an internal token with necessary scope.
+
+extended_description: |
+  Use the OpenID Connect plugin to switch an external token with limited scope for an internal token with necessary scope.
+  
+  In this example, clients are registered in the same AuthZ server as the one protecting the upstream services.
+  However, clients are restricted and are issued tokens with limited scopes for security reasons. 
+  {{site.base_gateway}} is a special client that is authorized to request a token (with appropriate scope) to access the upstream services.
+  on behalf of these other clients. 
+  Kong exchanges the incoming token for a new token with the right scope to access the upstream services.
+
+  Here's how token exchange works with the OIDC plugin:
+
+  [diagram goes here]
+
+weight: 700
+
+requirements:
+  - A an identity provider (IdPs) that supports token exchange, configured with two clients. Client A has limited in what it can request, while Client 2 is authorized to do token exchange and request specific scopes.
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - bearer
+  token_exchange:
+    subject_token_issuers:
+      - issuer: ${issuer}
+        conditions:
+          missing_audience: null
+          has_audience: null
+          missing_scopes:
+            - profile
+          has_scopes: null
+    request:
+      empty_audience: false
+      scopes: null
+      empty_scopes: false
+      audience: null
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for the authorization server that issued the token in the incoming request.
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP (in this case, Server A).
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP (in this case, Server A).
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - konnect
+  - terraform
+
+group: authentication
