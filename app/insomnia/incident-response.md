@@ -23,8 +23,8 @@ faqs:
     a: From the [Insomnia GitHub Releases](https://docs.insomnia.rest/insomnia/sbom#:~:text=Navigate%20to%20Insomnia%20GitHub%20Releases) page, download the `sbom.spdx.json` and `sbom.cyclonedx.json` SBOM files.
   - q: Do you have any penetration test results from external parties?
     a: Yes. Insomnia undergoes annual penetration testing by Cobalt. Reports are available on the [Kong Trust Center](https://trust.konghq.com).
-  - q: How often do you release major updates, and or security patches?
-    a: We regularly update the Insomnia desktop application. Security, and hotfix patches are handled on a case-by-case basis and can occur at any time.
+  - q: How often do you release major updates, and/or security patches?
+    a: We regularly update the Insomnia desktop application. Security and hotfix patches are handled on a case-by-case basis and can occur at any time.
   - q: Do you maintain documentation when an incident/event occurs?
     a: When an incident occurs, we perform an internal post-mortem and disseminate information accordingly, either through the site in the form of a blog post, or through social media/support on a case-by-case basis.
   - q: In case of a security breach, do you notify customers?
