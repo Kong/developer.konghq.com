@@ -1,0 +1,55 @@
+title: 'Forward nested token claims as upstream headers'
+description: 'Use upstream_headers to map nested token claims to HTTP headers sent to the upstream MCP server'
+
+extended_description: |
+  Use `upstream_headers` to extract values from nested objects in a validated JWT
+  and forward them as HTTP headers to the upstream MCP server.
+
+  Each entry specifies the target header name and a `path` array that describes how
+  to traverse the token payload. For example, `["realm_access", "roles"]` maps the
+  value at `token.realm_access.roles`.
+
+  `upstream_headers` and `claim_to_header` are mutually exclusive. Use `upstream_headers`
+  when the claims you need are inside nested objects. Use `claim_to_header` for top-level
+  claims only.
+
+weight: 810
+
+min_version:
+  gateway: '3.14'
+
+config:
+  resource: ${mcp_resource_url}
+  authorization_servers:
+    - ${authorization_server_url}
+  jwks_endpoint: ${jwks_endpoint_url}
+  upstream_headers:
+    - header: X-Org-Id
+      path:
+        - org
+        - id
+    - header: X-User-Role
+      path:
+        - realm_access
+        - roles
+        - 0
+
+variables:
+  mcp_resource_url:
+    value: $MCP_RESOURCE_URL
+    description: The resource identifier for the MCP server (for example, `https://api.example.com/mcp`).
+  authorization_server_url:
+    value: $AUTHORIZATION_SERVER_URL
+    description: The authorization server URL (for example, `https://auth.example.com`).
+  jwks_endpoint_url:
+    value: $JWKS_ENDPOINT_URL
+    description: |
+      The JWKS endpoint URL for fetching the authorization server's public keys.
+      If not provided, the plugin attempts to discover it from the authorization server metadata.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -1,0 +1,67 @@
+title: 'Consumer and consumer group mapping'
+description: 'Map OAuth2 token claims to Kong consumers and consumer groups'
+
+extended_description: |
+  Map claims from a validated OAuth2 token to a Kong consumer and consumer groups.
+  This lets consumer-aware plugins (such as rate-limiting or ACL) act on MCP traffic
+  without requiring a separate authentication step.
+
+  The `consumer_claim` array sets the path to the claim used for consumer lookup.
+  A single element refers to a top-level claim; multiple elements traverse a nested object.
+
+  The `consumer_groups_claim` array works the same way for group membership.
+
+  If no matching consumer or group is found and you want to allow the request through
+  anyway, set `consumer_optional` or `consumer_groups_optional` to `true`.
+
+weight: 820
+
+min_version:
+  gateway: '3.14'
+
+requirements:
+  - At least one [Consumer](/gateway/entities/consumer/) with a `username` or `custom_id` matching the value of the configured claim in the access token
+  - At least one [Consumer Group](/gateway/entities/consumer-group/) matching the values in the groups claim, if using `consumer_groups_claim`
+
+config:
+  resource: ${mcp_resource_url}
+  authorization_servers:
+    - ${authorization_server_url}
+  introspection_endpoint: ${introspection_endpoint_url}
+  client_id: ${client_id}
+  client_secret: ${client_secret}
+  consumer_claim:
+    - sub
+  consumer_by:
+    - username
+    - custom_id
+  consumer_optional: false
+  consumer_groups_claim:
+    - groups
+  consumer_groups_optional: true
+  credential_claim:
+    - sub
+
+variables:
+  mcp_resource_url:
+    value: $MCP_RESOURCE_URL
+    description: The resource identifier for the MCP server (for example, `https://api.example.com/mcp`).
+  authorization_server_url:
+    value: $AUTHORIZATION_SERVER_URL
+    description: The authorization server URL (for example, `https://auth.example.com`).
+  introspection_endpoint_url:
+    value: $INTROSPECTION_ENDPOINT_URL
+    description: The token introspection endpoint. Used by {{site.base_gateway}} to validate access tokens.
+  client_id:
+    value: $CLIENT_ID
+    description: The client ID used by {{site.base_gateway}} when calling the introspection endpoint.
+  client_secret:
+    value: $CLIENT_SECRET
+    description: The client secret used by {{site.base_gateway}} when calling the introspection endpoint.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
