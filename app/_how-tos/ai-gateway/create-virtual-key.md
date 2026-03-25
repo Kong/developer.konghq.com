@@ -73,7 +73,7 @@ entities:
               header_value: Bearer ${openai_api_key}
             model:
               provider: openai
-              name: gpt-4o
+              name: gpt-5.1
               options:
                 max_tokens: 512
                 temperature: 1.0
