@@ -32,7 +32,7 @@ config:
       path:
         - realm_access
         - roles
-        - 0
+        - "0"
 
 variables:
   mcp_resource_url:
