@@ -106,6 +106,7 @@ Additionally, the following built-in variables are available in Lua expression. 
 * `$(conf)`: A Lua table that corresponds to the plugin’s config field, meaning it has the same values as the plugin’s configuration, which allows to access sub-fields under `config`.
 * `$(content)`: The text content being inspected, extracted from the request body in the `INPUT` phase and the response body in the `OUTPUT` phase.
 * `$(resp)`:  The response from the guardrail service. 
+   
    {:.warning}
    > This variable is a Lua table corresponding to the request body if the plugin is inspecting the request, but it's string when inspecting the response. Make sure to configure your functions accordingly.
 
