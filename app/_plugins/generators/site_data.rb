@@ -8,11 +8,24 @@ module Jekyll
     priority :highest
 
     def generate(site)
+      current_mtimes = Utils::Incremental.collect_mtimes(
+        File.join(site.source, '_data/**/*.{yml,yaml,json}')
+      )
+
+      if Utils::Incremental.enabled? && @cached_mtimes && @cached_data && !Utils::Incremental.mtimes_changed?(current_mtimes, @cached_mtimes)
+        @cached_data.each { |key, value| site.data[key] = value }
+        Jekyll.logger.info 'IncrementalGen:', 'Skipped SiteDataGenerator (sources unchanged)'
+        return
+      end
+
       site.data['searchFilters'] = search_filters(site)
       site.data['searchSources'] = site.data.dig('search', 'sources')
 
       product_latest_release(site)
       tools_latest_release(site)
+
+      @cached_data = site.data.select { |k, _| k.end_with?('_latest', '_releases') || %w[searchFilters searchSources].include?(k) }
+      @cached_mtimes = current_mtimes
     end
 
     def search_filters(site)
