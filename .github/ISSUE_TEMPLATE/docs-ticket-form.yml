@@ -7,8 +7,8 @@ body:
     id: jobs-to-be-done
     attributes:
       label: Jobs to be done
-      description: User case or reason for doing this work.
-      placeholder: "Example: Users should be able to log in to Konnect and associate Control Planes with the docs examples."
+      description: Use case or reason for doing this work.
+      placeholder: "Example: Users should be able to log in to Konnect and associate control planes with the docs examples."
     validations:
       required: false
 
@@ -17,7 +17,7 @@ body:
     attributes:
       label: Definition of done
       description: The measurable outcome that marks this issue as complete.
-      placeholder: "Example: Write a how-to doc that explains using the GitLab integration in Service Catalog."
+      placeholder: "Example: Write a how-to doc that explains using the GitLab integration in Catalog."
     validations:
       required: true
 
