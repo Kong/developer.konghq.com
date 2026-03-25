@@ -42,7 +42,7 @@ related_resources:
     url: /plugins/ai-a2a-proxy/
   - text: Key Auth plugin reference
     url: /plugins/key-auth/
-  - text: Proxy A2A agents through AI Gateway
+  - text: "Proxy A2A agents through {{site.ai_gateway}}"
     url: /how-to/proxy-a2a-agents/
   - text: Rate limit A2A traffic
     url: /how-to/rate-limit-a2a-traffic/
