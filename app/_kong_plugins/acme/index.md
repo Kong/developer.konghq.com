@@ -53,6 +53,7 @@ min_version:
   gateway: '2.0'
 ---
 
+
 The ACME plugin allows {{site.base_gateway}} to apply SSL certificates from Let's Encrypt or any other ACMEv2 service and serve them dynamically for TLS requests.
 You can also configure a threshold time for automatic renewal. 
 

@@ -1,5 +1,5 @@
 
-title: ACME with HashiCorp Consul storage
+title: ACME with HashiCorp Consul storage tests
 description: |
   Configure the ACME plugin with HashiCorp Consul as the storage backend.
 weight: 880

@@ -57,6 +57,8 @@ related_resources:
     url: /event-gateway/policies/acl/
 ---
 
+test2
+
 {% include /how-tos/steps/konnect-identity-server-scope-claim-client.md %}
 
 ## Add a backend cluster
