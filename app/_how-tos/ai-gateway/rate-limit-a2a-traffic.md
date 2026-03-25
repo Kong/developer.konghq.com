@@ -43,7 +43,7 @@ related_resources:
     url: /plugins/ai-a2a-proxy/
   - text: Rate Limiting Advanced plugin reference
     url: /plugins/rate-limiting-advanced/
-  - text: Proxy A2A agents through AI Gateway
+  - text: "Proxy A2A agents through {{site.ai_gateway}}"
     url: /how-to/proxy-a2a-agents/
   - text: Secure A2A endpoints with key authentication
     url: /how-to/secure-a2a-endpoints/
@@ -60,7 +60,7 @@ prereqs:
       content: |
         This guide builds on two previous how-to guides:
 
-        1. [Proxy A2A agents through AI Gateway](/how-to/proxy-a2a-agents/) sets up the
+        1. [Proxy A2A agents through {{site.ai_gateway}}](/how-to/proxy-a2a-agents/) sets up the
            A2A service, route, and AI A2A Proxy plugin.
         2. [Secure A2A endpoints with key authentication](/how-to/secure-a2a-endpoints/) adds
            Key Auth with a consumer `a2a-client-1` and API key `a2a-secret-key-1`.
