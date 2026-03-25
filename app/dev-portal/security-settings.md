@@ -133,7 +133,7 @@ This IP allow list applies to all Dev Portal communication that goes through the
 
 {:.warning}
 > **Important:** 
-* If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to your Dev Portal will be blocked.
+> * If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to your Dev Portal will be blocked.
 > * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
 
 
@@ -177,7 +177,7 @@ To configure IP allow list for a Dev Portal, do one of the following:
    <!--vale off-->
    {% konnect_api_request %}
    url: /v3/portals/$DEV_PORTAL_ID
-   status_code: 201
+   status_code: 200
    region: us
    method: PATCH
    body:
