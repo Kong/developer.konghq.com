@@ -188,7 +188,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "How much is 1 USD in PLN?"
 {% endvalidation %}
 <!-- vale on -->
 
@@ -226,7 +226,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "How much is 1 USD in PLN?"
 {% endvalidation %}
 <!-- vale on -->
 
