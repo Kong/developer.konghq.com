@@ -327,8 +327,8 @@ rows:
 
 ## DatasourceConfig
 
-Discovers available metrics, dimensions, and filter fields for {{site.konnect_short_name}} analytics datasources. 
-Call this tool first before using `query_analytics`, `query_llm_analytics`, `query_mcp_analytics`, or `query_api_requests` to learn what fields are valid for each datasource.
+Discovers available metrics, dimensions, and filter fields for {{site.konnect_short_name}} analytics data sources. 
+Call this tool first before using `query_analytics`, `query_llm_analytics`, `query_mcp_analytics`, or `query_api_requests` to learn what fields are valid for each data source.
 
 <!-- vale off -->
 
@@ -344,18 +344,18 @@ rows:
   - parameter: "`datasource`"
     type: string
     description: |
-      Optional datasource name to filter results: `"api_usage"`, `"llm_usage"`, `"mcp_usage"`, or `"requests"`. Returns all datasources if omitted.
+      Optional data source name to filter results: `"api_usage"`, `"llm_usage"`, `"mcp_usage"`, or `"requests"`. Returns all data sources if omitted.
 {% endtable %}
 
 <!-- vale on -->
 
-**Returns:** Per datasource: `metrics`, `dimensions`, `filterable_fields` (with value types and supported operators), and the `tool` to use for that datasource. 
+**Returns:** Per data source: `metrics`, `dimensions`, `filterable_fields` (with value types and supported operators), and the `tool` to use for that data source. 
 Also returns `org_config` with data retention and percentile availability.
 
 
 ## QueryExploreTimeRange
 
-Resolves a time range to effective start/end timestamps and minimum granularity for a {{site.konnect_short_name}} analytics datasource. 
+Resolves a time range to effective start/end timestamps and minimum granularity for a {{site.konnect_short_name}} analytics data source. 
 Use this after `datasource_config` and before an explore query when you need to understand the exact resolved time window or choose a valid granularity. 
 Use `query_analytics`, `query_llm_analytics`, or `query_mcp_analytics` for aggregate questions before using this tool.
 
@@ -373,7 +373,7 @@ rows:
   - parameter: "`datasource`"
     type: string
     description: |
-      The analytics datasource to query: `"api-usage"`, `"llm-usage"`, or `"mcp-usage"`. Defaults to `"api-usage"`.
+      The analytics data source to query: `"api-usage"`, `"llm-usage"`, or `"mcp-usage"`. Defaults to `"api-usage"`.
   - parameter: "`time_range`"
     type: object
     description: |
@@ -387,14 +387,14 @@ rows:
 
 <!-- vale on -->
 
-**Returns:** Resolved `start`, `end`, and `min_granularity_ms` for the selected datasource and time range.
+**Returns:** Resolved `start`, `end`, and `min_granularity_ms` for the selected data source and time range.
 
 
 ## QueryAnalytics
 
 Queries {{site.konnect_short_name}} analytics data for aggregated API traffic metrics over time. 
 Use this to answer questions about API traffic patterns, error rates, latency, and throughput. 
-Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `api_usage` datasource. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `api_usage` data source. 
 Use this explore-style query before `query_api_requests` or `get_consumer_requests`.
 
 <!-- vale off -->
@@ -479,7 +479,7 @@ Responses exceeding 500 rows are truncated, with `meta.truncated` set to `true` 
 
 Queries {{site.konnect_short_name}} LLM/AI analytics data for aggregated metrics over time. 
 Use this to answer questions about AI/LLM API usage, token consumption, costs, and latency. 
-Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `llm_usage` datasource. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `llm_usage` data source. 
 For general API traffic metrics, use `query_analytics` instead.
 
 Uses the same parameters as [QueryAnalytics](#queryanalytics).
@@ -492,7 +492,7 @@ Responses exceeding 500 rows are truncated, with `meta.truncated` set to `true` 
 
 Queries {{site.konnect_short_name}} MCP (Model Context Protocol) analytics data for aggregated metrics over time. 
 Use this to answer questions about MCP server traffic, tool usage, session activity, and errors. 
-Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `mcp_usage` datasource. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `mcp_usage` data source. 
 For general API traffic without MCP dimensions, use `query_analytics` instead.
 
 Uses the same parameters as [QueryAnalytics](#queryanalytics).
