@@ -58,5 +58,5 @@ As a workaround for load balancing, configure the [`host` field in a Gateway Ser
 [DNS-based load balancing](/gateway/traffic-control/load-balancing-reference/#dns-based-load-balancing) technique.
 
 The Forward Proxy Advanced plugin also can't be used together with the following:
-- Validate the upstream response with the [OAS Validation](/plugins/oas-validation/) plugin
-- Use the `kong.service.response.get_raw_body()` from the PDK in the `header_filter` phase
+- Validating the upstream response with the [OAS Validation](/plugins/oas-validation/) plugin.
+- Using the `kong.service.response.get_raw_body()` from the PDK in the `header_filter` phase.
