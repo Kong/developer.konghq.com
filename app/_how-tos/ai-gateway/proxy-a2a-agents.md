@@ -237,6 +237,7 @@ The `traces_endpoint` points to Jaeger's OTLP HTTP receiver on port 4318. The `s
 
 Send a `message/send` JSON-RPC request to the gateway route:
 
+<!-- vale off -->
 {% validation request-check %}
 url: /a2a
 status_code: 200
@@ -256,6 +257,7 @@ body:
         - kind: text
           text: "How much is 100 USD in EUR?"
 {% endvalidation %}
+<!-- vale on -->
 
 The gateway proxies the request to the A2A agent and returns the agent's JSON-RPC response. A successful response contains either a completed task with artifacts, or a task in `input-required` state if the agent needs more information.
 
