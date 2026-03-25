@@ -4,47 +4,28 @@ module Jekyll
   class MeshPoliciesGenerator < Jekyll::Generator # rubocop:disable Style/Documentation
     priority :high
 
-    POLICIES_FOLDER = '_mesh_policies'
+    def generate(site)
+      current_mtimes = Utils::Incremental.collect_mtimes(
+        File.join(site.source, '_mesh_policies/**/*'),
+        File.join(site.config['mesh_policy_schemas_path'], '**/*')
+      )
 
-    def generate(site) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-      site.data['mesh_policies'] ||= {}
-
-      unless Utils::Incremental.enabled?
-        Jekyll::MeshPolicyPages::Generator.run(site)
+      if Utils::Incremental.enabled? && @cached_mtimes && @cached_pages && !Utils::Incremental.mtimes_changed?(current_mtimes, @cached_mtimes)
+        site.pages.concat(@cached_pages)
+        Utils::Incremental.skip_regeneration(site, @cached_pages)
+        site.data['mesh_policies'] = @cached_mesh_policies
+        Jekyll.logger.info 'IncrementalGen:', 'Skipped MeshPoliciesGenerator (sources unchanged)'
         return
       end
 
-      @policy_cache ||= {}
-      schema_mtimes = Utils::Incremental.collect_mtimes(
-        File.join(site.config['mesh_policy_schemas_path'], '**/*')
-      )
-      schemas_changed = @cached_schema_mtimes.nil? || Utils::Incremental.mtimes_changed?(schema_mtimes, @cached_schema_mtimes)
-      @policy_cache.clear if schemas_changed
+      site.data['mesh_policies'] ||= {}
 
-      skipped = 0
-      generator = Jekyll::MeshPolicyPages::Generator.new(site)
+      before = site.pages.size
+      Jekyll::MeshPolicyPages::Generator.run(site)
 
-      Dir.glob(File.join(site.source, "#{POLICIES_FOLDER}/*/")).each do |folder|
-        slug = folder.gsub("#{site.source}/#{POLICIES_FOLDER}/", '').chomp('/')
-        current_mtimes = Utils::Incremental.collect_mtimes("#{folder}**/*")
-        cached = @policy_cache[slug]
-
-        if cached && !Utils::Incremental.mtimes_changed?(current_mtimes, cached[:mtimes])
-          site.pages.concat(cached[:pages])
-          Utils::Incremental.skip_regeneration(site, cached[:pages])
-          site.data['mesh_policies'][slug] = cached[:data]
-          skipped += 1
-        else
-          before = site.pages.size
-          policy = Jekyll::MeshPolicyPages::Policy.new(folder:, slug:)
-          generator.generate_pages(policy)
-          new_pages = site.pages[before..]
-          @policy_cache[slug] = { mtimes: current_mtimes, pages: new_pages, data: site.data['mesh_policies'][slug] }
-        end
-      end
-
-      @cached_schema_mtimes = schema_mtimes
-      Jekyll.logger.info 'IncrementalGen:', "MeshPoliciesGenerator: #{skipped} policies restored from cache" if skipped.positive?
+      @cached_pages = site.pages[before..]
+      @cached_mesh_policies = site.data['mesh_policies'].dup
+      @cached_mtimes = current_mtimes
     end
   end
 end
