@@ -205,6 +205,45 @@ rows:
       The detector type that caused Lakera to block the response.
 {% endtable %}
 
+### AI Custom Guardrail logs {% new_in 3.14 %}
+
+If you're using the [AI Custom Guardrail plugin](/plugins/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
+
+The following fields appear in structured AI logs when the AI Custom Guardrail plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.custom-guardrail.mode`"
+    description: |
+      The inspection mode configured for the guardrail. For example, `BOTH` means both input and output are inspected.
+  - property: "`ai.proxy.custom-guardrail.input_processing_latency`"
+    description: The time (in milliseconds) taken to process the input through the guardrail.
+  - property: "`ai.proxy.custom-guardrail.output_processing_latency`"
+    description: The time (in milliseconds) taken to process the output through the guardrail.
+  - property: "`ai.proxy.custom-guardrail.input_block_reason`"
+    description: The reason the input was blocked. Empty if the input was not blocked.
+  - property: "`ai.proxy.custom-guardrail.output_block_reason`"
+    description: The reason the output was blocked. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.input_block_source`"
+    description: The source that triggered the input block (for example, `ai-custom-guardrail`). Empty if the input was not blocked.
+  - property: "`ai.proxy.custom-guardrail.output_block_source`"
+    description: The source that triggered the output block. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.input_block_consumer_id`"
+    description: The consumer ID associated with the blocked input request. Set to `unknown` if the consumer can't be identified.
+  - property: "`ai.proxy.custom-guardrail.output_block_consumer_id`"
+    description: The consumer ID associated with the blocked output response. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.guards_triggered_count`"
+    description: The number of individual guard rules that were triggered during the request.
+{% endtable %}
+
+{:.info}
+> The plugin also allows you to define [custom metrics](/plugins/ai-custom-guardrail/#metrics) based on Lua expressions.
+
 
 ### AI PII Sanitizer logs {% new_in 3.10 %}
 
