@@ -174,8 +174,9 @@ To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/source-ip-restriction
+url: /v3/organizations/$ORG_ID/ip-allow-list
 status_code: 201
+region: global
 method: PATCH
 body:
     enabled: true
