@@ -71,16 +71,13 @@ cleanup:
 faqs:
   - q: Why limit request body size for A2A traffic?
     a: |
-      A2A messages can carry `FilePart` and `DataPart` content alongside text. Without a size
-      limit, a client could send arbitrarily large payloads to the upstream agent, consuming
-      memory and bandwidth. The Request Size Limiting plugin rejects oversized requests before
+      A2A messages can carry `FilePart` and `DataPart` content alongside text. Without a size limit, a client could send arbitrarily large payloads to the upstream agent, consuming memory and bandwidth. The Request Size Limiting plugin rejects oversized requests before
       they reach the upstream.
-  - q: How does this interact with the AI A2A Proxy plugin's max_request_body_size setting?
+  - q: |
+      How does this interact with the AI A2A Proxy plugin's `max_request_body_size` setting?
     a: |
-      The two settings serve different purposes. `config.max_request_body_size` on the AI A2A
-      Proxy plugin controls how much of the request body the plugin reads for JSON-RPC detection.
-      The Request Size Limiting plugin rejects the entire request if the body exceeds the
-      configured limit. Set both if you want to cap detection parsing and reject oversized
+      The two settings serve different purposes. `config.max_request_body_size` on the AI A2A Proxy plugin controls how much of the request body the plugin reads for JSON-RPC detection.
+      The Request Size Limiting plugin rejects the entire request if the body exceeds the configured limit. Set both if you want to cap detection parsing and reject oversized
       requests.
   - q: Does this affect streaming responses?
     a: |
@@ -107,9 +104,7 @@ entities:
 
 ## Enable the Request Size Limiting plugin
 
-The Request Size Limiting plugin rejects requests with a body larger than the configured
-limit. This configuration sets a 1 MB limit, which is intentionally low for testing with
-`FilePart` or `DataPart` payloads.
+The Request Size Limiting plugin rejects requests with a body larger than the configured limit. This configuration sets a 1 MB limit, which is intentionally low for testing with `FilePart` or `DataPart` payloads.
 
 {% entity_examples %}
 entities:
