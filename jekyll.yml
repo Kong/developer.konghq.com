@@ -81,11 +81,18 @@ defaults:
         - "/support/"
 
 reference_metadata:
+  event-gateway:
+    products:
+      - event-gateway
+    breadcrumbs:
+      - /event-gateway/
+
   inso-cli:
     products:
       - insomnia
     tools:
       - inso-cli
+
   gateway:
     pdk:
       products:
