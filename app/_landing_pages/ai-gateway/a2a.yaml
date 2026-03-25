@@ -158,6 +158,14 @@ rows:
             cta:
               url: /how-to/rate-limit-a2a-traffic/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Limit A2A request size
+            description: Use the Request Size Limiting plugin to restrict the size of A2A requests and responses
+            cta:
+              url: /how-to/limit-a2a-request-size/
+              align: end
   - header:
       type: h2
       text: A2A how-to guides
