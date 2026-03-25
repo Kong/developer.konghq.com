@@ -838,6 +838,18 @@ providers:
       provider_specific: []
       statistics_logging: []
 
+  - name: 'Databricks'
+    url_patterns:
+      - https://{databricks_instance}.cloud.databricks.com:443
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/serving-endpoints/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'databricks-gpt-oss-20b'
+      min_version: '3.14'
+
 parameters:
   provider: 'config.model.provider'
   route_type: 'config.route_type'

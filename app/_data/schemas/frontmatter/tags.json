@@ -60,6 +60,7 @@
     "data-plane-nodes",
     "data-streaming",
     "database",
+    "databricks",
     "datadog",
     "debugger",
     "declarative-config",
