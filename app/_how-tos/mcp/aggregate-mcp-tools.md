@@ -165,28 +165,9 @@ entities:
 
 ## Configure the second AI MCP Proxy plugin for the WeatherAPI
 
-### Step 1: Add an API key using the Request Transformer Advanced plugin
-
-To authenticate to Weather API, we'll need to configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: request-transformer-advanced
-      route: weather-route
-      enabled: true
-      config:
-        add:
-          querystring:
-            - key:${key}
-variables:
-  key:
-    value: $WEATHERAPI_API_KEY
-{% endentity_examples %}
-
-### Step 2: Configure the AI MCP Proxy plugin
-
 We can move on to configuring the second AI MCP Proxy plugin. Like the previous marketplace configuration, this instance only converts RESTful paths into tool definitions and doesn’t process MCP requests directly. Again, the `tags[]` field ensures that listener-mode plugins can later discover and aggregate this tool along with others from the marketplace instance.
+
+To authenticate to WeatherAPI, configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) tool to include your API key in `tools[].query`. This adds the required `key` query parameter directly from the plugin configuration.
 
 {% entity_examples %}
 entities:
@@ -201,6 +182,9 @@ entities:
         - description: Get current weather for a location
           method: GET
           path: "/weather"
+          query:
+            key:
+              - ${key}
           parameters:
           - name: q
             in: query
@@ -209,30 +193,12 @@ entities:
               type: string
             description: Location query. Accepts US Zipcode, UK Postcode, Canada Postalcode,
               IP address, latitude/longitude, or city name.
+variables:
+  key:
+    value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
 ## Configure the third AI MCP Proxy plugin for Free Currency
-
-### Step 1: Add an API key using the Request Transformer Advanced plugin
-
-To authenticate requests to the Free Currency API, we use the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin again to append the API key to all requests automatically.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: request-transformer-advanced
-      route: freecurrency-route
-      enabled: true
-      config:
-        add:
-          querystring:
-            - apikey:${key}
-variables:
-  key:
-    value: $FREECURRENCYAPI_API_KEY
-{% endentity_examples %}
-
-### Step 2: Configure the AI MCP Proxy plugin
 
 As in the previous steps, this AI MCP Proxy instance converts the RESTful paths of [FreecurrencyAPI](https://freecurrencyapi.com/docs/currencies) into tool definitions only. They will be aggregated by the listener-mode plugin based on the `tags[]` field.
 
@@ -249,6 +215,9 @@ entities:
           - description: Get latest exchange rates for one or more currencies
             method: GET
             path: "/currency"
+            query:
+              apikey:
+                - ${key}
             parameters:
               - name: currencies
                 in: query
@@ -256,6 +225,9 @@ entities:
                 schema:
                   type: string
                 description: A comma-separated list of currency codes (e.g., "EUR,USD,CAD").
+variables:
+  key:
+    value: $FREECURRENCYAPI_API_KEY
 {% endentity_examples %}
 
 ## Configure the listener AI MCP Proxy plugin
