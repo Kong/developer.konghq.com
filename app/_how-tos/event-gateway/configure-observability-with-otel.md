@@ -30,10 +30,10 @@ tools:
 faqs:
   - q: What metrics are available for {{site.event_gateway}}?
     a: You can find the list of all available metrics in the [metrics reference](/event-gateway/metrics/).
-  - q: I don't see observability showing up in grafana. How can I troubleshoot?
-    a: Kong Event Gateway logs are still available on stdout so you can use `docker logs event-gateway-quickstart`
-  - q: Can I still access metrics through an http endpoint?
-    a: Yes but by default the health server is only accessible on `localhost` to make it more widely available use `KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT`
+  - q: I don't see observability data in Grafana. How can I troubleshoot?
+    a: Kong Event Gateway logs are still available on STDOUT, so you can use `docker logs event-gateway-quickstart`.
+  - q: Can I still access metrics through an HTTP endpoint?
+    a: Yes, but by default the health server is only accessible on `localhost`. To make it more widely available, use `KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT`.
   
 prereqs:
   skip_product: true
@@ -350,10 +350,10 @@ Now that {{site.event_gateway_short}} is pushing metrics via OTLP to the LGTM st
 1. Search for `kong` to see the list of available metrics.
 1. Let’s look at a sample metric: `kong_keg_kafka_backend_roundtrip_duration_seconds_count`.
 
-This tells you how long it took for the {{site.event_gateway_short}} to send a request to the backend cluster and receive a response.
+This metric reports how many Kafka backend round-trip observations have been recorded (the number of requests {{site.event_gateway_short}} has sent to the backend cluster and received responses for).
 
 {:.info}
-> On startup metrics can take up to 5 minutes to start showing up.
+> On startup, metrics can take up to 5 minutes to start showing up.
 
 ## View traces in Grafana
 
