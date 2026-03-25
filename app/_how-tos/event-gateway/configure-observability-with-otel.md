@@ -31,9 +31,10 @@ faqs:
   - q: What metrics are available for {{site.event_gateway}}?
     a: You can find the list of all available metrics in the [metrics reference](/event-gateway/metrics/).
   - q: I don't see observability data in Grafana. How can I troubleshoot?
-    a: Kong Event Gateway logs are still available on STDOUT, so you can use `docker logs event-gateway-quickstart`.
+    a: |
+      {{site.event_gateway}} logs are also available on STDOUT, so you can use `docker logs event-gateway-quickstart`.
   - q: Can I still access metrics through an HTTP endpoint?
-    a: Yes, but by default the health server is only accessible on `localhost`. To make it more widely available, use `KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT`.
+    a: Yes, but by default the health server is only accessible on `localhost`. To make it more widely available, set `KEG__RUNTIME__HEALTH_LISTENER_ADDRESS_PORT` at data plane startup.
   
 prereqs:
   skip_product: true
