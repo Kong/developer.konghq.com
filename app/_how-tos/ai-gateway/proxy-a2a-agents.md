@@ -201,10 +201,11 @@ entities:
 
 A2A agents expose their capabilities through an Agent Card at the `/.well-known/agent.json` endpoint. Retrieve it through the gateway:
 
-```sh
-curl -k --no-progress-meter --fail-with-body \
-  https://localhost:8443/a2a/.well-known/agent.json
-```
+{% validation request-check %}
+url: /a2a/.well-known/agent-card.json
+status_code: 200
+method: GET
+{% endvalidation %}
 
 You should see the following response:
 
@@ -236,28 +237,25 @@ The `traces_endpoint` points to Jaeger's OTLP HTTP receiver on port 4318. The `s
 
 Send a `message/send` JSON-RPC request to the gateway route:
 
-```sh
-curl -k --no-progress-meter --fail-with-body \
-  https://localhost:8443/a2a \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "How much is 100 USD in EUR?"
-          }
-        ]
-      }
-    }
-  }'
-```
+{% validation request-check %}
+url: /a2a
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: "2.0"
+  id: "1"
+  method: message/send
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+        - kind: text
+          text: "How much is 100 USD in EUR?"
+{% endvalidation %}
 
 The gateway proxies the request to the A2A agent and returns the agent's JSON-RPC response. A successful response contains either a completed task with artifacts, or a task in `input-required` state if the agent needs more information.
 

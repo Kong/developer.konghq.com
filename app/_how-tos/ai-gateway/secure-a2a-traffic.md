@@ -158,43 +158,39 @@ All requests to the A2A route now require a valid `apikey` header (or query para
 
 Create a consumer to represent an A2A client, then issue an API key.
 
-```sh
-echo '
-_format_version: "3.0"
-consumers:
-  - username: a2a-client-1
-    keyauth_credentials:
-      - key: a2a-secret-key-1
-' | deck gateway apply -
-```
-{: data-test-step="block" }
+{% entity_examples %}
+entities:
+  consumers:
+    - username: a2a-client-1
+      keyauth_credentials:
+        - key: a2a-secret-key-1
+{% endentity_examples %}
 
 ## Validate unauthenticated requests are rejected
 
 Send a request without an API key to confirm that the gateway rejects it:
 
-```sh
-curl -i -k --no-progress-meter --fail-with-body \
-  https://localhost:8443/a2a \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "How much is 100 USD in EUR?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a
+status_code: 401
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: "2.0"
+  id: "1"
+  method: "message/send"
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+        - kind: text
+          text: "How much is 100 USD in EUR?"
+{% endvalidation %}
+<!-- vale on -->
 
 The gateway responds with `401 Unauthorized`:
 
@@ -211,28 +207,27 @@ HTTP/2 401
 
 Send the same request with the API key:
 
-```sh
-curl -k --no-progress-meter --fail-with-body \
-  https://localhost:8443/a2a \
-  -H "apikey: a2a-secret-key-1" \
-  --json '{
-    "jsonrpc": "2.0",
-    "id": "1",
-    "method": "message/send",
-    "params": {
-      "message": {
-        "kind": "message",
-        "messageId": "msg-001",
-        "role": "user",
-        "parts": [
-          {
-            "kind": "text",
-            "text": "How much is 100 USD in EUR?"
-          }
-        ]
-      }
-    }
-  }'
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'apikey: a2a-secret-key-1'
+body:
+  jsonrpc: "2.0"
+  id: "1"
+  method: "message/send"
+  params:
+    message:
+      kind: message
+      messageId: msg-001
+      role: user
+      parts:
+        - kind: text
+          text: "How much is 100 USD in EUR?"
+{% endvalidation %}
+<!-- vale on -->
 
 The gateway proxies the request to the upstream A2A agent and returns a JSON-RPC response with a completed task or an `input-required` state.

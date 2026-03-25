@@ -4,3 +4,6 @@ paths:
 strip_path: true
 service:
   name: a2a-currency-agent
+protocols:
+  - http
+  - https

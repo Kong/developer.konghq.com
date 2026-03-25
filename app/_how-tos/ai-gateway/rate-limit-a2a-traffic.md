@@ -139,16 +139,17 @@ entities:
 
 ## Validate rate limit headers
 
-Send an authenticated request to the agent card endpoint and inspect the response headers.
-The agent card is a lightweight A2A operation (`GetAgentCard`) that returns agent metadata
-without calling an LLM, so responses are instant. This makes it practical for testing rate
-limits within a short window.
+Send an authenticated request to the agent card endpoint and inspect the response headers. The agent card is a lightweight A2A operation (`GetAgentCard`) that returns agent metadata without calling an LLM, so responses are instant. This makes it practical for testing rate limits within a short window.
 
-```sh
-curl -i -k --no-progress-meter --fail-with-body \
-  https://localhost:8443/a2a/.well-known/agent.json \
-  -H "apikey: a2a-secret-key-1"
-```
+<!-- vale off -->
+{% validation request-check %}
+url: /a2a/.well-known/agent.json
+status_code: 200
+method: GET
+headers:
+  - 'apikey: a2a-secret-key-1'
+{% endvalidation %}
+<!-- vale on -->
 
 The response includes rate limit headers:
 
@@ -173,8 +174,8 @@ Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI
 ```sh
 for i in $(seq 1 6); do
   echo "--- Request $i ---"
-  curl -s -o /dev/null -w "HTTP status: %{http_code}\n" -k \
-    https://localhost:8443/a2a/.well-known/agent.json \
+  curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
+    http://localhost:8000/a2a/.well-known/agent.json \
     -H "apikey: a2a-secret-key-1"
 done
 ```
