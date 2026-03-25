@@ -10,8 +10,8 @@ description: 'Use a third-party guardrails service to validate requests and/or r
 
 
 products:
-    - ai-gateway
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
