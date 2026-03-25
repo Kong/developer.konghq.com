@@ -56,6 +56,7 @@ are being rejected without overwhelming your logging pipeline.
   - [Metrics reference](/event-gateway/metrics/)
 - **Header modification policy**: A new policy execution model is now available for header modification policies, providing a more flexible and extensible approach to transforming Kafka request and response headers.
 - **Backend clusters sharing SNI suffix**: Multiple backend clusters can now share a common SNI suffix, simplifying TLS configuration when clusters are behind a shared domain.
+  - [Example: Forward via SNI routing with shared suffix](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing-shared-suffix/)
 - **Analytics for record count and message size**: Analytics events now include the number of records and byte sizes, giving you more granular visibility into traffic patterns in the Konnect analytics dashboard.
 - **Long polling for control plane configuration**: The gateway now supports long polling when fetching configuration from the Konnect control plane, reducing latency for configuration updates.
 - **Enhanced `validate` subcommand**: The `validate` CLI command now performs more thorough validation of your configuration, catching additional issues before startup.

@@ -46,6 +46,9 @@ related_resources:
     url: /event-gateway/get-started/
   - text: Authenticate connections to Kafka using SASL/PLAIN
     url: /event-gateway/configure-sasl-plain-backend-cluster-auth/
+
+min_version:
+  event_gateway: '1.1.0'
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
