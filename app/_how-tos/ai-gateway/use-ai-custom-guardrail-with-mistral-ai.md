@@ -71,7 +71,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details to proxy requests to OpenAI. In this example, we'll use the GPT-4o model:
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details to proxy requests to OpenAI. In this example, we'll use the GPT 5.1 model:
 
 {% entity_examples %}
 entities:
@@ -84,7 +84,7 @@ entities:
           header_value: Bearer ${openai_api_key}
         model:
           provider: openai
-          name: gpt-4o
+          name: gpt-5.1
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY

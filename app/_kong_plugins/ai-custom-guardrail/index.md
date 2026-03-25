@@ -6,10 +6,11 @@ tier: ai_gateway_enterprise
 content_type: plugin
 
 publisher: kong-inc
-description: 'Use a third-party guardrails service to validate requests and/or responses in the AI Proxy plugin before forwarding them between clients and upstream LLMs.'
+description: 'Use a third-party guardrails service to validate requests and/or responses in the AI Proxy plugin before forwarding them between clients and upstream LLMs'
 
 
 products:
+    - ai-gateway
     - gateway
 
 works_on:
@@ -98,13 +99,15 @@ sequenceDiagram
 
 ## Configuration
 
-To configure the AI Custom Guardrail plugin to work with your guardrail service, you must define you service's required parameters under [`config.params`](./reference/#schema--config-params). They key will be the parameter name, and the value can be a string or a Lua expression.
+To configure the AI Custom Guardrail plugin to work with your guardrail service, you must define your Service's required parameters under [`config.params`](./reference/#schema--config-params). They key will be the parameter name, and the value can be a string or a Lua expression.
 
 Additionally, the following built-in variables are available:
 * `$(source)`: The current phase on which the plugin is running. The value is `INPUT` if the plugin is currently inspecting the request, and `OUTPUT` if it's inspecting the response.
-* `$(conf)`: The values defined under `config.params`.
+* `$(conf)`: A Lua table that corresponds to the plugin’s config field, meaning it has the same values as the plugin’s configuration, which allows to access sub-fields under `config`.
 * `$(content)`: The text content being inspected, extracted from the request body in the `INPUT` phase and the response body in the `OUTPUT` phase.
-* `$(resp)`:  The response from the guardrail service.
+* `$(resp)`:  The response from the guardrail service. 
+   {:.warning}
+   > This variable is a Lua table corresponding to the request body if the plugin is inspecting the request, but it's string when inspecting the response. Make sure to configure your functions accordingly.
 
 ### Request
 
