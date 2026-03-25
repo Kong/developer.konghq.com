@@ -14,7 +14,7 @@ tags:
 
 Changelog for supported {{site.event_gateway}} versions.
 
-## 1.1
+## 1.1.0
 
 **Release date**: 2026/03/25
 
