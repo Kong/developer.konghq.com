@@ -16,12 +16,12 @@ requirements:
   - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
 
 config:
-  http_endpoint: https://us.api.konghq.com/v3/openmeter/events
-  auth_token: ${auth-token}
-  enable_api_requests: false
-  enable_ai_llm: true
+  ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+  api_token: ${auth-token}
+  meter_api_requests: false
+  meter_ai_token_usage: true
   subject:
-    in: consumer
+    look_up_value_in: consumer
 
 variables:
   auth-token:

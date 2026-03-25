@@ -16,19 +16,19 @@ requirements:
   - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
 
 config:
-  http_endpoint: https://us.api.konghq.com/v3/openmeter/events
-  auth_token: ${auth-token}
-  enable_api_requests: true
-  enable_ai_llm: false
+  ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+  api_token: ${auth-token}
+  meter_api_requests: true
+  meter_ai_token_usage: false
   subject:
-    in: consumer
+    look_up_value_in: consumer
   attributes:
-    - in: header
-      key: x-department
-      field: department
-    - in: header
-      key: x-project
-      field: project
+    - source: header
+      look_up_value_in: x-department
+      event_property_name: department
+    - source: header
+      look_up_value_in: x-project
+      event_property_name: project
 
 variables:
   auth-token:

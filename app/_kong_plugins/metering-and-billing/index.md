@@ -61,7 +61,7 @@ These events are immutable once emitted and aren't observability or analytics si
 
 For each request, the plugin:
 
-1. Resolves the subject (the customer identity that gets billed) from the configured source (a Consumer, Consumer Group, application, or request header).
+1. Resolves the subject (the customer identity that gets billed) from the configured source (a Consumer, application, or request header).
 2. Captures standard {{site.base_gateway}} metadata on the event, including Route, Service, and response status.
 3. Attaches any configured custom attributes from request headers or query parameters, such as department, project, or priority tier.
 4. Buffers the event locally and delivers it in batches to the configured ingest endpoint ({{site.konnect_short_name}} {{site.metering-and-billing}} or OpenMeter self-hosted), with automatic retries on failure.
@@ -92,7 +92,7 @@ sequenceDiagram
 
 ### Events and subjects
 
-Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} Consumer, Consumer Group, {{site.konnect_short_name}} Dev Portal application, or any request header value such as `x-customer-id` or `x-tenant-id`.
+Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} Consumer, {{site.konnect_short_name}} Dev Portal application, or any request header value such as `x-customer-id` or `x-tenant-id`.
 
 If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing) it sets the subject to `unknown`.
 
