@@ -33,12 +33,12 @@ KONNECT_CLIENT_KEY -> KONG_KONNECT_CLIENT_KEY
 KONNECT_CLIENT_KEY_PATH -> KONG_KONNECT_CLIENT_KEY_PATH
 
 ### Features
-  - **mTLS to backend Kafka clusters** ([demo](https://konghq.zoom.us/clips/share/5ymJRJzKSlW4x61UGd3xKg)): You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers.
-  - **mTLS between clients and the gateway** ([demo](https://konghq.zoom.us/clips/share/G1UdfD5NSk66goPVc_KQHw)): Clients can now authenticate to the gateway using TLS client certificates. Supports principal mapping to extract identity information from certificates for
+  - **mTLS to backend Kafka clusters** You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers.
+  - **mTLS between clients and the gateway** Clients can now authenticate to the gateway using TLS client certificates. Supports principal mapping to extract identity information from certificates for
   use in authorization policies.
-  - **JWT claims in ACL expressions** ([demo](https://zoom.us/clips/share/LBIeHzzfRym2yUnVSM_WeA)): OAuth/JWT claims are now available in the authentication context and can be used in `resource_names` expressions on ACL rules, enabling dynamic, claim-based access
+  - **JWT claims in ACL expressions** OAuth/JWT claims are now available in the authentication context and can be used in `resource_names` expressions on ACL rules, enabling dynamic, claim-based access
   control per topic.
-  - **Improved policy failure observability** ([demo](https://konghq.zoom.us/clips/share/NB0Ni-naQm62fee5m-x1oQ)): Policy evaluation errors (CEL, schema validation, encryption) now emit detailed metrics and logs with sampling, making it easier to diagnose why requests
+  - **Improved policy failure observability** Policy evaluation errors (CEL, schema validation, encryption) now emit detailed metrics and logs with sampling, making it easier to diagnose why requests
   are being rejected without overwhelming your logging pipeline.
   - **Header modification policy**: A new policy execution model is now available for header modification policies, providing a more flexible and extensible approach to transforming Kafka request and response headers.
   - **Backend clusters sharing SNI suffix**: Multiple backend clusters can now share a common SNI suffix, simplifying TLS configuration when clusters are behind a shared domain.
