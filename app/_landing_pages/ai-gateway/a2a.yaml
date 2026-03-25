@@ -85,8 +85,8 @@ rows:
                   url: "/plugins/key-auth/"
                 - text: OpenID Connect plugin
                   url: "/plugins/openid-connect/"
-                - text: JWT plugin
-                  url: "/plugins/jwt/"
+                - text: Secure A2A endpoints with Key Authentication
+                  url: "/how-to/secure-a2a-endpoints/"
 
   - header:
       type: h2
@@ -148,7 +148,16 @@ rows:
                 - type: text
                   text: |
                     Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
-
+  - column_count: 4
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Rate limit A2A traffic
+            description: Apply rate limiting to A2A routes using standard gateway plugins.
+            cta:
+              url: /how-to/rate-limit-a2a-traffic/
+              align: end
   - header:
       type: h2
       text: A2A how-to guides
