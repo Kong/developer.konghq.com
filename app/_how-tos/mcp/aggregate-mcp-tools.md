@@ -167,7 +167,7 @@ entities:
 
 We can move on to configuring the second AI MCP Proxy plugin. Like the previous marketplace configuration, this instance only converts RESTful paths into tool definitions and doesn’t process MCP requests directly. Again, the `tags[]` field ensures that listener-mode plugins can later discover and aggregate this tool along with others from the marketplace instance.
 
-To authenticate to WeatherAPI, configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) tool to include your API key in `tools[].query`. This adds the required `key` query parameter directly from the plugin configuration.
+To authenticate to WeatherAPI, configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin to include your API key in `tools[].query`. This adds the required `key` query parameter directly from the plugin configuration.
 
 {% entity_examples %}
 entities:
