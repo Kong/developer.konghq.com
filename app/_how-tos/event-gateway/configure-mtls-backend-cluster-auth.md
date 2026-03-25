@@ -233,8 +233,9 @@ body_cmd: $(cat mtls_backend_cluster.json)
 extract_body:
   - name: id
     variable: MTLS_BACKEND_CLUSTER_ID
-capture: MTLS_BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: MTLS_BACKEND_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -261,8 +262,9 @@ body:
 extract_body:
   - name: id
     variable: MTLS_VC_ID
-capture: MTLS_VC_ID
-jq: ".id"
+capture:
+  - variable: MTLS_VC_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -284,8 +286,9 @@ body:
 extract_body:
   - name: id
     variable: MTLS_LISTENER_ID
-capture: MTLS_LISTENER_ID
-jq: ".id"
+capture:
+  - variable: MTLS_LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

@@ -172,8 +172,9 @@ body:
 extract_body:
   - name: id
     variable: LISTENER_ID
-capture: LISTENER_ID
-jq: ".id"
+capture:
+  - variable: LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -194,8 +195,9 @@ body:
 extract_body:
   - name: id
     variable: BUNDLE_ID
-capture: BUNDLE_ID
-jq: ".id"
+capture:
+  - variable: BUNDLE_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -279,8 +281,9 @@ body:
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
-capture: VIRTUAL_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: VIRTUAL_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
