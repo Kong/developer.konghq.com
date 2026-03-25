@@ -16,7 +16,7 @@ Changelog for supported {{site.event_gateway}} versions.
 
 ## 1.1
 
-**Release date**: TBA 
+**Release date**: 2026/03/25
 
 ### **Breaking Changes**
   - **Observability stack migrated to OpenTelemetry**: All metrics, traces, and logs now use OpenTelemetry-native naming. Prometheus is still enabled by default but metric names, attribute keys, and duration units (all now in seconds) have changed. If you have dashboards or alerts based on previous metric names, you will need to update them.
