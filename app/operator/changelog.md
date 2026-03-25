@@ -14,6 +14,54 @@ breadcrumbs:
 
 Changelog for supported {{ site.operator_product_name }} versions.
 
+## 2.1.3
+
+**Release date**: 2026-03-25
+
+### Fixes
+
+- Admission webhook now validates HTTPRoute regex patterns before sending
+  configuration to the Admin API.
+  [#3666](https://github.com/Kong/kong-operator/pull/3666)
+- Do not try to list `Gateway`s for namespaces that are not being watched by controller
+  [#3625](https://github.com/Kong/kong-operator/pull/3625)
+- Fix `KonnectGatewayControlPlane` not setting `Programmed=False` when its
+  `KonnectAPIAuthConfiguration` reference cannot be resolved (e.g. the auth
+  config does not exist, or a cross-namespace reference lacks a
+  `KongReferenceGrant`). Both `APIAuthResolvedRef` and `Programmed` conditions
+  are now set to `False` atomically.
+  [#3526](https://github.com/Kong/kong-operator/pull/3526)
+- Fix configuring SNIs in ingress-controller when running with local controlplane.
+  [#3554](https://github.com/Kong/kong-operator/pull/3554)
+- Fix reducing `Secret`s with in use finalizers.
+  [#3506](https://github.com/Kong/kong-operator/pull/3506)
+- Fix KongUpstream and KongService names in hybrid mode not taking into account
+  backendless rules. When a rule has no BackendRefs, the generated KongUpsteam and KongService names
+  now include a hash of rule's other field to avoid naming collisions with other
+  rules that also have no BackendRefs.
+  [#3576](https://github.com/Kong/kong-operator/pull/3576)
+- Fix the on-prem translator to set `protocols` in translated Kong routes to
+  `http,https`.
+  [#3587](https://github.com/Kong/kong-operator/pull/3587)
+
+## 2.1.2
+
+**Release date**: 2026-03-05
+
+### Fixes
+
+- Fix `ResolvedRefs` status condition on `HTTPRoute` not being updated when a
+  referenced `KongPlugin` is deleted in self-managed ControlPlane mode.
+  [#3206](https://github.com/Kong/kong-operator/pull/3206)
+- Fix handling removal of annotations for DataPlane's Services
+  [#3402](https://github.com/Kong/kong-operator/pull/3402)
+- Fix Gateway controller deleting all DataPlanes when KonnectExtension's
+  `ControlPlaneRefValid` condition is temporarily False due to transient Konnect
+  API failures. DataPlanes now continue serving traffic during Konnect
+  connectivity issues. Added `NotProgrammed` condition reason to differentiate
+  transient failures from permanent reference errors.
+  [#3463](https://github.com/Kong/kong-operator/pull/3463)
+
 ## 2.1.1
 
 **Release date**: 2026-02-19
@@ -30,16 +78,14 @@ Changelog for supported {{ site.operator_product_name }} versions.
   the name of the corresponding `KonnectGatewayControlPlane` resource in Kubernetes
   (the same random suffix is added). It prevents collisions in Konnect.
   [#3357](https://github.com/Kong/kong-operator/pull/3357)
-- Use the same defaults for `preserve_host` and `strip_path` in for Konnect Gateway Control Plane
-  as in self-managed.
-  [#3366](https://github.com/Kong/kong-operator/pull/3366)
 - Fix not resetting resource errors in ControlPlane's DB mode from previous `Update()`
   calls to prevent stale errors from leaking into subsequent calls.
   [#3369](https://github.com/Kong/kong-operator/pull/3369)
+- Use the same defaults for `preserve_host` and `strip_path` in for Konnect Gateway Control Plane
+  as in self-managed.
+  [#3366](https://github.com/Kong/kong-operator/pull/3366)
 
 ## 2.1.0
-
-**Release date**: 2026-02-05
 
 ### Added
 
@@ -333,40 +379,6 @@ Changelog for supported {{ site.operator_product_name }} versions.
   `spec.listeners.tls.certificateRef`, ensuring Gateway status conditions
   are updated when referenced certificates change.
   [#2661](https://github.com/Kong/kong-operator/pull/2661)
-
-## 2.0.7
-
-**Release date**: 2026-02-19
-
-### Fixed
-
-- Fixed an issue where users could set the secret of configmap label selectors
-  to empty when the other one was left non-empty.
-  [#2815](https://github.com/Kong/kong-operator/pull/2815)
-- Bump Go to 1.25.7 and fix v2 module
-  [#3355](https://github.com/Kong/kong-operator/pull/3355)
-
-## 2.0.6
-
-**Release date**: 2025-12-01
-
-### Fixes
-
-- Translate `healtchchecks.thershold` in `KongUpstreamPolicy` to the
-  `healthchecks.thershold` field in Kong upstreams.
-  [#2662](https://github.com/Kong/kong-operator/pull/2662)
-- Fix random, unexpected and invalid validation error during validation of `HTTPRoute`s
-  for `Gateway`s configured in different namespaces with `GatewayConfiguration` that
-  has field `spec.controlPlaneOptions.watchNamespaces.type` set to `own`.
-  [#2717](https://github.com/Kong/kong-operator/pull/2717)
-- Reject CA Secrets with multiple PEM certs.
-  [#2671](https://github.com/Kong/kong-operator/pull/2671)
-- Gateway controllers now watch changes on Secrets referenced by
-  `spec.listeners.tls.certificateRef`, ensuring Gateway status conditions
-  are updated when referenced certificates change.
-  [#2661](https://github.com/Kong/kong-operator/pull/2661)
-- Trigger reconciliation events on `KongPlugin`s upon changes on `KongPluginBinding`.
-  [#2637](https://github.com/Kong/kong-operator/pull/2637)
 
 ## 2.0.5
 
@@ -742,7 +754,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   the [Kong documentation](https://developer.konghq.com/operator/konnect/reference/migrate-1.4-1.5/).
   [#1183](https://github.com/kong/kong-operator/pull/1183)
 - Migrate KGO CRDs conditions to the kubernetes-configuration repo.
-  With this migration process, we have moved all conditions from the KGO repo to [kubernetes-configuration][kubernetes-configuration].
+  With this migration process, we have moved all conditions from the KGO repo to [kubernetes-configuration](kubernetes-configuration).
   This is a breaking change which requires manual action for projects that use operator's Go conditions types.
   In order to migrate please use the import paths from the [kong/kubernetes-configuration][kubernetes-configuration] repo instead.
   [#1281](https://github.com/kong/kong-operator/pull/1281)
@@ -1106,4 +1118,269 @@ Changelog for supported {{ site.operator_product_name }} versions.
 
 - Fix enforcing up to date `ControlPlane`'s `ValidatingWebhookConfiguration`
   [#225](https://github.com/kong/kong-operator/pull/225)
+
+## 1.2.3
+
+### Fixes
+
+**Release date**: 2024-04-23
+
+- Fixes an issue where managed `Gateway`s controller wasn't able to reduce
+  the created `DataPlane` objects when too many have been created.
+  [#43](https://github.com/kong/kong-operator/pull/43)
+- `Gateway` controller will no longer set `DataPlane` deployment's replicas
+  to default value when `DataPlaneOptions` in `GatewayConfiguration` define
+  scaling strategy. This effectively allows users to use `DataPlane` horizontal
+  autoscaling with `GatewayConfiguration` as the generated `DataPlane` deployment
+  will no longer be rejected.
+  [#79](https://github.com/kong/kong-operator/pull/79)
+- Make creating a `DataPlane` index conditional based on enabling the `ControlPlane`
+  controller. This allows running KGO without `ControlPlane` CRD with its controller
+  disabled.
+  [#103](https://github.com/kong/kong-operator/pull/103)
+
+## 1.2.2
+
+**Release date**: 2024-04-23
+
+### **NOTE: Retracted**
+
+Due to [golang proxy caching modules indefinitely][goproxy] we needed to retract this version.
+
+[goproxy]: https://sum.golang.org/#faq-retract-version
+[rel_122]: https://github.com/kong/kong-operator/releases/tag/v1.2.2
+[rel_123]: https://github.com/kong/kong-operator/releases/tag/v1.2.3
+
+## 1.2.1
+
+**Release date**: 2024-03-19
+
+### Fixes
+
+- Fixed an issue where operator wasn't able to update `ControlPlane` `ClusterRole` or `ClusterRoleBinding`
+  when they got out of date.
+  [#11](https://github.com/kong/kong-operator/pull/11)
+
+### Changes
+
+- KGO now uses `GATEWAY_OPERATOR_` prefix for all flags, including the `zap` related logging flags.
+  This means that the following can now be set:
+  - `-zap-devel` (env: `GATEWAY_OPERATOR_ZAP_DEVEL`)
+  - `-zap-encoder` (env: `GATEWAY_OPERATOR_ZAP_ENCODER`)
+  - `-zap-log-level` (env: `GATEWAY_OPERATOR_ZAP_LOG_LEVEL`)
+  - `-zap-stacktrace-level` (env: `GATEWAY_OPERATOR_ZAP_STACKTRACE_LEVEL`)
+  - `-zap-time-encoding` (env: `GATEWAY_OPERATOR_ZAP_TIME_ENCODING`)
+
+  For more details about those please consult [`zap.Options` pkg.go.dev][zap_bindflags]
+
+[zap_bindflags]: https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.2/pkg/log/zap#Options.BindFlags
+
+## 1.2.0
+
+**Release date**: 2024-03-15
+
+## Highlights
+
+- 🎓 The Managed `Gateway`s feature is now GA.
+- 🎓 `ControlPlane` and `GatewayConfig` APIs have been promoted to `v1beta1`.
+- ✨ `DataPlane`s managed by `Gateway`s can be now scaled horizontally through the
+  `GatewayConfiguration` API.
+- ✨ `Gateway` listeners are dynamically mapped to the `DataPlane` proxy service ports.
+- 🧠 The new feature `AIGateway` has been released in `alpha` stage.
+
+## Added
+
+- Added support for specifying command line flags through environment
+  variables having the `GATEWAY_OPERATOR_` prefix. For example, you can specify the
+  value of flag `--controller-name` through the environment variable `GATEWAY_OPERATOR_CONTROLLER_NAME`.
+  [kong/kong-operator-archive#1616](https://github.com/kong/kong-operator-archive/pull/1616)
+- Add horizontal autoscaling for `DataPlane`s using its `scaling.horizontal` spec
+  field.
+  [kong/kong-operator-archive#1281](https://github.com/kong/kong-operator-archive/pull/1281)
+- `ControlPlane`s now use Gateway Discovery by default, with Service DNS Strategy.
+  Additionally, the `DataPlane` readiness probe has been changed to `/status/ready`
+  when the `DataPlane` is managed by a `Gateway`.
+  [kong/kong-operator-archive#1261](https://github.com/kong/kong-operator-archive/pull/1261)
+- `Gateway`s and `Listener`s `Accepted` and `Conflicted` conditions are now set
+  and enforced based on the Gateway API specifications.
+  [kong/kong-operator-archive#1398](https://github.com/kong/kong-operator-archive/pull/1398)
+- `ControlPlane` `ClusterRole`s and `ClusterRoleBinding`s are enforced and kept
+  up to date by the `ControlPlane` controller.
+  [kong/kong-operator-archive#1259](https://github.com/kong/kong-operator-archive/pull/1259)
+- The `Gateway` listeners are now dynamically mapped to `DataPlane` ingress service
+  ports. This means that the change of a `Gateway` spec leads to a `DataPlane` reconfiguration,
+  along with an ingress service update.
+  [kong/kong-operator-archive#1363](https://github.com/kong/kong-operator-archive/pull/1363)
+- `--enable-controller-gateway` and `--enable-controller-controlplane` command
+  line flags are set to `true` by default to enable controllers for `Gateway`s
+  and `ControlPlane`s.
+  [kong/kong-operator-archive#1519](https://github.com/kong/kong-operator-archive/pull/1519)
+- When the `Gateway` controller provisions a `ControlPlane`, it sets the `CONTROLLER_GATEWAY_TO_RECONCILE`
+  env variable to let the `ControlPlane` reconcile
+  that specific `Gateway` only.
+  [kong/kong-operator-archive#1529](https://github.com/kong/kong-operator-archive/pull/1529)
+- `ControlPlane` is now deployed with a validating webhook server turned on. This
+  involves creating `ValidatingWebhookConfiguration`, a `Service` that exposes the
+  webhook and a `Secret` that holds a TLS certificate. The `Secret` is mounted in
+  the `ControlPlane`'s `Pod` for the webhook server to use it.
+  [kong/kong-operator-archive#1539](https://github.com/kong/kong-operator-archive/pull/1539)
+  [kong/kong-operator-archive#1545](https://github.com/kong/kong-operator-archive/pull/1545)
+- Added `konnectCertificate` field to the DataPlane resource.
+  [kong/kong-operator-archive#1517](https://github.com/kong/kong-operator-archive/pull/1517)
+- Added `v1alpha1.AIGateway` as an experimental API. This can be enabled by
+  manually deploying the `AIGateway` CRD and enabling the feature on the
+  controller manager with the `--enable-controller-aigateway` flag.
+  [kong/kong-operator-archive#1399](https://github.com/kong/kong-operator-archive/pull/1399)
+  [kong/kong-operator-archive#1542](https://github.com/kong/kong-operator-archive/pull/1399)
+- Added validation on checking if ports in `KONG_PORT_MAPS` and `KONG_PROXY_LISTEN`
+  environment variables of deployment options in `DataPlane` match the `ports`
+  in the ingress service options of the `DataPlane`.
+  [kong/kong-operator-archive#1521](https://github.com/kong/kong-operator-archive/pull/1521)
+
+### Changes
+
+- The `GatewayConfiguration` API has been promoted from `v1alpha1` to `v1beta1`.
+  [kong/kong-operator-archive#1514](https://github.com/kong/kong-operator-archive/pull/1514)
+- The `ControlPlane` API has been promoted from `v1alpha1` to `v1beta1`.
+  [kong/kong-operator-archive#1523](https://github.com/kong/kong-operator-archive/pull/1523)
+- The CRD's shortname of `ControlPlane` has been changed to `kocp`.
+  The CRD's shortname of `DataPlane` has been changed to `kodp`.
+  The CRD's shortname of `GatewayConfiguration` has been changed to `kogc`.
+  [kong/kong-operator-archive#1532](https://github.com/kong/kong-operator-archive/pull/1532)
+- `ControlPlane` (Kong Ingress Controller) default and minimum version has been
+  bumped to 3.1.2.
+  [kong/kong-operator-archive#1586](https://github.com/kong/kong-operator-archive/pull/1586)
+- `DataPlane` (Kong Gateway) default version has been bumped to `v3.6.0`.
+  [kong/kong-operator-archive#1577](https://github.com/kong/kong-operator-archive/pull/1577)
+
+### Fixes
+
+- Fixed a problem where the operator would not set the defaults to `PodTemplateSpec`
+  patch and because of that it would detect a change and try to reconcile the owned
+  resource where in fact the change was not there.
+  One of the symptoms of this bug could have been a `StartupProbe` set in `PodSpec`
+  preventing the `DataPlane` from getting correct status information.
+  [kong/kong-operator-archive#1224](https://github.com/kong/kong-operator-archive/pull/1224)
+- If the Gateway controller is enabled, `DataPlane` and `ControlPlane` controllers
+  get enabled as well.
+  [kong/kong-operator-archive#1242](https://github.com/kong/kong-operator-archive/pull/1242)
+- Fix applying the `PodTemplateSpec` patch so that it's not applied when the
+  calculated patch (resulting from the generated manifest and current in-cluster
+  state) is empty.
+  One of the symptoms of this bug was that when users tried to apply a `ReadinessProbe`
+  which specified a port name instead of a number (which is what's generated by
+  the operator) it would never reconcile and the status conditions would never get
+  up to date `ObservedGeneration`.
+  [kong/kong-operator-archive#1238](https://github.com/kong/kong-operator-archive/pull/1238)
+- Fix manager RBAC permissions which prevented the operator from being able to
+  create `ControlPlane`'s `ClusterRole`s, list pods or list `EndpointSlices`.
+  [kong/kong-operator-archive#1255](https://github.com/kong/kong-operator-archive/pull/1255)
+- `DataPlane`s with BlueGreen rollout strategy enabled will now have its Ready status
+  condition updated to reflect "live" `Deployment` and `Service`s status.
+  [kong/kong-operator-archive#1308](https://github.com/kong/kong-operator-archive/pull/1308)
+- The `ControlPlane` `election-id` has been changed so that every `ControlPlane`
+  has its own `election-id`, based on the `ControlPlane` name. This prevents `pod`s
+  belonging to different `ControlPlane`s from competing for the same lease.
+  [kong/kong-operator-archive#1349](https://github.com/kong/kong-operator-archive/pull/1349)
+- Fill in the defaults for `env` and `volumes` when comparing the in-cluster spec
+  with the generated spec.
+  [kong/kong-operator-archive#1446](https://github.com/kong/kong-operator-archive/pull/1446)
+- Do not flap `DataPlane`'s `Ready` status condition when e.g. ingress `Service`
+  can't get an address assigned and `spec.network.services.ingress.`annotations`
+  is non-empty.
+  [kong/kong-operator-archive#1447](https://github.com/kong/kong-operator-archive/pull/1447)
+- Update or recreate a `ClusterRoleBinding` for control planes if the existing
+  one does not contain the `ServiceAccount` used by `ControlPlane`, or
+  `ClusterRole` is changed.
+  [kong/kong-operator-archive#1501](https://github.com/kong/kong-operator-archive/pull/1501)
+- Retry reconciling `Gateway`s when provisioning owned `DataPlane` fails.
+  [kong/kong-operator-archive#1553](https://github.com/kong/kong-operator-archive/pull/1553)
+
+## 1.1.0
+
+**Release date**: 2023-11-20
+
+### Added
+
+- Add support for `ControlPlane` `v3.0` by updating the generated `ClusterRole`.
+  [kong/kong-operator-archive#1189](https://github.com/kong/kong-operator-archive/pull/1189)
+
+### Changes
+
+- Bump `ControlPlane` default version to `v3.0`.
+  [kong/kong-operator-archive#1189](https://github.com/kong/kong-operator-archive/pull/1189)
+- Bump Gateway API to v1.0.
+  [kong/kong-operator-archive#1189](https://github.com/kong/kong-operator-archive/pull/1189)
+
+### Fixes
+
+- Operator `Role` generation is fixed. As a result it contains now less rules
+  hence the operator needs less permissions to run.
+  [kong/kong-operator-archive#1191](https://github.com/kong/kong-operator-archive/pull/1191)
+
+## 1.0.3
+
+**Release date**: 2023-11-06
+
+### Fixes
+
+- Fix an issue where operator is upgraded from an older version and it orphans
+  old `DataPlane` resources.
+  [kong/kong-operator-archive#1155](https://github.com/kong/kong-operator-archive/pull/1155)
+  [kong/kong-operator-archive#1161](https://github.com/kong/kong-operator-archive/pull/1161)
+
+### Added
+
+- Setting `spec.deployment.podTemplateSpec.spec.volumes` and
+  `spec.deployment.podTemplateSpec.spec.containers[*].volumeMounts` on `ControlPlane`s
+  is now allowed.
+  [kong/kong-operator-archive#1175](https://github.com/kong/kong-operator-archive/pull/1175)
+
+## 1.0.2
+
+**Release date**: 2023-10-18
+
+### Fixes
+
+- Bump dependencies
+
+## 1.0.1
+
+**Release date**: 2023-10-02
+
+### Fixes
+
+- Fix flapping of `Gateway` managed `ControlPlane` `spec` field when applied without
+  `controlPlaneOptions` set.
+  [kong/kong-operator-archive#1127](https://github.com/kong/kong-operator-archive/pull/1127)
+
+### Changes
+
+- Bump `ControlPlane` default version to `v2.12`.
+  [kong/kong-operator-archive#1118](https://github.com/kong/kong-operator-archive/pull/1118)
+- Bump `WebhookCertificateConfigBaseImage` to `v1.3.0`.
+  [kong/kong-operator-archive#1130](https://github.com/kong/kong-operator-archive/pull/1130)
+
+## 1.0.0
+
+**Release date**: 2023-09-26
+
+### Changes
+
+- Operator managed subresources are now labelled with `gateway-operator.konghq.com/managed-by`
+  additionally to the old `konghq.com/gateway-operator` label.
+  The value associated with this label stays the same and it still indicates the
+  type of a resource that owns the subresrouce.
+  The old label should not be used as it will be deleted in the future.
+  [kong/kong-operator-archive#1098](https://github.com/kong/kong-operator-archive/pull/1098)
+- Enable `DataPlane` Blue Green rollouts controller by default.
+  [kong/kong-operator-archive#1106](https://github.com/kong/kong-operator-archive/pull/1106)
+
+### Fixes
+
+- Fixes handling `Volume`s and `VolumeMount`s when customizing through `DataPlane`'s
+  `spec.deployment.podTemplateSpec.spec.containers[*].volumeMounts` and/or
+  `spec.deployment.podTemplateSpec.spec.volumes`.
+  Sample manifests are updated accordingly.
+  [kong/kong-operator-archive#1095](https://github.com/kong/kong-operator-archive/pull/1095)
 
