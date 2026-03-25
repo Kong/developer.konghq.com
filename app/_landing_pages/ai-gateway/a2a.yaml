@@ -79,8 +79,6 @@ rows:
               title: Secure A2A endpoints
               description: Apply authentication to A2A routes using standard gateway plugins.
               ctas:
-                - text: Basic Authentication plugin
-                  url: "/plugins/basic-auth/"
                 - text: Key Authentication plugin
                   url: "/plugins/key-auth/"
                 - text: OpenID Connect plugin
