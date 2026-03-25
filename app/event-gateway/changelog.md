@@ -22,15 +22,7 @@ Changelog for supported {{site.event_gateway}} versions.
   - **Observability stack migrated to OpenTelemetry**: All metrics, traces, and logs now use OpenTelemetry-native naming. Prometheus is still enabled by default but metric names, attribute keys, and duration units (all now in seconds) have changed. If you have dashboards or alerts based on previous metric names, you will need to update them.
   - **Environment variable names changed**: Legacy Konnect bootstrap environment variables are no longer supported. The variables now have a `KONG_` prefix. The gateway now logs a clear message indicating which variables to migrate if old-style names are detected:
 
-> KONNECT_REGION -> KONG_KONNECT_REGION  
-KONNECT_DOMAIN -> KONG_KONNECT_DOMAIN  
-KONNECT_GATEWAY_CLUSTER_ID -> KONG_KONNECT_GATEWAY_CLUSTER_ID  
-KONNECT_API_REQUEST_TIMEOUT -> KONG_KONNECT_API_REQUEST_TIMEOUT  
-KONNECT_INSECURE_SKIP_VERIFY -> KONG_KONNECT_INSECURE_SKIP_VERIFY  
-KONNECT_CLIENT_CERT -> KONG_KONNECT_CLIENT_CERT  
-KONNECT_CLIENT_CERT_PATH -> KONG_KONNECT_CLIENT_CERT_PATH  
-KONNECT_CLIENT_KEY -> KONG_KONNECT_CLIENT_KEY  
-KONNECT_CLIENT_KEY_PATH -> KONG_KONNECT_CLIENT_KEY_PATH
+    
 
 ### Features
   - **mTLS to backend Kafka clusters** You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers.
@@ -42,7 +34,7 @@ KONNECT_CLIENT_KEY_PATH -> KONG_KONNECT_CLIENT_KEY_PATH
   are being rejected without overwhelming your logging pipeline.
   - **Header modification policy**: A new policy execution model is now available for header modification policies, providing a more flexible and extensible approach to transforming Kafka request and response headers.
   - **Backend clusters sharing SNI suffix**: Multiple backend clusters can now share a common SNI suffix, simplifying TLS configuration when clusters are behind a shared domain.
-  - **Analytics: record count and message size**: Analytics events now include the number of records and byte sizes, giving you more granular visibility into traffic patterns in the Konnect analytics dashboard.
+  - **Analytics for record count and message size**: Analytics events now include the number of records and byte sizes, giving you more granular visibility into traffic patterns in the Konnect analytics dashboard.
   - **Long polling for control plane configuration**: The gateway now supports long polling when fetching configuration from the Konnect control plane, reducing latency for configuration updates.
   - **Enhanced `validate` subcommand**: The `validate` CLI command now performs more thorough validation of your configuration, catching additional issues before startup.
   - **Configuration change observability**: Changes to the gateway's configuration (from the control plane or bootstrap) are now logged with details about what changed, making it easier to audit and debug configuration drift.
