@@ -235,6 +235,13 @@ config:
   - name: admin_emails_from
   - name: admin_emails_reply_to
   - name: admin_invitation_expiry
+  - name: smtp_mock
+  - name: smtp_host
+  - name: smtp_port
+  - name: smtp_starttls
+  - name: smtp_username
+  - name: smtp_password
+  - name: smtp_auth_type
 {% endkong_config_table %}
 <!--vale on-->
 
@@ -243,4 +250,7 @@ If running {{site.base_gateway}} in hybrid mode, the admin SMTP settings must be
 {:.warning}
 > {{site.base_gateway}} doesn't check the validity of email addresses set in the configuration. 
 If the SMTP settings are configured incorrectly (for example, pointing to a non-existent email address), Kong Manager will _not_ display an error message.
+
+For complete tutorials, see the following:
+* [Configure AWS SES for SMTP emails in {{site.base_gateway}}](/how-to/configure-aws-ses-smtp-for-kong-gateway/)
 
