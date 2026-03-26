@@ -145,30 +145,50 @@ The plugin can extract claims from a validated token and forward them to the ups
 
 Use [`config.claim_to_header`](./reference/#schema--config-claim-to-header) to map top-level token claims to upstream headers. Each entry requires a `claim` name and a `header` name:
 
-```yaml
-claim_to_header:
-  - claim: sub
-    header: X-User-Id
-  - claim: email
-    header: X-User-Email
-```
+{% entity_example %}
+type: plugin
+data:
+  name: ai-mcp-oauth2
+  config:
+    claim_to_header:
+      - claim: sub
+        header: X-User-Id
+      - claim: email
+        header: X-User-Email
+formats:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+{% endentity_example %}
 
 ### Nested claims {% new_in 3.14 %}
 
 Use [`config.upstream_headers`](./reference/#schema--config-upstream-headers) to map claims at any depth in the token payload using a path array. This field is mutually exclusive with `claim_to_header`:
 
-```yaml
-upstream_headers:
-  - header: X-Org-Id
-    path:
-      - org
-      - id
-  - header: X-Role
-    path:
-      - realm_access
-      - roles
-      - 0
-```
+{% entity_example %}
+type: plugin
+data:
+  name: ai-mcp-oauth2
+  config:
+    upstream_headers:
+      - header: X-Org-Id
+        path:
+          - org
+          - id
+      - header: X-Role
+        path:
+          - realm_access
+          - roles
+          - "0"
+formats:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+{% endentity_example %}
 
 ## Consumer mapping {% new_in 3.14 %}
 
@@ -178,25 +198,50 @@ The plugin can map token claims to Kong consumers and consumer groups, enabling 
 
 Set [`config.consumer_claim`](./reference/#schema--config-consumer-claim) to the path of the claim to use for consumer lookup. If multiple strings are provided, the plugin treats them as a nested path in the token payload.
 
-```yaml
-consumer_claim:
-  - sub
-```
-
 Use [`config.consumer_by`](./reference/#schema--config-consumer-by) to control which consumer fields are checked during lookup. Accepted values are `id`, `username`, and `custom_id`. Defaults to `["username", "custom_id"]`.
 
 Set [`config.consumer_optional`](./reference/#schema--config-consumer-optional) to `true` if you want the plugin to continue without failing when no matching consumer is found.
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-mcp-oauth2
+  config:
+    consumer_claim:
+      - sub
+    consumer_by:
+      - username
+      - custom_id
+    consumer_optional: false
+formats:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+{% endentity_example %}
 
 ### Consumer groups
 
 Set [`config.consumer_groups_claim`](./reference/#schema--config-consumer-groups-claim) to the path of the claim containing the consumer group names. If multiple strings are provided, the plugin treats them as a nested path.
 
-```yaml
-consumer_groups_claim:
-  - groups
-```
-
 Set [`config.consumer_groups_optional`](./reference/#schema--config-consumer-groups-optional) to `true` to allow the request to proceed even if no matching consumer group is found.
+
+{% entity_example %}
+type: plugin
+data:
+  name: ai-mcp-oauth2
+  config:
+    consumer_groups_claim:
+      - groups
+    consumer_groups_optional: true
+formats:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+{% endentity_example %}
 
 ### Virtual credentials
 
