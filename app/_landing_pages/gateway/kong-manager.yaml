@@ -168,7 +168,28 @@ rows:
               
             cta:
               url: "/gateway/entities/rbac/"
-  
+  - header:
+      type: h2
+      text: "Kong Manager SMTP"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: SMTP configuration reference
+              description: |
+                Learn which parameters you can use to configure SMTP for sending emails with Kong Manager.
+              icon: /assets/icons/codeblock.svg
+              cta:
+                url: "/gateway/kong-manager/configuration/#configure-kong-manager-to-send-email"
+      - blocks:
+          - type: card
+            config:
+              title: Configure AWS SES for SMTP emails in {{site.base_gateway}}
+              description: |
+                Learn how to configure Amazon Simple Email Service (SES) as the SMTP provider for {{site.base_gateway}} to send emails from Kong Manager.
+              icon: /assets/icons/aws.svg
+              cta:
+                url: "/how-to/configure-aws-ses-smtp-for-kong-gateway/"
 #  - header:
 #      text: How-to Guides
 #      type: h2
