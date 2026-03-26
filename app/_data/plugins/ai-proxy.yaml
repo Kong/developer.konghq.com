@@ -850,6 +850,28 @@ providers:
       model_example: 'databricks-gpt-oss-20b'
       min_version: '3.14'
 
+  - name: 'DeepSeek'
+    url_patterns:
+      - 'https://api.deepseek.com'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'deepseek-chat'
+      min_version: '3.14'
+    embeddings:
+      supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
 parameters:
   provider: 'config.model.provider'
   route_type: 'config.route_type'
