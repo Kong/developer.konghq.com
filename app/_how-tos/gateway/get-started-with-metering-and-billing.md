@@ -57,6 +57,8 @@ related_resources:
     url: /metering-and-billing/billing-invoicing-subscriptions/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
     url: /how-to/meter-llm-traffic/
+  - text: Get started with {{site.metering_and_billing}} generic meters
+    url: /how-to/get-started-with-metering-and-billing-generic-meters/
 min_version:
     gateway: '3.4'
 next_steps:

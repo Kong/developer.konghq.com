@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@fc5007a42006704a75e5ab4d701a50c2edf7da81
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fc5007a42006704a75e5ab4d701a50c2edf7da81'
+  x-oas-source: kong/platform-api@b59652ecce8462f83e953c8709c94bb31ed11ca5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b59652ecce8462f83e953c8709c94bb31ed11ca5'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -1560,6 +1560,18 @@ components:
         - dedicated.v0
         - serverless.v1
       title: ConfigurationKind
+    CustomDomainKind:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        Kind of the custom domain based on Cloud Gateway deployment.
+      type: string
+      default: dedicated.v0
+      enum:
+        - dedicated.v0
+        - serverless.v1
+      title: CustomDomainKind
     ConfigurationManifest:
       description: Object containing information about a control-plane's cloud-gateways configuration.
       type: object
@@ -3264,6 +3276,8 @@ components:
           format: date-time
           example: '2022-11-04T20:10:06.927Z'
           readOnly: true
+        kind:
+          $ref: '#/components/schemas/CustomDomainKind'
       required:
         - id
         - control_plane_id
@@ -3332,6 +3346,8 @@ components:
           $ref: '#/components/schemas/ControlPlaneGeo'
         domain:
           $ref: '#/components/schemas/CustomDomainName'
+        kind:
+          $ref: '#/components/schemas/CustomDomainKind'
       additionalProperties: false
       required:
         - control_plane_id

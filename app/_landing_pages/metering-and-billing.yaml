@@ -47,6 +47,15 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Get started with generic meters
+              description: |
+                Learn how to meter and bill generic meters.
+              icon: /assets/icons/graduation.svg
+              cta:
+                url: /how-to/get-started-with-metering-and-billing-generic-meters/
+      - blocks:
+          - type: card
+            config:
               title: Start monetizing {{site.base_gateway}} API traffic
               description: |
                 Learn how to meter and bill {{site.base_gateway}} API requests.
@@ -203,6 +212,33 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+
+  - header:
+      type: h2
+      text: "Cost analytics"
+      sub_text: "Track and analyze the internal costs of feature usage."
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Cost analytics
+              description: |
+                Query and visualize the computed cost of feature usage over time, with filtering and dimensional breakdowns.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#cost-analytics-queries
+      - blocks:
+          - type: card
+            config:
+              title: LLM cost database
+              description: |
+                Browse the built-in database of per-token pricing for major LLM providers and models. Create price overrides for custom rates.
+              icon: /assets/icons/llm.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#llm-cost-database
 
   - header:
       type: h2
