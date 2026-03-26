@@ -144,7 +144,7 @@ data:
   credentials:
     - my-admin-key-auth
   
-indent: 4
+indent: 3
 {% endentity_example %}
 
 {% entity_example %}
@@ -154,7 +154,7 @@ data:
   credentials:
     - my-user-key-auth
   
-indent: 4
+indent: 3
 {% endentity_example %}
 
 ## Secure the service
@@ -205,20 +205,20 @@ Create two plugins, one which allows only an admin group, and one which allows b
 
 1. Patch the Consumers:
 
-    ```bash
-    kubectl patch -n kong --type json kongconsumer my-admin \
-      -p='[{
-        "op":"add",
-        "path":"/credentials/-",
-        "value":"admin-acl"
-      }]'
-    kubectl patch -n kong --type json kongconsumer my-user \
-      -p='[{
-        "op":"add",
-        "path":"/credentials/-",
-        "value":"user-acl"
-      }]'
-    ```
+   ```bash
+   kubectl patch -n kong --type json kongconsumer my-admin \
+     -p='[{
+       "op":"add",
+       "path":"/credentials/-",
+       "value":"admin-acl"
+     }]'
+   kubectl patch -n kong --type json kongconsumer my-user \
+     -p='[{
+       "op":"add",
+       "path":"/credentials/-",
+       "value":"user-acl"
+     }]'
+   ```
 
 ## Add access control
 
