@@ -53,11 +53,13 @@ prereqs:
     routes:
       - a2a-route
   inline:
-    - title: AI A2A Proxy plugin
-      icon_url: /assets/icons/ai.svg
-      content: |
-        This guide builds on the [Proxy A2A agents through {{site.ai_gateway}}](/how-to/proxy-a2a-agents/)
-        how-to. Complete that guide first to set up the A2A service, route, and AI A2A Proxy plugin.
+  - title: OpenAI API key
+    include_content: prereqs/openai
+    icon_url: /assets/icons/openai.svg
+  - title: A2A agent
+    include_content: prereqs/a2a-agent
+    icon_url: /assets/icons/ai.svg
+
 
 cleanup:
   inline:
@@ -81,15 +83,12 @@ faqs:
       requests.
   - q: Does this affect streaming responses?
     a: |
-      No. The Request Size Limiting plugin checks the request body size, not the response.
-      Streaming SSE responses from the upstream agent are not affected.
+      No. The Request Size Limiting plugin checks the request body size, not the response. Streaming SSE responses from the upstream agent are not affected.
 ---
 
 ## Enable the AI A2A Proxy plugin
 
 The AI A2A Proxy plugin parses A2A JSON-RPC requests and proxies them to the upstream agent.
-With logging enabled, the plugin records A2A metrics and payloads as OpenTelemetry span
-attributes.
 
 {% entity_examples %}
 entities:
@@ -104,7 +103,7 @@ entities:
 
 ## Enable the Request Size Limiting plugin
 
-The Request Size Limiting plugin rejects requests with a body larger than the configured limit. This configuration sets a 1 MB limit, which is intentionally low for testing with `FilePart` or `DataPart` payloads.
+The [Request Size Limiting plugin](/plugins/request-size-limiting/) rejects requests with a body larger than the configured limit. This configuration sets a 1 MB limit, which is intentionally low for testing with `FilePart` or `DataPart` payloads.
 
 {% entity_examples %}
 entities:
@@ -145,7 +144,7 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-The gateway proxies the request to the upstream A2A agent and returns a JSON-RPC response.
+The {{site.base_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
 
 ## Validate oversized requests are rejected
 
@@ -181,7 +180,7 @@ curl -i --no-progress-meter \
   -d @/tmp/large_payload.json
 ```
 
-The gateway rejects the request with `413 Request Entity Too Large`:
+The {{site.base_gateway}} rejects the request with `413 Request Entity Too Large`:
 
 ```
 HTTP/2 413

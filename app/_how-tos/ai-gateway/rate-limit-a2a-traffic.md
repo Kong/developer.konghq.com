@@ -55,17 +55,12 @@ prereqs:
     routes:
       - a2a-route
   inline:
-    - title: AI A2A Proxy and Key Auth plugins
-      icon_url: /assets/icons/ai.svg
-      content: |
-        This guide builds on two previous how-to guides:
-
-        1. [Proxy A2A agents through {{site.ai_gateway}}](/how-to/proxy-a2a-agents/) sets up the
-           A2A service, route, and AI A2A Proxy plugin.
-        2. [Secure A2A endpoints with key authentication](/how-to/secure-a2a-endpoints/) adds
-           Key Auth with a consumer `a2a-client-1` and API key `a2a-secret-key-1`.
-
-        Complete both guides before continuing.
+  - title: OpenAI API key
+    include_content: prereqs/openai
+    icon_url: /assets/icons/openai.svg
+  - title: A2A agent
+    include_content: prereqs/a2a-agent
+    icon_url: /assets/icons/ai.svg
 
 cleanup:
   inline:
@@ -105,7 +100,7 @@ entities:
 
 ## Enable the Key Auth plugin
 
-The Key Auth plugin identifies callers and associates them with a Kong consumer. Rate Limiting Advanced uses this consumer identity to apply per-consumer limits.
+The [Key Auth plugin](/plugins/key-auth/) identifies callers and associates them with a Kong consumer. Rate Limiting Advanced uses this consumer identity to apply per-consumer limits.
 
 {% entity_examples %}
 entities:
@@ -115,9 +110,7 @@ entities:
 
 ## Enable the Rate Limiting Advanced plugin
 
-The Rate Limiting Advanced plugin counts requests per consumer and rejects requests that
-exceed the configured limit. This configuration allows 5 requests per 30 seconds. The low
-limit makes it easy to test.
+The [Rate Limiting Advanced plugin]/plugins/rate-limiting-advanced/() counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds. The low limit makes it easy to test.
 
 {% entity_examples %}
 entities:
@@ -164,8 +157,7 @@ x-ratelimit-remaining-30: 4
 ```
 {:.no-copy-code}
 
-`ratelimit-remaining` decreases with each request. `ratelimit-reset` shows the seconds
-until the window resets.
+`ratelimit-remaining` decreases with each request. `ratelimit-reset` shows the seconds until the window resets.
 
 ## Validate rate limit enforcement
 
@@ -206,5 +198,3 @@ The `429` response body contains:
 }
 ```
 {:.no-copy-code}
-
-Wait 30 seconds for the window to reset, then send another request to confirm it succeeds again.
