@@ -864,7 +864,7 @@
     }
 
    [data-code-snippet]::after {
-      @apply absolute left-0 right-0 bottom-0 h-20 z-[1];
+      @apply absolute left-0 right-0 bottom-0 h-20 z-[1] pointer-events-none;
       content: "";
       background: linear-gradient(0deg, rgb(var(--color-bg-code-block)) 0, rgb(var(--color-bg-code-block)) 25%, transparent 100%);
     }
