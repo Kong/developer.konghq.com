@@ -66,16 +66,16 @@ smtp_port = 587
 smtp_starttls = on
 smtp_username = YOUR_SMTP_USERNAME
 smtp_password = YOUR_ENTRA_CLIENT_SECRET
-smtp_auth_type = plain
+smtp_auth_type = login
 
-admin_emails_from = verified-sender@your-azure-domain.com
-admin_emails_reply_to = verified-sender@your-azure-domain.com
+admin_emails_from = YOUR_NAME <verified-sender@example.com>
+admin_emails_reply_to = YOUR_NAME <verified-sender@example.com>
 ```
 
 Replace the following values:
 * `smtp_username`: The SMTP username you created in the Azure portal.
 * `smtp_password`: The Microsoft Entra application client secret.
-* `admin_emails_from`: A verified email address from your Azure Communication Services domain.
+* `admin_emails_from`: A connected email address from your Azure Communication Services domain.
 * `admin_emails_reply_to`: The reply-to email address for outgoing emails.
 
 ## Restart {{site.base_gateway}}
