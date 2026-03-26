@@ -245,57 +245,24 @@ features:
 {:.info}
 > For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).
 
-<!-- vale off -->
-{% feature_table %}
-item_title: Provider
-columns:
-  - title: Description
-    key: description
-
-features:
-  - title: "[OpenAI](/ai-gateway/ai-providers/openai/)"
-    description: GPT-5, GPT-4, GPT-4o, GPT-3.5, DALL-E, Whisper, Sora, and text embedding models.
-
-  - title: "[Azure OpenAI](/ai-gateway/ai-providers/azure/)"
-    description: Microsoft-hosted OpenAI models with Azure enterprise integration.
-
-  - title: "[Amazon Bedrock](/ai-gateway/ai-providers/bedrock/)"
-    description: AWS-managed foundation models including Claude, Titan, Llama, and Stable Diffusion.
-
-  - title: "[Anthropic](/ai-gateway/ai-providers/anthropic/)"
-    description: Claude model family for chat, completions, and function calling.
-
-  - title: "[Gemini](/ai-gateway/ai-providers/gemini/)"
-    description: Google's Gemini models via the Generative Language API.
-
-  - title: "[Vertex AI](/ai-gateway/ai-providers/vertex/)"
-    description: Google Cloud-hosted Gemini models with enterprise features.
-
-  - title: "[Cohere](/ai-gateway/ai-providers/cohere/)"
-    description: Command models for chat, completions, embeddings, and reranking.
-
-  - title: "[Mistral](/ai-gateway/ai-providers/mistral/)"
-    description: Mistral AI models in cloud, self-hosted, or OLLAMA formats.
-
-  - title: "[Hugging Face](/ai-gateway/ai-providers/huggingface/)"
-    description: Open-source models via Hugging Face Inference API.
-
-  - title: "[Llama](/ai-gateway/ai-providers/llama/)"
-    description: Meta's Llama 2 and Llama 3 models in raw, OLLAMA, or OpenAI formats.
-
-  - title: "[xAI](/ai-gateway/ai-providers/xai/)"
-    description: Grok models for chat, function calling, and image generation.
-
-  - title: "[Alibaba Cloud DashScope](/ai-gateway/ai-providers/dashscope/)"
-    description: Qwen models for chat, embeddings, and image generation.
-
-  - title: "[Cerebras](/ai-gateway/ai-providers/cerebras/)"
-    description: High-performance inference for Llama models via Cerebras Cloud.
-
-  - title: "[DeepSeek](/ai-gateway/ai-providers/deepseek/)"
-    description: DeepSeek chat models optimized for reasoning and code generation.
-{% endfeature_table %}
-<!-- vale on -->
+{% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
+{% include cards/third_party_tool.md icon="openai.svg" content="OpenAI" %}
+{% include cards/third_party_tool.md icon="azure.svg" content="Azure OpenAI" %}
+{% include cards/third_party_tool.md icon="bedrock.svg" content="Amazon Bedrock" %}
+{% include cards/third_party_tool.md icon="anthropic.svg" content="Anthropic" %}
+{% include cards/third_party_tool.md icon="gemini.svg" content="Gemini" %}
+{% include cards/third_party_tool.md icon="vertex.svg" content="Vertex AI" %}
+{% include cards/third_party_tool.md icon="cohere.svg" content="Cohere" %}
+{% include cards/third_party_tool.md icon="mistral.svg" content="Mistral" %}
+{% include cards/third_party_tool.md icon="huggingface.svg" content="Hugging Face" %}
+{% include cards/third_party_tool.md icon="metaai.svg" content="Llama" %}
+{% include cards/third_party_tool.md icon="xai.svg" content="xAI" %}
+{% include cards/third_party_tool.md icon="dashscope.svg" content="Alibaba Cloud DashScope" %}
+{% include cards/third_party_tool.md icon="cerebras.svg" content="Cerebras" %}
+{% include cards/third_party_tool.md icon="deepseek.svg" content="DeepSeek" %}
+{% include cards/third_party_tool.md icon="ollama.svg" content="Ollama" %}
+{% include cards/third_party_tool.md icon="databricks.svg" content="Databricks" %}
+{% endhtml_tag %}
 
 ## How it works
 
