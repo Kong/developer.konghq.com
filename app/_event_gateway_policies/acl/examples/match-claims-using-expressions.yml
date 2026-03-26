@@ -11,22 +11,18 @@ extended_description: |
   For more information on expressions in {{site.event_gateway}}, see the [expressions reference](/event-gateway/expressions/).
 weight: 900
 
-name: read-only-topic
+name: acl_policy
 type: acls
 config:
-  policies:
-    - name: acl_policy
-      type: acls
-      config:
-        rules:
-        - resource_type: topic
-          action: allow
-          operations:
-            - name: describe
-            - name: describe_configs
-            - name: read
-            - name: write
-          resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
+  rules:
+  - resource_type: topic
+    action: allow
+    operations:
+      - name: describe
+      - name: describe_configs
+      - name: read
+      - name: write
+    resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
 tools:
   - konnect-api
   - terraform
