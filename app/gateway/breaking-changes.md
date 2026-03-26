@@ -87,8 +87,7 @@ We recommend updating your configurations, as the old `config.consumer_claim` fi
 
 Starting in 3.14, the {{site.base_gateway}} global configuration option [`tls_certificate_verify`](/gateway/configuration/#tls-certificate-verify) now defaults to `on`, requiring TLS/SSL certificate verification by default.
 
-This change can cause issues in the following areas:
-
+Review the following table to learn how this change affects your deployments:
 {% table %}
 columns:
   - title: Category
@@ -104,26 +103,28 @@ rows:
     action:
       For PostgreSQL configurations, add the PostgreSQL server’s certificate into {{site.base_gateway}}’s trusted certificate list at [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate), and set [`pg_ssl_verify`](/gateway/configuration/#pg-ssl-verify) to `on`.
 
-  - category: Services
+  - category: Gateway Services
     impact: |
-      Service entities with `tls_verify = false` where the Service protocol is `https`, `tls`, `grpcs`, or `wss` are affected as follows:
+      Gateway Service entities with `tls_verify = false` where the Service protocol is `https`, `tls`, `grpcs`, or `wss` are affected as follows:
 
-      - **Traditional mode:** Existing Service entities with `tls_verify = false` can still be loaded and used, but updating the Service's config with `tls_verify = false` returns an error from the Admin API.
-      - **DB-less mode:** If the declarative configuration contains a Service with `tls_verify = false`, {{site.base_gateway}} will fail to boot.
+      - **Traditional mode:** Existing Gateway Service entities with `tls_verify = false` can still be loaded and used, but updating the Service's config with `tls_verify = false` returns an error from the Admin API.
+      - **DB-less mode:** If the declarative configuration contains a Gateway Service with `tls_verify = false`, {{site.base_gateway}} will fail to boot.
       - **Hybrid mode (on-prem):** The data plane can boot but can't receive a valid configuration from the control plane, and errors will appear in the data plane log.
     action: |
-      Update the schema for all affected Services (where protocol is `https`, `tls`, `grpcs`, or `wss`) by setting `tls_verify = true`.
+      Update the schema for all affected Gateway Services (where protocol is `https`, `tls`, `grpcs`, or `wss`) by setting `tls_verify = true`.
 
   - category: Plugins
     impact: |
-      Any plugin configured with  `ssl_verify = false` is affected by this change.
-
+      Any plugin configured with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false` is affected by this change.
+      <br><br>
       The behavior differs based on deployment mode:
-      - **Traditional mode:** Existing plugins with `ssl_verify = false` can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
-      - **DB-less mode:** If the declarative configuration contains plugins with `ssl_verify = false`, {{site.base_gateway}} will fail to boot.
+      - **Traditional mode:** Existing plugins with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false` can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
+      - **DB-less mode:** If the declarative configuration contains plugins with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false`, {{site.base_gateway}} will fail to boot.
       - **Hybrid mode (on-prem):** The data plane cannot receive a valid configuration from the control plane, and errors will appear in the data plane log.
     action: |
-      Update the schema for all affected plugins by setting `ssl_verify = true`.
+      Update the schema for all affected plugins by setting `ssl_verify = true`, `tls_verify = true`, or `https_verify =  true`. 
+      <br>
+      To see your plugin's schema, find your plugin on the [Plugin Hub](/plugins/), then open the **Configuration reference** tab.
 
   - category: HashiCorp Vault
     impact: |
