@@ -147,19 +147,26 @@ rows:
   - property: "`ai.proxy.aws-guardrails.output_masked`"
     description: "`true` if the response content was masked rather than blocked. Only present when `config.allow_masking` is `true`."
   - property: "`ai.proxy.aws-guardrails.input_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.aws-guardrails.output_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.aws-guardrails.input_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.output_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.aws-guardrails.guards_triggered_count`"
-    description: "{% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request."
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.aws-guardrails.input_faulty_prompt`"
-    description: "{% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.aws-guardrails.output_faulty_response`"
-    description: "{% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 ### AI GCP Model Armor logs {% new_in 3.12 %}
@@ -184,21 +191,29 @@ rows:
   - property: "`ai.proxy.gcp-model-armor.output_block_reason`"
     description: "The check type or types that caused the response to be blocked, comma-separated. Empty if the response was allowed."
   - property: "`ai.proxy.gcp-model-armor.mode`"
-    description: "{% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`."
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.gcp-model-armor.input_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.gcp-model-armor.output_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.gcp-model-armor.input_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.output_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.gcp-model-armor.guards_triggered_count`"
-    description: "{% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request."
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.gcp-model-armor.input_faulty_prompt`"
-    description: "{% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.gcp-model-armor.output_faulty_response`"
-    description: "{% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 ### AI Azure Content Safety logs
@@ -246,21 +261,29 @@ rows:
   - property: "`ai.proxy.azure-content-safety.output_block_reason`"
     description: The reason the response was blocked. Empty if the response was allowed.
   - property: "`ai.proxy.azure-content-safety.mode`"
-    description: "{% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`."
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.azure-content-safety.input_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.azure-content-safety.output_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.azure-content-safety.input_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.output_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.azure-content-safety.guards_triggered_count`"
-    description: "{% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request."
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.azure-content-safety.input_faulty_prompt`"
-    description: "{% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.azure-content-safety.output_faulty_response`"
-    description: "{% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 ### AI Lakera Guard logs {% new_in 3.13 %}
@@ -297,19 +320,26 @@ rows:
   - property: "`ai.proxy.lakera-guard.output_block_detail`"
     description: "An array of violation objects present when Lakera blocks a response. The structure matches `input_block_detail`."
   - property: "`ai.proxy.lakera-guard.input_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
   - property: "`ai.proxy.lakera-guard.output_block_source`"
-    description: "{% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed."
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
   - property: "`ai.proxy.lakera-guard.input_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.output_block_consumer_id`"
-    description: "{% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved."
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
   - property: "`ai.proxy.lakera-guard.guards_triggered_count`"
-    description: "{% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request."
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
   - property: "`ai.proxy.lakera-guard.input_faulty_prompt`"
-    description: "{% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
   - property: "`ai.proxy.lakera-guard.output_faulty_response`"
-    description: "{% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`."
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 
@@ -512,11 +542,6 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-### AI A2A Proxy logs {% new_in 3.14 %}
-
-If you're using the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
-
-{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
 
 ## Example log entries
 
