@@ -42,7 +42,7 @@ See the [breaking changes entry for metrics naming](/event-gateway/breaking-chan
 
 - **Minimum runtime version**: Event gateway control planes can now be configured to enforce a minimum version on connecting nodes. Some features are gated behind this setting because they depend on support in the data plane node.
 - **mTLS to backend Kafka clusters**: You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers. 
-  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using mTLS](event-gateway/configure-mtls-backend-cluster-auth/)
+  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using mTLS](/event-gateway/configure-mtls-backend-cluster-auth/)
   - [Backend cluster reference](/event-gateway/entities/backend-cluster/)
 - **mTLS between clients and the gateway**: Clients can now authenticate to the gateway using TLS client certificates. Supports principal mapping to extract identity information from certificates for
 use in authorization policies.
