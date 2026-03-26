@@ -81,7 +81,7 @@ rows:
 
 The plugin runs in four phases:
 
-- **Access phase**: Detects A2A protocol binding (JSON-RPC or REST). Starts an OpenTelemetry span when [`config.logging.log_statistics`](./reference/#schema--config-logging-log-statistics) is enabled. Records the request body for payload logging when [`config.logging.log_payloads`](/reference/#schema--config-logging-log-payloads) is enabled.
+- **Access phase**: Detects A2A protocol binding (JSON-RPC or REST). Starts an OpenTelemetry span when [`config.logging.log_statistics`](./reference/#schema--config-logging-log-statistics) is enabled. Records the request body for payload logging when [`config.logging.log_payloads`](./reference/#schema--config-logging-log-payloads) is enabled.
 - **Header filter phase**: Detects streaming responses (`Content-Type: text/event-stream`) and records time to first
   byte (TTFB). Buffers agent card responses for URL rewriting.
 - **Body filter phase**: Streams SSE chunks through to the client without buffering, preserving low latency. Buffers non-streaming responses to extract task metadata. Rewrites agent card URLs to the gateway address. Emits analytics data to the Konnect pipeline at end-of-response.
@@ -194,7 +194,7 @@ For responses with `Content-Type: text/event-stream`, the plugin passes SSE chun
 
 ### Logging and observability
 
-Enable observability with [`config.logging.log_statistics`](./reference/#schema--config-logging-log_statistics).
+Enable observability with [`config.logging.log_statistics`](./reference/#schema--config-logging-log-statistics).
 When enabled, the plugin:
 
 - Starts an OpenTelemetry span per A2A request
@@ -207,9 +207,9 @@ When enabled, the plugin:
 > for metadata extraction.
 
 To also capture request and response bodies, enable
-[`config.logging.log_payloads`](./reference/#schema--config-logging-log_payloads).
+[`config.logging.log_payloads`](./reference/#schema--config-logging-log-payloads).
 This field requires `log_statistics` to also be enabled. Payloads are truncated at
-[`config.logging.max_payload_size`](./reference/#schema--config-logging-max_payload_size) (default 1 MB).
+[`config.logging.max_payload_size`](./reference/#schema--config-logging-max-payload-size) (default 1 MB).
 `max_payload_size` must be greater than 0; set `max_request_body_size` to `0` instead if you need
 unlimited capture for request detection.
 
@@ -234,6 +234,6 @@ When `config.logging.log_statistics` is enabled and Kong tracing is configured, 
 ### Request body size
 
 The plugin reads the request body to detect JSON-RPC A2A requests. Use
-[`config.max_request_body_size`](./reference/#schema--config-max_request_body_size) to control the maximum body size parsed for detection (default 1 MB). Set to `0` for no limit. REST requests are detected by path and HTTP method without reading the body, so this setting applies to JSON-RPC detection only.
+[`config.max_request_body_size`](./reference/#schema--config-max-request-body-size) to control the maximum body size parsed for detection (default 1 MB). Set to `0` for no limit. REST requests are detected by path and HTTP method without reading the body, so this setting applies to JSON-RPC detection only.
 
 If a request body exceeds the limit, the plugin logs a warning and skips A2A detection for that request; the request is still proxied upstream.
