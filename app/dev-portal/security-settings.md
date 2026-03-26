@@ -124,7 +124,7 @@ Default_application_auth_strategy_id: null (none) or auth strategy uuid
 ```
 -->
 
-## Specify IP addresses that can connect to your Dev Portal
+## Specify IP addresses that can connect to your {{site.dev_portal}}
 
 You can specify an IP address or a range of IP addresses that are allowed to connect to a Dev Portal through its supported interfaces. 
 This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin API](/admin-api/), and [Terraform](/terraform/).
@@ -137,7 +137,7 @@ This IP allow list applies to all Dev Portal communication that goes through the
 > * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after several minutes.
 
 
-To configure IP allow list for a Dev Portal, do one of the following:
+To configure an IP allow list for a Dev Portal, do one of the following:
 
 {% navtabs "ip-allow-list" %}
 {% navtab "UI" %}
