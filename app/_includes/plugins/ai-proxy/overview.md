@@ -291,6 +291,9 @@ features:
 
   - title: "[Cerebras](/ai-gateway/ai-providers/cerebras/)"
     description: High-performance inference for Llama models via Cerebras Cloud.
+
+  - title: "[DeepSeek](/ai-gateway/ai-providers/deepseek/)"
+    description: DeepSeek chat models optimized for reasoning and code generation.
 {% endfeature_table %}
 <!-- vale on -->
 
