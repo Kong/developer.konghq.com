@@ -146,6 +146,7 @@ configMaps
 configs
 configurability
 Conjur
+Coroutine
 conntrack
 consumer_group
 consumer_id
@@ -666,6 +667,7 @@ pipelines
 plaintext
 Pongo
 Pongo
+Pgmoon
 Postgres
 Postgres
 PostgreSQL
@@ -1035,3 +1037,6 @@ Zipkin
 Zipkin
 zipkin
 zsh
+Subrequest
+Tablepool
+XMLua
