@@ -3,7 +3,7 @@ title: "{{site.observability}} Explorer"
 content_type: reference
 layout: reference
 description: | 
-    Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
+    Explorer is an intuitive web-based interface that displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
 breadcrumbs:
   - /observability/
 products:
@@ -69,13 +69,16 @@ related_resources:
     url: /dev-portal/analytics/
 ---
 
-The Explorer interface displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to:
+The Explorer interface displays API, LLM, and platform usage data gathered by {{site.konnect_short_name}} Analytics. You can use this tool to:
 * Diagnose performance issues
 * Monitor LLM token consumption and costs
 * Capture essential usage metrics
-* See how many {{site.base_gateway}} entities your platform or control plane have
+* See how many {{site.base_gateway}} entities exist in your platform or control plane
 
 The Analytics Explorer also lets you save the output as a custom report.
+
+To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/us/analytics/explorer) and switch between API usage, LLM usage, and platform usage using the dataset dropdown. 
+Metrics and groupings will dynamically adjust based on the selected dataset.
 
 ## Enabling data ingestion
 
@@ -85,17 +88,7 @@ This toggle lets you enable or disable data collection for your API traffic per 
 **Modes:**
 - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
 - **Off:** Advanced analytics collection stops, but basic API metrics remain available for API Gateway in {{site.konnect_short_name}}, 
-and can still be used for custom reports.
-
-## LLM reporting
-
-{{site.observability}} allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency. 
-
-With LLM usage reporting, you can:
-
-* Track token consumption: Monitor the number of tokens processed by the different LLM models you have configured. 
-* Understand costs: Gain visibility into the costs associated with your LLM providers. 
-* Measure latency: Analyze the latency involved in processing LLM requests. 
+and can still be used for custom reports. 
 
 ## Metrics
 
@@ -104,6 +97,10 @@ Within a single report, you have the flexibility to choose one or multiple metri
 
 {% navtabs "metrics" %}
 {% navtab "API usage" %}
+With API usage reporting, you can:
+* Identify which services are slow or have high error rates
+* Monitor request volume and throughput over time
+* Analyze payload sizes for clients and upstream services
 
 The following table shows which API usage metrics you can view:
 <!--vale off-->
@@ -148,50 +145,88 @@ rows:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "LLM usage" %}
+{{site.observability}} allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency. 
+
+With LLM usage reporting, you can:
+
+* Track token consumption: Monitor the number of tokens processed by the different LLM models you have configured. 
+* Understand costs: Gain visibility into the costs associated with your LLM providers. 
+* Measure latency: Analyze the latency involved in processing LLM requests.
 
 The following table shows which LLM usage metrics you can view:
 <!--vale off-->
 {% table %}
 columns:
-  - title: "Metric"
-    key: "metric"
-  - title: "Category"
-    key: "category"
+  - title: "Attribute"
+    key: "attribute"
+  - title: "Unit"
+    key: "unit"
   - title: "Description"
     key: "description"
 rows:
-  - metric: "Request Count"
-    category: "Count"
-    description: |
-      Total number of API calls within the selected time frame. This includes requests that were rejected due to rate limiting, failed authentication, and so on.
-  - metric: "Requests per Minute"
-    category: "Rate"
-    description: |
-      Number of API calls per minute within the selected time frame.
-  - metric: "Response Latency"
-    category: "Latency"
-    description: |
-      The time, in milliseconds, it takes to process an API request from start to finish. Users can choose from average (avg) or specific percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that 99 out of 100 requests were completed in under 10 ms from the time the request was received to when the response was sent.
-  - metric: "Upstream Latency"
-    category: "Latency"
-    description: |
-      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms from the moment the request was sent to the upstream service to when the first byte of the response was received.
-  - metric: "Kong latency"
-    category: "Latency"
-    description: |
-      The time, in milliseconds, spent within {{site.base_gateway}} processing a request, excluding upstream response time. Users can choose from different percentiles (p99, p95, and p50). For example, a 99th percentile Kong latency of 10 milliseconds means that 99 out of 100 requests took less than 10 ms to be processed in {{site.base_gateway}} before reaching the upstream service.
-  - metric: "Request Size"
-    category: "Size"
-    description: |
-      The size of the request payload received from the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile request size of 100 bytes means that the payload size for every 1 in 100 requests was at least 100 bytes.
-  - metric: "Response Size"
-    category: "Size"
-    description: |
-      The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+  - attribute: "Completion Tokens"
+    unit: "Count"
+    description: "Completion tokens are any tokens that the model generates in response to an input."
+  - attribute: "Prompt Tokens"
+    unit: "Count"
+    description: "Prompt tokens are the number of tokens in the prompt that are input into the model."
+  - attribute: "Total Tokens"
+    unit: "Count"
+    description: "Sum of all tokens used in a single request to the model. It includes both the tokens in the input (prompt) and the tokens generated by the model (completion)."
+  - attribute: "Time per Tokens"
+    unit: "Number"
+    description: "Average time in milliseconds to generate a token. Calculated as LLM latency divided by the number of tokens."
+  - attribute: "Costs"
+    unit: "Cost"
+    description: "Represents the resulting costs for a request. Final costs = (total number of prompt tokens × input cost per token) + (total number of completion tokens × output cost per token) + (total number of prompt tokens × embedding cost per token)."
+  - attribute: "Response Model"
+    unit: "String"
+    description: "Represents which AI model was used to process the prompt by the AI provider."
+  - attribute: "Request Model"
+    unit: "String"
+    description: "Represents which AI model was used to process the prompt."
+  - attribute: "Provider Name"
+    unit: "String"
+    description: "Represents which AI provider was used to process the prompt."
+  - attribute: "Plugin ID"
+    unit: "String"
+    description: "Represents the UUID of the plugin."
+  - attribute: "LLM Latency"
+    unit: "Latency"
+    description: "Total time taken to receive a full response after a request sent from Kong (LLM latency + connection time)."
+  - attribute: "Embeddings Latency"
+    unit: "Latency"
+    description: "Time taken to generate the vector for the prompt string."
+  - attribute: "Fetch Latency"
+    unit: "Latency"
+    description: "Total time taken to return a cache."
+  - attribute: "Cache Status"
+    unit: "String"
+    description: "Shows if the response comes directly from the upstream or not. Possible values: `hit` or `Miss`."
+  - attribute: "Embeddings Model"
+    unit: "String"
+    description: "AI providers may have multiple embedding models. This represents the model used for the embeddings."
+  - attribute: "Embeddings Provider"
+    unit: "String"
+    description: "Provider used for generating embeddings."
+  - attribute: "Embeddings Token"
+    unit: "Count"
+    description: "Tokens input into the model for embeddings."
+  - attribute: "Embeddings Cost"
+    unit: "Cost"
+    description: "Cost of caching."
+  - attribute: "Cost Savings"
+    unit: "Cost"
+    description: "Cost savings from cache."
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Platform usage" %}
+
+With platform usage reporting, you can:
+* Track the number of control planes and data plane nodes in your organization
+* Monitor Gateway Services, Routes, and plugins per control plane
+* View Consumer counts across your realms and control planes
 
 The following table shows which platform usage metrics you can view:
 <!--vale off-->
@@ -211,8 +246,8 @@ rows:
   - metric: "Data plane node count"
     category: "Count"
     description: |
-      Number of data planes in your control plane. 
-      These can also be filtered by data plane node version.
+      Number of data plane nodes in your organization.
+      You can also filter this metric by data plane node version.
   - metric: "Gateway Service count"
     category: "Count"
     description: |
