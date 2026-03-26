@@ -33,6 +33,7 @@ sections:
       - path: /mesh/deploy-mesh-self-managed/
       - path: /mesh/deploy-universal-self-managed/
       - path: /mesh/use-mesh-cli/
+      - path: /mesh/configure-virtual-outbound/
 
   - title: How Mesh Works
     items:
