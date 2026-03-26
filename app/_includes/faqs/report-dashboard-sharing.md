@@ -1,7 +1,6 @@
 {% if include.section == "question" %}
 
 How can I share {{include.feature}}s with other {{site.konnect_short_name}} users and teams?
-
 {% elsif include.section == "answer" %}
 
 Navigate to the {{include.feature}} in {{site.observability}}, click the action menu icon, and select "Share". 

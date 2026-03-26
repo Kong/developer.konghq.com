@@ -79,10 +79,15 @@ rows:
             config:
               - q: Who can create and manage custom dashboards?
                 a: |
-                  The Org Admin and Analytics Admin roles can create and manage custom dashboards in {{site.konnect_short_name}}.
+                  The Org Admin, Analytics Admin, and Dashboard Creator roles can create and manage custom dashboards in {{site.konnect_short_name}}.
+                  If you share a dashboard with a user or team, you can also grant them Editor and Admin access for that specific dashboard.
+                  To share a dashboard, navigate to the dashboard and click the action menu icon, and select "Share".
               - q: How can I give my team read-only access to dashboards?
                 a: |
                   [Assign the Viewer role](/observability/custom-dashboards-reference/#role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
+
+                  Alternatively, if you only want to grant read-only access to certain dashboards, you can share them with users and teams by clicking the action menu icon, and selecting "Share". 
+                  You can add users and teams to share the dashboard with them and configure their access level (**Viewer**, **Editor**, or **Admin**).
 
               - q: Can I automate dashboard creation?
                 a: |
