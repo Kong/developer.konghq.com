@@ -133,13 +133,13 @@ This IP allow list applies to all Dev Portal communication that goes through the
 
 {:.warning}
 > **Important:** 
-> * If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to your Dev Portal will be blocked.
-> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
+> * Any IP addresses that aren't allow listed won't be able to access the Dev Portal, including your own.
+> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after several minutes.
 
 
 To configure IP allow list for a Dev Portal, do one of the following:
 
-{% navtabs "ip-allowlist" %}
+{% navtabs "ip-allow-list" %}
 {% navtab "UI" %}
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
@@ -147,16 +147,16 @@ To configure IP allow list for a Dev Portal, do one of the following:
 1. In the Dev Portal sidebar, click **Settings**.
 1. Click the **Security** tab.
 1. For IP allow list, click **Configure**.
-1. In the **IP range** field, enter a single IP or an IP range. 
+1. In the **IP range** field, enter a single IP or an IP range in CIDR notation. 
    For example, `192.0.2.1` or `192.0.2.1/32`.
    
    {:.danger}
-   > **Allowlist your current IP:** Make sure your current IP is added to the allowlist otherwise you'll lose access to Dev Portal.
-1. Enable **IP allow list status**. <!--explanation of why-->
+   > **Allowlist your current IP:** Make sure your current IP is added to the allow list otherwise you'll lose access to Dev Portal.
+1. Enable **IP allow list status** to enable the Dev Portal allow list.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
-1. To configure your Dev Portal IP allowlist, send a POST request to the `/portals/$DEV_PORTAL_ID/ip-allow-list` endpoint:
+1. To configure your Dev Portal IP allow list, send a POST request to the `/portals/$DEV_PORTAL_ID/ip-allow-list` endpoint:
    <!--vale off-->
    {% konnect_api_request %}
    url: /v3/portals/$DEV_PORTAL_ID/ip-allow-list
@@ -171,9 +171,9 @@ To configure IP allow list for a Dev Portal, do one of the following:
    <!--vale on-->
 
    {:.danger}
-   > **Allowlist your current IP:** Make sure your current IP is added to the allowlist otherwise you'll lose access to Dev Portal.
+   > **Allowlist your current IP:** Make sure your current IP is added to the allow list otherwise you'll lose access to Dev Portal.
 
-1. To enable your Dev Portal IP allowlist, send a PATCH request to the `/portals/$DEV_PORTAL_ID` endpoint:
+1. To enable your Dev Portal IP allow list, send a PATCH request to the `/portals/$DEV_PORTAL_ID` endpoint:
    <!--vale off-->
    {% konnect_api_request %}
    url: /v3/portals/$DEV_PORTAL_ID
