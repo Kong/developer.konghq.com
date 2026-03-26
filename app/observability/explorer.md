@@ -59,7 +59,7 @@ faqs:
        From the chart settings, you can do the following:
        - Open Explorer with the chart’s current filters and time range, by selecting **Explore**.
        - Download the chart view by selecting **Export CSV**. The file includes the current filters and time window.
-  - q: Why don't I see any any data in the geo map?
+  - q: Why don't I see any data in the geo map?
     a: If you're sending requests from an internal IP address (local), those won't display in {{site.observability}} charts even if `konnect_mode` is off.
 
 related_resources:
