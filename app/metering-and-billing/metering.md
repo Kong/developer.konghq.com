@@ -186,10 +186,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -201,8 +197,7 @@ method: POST
 body:
     specversion: "1.0"
     type: prompt
-    id: 0C6A80B5-8FEB-437B-BDCB-00A7BF9DFDE5
-    time: $EVENT_TIME
+    id: C0B7E77A-7196-4F56-BE5B-9CA8E1224942
     source: chat-app
     subject: customer-1
     data: {"tokens": "123456", "model": "gpt4-turbo", "type": "output"}
@@ -235,10 +230,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -250,8 +241,7 @@ method: POST
 body:
     specversion: "1.0"
     type: gpu_time
-    id: 0609FE22-E4E1-4843-97C6-AFA00933065D
-    time: $EVENT_TIME
+    id: EFAE39C4-B3E1-49D8-A305-F338FD2160E0
     source: my-image-generator
     subject: customer-1
     data: {"duration_seconds": "12345", "hostname": "my-hostname", "region": "us-east-1", "gpu_type": "nvidia_A100"}
@@ -286,10 +276,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -301,8 +287,7 @@ method: POST
 body:
     specversion: "1.0"
     type: request
-    id: 913DE01E-5555-4D9A-B53B-15E7D1E95172
-    time: $EVENT_TIME
+    id: 94ABFA74-72B6-4785-A225-9EED9DD054C7
     source: api-service
     subject: customer-1
     data: {"method": "GET", "route": "/products/:product_id"}
@@ -335,10 +320,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -350,8 +331,7 @@ method: POST
 body:
     specversion: "1.0"
     type: request
-    id: 36F305FC-84E9-4CC0-9C94-348AC3F6FD4A
-    time: $EVENT_TIME
+    id: 361DA1BF-74F8-45F2-B6DF-675811006CF3
     source: api-service
     subject: customer-1
     data: {"method": "GET", "route": "/products/:product_id", "duration_seconds": "12345"}
@@ -384,10 +364,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -399,8 +375,7 @@ method: POST
 body:
     specversion: "1.0"
     type: kube-pod-exec-time
-    id: 870ff720-d777-4069-96b6-bcbb552522ec
-    time: $EVENT_TIME
+    id: E6313226-927B-4FC8-BC24-B1A5970F1FB6
     source: my-app
     subject: customer-1
     data: {"duration_seconds": "123", "pod_name": "pod_name", "pod_namespace": "pod_namespace"}
@@ -432,10 +407,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -447,8 +418,7 @@ method: POST
 body:
     specversion: "1.0"
     type: login
-    id: BD7CF22F-88B8-41A8-AA0E-B79076D08745
-    time: $EVENT_TIME
+    id: 4EFE926A-FC4D-454B-8FB8-03327CD81664
     source: auth-service
     subject: customer-1
     data: {"session_id": "session_id"}
@@ -506,10 +476,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 
@@ -521,8 +487,7 @@ method: POST
 body:
     specversion: "1.0"
     type: request
-    id: 7FACA1DA-1951-4791-B0AB-069C6AC8C289
-    time: $EVENT_TIME
+    id: 378A5F14-A5DE-4D18-81F2-443C794DA06A
     source: api-service
     subject: customer-1
     data: {"method": "GET", "route": "/products/:product_id", "duration_seconds": "123", "ingress_bytes": "456", "egress_bytes": "789"}
@@ -581,10 +546,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send two POST requests to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 <!--vale off-->
@@ -595,8 +556,7 @@ method: POST
 body:
     specversion: "1.0"
     type: workflow_create
-    id: B52D746E-028E-47ED-8106-BF53F68C4705
-    time: $EVENT_TIME
+    id: 30368136-4A64-4C04-89FA-C6672AD0AA0B
     source: task-queue
     subject: task-1
     data: {"task_type": "image-generate"}
@@ -610,7 +570,7 @@ method: POST
 body:
     specversion: "1.0"
     type: workflow_success
-    id: A85A83B3-68B0-49B3-A2D5-6415CC8215E2
+    id: 4E7A4D41-1AE1-470A-887C-C22C1A658583
     time: $EVENT_TIME
     source: task-queue
     subject: task-1
@@ -675,10 +635,6 @@ body:
 <!--vale on-->
 {% endnavtab %}
 {% navtab "Usage event example" %}
-Export the current time:
-```sh
-export EVENT_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-```
 
 Send a POST request to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
 <!--vale off-->
@@ -689,8 +645,7 @@ method: POST
 body:
     specversion: "1.0"
     type: translate
-    id: FCBFF8FA-CBBD-49EB-901A-8DC174C42F46
-    time: $EVENT_TIME
+    id: AAAD7FC5-D285-4405-A6CF-96E2B09D9DE3
     source: myapp
     subject: customer-123
     data: {"model": "gpt-4", "pages": 23, "tokens": 10200, "words": 6912}
