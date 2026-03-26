@@ -99,7 +99,7 @@ columns:
 rows:
   - category: PostgreSQL database
     impact: |
-      When PostgreSQL configuration contains `pg_ssl_verify = off`, {{site.base_gateway}} can fail to start.
+      When the PostgreSQL configuration contains `pg_ssl_verify = off`, {{site.base_gateway}} can fail to start.
     action:
       For PostgreSQL configurations, add the PostgreSQL server’s certificate into {{site.base_gateway}}’s trusted certificate list at [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate), and set [`pg_ssl_verify`](/gateway/configuration/#pg-ssl-verify) to `on`.
 
