@@ -30,7 +30,7 @@ faqs:
 
 ## Overview
 
-Use the `https://app.insomnia.rest/run` URL scheme to deep-link into the Insomnia desktop app and open a pre-imported request. You can embed this URL as a button or link in documentation, READMEs, or API references.
+Use the `https://app.insomnia.rest/run` URL scheme to deep-link into the Insomnia desktop app and open a pre-imported request. You can embed this URL as a button or link in documentation, `readme.md`, or API references.
 
 ## URL parameters
 
