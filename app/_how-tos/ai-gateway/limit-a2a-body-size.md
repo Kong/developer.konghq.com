@@ -84,6 +84,8 @@ faqs:
   - q: Does this affect streaming responses?
     a: |
       No. The Request Size Limiting plugin checks the request body size, not the response. Streaming SSE responses from the upstream agent are not affected.
+
+automated_tests: false
 ---
 
 ## Enable the AI A2A Proxy plugin

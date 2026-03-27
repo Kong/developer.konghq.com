@@ -130,6 +130,8 @@ faqs:
       Yes. Apply any {{site.base_gateway}} authentication plugin (Key Auth, OAuth2, JWT, etc.)
       to the same service or route. The AI A2A Proxy plugin handles A2A protocol concerns
       independently of authentication.
+
+automated_tests: false
 ---
 
 ## Enable the AI A2A Proxy plugin

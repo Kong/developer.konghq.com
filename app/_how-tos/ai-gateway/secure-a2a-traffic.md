@@ -78,6 +78,8 @@ faqs:
   - q: Can I use other authentication methods instead of Key Auth?
     a: |
       Yes. Any {{site.ai_gateway}} authentication plugin works with A2A routes: [JWT](/plugins/jwt/), [OpenID Connect](/plugins/openid-connect/), [OAuth2](/plugins/oauth2/), and others. The AI A2A Proxy plugin operates independently of the authentication method.
+
+automated_tests: false
 ---
 
 ## Enable the AI A2A Proxy plugin

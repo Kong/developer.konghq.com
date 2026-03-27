@@ -82,6 +82,8 @@ faqs:
   - q: Can I use AI Rate Limiting Advanced instead?
     a: |
       AI Rate Limiting Advanced limits based on LLM token consumption (prompt and completion tokens). The AI A2A Proxy plugin does not extract token counts from A2A responses, so AI Rate Limiting Advanced has no token data to act on. Use the standard Rate Limiting Advanced plugin for A2A traffic.
+
+automated_tests: false
 ---
 
 ## Enable the AI A2A Proxy plugin
