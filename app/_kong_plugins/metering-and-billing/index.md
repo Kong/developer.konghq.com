@@ -94,7 +94,7 @@ sequenceDiagram
 
 Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} Consumer, {{site.konnect_short_name}} Dev Portal application, or any request header value such as `x-customer-id` or `x-tenant-id`.
 
-If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing) it sets the subject to `unknown`.
+If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing), the event is dropped.
 
 ### Filtering traffic and custom dimensions
 

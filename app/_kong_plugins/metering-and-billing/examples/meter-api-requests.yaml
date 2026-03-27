@@ -11,7 +11,7 @@ title: 'Meter API requests by Consumer'
 weight: 999
 
 requirements:
-  - 'An authentication plugin (for example, [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/)) is configured on the same Gateway Service or Route so that a Consumer is present on each request. Requests without a Consumer will have their subject set to `unknown`.'
+  - 'An authentication plugin (for example, [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/)) is configured on the same Gateway Service or Route so that a Consumer is present on each request.'
   - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
 
 config:

@@ -28,6 +28,6 @@ rows:
     plugin: Yes. Attach any request header or query parameter as a dimension on the event (for example, department, project, priority tier)
   - use-case: How do you want to filter traffic for events?
     builtin: At the Gateway control plane-level only (all Routes and Services in a control plane)
-    plugin: Filter by Route, Service, header, or expression
+    plugin: Filter by Route, Service, or header
 {% endtable %}
 <!--vale on-->
