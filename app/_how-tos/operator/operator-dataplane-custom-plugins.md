@@ -104,6 +104,17 @@ content: |
   indent: 2
   {% endkonnect_api_request %}
   <!--vale on-->
+
+  Run the following command to upload your schema file to your {{site.konnect_short_name}} control plane:
+
+  ```sh
+  curl -X POST \
+    https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+    --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $KONNECT_TOKEN" \
+    --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+  ```
+
 {% endkonnect %}
 
 ## Install the plugin
