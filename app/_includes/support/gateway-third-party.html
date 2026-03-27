@@ -10,7 +10,7 @@ The following stores have been tested by Kong.
 {%- assign db-item = d | first | last -%}
 {%- assign db = site.data.support.third-party[key] -%}
 {%- capture card_content %}{{ db.name }}{% if db-item.versions %}: {{ db-item.versions | join: ', '}}{% endif %}{% endcapture -%}
-{% include cards/third_party_tool.md icon=db.icon content=card_content %}
+{% icon_card icon=db.icon title=card_content %}
 {%- endfor -%}
 {%- endhtml_tag %}
 
@@ -26,7 +26,7 @@ The following vaults and versions have been tested by Kong.
 {%- assign vault-item = va | first | last -%}
 {%- assign vault-provider = site.data.support.third-party[key] -%}
 {%- capture card_content %}{{ vault-provider.name }}{% if vault-item.versions %}: {{ vault-item.versions | join: ', '}}{% endif %}{% endcapture -%}
-{% include cards/third_party_tool.md icon=vault-provider.icon content=card_content %}
+{% icon_card icon=vault-provider.icon title=card_content %}
 {%- endfor -%}
 {%- endhtml_tag %}
 
@@ -38,7 +38,7 @@ The following vaults and versions have been tested by Kong.
 {%- for l in include.release.third_party_support.log_provider -%}
 {%- assign key = l -%}
 {%- assign log-provider-item = site.data.support.third-party[key] -%}
-{% include cards/third_party_tool.md icon=log-provider-item.icon content=log-provider-item.name %}
+{% icon_card icon=log-provider-item.icon title=log-provider-item.name %}
 {%- endfor -%}
 {%- endhtml_tag %}
 
@@ -52,7 +52,7 @@ The following vaults and versions have been tested by Kong.
 {%- assign metric-item = m | first | last -%}
 {%- assign metric-provider = site.data.support.third-party[key] -%}
 {%- capture card_content %}{{ metric-provider.name }}{% if metric-item.versions %}: {{ metric-item.versions | join: ', '}}{% endif %}{% endcapture -%}
-{% include cards/third_party_tool.md icon=metric-provider.icon content=card_content %}
+{% icon_card icon=metric-provider.icon title=card_content %}
 {%- endfor -%}
 {%- endhtml_tag %}
 
@@ -66,7 +66,7 @@ The following have been tested by Kong.
 {% for s3 in include.release.third_party_support.s3_api -%}
 {%- assign key = s3 -%}
 {%- assign s3-provider = site.data.support.third-party[key] -%}
-{% include cards/third_party_tool.md icon=s3-provider.icon content=s3-provider.name %}
+{% icon_card icon=s3-provider.icon title=s3-provider.name %}
 {%- endfor -%}
 {%- endhtml_tag %}
 
@@ -80,6 +80,6 @@ The following have been tested by Kong.
 {%- assign mesh-item = me | first | last -%}
 {%- assign mesh-provider = site.data.support.third-party[key] -%}
 {%- capture card_content %}{{ mesh-provider.name }}{% if mesh-item.versions %}: {{ mesh-item.versions | join: ', '}}{% endif %}{% endcapture -%}
-{% include cards/third_party_tool.md icon=mesh-provider.icon content=card_content %}
+{% icon_card icon=mesh-provider.icon title=card_content %}
 {%- endfor -%}
 {%- endhtml_tag %}
