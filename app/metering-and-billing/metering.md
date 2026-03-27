@@ -162,7 +162,7 @@ The following example show how you can configure meters and usage events for com
 ### LLM token usage
 
 {:.info}
-> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage in one click.
+> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Related API Gateways** for the AI Gateway Tokens setting.
 
 In most cases, AI applications want to count token usage for billing or cost control purposes. As a single AI interaction involves consuming multiple tokens, we define our generic meter with the `sum` aggregation and report token usage in the data's tokens property. As most LLMs charge differently for input, output and system prompts and different models it makes sense to add model and prompt type to the group by.
 
@@ -253,7 +253,7 @@ body:
 ### API request count
 
 {:.info}
-> If you want to meter {{site.base_gateway}} API requests, you can enable the built-in integration to meter usage in one click.
+> If you want to meter {{site.base_gateway}} API requests, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Gateways** for the API Gateway Requests setting.
 
 Products monetizing API usage may want to count the number of requests. With choosing the `count` aggregation each event will increase the meter by one. For grouping we can add method and route. Note how we report the route template not the actual HTTP path to avoid differences around IDs and dynamic routes.
 
