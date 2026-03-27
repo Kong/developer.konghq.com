@@ -2,7 +2,7 @@
 title: "Lua sandboxing"
 
 description: |
-  Reference for Lua sandboxing in Kong Gateway, including available environments and modules for each sandbox mode.
+  Reference for Lua sandboxing in {{site.base_gateway}}, including available environments and modules for each sandbox mode.
 content_type: reference
 layout: reference
 
