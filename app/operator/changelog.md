@@ -370,7 +370,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
 
 ### Fixed
 
-- Do not try to list `Gateway`s for namespaces that are not being watched by controller
+- Do not try to list `Gateway`s for namespaces that are not being watched by the controller
   [#3625](https://github.com/Kong/kong-operator/pull/3625)
 - Fix the on-prem translator to set `protocols` in translated Kong routes to
   `http,https`.
