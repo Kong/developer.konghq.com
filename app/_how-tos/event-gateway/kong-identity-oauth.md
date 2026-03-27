@@ -405,16 +405,16 @@ command: |
 expected:
   return_code: 0
   message: |
-    TOPIC             PARTITIONS     REPLICATION FACTOR
-    products-topic    1              1
+    TOPIC              PARTITIONS     REPLICATION FACTOR
+    products-topic     1              1
 render_output: false
 {% endvalidation %}
 
 The output should look like this:
 
 ```shell
-TOPIC             PARTITIONS     REPLICATION FACTOR
-products-topic    1              1
+TOPIC           PARTITIONS     REPLICATION FACTOR
+products-topic  1              1
 ```
 {:.no-copy-code}
 

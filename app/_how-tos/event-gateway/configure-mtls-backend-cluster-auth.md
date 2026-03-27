@@ -49,6 +49,8 @@ related_resources:
 
 min_version:
   event_gateway: '1.1.0'
+
+automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
