@@ -48,7 +48,7 @@ You can meter {{site.base_gateway}} events, like API requests and LLM token usag
 
 Each generic meter is comprised from the following attributes:
 * Event type: The event type that the meter is tracking. This is used to filter the events that are used to calculate the meter.
-* Value type: The JSON path to the property that contains the value to be metered. This is optional when the aggregation is `count`.
+* Value property: The JSON path to the property that contains the value to be metered. This is optional when the aggregation is `count`.
 * Aggregation type: The [aggregation type](#aggregation-types) to use for the meter.
 * Group by: (Optional) A map of JSON paths to group the metered data by.
 
@@ -66,11 +66,11 @@ columns:
     key: description
 rows:
   - aggregation_type: count
-    description: "The `count` aggregation type counts the number of events that occur within a specific time window. This is often used for metrics that are inherently countable, such as the number of transactions processed or API calls made. The `count` aggregation type doesn't have the `valueProperty`."
+    description: "The `count` aggregation type counts the number of events that occur within a specific time window. This is often used for metrics that are inherently countable, such as the number of transactions processed or API calls made. The `count` aggregation type doesn't have the `value_property`."
   - aggregation_type: sum
-    description: "The `sum` aggregation type calculates the total sum of the metered values for a specific time window. `sum` aggregates over the events `valueProperty`. This is useful for accumulating metrics like total LLM tokens used, total data transferred, or total time spent on a service."
+    description: "The `sum` aggregation type calculates the total sum of the metered values for a specific time window. `sum` aggregates over the events `value_property`. This is useful for accumulating metrics like total LLM tokens used, total data transferred, or total time spent on a service."
   - aggregation_type: unique_count
-    description: "The `unique_count` aggregation type counts the number of unique events. This is useful when events are unique by a specific field. The `valueProperty` defines the field that makes the ingested event unique. The property's value in the ingested event must be a string or number."
+    description: "The `unique_count` aggregation type counts the number of unique events. This is useful when events are unique by a specific field. The `value_property` defines the field that makes the ingested event unique. The property's value in the ingested event must be a string or number."
   - aggregation_type: latest
     description: "The `latest` aggregation type returns the latest value for a specific time window. This is useful for when you track the size of a resource on your own and report periodically the value of it to {{site.metering_and_billing}}. For example disk size, number of resources or seats. The latest aggregation takes the last value reported for the period."
   - aggregation_type: min
@@ -433,8 +433,9 @@ In {{site.metering_and_billing}}, a single event can move multiple meters if the
 
 {% navtabs "moving-meters" %}
 {% navtab "Meter example" %}
-Send a POST request to the [`/openmeter/meters` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-meter) for each meter:
+Send a POST request to the [`/openmeter/meters` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-meter) for each meter.
 
+Create a meter to track an API request’s occurrence:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
@@ -447,7 +448,7 @@ body:
     aggregation: count
     dimensions: {"method": "$.method", "route": "$.route"}
 {% endkonnect_api_request %}
-
+Create a meter to track request execution duration:
 {% konnect_api_request %}
 url: /v3/openmeter/meters
 status_code: 201
@@ -460,7 +461,7 @@ body:
     value_property: $.duration_seconds
     dimensions: {"method": "$.method", "route": "$.route"}
 {% endkonnect_api_request %}
-
+Create a meter to track each request's network usage:
 {% konnect_api_request %}
 url: /v3/openmeter/meters
 status_code: 201
@@ -504,7 +505,9 @@ The recommended way to model states is to create separate meters per state.
 
 {% navtabs "state-change" %}
 {% navtab "Meter example" %}
-Send a POST request to the [`/openmeter/meters` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-meter) for each meter:
+Send a POST request to the [`/openmeter/meters` endpoint](/api/konnect/metering-and-billing/v3/#/operations/create-meter) for each meter.
+
+Create a meter to count the number of workflows created:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
@@ -518,6 +521,7 @@ body:
     dimensions: {"task_type": "$.task_type"}
 {% endkonnect_api_request %}
 <!--vale on-->
+Create a meter to count the number of workflows that have succeeded:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
@@ -531,6 +535,7 @@ body:
     dimensions: {"task_type": "$.task_type"}
 {% endkonnect_api_request %}
 <!--vale on-->
+Create a meter to count the number of workflows that have failed:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
@@ -547,7 +552,9 @@ body:
 {% endnavtab %}
 {% navtab "Usage event example" %}
 
-Send two POST requests to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events):
+Send two POST requests to the [`/openmeter/events` endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events).
+
+The first event indicates that a workflow was created:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
@@ -562,6 +569,8 @@ body:
     data: {"task_type": "image-generate"}
 {% endkonnect_api_request %}
 <!--vale on-->
+
+The second event marks the time at which the workflow succeeded:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v3/openmeter/events
@@ -571,7 +580,6 @@ body:
     specversion: "1.0"
     type: workflow_success
     id: 4E7A4D41-1AE1-470A-887C-C22C1A658583
-    time: $EVENT_TIME
     source: task-queue
     subject: task-1
     data: {"task_type": "image-generate"}
