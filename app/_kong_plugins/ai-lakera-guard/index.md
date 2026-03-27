@@ -41,9 +41,6 @@ search_aliases:
 
 icon: ai-lakera.png
 
-categories:
-  - ai
-
 related_resources:
   - text: Use the AI Lakera Guard plugin
     url: /ai-gateway/ai-audit-log-reference/
