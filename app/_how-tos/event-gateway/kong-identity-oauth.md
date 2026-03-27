@@ -20,7 +20,7 @@ description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} 
 tldr:
   q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity?"
   a: |
-    1. Create a Kong Identity auth server, scope, claim and client.
+    1. Create a Kong Identity auth server, scope, claim, and client.
     1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
     1. Create an ACL policy to restrict access to a specific client.
 
@@ -55,6 +55,9 @@ related_resources:
     url: /kong-identity/#dynamic-claim-templates
   - text: Event Gateway ACL policy
     url: /event-gateway/policies/acl/
+
+min_version:
+  event_gateway: '1.1.0'
 ---
 
 ## Create an auth server in Kong Identity

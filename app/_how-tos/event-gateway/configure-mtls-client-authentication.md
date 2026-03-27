@@ -52,6 +52,9 @@ related_resources:
     url: /event-gateway/policies/acl/
   - text: "{{site.event_gateway_short}} Control Plane API"
     url: /api/konnect/event-gateway/
+
+min_version:
+  event_gateway: '1.1.0'
 ---
 
 ## Overview
