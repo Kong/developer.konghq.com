@@ -155,9 +155,14 @@ directives:
 
 {{site.base_gateway}} also provides many customization settings for SSL connections. See the [Kong Configuration Reference](/gateway/configuration/) for all available options.
 
-### Enforcing TLS verification globally {% new_in 3.13 %}
+### Enforcing TLS verification globally {% new_in 3.14 %}
 
-You can set [`tls_certificate_verify`](/gateway/configuration/#tls_certificate_verify) to `true` to enforce global certificate verification when connecting to secure endpoints. When this setting is enabled, configurations containing Services or plugins where `tls_verify` is set to `off` will fail to be inserted or updated. You will need to manually update each Service or plugin instance to resolve this error.
+By default, [`tls_certificate_verify`](/gateway/configuration/#tls_certificate_verify) is set to `true` to enforce global certificate verification when connecting to secure endpoints. 
+When this setting is enabled, configurations containing Services or plugins where `tls_verify` is set to `off` will fail to be inserted or updated. You will need to manually update each Service or plugin instance to resolve this error.
+
+{:.info}
+> In 3.13, `tls_certificate_verify` was set to `false` by default. If you are upgrading to 3.14, you may need to adjust your configuration. 
+See the [breakdown of each affected entity](/gateway/breaking-changes/#tls-certificate-verify-by-default) to learn more.
 
 When certificate verification is enforced:
 

@@ -253,4 +253,5 @@ If the SMTP settings are configured incorrectly (for example, pointing to a non-
 
 For complete tutorials, see the following:
 * [Configure Azure Communication Services for SMTP emails in {{site.base_gateway}}](/how-to/configure-azure-smtp-for-kong-gateway/)
+* [Configure AWS SES for SMTP emails in {{site.base_gateway}}](/how-to/configure-aws-ses-smtp-for-kong-gateway/)
 

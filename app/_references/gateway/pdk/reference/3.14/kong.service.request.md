@@ -478,7 +478,7 @@ local ok, err = kong.service.request.set_body({
 
 ## kong.service.request.set_authentication_headers([consumer[, credential_id[, group_names[, opts]]]])
 
-Sets the authentication headers on the resquest sent to the service
+Sets the authentication headers on the request sent to the service
 
 **Phases**
 
@@ -492,7 +492,7 @@ Sets the authentication headers on the resquest sent to the service
 * **credential_id** (`string|nil`, _optional_):  An optional credential_id
   If provided and it has an id, then the header X-Credential-Identifier is set.
   If nil, then the header is cleared.
-* **group_names** (`table|nil`, _optional_):  Expecs an array of group names. Sets the X-Consumer-Groups header to the comma-separated list of group names.
+* **group_names** (`table|nil`, _optional_):  Expects an array of group names. Sets the X-Consumer-Groups header to the comma-separated list of group names.
 * **opts** (`table|nil`, _optional_):  Options table, with the following fields:
  `opts.mode` - either "write" or "append", write will replace any
  existing groups that are set, append will add to the existing groups.

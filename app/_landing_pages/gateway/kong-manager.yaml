@@ -190,6 +190,15 @@ rows:
               icon: /assets/icons/azure.svg
               cta:
                 url: "/how-to/configure-azure-smtp-for-kong-gateway/"
+      - blocks:
+          - type: card
+            config:
+              title: Configure AWS SES for SMTP emails in {{site.base_gateway}}
+              description: |
+                Learn how to configure Amazon Simple Email Service (SES) as the SMTP provider for {{site.base_gateway}} to send emails from Kong Manager.
+              icon: /assets/icons/aws.svg
+              cta:
+                url: "/how-to/configure-aws-ses-smtp-for-kong-gateway/"
 #  - header:
 #      text: How-to Guides
 #      type: h2
