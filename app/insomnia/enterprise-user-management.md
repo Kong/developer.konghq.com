@@ -38,7 +38,10 @@ faqs:
       ```
 
       Configure this variable through your organization’s device management system. When active, this setting prevents Insomnia from performing automatic updates and allows your IT department to control rollout and version management through its standard deployment process.
-  
+  - q: Can I export a list of unmanaged users?
+    a: |
+      Yes. You can export a CSV file of unmanaged users for a specific domain from the **Licenses** section in the Enterprise tools.  
+
 ---
 
 ## Insomnia teams
@@ -95,7 +98,6 @@ You can review unmanaged users on a domain to identify accounts that you may wan
 1. Select your domain.
 1. From the **Unclaimed Accounts** section, you can:
    * Click **Manage* to view a list of unmanaged users directly in Insomnia.
-   * Click the download icon to export unmanaged users for the domain as a CSV file.
 
 To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
 1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
