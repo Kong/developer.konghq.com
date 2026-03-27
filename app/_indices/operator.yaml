@@ -25,6 +25,7 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
           - path: /operator/reference/control-plane-feature-gates-and-controllers/
+          - path: /operator/reference/http-proxy/
 
   - title: Security hardening
     sections:
