@@ -77,6 +77,8 @@ smtp_auth_type = login
 
 admin_emails_from = YOUR_NAME <verified-sender@example.com>
 admin_emails_reply_to = YOUR_NAME <verified-sender@example.com>
+
+lua_ssl_verify_depth = 2
 ```
 
 Replace the following values:
@@ -84,6 +86,11 @@ Replace the following values:
 * `smtp_password`: The Microsoft Entra application client secret.
 * `admin_emails_from`: A connected email address from your Azure Communication Services domain.
 * `admin_emails_reply_to`: The reply-to email address for outgoing emails.
+
+{:.warning}
+> **Setting `lua_ssl_verify_depth`:** 
+> Azure Communication Services uses a deeper intermediate certificate chain than the default SSL verification depth allows. 
+> Set [`lua_ssl_verify_depth`](/gateway/configuration/#lua-ssl-verify-depth) to 2 to resolve SSL handshake errors.
 
 ## Restart {{site.base_gateway}}
 
