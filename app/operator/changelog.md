@@ -23,7 +23,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
 - Admission webhook now validates HTTPRoute regex patterns before sending
   configuration to the Admin API.
   [#3666](https://github.com/Kong/kong-operator/pull/3666)
-- Do not try to list `Gateway`s for namespaces that are not being watched by controller
+- Do not try to list `Gateway`s for namespaces that are not being watched by the controller
   [#3625](https://github.com/Kong/kong-operator/pull/3625)
 - Fix `KonnectGatewayControlPlane` not setting `Programmed=False` when its
   `KonnectAPIAuthConfiguration` reference cannot be resolved (e.g. the auth
