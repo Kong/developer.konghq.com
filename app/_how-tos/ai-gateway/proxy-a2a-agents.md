@@ -153,7 +153,7 @@ entities:
 
 ## Retrieve the Agent Card
 
-A2A agents expose their capabilities through an Agent Card at the `/.well-known/agent.json` endpoint. Retrieve it through the gateway:
+A2A agents expose their capabilities through an Agent Card at the `/.well-known/agent-card.json` endpoint. Retrieve it through the gateway:
 
 {% validation request-check %}
 url: /a2a/.well-known/agent-card.json

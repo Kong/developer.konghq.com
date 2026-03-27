@@ -150,35 +150,71 @@ The {{site.base_gateway}} proxies the request to the upstream A2A agent and retu
 
 Generate a payload that exceeds 1 MB and send it as an A2A request:
 
-```sh
-python3 -c "
-import json
-payload = {
-    'jsonrpc': '2.0',
-    'id': '2',
-    'method': 'message/send',
-    'params': {
-        'message': {
-            'kind': 'message',
-            'messageId': 'msg-002',
-            'role': 'user',
-            'parts': [
-                {
-                    'kind': 'text',
-                    'text': 'A' * 1100000
-                }
-            ]
-        }
-    }
-}
-print(json.dumps(payload))
-" > /tmp/large_payload.json
+{% on_prem %}
+content: |
+  ```sh
+  python3 -c "
+  import json
+  payload = {
+      'jsonrpc': '2.0',
+      'id': '2',
+      'method': 'message/send',
+      'params': {
+          'message': {
+              'kind': 'message',
+              'messageId': 'msg-002',
+              'role': 'user',
+              'parts': [
+                  {
+                      'kind': 'text',
+                      'text': 'A' * 1100000
+                  }
+              ]
+          }
+      }
+  }
+  print(json.dumps(payload))
+  " > /tmp/large_payload.json
 
-curl -i --no-progress-meter \
-  http://localhost:8000/a2a \
-  -H "Content-Type: application/json" \
-  -d @/tmp/large_payload.json
-```
+  curl -i --no-progress-meter \
+    http://localhost:8000/a2a \
+    -H "Content-Type: application/json" \
+    -d @/tmp/large_payload.json
+  ```
+{% endon_prem %}
+
+{% konnect %}
+content: |
+  ```sh
+  python3 -c "
+  import json
+  payload = {
+      'jsonrpc': '2.0',
+      'id': '2',
+      'method': 'message/send',
+      'params': {
+          'message': {
+              'kind': 'message',
+              'messageId': 'msg-002',
+              'role': 'user',
+              'parts': [
+                  {
+                      'kind': 'text',
+                      'text': 'A' * 1100000
+                  }
+              ]
+          }
+      }
+  }
+  print(json.dumps(payload))
+  " > /tmp/large_payload.json
+
+  curl -i --no-progress-meter \
+    $KONNECT_PROXY_URL/a2a \
+    -H "Content-Type: application/json" \
+    -d @/tmp/large_payload.json
+  ```
+{% endkonnect %}
 
 The {{site.base_gateway}} rejects the request with `413 Request Entity Too Large`:
 

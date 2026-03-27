@@ -110,7 +110,7 @@ entities:
 
 ## Enable the Rate Limiting Advanced plugin
 
-The [Rate Limiting Advanced plugin]/plugins/rate-limiting-advanced/() counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds. The low limit makes it easy to test.
+The [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds. The low limit makes it easy to test.
 
 {% entity_examples %}
 entities:
@@ -136,7 +136,7 @@ Send an authenticated request to the agent card endpoint and inspect the respons
 
 <!-- vale off -->
 {% validation request-check %}
-url: /a2a/.well-known/agent.json
+url: /a2a/.well-known/agent-card.json
 status_code: 200
 method: GET
 headers:
@@ -163,14 +163,29 @@ x-ratelimit-remaining-30: 4
 
 Send 6 requests to the agent card endpoint in a loop to exceed the limit. The AI A2A Proxy plugin detects each request as an A2A `GetAgentCard` operation, so the rate limit applies the same way it does for `message/send` or any other A2A method.
 
-```sh
-for i in $(seq 1 6); do
-  echo "--- Request $i ---"
-  curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
-    http://localhost:8000/a2a/.well-known/agent.json \
-    -H "apikey: a2a-secret-key-1"
-done
-```
+{% on_prem %}
+content: |
+  ```sh
+  for i in $(seq 1 6); do
+    echo "--- Request $i ---"
+    curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
+      http://localhost:8000/a2a/.well-known/agent-card.json \
+      -H "apikey: a2a-secret-key-1"
+  done
+  ```
+{% endon_prem %}
+
+{% konnect %}
+content: |
+  ```sh
+  for i in $(seq 1 6); do
+    echo "--- Request $i ---"
+    curl -s -o /dev/null -w "HTTP status: %{http_code}\n"\
+      $KONNECT_PROXY_URL/a2a/.well-known/agent-card.json \
+      -H "apikey: a2a-secret-key-1"
+  done
+  ```
+{% endkonnect %}
 
 The first 5 requests return `HTTP status: 200`. The 6th request returns `HTTP status: 429`:
 
