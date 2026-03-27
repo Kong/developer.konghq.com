@@ -55,9 +55,9 @@ Set the environment variables through Helm values:
 
 ```yaml
 customEnv:
-- HTTP_PROXY: "http://proxy.example.com:3128"
-- HTTPS_PROXY: "http://proxy.example.com:3128"
-- NO_PROXY: "10.0.0.0/8,127.0.0.1,localhost,.svc,.cluster.local"
+  HTTP_PROXY: "http://proxy.example.com:3128"
+  HTTPS_PROXY: "http://proxy.example.com:3128"
+  NO_PROXY: "10.0.0.0/8,127.0.0.1,localhost,.svc,.cluster.local"
 ```
 
 {:.info}
