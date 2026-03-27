@@ -252,5 +252,6 @@ If running {{site.base_gateway}} in hybrid mode, the admin SMTP settings must be
 If the SMTP settings are configured incorrectly (for example, pointing to a non-existent email address), Kong Manager will _not_ display an error message.
 
 For complete tutorials, see the following:
+* [Configure Azure Communication Services for SMTP emails in {{site.base_gateway}}](/how-to/configure-azure-smtp-for-kong-gateway/)
 * [Configure AWS SES for SMTP emails in {{site.base_gateway}}](/how-to/configure-aws-ses-smtp-for-kong-gateway/)
 
