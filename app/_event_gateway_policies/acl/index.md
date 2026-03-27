@@ -33,6 +33,8 @@ related_resources:
     url: /how-to/event-gateway/kong-identity-oauth/
   - text: "How-to: Productize Kafka topics with namespaces and ACLs"
     url: /event-gateway/productize-kafka-topics/
+  - text: Expressions reference
+    url: /event-gateway/expressions/
 ---
 
 The ACL (Access Control List) policy manages authorization for your [virtual cluster](/event-gateway/entities/virtual-cluster/) by defining which actions principals can perform on specific resources.

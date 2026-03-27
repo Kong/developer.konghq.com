@@ -98,8 +98,9 @@ content: |
   extract_body:
     - name: data[0].id
       variable: CONTROL_PLANE_ID
-  capture: CONTROL_PLANE_ID
-  jq: ".data[0].id"
+  capture:
+    - variable: CONTROL_PLANE_ID
+      jq: ".data[0].id"
   indent: 2
   {% endkonnect_api_request %}
   <!--vale on-->
@@ -113,6 +114,7 @@ content: |
     --header "Authorization: Bearer $KONNECT_TOKEN" \
     --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
   ```
+
 {% endkonnect %}
 
 ## Install the plugin
