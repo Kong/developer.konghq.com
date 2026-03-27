@@ -246,22 +246,22 @@ features:
 > For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).
 
 {% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
-{% include cards/third_party_tool.md icon="openai.svg" content="OpenAI" %}
-{% include cards/third_party_tool.md icon="azure.svg" content="Azure OpenAI" %}
-{% include cards/third_party_tool.md icon="bedrock.svg" content="Amazon Bedrock" %}
-{% include cards/third_party_tool.md icon="anthropic.svg" content="Anthropic" %}
-{% include cards/third_party_tool.md icon="gemini.svg" content="Gemini" %}
-{% include cards/third_party_tool.md icon="vertex.svg" content="Vertex AI" %}
-{% include cards/third_party_tool.md icon="cohere.svg" content="Cohere" %}
-{% include cards/third_party_tool.md icon="mistral.svg" content="Mistral" %}
-{% include cards/third_party_tool.md icon="huggingface.svg" content="Hugging Face" %}
-{% include cards/third_party_tool.md icon="metaai.svg" content="Llama" %}
-{% include cards/third_party_tool.md icon="xai.svg" content="xAI" %}
-{% include cards/third_party_tool.md icon="dashscope.svg" content="Alibaba Cloud DashScope" %}
-{% include cards/third_party_tool.md icon="cerebras.svg" content="Cerebras" %}
-{% include cards/third_party_tool.md icon="deepseek.svg" content="DeepSeek" %}
-{% include cards/third_party_tool.md icon="ollama.svg" content="Ollama" %}
-{% include cards/third_party_tool.md icon="databricks.svg" content="Databricks" %}
+{% icon_card icon="openai.svg" title="OpenAI" cta_url="/ai-gateway/ai-providers/openai/" %}
+{% icon_card icon="azure.svg" title="Azure OpenAI" cta_url="/ai-gateway/ai-providers/azure/" %}
+{% icon_card icon="bedrock.svg" title="Amazon Bedrock" cta_url="/ai-gateway/ai-providers/bedrock/" %}
+{% icon_card icon="anthropic.svg" title="Anthropic" cta_url="/ai-gateway/ai-providers/anthropic/" %}
+{% icon_card icon="gemini.svg" title="Gemini" cta_url="/ai-gateway/ai-providers/gemini/" %}
+{% icon_card icon="vertex.svg" title="Vertex AI" cta_url="/ai-gateway/ai-providers/vertex/" %}
+{% icon_card icon="cohere.svg" title="Cohere" cta_url="/ai-gateway/ai-providers/cohere/" %}
+{% icon_card icon="mistral.svg" title="Mistral" cta_url="/ai-gateway/ai-providers/mistral/" %}
+{% icon_card icon="huggingface.svg" title="Hugging Face" cta_url="/ai-gateway/ai-providers/huggingface/" %}
+{% icon_card icon="metaai.svg" title="Llama" cta_url="/ai-gateway/ai-providers/llama/" %}
+{% icon_card icon="xai.svg" title="xAI" cta_url="/ai-gateway/ai-providers/xai/" %}
+{% icon_card icon="dashscope.svg" title="Alibaba Cloud DashScope" cta_url="/ai-gateway/ai-providers/dashscope/" %}
+{% icon_card icon="cerebras.svg" title="Cerebras" cta_url="/ai-gateway/ai-providers/cerebras/" %}
+{% icon_card icon="deepseek.svg" title="DeepSeek" cta_url="/ai-gateway/ai-providers/deepseek/" %}
+{% icon_card icon="ollama.svg" title="Ollama" cta_url="/ai-gateway/ai-providers/ollama/" %}
+{% icon_card icon="databricks.svg" title="Databricks" cta_url="/ai-gateway/ai-providers/databricks/" %}
 {% endhtml_tag %}
 
 ## How it works
