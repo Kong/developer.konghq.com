@@ -67,7 +67,7 @@ components:
             x-speakeasy-name-override: consumer_group_id
         ConsumerIdForNestedEntities:
             description: Consumer ID for nested entities
-            example: f28acbfa-c866-4587-b688-0208ac24df21
+            example: ""
             in: path
             name: ConsumerIdForNestedEntities
             required: true
@@ -79,6 +79,13 @@ components:
             in: path
             name: ConsumerIdOrUsername
             required: true
+            schema:
+                type: string
+        CustomId:
+            description: Filter consumers by their custom_id.
+            example: my-custom-id
+            in: query
+            name: custom_id
             schema:
                 type: string
         CustomPluginIdOrName:
@@ -104,6 +111,14 @@ components:
             required: true
             schema:
                 example: key
+                type: string
+        GraphQLCostDecorationId:
+            description: ID of the GraphQL Cost Decoration to lookup
+            example: ""
+            in: path
+            name: GraphQLCostDecorationId
+            required: true
+            schema:
                 type: string
         GroupId:
             description: ID of the Group to lookup
@@ -296,13 +311,13 @@ components:
             schema:
                 type: string
         Workspace:
-            description: The name or UUID of the workspace
+            description: The name of the workspace
             in: path
             name: workspace
             required: true
             schema:
-                example: 747d1e5-8246-4f65-a939-b392f1ee17f8
-                format: uuid
+                default: default
+                example: team-payments
                 type: string
         WorkspaceIdOrName:
             description: ID or name of the Workspace to lookup
@@ -1466,10 +1481,6 @@ components:
                                     - /files/*
                                     - /files/partials/*
                                     - /files/{files}
-                                    - /filter-chains
-                                    - /filter-chains/{filter_chains}
-                                    - /filter-chains/{filter_chains}/route
-                                    - /filter-chains/{filter_chains}/service
                                     - /graphql-proxy-cache-advanced
                                     - /graphql-proxy-cache-advanced/{cache_key}
                                     - /graphql-proxy-cache-advanced/{plugin_id}/caches/{cache_key}
@@ -1573,8 +1584,6 @@ components:
                                     - /rbac/users/{rbac_users}/roles
                                     - /routes
                                     - /routes/{routes}
-                                    - /routes/{routes}/filter-chains
-                                    - /routes/{routes}/filter-chains/{filter_chains}
                                     - /routes/{routes}/filters/all
                                     - /routes/{routes}/filters/disabled
                                     - /routes/{routes}/filters/enabled
@@ -1597,8 +1606,6 @@ components:
                                     - /services/{services}/degraphql_routes/{degraphql_routes}
                                     - /services/{services}/document_objects
                                     - /services/{services}/document_objects/{document_objects}
-                                    - /services/{services}/filter-chains
-                                    - /services/{services}/filter-chains/{filter_chains}
                                     - /services/{services}/graphql-rate-limiting-advanced/costs
                                     - /services/{services}/graphql_ratelimiting_advanced_cost_decoration
                                     - /services/{services}/graphql_ratelimiting_advanced_cost_decoration/{graphql_ratelimiting_advanced_cost_decoration}
@@ -1784,10 +1791,6 @@ components:
                                     - workspace_/files/*
                                     - workspace_/files/partials/*
                                     - workspace_/files/{files}
-                                    - workspace_/filter-chains
-                                    - workspace_/filter-chains/{filter_chains}
-                                    - workspace_/filter-chains/{filter_chains}/route
-                                    - workspace_/filter-chains/{filter_chains}/service
                                     - workspace_/graphql-proxy-cache-advanced
                                     - workspace_/graphql-proxy-cache-advanced/{cache_key}
                                     - workspace_/graphql-proxy-cache-advanced/{plugin_id}/caches/{cache_key}
@@ -1891,8 +1894,6 @@ components:
                                     - workspace_/rbac/users/{rbac_users}/roles
                                     - workspace_/routes
                                     - workspace_/routes/{routes}
-                                    - workspace_/routes/{routes}/filter-chains
-                                    - workspace_/routes/{routes}/filter-chains/{filter_chains}
                                     - workspace_/routes/{routes}/filters/all
                                     - workspace_/routes/{routes}/filters/disabled
                                     - workspace_/routes/{routes}/filters/enabled
@@ -1915,8 +1916,6 @@ components:
                                     - workspace_/services/{services}/degraphql_routes/{degraphql_routes}
                                     - workspace_/services/{services}/document_objects
                                     - workspace_/services/{services}/document_objects/{document_objects}
-                                    - workspace_/services/{services}/filter-chains
-                                    - workspace_/services/{services}/filter-chains/{filter_chains}
                                     - workspace_/services/{services}/graphql-rate-limiting-advanced/costs
                                     - workspace_/services/{services}/graphql_ratelimiting_advanced_cost_decoration
                                     - workspace_/services/{services}/graphql_ratelimiting_advanced_cost_decoration/{graphql_ratelimiting_advanced_cost_decoration}
@@ -2817,80 +2816,6 @@ components:
                                 type: object
                         type: object
             description: OK
-        GetWorkspaceResponse:
-            content:
-                application/json:
-                    schema:
-                        properties:
-                            comment:
-                                type: string
-                            config:
-                                properties:
-                                    meta:
-                                        type: object
-                                    portal:
-                                        default: false
-                                        description: Portal enabled
-                                        type: boolean
-                                    portal_access_request_email:
-                                        type: boolean
-                                    portal_application_request_email:
-                                        type: boolean
-                                    portal_application_status_email:
-                                        type: boolean
-                                    portal_approved_email:
-                                        type: boolean
-                                    portal_auth:
-                                        type: string
-                                    portal_auth_conf:
-                                        type: string
-                                    portal_auto_approve:
-                                        type: boolean
-                                    portal_cors_origins:
-                                        items:
-                                            type: string
-                                        type: array
-                                    portal_developer_meta_fields:
-                                        default: '[{"label":"Full Name","title":"full_name","validator":{"required":true,"type":"string"}}]'
-                                        type: string
-                                    portal_emails_from:
-                                        type: string
-                                    portal_emails_reply_to:
-                                        type: string
-                                    portal_invite_email:
-                                        type: boolean
-                                    portal_is_legacy:
-                                        type: boolean
-                                    portal_reset_email:
-                                        type: boolean
-                                    portal_reset_success_email:
-                                        type: boolean
-                                    portal_session_conf:
-                                        type: string
-                                    portal_smtp_admin_emails:
-                                        items:
-                                            type: string
-                                        type: array
-                                    portal_token_exp:
-                                        type: integer
-                                type: object
-                            created_at:
-                                description: Unix epoch when the resource was created.
-                                type: integer
-                            id:
-                                description: The unique UUID for this resource.
-                                type: string
-                            meta:
-                                properties:
-                                    color:
-                                        type: string
-                                    thumbnail:
-                                        type: string
-                                type: object
-                            name:
-                                type: string
-                        type: object
-            description: Workspaces provide a way to segment Kong entities.
         GroupRoleAssociationCreated:
             content:
                 application/json:
@@ -3490,6 +3415,7 @@ components:
                     type: string
                 password:
                     type: string
+                    x-encrypted: true
                 tags:
                     description: A set of strings representing tags.
                     items:
@@ -3527,6 +3453,7 @@ components:
                     type: string
                 password:
                     type: string
+                    x-encrypted: true
                 tags:
                     description: A set of strings representing tags.
                     items:
@@ -3601,10 +3528,12 @@ components:
                 cert:
                     description: PEM-encoded public certificate chain of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).
                     type: string
+                    x-referenceable: true
                 cert_alt:
                     description: PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).
                     nullable: true
                     type: string
+                    x-referenceable: true
                 created_at:
                     description: Unix epoch when the resource was created.
                     nullable: true
@@ -3616,10 +3545,14 @@ components:
                 key:
                     description: PEM-encoded private key of the SSL key pair. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).
                     type: string
+                    x-encrypted: true
+                    x-referenceable: true
                 key_alt:
                     description: PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is _referenceable_, which means it can be securely stored as a [secret](/gateway/latest/plan-and-deploy/security/secrets-management/getting-started) in a vault. References must follow a [specific format](/gateway/latest/plan-and-deploy/security/secrets-management/reference-format).
                     nullable: true
                     type: string
+                    x-encrypted: true
+                    x-referenceable: true
                 snis:
                     items:
                         description: A string representing a wildcard host name, such as *.example.com.
@@ -3965,6 +3898,92 @@ components:
                 - message
                 - status
             type: object
+        GraphQLCostDecoration:
+            additionalProperties: false
+            properties:
+                add_arguments:
+                    default: []
+                    items:
+                        type: string
+                    nullable: true
+                    type: array
+                add_constant:
+                    default: 1
+                    nullable: true
+                    type: number
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                id:
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
+                    type: string
+                mul_arguments:
+                    default: []
+                    items:
+                        type: string
+                    nullable: true
+                    type: array
+                mul_constant:
+                    default: 1
+                    nullable: true
+                    type: number
+                service:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                type_path:
+                    type: string
+            required:
+                - type_path
+            type: object
+        GraphQLCostDecorationWithoutParents:
+            additionalProperties: false
+            properties:
+                add_arguments:
+                    default: []
+                    items:
+                        type: string
+                    nullable: true
+                    type: array
+                add_constant:
+                    default: 1
+                    nullable: true
+                    type: number
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    nullable: true
+                    type: integer
+                id:
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
+                    type: string
+                mul_arguments:
+                    default: []
+                    items:
+                        type: string
+                    nullable: true
+                    type: array
+                mul_constant:
+                    default: 1
+                    nullable: true
+                    type: number
+                service:
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                type_path:
+                    type: string
+            required:
+                - type_path
+            type: object
         Group:
             additionalProperties: false
             example:
@@ -4236,6 +4255,8 @@ components:
                     description: A JSON Web Key represented as a string.
                     nullable: true
                     type: string
+                    x-encrypted: true
+                    x-referenceable: true
                 kid:
                     description: A unique identifier for a key.
                     type: string
@@ -4249,8 +4270,11 @@ components:
                     properties:
                         private_key:
                             type: string
+                            x-encrypted: true
+                            x-referenceable: true
                         public_key:
                             type: string
+                            x-referenceable: true
                     type: object
                 set:
                     description: The id (an UUID) of the key-set with which to associate the key.
@@ -4410,6 +4434,8 @@ components:
                     description: A JSON Web Key represented as a string.
                     nullable: true
                     type: string
+                    x-encrypted: true
+                    x-referenceable: true
                 kid:
                     description: A unique identifier for a key.
                     type: string
@@ -4423,8 +4449,11 @@ components:
                     properties:
                         private_key:
                             type: string
+                            x-encrypted: true
+                            x-referenceable: true
                         public_key:
                             type: string
+                            x-referenceable: true
                     type: object
                 set:
                     description: The id (an UUID) of the key-set with which to associate the key.
@@ -4573,16 +4602,24 @@ components:
                                         type: string
                                     d:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     dp:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     dq:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     e:
                                         type: string
                                     issuer:
                                         type: string
                                     k:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     key_ops:
                                         items:
                                             type: string
@@ -4595,16 +4632,28 @@ components:
                                         type: string
                                     oth:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     p:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     q:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     qi:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     r:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     t:
                                         type: string
+                                        x-encrypted: true
+                                        x-referenceable: true
                                     use:
                                         type: string
                                     x:
@@ -4626,6 +4675,8 @@ components:
                     required:
                         - keys
                     type: object
+            required:
+                - jwks
             type: object
         PaginationNextResponse:
             description: URI to the next page (may be null)
@@ -4717,6 +4768,8 @@ components:
                         password:
                             description: Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.
                             type: string
+                            x-encrypted: true
+                            x-referenceable: true
                         port:
                             default: 6379
                             description: An integer representing a port number between 0 and 65535, inclusive.
@@ -4743,6 +4796,7 @@ components:
                         username:
                             description: Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.
                             type: string
+                            x-referenceable: true
                     type: object
                 created_at:
                     description: Unix epoch when the resource was created.
@@ -4764,9 +4818,9 @@ components:
                     nullable: true
                     type: array
                 type:
-                    enum:
-                        - redis-ce
+                    const: redis-ce
                     type: string
+                    x-terraform-transform-const: true
                 updated_at:
                     description: Unix epoch when the resource was last updated.
                     nullable: true
@@ -4854,6 +4908,8 @@ components:
                         password:
                             description: Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.
                             type: string
+                            x-encrypted: true
+                            x-referenceable: true
                         port:
                             default: 6379
                             description: An integer representing a port number between 0 and 65535, inclusive.
@@ -4895,6 +4951,8 @@ components:
                         sentinel_password:
                             description: Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.
                             type: string
+                            x-encrypted: true
+                            x-referenceable: true
                         sentinel_role:
                             description: Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.
                             enum:
@@ -4905,6 +4963,7 @@ components:
                         sentinel_username:
                             description: Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.
                             type: string
+                            x-referenceable: true
                         server_name:
                             description: A string representing an SNI (server name indication) value for TLS.
                             type: string
@@ -4919,6 +4978,7 @@ components:
                         username:
                             description: Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.
                             type: string
+                            x-referenceable: true
                     type: object
                 created_at:
                     description: Unix epoch when the resource was created.
@@ -4940,9 +5000,9 @@ components:
                     nullable: true
                     type: array
                 type:
-                    enum:
-                        - redis-ee
+                    const: redis-ee
                     type: string
+                    x-terraform-transform-const: true
                 updated_at:
                     description: Unix epoch when the resource was last updated.
                     nullable: true
@@ -6169,10 +6229,95 @@ components:
                     nullable: true
                     type: string
                 healthchecks:
+                    default:
+                        active:
+                            concurrency: 10
+                            healthy:
+                                http_statuses:
+                                    - 200
+                                    - 302
+                                interval: 0
+                                successes: 0
+                            http_path: /
+                            https_verify_certificate: true
+                            timeout: 1
+                            type: http
+                            unhealthy:
+                                http_failures: 0
+                                http_statuses:
+                                    - 429
+                                    - 404
+                                    - 500
+                                    - 501
+                                    - 502
+                                    - 503
+                                    - 504
+                                    - 505
+                                interval: 0
+                                tcp_failures: 0
+                                timeouts: 0
+                        passive:
+                            healthy:
+                                http_statuses:
+                                    - 200
+                                    - 201
+                                    - 202
+                                    - 203
+                                    - 204
+                                    - 205
+                                    - 206
+                                    - 207
+                                    - 208
+                                    - 226
+                                    - 300
+                                    - 301
+                                    - 302
+                                    - 303
+                                    - 304
+                                    - 305
+                                    - 306
+                                    - 307
+                                    - 308
+                                successes: 0
+                            type: http
+                            unhealthy:
+                                http_failures: 0
+                                http_statuses:
+                                    - 429
+                                    - 500
+                                    - 503
+                                tcp_failures: 0
+                                timeouts: 0
                     description: The array of healthchecks.
                     nullable: true
                     properties:
                         active:
+                            default:
+                                concurrency: 10
+                                healthy:
+                                    http_statuses:
+                                        - 200
+                                        - 302
+                                    interval: 0
+                                    successes: 0
+                                http_path: /
+                                https_verify_certificate: true
+                                timeout: 1
+                                type: http
+                                unhealthy:
+                                    http_failures: 0
+                                    http_statuses:
+                                        - 429
+                                        - 404
+                                        - 500
+                                        - 501
+                                        - 502
+                                        - 503
+                                        - 504
+                                        - 505
+                                    interval: 0
+                                    tcp_failures: 0
+                                    timeouts: 0
                             properties:
                                 concurrency:
                                     default: 10
@@ -6187,6 +6332,12 @@ components:
                                     description: A map of header names to arrays of header values.
                                     type: object
                                 healthy:
+                                    default:
+                                        http_statuses:
+                                            - 200
+                                            - 302
+                                        interval: 0
+                                        successes: 0
                                     properties:
                                         http_statuses:
                                             default:
@@ -6233,6 +6384,20 @@ components:
                                         - tcp
                                     type: string
                                 unhealthy:
+                                    default:
+                                        http_failures: 0
+                                        http_statuses:
+                                            - 429
+                                            - 404
+                                            - 500
+                                            - 501
+                                            - 502
+                                            - 503
+                                            - 504
+                                            - 505
+                                        interval: 0
+                                        tcp_failures: 0
+                                        timeouts: 0
                                     properties:
                                         http_failures:
                                             default: 0
@@ -6272,8 +6437,62 @@ components:
                                     type: object
                             type: object
                         passive:
+                            default:
+                                healthy:
+                                    http_statuses:
+                                        - 200
+                                        - 201
+                                        - 202
+                                        - 203
+                                        - 204
+                                        - 205
+                                        - 206
+                                        - 207
+                                        - 208
+                                        - 226
+                                        - 300
+                                        - 301
+                                        - 302
+                                        - 303
+                                        - 304
+                                        - 305
+                                        - 306
+                                        - 307
+                                        - 308
+                                    successes: 0
+                                type: http
+                                unhealthy:
+                                    http_failures: 0
+                                    http_statuses:
+                                        - 429
+                                        - 500
+                                        - 503
+                                    tcp_failures: 0
+                                    timeouts: 0
                             properties:
                                 healthy:
+                                    default:
+                                        http_statuses:
+                                            - 200
+                                            - 201
+                                            - 202
+                                            - 203
+                                            - 204
+                                            - 205
+                                            - 206
+                                            - 207
+                                            - 208
+                                            - 226
+                                            - 300
+                                            - 301
+                                            - 302
+                                            - 303
+                                            - 304
+                                            - 305
+                                            - 306
+                                            - 307
+                                            - 308
+                                        successes: 0
                                     properties:
                                         http_statuses:
                                             default:
@@ -6317,6 +6536,14 @@ components:
                                         - tcp
                                     type: string
                                 unhealthy:
+                                    default:
+                                        http_failures: 0
+                                        http_statuses:
+                                            - 429
+                                            - 500
+                                            - 503
+                                        tcp_failures: 0
+                                        timeouts: 0
                                     properties:
                                         http_failures:
                                             default: 0
@@ -6450,17 +6677,54 @@ components:
                 - prefix
             type: object
         Workspace:
-            description: Workspaces provide a way to segment Kong entities.
+            additionalProperties: false
+            example:
+                comment: Example workspace comment
+                config:
+                    meta: {}
+                    portal: false
+                    portal_access_request_email: true
+                    portal_application_request_email: true
+                    portal_application_status_email: true
+                    portal_approved_email: true
+                    portal_auth: basic
+                    portal_auth_conf: some-auth-config
+                    portal_auto_approve: true
+                    portal_cors_origins:
+                        - https://example.com
+                        - https://another-origin.com
+                    portal_developer_meta_fields: '[{"label":"Full Name","title":"full_name","validator":{"required":true,"type":"string"}}]'
+                    portal_emails_from: admin@example.com
+                    portal_emails_reply_to: support@example.com
+                    portal_invite_email: true
+                    portal_is_legacy: false
+                    portal_reset_email: true
+                    portal_reset_success_email: true
+                    portal_session_conf: some-session-config
+                    portal_smtp_admin_emails:
+                        - admin@example.com
+                        - dev@example.com
+                    portal_token_exp: 3600
+                created_at: 1.706598432e+09
+                id: b58c7d9d-e54f-444c-b24d-cdfc4159f61e
+                meta:
+                    color: '#ffcc00'
+                    thumbnail: https://example.com/image.png
+                name: example-workspace
             properties:
                 comment:
+                    description: A description or additional information about the workspace.
+                    nullable: true
                     type: string
                 config:
+                    nullable: true
                     properties:
                         meta:
+                            additionalProperties:
+                                type: string
                             type: object
                         portal:
                             default: false
-                            description: Portal enabled
                             type: boolean
                         portal_access_request_email:
                             type: boolean
@@ -6506,11 +6770,14 @@ components:
                     type: object
                 created_at:
                     description: Unix epoch when the resource was created.
+                    nullable: true
                     type: integer
                 id:
-                    description: The unique UUID for this resource.
+                    description: A string representing a UUID (universally unique identifier).
+                    nullable: true
                     type: string
                 meta:
+                    nullable: true
                     properties:
                         color:
                             type: string
@@ -6518,40 +6785,21 @@ components:
                             type: string
                     type: object
                 name:
+                    description: A unique string representing a UTF-8 encoded name.
+                    minLength: 1
                     type: string
+                updated_at:
+                    description: Unix epoch when the resource was last updated.
+                    nullable: true
+                    type: integer
+            required:
+                - name
             type: object
-            x-examples:
-                Example 1:
-                    comment: string
-                    config:
-                        meta: {}
-                        portal: false
-                        portal_access_request_email: true
-                        portal_application_request_email: true
-                        portal_application_status_email: true
-                        portal_approved_email: true
-                        portal_auth: string
-                        portal_auth_conf: string
-                        portal_auto_approve: true
-                        portal_cors_origins:
-                            - string
-                        portal_developer_meta_fields: '[{"label":"Full Name","title":"full_name","validator":{"required":true,"type":"string"}}]'
-                        portal_emails_from: string
-                        portal_emails_reply_to: string
-                        portal_invite_email: true
-                        portal_is_legacy: true
-                        portal_reset_email: true
-                        portal_reset_success_email: true
-                        portal_session_conf: string
-                        portal_smtp_admin_emails:
-                            - string
-                        portal_token_exp: 0
-                    created_at: 0
-                    id: string
-                    meta:
-                        color: string
-                        thumbnail: string
-                    name: string
+    securitySchemes:
+        adminToken:
+            in: header
+            name: Kong-Admin-Token
+            type: apiKey
 externalDocs:
     description: Documentation for Kong Gateway and its APIs
     url: https://developer.konghq.com
@@ -6569,8 +6817,8 @@ info:
         name: Apache 2.0
         url: https://www.apache.org/licenses/LICENSE-2.0.html
     title: Kong Enterprise Admin API
-    version: 0.0.1
-openapi: 3.0.0
+    version: 3.12.0
+openapi: 3.1.0
 paths:
     /:
         get:
@@ -6707,7 +6955,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an ACL in a workspace
+            summary: Get an ACL in a workspace
             tags:
                 - ACLs
         parameters:
@@ -6847,7 +7095,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Basic-auth credential in a workspace
+            summary: Get a Basic-auth credential in a workspace
             tags:
                 - Basic-auth credentials
         parameters:
@@ -6987,7 +7235,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Certificate in a workspace
+            summary: Get a Certificate in a workspace
             tags:
                 - Certificates
         parameters:
@@ -7124,7 +7372,7 @@ paths:
                     description: Successfully fetched SNI
                 "404":
                     description: Resource does not exist
-            summary: Fetch an SNI associated with a Certificate in a workspace
+            summary: Get an SNI associated with a Certificate in a workspace
             tags:
                 - SNIs
         patch:
@@ -7262,7 +7510,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Consumer Group in a workspace
+            summary: Get a Consumer Group in a workspace
             tags:
                 - Consumer Groups
         parameters:
@@ -7396,22 +7644,25 @@ paths:
             x-speakeasy-entity-operation: GatewayConsumerGroupMember#create
     /{workspace}/consumer_groups/{ConsumerGroupId}/consumers/{ConsumerIdOrUsername}:
         delete:
-            description: The consumer groups endpoint for removing a consumer from a specified consumer group in a workspace.
+            description: Remove a consumer from a consumer group in a workspace
             operationId: remove-consumer-from-group-in-workspace
             parameters:
                 - $ref: '#/components/parameters/Workspace'
             responses:
                 "204":
-                    description: |
-                        HTTP/1.1 204 No Content
-                "401":
-                    $ref: '#/components/responses/UnauthorizedRequest'
-            summary: Remove a consumer from a consumer group in a workspace
+                    description: Consumer removed from group
+            summary: Remove consumer from consumer group in a workspace
             tags:
                 - Consumer Groups
+            x-speakeasy-entity-operation: GatewayConsumerGroupMember#delete
         parameters:
-            - $ref: '#/components/parameters/ConsumerGroupId'
-            - $ref: '#/components/parameters/ConsumerIdOrUsername'
+            - $ref: '#/components/parameters/ConsumerGroupIdManageConsumers'
+            - in: path
+              name: ConsumerIdOrUsername
+              required: true
+              schema:
+                type: string
+              x-speakeasy-name-override: consumer_id
     /{workspace}/consumer_groups/{ConsumerGroupId}/overrides/plugins/rate-limiting-advanced:
         delete:
             description: |-
@@ -7503,7 +7754,7 @@ paths:
                                         type: string
                                 type: object
                     description: Created
-            summary: Configure rate limiting for a consumer group in a workspace.
+            summary: Configure rate limiting for a consumer group in a workspace
             tags:
                 - Consumer Groups
     /{workspace}/consumer_groups/{ConsumerGroupId}/plugins:
@@ -7588,7 +7839,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Consumer Group in a workspace
+            summary: Get a Plugin associated with a Consumer Group in a workspace
             tags:
                 - Plugins
         patch:
@@ -7777,7 +8028,7 @@ paths:
                     description: Successfully fetched ACL
                 "404":
                     description: Resource does not exist
-            summary: Fetch an ACL associated with a Consumer in a workspace
+            summary: Get an ACL associated with a Consumer in a workspace
             tags:
                 - ACLs
         patch:
@@ -7912,7 +8163,7 @@ paths:
                     description: Successfully fetched Basic-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Basic-auth credential associated with a Consumer in a workspace
+            summary: Get a Basic-auth credential associated with a Consumer in a workspace
             tags:
                 - Basic-auth credentials
         patch:
@@ -8047,7 +8298,7 @@ paths:
                     description: Successfully fetched HMAC-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a HMAC-auth credential associated with a Consumer in a workspace
+            summary: Get a HMAC-auth credential associated with a Consumer in a workspace
             tags:
                 - HMAC-auth credentials
         patch:
@@ -8181,7 +8432,7 @@ paths:
                     description: Successfully fetched JWT
                 "404":
                     description: Resource does not exist
-            summary: Fetch a JWT associated with a Consumer in a workspace
+            summary: Get a JWT associated with a Consumer in a workspace
             tags:
                 - JWTs
         patch:
@@ -8314,7 +8565,7 @@ paths:
                     description: Successfully fetched API-key
                 "404":
                     description: Resource does not exist
-            summary: Fetch an API-key associated with a Consumer in a workspace
+            summary: Get an API-key associated with a Consumer in a workspace
             tags:
                 - API-keys
         patch:
@@ -8448,7 +8699,7 @@ paths:
                     description: Successfully fetched MTLS-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a MTLS-auth credential associated with a Consumer in a workspace
+            summary: Get a MTLS-auth credential associated with a Consumer in a workspace
             tags:
                 - MTLS-auth credentials
         patch:
@@ -8583,7 +8834,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Consumer in a workspace
+            summary: Get a Plugin associated with a Consumer in a workspace
             tags:
                 - Plugins
         patch:
@@ -8667,7 +8918,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Consumer in a workspace
+            summary: Get a Consumer in a workspace
             tags:
                 - Consumers
         parameters:
@@ -8900,7 +9151,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a CustomPlugin in a workspace
+            summary: Get a CustomPlugin in a workspace
             tags:
                 - CustomPlugins
             x-unstable: true
@@ -9042,7 +9293,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Degraphql_route in a workspace
+            summary: Get a Degraphql_route in a workspace
             tags:
                 - Degraphql_routes
         parameters:
@@ -9097,6 +9348,146 @@ paths:
             summary: Upsert a Degraphql_route in a workspace
             tags:
                 - Degraphql_routes
+    /{workspace}/graphql-rate-limiting-advanced-costs:
+        get:
+            description: List all GraphQL Cost Decorations in a workspace
+            operationId: list-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing GraphQL Cost Decorations
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all GraphQL Cost Decorations in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        post:
+            description: Create a new GraphQL Cost Decoration in a workspace
+            operationId: create-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Description of the new GraphQL Cost Decoration for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully created GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new GraphQL Cost Decoration in a workspace
+            tags:
+                - GraphQL Cost Decorations
+    /{workspace}/graphql-rate-limiting-advanced-costs/{GraphQLCostDecorationId}:
+        delete:
+            description: Delete a GraphQL Cost Decoration in a workspace
+            operationId: delete-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a GraphQL Cost Decoration in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        get:
+            description: Get a GraphQL Cost Decoration using ID in a workspace.
+            operationId: get-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully fetched GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a GraphQL Cost Decoration in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        parameters:
+            - $ref: '#/components/parameters/GraphQLCostDecorationId'
+        patch:
+            description: Update a GraphQL Cost Decoration in a workspace
+            operationId: update-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Fields of the GraphQL Cost Decoration that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully updated GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a GraphQL Cost Decoration in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        put:
+            description: Create or Update GraphQL Cost Decoration using ID in a workspace.
+            operationId: upsert-graphql-rate-limiting-advanced-cost-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Description of the GraphQL Cost Decoration
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully upserted GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a GraphQL Cost Decoration in a workspace
+            tags:
+                - GraphQL Cost Decorations
     /{workspace}/hmac-auths:
         get:
             description: List all HMAC-auth credentials in a workspace
@@ -9182,7 +9573,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a HMAC-auth credential in a workspace
+            summary: Get a HMAC-auth credential in a workspace
             tags:
                 - HMAC-auth credentials
         parameters:
@@ -9321,7 +9712,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a JWT in a workspace
+            summary: Get a JWT in a workspace
             tags:
                 - JWTs
         parameters:
@@ -9459,7 +9850,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an API-key in a workspace
+            summary: Get an API-key in a workspace
             tags:
                 - API-keys
         parameters:
@@ -9597,7 +9988,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a KeySet in a workspace
+            summary: Get a KeySet in a workspace
             tags:
                 - KeySets
         parameters:
@@ -9733,7 +10124,7 @@ paths:
                     description: Successfully fetched Key
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Key associated with a KeySet in a workspace
+            summary: Get a Key associated with a KeySet in a workspace
             tags:
                 - Keys
         patch:
@@ -9871,7 +10262,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Key in a workspace
+            summary: Get a Key in a workspace
             tags:
                 - Keys
         parameters:
@@ -10011,7 +10402,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a MTLS-auth credential in a workspace
+            summary: Get a MTLS-auth credential in a workspace
             tags:
                 - MTLS-auth credentials
         parameters:
@@ -10151,7 +10542,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an OIDC JWK in a workspace
+            summary: Get an OIDC JWK in a workspace
             tags:
                 - OIDC JWKs
         parameters:
@@ -10291,7 +10682,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Partial in a workspace
+            summary: Get a Partial in a workspace
             tags:
                 - Partials
         parameters:
@@ -10376,6 +10767,7 @@ paths:
             summary: List all Plugins in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
         post:
             description: Create a new Plugin in a workspace
             operationId: create-plugin-in-workspace
@@ -10400,6 +10792,7 @@ paths:
             summary: Create a new Plugin in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
     /{workspace}/plugins/{PluginId}:
         delete:
             description: Delete a Plugin in a workspace
@@ -10415,6 +10808,7 @@ paths:
             summary: Delete a Plugin in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
         get:
             description: Get a Plugin using ID in a workspace.
             operationId: get-plugin-in-workspace
@@ -10431,9 +10825,10 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin in a workspace
+            summary: Get a Plugin in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
         parameters:
             - $ref: '#/components/parameters/PluginId'
         patch:
@@ -10462,6 +10857,7 @@ paths:
             summary: Update a Plugin in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
         put:
             description: Create or Update Plugin using ID in a workspace.
             operationId: upsert-plugin-in-workspace
@@ -10486,6 +10882,7 @@ paths:
             summary: Upsert a Plugin in a workspace
             tags:
                 - Plugins
+            x-keep-sdk: true
     /{workspace}/routes:
         get:
             description: List all Routes in a workspace
@@ -10571,7 +10968,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Route in a workspace
+            summary: Get a Route in a workspace
             tags:
                 - Routes
         parameters:
@@ -10708,7 +11105,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Route in a workspace
+            summary: Get a Plugin associated with a Route in a workspace
             tags:
                 - Plugins
         patch:
@@ -10846,7 +11243,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Service in a workspace
+            summary: Get a Service in a workspace
             tags:
                 - Services
         parameters:
@@ -10983,7 +11380,7 @@ paths:
                     description: Successfully fetched Degraphql_route
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Degraphql_route associated with a Service in a workspace
+            summary: Get a Degraphql_route associated with a Service in a workspace
             tags:
                 - Degraphql_routes
         patch:
@@ -11036,6 +11433,141 @@ paths:
             summary: Upsert a Degraphql_route associated with a Service in a workspace
             tags:
                 - Degraphql_routes
+    /{workspace}/services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs:
+        get:
+            description: List all GraphQL Cost Decorations associated with a Service in a workspace
+            operationId: list-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing GraphQL Cost Decorations
+            summary: List all GraphQL Cost Decorations associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        post:
+            description: Create a new GraphQL Cost Decoration associated with a Service in a workspace
+            operationId: create-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+                description: Description of new GraphQL Cost Decoration for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully created GraphQL Cost Decoration
+            summary: Create a new GraphQL Cost Decoration associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
+    /{workspace}/services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
+        delete:
+            description: Delete a a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+            operationId: delete-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+            summary: Delete a a GraphQL Cost Decoration associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        get:
+            description: Get a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+            operationId: get-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully fetched GraphQL Cost Decoration
+                "404":
+                    description: Resource does not exist
+            summary: Get a GraphQL Cost Decoration associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        patch:
+            description: Update a a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+            operationId: update-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Fields of the GraphQL Cost Decoration that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully updated GraphQL Cost Decoration
+                "404":
+                    description: Resource does not exist
+            summary: Update a a GraphQL Cost Decoration associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
+        put:
+            description: Create or Update a GraphQL Cost Decoration associated with a Service using ID in a workspace.
+            operationId: upsert-graphql-rate-limiting-advanced-cost-with-service-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+                description: Description of the GraphQL Cost Decoration
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully upserted GraphQL Cost Decoration
+            summary: Upsert a GraphQL Cost Decoration associated with a Service in a workspace
+            tags:
+                - GraphQL Cost Decorations
     /{workspace}/services/{ServiceIdOrName}/plugins:
         get:
             description: List all Plugins associated with a Service in a workspace
@@ -11118,7 +11650,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Service in a workspace
+            summary: Get a Plugin associated with a Service in a workspace
             tags:
                 - Plugins
         patch:
@@ -11253,7 +11785,7 @@ paths:
                     description: Successfully fetched Route
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Route associated with a Service in a workspace
+            summary: Get a Route associated with a Service in a workspace
             tags:
                 - Routes
         patch:
@@ -11391,7 +11923,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an SNI in a workspace
+            summary: Get an SNI in a workspace
             tags:
                 - SNIs
         parameters:
@@ -11582,7 +12114,7 @@ paths:
                     description: Successfully fetched Target
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Target associated with an Upstream in a workspace
+            summary: Get a Target associated with an Upstream in a workspace
             tags:
                 - Targets
         patch:
@@ -11666,7 +12198,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an Upstream in a workspace
+            summary: Get an Upstream in a workspace
             tags:
                 - Upstreams
         parameters:
@@ -11806,7 +12338,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Vault in a workspace
+            summary: Get a Vault in a workspace
             tags:
                 - Vaults
         parameters:
@@ -11940,7 +12472,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an ACL
+            summary: Get an ACL
             tags:
                 - ACLs
         parameters:
@@ -12044,7 +12576,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Admin
+            summary: Get a Admin
             tags:
                 - Admins
         parameters:
@@ -12340,7 +12872,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Basic-auth credential
+            summary: Get a Basic-auth credential
             tags:
                 - Basic-auth credentials
         parameters:
@@ -12470,7 +13002,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a CA Certificate
+            summary: Get a CA Certificate
             tags:
                 - CA Certificates
         parameters:
@@ -12646,7 +13178,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Certificate
+            summary: Get a Certificate
             tags:
                 - Certificates
         parameters:
@@ -12775,7 +13307,7 @@ paths:
                     description: Successfully fetched SNI
                 "404":
                     description: Resource does not exist
-            summary: Fetch an SNI associated with a Certificate
+            summary: Get an SNI associated with a Certificate
             tags:
                 - SNIs
         patch:
@@ -12844,7 +13376,7 @@ paths:
                                         type: string
                                 type: object
                     description: Kong Gateway is not running as a control plane.
-            summary: Retrieve connected data planes
+            summary: List connected data planes
             tags:
                 - Clustering
     /clustering/status:
@@ -12865,7 +13397,7 @@ paths:
                                         type: string
                                 type: object
                     description: Kong Gateway is not running as a control plane.
-            summary: Retrieve the status of connected data planes
+            summary: Get the status of connected data planes
             tags:
                 - Clustering
     /config:
@@ -12974,7 +13506,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Consumer Group
+            summary: Get a Consumer Group
             tags:
                 - Consumer Groups
         parameters:
@@ -13115,6 +13647,7 @@ paths:
               required: true
               schema:
                 type: string
+              x-speakeasy-name-override: consumer_id
     /consumer_groups/{ConsumerGroupId}/overrides/plugins/rate-limiting-advanced:
         delete:
             description: |
@@ -13201,7 +13734,7 @@ paths:
                                         type: string
                                 type: object
                     description: Created
-            summary: Configure rate limiting for a consumer group.
+            summary: Configure rate limiting for a consumer group
             tags:
                 - Consumer Groups
     /consumer_groups/{ConsumerGroupId}/plugins:
@@ -13282,7 +13815,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Consumer Group
+            summary: Get a Plugin associated with a Consumer Group
             tags:
                 - Plugins
         patch:
@@ -13341,6 +13874,7 @@ paths:
                 - $ref: '#/components/parameters/PaginationSize'
                 - $ref: '#/components/parameters/PaginationOffset'
                 - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/CustomId'
             responses:
                 "200":
                     content:
@@ -13462,7 +13996,7 @@ paths:
                     description: Successfully fetched ACL
                 "404":
                     description: Resource does not exist
-            summary: Fetch an ACL associated with a Consumer
+            summary: Get an ACL associated with a Consumer
             tags:
                 - ACLs
         patch:
@@ -13591,7 +14125,7 @@ paths:
                     description: Successfully fetched Basic-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Basic-auth credential associated with a Consumer
+            summary: Get a Basic-auth credential associated with a Consumer
             tags:
                 - Basic-auth credentials
         patch:
@@ -13720,7 +14254,7 @@ paths:
                     description: Successfully fetched HMAC-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a HMAC-auth credential associated with a Consumer
+            summary: Get a HMAC-auth credential associated with a Consumer
             tags:
                 - HMAC-auth credentials
         patch:
@@ -13848,7 +14382,7 @@ paths:
                     description: Successfully fetched JWT
                 "404":
                     description: Resource does not exist
-            summary: Fetch a JWT associated with a Consumer
+            summary: Get a JWT associated with a Consumer
             tags:
                 - JWTs
         patch:
@@ -13975,7 +14509,7 @@ paths:
                     description: Successfully fetched API-key
                 "404":
                     description: Resource does not exist
-            summary: Fetch an API-key associated with a Consumer
+            summary: Get an API-key associated with a Consumer
             tags:
                 - API-keys
         patch:
@@ -14103,7 +14637,7 @@ paths:
                     description: Successfully fetched MTLS-auth credential
                 "404":
                     description: Resource does not exist
-            summary: Fetch a MTLS-auth credential associated with a Consumer
+            summary: Get a MTLS-auth credential associated with a Consumer
             tags:
                 - MTLS-auth credentials
         patch:
@@ -14232,7 +14766,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Consumer
+            summary: Get a Plugin associated with a Consumer
             tags:
                 - Plugins
         patch:
@@ -14311,7 +14845,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Consumer
+            summary: Get a Consumer
             tags:
                 - Consumers
         parameters:
@@ -14530,7 +15064,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a CustomPlugin
+            summary: Get a CustomPlugin
             tags:
                 - CustomPlugins
             x-unstable: true
@@ -14647,7 +15181,7 @@ paths:
                     $ref: '#/components/responses/GetNodeLogLevelResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Retrieve Node Log Level of A Node
+            summary: Get Node Log Level of A Node
             tags:
                 - Debug
     /debug/node/log-level/{logLevel}:
@@ -14756,7 +15290,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Degraphql_route
+            summary: Get a Degraphql_route
             tags:
                 - Degraphql_routes
         parameters:
@@ -14880,7 +15414,7 @@ paths:
                     $ref: '#/components/responses/EventHooksResponse'
                 "401":
                     $ref: '#/components/responses/HTTP401Error'
-            summary: Ping a webhook event hook
+            summary: Get a webhook event hook
             tags:
                 - Event-hooks
     /event-hooks/{eventHookId}/test:
@@ -14948,9 +15482,139 @@ paths:
                     $ref: '#/components/responses/FIPS-response'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: FIPS Mode Status
+            summary: Get FIPS Mode Status
             tags:
                 - Information
+    /graphql-rate-limiting-advanced-costs:
+        get:
+            description: List all GraphQL Cost Decorations
+            operationId: list-graphql-rate-limiting-advanced-cost
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing GraphQL Cost Decorations
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all GraphQL Cost Decorations
+            tags:
+                - GraphQL Cost Decorations
+        post:
+            description: Create a new GraphQL Cost Decoration
+            operationId: create-graphql-rate-limiting-advanced-cost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Description of the new GraphQL Cost Decoration for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully created GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new GraphQL Cost Decoration
+            tags:
+                - GraphQL Cost Decorations
+    /graphql-rate-limiting-advanced-costs/{GraphQLCostDecorationId}:
+        delete:
+            description: Delete a GraphQL Cost Decoration
+            operationId: delete-graphql-rate-limiting-advanced-cost
+            parameters:
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+            responses:
+                "204":
+                    description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a GraphQL Cost Decoration
+            tags:
+                - GraphQL Cost Decorations
+        get:
+            description: Get a GraphQL Cost Decoration using ID.
+            operationId: get-graphql-rate-limiting-advanced-cost
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully fetched GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a GraphQL Cost Decoration
+            tags:
+                - GraphQL Cost Decorations
+        parameters:
+            - $ref: '#/components/parameters/GraphQLCostDecorationId'
+        patch:
+            description: Update a GraphQL Cost Decoration
+            operationId: update-graphql-rate-limiting-advanced-cost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Fields of the GraphQL Cost Decoration that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully updated GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a GraphQL Cost Decoration
+            tags:
+                - GraphQL Cost Decorations
+        put:
+            description: Create or Update GraphQL Cost Decoration using ID.
+            operationId: upsert-graphql-rate-limiting-advanced-cost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Description of the GraphQL Cost Decoration
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully upserted GraphQL Cost Decoration
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a GraphQL Cost Decoration
+            tags:
+                - GraphQL Cost Decorations
     /groups:
         get:
             description: Returns a list of groups.
@@ -15015,7 +15679,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Group
+            summary: Get a Group
             tags:
                 - Groups
         parameters:
@@ -15198,7 +15862,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a HMAC-auth credential
+            summary: Get a HMAC-auth credential
             tags:
                 - HMAC-auth credentials
         parameters:
@@ -15327,7 +15991,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a JWT
+            summary: Get a JWT
             tags:
                 - JWTs
         parameters:
@@ -15455,7 +16119,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an API-key
+            summary: Get an API-key
             tags:
                 - API-keys
         parameters:
@@ -15583,7 +16247,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a KeySet
+            summary: Get a KeySet
             tags:
                 - KeySets
         parameters:
@@ -15711,7 +16375,7 @@ paths:
                     description: Successfully fetched Key
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Key associated with a KeySet
+            summary: Get a Key associated with a KeySet
             tags:
                 - Keys
         patch:
@@ -15771,7 +16435,7 @@ paths:
                     $ref: '#/components/responses/KeyRingResponse'
                 "401":
                     $ref: '#/components/responses/UnauthorizedRequest'
-            summary: Fetch cluster Keyring
+            summary: Get cluster Keyring
             tags:
                 - Keyring
     /keyring/activate:
@@ -15957,7 +16621,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Key
+            summary: Get a Key
             tags:
                 - Keys
         parameters:
@@ -16018,7 +16682,7 @@ paths:
                     $ref: '#/components/responses/ReportResponse'
                 "401":
                     $ref: '#/components/responses/LicenseHTTP401Error'
-            summary: Generate a report
+            summary: Get a report
             tags:
                 - Licenses
     /licenses:
@@ -16065,14 +16729,14 @@ paths:
             tags:
                 - Licenses
         get:
-            description: Fetch a specific license using the license id parameter.
+            description: Get a specific license using the license id parameter.
             operationId: get-licenses-license-id
             responses:
                 "200":
                     $ref: '#/components/responses/LicenseResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Fetch a license
+            summary: Get a license
             tags:
                 - Licenses
         parameters:
@@ -16192,7 +16856,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a MTLS-auth credential
+            summary: Get a MTLS-auth credential
             tags:
                 - MTLS-auth credentials
         parameters:
@@ -16322,7 +16986,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an OIDC JWK
+            summary: Get an OIDC JWK
             tags:
                 - OIDC JWKs
         parameters:
@@ -16452,7 +17116,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Partial
+            summary: Get a Partial
             tags:
                 - Partials
         parameters:
@@ -16614,7 +17278,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin
+            summary: Get a Plugin
             tags:
                 - Plugins
         parameters:
@@ -16712,7 +17376,7 @@ paths:
                     $ref: '#/components/responses/GetRbacResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Retrieve a Role
+            summary: Get a Role
             tags:
                 - RBAC
         parameters:
@@ -16797,7 +17461,7 @@ paths:
                     $ref: '#/components/responses/GetRoleEndpointPermissionResponse'
                 "401":
                     $ref: '#/components/responses/HTTP401Error'
-            summary: Retrieve a Role Endpoint Permission
+            summary: Get a Role Endpoint Permission
             tags:
                 - RBAC
         parameters:
@@ -16984,7 +17648,7 @@ paths:
                     $ref: '#/components/responses/GetRBACUserResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Retrieve a User
+            summary: Get a User
             tags:
                 - RBAC
         parameters:
@@ -17134,7 +17798,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Route
+            summary: Get a Route
             tags:
                 - Routes
         parameters:
@@ -17263,7 +17927,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Route
+            summary: Get a Plugin associated with a Route
             tags:
                 - Plugins
         patch:
@@ -17345,7 +18009,7 @@ paths:
             responses:
                 "200":
                     $ref: '#/components/responses/GetPartialSchemaResponse'
-            summary: Fetch partial schema
+            summary: Get partial schema
             tags:
                 - Schemas
         parameters:
@@ -17362,9 +18026,10 @@ paths:
             responses:
                 "200":
                     $ref: '#/components/responses/GetPluginSchemaResponse'
-            summary: Fetch plugin schema
+            summary: Get plugin schema
             tags:
                 - Plugins
+            x-keep-sdk: true
         parameters:
             - description: The name of the plugin
               in: path
@@ -17451,7 +18116,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Service
+            summary: Get a Service
             tags:
                 - Services
         parameters:
@@ -17580,7 +18245,7 @@ paths:
                     description: Successfully fetched Degraphql_route
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Degraphql_route associated with a Service
+            summary: Get a Degraphql_route associated with a Service
             tags:
                 - Degraphql_routes
         patch:
@@ -17631,6 +18296,135 @@ paths:
             summary: Upsert a Degraphql_route associated with a Service
             tags:
                 - Degraphql_routes
+    /services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs:
+        get:
+            description: List all GraphQL Cost Decorations associated with a Service
+            operationId: list-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing GraphQL Cost Decorations
+            summary: List all GraphQL Cost Decorations associated with a Service
+            tags:
+                - GraphQL Cost Decorations
+        post:
+            description: Create a new GraphQL Cost Decoration associated with a Service
+            operationId: create-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+                description: Description of new GraphQL Cost Decoration for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully created GraphQL Cost Decoration
+            summary: Create a new GraphQL Cost Decoration associated with a Service
+            tags:
+                - GraphQL Cost Decorations
+    /services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
+        delete:
+            description: Delete a a GraphQL Cost Decoration associated with a Service using ID.
+            operationId: delete-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+            responses:
+                "204":
+                    description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+            summary: Delete a a GraphQL Cost Decoration associated with a Service
+            tags:
+                - GraphQL Cost Decorations
+        get:
+            description: Get a GraphQL Cost Decoration associated with a Service using ID.
+            operationId: get-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully fetched GraphQL Cost Decoration
+                "404":
+                    description: Resource does not exist
+            summary: Get a GraphQL Cost Decoration associated with a Service
+            tags:
+                - GraphQL Cost Decorations
+        patch:
+            description: Update a a GraphQL Cost Decoration associated with a Service using ID.
+            operationId: update-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecoration'
+                description: Fields of the GraphQL Cost Decoration that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully updated GraphQL Cost Decoration
+                "404":
+                    description: Resource does not exist
+            summary: Update a a GraphQL Cost Decoration associated with a Service
+            tags:
+                - GraphQL Cost Decorations
+        put:
+            description: Create or Update a GraphQL Cost Decoration associated with a Service using ID.
+            operationId: upsert-graphql-rate-limiting-advanced-cost-with-service
+            parameters:
+                - $ref: '#/components/parameters/ServiceIdOrName'
+                - $ref: '#/components/parameters/GraphQLCostDecorationId'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+                description: Description of the GraphQL Cost Decoration
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GraphQLCostDecoration'
+                    description: Successfully upserted GraphQL Cost Decoration
+            summary: Upsert a GraphQL Cost Decoration associated with a Service
+            tags:
+                - GraphQL Cost Decorations
     /services/{ServiceIdOrName}/plugins:
         get:
             description: List all Plugins associated with a Service
@@ -17709,7 +18503,7 @@ paths:
                     description: Successfully fetched Plugin
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Plugin associated with a Service
+            summary: Get a Plugin associated with a Service
             tags:
                 - Plugins
         patch:
@@ -17838,7 +18632,7 @@ paths:
                     description: Successfully fetched Route
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Route associated with a Service
+            summary: Get a Route associated with a Service
             tags:
                 - Routes
         patch:
@@ -17968,7 +18762,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an SNI
+            summary: Get an SNI
             tags:
                 - SNIs
         parameters:
@@ -18033,7 +18827,7 @@ paths:
                     $ref: '#/components/responses/GetNodeStatusResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Health Routes
+            summary: Get Health Routes
             tags:
                 - Information
     /status/dns:
@@ -18055,7 +18849,7 @@ paths:
                                         type: string
                                 type: object
                     description: Legacy DNS client in use
-            summary: DNS Status
+            summary: Get DNS Status
             tags:
                 - Information
     /tags:
@@ -18102,7 +18896,7 @@ paths:
                     $ref: '#/components/responses/GetTimersDebugInfoResponse'
                 "401":
                     $ref: '#/components/responses/InvalidAuthCredError'
-            summary: Retrieve Runtime Debugging Info of Kong's Timers
+            summary: Get Runtime Debugging Info of Kong's Timers
             tags:
                 - Information
     /upstreams:
@@ -18234,7 +19028,7 @@ paths:
                     description: Successfully fetched Target
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Target associated with an Upstream
+            summary: Get a Target associated with an Upstream
             tags:
                 - Targets
         patch:
@@ -18313,7 +19107,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch an Upstream
+            summary: Get an Upstream
             tags:
                 - Upstreams
         parameters:
@@ -18443,7 +19237,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Vault
+            summary: Get a Vault
             tags:
                 - Vaults
         parameters:
@@ -18500,7 +19294,7 @@ paths:
             responses:
                 "200":
                     $ref: '#/components/responses/ListAllGroups'
-            summary: Retrieve a list of all groups
+            summary: List all groups
             tags:
                 - Workspaces
         post:
@@ -18555,7 +19349,7 @@ paths:
             responses:
                 "200":
                     $ref: '#/components/responses/GetRolesResponse'
-            summary: Retrieve roles associated with a specific group
+            summary: List roles associated with a specific group
             tags:
                 - Workspaces
         parameters:
@@ -18653,7 +19447,7 @@ paths:
                     $ref: '#/components/responses/HTTP401Error'
                 "404":
                     description: Resource does not exist
-            summary: Fetch a Workspace
+            summary: Get a Workspace
             tags:
                 - Workspaces
         parameters:
@@ -18704,6 +19498,8 @@ paths:
             summary: Upsert a Workspace
             tags:
                 - Workspaces
+security:
+    - adminToken: []
 servers:
     - description: Default Admin API URL
       url: '{protocol}://{hostname}:{port}{path}'
@@ -18777,6 +19573,7 @@ tags:
         Event hooks do not work with Konnect yet.
         <br><br>
       name: Event-hooks
+    - name: GraphQL Cost Decorations
     - description: Group routes
       name: Groups
     - name: HMAC-auth credentials
