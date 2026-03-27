@@ -93,9 +93,9 @@ In your Enterprise Plan, there are two types of users:
 You can review unmanaged users on a domain to identify accounts that you may want to add to your Enterprise organization. At this time, you must review unmanaged users on a per-domain basis. To view all of the unmanaged users associated with a domain:
 1. From Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
 1. Select your domain.
-1. From the **Unclaimed Accounts** section, click **Manage**.
-
-In the **Unclaimed Accounts** section, click the download icon to export unmanaged users for the domain as a CSV file.
+1. From the **Unclaimed Accounts** section, you can:
+   * Click **Manage* to view a list of unmanaged users directly in Insomnia.
+   * Click the download icon to export unmanaged users for the domain as a CSV file.
 
 To associate unmanaged users with your Enterprise account, enable [Domain Capture](#domain-capture):
 1. From the Insomnia [**Enterprise Controls**](https://app.insomnia.rest/app/enterprise/), click **Domains** in the sidebar.
