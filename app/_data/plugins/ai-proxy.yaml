@@ -719,7 +719,7 @@ providers:
         streaming: false
         upstream_path: '`/v1/images/generations`'
         route_type: 'image/v1/images/generations'
-        model_example: 'dall-e-3'
+        model_example: 'gpt-image-1.5'
         min_version: '3.11'
       edits:
         supported: true
