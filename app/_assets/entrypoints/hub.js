@@ -23,6 +23,8 @@ class Hub {
     this.policyTargets = this.filters.querySelectorAll(
       'input[name="policy-target"]'
     );
+    this.products = this.filters.querySelectorAll('input[name="product"]');
+    this.contexts = this.filters.querySelectorAll('input[name="context"]');
 
     this.deploymentValues = [];
     this.categoryValues = [];
@@ -31,6 +33,8 @@ class Hub {
     this.tierValues = [];
     this.phaseValues = [];
     this.policyTargetValues = [];
+    this.productValues = [];
+    this.contextValues = [];
 
     this.typingTimer;
     this.typeInterval = 400;
@@ -48,6 +52,8 @@ class Hub {
       ...this.tiers,
       ...this.phases,
       ...this.policyTargets,
+      ...this.products,
+      ...this.contexts,
     ];
     checkboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => this.onChange());
@@ -95,6 +101,8 @@ class Hub {
     this.trustedContentValues = this.getValues(this.trustedContent);
     this.phaseValues = this.getValues(this.phases);
     this.policyTargetValues = this.getValues(this.policyTargets);
+    this.productValues = this.getValues(this.products);
+    this.contextValues = this.getValues(this.contexts);
 
     this.updateURL();
     this.scrollCardsIntoView();
@@ -149,6 +157,18 @@ class Hub {
 
       const matchesTier = this.matchesFilter(plugin, this.tiers, "tier");
 
+      const matchesProducts = this.matchesFilter(
+        plugin,
+        this.products,
+        "products"
+      );
+
+      const matchesContext = this.matchesFilter(
+        plugin,
+        this.contexts,
+        "context"
+      );
+
       const matchesText = this.matchesQuery(plugin);
 
       const showPlugin =
@@ -159,6 +179,8 @@ class Hub {
         matchesTier &&
         matchesPhases &&
         matchesPolicyTarget &&
+        matchesProducts &&
+        matchesContext &&
         matchesText;
 
       plugin.classList.toggle("hidden", !showPlugin);
@@ -264,6 +286,16 @@ class Hub {
       );
     }
 
+    params.delete("product");
+    if (this.productValues.length > 0) {
+      this.productValues.forEach((value) => params.append("product", value));
+    }
+
+    params.delete("context");
+    if (this.contextValues.length > 0) {
+      this.contextValues.forEach((value) => params.append("context", value));
+    }
+
     let newUrl = window.location.pathname;
     if (params.size > 0) {
       newUrl += "?" + params.toString();
@@ -309,6 +341,16 @@ class Hub {
       checkbox.checked = policyTargetValues.includes(checkbox.value);
     });
 
+    const productValues = params.getAll("product") || [];
+    this.products.forEach((checkbox) => {
+      checkbox.checked = productValues.includes(checkbox.value);
+    });
+
+    const contextValues = params.getAll("context") || [];
+    this.contexts.forEach((checkbox) => {
+      checkbox.checked = contextValues.includes(checkbox.value);
+    });
+
     const termsValue = params.get("terms") || "";
     this.textInput.value = decodeURIComponent(termsValue);
 
@@ -320,6 +362,8 @@ class Hub {
       tierValues.length ||
       phaseValues.length ||
       policyTargetValues.length ||
+      productValues.length ||
+      contextValues.length ||
       termsValue
     ) {
       this.onChange();

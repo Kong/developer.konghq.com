@@ -1,0 +1,8 @@
+title: Rate limiting plugins across production
+prompt: Show me all rate limiting plugins across production control planes.
+description: Displays rate limiting plugins in production control planes in {{site.konnect_short_name}}.
+products:
+  - konnect
+context:
+  - plugins
+  - rate-limiting

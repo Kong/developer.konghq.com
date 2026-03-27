@@ -1,0 +1,9 @@
+title: Audit security misconfigurations
+prompt: |
+  Audit my [CONTROL_PLANE] control plane for common security misconfigurations (for example: auth missing, weak TLS, or overly broad CORS). Suggest prioritized fixes.
+description: Audits control planes for security issues and provides fix recommendations in {{site.konnect_short_name}}.
+products:
+  - gateway
+  - event-gateway
+context:
+  - security

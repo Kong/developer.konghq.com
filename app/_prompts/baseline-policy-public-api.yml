@@ -1,0 +1,8 @@
+title: Baseline policy for public API
+prompt: Suggest a safe baseline policy set for a public API (rate limiting, authentication, and logging) and show how to apply it to the [SERVICE_NAME] Gateway Service.
+description: Recommends and shows how to apply baseline security policies to services in {{site.konnect_short_name}}.
+products:
+  - gateway
+context:
+  - security
+  - plugins

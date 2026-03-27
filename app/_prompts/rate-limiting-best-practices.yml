@@ -1,0 +1,7 @@
+title: Rate limiting best practices
+prompt: Search the Kong docs for best practices on rate limiting and summarize the key steps for my setup.
+description: Summarizes best practices for rate limiting from Kong documentation.
+products:
+  - gateway
+context:
+  - rate-limiting

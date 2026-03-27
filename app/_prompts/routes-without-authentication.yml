@@ -1,0 +1,8 @@
+title: Routes without authentication
+prompt: Check if any Routes in my [CONTROL_PLANE] control plane expose endpoints without authentication, and list them.
+description: Identifies [Routes](/gateway/entities/route/) without authentication in a control plane in {{site.konnect_short_name}}.
+products:
+  - gateway
+context:
+  - security
+  - authentication

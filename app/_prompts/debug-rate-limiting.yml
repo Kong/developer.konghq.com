@@ -1,0 +1,8 @@
+title: Debug rate limiting
+prompt: I'm seeing 429 errors on my API Gateway route. Walk me through diagnosing a rate limiting issue, including how to check plugin config, consumer credentials, and request headers.
+description: Helps diagnose 429 Too Many Requests errors caused by rate limiting plugins in {{site.base_gateway}}.
+products:
+  - gateway
+context:
+  - debugger
+  - rate-limiting

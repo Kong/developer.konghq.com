@@ -1,0 +1,7 @@
+title: Debug latency spikes
+prompt: Help me initiate a debugging session to troubleshoot the recent latency spikes and give me an analysis of the results with recommendations. 
+description: Helps diagnose latency issues in {{site.base_gateway}}.
+products:
+  - gateway
+context:
+  - debugger

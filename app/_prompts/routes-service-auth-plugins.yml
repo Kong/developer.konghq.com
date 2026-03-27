@@ -1,0 +1,8 @@
+title: Routes for Gateway Service with auth plugins
+prompt: List all Routes associated with the `SERVICE_NAME` Gateway Service and tell me which auth and security plugins apply to each.
+description: Lists [Routes](/gateway/entities/route/) for a [Gateway Service](/gateway/entities/service/) and their associated auth and security plugins in {{site.konnect_short_name}}.
+products:
+  - gateway
+context:
+  - routes
+  - plugins

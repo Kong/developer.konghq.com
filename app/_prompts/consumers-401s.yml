@@ -1,0 +1,7 @@
+title: Consumers getting 401s
+prompt: Why are Consumers in [CONSUMER_GROUP] getting 401s? Walk me through likely causes and how to verify them in Konnect.
+description: Helps troubleshoot authentication issues for consumer groups in {{site.konnect_short_name}}.
+products:
+  - gateway
+context:
+  - authentication

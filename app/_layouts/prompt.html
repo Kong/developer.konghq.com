@@ -1,0 +1,37 @@
+---
+layout: with_aside
+---
+
+<div class="flex flex-col gap-8">
+  {% if page.description %}
+    <p class="text-secondary">{{ page.description | liquify }}</p>
+  {% endif %}
+
+  <div class="flex flex-col gap-3">
+    <h2 id="prompt">Prompt</h2>
+    <pre class="rounded-md p-4 bg-secondary overflow-x-auto whitespace-pre-wrap text-sm leading-relaxed"><code>{{ page.prompt }}</code></pre>
+  </div>
+</div>
+
+{% contentfor info_box %}
+  <div>
+    <a href="{{ page.kai_url }}" class="button button--primary w-full justify-center" target="_blank" rel="noopener noreferrer">
+      Run in KAi &rarr;
+    </a>
+  </div>
+
+  {% if page.context %}
+  <div class="flex flex-col gap-2 w-full">
+    <div class="text-primary font-medium">Context</div>
+    <div class="flex flex-wrap gap-2">
+      {% for ctx in page.context %}
+        {% include badge.html text=ctx css_class="secondary" %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if page.related_resources %}
+    {% include info_box/sections/related_resources.html %}
+  {% endif %}
+{% endcontentfor %}

@@ -1,0 +1,7 @@
+title: Troubleshoot upstream timed out
+prompt: What's the recommended way to troubleshoot `upstream timed out` errors in API Gateway?
+description: Provides guidance on troubleshooting errors in {{site.base_gateway}}.
+products:
+  - gateway
+context:
+  - troubleshooting

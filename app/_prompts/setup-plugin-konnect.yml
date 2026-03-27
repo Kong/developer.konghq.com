@@ -1,0 +1,7 @@
+title: Set up API Gateway plugin
+prompt: How do I set up the plugin [PLUGIN_NAME] in {{site.konnect_short_name}} for a particular use case? Give me the exact steps and the limitations.
+description: Provides setup instructions for plugins in {{site.konnect_short_name}}.
+products:
+  - gateway
+context:
+  - plugins

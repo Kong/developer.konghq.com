@@ -1,0 +1,7 @@
+title: Debug slow endpoint
+prompt: Why is my `/api/checkout` endpoint slow? Create a debugging session, focusing on high-latency requests, and summarize where time is being spent.
+description: Helps diagnose latency issues for specific endpoints in {{site.base_gateway}}.
+products:
+  - gateway
+context:
+  - debugger

@@ -1,0 +1,7 @@
+title: Describe differences between entities
+prompt: Explain the difference between a Gateway Service vs a Route in {{site.konnect_short_name}}, with an example from my current control plane.
+description: Explains the concepts of API Gateway entities in {{site.konnect_short_name}}.
+products:
+  - konnect
+context:
+  - concepts
