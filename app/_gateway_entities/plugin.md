@@ -232,6 +232,27 @@ In some cases, this might be compensated for when you run rate limiting before a
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
+## Conditional plugin execution {% new_in 3.14 %}
+
+{:.warning}
+> This feature is currently in [beta](/stages-of-software-availability/#beta) and should not be used in a production environment.
+
+Plugins have a condition field that determines whether the policy executes or not. 
+By writing conditions using expressions, you can access dynamic configuration from the execution context.
+
+When a request comes in, {{site.base_gateway}} evaluates the condition. 
+If the condition matches, the plugin runs normally; if it doesn't match, the plugin is skipped entirely for that request.
+
+For example, you can create a condition that causes the plugin to trigger only when the request includes the header `x-block: true`:
+
+```json
+condition: 'http.headers.x_block == "true"'
+```
+
+For more information, see:
+* [Plugin expressions reference](/gateway/plugins/expressions/)
+* [How to: Configure conditional plugin execution in {{site.base_gateway}}](/gateway/configure-conditional-plugin-execution/)
+
 ## Protocols
 
 Plugins support different protocols.
