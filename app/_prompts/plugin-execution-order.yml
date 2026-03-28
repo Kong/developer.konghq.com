@@ -1,6 +1,6 @@
 title: Plugin execution order
 prompt: What is the plugin execution order for my [ROUTE_NAME] Route?
-description: Explains the order in which plugins execute on a [Route](/gateway/entities/route/) in {{site.base_gateway}}.
+description: Explains the order in which plugins execute on a Route in {{site.base_gateway}}.
 products:
   - gateway
 context:

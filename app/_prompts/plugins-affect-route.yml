@@ -1,6 +1,6 @@
 title: Plugins affecting a Route
 prompt: What plugins affect the [ROUTE_NAME] Route? List them in order and explain what each one does.
-description: Lists and explains plugins applied to a specific [Route](/gateway/entities/route/) in {{site.konnect_short_name}}.
+description: Lists and explains plugins applied to a specific Route in {{site.konnect_short_name}}.
 products:
   - gateway
 context:

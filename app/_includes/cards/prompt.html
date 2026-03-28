@@ -4,14 +4,14 @@
   data-card="plugin"
   data-products="{{ prompt.products | join: ',' }}"
   data-context="{{ prompt.context | join: ',' }}"
-  data-search="{{ prompt.title | downcase }}"
+  data-search="{{prompt.search_aliases | join: ','}}"
 >
   <a href="{{ prompt.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
     <div class="flex flex-col gap-3 flex-grow">
       <h4>{{ prompt.title | liquify }}</h4>
 
       <p class="text-sm line-clamp-3">
-        {{ page.description | liquify }}
+        {{ prompt.description | liquify }}
       </p>
 
       <div class="flex flex-wrap gap-2 mt-auto pt-2">

@@ -1,6 +1,6 @@
 title: Diagnose intermittent 502s
 prompt: Help me diagnose intermittent 502s on my [ROUTE_NAME] Route.
-description: Assists in troubleshooting 502 errors on specific [Routes](/gateway/entities/route/) in {{site.base_gateway}}.
+description: Assists in troubleshooting 502 errors on specific Routes in {{site.base_gateway}}.
 products:
   - gateway
 context:
