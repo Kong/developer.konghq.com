@@ -770,6 +770,53 @@ providers:
       statistics_logging:
         - 'No statistics logging for assistants, batch, or audio APIs'
 
+  - name: 'vLLM'
+    url_patterns: []
+    url_is_variable: true
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'vllm-llama-3-8b'
+      min_version: '3.14'
+    completions:
+      supported: false
+    embeddings:
+      supported: false
+    function_calling:
+      supported: false
+    files:
+      supported: false
+    batches:
+      supported: false
+    assistants:
+      supported: false
+    responses:
+      supported: false
+    audio:
+      speech:
+        supported: false
+      transcriptions:
+        supported: false
+      translations:
+        supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
+    video:
+      generations:
+        supported: false
+    realtime:
+      supported: false
+    limitations:
+      provider_specific:
+        - '`upstream_url` must be set in `model.options` — vLLM has no fixed API endpoint'
+      statistics_logging: []
+
   - name: 'xAI'
     url_patterns:
       - 'https://api.x.ai:443/{route_type_path}'

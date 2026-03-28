@@ -1,0 +1,36 @@
+
+title: 'Chat route with vLLM'
+description: 'Configure a chat route using a self-hosted vLLM server.'
+
+weight: 900
+
+requirements:
+  - A running vLLM server
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      model:
+        provider: vllm
+        name: vllm-llama-3-8b
+        options:
+          upstream_url: ${upstream_url}
+      # auth is optional — omit if your vLLM server has no API key configured
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+
+variables:
+  upstream_url:
+    value: $VLLM_UPSTREAM_URL
+    description: The full URL of your vLLM server, including the path (for example, http://your-vllm-host:8000/v1/chat/completions).
+  key:
+    value: $VLLM_API_KEY
+    description: The API key for your vLLM server (optional).
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
