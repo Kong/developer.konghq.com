@@ -93,4 +93,6 @@ The matching behavior is as follows:
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
+{% include plugins/ai-partials-vectordb-embeddings.md %}
+
 {% include plugins/redis-cloud-auth.md %}

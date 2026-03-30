@@ -489,4 +489,6 @@ Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metada
   POST /ai-rag-injector/{pluginID}/lookup_chunks
   {"prompt": "...", "collection": "finance-reports", "filters": {...}}
   ```
+{% include plugins/ai-partials-vectordb-embeddings.md %}
+
 {% include plugins/redis-cloud-auth.md %}

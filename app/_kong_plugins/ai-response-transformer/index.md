@@ -88,5 +88,7 @@ You can additionally instruct the LLM to respond in the following format, which 
 }
 ```
 
-If the `parse_llm_response_json_instructions` parameter is set to `true`, {{site.base_gateway}} will parse these instructions and set the specified response headers, response status code, and replacement response body. 
+If the `parse_llm_response_json_instructions` parameter is set to `true`, {{site.base_gateway}} will parse these instructions and set the specified response headers, response status code, and replacement response body.
 This lets you change specific headers such as `Content-Type`, or throw errors from the LLM.
+
+{% include plugins/ai-partials-model.md %}

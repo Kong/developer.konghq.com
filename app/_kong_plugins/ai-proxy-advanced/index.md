@@ -167,4 +167,27 @@ The [AI load balancer](/ai-gateway/load-balancing/) supports circuit breakers to
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
+## Partials {% new_in 3.13 %}
+
+This plugin supports all three AI [Partial](/gateway/entities/partial/) types, which let you define shared configuration once and reuse it across multiple [{{site.ai_gateway}}](/ai-gateway/) plugins.
+
+{% table %}
+columns:
+  - title: Partial type
+    key: type
+  - title: Fields covered
+    key: fields
+rows:
+  - type: "`vectordb`"
+    fields: "`config.vectordb`"
+  - type: "`embeddings`"
+    fields: "`config.embeddings`"
+  - type: "`model`"
+    fields: "Each element of `config.targets[]`"
+{% endtable %}
+
+A `model` Partial applies to each entry in the `config.targets` array, so you can share one provider configuration across multiple targets.
+
+For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-plugin-partials).
+
 {% include plugins/redis-cloud-auth.md %}
