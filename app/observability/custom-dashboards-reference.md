@@ -107,11 +107,11 @@ Preset filters appear as badges at the top of the dashboard. Viewers with ["View
 
 ## Role-based access
 
-Users with Org Admin, Dashboard Admin, or Dashboard Creator roles can control who is allowed to view, edit, and manage (view, edit, delete) a custom dashboard.
+Users with Org Admin, Dashboard Admin, or Dashboard Creator roles can control who is allowed to view, edit, and delete a custom dashboard.
 
 To manage dashboard visibility, Organization Admins can assign roles to users through [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}}, using the **Role Assignments** tab. Only users with the appropriate roles will be able to access dashboards that are restricted to specific teams or audiences.
 
-You can share dashboards with other {{site.konnect_short_name}} users and teams by navigate to the dashboard in {{site.observability}}, clicking the action menu, and selecting "Share". 
+You can share dashboards with other {{site.konnect_short_name}} users and teams by navigating to the dashboard in {{site.observability}}, clicking the action menu, and selecting "Share". 
 Add users and teams to share the dashboard with them and configure their level of access (view only, edit, or admin).
 
 ### Permissions
