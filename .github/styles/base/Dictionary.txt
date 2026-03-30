@@ -998,6 +998,7 @@ vararg
 vc
 viewport
 viewports
+vLLM
 vms
 vnet
 vpc

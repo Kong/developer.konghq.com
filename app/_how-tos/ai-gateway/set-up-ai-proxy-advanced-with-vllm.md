@@ -32,7 +32,7 @@ tags:
 
 tldr:
   q: "How do I use the AI Proxy Advanced plugin with vLLM?"
-  a: "Create a Gateway Service and Route, then configure the AI Proxy Advanced plugin with the vllm provider and the URL of your vLLM server."
+  a: "Create a Gateway Service and Route, then configure the AI Proxy Advanced plugin with the vLLM provider and the URL of your vLLM server."
 
 tools:
   - deck
