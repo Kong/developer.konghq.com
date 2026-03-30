@@ -47,12 +47,13 @@ tldr:
     a: |
       Run {{site.base_gateway}} on a GCE instance with a service account attached. Enable the GCP auth method in HashiCorp Vault and create a GCE role bound to your {{site.base_gateway}} service account.
 
-      Then in {{site.base_gateway}}:
-      * Configure a Vault entity with `config.auth_method` set to `gcp_gce`.
-      * Set `config.gcp_auth_role` to the Vault role name. The GCE instance identity token is provided automatically by the instance metadata service — no credential files are required.
+      Then in {{site.base_gateway}}, configure a Vault entity with the following:
+      * Set `config.auth_method` to `gcp_gce`
+      * Set `config.gcp_auth_role` to the Vault role name. 
+        The GCE instance identity token is provided automatically by the instance metadata service, no credential files are required.
 
 tools:
-    - deck
+    - admin-api
 
 prereqs:
   skip_product: true
@@ -69,7 +70,7 @@ prereqs:
            export GCE_ZONE='YOUR GCE INSTANCE ZONE'
            export GCE_LABEL='YOUR GCE INSTANCE LABELS'
            ```
-        1. Create a service account to attach to your GCE instance, no additional IAM permissions are necessary.
+        1. Create a service account to attach to your GCE instance with the "Compute Viewer" and "View Service Accounts" permissions.  
         1. Export the service account email attached to your GCE instance:
            ```sh
            export GCE_SERVICE_ACCOUNT="kong@YOUR-PROJECT.iam.gserviceaccount.com"
@@ -79,29 +80,6 @@ prereqs:
         If {{site.base_gateway}} isn't running on a GCE instance, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
 
       icon_url: /assets/icons/google-cloud.svg
-    - title: GCP credentials for the Vault server
-      content: |
-        HashiCorp Vault must call the GCP Compute Engine API to verify incoming GCE instance identity tokens. You need a GCP service account for the Vault server with `roles/compute.viewer`.
-
-        1. In the [Google Cloud console](https://console.cloud.google.com/), create a service account key:
-           1. In the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts), click your project.
-           1. Click **Create service account**.
-           1. Enter a name for your service account.
-           1. Click **Create and continue**.
-           1. From the **Select a role** dropdown menu, select "Compute Viewer". 
-              For more information about this role, see [Compute Engine roles and permissions](https://docs.cloud.google.com/iam/docs/roles-permissions/compute#compute.viewer).
-           1. Click **Continue**.
-           1. Click **Done**.
-          1. Click the service account you just created.
-          2. From the **Keys** tab, create a new key from the add key menu and select JSON for the key type.
-          3. Save the JSON file you downloaded.
-          1. Set the environment variables needed to authenticate to Google Cloud:
-             ```sh
-             export VAULT_GCP_CREDENTIALS_FILE="/path/to/vault-server-sa-key.json"
-             export KONG_LUA_SSL_TRUSTED_CERTIFICATE='system'
-             ```
-
-      icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
   inline:
@@ -216,46 +194,23 @@ body:
   prefix: hashicorp-vault
   description: Storing secrets in HashiCorp Vault
   config:
-    host: ${hcv_host}
+    host: $HCV_HOST
     kv: v1
     mount: kong
     port: 8200
     protocol: http
     auth_method: gcp_gce
-    gcp_auth_role: ${gcp_auth_role}
+    gcp_auth_role: $GCP_AUTH_ROLE
     gcp_login_path: /v1/auth/gcp/login
 {% endcontrol_plane_request %}
-{% entity_examples %}
-entities:
-  vaults:
-    - name: hcv
-      prefix: hashicorp-vault
-      description: Storing secrets in HashiCorp Vault
-      config:
-        host: $HCV_HOST
-        kv: v1
-        mount: kong
-        port: 8200
-        protocol: http
-        auth_method: gcp_gce
-        gcp_auth_role: $GCP_AUTH_ROLE
-        gcp_login_path: /v1/auth/gcp/login
-
-variables:
-  hcv_host:
-    value: $HCV_HOST
-  gcp_auth_role:
-    value: $GCP_AUTH_ROLE
-{% endentity_examples %}
 
 ## Validate
 
-To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command within the Data Plane container.
+To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command.
 
-{% validation vault-secret %}
-secret: '{vault://hashicorp-vault/headers/request/header}'
-value: 'x-kong:test'
-{% endvalidation %}
+```sh
+sudo -E kong vault get {vault://hashicorp-vault/headers/request/header}
+```
 
 If the vault was configured correctly, this command returns the value of the secret. You can use `{vault://hashicorp-vault/headers/request/header}` to reference the secret in any referenceable field.
 
