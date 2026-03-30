@@ -12,22 +12,22 @@ min_version:
 weight: 800
 
 requirements:
-  - You have a GCP project with Model Armor enabled and a configured template.
+  - A GCP project with Model Armor enabled and a configured template.
   - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
   - You have enabled a [logging plugin](/plugins/?category=logging) such as [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/).
 
 variables:
   gcp_service_account_json:
-    description: GCP service account credentials in JSON format
+    description: GCP service account credentials in JSON format.
     value: $GCP_SERVICE_ACCOUNT_JSON
   project_id:
-    description: GCP project identifier
+    description: GCP project identifier.
     value: $GCP_PROJECT_ID
   location_id:
-    description: GCP location identifier
+    description: GCP location identifier.
     value: $GCP_LOCATION_ID
   template_id:
-    description: Guardrail template identifier
+    description: Guardrail template identifier.
     value: $GCP_TEMPLATE_ID
 
 config:

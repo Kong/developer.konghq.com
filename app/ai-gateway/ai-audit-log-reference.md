@@ -172,7 +172,7 @@ rows:
 
 ### AI GCP Model Armor logs {% new_in 3.12 %}
 
-If you're using the [AI GCP Model Armor plugin](/plugins/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and block reasons when content is flagged.
+If you're using the [AI GCP Model Armor plugin](/plugins/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
 
 {% table %}
 columns:
@@ -412,7 +412,7 @@ rows:
 
 ### AI RAG Injector logs {% new_in 3.10 %}
 
-If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider and model details.
+If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
 
 {% table %}
 columns:

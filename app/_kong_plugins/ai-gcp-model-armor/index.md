@@ -157,7 +157,7 @@ See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-m
 
 ## Unrecognized filters {% new_in 3.14 %}
 
-The plugin now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To preserve the previous behavior, review your Model Armor template and ensure it only includes filter types the plugin supports.
+The plugin now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the plugin supports.
 
 ## Logging
 

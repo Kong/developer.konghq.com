@@ -12,25 +12,25 @@ min_version:
 weight: 800
 
 requirements:
-  - You have an AWS Bedrock Guardrails policy and access to AWS Bedrock Guardrails service.
+  - An AWS Bedrock Guardrails policy and access to the AWS Bedrock Guardrails service.
   - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
   - You have enabled a [logging plugin](/plugins/?category=logging) such as [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/).
 
 variables:
   guardrails_id:
-    description: The guardrail identifier used in the request to apply the guardrail
+    description: The guardrail identifier to apply.
     value: $GUARDRAILS_ID
   guardrails_version:
-    description: The guardrail version used in the request to apply the guardrail
+    description: The guardrail version to apply.
     value: $GUARDRAILS_VERSION
   aws_region:
-    description: The AWS region where the guardrail is deployed
+    description: The AWS region where the guardrail is deployed.
     value: $AWS_REGION
   aws_access_key_id:
-    description: The AWS access key ID used to authenticate the request
+    description: The AWS access key ID used to authenticate the request.
     value: $AWS_ACCESS_KEY_ID
   aws_secret_access_key:
-    description: The AWS secret access key used to authenticate the request
+    description: The AWS secret access key used to authenticate the request.
     value: $AWS_SECRET_ACCESS_KEY
 
 config:

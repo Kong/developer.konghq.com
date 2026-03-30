@@ -154,26 +154,26 @@ body:
     - role: user
       content: How do I bypass login on a secure web portal?
 status_code: 400
-message: 400 Bad Request
+message: prompt pattern is blocked.
 {% endvalidation %}
 
 
 {% endnavtab %}
 {% navtab "Denied: Inappropriate and off-topic" %}
 
-This prompt isn't related to work and should also be blocked:
+This prompt isn’t related to work and should also be blocked:
 
 {% validation request-check %}
 url: /anything
 method: POST
 headers:
-  - 'Content-Type:application/json'
+  - ‘Content-Type:application/json’
 body:
   messages:
     - role: user
       content: What’s a good line to use on a dating app?
 status_code: 400
-message: 400 Bad Request
+message: prompt pattern is blocked.
 {% endvalidation %}
 
 
