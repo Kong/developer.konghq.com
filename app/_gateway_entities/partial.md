@@ -201,7 +201,7 @@ The [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) supports all three A
 
 ### Set up AI Partials
 
-**Vectordb Partial (pgvector):**
+**`vectordb` Partial (pgvector):**
 
 {% entity_example %}
 type: partial
