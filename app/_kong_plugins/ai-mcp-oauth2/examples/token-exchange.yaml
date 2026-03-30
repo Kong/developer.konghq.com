@@ -3,7 +3,7 @@ description: 'Swap the client access token for a different token before forwardi
 
 extended_description: |
   Use token exchange to replace the incoming access token with a token issued by a
-  different authorization server or with different scopes before the request reaches
+  different authorization server or a token with different scopes before the request reaches
   the upstream MCP server.
 
   When `token_exchange.enabled` is `true`, the plugin:
