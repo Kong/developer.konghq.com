@@ -127,14 +127,16 @@ Default_application_auth_strategy_id: null (none) or auth strategy uuid
 ## Specify IP addresses that can connect to your {{site.dev_portal}}
 
 You can specify an IP address or a range of IP addresses that are allowed to connect to a {{site.dev_portal}} through its supported interfaces. 
-This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin API](/admin-api/), and [Terraform](/terraform/).
+This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), and [Terraform](/terraform/).
+This **does not** restrict who can access the {{site.dev_portal}} settings, configuration, and Portal Editor in {{site.konnect_short_name}}.
 
 This IP allow list applies to all {{site.dev_portal}} communication that goes through the Admin API.
 
 {:.warning}
 > **Important:** 
 > * Any IP addresses that aren't allow listed won't be able to access the {{site.dev_portal}}, including your own.
-> * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after several minutes.
+> * If you're configuring IP allow list for the first time, it will take effect in up to a minute. If you're editing existing IP allow list values, the changes will take effect after several minutes.
+> * {{site.konnect_short_name}} favors IPs over IPv6, and not the IPv4. If your network has dual stack support (supports IPv4 and IPv6), we recommend configuring the IP the network uses if you're using IPv4 and IPv6. If you aren't sure or your network path isn't explicitly controlled by you, its best to enter both.
 
 
 To configure an IP allow list for a {{site.dev_portal}}, do one of the following:
@@ -148,41 +150,46 @@ To configure an IP allow list for a {{site.dev_portal}}, do one of the following
 1. Click the **Security** tab.
 1. For IP allow list settings, click **Configure**.
 1. In the **IP range** field, enter a single IP or an IP range in CIDR notation. 
-   For example, `192.0.2.1` or `192.0.2.1/32`.
-   
-   {:.danger}
-   > **Allowlist your current IP:** Make sure your current IP is added to the allow list otherwise you'll lose access to {{site.dev_portal}}.
+   For example, `192.0.2.1` or `192.0.2.0/24`.
+1. To add another IP or IP range, click **Add IP address**.
 1. Enable **IP allow list status** to enable the {{site.dev_portal}} allow list.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
 1. To configure your {{site.dev_portal}} IP allow list, send a POST request to the `/portals/$DEV_PORTAL_ID/ip-allow-list` endpoint:
-   <!--vale off-->
-   {% konnect_api_request %}
-   url: /v3/portals/$DEV_PORTAL_ID/ip-allow-list
-   status_code: 201
-   region: us
-   method: POST
-   body:
-     allowed_ips:
-     - 192.168.1.1
-     - 192.168.1.0/22
-   {% endkonnect_api_request %}
-   <!--vale on-->
+{% capture set-allow-list %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID/ip-allow-list
+status_code: 201
+region: us
+method: POST
+body:
+  allowed_ips:
+  - 192.168.1.1
+  - 192.168.1.0/22
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ set-allow-list | indent: 3 }}
+
 
    {:.danger}
    > **Allowlist your current IP:** Make sure your current IP is added to the allow list otherwise you'll lose access to {{site.dev_portal}}.
 
 1. To enable your {{site.dev_portal}} IP allow list, send a PATCH request to the `/portals/$DEV_PORTAL_ID` endpoint:
-   <!--vale off-->
-   {% konnect_api_request %}
-   url: /v3/portals/$DEV_PORTAL_ID
-   status_code: 200
-   region: us
-   method: PATCH
-   body:
-     sipr_enabled: true
-   {% endkonnect_api_request %}
-   <!--vale on-->
+{% capture enable-allow-list %}   
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/portals/$DEV_PORTAL_ID
+status_code: 200
+region: us
+method: PATCH
+body:
+  sipr_enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ enable-allow-list | indent: 3 }}
 {% endnavtab %}
 {% endnavtabs %}
