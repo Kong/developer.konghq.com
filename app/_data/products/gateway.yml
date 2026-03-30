@@ -1252,7 +1252,6 @@ releases:
               - Confluent Cloud
   
   - release: "3.13"
-    latest: true
     ee-version: "3.13.0.2"
     eol: 2026-12-18
     distributions:
