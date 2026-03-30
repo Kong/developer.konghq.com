@@ -99,7 +99,7 @@ This reference describes the expression syntax and available fields for plugin c
 ### Expression formatting
 
 A condition expression is a string value assigned to the `condition` field of a plugin object.
-It follows the same ATC (Abstract Tree Classifier) expression syntax used by {{site.base_gateway}}'s [expressions router](/gateway.routing/expressions/).
+It follows the same ATC (Abstract Tree Classifier) expression syntax used by {{site.base_gateway}}'s [expressions router](/gateway/routing/expressions/).
 
 A predicate is the basic unit of an expression and takes the following form:
 
