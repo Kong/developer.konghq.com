@@ -264,7 +264,7 @@ data:
       header_value: Bearer ${openai_api_key}
     model:
       provider: openai
-      name: gpt-4o
+      name: gpt-5.1
 
 variables:
   openai_api_key:
