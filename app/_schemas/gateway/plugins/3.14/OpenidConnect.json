@@ -791,7 +791,7 @@
           "type": "array"
         },
         "downstream_headers_claims": {
-          "description": "The downstream header claims. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+          "description": "The downstream header claims. Only top level claims are supported.",
           "items": {
             "type": "string"
           },
@@ -2314,9 +2314,7 @@
         "grpc",
         "grpcs",
         "http",
-        "https",
-        "ws",
-        "wss"
+        "https"
       ],
       "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
       "items": {

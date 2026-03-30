@@ -3,8 +3,8 @@
     "config": {
       "properties": {
         "allow_all_conversation_history": {
-          "default": false,
-          "description": "If true, will ignore all previous chat messages from the conversation history.",
+          "default": true,
+          "description": "If false, will ignore all previous chat messages from the conversation history.",
           "type": "boolean"
         },
         "anonymize": {
