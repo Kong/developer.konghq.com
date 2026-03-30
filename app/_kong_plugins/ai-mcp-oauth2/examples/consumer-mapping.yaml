@@ -2,7 +2,7 @@ title: 'Consumer and consumer group mapping'
 description: 'Map OAuth2 token claims to Kong consumers and consumer groups'
 
 extended_description: |
-  Map claims from a validated OAuth2 token to a Kong consumer and consumer groups.
+  Map claims from a validated OAuth2 token to Kong consumers and consumer groups.
   This lets consumer-aware plugins (such as rate-limiting or ACL) act on MCP traffic
   without requiring a separate authentication step.
 
