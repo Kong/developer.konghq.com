@@ -1,5 +1,5 @@
 title: 'Forward nested token claims as upstream headers'
-description: 'Use upstream_headers to map nested token claims to HTTP headers sent to the upstream MCP server'
+description: 'Use `upstream_headers` to map nested token claims to HTTP headers sent to the upstream MCP server'
 
 extended_description: |
   Use `upstream_headers` to extract values from nested objects in a validated JWT

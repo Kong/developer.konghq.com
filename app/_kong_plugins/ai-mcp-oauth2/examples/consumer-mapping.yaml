@@ -8,15 +8,16 @@ extended_description: |
 
   The `consumer_claim` array sets the path to the claim used for consumer lookup.
   A single element refers to a top-level claim; multiple elements traverse a nested object.
+  For example, `["sub"]` maps the top-level `sub` claim, while `["realm_access", "user_id"]` maps `token.realm_access.user_id`.
 
   The `consumer_groups_claim` array works the same way for group membership.
-
-  If no matching consumer or group is found and you want to allow the request through
-  anyway, set `consumer_optional` or `consumer_groups_optional` to `true`.
 
   When no consumer is matched, the plugin falls back to `credential_claim` to set a
   credential identifier on the request. This allows downstream plugins to identify the
   caller without requiring a Kong consumer to exist.
+
+  If no matching consumer or group is found and you want to allow the request through
+  anyway, set `consumer_optional` or `consumer_groups_optional` to `true`.
 
 weight: 820
 
@@ -24,8 +25,8 @@ min_version:
   gateway: '3.14'
 
 requirements:
-  - At least one [Consumer](/gateway/entities/consumer/) with a `username` or `custom_id` matching the value of the configured claim in the access token
-  - At least one [Consumer Group](/gateway/entities/consumer-group/) matching the values in the groups claim, if using `consumer_groups_claim`
+  - At least one [Consumer](/gateway/entities/consumer/) with a `username` or `custom_id` matching the value of the configured claim in the access token.
+  - At least one [Consumer Group](/gateway/entities/consumer-group/) matching the values in the groups claim, if using `consumer_groups_claim`.
 
 config:
   resource: ${mcp_resource_url}

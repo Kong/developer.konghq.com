@@ -201,7 +201,7 @@ The plugin can map token claims to Kong consumers and consumer groups, enabling 
 
 ### Consumer
 
-Set [`config.consumer_claim`](./reference/#schema--config-consumer-claim) to the path of the claim to use for consumer lookup. If multiple strings are provided, the plugin treats them as a nested path in the token payload.
+Set [`config.consumer_claim`](./reference/#schema--config-consumer-claim) to the path of the claim to use for consumer lookup. If multiple strings are provided, the plugin treats them as a nested path in the token payload. For example, `["sub"]` maps the top-level `sub` claim, while `["realm_access", "user_id"]` maps `token.realm_access.user_id`.
 
 Use [`config.consumer_by`](./reference/#schema--config-consumer-by) to control which consumer fields are checked during lookup. Accepted values are `id`, `username`, and `custom_id`. Defaults to `["username", "custom_id"]`.
 

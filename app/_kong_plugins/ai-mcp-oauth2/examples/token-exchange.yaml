@@ -49,28 +49,28 @@ config:
 variables:
   mcp_resource_url:
     value: $MCP_RESOURCE_URL
-    description: The resource identifier for the MCP server (for example, `https://api.example.com/mcp`).
+    description: Resource identifier for the MCP server (for example, `https://api.example.com/mcp`).
   authorization_server_url:
     value: $AUTHORIZATION_SERVER_URL
-    description: The authorization server URL used to validate the incoming token.
+    description: Authorization server URL used to validate the incoming token.
   introspection_endpoint_url:
     value: $INTROSPECTION_ENDPOINT_URL
-    description: The token introspection endpoint. Used by {{site.base_gateway}} to validate the incoming access token.
+    description: Token introspection endpoint. Used by {{site.base_gateway}} to validate the incoming access token.
   client_id:
     value: $CLIENT_ID
-    description: The client ID used by {{site.base_gateway}} when calling the introspection endpoint.
+    description: Client ID used by {{site.base_gateway}} when calling the introspection endpoint.
   client_secret:
     value: $CLIENT_SECRET
-    description: The client secret used by {{site.base_gateway}} when calling the introspection endpoint.
+    description: Client secret used by {{site.base_gateway}} when calling the introspection endpoint.
   token_exchange_endpoint_url:
     value: $TOKEN_EXCHANGE_ENDPOINT_URL
-    description: The token exchange endpoint URL (for example, `https://exchange.example.com/oauth/token`).
+    description: Token exchange endpoint URL (for example, `https://exchange.example.com/oauth/token`).
   exchange_client_id:
     value: $EXCHANGE_CLIENT_ID
-    description: The client ID used by {{site.base_gateway}} when calling the token exchange endpoint.
+    description: Client ID used by {{site.base_gateway}} when calling the token exchange endpoint.
   exchange_client_secret:
     value: $EXCHANGE_CLIENT_SECRET
-    description: The client secret used by {{site.base_gateway}} when calling the token exchange endpoint.
+    description: Client secret used by {{site.base_gateway}} when calling the token exchange endpoint.
 
 tools:
   - deck
