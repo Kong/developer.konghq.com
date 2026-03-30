@@ -80,7 +80,7 @@ sequenceDiagram
 
     client->>kong: API or AI Gateway request
     kong->>plugin: log() phase triggers after response
-    plugin->>plugin: Resolve subject from consumer,<br>application, or request header
+    plugin->>plugin: Resolve subject from Consumer,<br>application, or request header
     plugin->>plugin: Build CloudEvent with Kong metadata<br>and custom attributes
     plugin->>queue: Enqueue event(s)
     note right of plugin: AI requests enqueue 3 events:<br>API request, input tokens, output tokens
@@ -92,7 +92,7 @@ sequenceDiagram
 
 ### Events and subjects
 
-Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} Consumer, {{site.konnect_short_name}} Dev Portal application, or any request header value such as `x-customer-id` or `x-tenant-id`.
+Every usage event has a subject that identifies who is billed for the request. The subject is the most important configuration decision because it determines how usage is grouped and aggregated. You can set the subject to a {{site.base_gateway}} [Consumer](/gateway/entities/consumer/), {{site.konnect_short_name}} [Dev Portal application](/dev-portal/self-service/), or any request header value such as `x-customer-id` or `x-tenant-id`.
 
 If the plugin can't resolve a subject from the configured source (for example, if the expected header is missing), the event is dropped.
 
@@ -111,13 +111,13 @@ columns:
   - title: Configuration example
     key: example
 rows:
-  - use-case: Filtering on custom dimensions
+  - use-case: "[Filtering on custom dimensions](/plugins/metering-and-billing/examples/filter-by-department/)"
     description: |
       You can use event attributes to capture custom properties for the usage event for pricing dimensions or reporting. 
       Event attributes allow you to filter based on criteria such as provider, department, priority, or project for tiered or per-dimension pricing.
 
       You can define any attribute that is found in the header, query, or path of a request.
-    example: 
+    example: Set `config.attributes` with the source, what attribute to look up in the source, and which source value to use. 
   - use-case: Filtering traffic in a control plane
     description: Since plugins can be applied globally, to Routes, Gateway Services, or Consumers, you can apply the Metering & Billing plugin to these entities to further narrow down the traffic you want to meter from the control plane. 
     example: Scope the plugin to a Route, Service, or Consumer.
