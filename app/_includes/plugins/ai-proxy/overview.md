@@ -245,57 +245,24 @@ features:
 {:.info}
 > For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).
 
-<!-- vale off -->
-{% feature_table %}
-item_title: Provider
-columns:
-  - title: Description
-    key: description
-
-features:
-  - title: "[OpenAI](/ai-gateway/ai-providers/openai/)"
-    description: GPT-5, GPT-4, GPT-4o, GPT-3.5, DALL-E, Whisper, Sora, and text embedding models.
-
-  - title: "[Azure OpenAI](/ai-gateway/ai-providers/azure/)"
-    description: Microsoft-hosted OpenAI models with Azure enterprise integration.
-
-  - title: "[Amazon Bedrock](/ai-gateway/ai-providers/bedrock/)"
-    description: AWS-managed foundation models including Claude, Titan, Llama, and Stable Diffusion.
-
-  - title: "[Anthropic](/ai-gateway/ai-providers/anthropic/)"
-    description: Claude model family for chat, completions, and function calling.
-
-  - title: "[Gemini](/ai-gateway/ai-providers/gemini/)"
-    description: Google's Gemini models via the Generative Language API.
-
-  - title: "[Vertex AI](/ai-gateway/ai-providers/vertex/)"
-    description: Google Cloud-hosted Gemini models with enterprise features.
-
-  - title: "[Cohere](/ai-gateway/ai-providers/cohere/)"
-    description: Command models for chat, completions, embeddings, and reranking.
-
-  - title: "[Mistral](/ai-gateway/ai-providers/mistral/)"
-    description: Mistral AI models in cloud, self-hosted, or OLLAMA formats.
-
-  - title: "[Hugging Face](/ai-gateway/ai-providers/huggingface/)"
-    description: Open-source models via Hugging Face Inference API.
-
-  - title: "[Llama](/ai-gateway/ai-providers/llama/)"
-    description: Meta's Llama 2 and Llama 3 models in raw, OLLAMA, or OpenAI formats.
-
-  - title: "[xAI](/ai-gateway/ai-providers/xai/)"
-    description: Grok models for chat, function calling, and image generation.
-
-  - title: "[Alibaba Cloud DashScope](/ai-gateway/ai-providers/dashscope/)"
-    description: Qwen models for chat, embeddings, and image generation.
-
-  - title: "[Cerebras](/ai-gateway/ai-providers/cerebras/)"
-    description: High-performance inference for Llama models via Cerebras Cloud.
-
-  - title: "[DeepSeek](/ai-gateway/ai-providers/deepseek/)"
-    description: DeepSeek chat models optimized for reasoning and code generation.
-{% endfeature_table %}
-<!-- vale on -->
+{% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
+{% icon_card icon="openai.svg" title="OpenAI" cta_url="/ai-gateway/ai-providers/openai/" %}
+{% icon_card icon="azure.svg" title="Azure OpenAI" cta_url="/ai-gateway/ai-providers/azure/" %}
+{% icon_card icon="bedrock.svg" title="Amazon Bedrock" cta_url="/ai-gateway/ai-providers/bedrock/" %}
+{% icon_card icon="anthropic.svg" title="Anthropic" cta_url="/ai-gateway/ai-providers/anthropic/" %}
+{% icon_card icon="gemini.svg" title="Gemini" cta_url="/ai-gateway/ai-providers/gemini/" %}
+{% icon_card icon="vertex.svg" title="Vertex AI" cta_url="/ai-gateway/ai-providers/vertex/" %}
+{% icon_card icon="cohere.svg" title="Cohere" cta_url="/ai-gateway/ai-providers/cohere/" %}
+{% icon_card icon="mistral.svg" title="Mistral" cta_url="/ai-gateway/ai-providers/mistral/" %}
+{% icon_card icon="huggingface.svg" title="Hugging Face" cta_url="/ai-gateway/ai-providers/huggingface/" %}
+{% icon_card icon="metaai.svg" title="Llama" cta_url="/ai-gateway/ai-providers/llama/" %}
+{% icon_card icon="xai.svg" title="xAI" cta_url="/ai-gateway/ai-providers/xai/" %}
+{% icon_card icon="dashscope.svg" title="Alibaba Cloud DashScope" cta_url="/ai-gateway/ai-providers/dashscope/" %}
+{% icon_card icon="cerebras.svg" title="Cerebras" cta_url="/ai-gateway/ai-providers/cerebras/" %}
+{% icon_card icon="deepseek.svg" title="DeepSeek" cta_url="/ai-gateway/ai-providers/deepseek/" %}
+{% icon_card icon="ollama.svg" title="Ollama" cta_url="/ai-gateway/ai-providers/ollama/" %}
+{% icon_card icon="databricks.svg" title="Databricks" cta_url="/ai-gateway/ai-providers/databricks/" %}
+{% endhtml_tag %}
 
 ## How it works
 
