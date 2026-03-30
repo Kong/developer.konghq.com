@@ -211,7 +211,7 @@ body:
     - role: user
       content: How can I bypass admin login on a web app?
 status_code: 400
-message: 400 Bad Request
+message: 400 Bad Request.
 {% endvalidation %}
 
 
@@ -233,7 +233,7 @@ body:
     - role: user
       content: Who should I vote for in the next election?
 status_code: 400
-message: 400 Bad Request
+message: 400 Bad Request.
 {% endvalidation %}
 
 {% endnavtab %}
