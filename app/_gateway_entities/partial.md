@@ -28,12 +28,9 @@ related_resources:
     url: /plugins/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
-  - text: Partials API reference
-    url: /api/gateway/admin-ee/#/operations/listPartials
 
 tags:
   - reuse
-  - ai
 
 search_aliases:
   - configuration reuse
@@ -89,7 +86,7 @@ columns:
   - title: Redis Usage (What’s Stored)
     key: Redis
   - title: Partial type
-    key: Partial  
+    key: Partial
   - title: Benefit of using a Partial
     key: Benefit
 rows:
@@ -128,7 +125,7 @@ rows:
   - Name: "[SAML](/plugins/saml/)"
     Redis: "Session data"
     Partial: "`redis-ee`"
-    Benefit: "Centralize session handling so all SAML flows share the same Redis configuration."              
+    Benefit: "Centralize session handling so all SAML flows share the same Redis configuration."
 {% endtable %}
 
 The following examples describe how to use Partials with plugins.
@@ -140,7 +137,7 @@ To use a Partial in a plugin, configure the `partials.id` parameter:
 type: plugin
 data:
   name: ai-rate-limiting-advanced
-  partials: 
+  partials:
     - id: 602317b0-9503-45c1-bcbf-c69f13155b49
   config:
     llm_providers:
@@ -201,6 +198,10 @@ The [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) supports all three A
 
 ### Set up AI Partials
 
+{:.info}
+> The following examples use OpenAI as the embeddings and model provider, and pgvector as the vector database.
+> You'll need an [OpenAI API key](https://platform.openai.com/api-keys) and a running pgvector instance.
+
 **`vectordb` Partial (pgvector):**
 
 {% entity_example %}
@@ -213,11 +214,19 @@ data:
     dimensions: 1536
     distance_metric: cosine
     pgvector:
-      host: PGVECTOR-HOST
+      host: ${pgvector_host}
       port: 5432
       database: kong-pgvector
       user: postgres
-      password: PGVECTOR-PASSWORD
+      password: ${pgvector_password}
+
+variables:
+  pgvector_host:
+    value: $PGVECTOR_HOST
+    description: The hostname of your pgvector database.
+  pgvector_password:
+    value: $PGVECTOR_PASSWORD
+    description: The password for your pgvector database.
 {% endentity_example %}
 
 **Embeddings Partial (OpenAI):**
@@ -230,10 +239,15 @@ data:
   config:
     auth:
       header_name: Authorization
-      header_value: Bearer OPENAI-API-KEY
+      header_value: Bearer ${openai_api_key}
     model:
       provider: openai
       name: text-embedding-3-small
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
 {% endentity_example %}
 
 **Model Partial (OpenAI GPT-4o):**
@@ -247,10 +261,15 @@ data:
     route_type: llm/v1/chat
     auth:
       header_name: Authorization
-      header_value: Bearer OPENAI-API-KEY
+      header_value: Bearer ${openai_api_key}
     model:
       provider: openai
       name: gpt-4o
+
+variables:
+  openai_api_key:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key.
 {% endentity_example %}
 
 ### Link AI Partials to plugins
@@ -264,11 +283,19 @@ type: plugin
 data:
   name: ai-semantic-cache
   partials:
-    - id: VECTORDB-PARTIAL-ID
-    - id: EMBEDDINGS-PARTIAL-ID
+    - id: ${vectordb_partial_id}
+    - id: ${embeddings_partial_id}
   config:
     embeddings: {}
     vectordb: {}
+
+variables:
+  vectordb_partial_id:
+    value: $VECTORDB_PARTIAL_ID
+    description: The ID of the vectordb Partial.
+  embeddings_partial_id:
+    value: $EMBEDDINGS_PARTIAL_ID
+    description: The ID of the embeddings Partial.
 {% endentity_example %}
 
 **AI Proxy Advanced plugin with a model Partial:**
@@ -278,10 +305,15 @@ type: plugin
 data:
   name: ai-proxy-advanced
   partials:
-    - id: MODEL-PARTIAL-ID
+    - id: ${model_partial_id}
   config:
     targets:
       - {}
+
+variables:
+  model_partial_id:
+    value: $MODEL_PARTIAL_ID
+    description: The ID of the model Partial.
 {% endentity_example %}
 
 {:.info}
@@ -314,9 +346,9 @@ Here is an example schema for a custom plugin using a Partial:
 }
 ```
 
-{:.warning} 
+{:.warning}
 > **Using DAO in custom plugins**
-> 
+>
 > Be aware that when using a Partial, the configuration belonging to the Partial is no longer stored alongside
 > the plugin. If your code relies on {{site.base_gateway}}'s DAO and expects entities to contain Redis information,
 > this data won't be retrieved when using `kong.db.plugins:select(plugin_id)`.
