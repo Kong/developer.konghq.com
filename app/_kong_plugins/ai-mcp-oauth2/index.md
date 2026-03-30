@@ -79,7 +79,7 @@ The plugin follows the following authorization flow:
 * {{site.ai_gateway}} acts as the **Resource Server**, enforcing access control.
 * The MCP clients send requests with a valid `Authorization: Bearer <access-token>` header.
 * The plugin validates tokens, checks the intended audience, and blocks invalid or expired tokens with a `401 Unauthorized`.
-* Access tokens are **never passed to upstream services**, protecting against token theft or confused deputy attacks.
+* Access tokens are **not forwarded to upstream services** by default, protecting against token theft or confused deputy attacks.
 
 <!-- vale off -->
 {% mermaid %}
@@ -132,7 +132,7 @@ The AI MCP OAuth2 plugin is designed to secure MCP traffic as early as possible 
 
 ## Token validation methods {% new_in 3.14 %}
 
-The plugin supports multiple token validation methods simultaneously. You can configure an introspection endpoint, a JWKS endpoint, or both. When both are configured, the plugin tries each method in turn.
+The plugin supports two token validation methods. When introspection is configured, it is always used. JWKS is only used when no introspection endpoint is configured.
 
 * **Introspection**: Set [`config.introspection_endpoint`](./reference/#schema--config-introspection-endpoint) to have the plugin call the authorization server to validate opaque tokens. Requires `config.client_id` when `config.client_auth` is `client_secret_basic` or `client_secret_post`.
 * **JWKS**: Set [`config.jwks_endpoint`](./reference/#schema--config-jwks-endpoint) to validate signed JWTs locally using the authorization server's public keys. If not set, the plugin attempts to discover the JWKS URI from the authorization server metadata.

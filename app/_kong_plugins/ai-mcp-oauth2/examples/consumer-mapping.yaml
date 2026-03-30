@@ -14,6 +14,10 @@ extended_description: |
   If no matching consumer or group is found and you want to allow the request through
   anyway, set `consumer_optional` or `consumer_groups_optional` to `true`.
 
+  When no consumer is matched, the plugin falls back to `credential_claim` to set a
+  credential identifier on the request. This allows downstream plugins to identify the
+  caller without requiring a Kong consumer to exist.
+
 weight: 820
 
 min_version:
