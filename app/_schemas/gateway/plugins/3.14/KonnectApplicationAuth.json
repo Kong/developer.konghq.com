@@ -859,7 +859,7 @@
                         "type": "array"
                       },
                       "downstream_headers_claims": {
-                        "description": "The downstream header claims. If multiple values are set, it means the claim is inside a nested object of the token payload.",
+                        "description": "The downstream header claims. Only top level claims are supported.",
                         "items": {
                           "type": "string"
                         },
