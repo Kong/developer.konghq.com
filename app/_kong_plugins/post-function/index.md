@@ -54,6 +54,8 @@ If you need to run Lua code _before_ other plugins in each phase, see the [Pre-F
 
 {% include_cached /plugins/serverless/untrusted-lua.md %}
 
+{% include_cached /gateway/expressions/limitation-note.md %}
+
 ## Phases
 
 {% include_cached /plugins/serverless/phases.md name=page.name %}

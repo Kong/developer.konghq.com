@@ -64,9 +64,6 @@ Here are some common use cases for setting a condition on a plugin:
 * Make one plugin's execution depend on context set by a higher-priority plugin.
 * Condition plugin behavior on the authenticated Consumer, matched Route, or target Gateway Service.
 
-{:.info}
-> Plugin conditions are only supported in the HTTP subsystem. They can't be used with stream (TCP, TLS, UDP) Routes.
-
 ## How it works
 
 When {{site.base_gateway}} receives a request, it matches the request to a Route and determines which plugins are in scope according to the [plugin scoping rules](/gateway/entities/plugin/#scoping-plugins).
@@ -91,6 +88,18 @@ When conditions are necessary, keep the following in mind:
 * A plugin's configuration is always loaded into memory, even if its condition evaluates to `false`.
 * Complex compound expressions with many fields are more expensive to evaluate than simple single-field expressions.
 * Conditions that reference `kong.ctx.shared` fields require a higher-priority plugin to set those values on every request, which adds its own overhead.
+
+## Limitations
+
+Plugin conditions are only supported in the HTTP subsystem. They can't be used with stream (TCP, TLS, UDP) Routes.
+
+The following plugins **do not** support conditions:
+* Pre-Function
+* Post-Function
+* WebSocket Size Limit
+* WebSocket Validator
+
+All other [{{site.base_gateway}} plugins](/plugins/) support conditions.
 
 ## Plugin conditions reference
 
