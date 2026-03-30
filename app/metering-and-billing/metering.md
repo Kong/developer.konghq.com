@@ -69,6 +69,8 @@ rows:
     description: "The `count` aggregation type counts the number of events that occur within a specific time window. This is often used for metrics that are inherently countable, such as the number of transactions processed or API calls made. The `count` aggregation type doesn't have the `value_property`."
   - aggregation_type: sum
     description: "The `sum` aggregation type calculates the total sum of the metered values for a specific time window. `sum` aggregates over the events `value_property`. This is useful for accumulating metrics like total LLM tokens used, total data transferred, or total time spent on a service."
+  - aggregation_type: avg
+    description: "The `avg` aggregation type calculates the average (arithmetic mean) of the metered values for a specific time window. `avg` aggregates over the events `valueProperty`. This is useful for metrics such as average response time, average CPU or GPU utilization, or average request size."
   - aggregation_type: unique_count
     description: "The `unique_count` aggregation type counts the number of unique events. This is useful when events are unique by a specific field. The `value_property` defines the field that makes the ingested event unique. The property's value in the ingested event must be a string or number."
   - aggregation_type: latest
@@ -162,7 +164,7 @@ The following example show how you can configure meters and usage events for com
 ### LLM token usage
 
 {:.info}
-> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Related API Gateways** for the AI Gateway Tokens setting.
+> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Related API Gateways** for the {{site.ai_gateway}} Tokens setting.
 
 In most cases, AI applications want to count token usage for billing or cost control purposes. As a single AI interaction involves consuming multiple tokens, we define our generic meter with the `sum` aggregation and report token usage in the data's tokens property. As most LLMs charge differently for input, output and system prompts and different models it makes sense to add model and prompt type to the group by.
 
