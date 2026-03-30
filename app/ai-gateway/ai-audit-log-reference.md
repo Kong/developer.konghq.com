@@ -133,7 +133,8 @@ rows:
   - property: "`ai.proxy.aws-guardrails.guardrails_version`"
     description: "The version of the guardrail applied. Can be a numeric version or `DRAFT`."
   - property: "`ai.proxy.aws-guardrails.mode`"
-    description: "The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`."
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.aws-guardrails.input_processing_latency`"
     description: The time, in milliseconds, spent processing the request through the guardrail.
   - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
@@ -302,7 +303,8 @@ rows:
   - property: "`ai.proxy.lakera-guard.lakera_project_id`"
     description: "The Lakera project identifier used for the inspection. Defaults to `default` if no project ID is configured."
   - property: "`ai.proxy.lakera-guard.mode`"
-    description: "The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`."
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
   - property: "`ai.proxy.lakera-guard.input_processing_latency`"
     description: The time, in milliseconds, that Lakera took to process the request.
   - property: "`ai.proxy.lakera-guard.output_processing_latency`"
@@ -362,6 +364,21 @@ rows:
     description: The time taken (in milliseconds) by the `ai-pii-service` container to process the payload.
   - property: "`ai.sanitizer.sanitized_items`"
     description: A list of sanitized PII entities, each including the original text, redacted text, and the entity type.
+  - property: "`ai.sanitizer.input_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.sanitizer.output_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.sanitizer.input_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.sanitizer.output_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.sanitizer.guards_triggered_count`"
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
 {% endtable %}
 
 ### AI Prompt Compressor logs {% new_in 3.11 %}
@@ -593,7 +610,7 @@ The following example shows a structured {{site.ai_gateway}} log entry:
       },
       "aws-guardrails": {
         "guardrails_id": "gr-1234abcd",
-        "guardrails_version": "RELEASE",
+        "guardrails_version": "DRAFT",
         "aws_region": "us-west-2",
         "mode": "BOTH",
         "input_processing_latency": 134,

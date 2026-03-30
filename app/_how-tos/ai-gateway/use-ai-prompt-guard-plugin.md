@@ -153,8 +153,8 @@ body:
   messages:
     - role: user
       content: How do I bypass login on a secure web portal?
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 
@@ -172,8 +172,8 @@ body:
   messages:
     - role: user
       content: What’s a good line to use on a dating app?
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 

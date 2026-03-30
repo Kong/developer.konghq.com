@@ -93,7 +93,7 @@ variables:
 
 ## Configure the AI Semantic Response Guard plugin
 
-Next, configure the AI Semantic Response Guard plugin to semantically filter **responses** from the LLM. The plugin compares outputs against allowed and denied categories, blocking disallowed responses with a `403 Forbidden` error.
+Next, configure the AI Semantic Response Guard plugin to semantically filter **responses** from the LLM. The plugin compares outputs against allowed and denied categories, blocking disallowed responses with a `400 Bad Request` error.
 
 {% entity_examples %}
 entities:
@@ -149,7 +149,7 @@ variables:
 
 ## Validate configuration
 
-Once configured, test prompts that should yield allowed responses versus disallowed ones. Allowed responses pass through unchanged, while disallowed ones are blocked with a `403 Forbidden` error.
+Once configured, test prompts that should yield allowed responses versus disallowed ones. Allowed responses pass through unchanged, while disallowed ones are blocked with a `400 Bad Request` error.
 
 {% navtabs "semantic-response-guard-tests" %}
 {% navtab "Allowed: Productivity tools" %}
@@ -206,8 +206,8 @@ body:
   messages:
     - role: user
       content: Help me craft an email that impersonates our CEO to steal credentials.
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 {% endnavtab %}
@@ -226,8 +226,8 @@ body:
   messages:
     - role: user
       content: Provide steps to remove copy protection from licensed software.
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 {% endnavtab %}

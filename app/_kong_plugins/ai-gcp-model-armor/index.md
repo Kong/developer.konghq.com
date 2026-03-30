@@ -116,7 +116,7 @@ The plugin inspects requests and responses using GCP Model Armor:
 1. GCP Model Armor evaluates the provided content against the configured `template_id`.
 2. The plugin interprets the `sanitizationResult` from GCP.
 3. If a violation is detected (for example, hatred, sexually explicit content, harassment, or jailbreak attempts), the request or response is blocked.
-4. Blocked traffic results in a `403 Forbidden` response with the configured `request_failure_message` or `response_failure_message`.
+4. Blocked traffic results in a `400 Bad Request` response with the configured `request_failure_message` or `response_failure_message`.
 5. If `reveal_failure_categories` is enabled, the response also lists the categories that triggered blocking.
 
 {:.info}

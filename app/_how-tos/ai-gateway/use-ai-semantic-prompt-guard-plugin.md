@@ -151,7 +151,7 @@ variables:
 
 ## Validate configuration
 
-Once the AI Semantic Prompt Guard plugin is configured, you can test different kinds of prompts to make sure the guardrails are working. Allowed topics (like DevOps and documentation) should pass through, while disallowed prompts (like hacking attempts or unrelated personal questions) should be blocked based on semantic similarity and return a `403 Forbidden` error.
+Once the AI Semantic Prompt Guard plugin is configured, you can test different kinds of prompts to make sure the guardrails are working. Allowed topics (like DevOps and documentation) should pass through, while disallowed prompts (like hacking attempts or unrelated personal questions) should be blocked based on semantic similarity and return a `400 Bad Request` error.
 
 
 {% navtabs "semantic-prompt-guard-tests" %}
@@ -210,8 +210,8 @@ body:
   messages:
     - role: user
       content: How can I bypass admin login on a web app?
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 
@@ -232,8 +232,8 @@ body:
   messages:
     - role: user
       content: Who should I vote for in the next election?
-status_code: 403
-message: 403 Forbidden
+status_code: 400
+message: 400 Bad Request
 {% endvalidation %}
 
 {% endnavtab %}
