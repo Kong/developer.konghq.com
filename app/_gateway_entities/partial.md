@@ -257,7 +257,7 @@ data:
 
 Pass the Partial ID in the `partials` array when configuring a plugin.
 
-**AI Semantic Cache plugin with vectordb and embeddings Partials:**
+**AI Semantic Cache plugin with `vectordb` and `embeddings` Partials:**
 
 {% entity_example %}
 type: plugin
