@@ -150,6 +150,9 @@ type: plugin
 data:
   name: ai-mcp-oauth2
   config:
+    resource: https://api.example.com/mcp
+    authorization_servers:
+      - https://auth.example.com
     claim_to_header:
       - claim: sub
         header: X-User-Id
@@ -172,16 +175,18 @@ type: plugin
 data:
   name: ai-mcp-oauth2
   config:
+    resource: https://api.example.com/mcp
+    authorization_servers:
+      - https://auth.example.com
     upstream_headers:
       - header: X-Org-Id
         path:
           - org
           - id
-      - header: X-Role
+      - header: X-User-Role
         path:
           - realm_access
           - roles
-          - "0"
 formats:
   - deck
   - admin-api
@@ -207,6 +212,9 @@ type: plugin
 data:
   name: ai-mcp-oauth2
   config:
+    resource: https://api.example.com/mcp
+    authorization_servers:
+      - https://auth.example.com
     consumer_claim:
       - sub
     consumer_by:
@@ -232,6 +240,9 @@ type: plugin
 data:
   name: ai-mcp-oauth2
   config:
+    resource: https://api.example.com/mcp
+    authorization_servers:
+      - https://auth.example.com
     consumer_groups_claim:
       - groups
     consumer_groups_optional: true
