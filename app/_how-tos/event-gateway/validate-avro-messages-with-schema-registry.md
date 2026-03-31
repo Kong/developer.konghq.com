@@ -15,6 +15,9 @@ works_on:
 tags:
     - event-gateway
     - kafka
+    - confluent
+    - schema-registry
+    - avro
 
 description: "Enforce Avro schema validation on produced messages using the Confluent Schema Registry and {{site.event_gateway}}."
 
@@ -145,7 +148,7 @@ body:
 
 ## Create a Schema Registry entity
 
-Create a [Schema Registry](/event-gateway/entities/schema-registry/) entity in {{site.event_gateway_short}} that points to the Confluent Schema Registry running locally. Since the Event Gateway data plane runs in the same Docker network as the Schema Registry, use the container hostname `schema-registry`:
+Create a [Schema Registry](/event-gateway/entities/schema-registry/) entity in {{site.event_gateway_short}} that points to the Confluent Schema Registry running locally. Since the {{site.event_gateway_short}} data plane runs in the same Docker network as the Schema Registry, use the container hostname `schema-registry`:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -243,6 +246,7 @@ render_output: false
 The subject name `app_logs-value` follows Confluent's default [TopicNameStrategy](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/index.html#subject-name-strategy), which uses the pattern `<topic>-value`.
 
 ## Validate
+Use the following steps to make sure everything was set up correctly.
 
 ### Produce a valid Avro message
 
