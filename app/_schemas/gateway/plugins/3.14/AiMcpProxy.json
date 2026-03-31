@@ -86,13 +86,12 @@
           "type": "integer"
         },
         "mode": {
-          "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener', 'upstream-server'.",
+          "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'.",
           "enum": [
             "conversion-listener",
             "conversion-only",
             "listener",
-            "passthrough-listener",
-            "upstream-server"
+            "passthrough-listener"
           ],
           "type": "string"
         },
@@ -101,11 +100,6 @@
             "forward_client_headers": {
               "default": true,
               "description": "Whether to forward the client request headers to the upstream server when calling the tools.",
-              "type": "boolean"
-            },
-            "preserve_upstream_tool_names": {
-              "default": false,
-              "description": "If enabled (true), the service name will be prepended to the MCP tool names when Kong acts as an MCP server for upstream tools. This helps to avoid name collisions when multiple services are used.",
               "type": "boolean"
             },
             "session": {
@@ -469,13 +463,6 @@
                 "description": "The host of the exported API, which must match the route's hosts. It should be the route's host. By default, Kong will extract the host from API configuration. If the configured host is wildcard, this field is required.",
                 "type": "string"
               },
-              "input_schema": {
-                "additionalProperties": true,
-                "description": "The entire inputSchema section for the tool. This will override the upstream server's inputSchema on the same tool name, if present.",
-                "nullable": true,
-                "type": "object",
-                "x-speakeasy-type-override": "any"
-              },
               "method": {
                 "description": "The method of the exported API, which must be one of the route's method. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required.",
                 "enum": [
@@ -490,13 +477,6 @@
               "name": {
                 "description": "Tool identifier. In passthrough-listener mode, used to match remote MCP Server tools for ACL enforcement. In other modes, it is also used as the tool name (overrides tools.annotations.title if present).",
                 "type": "string"
-              },
-              "output_schema": {
-                "additionalProperties": true,
-                "description": "The entire outputSchema section for the tool. This will override the upstream server's outputSchema on the same tool name, if present.",
-                "nullable": true,
-                "type": "object",
-                "x-speakeasy-type-override": "any"
               },
               "parameters": {
                 "description": "The API parameters specification defined in OpenAPI JSON format. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
@@ -551,10 +531,6 @@
             "type": "object"
           },
           "type": "array"
-        },
-        "tools_cache_ttl_seconds": {
-          "description": "The time-to-live (TTL) for the upstream tools cache in seconds. Set to 0 to refresh on every client call.",
-          "type": "integer"
         }
       },
       "required": [
