@@ -12,7 +12,7 @@ extended_description: |
 
   {:.info}
   > **Note**: `extra_jwks_uris` adds multiple discovery endpoints, but the plugin will still look at the `jwks_uri` returned by the internal discovery mechanism first, introducing potential latency.
-  If you want to override the default discovery JWKS endpoint instead of providing multiple fallback options, see the [Use a custom JWKS endpoint for discovery example](/examples/openid-connect/override-jwks/).
+  If you want to override the default discovery JWKS endpoint instead of providing multiple fallback options, see the [Use a custom JWKS endpoint for discovery example](/plugins/openid-connect/examples/override-jwks-endpoint/).
 weight: 698
 
 requirements:

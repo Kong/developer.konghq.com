@@ -5,7 +5,7 @@ extended_description: |
   This is useful when the IdP exposes a non-standard JWKS endpoint.
 
   This option is similar to `extra_jwks_uris`, but it overrides the endpoint instead of providing multiple fallback options.
-  If you need to use multiple JWKS endpoints, see the [Token validation for multiple IdPs example](/examples/openid-connect/extra-jwks/).
+  If you need to use multiple JWKS endpoints, see the [Token validation for multiple IdPs example](/plugins/openid-connect/examples/extra-jwks/).
   
 weight: 698
 
