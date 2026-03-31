@@ -1,6 +1,6 @@
 ---
 title: Self-hosted mocks
-description: Insomnia allows Enterprise users to create self-hosted mock servers.
+description: Insomnia allows users to create self-hosted mock servers.
 
 content_type: reference
 layout: reference
@@ -9,8 +9,6 @@ breadcrumbs:
   - /insomnia/mock-servers/
 products:
   - insomnia
-
-tier: enterprise
 tags:
   - mock-servers
 
@@ -23,7 +21,7 @@ related_resources:
     url: /insomnia/ai-in-insomnia/#Use-ai-to-auto-generate-a-mock-server
 ---
 
-Enterprise users can use Insomnia to create self-hosted mock servers that let you run mock API endpoints in your own environment, outside of Insomnia's cloud.
+Users can use Insomnia to create self-hosted mock servers that let you run mock API endpoints in your own environment, outside of Insomnia's cloud.
 
 Our self-hosted mock servers use the [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin) service which allows you to simulate API behavior during development, testing, or integration work without depending on external mock hosting. 
 
