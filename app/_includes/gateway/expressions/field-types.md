@@ -1,5 +1,3 @@
-{%- if include.table_name=="field_types" -%}
-
 Types define what you can use for a predicate's field and constant value. Expressions language is strongly typed. Operations are only performed
 if such an operation makes sense in regard to the actual type of field and constant.
 
@@ -63,4 +61,3 @@ features:
 In addition, the expressions router also supports one composite type, `Array`. Array types are written as `Type[]`.
 For example: `String[]`, `Int[]`. Currently, arrays can only be present in field values. They are used in
 case one field could contain multiple values. For example, `http.headers.x` or `http.queries.x`.
-{%- endif -%}
