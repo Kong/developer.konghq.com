@@ -1,0 +1,80 @@
+title: 'Token exchange'
+description: 'Swap the client access token for a different token before forwarding to the upstream MCP server'
+
+extended_description: |
+  Use token exchange to replace the incoming access token with a token issued by a
+  different authorization server or a token with different scopes before the request reaches
+  the upstream MCP server.
+
+  When `token_exchange.enabled` is `true`, the plugin:
+
+  1. Validates the incoming Bearer token using introspection or JWKS.
+  2. Calls the configured token exchange endpoint with the validated token as the subject token.
+  3. Forwards the request to the upstream MCP server with the exchanged token.
+
+  Because the plugin is passing a credential to the upstream, `passthrough_credentials`
+  must be set to `true` when token exchange is enabled.
+
+  Exchanged tokens are cached by default. The TTL comes from the `expires_in` field in
+  the exchange response, or falls back to `token_exchange.cache.ttl` if the field is absent.
+
+weight: 800
+
+min_version:
+  gateway: '3.14'
+
+config:
+  resource: ${mcp_resource_url}
+  authorization_servers:
+    - ${authorization_server_url}
+  introspection_endpoint: ${introspection_endpoint_url}
+  client_id: ${client_id}
+  client_secret: ${client_secret}
+  passthrough_credentials: true
+  token_exchange:
+    enabled: true
+    token_endpoint: ${token_exchange_endpoint_url}
+    client_auth: client_secret_basic
+    client_id: ${exchange_client_id}
+    client_secret: ${exchange_client_secret}
+    request:
+      requested_token_type: urn:ietf:params:oauth:token-type:access_token
+      subject_token_type: urn:ietf:params:oauth:token-type:access_token
+      scopes:
+        - mcp:read
+    cache:
+      enabled: true
+      ttl: 3600
+
+variables:
+  mcp_resource_url:
+    value: $MCP_RESOURCE_URL
+    description: Resource identifier for the MCP server (for example, `https://api.example.com/mcp`).
+  authorization_server_url:
+    value: $AUTHORIZATION_SERVER_URL
+    description: Authorization server URL used to validate the incoming token.
+  introspection_endpoint_url:
+    value: $INTROSPECTION_ENDPOINT_URL
+    description: Token introspection endpoint. Used by {{site.base_gateway}} to validate the incoming access token.
+  client_id:
+    value: $CLIENT_ID
+    description: Client ID used by {{site.base_gateway}} when calling the introspection endpoint.
+  client_secret:
+    value: $CLIENT_SECRET
+    description: Client secret used by {{site.base_gateway}} when calling the introspection endpoint.
+  token_exchange_endpoint_url:
+    value: $TOKEN_EXCHANGE_ENDPOINT_URL
+    description: Token exchange endpoint URL (for example, `https://exchange.example.com/oauth/token`).
+  exchange_client_id:
+    value: $EXCHANGE_CLIENT_ID
+    description: Client ID used by {{site.base_gateway}} when calling the token exchange endpoint.
+  exchange_client_secret:
+    value: $EXCHANGE_CLIENT_SECRET
+    description: Client secret used by {{site.base_gateway}} when calling the token exchange endpoint.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
