@@ -45,21 +45,23 @@ related_resources:
   - text: AI providers
     url: /ai-gateway/ai-providers/
 
-how_to_list:
-  config:
-    products:
-      - ai-gateway
-    tags:
-      - vllm
-    description: true
-    view_more: false
+# how_to_list:
+#   config:
+#     products:
+#       - ai-gateway
+#     tags:
+#       - vllm
+#     description: true
+#     view_more: false
 ---
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="vLLM" %}
 
-## Configuration example
+## Configure {{ provider.name }} with AI Proxy
 
-Configure the [AI Proxy plugin](/plugins/ai-proxy/) to route chat requests to your vLLM server.
+To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
+
+Here's a minimal configuration for chat completions:
 
 {% entity_example %}
 type: plugin
@@ -69,18 +71,17 @@ data:
     route_type: llm/v1/chat
     model:
       provider: vllm
-      name: vllm-llama-3-8b
+      name: ai/smollm2
       options:
         upstream_url: ${upstream_url}
-    # auth is optional — omit if your vLLM server has no API key configured
-    auth:
-      header_name: Authorization
-      header_value: Bearer ${key}
 variables:
   upstream_url:
     value: $VLLM_UPSTREAM_URL
-  key:
-    value: $VLLM_API_KEY
 {% endentity_example %}
 
-{% include plugins/ai-proxy/providers/how-tos.md %}
+{:.success}
+> For more configuration options and examples, see:
+> - [AI Proxy examples](/plugins/ai-proxy/examples/)
+> - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
+
+<!-- {% include plugins/ai-proxy/providers/how-tos.md %} -->
