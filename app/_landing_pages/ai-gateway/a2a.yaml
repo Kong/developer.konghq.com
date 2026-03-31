@@ -146,7 +146,7 @@ rows:
                 - type: text
                   text: |
                     Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
-  - column_count: 4
+  - column_count: 2
     columns:
       - blocks:
         - type: card

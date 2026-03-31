@@ -92,6 +92,8 @@ automated_tests: false
 
 The AI A2A Proxy plugin parses A2A JSON-RPC requests and proxies them to the upstream agent.
 
+Setting `max_request_body_size` to `0` disables the body size cap entirely, so the full request body is buffered for payload logging and request detection — which is required in this guide since `log_payloads` is enabled. Any positive value sets a hard byte ceiling instead. For more details on logging options, see the [AI A2A Proxy plugin reference](/plugins/ai-a2a-proxy/#logging-and-observability).
+
 {% entity_examples %}
 entities:
   plugins:
