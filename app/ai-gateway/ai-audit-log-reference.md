@@ -43,7 +43,7 @@ Each AI plugin returns a set of tokens. Log entries include the following detail
 
 ### AI Proxy core logs
 
-The [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy/) plugins act as the main gateway for forwarding requests to AI providers. Logs here capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
+The [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins act as the main gateway for forwarding requests to AI providers. Logs here capture detailed information about the request and response payloads, token usage, model details, latency, and cost metrics. They provide a comprehensive view of each AI interaction.
 
 {:.warning}
 > Logs and metrics for cost and token usage via the [OpenAI Files API](https://developers.openai.com/api/reference/resources/files/methods/list) are not currently supported.
@@ -117,9 +117,7 @@ rows:
 
 ### AI AWS Guardrails logs {% new_in 3.11 %}
 
-For users using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), logs capture processing times and configuration metadata related to content guardrails applied to inputs and outputs.
-
-The following fields appear in structured AI logs when the AI AWS Guardrails plugin is enabled:
+If you're using the [AI AWS Guardrails plugin](/plugins/ai-aws-guardrails/), {{site.ai_gateway}} logs include fields under the `ai.proxy.aws-guardrails` object. These fields capture processing latency, the guardrails configuration applied, block reasons, and masking behavior.
 
 {% table %}
 columns:
@@ -128,23 +126,104 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "`ai.proxy.aws-guardrails.guardrails_id`"
-    description: The unique identifier of the guardrails configuration applied.
-  - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
-    description: The time (in milliseconds) taken to process the output through guardrails.
-  - property: "`ai.proxy.aws-guardrails.input_processing_latency`"
-    description: The time (in milliseconds) taken to process the input through guardrails.
-  - property: "`ai.proxy.aws-guardrails.guardrails_version`"
-    description: The version or state of the guardrails configuration (for example, `DRAFT`, `RELEASE`).
   - property: "`ai.proxy.aws-guardrails.aws_region`"
-    description: The AWS region where the guardrails are deployed or executed.
+    description: The AWS region where the guardrail was applied.
+  - property: "`ai.proxy.aws-guardrails.guardrails_id`"
+    description: The unique identifier of the guardrail configuration applied.
+  - property: "`ai.proxy.aws-guardrails.guardrails_version`"
+    description: "The version of the guardrail applied. Can be a numeric version or `DRAFT`."
+  - property: "`ai.proxy.aws-guardrails.mode`"
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.aws-guardrails.input_processing_latency`"
+    description: The time, in milliseconds, spent processing the request through the guardrail.
+  - property: "`ai.proxy.aws-guardrails.output_processing_latency`"
+    description: The time, in milliseconds, spent processing the response through the guardrail.
+  - property: "`ai.proxy.aws-guardrails.input_block_reason`"
+    description: The reason the request was blocked. Empty if the request was allowed.
+  - property: "`ai.proxy.aws-guardrails.output_block_reason`"
+    description: The reason the response was blocked. Empty if the response was allowed.
+  - property: "`ai.proxy.aws-guardrails.input_masked`"
+    description: "`true` if the request content was masked rather than blocked. Only present when `config.allow_masking` is `true`."
+  - property: "`ai.proxy.aws-guardrails.output_masked`"
+    description: "`true` if the response content was masked rather than blocked. Only present when `config.allow_masking` is `true`."
+  - property: "`ai.proxy.aws-guardrails.input_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.proxy.aws-guardrails.output_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.aws-guardrails.input_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.aws-guardrails.output_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.aws-guardrails.guards_triggered_count`"
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+  - property: "`ai.proxy.aws-guardrails.input_faulty_prompt`"
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.aws-guardrails.output_faulty_response`"
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+### AI GCP Model Armor logs {% new_in 3.12 %}
+
+If you're using the [AI GCP Model Armor plugin](/plugins/ai-gcp-model-armor/), {{site.ai_gateway}} logs include fields under the `ai.proxy.gcp-model-armor` object. These fields capture the template applied, processing latency, and reasons for blocking when content is flagged.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.gcp-model-armor.template_id`"
+    description: The GCP Model Armor template identifier applied to the request.
+  - property: "`ai.proxy.gcp-model-armor.input_processing_latency`"
+    description: The time, in milliseconds, spent processing the request through Model Armor.
+  - property: "`ai.proxy.gcp-model-armor.output_processing_latency`"
+    description: The time, in milliseconds, spent processing the response through Model Armor.
+  - property: "`ai.proxy.gcp-model-armor.input_block_reason`"
+    description: "The check type or types that caused the request to be blocked, comma-separated (for example, `sexually_explicit`, `dangerous`). Empty if the request was allowed."
+  - property: "`ai.proxy.gcp-model-armor.output_block_reason`"
+    description: "The check type or types that caused the response to be blocked, comma-separated. Empty if the response was allowed."
+  - property: "`ai.proxy.gcp-model-armor.mode`"
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.gcp-model-armor.input_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.proxy.gcp-model-armor.output_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.gcp-model-armor.input_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.gcp-model-armor.output_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.gcp-model-armor.guards_triggered_count`"
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+  - property: "`ai.proxy.gcp-model-armor.input_faulty_prompt`"
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.gcp-model-armor.output_faulty_response`"
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
 
 ### AI Azure Content Safety logs
 
-If the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/) is enabled, each corresponding log entry records a detected feature level for a user-defined content safety category (for example, `Hate`, `Violence`, `SexualContent`). The category is a user-defined name, and the feature level indicates the detected severity for that category, as seen here. Multiple entries can appear per request depending on the configuration and detected content.
+If you're using the [AI Azure Content Safety plugin](/plugins/ai-azure-content-safety/), {{site.ai_gateway}} writes to two separate log paths.
 
-For detailed information on categories and severity levels, see [Harm categories in Azure AI Content Safety - Azure AI services](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
+The first path records per-category severity data from the Azure Content Safety API. Each entry represents a category that breached its configured rejection threshold. Multiple entries can appear per request depending on which categories were configured and what was detected.
+
+For information on categories and severity levels, see [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concept-harm-categories).
 
 {% table %}
 columns:
@@ -154,14 +233,10 @@ columns:
     key: description
 rows:
   - property: "`ai.audit.azure_content_safety.<CATEGORY>`"
-    description: Detected feature level for a user-defined category (for example, `Hate`, `Violence`). There can be multiple entries per request depending on configuration and detected content.
+    description: "The numeric rejection severity threshold for the category that was breached (for example, `Hate`, `Violence`). Defined by `config.categories[*].rejection_level`. Multiple entries can appear per request."
 {% endtable %}
 
-### AI Lakera Guard logs {% new_in 3.13 %}
-
-If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the lakera-guard object for each plugin entry. These fields provide insight into inspection behavior. For example, processing latency, request UUIDs, and violation details when requests or responses are blocked.
-
-The following fields appear in AI logs when the AI Lakera Guard plugin is enabled:
+The second path records plugin metadata and block reasons under the `ai.proxy.azure-content-safety` object:
 
 {% table %}
 columns:
@@ -170,47 +245,148 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "`ai.proxy.lakera-guard.input_processing_latency`"
+  - property: "`ai.proxy.azure-content-safety.azure_tenant_id`"
+    description: The Azure tenant ID used for authentication.
+  - property: "`ai.proxy.azure-content-safety.azure_client_id`"
+    description: The Azure client ID used for authentication.
+  - property: "`ai.proxy.azure-content-safety.azure_api_version`"
+    description: The Azure Content Safety API version used for the request.
+  - property: "`ai.proxy.azure-content-safety.azure_content_safety_url`"
+    description: The Azure Content Safety endpoint URL.
+  - property: "`ai.proxy.azure-content-safety.input_processing_latency`"
+    description: The time, in milliseconds, spent processing the request through Azure Content Safety.
+  - property: "`ai.proxy.azure-content-safety.output_processing_latency`"
+    description: The time, in milliseconds, spent processing the response through Azure Content Safety.
+  - property: "`ai.proxy.azure-content-safety.input_block_reason`"
+    description: The reason the request was blocked. Empty if the request was allowed.
+  - property: "`ai.proxy.azure-content-safety.output_block_reason`"
+    description: The reason the response was blocked. Empty if the response was allowed.
+  - property: "`ai.proxy.azure-content-safety.mode`"
     description: |
-      The time, in milliseconds, that Lakera took to process the inspected request.
-  - property: "`ai.proxy.lakera-guard.lakera_service_url`"
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.azure-content-safety.input_block_source`"
     description: |
-      The Lakera API endpoint used for inspection, such as `https://api.lakera.ai/v2/guard`.
-  - property: "`ai.proxy.lakera-guard.input_request_uuid`"
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.proxy.azure-content-safety.output_block_source`"
     description: |
-      The unique identifier assigned by Lakera for the inspected request.
-  - property: "`ai.proxy.lakera-guard.lakera_project_id`"
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.azure-content-safety.input_block_consumer_id`"
     description: |
-      The Lakera project identifier used for the inspection.
-  - property: "`ai.proxy.lakera-guard.input_block_detail`"
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.azure-content-safety.output_block_consumer_id`"
     description: |
-      An array of violation objects present when Lakera blocks a request.
-      Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`,
-      `detected` (boolean), and `detector_type`, such as `moderated_content/hate`.
-  - property: "`ai.proxy.lakera-guard.input_block_reason`"
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.azure-content-safety.guards_triggered_count`"
     description: |
-      The detector type that caused Lakera to block the request.
-  - property: "`ai.proxy.lakera-guard.output_processing_latency`"
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+  - property: "`ai.proxy.azure-content-safety.input_faulty_prompt`"
     description: |
-      The time, in milliseconds, that Lakera took to process the inspected response.
-  - property: "`ai.proxy.lakera-guard.output_request_uuid`"
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.azure-content-safety.output_faulty_response`"
     description: |
-      The unique identifier assigned by Lakera for the inspected response.
-  - property: "`ai.proxy.lakera-guard.output_block_detail`"
-    description: |
-      An array of violation objects present when Lakera blocks a response.
-      The structure matches `input_block_detail`.
-  - property: "`ai.proxy.lakera-guard.output_block_reason`"
-    description: |
-      The detector type that caused Lakera to block the response.
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
 {% endtable %}
+
+### AI Lakera Guard logs {% new_in 3.13 %}
+
+If you're using the [AI Lakera Guard plugin](/plugins/ai-lakera-guard/), {{site.ai_gateway}} logs include additional fields under the `ai.proxy.lakera-guard` object. These fields capture processing latency, Lakera-assigned request UUIDs, block reasons, and violation details when requests or responses are blocked.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.lakera-guard.lakera_service_url`"
+    description: "The Lakera API endpoint used for inspection (for example, `https://api.lakera.ai/v2/guard`)."
+  - property: "`ai.proxy.lakera-guard.lakera_project_id`"
+    description: "The Lakera project identifier used for the inspection. Defaults to `default` if no project ID is configured."
+  - property: "`ai.proxy.lakera-guard.mode`"
+    description: |
+      {% new_in 3.14 %} The content guarding mode configured for the plugin. Possible values: `INPUT`, `OUTPUT`, `BOTH`.
+  - property: "`ai.proxy.lakera-guard.input_processing_latency`"
+    description: The time, in milliseconds, that Lakera took to process the request.
+  - property: "`ai.proxy.lakera-guard.output_processing_latency`"
+    description: The time, in milliseconds, that Lakera took to process the response.
+  - property: "`ai.proxy.lakera-guard.input_request_uuid`"
+    description: The unique identifier assigned by Lakera for the inspected request.
+  - property: "`ai.proxy.lakera-guard.output_request_uuid`"
+    description: The unique identifier assigned by Lakera for the inspected response.
+  - property: "`ai.proxy.lakera-guard.input_block_reason`"
+    description: The detector type that caused Lakera to block the request. Empty if the request was allowed.
+  - property: "`ai.proxy.lakera-guard.output_block_reason`"
+    description: The detector type that caused Lakera to block the response. Empty if the response was allowed.
+  - property: "`ai.proxy.lakera-guard.input_block_detail`"
+    description: "An array of violation objects present when Lakera blocks a request. Each object includes `policy_id`, `detector_id`, `project_id`, `message_id`, `detected` (boolean), and `detector_type` (for example, `moderated_content/hate`)."
+  - property: "`ai.proxy.lakera-guard.output_block_detail`"
+    description: "An array of violation objects present when Lakera blocks a response. The structure matches `input_block_detail`."
+  - property: "`ai.proxy.lakera-guard.input_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.proxy.lakera-guard.output_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.proxy.lakera-guard.input_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.lakera-guard.output_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.proxy.lakera-guard.guards_triggered_count`"
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
+  - property: "`ai.proxy.lakera-guard.input_faulty_prompt`"
+    description: |
+      {% new_in 3.14 %} The raw request prompt that was blocked. Only present when `config.log_blocked_content` is `true`.
+  - property: "`ai.proxy.lakera-guard.output_faulty_response`"
+    description: |
+      {% new_in 3.14 %} The raw response that was blocked. Only present when `config.log_blocked_content` is `true`.
+{% endtable %}
+
+### AI Custom Guardrail logs {% new_in 3.14 %}
+
+If you're using the [AI Custom Guardrail plugin](/plugins/ai-custom-guardrail/), {{site.ai_gateway}} logs include additional fields under the `custom-guardrail` object. These fields record guardrail processing latency, block reasons, and the source and consumer identity associated with any triggered guards.
+
+The following fields appear in structured AI logs when the AI Custom Guardrail plugin is enabled:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.proxy.custom-guardrail.mode`"
+    description: |
+      The inspection mode configured for the guardrail. For example, `BOTH` means both input and output are inspected.
+  - property: "`ai.proxy.custom-guardrail.input_processing_latency`"
+    description: The time (in milliseconds) taken to process the input through the guardrail.
+  - property: "`ai.proxy.custom-guardrail.output_processing_latency`"
+    description: The time (in milliseconds) taken to process the output through the guardrail.
+  - property: "`ai.proxy.custom-guardrail.input_block_reason`"
+    description: The reason the input was blocked. Empty if the input was not blocked.
+  - property: "`ai.proxy.custom-guardrail.output_block_reason`"
+    description: The reason the output was blocked. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.input_block_source`"
+    description: The source that triggered the input block (for example, `ai-custom-guardrail`). Empty if the input was not blocked.
+  - property: "`ai.proxy.custom-guardrail.output_block_source`"
+    description: The source that triggered the output block. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.input_block_consumer_id`"
+    description: The consumer ID associated with the blocked input request. Set to `unknown` if the consumer can't be identified.
+  - property: "`ai.proxy.custom-guardrail.output_block_consumer_id`"
+    description: The consumer ID associated with the blocked output response. Empty if the output was not blocked.
+  - property: "`ai.proxy.custom-guardrail.guards_triggered_count`"
+    description: The number of individual guard rules that were triggered during the request.
+{% endtable %}
+
+{:.info}
+> The plugin also allows you to define [custom metrics](/plugins/ai-custom-guardrail/#metrics) based on Lua expressions.
 
 
 ### AI PII Sanitizer logs {% new_in 3.10 %}
 
-If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item—including the original value, redacted value, and detected entity type.
-
-The following fields appear in structured AI logs when the AI PII Sanitizer plugin is enabled:
+If you're using the [AI PII Sanitizer plugin](/plugins/ai-sanitizer/), {{site.ai_gateway}} logs include additional fields that provide insight into the detection and redaction of personally identifiable information (PII). These fields track the number of entities identified and sanitized, the time taken to process the payload, and detailed metadata about each sanitized item, including the original value, redacted value, and detected entity type.
 
 {% table %}
 columns:
@@ -227,13 +403,26 @@ rows:
     description: The time taken (in milliseconds) by the `ai-pii-service` container to process the payload.
   - property: "`ai.sanitizer.sanitized_items`"
     description: A list of sanitized PII entities, each including the original text, redacted text, and the entity type.
+  - property: "`ai.sanitizer.input_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the request. Empty if the request was allowed.
+  - property: "`ai.sanitizer.output_block_source`"
+    description: |
+      {% new_in 3.14 %} The name of the plugin that blocked the response. Empty if the response was allowed.
+  - property: "`ai.sanitizer.input_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose request was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.sanitizer.output_block_consumer_id`"
+    description: |
+      {% new_in 3.14 %} The ID of the consumer whose response was blocked, or `unknown` if no consumer identity was resolved.
+  - property: "`ai.sanitizer.guards_triggered_count`"
+    description: |
+      {% new_in 3.14 %} A counter that increments each time a block is triggered on either the input or output within a single request.
 {% endtable %}
 
 ### AI Prompt Compressor logs {% new_in 3.11 %}
 
 When the [AI Prompt Compressor plugin](/plugins/ai-prompt-compressor/) is enabled, additional logs record token counts before and after compression, compression ratios, and metadata about the compression method and model used.
-
-The following fields appear in structured AI logs when the AI Prompt Compressor plugin is enabled:
 
 {% table %}
 columns:
@@ -262,9 +451,7 @@ rows:
 
 ### AI RAG Injector logs {% new_in 3.10 %}
 
-If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the provider/model details.
-
-The following fields appear in structured AI logs when the AI RAG Injector plugin is enabled:
+If you're using the [AI RAG Injector plugin](/plugins/ai-rag-injector/), {{site.ai_gateway}} logs include additional fields that provide detailed information about the retrieval-augmented generation process. These fields track the vector database used, whether relevant context was injected into the prompt, the latency of data fetching, and embedding metadata such as tokens used and the embedding provider and model used.
 
 {% table %}
 columns:
@@ -293,76 +480,61 @@ rows:
 
 ### AI Semantic Cache logs {% new_in 3.8 %}
 
-If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), {{site.ai_gateway}} logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior—such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
-
-The following fields appear in AI logs when semantic caching is enabled:
+If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache/), {{site.ai_gateway}} logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior, such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
 
 {% table %}
 columns:
-- title: Property
-  key: property
-- title: Description
-  key: description
+  - title: Property
+    key: property
+  - title: Description
+    key: description
 rows:
-- property: "`ai.proxy.cache.cache_status`"
-  description: |
-    {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass`, or `Refresh`.
-- property: "`ai.proxy.cache.fetch_latency`"
-  description: |
-    The time, in milliseconds, it took to return a cached response.
-- property: "`ai.proxy.cache.embeddings_provider`"
-  description: |
-    The provider used to generate the embeddings.
-- property: "`ai.proxy.cache.embeddings_model`"
-  description: |
-    The model used to generate the embeddings.
-- property: "`ai.proxy.cache.embeddings_latency`"
-  description: |
-    The time taken to generate the embeddings.
+  - property: "`ai.proxy.cache.cache_status`"
+    description: |
+      {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass`, or `Refresh`.
+  - property: "`ai.proxy.cache.fetch_latency`"
+    description: The time, in milliseconds, it took to return a cached response.
+  - property: "`ai.proxy.cache.embeddings_provider`"
+    description: The provider used to generate the embeddings.
+  - property: "`ai.proxy.cache.embeddings_model`"
+    description: The model used to generate the embeddings.
+  - property: "`ai.proxy.cache.embeddings_latency`"
+    description: The time taken to generate the embeddings.
 {% endtable %}
 
 {:.info}
-> **Note:**
-> When returning a cached response, `time_per_token` and `llm_latency` are omitted.
+> **Note:** When returning a cached response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
 
 ### AI LLM as Judge logs {% new_in 3.12 %}
 
-If you're using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior—such as which models were scored, latency, and the numeric accuracy assigned by the judge.
-
-The following fields appear in AI logs when the LLM as Judge plugin is enabled:
+If you're using the [AI LLM as Judge plugin](/plugins/ai-llm-as-judge/), {{site.ai_gateway}} logs include additional fields under the `ai-llm-as-judge` object. These fields provide insight into evaluation behavior, such as which models were scored, latency, and the numeric accuracy assigned by the judge.
 
 {% table %}
 columns:
-- title: Property
-  key: property
-- title: Description
-  key: description
+  - title: Property
+    key: property
+  - title: Description
+    key: description
 rows:
-- property: "`ai.proxy.ai-llm-as-judge.meta.llm_latency`"
-  description: |
-    The time, in milliseconds, that the judge model took to return a score.
-- property: "`ai.proxy.ai-llm-as-judge.meta.request_model`"
-  description: |
-    The candidate model being evaluated by the judge.
-- property: "`ai.proxy.ai-llm-as-judge.meta.response_model`"
-  description: |
-    The model used as the judge (for example, `gpt-4o`).
-- property: "`ai.proxy.ai-llm-as-judge.meta.provider_name`"
-  description: |
-    The provider of the judge model (for example, `openai`).
-- property: "`ai.proxy.ai-llm-as-judge.meta.request_mode`"
-  description: |
-    The mode used for evaluation (for example, `oneshot`).
-- property: "`ai.proxy.ai-llm-as-judge.usage.llm_accuracy`"
-  description: |
-    The numeric accuracy score (1–100) returned by the judge model.
+  - property: "`ai.proxy.ai-llm-as-judge.meta.llm_latency`"
+    description: The time, in milliseconds, that the judge model took to return a score.
+  - property: "`ai.proxy.ai-llm-as-judge.meta.request_model`"
+    description: The candidate model being evaluated by the judge.
+  - property: "`ai.proxy.ai-llm-as-judge.meta.response_model`"
+    description: "The model used as the judge (for example, `gpt-4o`)."
+  - property: "`ai.proxy.ai-llm-as-judge.meta.provider_name`"
+    description: "The provider of the judge model (for example, `openai`)."
+  - property: "`ai.proxy.ai-llm-as-judge.meta.request_mode`"
+    description: "The mode used for evaluation (for example, `oneshot`)."
+  - property: "`ai.proxy.ai-llm-as-judge.usage.llm_accuracy`"
+    description: The numeric accuracy score (1-100) returned by the judge model.
 {% endtable %}
 
 
 ### AI MCP logs {% new_in 3.12 %}
 
-If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields are exposed when the AI MCP plugin is enabled and provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage and {% new_in 3.13 %} access control audit entries.
+If you're using the [AI MCP plugin](/plugins/ai-mcp-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.mcp` object. These fields provide insight into Model Context Protocol (MCP) traffic, including session IDs, JSON-RPC request/response payloads, latency, tool usage, and {% new_in 3.13 %} access control audit entries.
 
 {:.info}
 > **Note:** Unlike other available AI plugins, the AI MCP plugin is not invoked as part of an AI request.
@@ -426,6 +598,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+
 ## Example log entries
 
 ### LLM traffic entry
@@ -476,10 +649,18 @@ The following example shows a structured {{site.ai_gateway}} log entry:
       },
       "aws-guardrails": {
         "guardrails_id": "gr-1234abcd",
-        "guardrails_version": "RELEASE",
+        "guardrails_version": "DRAFT",
         "aws_region": "us-west-2",
-        "inputput_processing_latency": 134,
-        "output_processing_latency": 278
+        "mode": "BOTH",
+        "input_processing_latency": 134,
+        "output_processing_latency": 278,
+        "input_block_reason": "",
+        "output_block_reason": "",
+        "input_block_source": "",
+        "output_block_source": "",
+        "input_block_consumer_id": "",
+        "output_block_consumer_id": "",
+        "guards_triggered_count": 0
       },
       "rag-inject": {
         "vector_db": "pgvector",
@@ -537,6 +718,7 @@ The following example shows an MCP log entry:
 {
   "ai": {
     "mcp": {
+      "mcp_session_id": "abc123session",
       "rpc": [
         {
           "method": "tools/call",
@@ -557,17 +739,6 @@ The following example shows an MCP log entry:
           "scope": "primitive",
           "primitive": "tool",
           "action": "allow"
-        }
-      ]
-    }
-  },
-      "rpc": [
-        {
-          "method": "tools/call",
-          "id": "1",
-          "latency": 3,
-          "tool_name": "list_orders",
-          "response_body_size": 5030
         }
       ]
     }
