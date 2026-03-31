@@ -41,25 +41,7 @@
         }
     </script>
 
-    {% if jekyll.environment == "production" %}
-    <!-- OneTrust Cookies Consent Notice start for konghq.com -->
-    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a" async></script>
-    <script type="text/javascript">
-    function OptanonWrapper() { }
-    </script>
-    <!-- OneTrust Cookies Consent Notice end for konghq.com -->
-    {% endif %}
-
-    {% if jekyll.environment == "preview" %}
-    <!-- OneTrust Cookies Consent Notice start for konghq.com -->
-    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a-test" async></script>
-    <script type="text/javascript">
-    function OptanonWrapper() { }
-    </script>
-    <!-- OneTrust Cookies Consent Notice end for konghq.com -->
-    {% endif %}
-
-    {% if jekyll.environment == "production" %}
+    {% if jekyll.environment == "production" or jekyll.environment == "preview" %}
     <!-- DataGrail Consent Script -->
     <script type="text/javascript" src="https://api.consentjs.datagrail.io/fe1d496f-d60d-4459-b57f-3192651f79cf/745f7969-f1da-41f5-8315-cabe18e7d780/consent-loader.js" async></script>
     <!-- End DataGrail Consent Script -->
@@ -104,7 +86,7 @@
       data-modal-title-color="#ffffff"
       data-modal-override-open-selector=".ask-ai-button"
       data-kapa-branding-hide="true"
-      data-project-logo="https://developer.konghq.com/assets/logos/konglogo-gradient-secondary.svg"
+      data-project-logo="https://developer.konghq.com/assets/logos/kong-ask-ai-icon.svg"
       data-modal-example-questions="Can I set up Kong as an MCP server?,How do I publish an API to Dev Portal?,Set up rate limiting in API Gateway,Which AI providers are supported?"
     ></script>
     {% endif %}

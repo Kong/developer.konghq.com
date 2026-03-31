@@ -17,11 +17,12 @@ module Kramdown
         id = SecureRandom.uuid
 
         snippet = CodeHighlighter.new.highlight(code, language, id)
-        Liquid::Template.parse(template).render(
+        Liquid::Template.parse(template, { line_numbers: true }).render(
           {
             'codeblock' => {
               'copy' => copy,
               'css_classes' => el.attr['class'],
+              'collapsible' => el.attr.fetch('class', '').include?('collapsible'),
               'render_header' => !data['data-file'].nil?,
               'id' => id,
               'data' => data,

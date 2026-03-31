@@ -46,7 +46,11 @@ module Jekyll
 
         def set_canonicals!
           @references.each do |base_url, pages|
-            pages.map { |page| page.data['canonical_url'] = @canonicals[base_url].url }
+            canonical_url = @canonicals[base_url].url
+            pages.each do |page|
+              page.data['canonical_url'] = canonical_url
+              page.data['canonical?'] = page.url == canonical_url
+            end
           end
         end
 

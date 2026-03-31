@@ -53,6 +53,8 @@ related_resources:
     url: /metering-and-billing/billing-invoicing-subscriptions/
   - text: Meter and bill {{site.base_gateway}} API requests
     url: /metering-and-billing/get-started/
+  - text: Get started with {{site.metering_and_billing}} generic meters
+    url: /how-to/get-started-with-metering-and-billing-generic-meters/
 
 automated_tests: false
 ---

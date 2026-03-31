@@ -82,50 +82,52 @@ The {{ site.kic_product_name }} Helm chart automatically configures all the envi
 
 1. Update your `values.yaml` file with the following contents. Ensure that you add in other configuration values you might need for your installation to be successful.
 
-    ```yaml
-    gateway:
-      plugins:
-        configMaps:
-          - name: kong-plugin-myheader
-            pluginName: myheader
-    ```
+   ```yaml
+   gateway:
+     plugins:
+       configMaps:
+         - name: kong-plugin-myheader
+           pluginName: myheader
+   ```
 
-    If you need to include the migration scripts to the plugin, configure `userDefinedVolumes` and `userDefinedVolumeMounts` in `values.yaml` to mount the migration scripts to the {{site.base_gateway}} pod:
+   If you need to include the migration scripts to the plugin, configure `userDefinedVolumes` and `userDefinedVolumeMounts` in `values.yaml` to mount the migration scripts to the {{site.base_gateway}} pod:
 
-    ```yaml
-    gateway:
-      plugins:
-        configMaps:
-          - name: kong-plugin-myheader
-            pluginName: myheader
-      deployment:
-        userDefinedVolumes:
-          - name: "kong-plugin-myheader-migrations"
-            configMap:
-              name: "kong-plugin-myheader-migrations"
-        userDefinedVolumeMounts:
-          - name: "kong-plugin-myheader-migrations"
-            mountPath: "/opt/kong/plugins/myheader/migrations" # Should be the path /opt/kong/plugins/<plugin-name>/migrations
-    ```
+   ```yaml
+   gateway:
+     plugins:
+       configMaps:
+         - name: kong-plugin-myheader
+           pluginName: myheader
+     deployment:
+       userDefinedVolumes:
+         - name: "kong-plugin-myheader-migrations"
+           configMap:
+             name: "kong-plugin-myheader-migrations"
+       userDefinedVolumeMounts:
+         - name: "kong-plugin-myheader-migrations"
+           mountPath: "/opt/kong/plugins/myheader/migrations" # Should be the path /opt/kong/plugins/<plugin-name>/migrations
+   ```
 
 1. Upgrade {{site.kic_product_name}} with the new values
 
-    ```bash
-    helm upgrade --install kong kong/ingress -n kong --create-namespace --values values.yaml
-    ```
+   ```bash
+   helm upgrade --install kong kong/ingress -n kong --create-namespace --values values.yaml
+   ```
 
-{: data-deployment-topology="konnect" }
-## Register the plugin schema in Konnect
+{% konnect %}
+title: Register the plugin schema in Konnect
+step: true
+content: |
+  To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
 
-To see your custom plugin in {{site.konnect_product_name}}, you need to register the schema with your control plane: 
-
-```sh
-curl -X POST \
-  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
-  --header 'Content-Type: application/json' \
-  --header "Authorization: Bearer $KONNECT_TOKEN" \
-  --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
-```
+  ```sh
+  curl -X POST \
+    https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugin-schemas \
+    --header 'Content-Type: application/json' \
+    --header "Authorization: Bearer $KONNECT_TOKEN" \
+    --data "{\"lua_schema\": $(jq -Rs . './myheader/schema.lua')}"
+  ```
+{% endkonnect %}
 
 ## Using custom plugins
 
@@ -138,7 +140,7 @@ After you have set up {{ site.base_gateway }} with the custom plugin installed, 
 
 {% entity_example %}
 type: plugin
-indent: 4
+indent: 3
 data:
   name: my-custom-plugin
   plugin: myheader

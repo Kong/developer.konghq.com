@@ -35,6 +35,8 @@ icon: graph.svg
 
 The Forward to Virtual Cluster policy forwards messages from Kafka clients to virtual clusters configured with port or SNI routing.
 
+## Use cases
+
 The following examples provide some common configurations for the Forward to Virtual Cluster policy:
 
 <!--vale off-->

@@ -8,7 +8,7 @@ module Jekyll
       extend Forwardable
 
       def_delegators :@release_info, :latest_release_in_range, :latest_available_release, :releases,
-                     :min_release, :max_release
+                     :deduplicated_releases, :use_release_name?, :min_release, :max_release
 
       attr_reader :page, :site
 
@@ -37,8 +37,9 @@ module Jekyll
 
         page.data.merge!(
           'release' => latest_release_in_range,
-          'releases' => releases,
-          'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases:)
+          'releases' => deduplicated_releases,
+          'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases: deduplicated_releases,
+                                                             use_name: use_release_name?)
         )
       end
 
@@ -68,7 +69,7 @@ module Jekyll
           return [] if ENV['JEKYLL_ENV'] == 'production'
         end
 
-        releases.map do |release|
+        deduplicated_releases.map do |release|
           Page::Base.make_for(site:, page:, release:).to_jekyll_page
         end
       end

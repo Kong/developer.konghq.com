@@ -20,16 +20,12 @@ prereqs:
   inline:
     - title: "Create a Kubernetes {{site.mesh_product_name}} control plane"
       content: |
-        The {{site.mesh_product_name}} Control plan and Dataplane deployments are managed as part of the {{site.mesh_product_name}} Helm charts.  You will need a Kubernetes cluster to use this quick start.  
-        
-
-
+        The {{site.mesh_product_name}} Control plan and Dataplane deployments are managed as part of the {{site.mesh_product_name}} Helm charts.  You will need a Kubernetes cluster to use this quick start.
 ---
 
 
-{% tip %}
-To install the {{site.mesh_product_name}} components on Universal / VM / Bare metal, follow the instructions [here](/mesh/deploy-universal-self-managed).
-{% endtip %}
+{:.info}
+>To install the {{site.mesh_product_name}} components on Universal / VM / Bare metal, follow the instructions [here](/mesh/deploy-universal-self-managed).
 
 ## Install {{site.mesh_product_name}}
 
@@ -65,7 +61,7 @@ kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --ti
 ```
 
 {:.info}
-When using the {{site.konnect_short_name}} managed control plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
+>When using the {{site.konnect_short_name}} managed control plane, all changes to the Mesh must be applied using `kumactl`.  You can configure `kumactl` connectivity by clicking on **Actions** from the Mesh overview in [{{site.konnect_short_name}}](https://cloud.konghq.com/us/mesh-manager).
 
 
 ## Forward ports
@@ -88,10 +84,10 @@ By default, service-to-service traffic in the mesh is not encrypted. You can cha
 
 To enable mTLS using a built-in CA:
 
-{% warning %}
-Do not enable mTLS in an environment with existing workloads until you define a `MeshTrafficPermission` policy. 
-Without it, service-to-service communication will be blocked.
-{% endwarning %}
+{:.warning}
+>Do not enable mTLS in an environment with existing workloads until you define a `MeshTrafficPermission` policy. 
+>Without it, service-to-service communication will be blocked.
+
 
 ```sh
 cat <<EOF | kumactl apply -f -

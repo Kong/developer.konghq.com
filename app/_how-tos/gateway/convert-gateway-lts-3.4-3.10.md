@@ -75,17 +75,21 @@ See the [deck file convert](/deck/file/convert/) reference for a list of all the
 
 Use an existing backup file, or export the entity configuration an existing installation, for example 3.10:
 
-```sh
-deck gateway dump -o kong-3.4.yaml \
-    --konnect-token "$YOUR_KONNECT_PAT" \
-    --konnect-control-plane-name $YOUR_CP_NAME
-```
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  ```sh
+  deck gateway dump -o kong-3.4.yaml \
+      --konnect-token "$YOUR_KONNECT_PAT" \
+      --konnect-control-plane-name $YOUR_CP_NAME
+  ```
+{% endkonnect %}
 
-```sh
-deck gateway dump -o kong-3.4.yaml --all-workspaces
-```
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  ```sh
+  deck gateway dump -o kong-3.4.yaml --all-workspaces
+  ```
+{% endon_prem %}
 
 
 ## Convert configuration
@@ -114,21 +118,23 @@ deck file convert \
 
 ## Apply configuration
 
-Upload your new configuration to a {{site.konnect_short_name}} control plane:
-{: data-deployment-topology="konnect" }
+{% konnect %}
+content: |
+  Upload your new configuration to a {{site.konnect_short_name}} control plane:
 
-```sh
-deck gateway sync kong-3.10.yaml \
-    --konnect-token "$YOUR_KONNECT_PAT" \
-    --konnect-control-plane-name $YOUR_CP_NAME
-```
-{: data-deployment-topology="konnect" }
+  ```sh
+  deck gateway sync kong-3.10.yaml \
+      --konnect-token "$YOUR_KONNECT_PAT" \
+      --konnect-control-plane-name $YOUR_CP_NAME
+  ```
+{% endkonnect %}
 
-Upload your new configuration to the new environment:
-{: data-deployment-topology="on-prem" }
+{% on_prem %}
+content: |
+  Upload your new configuration to the new environment:
 
-```sh
-deck gateway sync kong-3.10.yaml \
-    --workspace default
-```
-{: data-deployment-topology="on-prem" }
+  ```sh
+  deck gateway sync kong-3.10.yaml \
+      --workspace default
+  ```
+{% endon_prem %}

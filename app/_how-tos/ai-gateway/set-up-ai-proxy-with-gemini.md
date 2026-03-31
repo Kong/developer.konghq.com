@@ -62,9 +62,9 @@ prereqs:
         1. Copy the generated API key.
         1. Export the API key as an environment variable:
 
-        ```sh
-        export DECK_GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
-        ```
+           ```sh
+           export DECK_GEMINI_API_KEY="YOUR-GEMINI-API-KEY"
+           ```
       icon_url: /assets/icons/gcp.svg
   entities:
     services:

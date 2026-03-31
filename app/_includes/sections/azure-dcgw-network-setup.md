@@ -1,3 +1,5 @@
+First, configure a Dedicated Cloud Gateway with an Azure network.
+
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
 1. From the **New** dropdown menu, select "New API gateway".
 1. Select **Dedicated Cloud**.
