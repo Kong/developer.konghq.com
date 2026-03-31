@@ -112,7 +112,7 @@ entities:
 
 ## Enable the Rate Limiting Advanced plugin
 
-The [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds. The low limit makes it easy to test.
+The [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) counts requests per consumer and rejects requests that exceed the configured limit. This configuration allows 5 requests per 30 seconds, intentionally low to make it easy to trigger during testing.
 
 {% entity_examples %}
 entities:
@@ -134,7 +134,7 @@ entities:
 
 ## Validate rate limit headers
 
-Send an authenticated request to the agent card endpoint and inspect the response headers. The agent card is a lightweight A2A operation (`GetAgentCard`) that returns agent metadata without calling an LLM, so responses are instant. This makes it practical for testing rate limits within a short window.
+Send an authenticated request to the agent card endpoint and inspect the response headers. The agent card is a lightweight A2A operation (`GetAgentCard`) that returns agent metadata without calling an LLM, so responses are instant.
 
 <!-- vale off -->
 {% validation request-check %}

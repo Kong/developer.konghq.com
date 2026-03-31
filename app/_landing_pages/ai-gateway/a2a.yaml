@@ -1,7 +1,7 @@
 metadata:
   title: "A2A Traffic Gateway"
   content_type: landing_page
-  description: This page introduces A2A Traffic Gateway capabilities in {{site.ai_gateway}}.
+  description: Observe Agent-to-Agent (A2A) protocol traffic through {{site.ai_gateway}}.
   products:
     - ai-gateway
     - gateway

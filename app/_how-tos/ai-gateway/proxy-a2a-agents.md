@@ -86,7 +86,7 @@ prereqs:
 
       The `COLLECTOR_OTLP_ENABLED` environment variable must be set to `true` to enable the OpenTelemetry Collector.
 
-      In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that Jaeger is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you. Export the host as an environment variable in the terminal window you used to set the other {{site.base_gateway}} environment variables:
+      In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that Jaeger is using because {{site.base_gateway}} is running in a container that has a different `localhost` than yours. Export the host as an environment variable in the terminal window you used to set the other {{site.base_gateway}} environment variables:
       ```sh
       export DECK_JAEGER_HOST=host.docker.internal
       ```
@@ -215,7 +215,7 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-The gateway proxies the request to the A2A agent and returns the agent's JSON-RPC response. A successful response contains either a completed task with artifacts, or a task in `input-required` state if the agent needs more information.
+{{site.base_gateway}} proxies the request to the A2A agent and returns the agent's JSON-RPC response. A successful response contains either a completed task with artifacts, or a task in `input-required` state if the agent needs more information.
 
 ## Validate traces in Jaeger
 

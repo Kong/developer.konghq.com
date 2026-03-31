@@ -43,5 +43,7 @@ Export your OpenAI API key and start the agent:
 export DECK_OPENAI_API_KEY='your-openai-key'
 docker compose up --build -d
 ```
+In this guide, we're using `host.docker.internal` as the service host instead of the container name because {{site.base_gateway}} is running in a container that has a different DNS resolver and cannot resolve Docker container names. Export the host as an environment variable:
 
+      
 The agent listens on port 10000 and uses the A2A JSON-RPC protocol to handle currency conversion queries.

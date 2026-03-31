@@ -105,7 +105,7 @@ entities:
 
 ## Enable the Request Size Limiting plugin
 
-The [Request Size Limiting plugin](/plugins/request-size-limiting/) rejects requests with a body larger than the configured limit. This configuration sets a 1 MB limit, which is intentionally low for testing with `FilePart` or `DataPart` payloads.
+The [Request Size Limiting plugin](/plugins/request-size-limiting/) rejects requests with a body larger than the configured limit. This configuration sets a 1 MB limit, which is intentionally low to make it easier to trigger in this guide.
 
 {% entity_examples %}
 entities:
@@ -146,7 +146,7 @@ body:
 {% endvalidation %}
 <!-- vale on -->
 
-The {{site.base_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
+{{site.base_gateway}} proxies the request to the upstream A2A agent and returns a JSON-RPC response.
 
 ## Validate oversized requests are rejected
 
