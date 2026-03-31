@@ -19,7 +19,7 @@ tldr:
   q: How do I conditionally execute a plugin based on request attributes?
   a: |
     The `condition` field on a plugin lets you write an ATC expression that controls whether the plugin runs for a given request. 
-    In this guide, learn how to attach a condition to the Request Termination plugin so that it only triggers when a specific request header is present.
+    Attach a condition to the Request Termination plugin so that it only triggers when a specific request header is present.
 
     While this guide uses a particular plugin, you can use conditions like this with any plugin that contains a `condition` field.
 
@@ -52,7 +52,7 @@ related_resources:
 faqs:
   - q: Can I see the results of a condition check in the {{site.base_gateway}} logs?
     a: |
-      If {{site.base_gateway}} is running with debug logging enabled, you can confirm the condition evaluation
+      If {{site.base_gateway}} is running with [debug logging enabled](/gateway/configuration/#log-level), you can confirm the condition evaluation
       result in `error.log`:
 
       ```
