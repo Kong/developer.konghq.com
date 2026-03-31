@@ -23,9 +23,10 @@ related_resources:
   - text: Dev Portal analytics
     url: /dev-portal/analytics/
 faqs:
-  - q: Why can't my users create dashboards even though they have the Dashboard Creator, Admin, or Editor role?
-    a: | 
-      {% include konnect/faqs/roles.md %}
+  - q: |
+      {% include faqs/report-dashboard-sharing.md section='question' feature="dashboard" %}
+    a: |
+      {% include faqs/report-dashboard-sharing.md section='answer' feature="dashboard" %}
 ---
 
 Custom Dashboards provide a flexible way to build, organize, and manage analytical views that are tailored to your organization’s needs. This functionality is available in [{{site.konnect_short_name}} Analytics](https://cloud.konghq.com/us/analytics/summary).
@@ -106,9 +107,12 @@ Preset filters appear as badges at the top of the dashboard. Viewers with ["View
 
 ## Role-based access
 
-Organization Admins can control who is allowed to **view** a custom dashboard. This is currently the only available permission level—there are no editor or owner roles beyond the original dashboard creator.
+Users with Org Admin, Dashboard Admin, or Dashboard Creator roles can control who is allowed to view, edit, and delete a custom dashboard.
 
 To manage dashboard visibility, Organization Admins can assign roles to users through [**Organization**](https://cloud.konghq.com/organization/) > **Users** in {{site.konnect_short_name}}, using the **Role Assignments** tab. Only users with the appropriate roles will be able to access dashboards that are restricted to specific teams or audiences.
+
+You can share dashboards with other {{site.konnect_short_name}} users and teams by navigating to the dashboard in {{site.observability}}, clicking the action menu, and selecting "Share". 
+Add users and teams to share the dashboard with them and configure their level of access (view only, edit, or admin).
 
 ### Permissions
 <!-- vale off-->
