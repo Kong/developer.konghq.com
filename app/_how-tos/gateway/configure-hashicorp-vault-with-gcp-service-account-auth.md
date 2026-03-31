@@ -187,7 +187,7 @@ export GCP_AUTH_ROLE=kong-role
 ## Create a Vault entity for HashiCorp Vault
 
 Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault GCP IAM authentication:
-
+<!--vale off-->
 {% control_plane_request %}
 url: /vaults
 method: POST
@@ -208,7 +208,7 @@ body:
     gcp_service_account: $GCP_SERVICE_ACCOUNT_EMAIL
     gcp_jwt_exp: 900
 {% endcontrol_plane_request %}
-
+<!--vale on-->
 
 ## Validate
 

@@ -203,6 +203,7 @@ export AWS_AUTH_ROLE=kong-role
 ## Create a Vault entity for HashiCorp Vault
 
 Create a [Vault entity](/gateway/entities/vault/) with the required parameters for HashiCorp Vault AWS EC2 authentication:
+<!--vale off-->
 {% control_plane_request %}
 url: /vaults
 method: POST
@@ -220,6 +221,7 @@ body:
     aws_auth_role: $AWS_AUTH_ROLE
     aws_auth_nonce: $AWS_AUTH_NONCE
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 ## Validate
 

@@ -190,7 +190,7 @@ export AWS_AUTH_ROLE=kong-role
 ## Create a Vault entity for HashiCorp Vault
 
 Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault AWS IAM authentication:
-
+<!--vale off-->
 {% control_plane_request %}
 url: /vaults
 method: POST
@@ -208,6 +208,7 @@ body:
     aws_auth_role: $AWS_AUTH_ROLE
     aws_auth_region: $AWS_AUTH_REGION
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 {:.info}
 > **Cross-account access:** If {{site.base_gateway}} and your Vault server are in different AWS accounts, configure `aws_assume_role_arn` with the ARN of the role Kong should assume in the target account, and `aws_role_session_name` with a session identifier. If you configure the Vault this way for cross-account access, `aws_access_key_id` and `aws_secret_access_key` are optional.

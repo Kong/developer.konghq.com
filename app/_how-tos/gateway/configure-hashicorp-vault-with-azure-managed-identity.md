@@ -221,6 +221,7 @@ export AZURE_AUTH_ROLE=kong-role
 ## Create a Vault entity for HashiCorp Vault
 
 Create a [Vault entity](/gateway/entities/vault/) with the required parameters for HashiCorp Vault Azure managed identity authentication:
+<!--vale off-->
 {% control_plane_request %}
 url: /vaults
 method: POST
@@ -237,6 +238,7 @@ body:
     auth_method: azure
     azure_auth_role: $AZURE_AUTH_ROLE
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 ## Validate
 
