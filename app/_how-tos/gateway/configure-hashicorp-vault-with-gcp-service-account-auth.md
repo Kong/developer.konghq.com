@@ -84,6 +84,14 @@ prereqs:
            1. Click **Done**.
 
       icon_url: /assets/icons/google-cloud.svg
+    - title: HashiCorp Vault
+      content: |
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault GCP authentication documentation](https://developer.hashicorp.com/vault/docs/auth/gcp) for the configuration changes you'll need to make.
+      icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
   inline:

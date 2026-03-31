@@ -55,35 +55,11 @@ tldr:
       * Set `config.azure_auth_role` to the Vault role name. The Azure managed identity token is provided automatically by the Azure Instance Metadata Service — no credential files are required on the {{site.base_gateway}} side.
 
 tools:
-    - deck
+    - admin-api
 
 prereqs:
   skip_product: true
   inline:
-    - title: Azure VM with managed identity
-      content: |
-        To complete this tutorial, {{site.base_gateway}} must be running on an Azure VM with a system-assigned managed identity enabled. The managed identity token is automatically provided by the [Azure Instance Metadata Service](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-use-vm-token), so no credential files are required on the {{site.base_gateway}} side.
-
-        1. [Create an Azure VM with a system-assigned managed identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-configure-managed-identities) enabled. 
-           When creating the VM, on the **Management** tab, in the **Identity** section, select the **Enable system-assigned managed identity** checkbox.
-
-        1. Copy the following values for your VM and export them as environment variables:
-           ```sh
-           export AZURE_SUBSCRIPTION_ID="YOUR-SUBSCRIPTION-ID"
-           export AZURE_RESOURCE_GROUP="YOUR-RESOURCE-GROUP"
-           export AZURE_VM_NAME="YOUR-VM-NAME"
-           ```
-           You can find these values in the Azure portal under your VM's **Overview** tab.
-
-        1. Copy the service principal ID of your VM's managed identity and export it:
-           ```sh
-           export AZURE_SERVICE_PRINCIPAL_ID="YOUR-SERVICE-PRINCIPAL-ID"
-           ```
-           You can find this in the Azure portal under your VM's **Security > Identity** tab, under **System assigned > Object (principal) ID**.
-
-        If {{site.base_gateway}} isn't running on an Azure VM, this auth method won't work. The Azure Instance Metadata Service is only available from within Azure infrastructure.
-
-      icon_url: /assets/icons/azure.svg
     - title: Azure AD app registration for the Vault server
       content: |
         HashiCorp Vault must call Azure APIs to verify incoming managed identity tokens. You need an Azure AD app registration that Vault will use as the resource for generating MSI access tokens, with a client secret for authentication.
@@ -100,12 +76,42 @@ prereqs:
            ```
            You can find the tenant ID and client ID in the Azure portal under your app registration's **Overview** tab. The client secret value is only shown at creation time.
 
-        1. Grant the app registration the following role assignment so Vault can verify VM identity during authentication. In the [Azure portal](https://portal.azure.com/), go to your subscription or resource group, select **Access control (IAM)**, and assign the **Reader** role to your app registration's service principal:
+        1. [Grant the app registration the following role assignment](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal) so Vault can verify VM identity during authentication. In the [Azure portal](https://portal.azure.com/), go to your subscription or resource group, select **Access control (IAM)**, select the app you created as a member, and assign the **Reader** role to your app registration's service principal:
            * `Microsoft.Compute/virtualMachines/*/read`
 
-           For instructions, see [Assign Azure roles using the Azure portal](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal).
+      icon_url: /assets/icons/azure.svg
+    - title: Azure VM with managed identity
+      content: |
+        To complete this tutorial, {{site.base_gateway}} must be running on an Azure VM with a system-assigned managed identity enabled. The managed identity token is automatically provided by the [Azure Instance Metadata Service](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-use-vm-token), so no credential files are required on the {{site.base_gateway}} side.
+
+        1. [Create an Azure VM with a system-assigned managed identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-configure-managed-identities) enabled. 
+           When creating the VM, go to **Management** > **Identity** and select the **Enable system-assigned managed identity** checkbox.
+
+        1. Copy the following values for your VM and export them as environment variables:
+           ```sh
+           export AZURE_SUBSCRIPTION_ID="YOUR-SUBSCRIPTION-ID"
+           export AZURE_RESOURCE_GROUP="YOUR-RESOURCE-GROUP"
+           export AZURE_VM_NAME="YOUR-VM-NAME"
+           ```
+           You can find these values in the Azure portal in your VM's **Overview** tab.
+
+        1. Copy the service principal ID of your VM's managed identity and export it:
+           ```sh
+           export AZURE_SERVICE_PRINCIPAL_ID="YOUR-SERVICE-PRINCIPAL-ID"
+           ```
+           You can find this in the Azure portal in your VM's **Security > Identity** tab, under **System assigned > Object (principal) ID**.
+
+        If {{site.base_gateway}} isn't running on an Azure VM, this auth method won't work. The Azure Instance Metadata Service is only available from within Azure infrastructure.
 
       icon_url: /assets/icons/azure.svg
+    - title: HashiCorp Vault
+      content: |
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault Azure authentication documentation](https://developer.hashicorp.com/vault/docs/auth/azure) for the configuration changes you'll need to make.
+      icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
   inline:
@@ -129,9 +135,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 faqs:
-  - q: What if {{site.base_gateway}} is not running on an Azure VM?
-    a: |
-      The `azure` auth method requires {{site.base_gateway}} to run on an Azure VM with a managed identity enabled. It relies on the Azure Instance Metadata Service to provide the identity token automatically. If {{site.base_gateway}} is not running on Azure infrastructure, this auth method will not work.
   - q: Can I use a user-assigned managed identity instead of a system-assigned managed identity?
     a: |
       Yes. Azure supports both system-assigned and user-assigned managed identities. For environments with high ephemeral workloads where VMs are frequently recreated, HashiCorp recommends user-assigned identities to avoid accumulating Vault entities. See [Azure managed identities](https://developer.hashicorp.com/vault/docs/auth/azure#azure-managed-identities) in the HashiCorp Vault documentation for more information.
@@ -203,49 +206,45 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 
 ## Set environment variables
 
+Find the internal IP for your VM:
+```sh
+hostname -I
+```
+
 Export the following environment variables before creating the Vault entity:
 
 ```sh
-export DECK_HCV_HOST=host.docker.internal
-export DECK_AZURE_AUTH_ROLE=kong-role
+export HCV_HOST="YOUR VM INTERNAL IP"
+export AZURE_AUTH_ROLE=kong-role
 ```
-
-In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
 
 ## Create a Vault entity for HashiCorp Vault
 
-Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault Azure managed identity authentication:
-
-{% entity_examples %}
-entities:
-  vaults:
-    - name: hcv
-      prefix: hashicorp-vault
-      description: Storing secrets in HashiCorp Vault
-      config:
-        host: ${hcv_host}
-        kv: v1
-        mount: kong
-        port: 8200
-        protocol: http
-        auth_method: azure
-        azure_auth_role: ${azure_auth_role}
-
-variables:
-  hcv_host:
-    value: $HCV_HOST
-  azure_auth_role:
-    value: $AZURE_AUTH_ROLE
-{% endentity_examples %}
+Create a [Vault entity](/gateway/entities/vault/) with the required parameters for HashiCorp Vault Azure managed identity authentication:
+{% control_plane_request %}
+url: /vaults
+method: POST
+body:
+  name: hcv
+  prefix: hashicorp-vault
+  description: Storing secrets in HashiCorp Vault
+  config:
+    host: $HCV_HOST
+    kv: v1
+    mount: kong
+    port: 8200
+    protocol: http
+    auth_method: azure
+    azure_auth_role: $AZURE_AUTH_ROLE
+{% endcontrol_plane_request %}
 
 ## Validate
 
-To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command within the Data Plane container.
+To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command:
 
-{% validation vault-secret %}
-secret: '{vault://hashicorp-vault/headers/request/header}'
-value: 'x-kong:test'
-{% endvalidation %}
+```sh
+sudo -E kong vault get {vault://hashicorp-vault/headers/request/header}
+```
 
 If the vault was configured correctly, this command returns the value of the secret. You can use `{vault://hashicorp-vault/headers/request/header}` to reference the secret in any referenceable field.
 

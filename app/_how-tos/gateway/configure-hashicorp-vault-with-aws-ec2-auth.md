@@ -54,7 +54,7 @@ tldr:
       * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service — no AWS credentials are required on {{site.base_gateway}}'s side.
 
 tools:
-    - deck
+    - admin-api
 
 prereqs:
   skip_product: true
@@ -86,6 +86,14 @@ prereqs:
         export VAULT_AWS_ACCESS_KEY="VAULT-SERVER-ACCESS-KEY"
         export VAULT_AWS_SECRET_KEY="VAULT-SERVER-SECRET-KEY"
         ```
+      icon_url: /assets/icons/hashicorp.svg
+    - title: HashiCorp Vault
+      content: |
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault AWS authentication documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for the configuration changes you'll need to make.
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -180,43 +188,38 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 
 ## Set environment variables
 
+Find the internal IP for your VM:
+```sh
+hostname -I
+```
+
 Export the following environment variables before creating the Vault entity:
 
 ```sh
-export DECK_HCV_HOST=host.docker.internal
-export DECK_AWS_AUTH_ROLE=kong-role
+export HCV_HOST="YOUR VM INTERNAL IP"
+export AWS_AUTH_ROLE=kong-role
 ```
-
-In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
 
 ## Create a Vault entity for HashiCorp Vault
 
-Using decK, create a [Vault entity](/gateway/entities/vault/) in the `kong.yaml` file with the required parameters for HashiCorp Vault AWS EC2 authentication:
-
-{% entity_examples %}
-entities:
-  vaults:
-    - name: hcv
-      prefix: hashicorp-vault
-      description: Storing secrets in HashiCorp Vault
-      config:
-        host: ${hcv_host}
-        kv: v1
-        mount: kong
-        port: 8200
-        protocol: http
-        auth_method: aws_ec2
-        aws_auth_role: ${aws_auth_role}
-        aws_auth_nonce: ${aws_auth_nonce}
-
-variables:
-  hcv_host:
-    value: $HCV_HOST
-  aws_auth_role:
-    value: $AWS_AUTH_ROLE
-  aws_auth_nonce:
-    value: $AWS_AUTH_NONCE
-{% endentity_examples %}
+Create a [Vault entity](/gateway/entities/vault/) with the required parameters for HashiCorp Vault AWS EC2 authentication:
+{% control_plane_request %}
+url: /vaults
+method: POST
+body:
+  name: hcv
+  prefix: hashicorp-vault
+  description: Storing secrets in HashiCorp Vault
+  config:
+    host: $HCV_HOST
+    kv: v1
+    mount: kong
+    port: 8200
+    protocol: http
+    auth_method: aws_ec2
+    aws_auth_role: $AWS_AUTH_ROLE
+    aws_auth_nonce: $AWS_AUTH_NONCE
+{% endcontrol_plane_request %}
 
 ## Validate
 

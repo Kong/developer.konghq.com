@@ -80,6 +80,14 @@ prereqs:
         If {{site.base_gateway}} isn't running on a GCE instance, use [GCP service account authentication](/how-to/configure-hashicorp-vault-with-gcp-service-account-auth/) instead.
 
       icon_url: /assets/icons/google-cloud.svg
+    - title: HashiCorp Vault
+      content: |
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault GCP authentication documentation](https://developer.hashicorp.com/vault/docs/auth/gcp) for the configuration changes you'll need to make.
+      icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
   inline:
@@ -178,8 +186,6 @@ Export the following environment variables before creating the Vault entity:
 export HCV_HOST="YOUR VM INTERNAL IP"
 export GCP_AUTH_ROLE=kong-role
 ```
-
-In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
 
 ## Create a Vault entity for HashiCorp Vault
 

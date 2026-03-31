@@ -47,11 +47,11 @@ tldr:
     a: |
       Enable the AWS auth method in HashiCorp Vault, configure it with credentials that can verify IAM identity, and create an IAM role bound to {{site.base_gateway}}'s IAM principal ARN.
 
-      Then in {{site.base_gateway}}:
-      * Configure a Vault entity with `config.auth_method` set to `aws_iam`.
+      Then in {{site.base_gateway}}, configure a Vault entity with the following:
+      * Set `config.auth_method` to `aws_iam`.
       * Set `config.aws_auth_role` to the Vault role name.
       * Set `config.aws_auth_region` to your AWS region.
-      * Optionally set `config.aws_access_key_id` and `config.aws_secret_access_key` for {{site.base_gateway}}'s AWS credentials. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain.
+      * Optionally, set `config.aws_access_key_id` and `config.aws_secret_access_key` for {{site.base_gateway}}'s AWS credentials. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain.
 
 tools:
     - admin-api
@@ -61,7 +61,7 @@ prereqs:
   inline:
     - title: AWS IAM principal for {{site.base_gateway}}
       content: |
-        You need an [AWS IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) or [user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
+        You need an [AWS IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
 
         {{site.base_gateway}}'s IAM principal doesn't need any additional IAM policies. The `sts:GetCallerIdentity` action that Vault uses to verify the identity is available to all authenticated AWS principals by default.
 
@@ -73,17 +73,13 @@ prereqs:
         export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
         ```
       icon_url: /assets/icons/aws.svg
-    - title: AWS credentials for the Vault server
+    - title: HashiCorp Vault
       content: |
-        You need an [AWS IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) for HashiCorp Vault to call the AWS IAM APIs to verify incoming authentication requests. The Vault server needs IAM credentials with the following permissions:
-        * `iam:GetUser`
-        * `iam:GetRole`
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
 
-        Export the Vault server's AWS credentials:
-        ```sh
-        export VAULT_AWS_ACCESS_KEY="VAULT-SERVER-ACCESS-KEY"
-        export VAULT_AWS_SECRET_KEY="VAULT-SERVER-SECRET-KEY"
-        ```
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
+        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
+        If this is the case, see the [HashiCorp Vault AWS authentication documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for the configuration changes you'll need to make.
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -98,8 +94,8 @@ cleanup:
         Unset environment variables:
         ```sh
         unset VAULT_ADDR
-        unset VAULT_AWS_ACCESS_KEY
-        unset VAULT_AWS_SECRET_KEY
+        unset AWS_ACCESS_KEY_ID
+        unset AWS_SECRET_ACCESS_KEY
         ```
       icon_url: /assets/icons/hashicorp.svg
     - title: Destroy the {{site.base_gateway}} container
@@ -146,6 +142,14 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
    vault auth enable aws
    ```
 
+1. (skip to try out) Configure the AWS client with access keys:
+   ```sh
+   vault write auth/aws/config/client \
+    secret_key=$AWS_SECRET_ACCESS_KEY \
+    access_key=$AWS_ACCESS_KEY_ID \
+    use_sts_region_from_client=true
+   ```
+
 1. Create an IAM role that binds to {{site.base_gateway}}'s IAM principal:
    ```sh
    vault write auth/aws/role/kong-role \
@@ -182,8 +186,6 @@ Export the following environment variables before creating the Vault entity:
 export HCV_HOST="YOUR VM INTERNAL IP"
 export AWS_AUTH_ROLE=kong-role
 ```
-
-In this tutorial, `host.docker.internal` is used as the host instead of `localhost` because {{site.base_gateway}} is running in a Docker container and uses a different `localhost` from the Vault server.
 
 ## Create a Vault entity for HashiCorp Vault
 
