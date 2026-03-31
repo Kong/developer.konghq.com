@@ -63,7 +63,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
+    image: confluentinc/cp-schema-registry:7.8.7
     networks:
       - kafka
     container_name: schema-registry

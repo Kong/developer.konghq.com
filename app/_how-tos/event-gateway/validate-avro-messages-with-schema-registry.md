@@ -231,7 +231,7 @@ Register an Avro schema for the `app_logs` topic in the Confluent Schema Registr
 <!--vale off-->
 {% validation custom-command %}
 command: |
-  curl -s -X POST http://localhost:8081/subjects/app_logs-value/versions \
+  curl -sS --fail -X POST http://localhost:8081/subjects/app_logs-value/versions \
     -H "Content-Type: application/vnd.schemaregistry.v1+json" \
     -d '{"schema": "{\"type\": \"record\", \"name\": \"AppLog\", \"namespace\": \"com.example\", \"fields\": [{\"name\": \"level\", \"type\": \"string\"}, {\"name\": \"message\", \"type\": \"string\"}]}"}'
 expected:
@@ -268,7 +268,7 @@ message produced (partition=0	offset=0)
 
 ### Produce a message that doesn't match the schema
 
-Try to produce a valid JSON message that doesn't conform to the registered Avro schema. This message has an `severity` field instead of `level`:
+Try to produce a valid JSON message that doesn't conform to the registered Avro schema. This message has a `severity` field instead of `level`:
 
 <!--vale off-->
 {% validation custom-command %}
