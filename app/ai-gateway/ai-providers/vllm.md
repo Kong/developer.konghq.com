@@ -45,14 +45,6 @@ related_resources:
   - text: AI providers
     url: /ai-gateway/ai-providers/
 
-# how_to_list:
-#   config:
-#     products:
-#       - ai-gateway
-#     tags:
-#       - vllm
-#     description: true
-#     view_more: false
 ---
 
 {% include plugins/ai-proxy/providers/providers.md providers=site.data.plugins.ai-proxy provider_name="vLLM" %}
@@ -83,5 +75,3 @@ variables:
 > For more configuration options and examples, see:
 > - [AI Proxy examples](/plugins/ai-proxy/examples/)
 > - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
-
-<!-- {% include plugins/ai-proxy/providers/how-tos.md %} -->
