@@ -243,12 +243,12 @@ rows:
     category: "Count"
     description: |
       Number of control planes in your organization.
-  - metric: "Data plane node count"
+  - metric: "Node count"
     category: "Count"
     description: |
       Number of data plane nodes in your organization.
       You can also filter this metric by data plane node version.
-  - metric: "Gateway Service count"
+  - metric: "Service count"
     category: "Count"
     description: |
       Number of Gateway Services in your control plane.
