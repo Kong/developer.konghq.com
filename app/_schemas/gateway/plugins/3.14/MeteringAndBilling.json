@@ -2,59 +2,61 @@
   "properties": {
     "config": {
       "properties": {
+        "api_token": {
+          "description": "Bearer token for authenticating with the ingest endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+          "type": "string",
+          "x-encrypted": true,
+          "x-referenceable": true
+        },
         "attributes": {
-          "description": "List of attributes to add to the events",
+          "description": "Capture custom properties to the usage event data payload for pricing dimensions or reporting. Attributes add dimensions like provider, department or project that your billing model needs for tiered or per-dimension pricing.",
           "items": {
             "properties": {
-              "field": {
+              "event_property_name": {
+                "description": "The property name in the usage event data payload.",
                 "type": "string"
               },
-              "in": {
+              "look_up_value_in": {
+                "description": "The header name or query parameter that contains the value, e.g 'x-department-id'",
+                "type": "string"
+              },
+              "source": {
+                "description": "Where to find this attribute in the request.",
                 "enum": [
                   "header",
                   "query"
                 ],
                 "type": "string"
-              },
-              "key": {
-                "type": "string"
               }
             },
             "required": [
-              "field",
-              "in",
-              "key"
+              "event_property_name",
+              "look_up_value_in",
+              "source"
             ],
             "type": "object"
           },
           "type": "array"
         },
-        "auth_token": {
-          "description": "The auth token to send to cloud events endpoint. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
+        "ingest_endpoint": {
+          "description": "The HTTP endpoint where usage events are sent. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).",
           "type": "string",
-          "x-encrypted": true,
-          "x-referenceable": true
-        },
-        "enable_ai_llm": {
-          "default": true,
-          "description": "Whether to emit events for AI LLM requests and responses.",
-          "type": "boolean"
-        },
-        "enable_api_requests": {
-          "default": true,
-          "description": "Whether to emit an event for API requests.",
-          "type": "boolean"
-        },
-        "http_endpoint": {
-          "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search. \nThis field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault). \nThis field is [encrypted](/gateway/keyring/).",
-          "type": "string",
-          "x-encrypted": true,
           "x-referenceable": true
         },
         "keepalive": {
           "default": 60000,
-          "description": "An optional value in milliseconds that defines how long an idle connection will live before being closed.",
+          "description": "How long in milliseconds an idle connection to the ingest endpoint is kept open before being closed.",
           "type": "number"
+        },
+        "meter_ai_token_usage": {
+          "default": true,
+          "description": "Emit events for LLM input and output tokens on AI Gateway requests.",
+          "type": "boolean"
+        },
+        "meter_api_requests": {
+          "default": true,
+          "description": "Emit a usage event for each API Gateway request.",
+          "type": "boolean"
         },
         "queue": {
           "properties": {
@@ -116,17 +118,19 @@
         },
         "ssl_verify": {
           "default": true,
-          "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+          "description": "Verify the TLS certificate presented by the ingest endpoint.",
           "type": "boolean"
         },
         "subject": {
-          "description": "Where to retrieve the subject of the event. Can be set to consumer, application, header, or query. If set to header or query, the field property must be set to specify which header or query parameter to use as the subject.",
+          "description": "The subject identifies who gets billed for each request. Choose where the plugin should look for the customer identifier.",
           "properties": {
             "field": {
+              "description": "The header name, query parameter, consumer field, or application field that contains the customer identifier, e.g. 'x-customer-id'",
               "type": "string"
             },
-            "in": {
+            "look_up_value_in": {
               "default": "consumer",
+              "description": "Where to find the customer identifier in the request.",
               "enum": [
                 "application",
                 "consumer",
@@ -140,13 +144,13 @@
         },
         "timeout": {
           "default": 10000,
-          "description": "An optional timeout in milliseconds when sending data to the upstream server.",
+          "description": "Maximum time in milliseconds to wait for a response from the ingest endpoint.",
           "type": "number"
         }
       },
       "required": [
-        "auth_token",
-        "http_endpoint"
+        "api_token",
+        "ingest_endpoint"
       ],
       "type": "object"
     },
