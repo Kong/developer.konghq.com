@@ -1,0 +1,45 @@
+title: Use a custom JWKS endpoint for discovery
+description: Set a custom JWKS endpoint for the OpenID Connect plugin to use instead of the one returned by the internal discovery mechanism.  
+extended_description: |
+  Set a custom JWKS endpoint for the OpenID Connect plugin to use instead of the one returned by the internal discovery mechanism.
+  This is useful when the IdP exposes a non-standard JWKS endpoint.
+
+  This option is similar to `extra_jwks_uris`, but it overrides the endpoint instead of providing multiple fallback options.
+  If you need to use multiple JWKS endpoints, see the [Token validation for multiple IdPs example](/examples/openid-connect/extra-jwks/).
+  
+weight: 698
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: ${issuer}
+  auth_methods:
+    - bearer
+  jwks_endpoint: ${jwks_endpoint}
+  issuers_allowed:
+    - issuer-url-for-example-host1
+    - issuer-url-for-example-host2
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
+  jwks_endpoint:
+    value: $JWKS_ENDPOINT
+    description: |
+      The URL of the JWKS endpoint to use instead of the `jwks_uri` returned by the internal discovery mechanism. 
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: other
+
+min_version:
+  gateway: '3.14'
