@@ -244,6 +244,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: A2A traffic gateway
+            description: Secure, govern, and observe agent-to-agent (A2A) traffic with {{site.ai_gateway}}'s A2A protocol support
+            icon: /assets/icons/plugins/ai-a2a-proxy.png
+            cta:
+              url: /ai-gateway/a2a/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Automated RAG injection
             description: Automatically embed RAG logic into your workflows
             icon: /assets/icons/plugins/ai-rag-injector.png

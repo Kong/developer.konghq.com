@@ -1,0 +1,136 @@
+<svg width="2546" height="1400" viewBox="0 0 2546 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<rect width="2546" height="1400" fill="rgb(var(--color-bg-primary))"/>
+
+<g filter="url(#glow)">
+  <rect x="750" y="300" width="1046" height="600" fill="url(#gradGlow)"/>
+</g>
+
+<rect x="940" y="370" width="666" height="460" rx="24" fill="#1A1D24" stroke="#2A2D35" stroke-width="1.5"/>
+
+<text x="1273" y="430" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="28" font-weight="600" fill="#FFFFFF">Kong AI Gateway</text>
+
+<rect x="1010" y="480" width="526" height="300" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+
+<text x="1273" y="525" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500" fill="#E0E4EA">AI A2A Proxy</text>
+
+<rect x="1050" y="555" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
+<text x="1150" y="581" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">Protocol detection</text>
+
+<rect x="1296" y="555" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
+<text x="1396" y="581" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">URL rewriting</text>
+
+<rect x="1050" y="618" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
+<text x="1150" y="644" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">OTel tracing</text>
+
+<rect x="1296" y="618" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
+<text x="1396" y="644" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">SSE streaming</text>
+
+<rect x="1050" y="681" width="200" height="42" rx="8" fill="#1C3A2E" stroke="#11A06B" stroke-width="0.8"/>
+<text x="1150" y="707" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#4ADE80">Task extraction</text>
+
+<rect x="1296" y="681" width="200" height="42" rx="8" fill="#1C2B3E" stroke="#286FEB" stroke-width="0.8"/>
+<text x="1396" y="707" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" font-weight="500" fill="#7CB3F4">Analytics pipeline</text>
+
+<line x1="1050" y1="745" x2="1496" y2="745" stroke="#3A3D45" stroke-width="0.5"/>
+
+<rect x="1080" y="755" width="110" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
+<text x="1135" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">JSON-RPC</text>
+
+<rect x="1210" y="755" width="80" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
+<text x="1250" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">REST</text>
+
+<rect x="1310" y="755" width="80" height="28" rx="6" fill="#2A1E3E" stroke="#7F77DD" stroke-width="0.6"/>
+<text x="1350" y="774" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="11" font-weight="500" fill="#AFA9EC">SSE</text>
+
+
+<text x="320" y="390" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="14" font-weight="500" fill="#828F8F" letter-spacing="2">A2A CLIENTS</text>
+
+<rect x="160" y="420" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="320" y="465" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
+<text x="320" y="495" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Orchestration agent</text>
+
+<rect x="160" y="560" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="320" y="605" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
+<text x="320" y="635" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Task manager</text>
+
+<rect x="160" y="700" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="320" y="745" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">A2A client</text>
+<text x="320" y="775" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Monitoring dashboard</text>
+
+
+<text x="2226" y="390" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="14" font-weight="500" fill="#828F8F" letter-spacing="2">UPSTREAM AGENTS</text>
+
+<rect x="2066" y="420" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="2226" y="465" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Research agent</text>
+<text x="2226" y="495" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Search, summarize, cite</text>
+
+<rect x="2066" y="560" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="2226" y="605" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Code agent</text>
+<text x="2226" y="635" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Generate, review, deploy</text>
+
+<rect x="2066" y="700" width="320" height="100" rx="16" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<text x="2226" y="745" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="18" font-weight="500" fill="#E0E4EA">Data agent</text>
+<text x="2226" y="775" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#828F8F">Query, transform, report</text>
+
+
+<path d="M480 470 C720 470, 780 540, 940 540" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
+<path d="M480 610 C720 610, 780 590, 940 590" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
+<path d="M480 750 C720 750, 780 650, 940 650" stroke="url(#lineGradL)" stroke-width="1.5" fill="none"/>
+
+<path d="M1606 540 C1766 540, 1830 470, 2066 470" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
+<path d="M1606 590 C1766 590, 1830 610, 2066 610" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
+<path d="M1606 650 C1766 650, 1830 750, 2066 750" stroke="url(#lineGradR)" stroke-width="1.5" fill="none"/>
+
+
+<rect x="970" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<circle cx="1010" cy="928" r="8" fill="#11A06B" opacity="0.6"/>
+<circle cx="1010" cy="928" r="4" fill="#11A06B"/>
+<text x="1030" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">Task tracking</text>
+
+<rect x="1198" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<circle cx="1238" cy="928" r="8" fill="#286FEB" opacity="0.6"/>
+<circle cx="1238" cy="928" r="4" fill="#286FEB"/>
+<text x="1258" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">OTel spans</text>
+
+<rect x="1426" y="900" width="200" height="56" rx="10" fill="#242529" stroke="#3A3D45" stroke-width="1"/>
+<circle cx="1466" cy="928" r="8" fill="#7F77DD" opacity="0.6"/>
+<circle cx="1466" cy="928" r="4" fill="#7F77DD"/>
+<text x="1486" y="933" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="13" fill="#AAB4BB">Konnect analytics</text>
+
+<path d="M1273 830 C1273 860, 1273 870, 1273 895" stroke="url(#arrowGradDown)" stroke-width="1.5" fill="none"/>
+
+
+<text x="1273" y="1060" text-anchor="middle" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="44" font-weight="600" fill="#AAB4BB" letter-spacing="-1">Agent-to-Agent protocol</text>
+
+<defs>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="80"/>
+  </filter>
+
+  <linearGradient id="gradGlow" x1="1820" y1="450" x2="1020" y2="1050" gradientUnits="userSpaceOnUse">
+    <stop offset="0.05" stop-color="#E9EEF7" stop-opacity="0"/>
+    <stop offset="0.36" stop-color="#11A06B"/>
+    <stop offset="0.65" stop-color="#286FEB"/>
+    <stop offset="1" stop-color="#E9EEF7" stop-opacity="0"/>
+  </linearGradient>
+
+  <linearGradient id="lineGradL" x1="480" y1="0" x2="940" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#286FEB" stop-opacity="0.1"/>
+    <stop offset="0.4" stop-color="#286FEB" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#286FEB" stop-opacity="0.8"/>
+  </linearGradient>
+
+  <linearGradient id="lineGradR" x1="1606" y1="0" x2="2066" y2="0" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#286FEB" stop-opacity="0.8"/>
+    <stop offset="0.6" stop-color="#286FEB" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#286FEB" stop-opacity="0.1"/>
+  </linearGradient>
+
+  <linearGradient id="arrowGradDown" x1="0" y1="830" x2="0" y2="895" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#286FEB" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#286FEB" stop-opacity="0.15"/>
+  </linearGradient>
+</defs>
+
+</svg>
