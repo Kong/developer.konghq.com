@@ -64,7 +64,7 @@ For more information, see [What is API Gateway Authentication?](https://konghq.c
 
 {% entity_example %}
 type: plugin
-indent: 4
+indent: 3
 data:
   name: key-auth
   
@@ -75,27 +75,27 @@ data:
 1. Test that the API is secure by sending a request using `curl -i $PROXY_IP/echo`:
 
 {% validation unauthorized-check %}
-indent: 4
+indent: 3
 url: /echo
 konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-    You should see the response:
+   You should see the response:
 
-    ```text
-    HTTP/1.1 401 Unauthorized
-    Date: Wed, 11 Jan 2044 18:33:46 GMT
-    Content-Type: application/json; charset=utf-8
-    WWW-Authenticate: Key realm="kong"
-    Content-Length: 45
-    X-Kong-Response-Latency: 1
-    Server: kong/{{site.latest_gateway_oss_version}}
+   ```text
+   HTTP/1.1 401 Unauthorized
+   Date: Wed, 11 Jan 2044 18:33:46 GMT
+   Content-Type: application/json; charset=utf-8
+   WWW-Authenticate: Key realm="kong"
+   Content-Length: 45
+   X-Kong-Response-Latency: 1
+   Server: kong/{{site.latest_gateway_oss_version}}
 
-    {
-      "message":"No API key found in request"
-    }
-    ```
+   {
+     "message":"No API key found in request"
+   }
+   ```
 
 ## Set up Consumers and keys 
 
@@ -105,24 +105,24 @@ Keys are stored as Kubernetes `Secrets` and Consumers are managed with the `Kong
 
 1. Create a new `Secret` labeled to use `key-auth` credential type:
 
-    ```bash
-    echo '
-    apiVersion: v1
-    kind: Secret
-    metadata:
-       name: alex-key-auth
-       namespace: kong
-       labels:
-          konghq.com/credential: key-auth
-    stringData:
-       key: hello_world
-    ' | kubectl apply -f -
-    ```
+   ```bash
+   echo '
+   apiVersion: v1
+   kind: Secret
+   metadata:
+      name: alex-key-auth
+      namespace: kong
+      labels:
+         konghq.com/credential: key-auth
+   stringData:
+      key: hello_world
+   ' | kubectl apply -f -
+   ```
 
 1. Create a new Consumer and attach the credential:
 
 {% entity_example %}
-indent: 4
+indent: 3
 type: consumer
 data:
   username: alex
@@ -133,7 +133,7 @@ data:
 1. Make a request to the API and provide your `apikey`:
 
 {% validation request-check %}
-indent: 4
+indent: 3
 url: /echo
 headers:
   - 'apikey:hello_world'
@@ -142,14 +142,14 @@ konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-    The results should look like this:
+   The results should look like this:
 
-    ```
-    Welcome, you are connected to node orbstack.
-    Running on Pod echo-965f7cf84-mvf6g.
-    In namespace default.
-    With IP address 192.168.194.10.
-    ```
+   ```
+   Welcome, you are connected to node orbstack.
+   Running on Pod echo-965f7cf84-mvf6g.
+   In namespace default.
+   With IP address 192.168.194.10.
+   ```
 
 ## Next Steps
 

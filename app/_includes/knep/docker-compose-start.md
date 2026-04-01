@@ -7,6 +7,7 @@ cat <<EOF > docker-compose.yaml
 {% include_cached _files/event-gateway/docker-compose.yaml %}
 EOF
 ```
+{:.collapsible}
 
 Now, let's start the local setup:
 ```shell

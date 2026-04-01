@@ -24,7 +24,7 @@ related_resources:
 
 ## Kubernetes
 
-The following table presents the general compatibility of {{site.mesh_product_name}} with specific Kubernetes versions.
+The following table presents versions of {{site.mesh_product_name}} validated against specific Kubernetes versions.
 
 {% version_compatibility_table %}
 product: "{{site.mesh_product_name}}"

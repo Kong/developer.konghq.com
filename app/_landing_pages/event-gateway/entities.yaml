@@ -86,3 +86,13 @@ rows:
               text: See reference
               url: /event-gateway/entities/static-key/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: "TLS trust bundles"
+            description: |
+              Store CA certificates used to verify client certificates during mutual TLS (mTLS) handshakes.
+            cta:
+              text: See reference
+              url: /event-gateway/entities/tls-trust-bundle/
+              align: end

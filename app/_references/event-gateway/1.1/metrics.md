@@ -2,29 +2,49 @@
 # **Auto-generated** - Do not edit manually. See https://github.com/kong-gateway/event-gateway/blob/main/api/metrics.md
 
 title: "{{site.event_gateway}} metrics"
-content_type: reference
-layout: reference
 
 description: Reference for all metrics exposed by {{site.event_gateway}}.
-  
+
 related_resources:
   - text: "{{site.event_gateway}}"
     url: /event-gateway/
   - text: Set up observability for {{site.event_gateway_short}}
     url: /how-to/event-gateway/configure-observability-with-otel/
-
-products:
-    - event-gateway
-
-breadcrumbs:
-  - /event-gateway/
 ---
 
 <!--vale off-->
 
+## Config
+
+### `kong.keg.config.errors`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** Count of errors when loading the config received from the control plane
+
+**Labels:**
+
+No labels documented.
+
+### `kong.keg.config.loaded`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Gauge     |N/A       |
+
+
+**Description:** The version of the configuration loaded from the control plane
+
+**Labels:**
+
+No labels documented.
+
 ## Kafka
 
-### `kong_keg_kafka_acl_attempts_count`
+### `kong.keg.kafka.acl.attempts`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -35,10 +55,10 @@ breadcrumbs:
 
 **Labels:**
 
-- `resource_type`: The type of Kafka resource being accessed (Possible values: `transactional_id`, `group`, `topic`, `cluster`)
-- `result`: The result of the ACL check (allowed or denied) (Possible values: `allowed`, `denied`)
+- `kong.keg.acl.resource_type`: The type of Kafka resource being accessed (Possible values: `transactional_id`, `group`, `topic`, `cluster`)
+- `kong.keg.result`: The result of the ACL check (allowed or denied) (Possible values: `allowed`, `denied`)
 
-### `kong_keg_kafka_backend_connection_error_count`
+### `kong.keg.kafka.backend.connection.errors`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -49,9 +69,9 @@ breadcrumbs:
 
 **Labels:**
 
-- `origin`: The origin of the connection error (Possible values: `io`, `peer`, `local`)
+- `kong.keg.connection.error.origin`: The origin of the connection error (Possible values: `io`, `peer`, `local`)
 
-### `kong_keg_kafka_backend_roundtrip_duration_seconds`
+### `kong.keg.kafka.backend.roundtrip.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -64,7 +84,20 @@ breadcrumbs:
 
 No labels documented.
 
-### `kong_keg_kafka_connections_active`
+### `kong.keg.kafka.connection.errors`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** The number of proxied connections that resulted in an error
+
+**Labels:**
+
+No labels documented.
+
+### `kong.keg.kafka.connections`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -77,7 +110,46 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_metadata_update_duration_seconds`
+### `kong.keg.kafka.decrypt.attempts`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** The number of attempts to decrypt records. This includes both successful and failed calls
+
+**Labels:**
+
+- `kong.keg.result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
+
+### `kong.keg.kafka.encrypt.attempts`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** The number of attempts to encrypt records. This includes both successful and failed calls
+
+**Labels:**
+
+- `kong.keg.result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
+
+### `kong.keg.kafka.kscheme.attempts`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** The number of attempts to run kscheme scripts. This includes both successful and failed calls
+
+**Labels:**
+
+- `kong.keg.result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
+
+### `kong.keg.kafka.metadata.update.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -90,7 +162,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_namespace_topic_conflict`
+### `kong.keg.kafka.namespace.topic.conflict`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -103,7 +175,33 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_policy_invocation_count`
+### `kong.keg.kafka.policy.condition.failures`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Counter   |N/A       |
+
+
+**Description:** The number of times the policy condition failed to execute due to an error
+
+**Labels:**
+
+No labels documented.
+
+### `kong.keg.kafka.policy.invocation.duration`
+
+|Type      |Unit      |
+|:---------|:---------|
+|Histogram |`seconds` |
+
+
+**Description:** The time to process a policy
+
+**Labels:**
+
+No labels documented.
+
+### `kong.keg.kafka.policy.invocations`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -114,22 +212,9 @@ No labels documented.
 
 **Labels:**
 
-- `result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
+- `kong.keg.result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
 
-### `kong_keg_kafka_policy_invocation_duration_ms`
-
-|Type      |Unit      |
-|:---------|:---------|
-|Histogram |`milliseconds`|
-
-
-**Description:** The time to process a policy
-
-**Labels:**
-
-No labels documented.
-
-### `kong_keg_kafka_proxy_total_duration_seconds`
+### `kong.keg.kafka.proxy.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -142,11 +227,11 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_request_processing_duration_ms`
+### `kong.keg.kafka.request.processing.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
-|Histogram |`milliseconds`|
+|Histogram |`seconds` |
 
 
 **Description:** The time spent processing the received request before forwarding it to the backend cluster
@@ -155,7 +240,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_request_received_count`
+### `kong.keg.kafka.request.received`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -168,7 +253,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_request_sent_count`
+### `kong.keg.kafka.request.sent`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -181,11 +266,11 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_response_processing_duration_ms`
+### `kong.keg.kafka.response.processing.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
-|Histogram |`milliseconds`|
+|Histogram |`seconds` |
 
 
 **Description:** The time spent processing the received response before forwarding it to the client
@@ -194,7 +279,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_response_received_count`
+### `kong.keg.kafka.response.received`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -207,7 +292,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_response_received_error_count`
+### `kong.keg.kafka.response.received.errors`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -218,9 +303,9 @@ No labels documented.
 
 **Labels:**
 
-- `error_code`: The lowest error code in the response
+- `kong.keg.kafka.error_code`: The lowest error code in the response
 
-### `kong_keg_kafka_response_sent_count`
+### `kong.keg.kafka.response.sent`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -233,7 +318,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_kafka_response_sent_error_count`
+### `kong.keg.kafka.response.sent.errors`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -244,9 +329,9 @@ No labels documented.
 
 **Labels:**
 
-- `error_code`: The lowest error code in the response
+- `kong.keg.kafka.error_code`: The lowest error code in the response
 
-### `kong_keg_kafka_schema_validation_attempt_count`
+### `kong.keg.kafka.schema.validation.attempts`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -257,11 +342,12 @@ No labels documented.
 
 **Labels:**
 
-- `result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
+- `kong.keg.record.part`: The part of the record (key or value) (Possible values: `key`, `value`)
+- `kong.keg.result`: The result of the operation (success or failure) (Possible values: `success`, `fail`)
 
 ## Konnect
 
-### `kong_keg_konnect_analytics_bytes_sent_count`
+### `kong.keg.konnect.analytics.bytes.sent`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -274,7 +360,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_konnect_analytics_messages_sent_count`
+### `kong.keg.konnect.analytics.messages.sent`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -287,7 +373,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_konnect_analytics_queue_dropped_count`
+### `kong.keg.konnect.analytics.queue.dropped`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -300,7 +386,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_konnect_analytics_queue_event_count`
+### `kong.keg.konnect.analytics.queue.events`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -313,7 +399,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_konnect_analytics_websocket_error_count`
+### `kong.keg.konnect.analytics.websocket.errors`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -326,21 +412,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_konnect_request_count`
-
-|Type      |Unit      |
-|:---------|:---------|
-|Histogram |N/A       |
-
-
-**Description:** The time to update the metadata from the upstream broker
-
-**Labels:**
-
-- `konnect_api`: The konnect api operation being performed (Possible values: `fetch_config`, `update_dp_state`)
-- `status_code`: The status code of an http response (Possible values: `2xx`, `3xx`, `4xx`, `5xx`)
-
-### `kong_keg_konnect_request_duration_seconds`
+### `kong.keg.konnect.request.duration`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -351,11 +423,13 @@ No labels documented.
 
 **Labels:**
 
-- `konnect_api`: The konnect api operation being performed (Possible values: `fetch_config`, `update_dp_state`)
+- `kong.keg.konnect.api`: The konnect api operation being performed (Possible values: `fetch_config`, `update_dp_state`)
+- `error.type`: The error type encountered on executing http request. Absent if a request was successful. (Possible values: `timeout`, `connect`, `unknown`)
+- `http.response.status_code`: The status code of an http response. Absent if a request did not succeed.
 
 ## Lifecycle
 
-### `kong_keg_lifecycle_component_ready`
+### `kong.keg.lifecycle.component.ready`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -366,9 +440,9 @@ No labels documented.
 
 **Labels:**
 
-- `component`: The component name
+- `kong.keg.component`: The component name
 
-### `kong_keg_lifecycle_service_healthy`
+### `kong.keg.lifecycle.service.healthy`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -381,7 +455,7 @@ No labels documented.
 
 No labels documented.
 
-### `kong_keg_lifecycle_service_ready`
+### `kong.keg.lifecycle.service.ready`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -396,7 +470,7 @@ No labels documented.
 
 ## Listener
 
-### `kong_keg_listener_connections_limit`
+### `kong.keg.listener.connections.limit`
 
 |Type      |Unit      |
 |:---------|:---------|
@@ -415,24 +489,20 @@ The following labels are commonly used across multiple metrics:
 
 ### Resource Identification
 
-- `topic`: Kafka topic name
-- `listener`: Listener identifier
-- `policy`: Policy identifier
-
+- `messaging.destination.name`: Kafka topic name
 ### Konnect Integration
 
-- `policy_konnect_type`: Policy type in Konnect
-- `policy_konnect_id`: Policy ID in Konnect
-- `policy_konnect_name`: Policy name in Konnect
-- `listener_konnect_id`: Listener ID in Konnect
-- `listener_konnect_name`: Listener name in Konnect
-
+- `kong.keg.policy.type`: Policy type in Konnect
+- `kong.konnect.policy.id`: Policy ID in Konnect
+- `kong.konnect.policy.name`: Policy name in Konnect
+- `kong.konnect.listener.id`: Listener ID in Konnect
+- `kong.konnect.listener.name`: Listener name in Konnect
 ### Operations
 
-- `chain_type`: Type of policy chain (e.g., produce, consume)
+- `kong.keg.policy.chain_type`: Type of policy chain (e.g., produce, consume)
 - `result`: Result of operation (success, fail, allowed, denied)
-- `part`: Part being processed (key, value)
-- `resource_type`: ACL resource type (transactional_id, group, topic, cluster)
+- `kong.keg.record.part`: Part being processed (key, value)
+
 - `origin`: Connection error origin (io, peer, local)
 
 ### HTTP/Network

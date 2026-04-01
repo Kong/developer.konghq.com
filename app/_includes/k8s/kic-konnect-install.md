@@ -13,7 +13,8 @@ method: POST
 body:
     name: My KIC CP
     cluster_type: "CLUSTER_TYPE_K8S_INGRESS_CONTROLLER"
-capture: CONTROL_PLANE_DETAILS
+capture:
+  - variable: CONTROL_PLANE_DETAILS
 {% endkonnect_api_request %}
 <!--vale on-->
 

@@ -1,5 +1,10 @@
 title: Forward via SNI routing
-description: Use SNI routing to forward messages from a Kafka client to a virtual cluster.
+description: |
+  Use SNI routing to forward messages from a Kafka client to a virtual cluster.
+  
+  Example hostnames generated with this configuration:
+  * `bootstrap.my-virtual-cluster.example.mycompany.com`
+  * `broker-1.my-virtual-cluster.example.mycompany.com`
 
 weight: 900
 
@@ -7,8 +12,9 @@ name: forward
 type: forward_to_virtual_cluster
 config:
   type: sni
-  sni_suffix: example.mycompany.com
+  sni_suffix: .example.mycompany.com
   advertised_port: 19095
+  broker_host_format: per_cluster_suffix
 
 tools:
   - konnect-api
