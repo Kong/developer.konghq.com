@@ -64,19 +64,19 @@ To use the diagnostic mode:
 
    ```yaml
    ingressController:
-    env:
-      dump_config: "true"
-      dump_sensitive_config: "true"
-    ```
+     env:
+       dump_config: "true"
+       dump_sensitive_config: "true"
+   ```
 
-    To enable configuration dumping temporarily for an existing deployment, run the following command:
+   To enable configuration dumping temporarily for an existing deployment, run the following command:
 
-    ```bash
-    kubectl set env -n kong deployment/kong-controller \
-      CONTROLLER_DUMP_CONFIG="true" \
-      CONTROLLER_DUMP_SENSITIVE_CONFIG="true" \
-      -c ingress-controller
-    ```
+   ```bash
+   kubectl set env -n kong deployment/kong-controller \
+     CONTROLLER_DUMP_CONFIG="true" \
+     CONTROLLER_DUMP_SENSITIVE_CONFIG="true" \
+     -c ingress-controller
+   ```
 
 1. (Optional) Make a change to a Kubernetes resource that you know will reproduce the issue. If you are unsure what change caused the issue originally, you can omit this step.
 

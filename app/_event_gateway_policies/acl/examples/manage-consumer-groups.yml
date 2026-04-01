@@ -7,21 +7,17 @@ extended_description: Allow the principal to create and delete consumer groups.
 
 weight: 900
 
-name: read-only-topic
+name: acl_policy
 type: acls
 config:
-  policies:
-    - name: name
-      type: acls
-      config:
-        rules:
-          - resource_type: group
-            action: allow
-            operations:
-              - name: create
-              - name: delete
-            resource_names:
-              - match: my_resource
+  rules:
+    - resource_type: group
+      action: allow
+      operations:
+        - name: create
+        - name: delete
+      resource_names:
+        - match: my_resource
 
 tools:
   - konnect-api

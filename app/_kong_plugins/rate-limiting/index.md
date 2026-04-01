@@ -79,6 +79,12 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/oss.md name=page.name heading_level=3 %}
+
 ## Limit by IP address
 
 {% include_cached /plugins/rate-limiting/limit-by-ip.md %}
@@ -87,4 +93,3 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
 
-{% include plugins/redis-cloud-auth.md %}
