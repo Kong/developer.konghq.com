@@ -38,7 +38,7 @@ tags:
 
 tldr:
   q: How do I protect MCP tools with OAuth2 using Okta?
-  a: Configure the AI MCP Proxy plugin to expose REST API endpoints as MCP tools, then add the AI MCP OAuth2 plugin to validate access tokens from Okta before MCP clients can call those tools.
+  a: Configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin to expose REST API endpoints as MCP tools, then add the [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) plugin to validate access tokens from Okta before MCP clients can call those tools. Then, use [MCP inspector](https://modelcontextprotocol.io/docs/tools/inspector) to validate the Oauth2 flow.
 
 tools:
   - deck
@@ -302,6 +302,7 @@ variables:
   weatherapi_key:
     value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
+{:.collapsible}
 
 ## Configure the AI MCP Proxy listener
 
