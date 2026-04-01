@@ -1,7 +1,7 @@
 ---
 title: 'Metering & Billing'
 name: 'Metering & Billing'
-
+tier: enterprise
 content_type: plugin
 
 publisher: kong-inc
@@ -64,7 +64,7 @@ For each request, the plugin:
 1. Resolves the subject (the customer identity that gets billed) from the configured source (a Consumer, application, or request header).
 2. Captures standard {{site.base_gateway}} metadata on the event, including Route, Service, and response status.
 3. Attaches any configured custom attributes from request headers or query parameters, such as department, project, or priority tier.
-4. Buffers the event locally and delivers it in batches to the configured ingest endpoint ({{site.konnect_short_name}} {{site.metering-and-billing}} or OpenMeter self-hosted), with automatic retries on failure.
+4. Buffers the event locally and delivers it in batches to the configured ingest endpoint ({{site.konnect_short_name}} {{site.metering_and_billing}} or OpenMeter self-hosted), with automatic retries on failure.
 
 The following diagram shows how the plugin works:
 
@@ -76,7 +76,7 @@ sequenceDiagram
     participant kong as {{site.base_gateway}}
     participant plugin as Metering & Billing Plugin
     participant queue as Event Queue
-    participant ingest as Ingest Endpoint<br>({{site.konnect_short_name}} {{site.metering-and-billing}} or OpenMeter)
+    participant ingest as Ingest Endpoint<br>({{site.konnect_short_name}} {{site.metering_and_billing}} or OpenMeter)
 
     client->>kong: API or AI Gateway request
     kong->>plugin: log() phase triggers after response
@@ -117,7 +117,7 @@ rows:
       Event attributes allow you to filter based on criteria such as provider, department, priority, or project for tiered or per-dimension pricing.
 
       You can define any attribute that is found in the header, query, or path of a request.
-    example: Set `config.attributes` with the source, what attribute to look up in the source, and which source value to use. 
+    example: Set [`config.attributes`](/plugins/metering-and-billing/reference/#schema--config-attributes) with the source, what attribute to look up in the source, and which source value to use. 
   - use-case: Filtering traffic in a control plane
     description: Since plugins can be applied globally, to Routes, Gateway Services, or Consumers, you can apply the Metering & Billing plugin to these entities to further narrow down the traffic you want to meter from the control plane. 
     example: Scope the plugin to a Route, Service, or Consumer.
@@ -136,5 +136,5 @@ For example, if you're metering AI request tokens to 100 per month, you must use
 
 ## Usage-based billing
 
-The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering-and-billing}}](/metering-and-billing/billing-invoicing-subscriptions/) or [OpenMeter self-hosted](https://openmeter.io/).
+The Metering & Billing plugin can't bill customers. If you want to bill customers based on usage events from the plugin, use [{{site.konnect_short_name}} {{site.metering_and_billing}}](/metering-and-billing/billing-invoicing-subscriptions/) or [OpenMeter self-hosted](https://openmeter.io/).
 
