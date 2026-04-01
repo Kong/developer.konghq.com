@@ -1334,7 +1334,8 @@ rows:
     desc: "`kong.service.set_service_request_scheme({scheme})`"
     type: "`string` (`{scheme}`)"
 
-  - property: "`kong.client.consumer`"
+  - property: |
+      `kong.client.consumer` {% new_in 3.14 %}
     desc: "`kong.client.authenticate()`"
     type: "`object` with at least one of `id`, `username`, or `custom_id`"
 {% endtable %}
