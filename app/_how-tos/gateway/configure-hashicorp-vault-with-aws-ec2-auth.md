@@ -48,10 +48,10 @@ tldr:
     a: |
       Run {{site.base_gateway}} on an EC2 instance with an instance profile attached. Enable the AWS auth method in HashiCorp Vault and create an EC2 role bound to the instance's AMI ID.
 
-      Then in {{site.base_gateway}}:
-      * Configure a Vault entity with `config.auth_method` set to `aws_ec2`.
+      Then in {{site.base_gateway}}, configure a Vault entity with the following:
+      * Set `config.auth_method` set to `aws_ec2`.
       * Set `config.aws_auth_role` to the Vault role name.
-      * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service — no AWS credentials are required on {{site.base_gateway}}'s side.
+      * Set `config.aws_auth_nonce` to a unique nonce string. The EC2 instance identity document is provided automatically by the instance metadata service, no AWS credentials are required on {{site.base_gateway}}'s side.
 
 tools:
     - admin-api
@@ -61,7 +61,7 @@ prereqs:
   inline:
     - title: EC2 instance with instance profile
       content: |
-        {{site.base_gateway}} must be running on an EC2 instance with an instance profile attached. The EC2 instance identity document is automatically provided by the instance metadata service — no additional IAM permissions are required on {{site.base_gateway}}'s side.
+        {{site.base_gateway}} must be running on an EC2 instance with an instance profile attached. The EC2 instance identity document is automatically provided by the instance metadata service, no additional IAM permissions are required on {{site.base_gateway}}'s side.
 
         If {{site.base_gateway}} is not running on an EC2 instance, use [AWS IAM authentication](/how-to/configure-hashicorp-vault-with-aws-iam-auth/) instead.
 
@@ -72,20 +72,9 @@ prereqs:
 
         Generate a unique nonce string. This nonce is stored with the Vault token and validated on subsequent logins to prevent replay attacks:
         ```sh
-        export DECK_AWS_AUTH_NONCE="$(openssl rand -hex 16)"
+        export AWS_AUTH_NONCE="$(openssl rand -hex 16)"
         ```
       icon_url: /assets/icons/aws.svg
-    - title: AWS credentials for the Vault server
-      content: |
-        HashiCorp Vault must call AWS EC2 APIs to verify incoming EC2 instance identity documents. The Vault server needs IAM credentials with the following permissions:
-        * `ec2:DescribeInstances`
-        * `iam:GetInstanceProfile`
-
-        Export the Vault server's AWS credentials:
-        ```sh
-        export VAULT_AWS_ACCESS_KEY="VAULT-SERVER-ACCESS-KEY"
-        export VAULT_AWS_SECRET_KEY="VAULT-SERVER-SECRET-KEY"
-        ```
       icon_url: /assets/icons/hashicorp.svg
     - title: HashiCorp Vault
       content: |
@@ -108,8 +97,8 @@ cleanup:
         Unset environment variables:
         ```sh
         unset VAULT_ADDR
-        unset VAULT_AWS_ACCESS_KEY
-        unset VAULT_AWS_SECRET_KEY
+        unset KONG_EC2_AMI_ID
+        unset AWS_AUTH_NONCE
         ```
       icon_url: /assets/icons/hashicorp.svg
     - title: Destroy the {{site.base_gateway}} container
@@ -154,13 +143,6 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
 1. Enable AWS authentication:
    ```sh
    vault auth enable aws
-   ```
-
-1. Configure the AWS auth method with the Vault server's AWS credentials:
-   ```sh
-   vault write auth/aws/config/client \
-     access_key="$VAULT_AWS_ACCESS_KEY" \
-     secret_key="$VAULT_AWS_SECRET_KEY"
    ```
 
 1. Create an EC2 role that binds to your {{site.base_gateway}} instance's AMI ID:
@@ -225,12 +207,11 @@ body:
 
 ## Validate
 
-To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command within the Data Plane container.
+To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command.
 
-{% validation vault-secret %}
-secret: '{vault://hashicorp-vault/headers/request/header}'
-value: 'x-kong:test'
-{% endvalidation %}
+```sh
+sudo -E kong vault get {vault://hashicorp-vault/headers/request/header}
+```
 
 If the vault was configured correctly, this command returns the value of the secret. You can use `{vault://hashicorp-vault/headers/request/header}` to reference the secret in any referenceable field.
 
