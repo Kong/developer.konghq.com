@@ -380,7 +380,7 @@ variables:
 
 1. Start MCP Inspector:
 ```sh
-    npx @modelcontextprotocol/inspector@latest
+    npx @modelcontextprotocol/inspector@latest --mcp-url http://localhost:8000/weather/mcp
 ```
 
 1. Open the MCP Inspector UI in your browser at the URL shown in the terminal output.
@@ -417,11 +417,11 @@ variables:
 1. In MCP Inspector, go to the **Tools** tab and click **List Tools**. You should see the weather tools exposed by the [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/):
 
     ```text
-    Realtime API
     Forecast API
     History API
-    Search API
     IP Lookup API
+    Search API
+    Realtime API
     ```
     {:.no-copy-code}
 
@@ -446,10 +446,12 @@ variables:
     ```
     {:.no-copy-code}
 
-1. To confirm that unauthenticated requests are rejected, disconnect from MCP Inspector and attempt to call the endpoint without a token:
+1. To confirm that unauthenticated requests are rejected, send an MCP tool call without a token:
 
     ```sh
-    curl --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp
+    curl --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp \
+      -H "Content-Type: application/json" \
+      -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"Realtime API","arguments":{"q":"London"}}}'
     ```
 
-    The response returns a `401` status, confirming the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) is enforcing authentication.
+    The response returns a `401` status, confirming the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) is enforcing authentication on MCP tool calls.
