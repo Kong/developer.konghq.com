@@ -18,7 +18,7 @@ config:
   policies:
   - match:
     - type: consumer_group
-      key: id
+      key: name
       values:
       - ${consumer_group}
     limits:
@@ -26,6 +26,7 @@ config:
         window_size: 60
       - limit: 1000
         window_size: 3600
+
 variables:
   consumer_group:
     value: $CONSUMER_GROUP_NAME

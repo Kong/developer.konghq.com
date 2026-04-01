@@ -26,6 +26,7 @@ config:
         window_size: 60
       - limit: 1000
         window_size: 3600
+
 variables:
   consumer:
     value: $CONSUMER_ID
