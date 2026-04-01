@@ -28,7 +28,7 @@ columns:
 rows:
   - interval: "Last 15 minutes"
     aggregation_increment_frequency: "1 minute"
-    notes: "Data is aggregated in one minute increments."
+    notes: "Data is aggregated in one minute increments. Platform usage data isn't collected at this interval."
   - interval: "Last hour"
     aggregation_increment_frequency: "1 minute"
     notes: "Data is aggregated in one minute increments."
