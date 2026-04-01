@@ -30,10 +30,10 @@ This command generates a {{site.base_gateway}} Service with an MCP route that in
 [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) configured with tools derived from the OpenAPI specification operations.
 
 Each OpenAPI operation is mapped to an MCP tool definition:
-- operationId -> tool name (kebab-case normalized)
-- Summary/description -> tool description
-- Parameters -> tool parameters array
-- requestBody -> tool `request_body`
+- `operationId` -> Tool name (kebab-case normalized)
+- Summary/description -> Tool description
+- Parameters -> Tool parameters array
+- `requestBody` -> tool `request_body`
 
 ## Security/ACL generation
 
