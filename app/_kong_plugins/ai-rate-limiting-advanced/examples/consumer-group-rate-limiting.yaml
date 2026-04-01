@@ -17,10 +17,10 @@ weight: 900
 config:
   policies:
   - match:
-    - type: consumer_group
-      key: name
-      values:
-      - ${consumer_group}
+      - type: consumer_group
+        key: name
+        values:
+          - "${consumer_group}"
     limits:
       - limit: 100
         window_size: 60
