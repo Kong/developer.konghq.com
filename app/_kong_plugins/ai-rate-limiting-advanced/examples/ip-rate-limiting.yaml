@@ -1,12 +1,10 @@
-description: Protect your LLM services with model rate limiting.
+description: Protect your LLM services with IP rate limiting.
 extended_description: |
-  Protect your LLM services with model rate limiting. 
+  Protect your LLM services with IP rate limiting. 
   The AI Rate Limiting Advanced plugin will analyze query costs and token response 
   to provide an enterprise-grade rate limiting strategy.
 
-  The following example uses GPT 5.1, but you can apply the same strategies to any LLM model.
-
-title: 'Enable LLM model rate limiting'
+title: 'Enable rate limiting for IP addresses'
 
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
@@ -16,9 +14,10 @@ weight: 900
 config:
   policies:
   - match:
-    - type: model
+    - type: ip
       values:
-      - gpt-5.1
+      - 127.0.0.1
+      - 192.0.2.0
     limits:
       - limit: 100
         window_size: 60
