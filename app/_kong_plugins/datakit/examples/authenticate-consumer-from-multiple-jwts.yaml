@@ -1,0 +1,140 @@
+description: |
+  Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
+
+extended_description: |
+  Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
+  
+  The plugin checks for a primary Authorization header first.
+  If it doesn't find the header, it falls back to a secondary Authorization2 header.
+  The verified JWT's `sub` claim is used to look up and authenticate the matching {{site.base_gateway}} Consumer.
+
+  This example contains the following nodes:
+  1. The node `HAS_AUTH1` checks whether a primary Authorization header is present.
+  1. The node `BRANCH_AUTH1` checks for an Authorization header. 
+  If the header exists, it extracts and verifies the JWT against JWKS1 and sets the Consumer; otherwise it checks for the secondary header.
+  1. The nodes `EXTRACT_AUTH1`, `VERIFY_AUTH1`, `BUILD_CONSUMER1`, and `SET_CONSUMER1` handle the primary JWT path.
+  1. The node `HAS_AUTH2` checks whether a secondary Authorization2 header is present.
+  1. The node `BRANCH_AUTH2` routes execution for the secondary JWT path.
+  1. The nodes `EXTRACT_AUTH2`, `VERIFY_AUTH2`, `BUILD_CONSUMER2`, and `SET_CONSUMER2` handle the secondary JWT path.
+
+  {:.info}
+  > **Note**: Datakit, with a priority of 810, currently runs after rate limiting plugins, which have priorities at or above 900.
+  With JWT consumer authentication, you may need Datakit to run before rate limiting to set Consumers for Consumer-based rate limits. 
+  You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
+
+title: Authenticate Consumer using multiple JWTs from different sources
+weight: 900
+
+requirements:
+  - "You have configured a [Consumer](/gateway/entities/consumer/)."
+  - "You have configured [Vault secrets](/gateway/entities/vault/) for both JWKS JSON values."
+
+config:
+  resources:
+    vault:
+      jwks1: "{vault://env/JWKS1_JSON}"
+      jwks2: "{vault://env/JWKS2_JSON}"
+
+  nodes:
+    - name: HAS_AUTH1
+      type: jq
+      input: request.headers
+      jq: |
+        (.Authorization // .authorization) != null
+
+    - name: BRANCH_AUTH1
+      type: branch
+      input: HAS_AUTH1
+      then:
+        - EXTRACT_AUTH1
+        - VERIFY_AUTH1
+        - BUILD_CONSUMER1
+        - SET_CONSUMER1
+      else:
+        - HAS_AUTH2
+        - BRANCH_AUTH2
+
+    - name: EXTRACT_AUTH1
+      type: jq
+      input: request.headers
+      jq: |
+        .Authorization // .authorization
+
+    - name: VERIFY_AUTH1
+      type: jwt_verify
+      issuers:
+        - "expected-issuer-1"
+      required_claims:
+        - "sub"
+        - "iss"
+        - "exp"
+      inputs:
+        token: EXTRACT_AUTH1
+        key: vault.jwks1
+
+    - name: BUILD_CONSUMER1
+      type: jq
+      input: VERIFY_AUTH1.claims
+      jq: |
+        { "username": .sub }
+
+    - name: SET_CONSUMER1
+      type: property
+      property: kong.client.consumer
+      input: BUILD_CONSUMER1
+
+    - name: HAS_AUTH2
+      type: jq
+      input: request.headers
+      jq: |
+        (.Authorization2 // .authorization2) != null
+
+    - name: BRANCH_AUTH2
+      type: branch
+      input: HAS_AUTH2
+      then:
+        - EXTRACT_AUTH2
+        - VERIFY_AUTH2
+        - BUILD_CONSUMER2
+        - SET_CONSUMER2
+
+    - name: EXTRACT_AUTH2
+      type: jq
+      input: request.headers
+      jq: |
+        .Authorization2 // .authorization2
+
+    - name: VERIFY_AUTH2
+      type: jwt_verify
+      issuers:
+        - "expected-issuer-2"
+      required_claims:
+        - "sub"
+        - "iss"
+        - "exp"
+      inputs:
+        token: EXTRACT_AUTH2
+        key: vault.jwks2
+
+    - name: BUILD_CONSUMER2
+      type: jq
+      input: VERIFY_AUTH2.claims
+      jq: |
+        { "username": .sub }
+
+    - name: SET_CONSUMER2
+      type: property
+      property: kong.client.consumer
+      input: BUILD_CONSUMER2
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
+
+group: authentication

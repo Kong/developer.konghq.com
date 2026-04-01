@@ -40,6 +40,13 @@ tags:
   - transformations
 
 toc_depth: 4
+examples_groups:
+  - slug: authentication
+    text: Authentication
+  - slug: transformation
+    text: Transformation
+  - slug: headers
+    text: Manipulate headers
 ---
 
 The {{site.base_gateway}} Datakit plugin allows you to interact with third-party APIs.
@@ -83,6 +90,10 @@ rows:
     description: "Transform JSON requests into XML so you can send the data to a SOAP service, then transform the resulting XML back into JSON."
   - usecase: "[Third-party auth with dynamic url](/plugins/datakit/examples/authenticate-third-party-with-dynamic-url/)"
     description: Dynamically resolve an internal authentication endpoint and inject the necessary request headers prior to proxying the request.
+  - usecase: "[Authenticate Consumers using multiple JWT sources](/plugins/datakit/examples/authenticate-consumer-from-multiple-jwts/)"
+    description: Authenticate a Consumer by verifying a JWT from one of two possible sources, each backed by a different JWKS.
+  - usecase: "[Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/)"
+    description: Sign an outgoing JWT in a request header using the authenticated Consumer’s ID as the subject. 
 {% endtable %}
 <!--vale on-->
 
@@ -571,8 +582,39 @@ rows:
     description: "Transforms JSON or a Lua table into XML strings."
     inputs: JSON formatted data or Lua tables
     outputs: XML formatted data
+  - nodetype: |
+      [JWT decode (`jwt_decode`)](#jwt-decode-node) {% new_in 3.14 %}
+    description: "Decode a JWT token without verifying its signature."
+    inputs: |
+      * `$self`: JWT token string (with or without `Bearer` prefix)
+    outputs: |
+      * `header`: Decoded JWT header
+      * `payload`: Decoded JWT payload (claims)
+      * `signature`: Raw base64url-encoded signature
+  - nodetype: |
+      [JWT sign (`jwt_sign`)](#jwt-sign-node) {% new_in 3.14 %}
+    description: "Create and sign a JWT."
+    inputs: |
+      * `claims`: Dynamic claims to include in the token
+      * `key`: Signing key (PEM, JWK JSON string, or HMAC secret)
+    outputs: |
+      * `token`: The signed JWT
+      * `claims`: All claims used when signing
+      * `header`: The JWT header
+  - nodetype: |
+      [JWT verify (`jwt_verify`)](#jwt-verify-node) {% new_in 3.14 %}
+    description: "Verify a JWT's signature and validate its claims."
+    inputs: |
+      * `token`: JWT token string (with or without `Bearer` prefix)
+      * `key`: Verification key (JWKS, JWK, PEM, or HMAC secret)
+    outputs: |
+      * `claims`: JWT payload claims
+      * `header`: JWT header
 {% endtable %}
 <!--vale on-->
+
+{:.info}
+> **Note:** `$self` indicates that a node accepts a single value directly via `input:`, not named fields via `inputs:`. For example, you would use `input: request.headers.authorization` rather than `inputs: {token: ...}`.
 
 You can learn more about the supported configuration parameters for each node in the [configuration reference](/plugins/datakit/reference/#schema--config-nodes).
 
@@ -1291,6 +1333,10 @@ rows:
   - property: "`kong.service.request_scheme`"
     desc: "`kong.service.set_service_request_scheme({scheme})`"
     type: "`string` (`{scheme}`)"
+
+  - property: "`kong.client.consumer`"
+    desc: "`kong.client.authenticate()`"
+    type: "`object` with at least one of `id`, `username`, or `custom_id`"
 {% endtable %}
 <!--vale on-->
 
@@ -1550,6 +1596,72 @@ Where `CALL_BAR` is a call node that calls an API, and that API outputs JSON.
 For a more detailed example, see [Convert JSON into XML](/plugins/datakit/examples/convert-json-into-xml/).
 
 For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
+
+### JWT Decode node {% new_in 3.14 %}
+
+Decode a JWT token without verifying its signature. 
+Accepts tokens with or without a `Bearer` prefix (case-insensitive).
+
+The node will fail the request if the token can't be parsed for any reason. No partial results are returned.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_decode` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: decode-token
+  type: jwt_decode
+  input: request.headers.authorization
+```
+
+### JWT Sign node {% new_in 3.14 %}
+
+Create and sign a JWT with the provided key.
+Automatically adds `iat`, `exp`, and `nbf` time claims.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_sign` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: sign-jwt
+  type: jwt_sign
+  algorithm: HS256
+  expires_in: 300
+  static_claims:
+    iss: "kong"
+  inputs:
+    claims: build-claims
+    key: vault.jwt_hmac_key
+```
+
+For a more detailed example, see [Sign JWT with Consumer ID](/plugins/datakit/examples/sign-consumer-jwt/).
+
+### JWT verify node {% new_in 3.14 %}
+
+Verify a JWT's signature and validate its claims.
+Supports JWKS, JWK, PEM, and HMAC secret key formats.
+
+The node will fail the request if the token can't be parsed for any reason. No partial results are returned.
+
+See the [configuration reference](/plugins/datakit/reference/#schema--config-nodes) and select `jwt_verify` from the node object dropdown to see all node attributes.
+
+#### Example
+
+```yaml
+- name: verify-jwt
+  type: jwt_verify
+  issuers:
+    - "expected-issuer"
+  required_claims:
+    - "sub"
+    - "exp"
+  inputs:
+    token: extract-auth
+    key: vault.jwks
+```
+
+For a more detailed example, see [Authenticate Consumer from multiple JWT sources](/plugins/datakit/examples/authenticate-consumer-from-multiple-jwts/).
 
 ### Implicit nodes
 

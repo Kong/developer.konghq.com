@@ -1,0 +1,71 @@
+description: |
+  Sign an outgoing JWT in a request header using the authenticated Consumer's ID as the subject.
+
+extended_description: |
+  Sign an outgoing JWT in a request header using the authenticated Consumer's ID as the subject.
+  This example assumes a Consumer has already been authenticated before DataKit runs.
+  This example contains the following nodes:
+  1. The node `GET_CONSUMER` retrieves the currently authenticated Consumer object.
+  1. The node `BUILD_CLAIMS` uses jq to extract the Consumer's `id` and build a `sub` claim.
+  1. The node `SIGN_JWT` signs a new JWT using an HMAC secret stored in Vault.
+  1. The node `BUILD_HEADER` injects the signed token into an `X-Consumer-JWT` request header sent to the upstream service.
+
+  {:.info}
+  > **Note**: Datakit, with a priority of 810, currently runs after rate limiting plugins, which have priorities at or above 900.
+  With JWT consumer authentication, you may need Datakit to run before rate limiting to set Consumers for Consumer-based rate limits. 
+  You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
+title: Sign JWT with Consumer ID
+weight: 900
+
+requirements:
+  - "You have configured a [Consumer](/gateway/entities/consumer/) and an [authentication plugin](/plugins/?category=authentication) (for example, Key Auth or JWT)."
+  - "You have configured a [Vault secret](/gateway/entities/vault/) for the HMAC signing key."
+
+config:
+  resources:
+    vault:
+      jwt_hmac_key: "{vault://env/JWT_HMAC_SECRET}"
+
+  nodes:
+    - name: GET_CONSUMER
+      type: property
+      property: kong.client.consumer
+
+    - name: BUILD_CLAIMS
+      type: jq
+      input: GET_CONSUMER
+      jq: |
+        {
+          "sub": .id
+        }
+
+    - name: SIGN_JWT
+      type: jwt_sign
+      algorithm: HS256
+      expires_in: 300
+      static_claims:
+        iss: "kong"
+      inputs:
+        claims: BUILD_CLAIMS
+        key: vault.jwt_hmac_key
+
+    - name: BUILD_HEADER
+      type: jq
+      input: SIGN_JWT.token
+      jq: |
+        {
+          "X-Consumer-JWT": .
+        }
+      output: service_request.headers
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
+
+group: authentication
