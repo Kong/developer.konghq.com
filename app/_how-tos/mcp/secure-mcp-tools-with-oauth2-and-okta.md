@@ -393,7 +393,7 @@ variables:
 
 1. Enter the **Native Application** Client ID from the Okta setup (the `MCP Inspector` app, not the `Kong MCP Gateway` app). Leave **Client Secret** empty.
 
-    {:.important}
+    {:.warning}
     > Use the Client ID from the **Native Application** (`MCP Inspector`) you created in Okta. Do not use the Web Application Client ID. The Web Application credentials are used by {{site.base_gateway}} for token introspection, not by MCP clients.
 
 1. Click **Guided OAuth Flow**.

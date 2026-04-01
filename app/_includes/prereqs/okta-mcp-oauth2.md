@@ -73,5 +73,5 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 8. Click **Save**.
 9. Copy the **Client ID**. This is the Client ID you enter in MCP Inspector. No secret is needed for this public client.
 
-{:.important}
+{:.info}
 > The two applications serve different purposes. The **Web Application** Client ID and Client Secret go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config for token introspection. The **Native Application** Client ID is what you enter in MCP Inspector when connecting to the OAuth-protected MCP endpoint.
