@@ -46,6 +46,11 @@ related_resources:
     url: /event-gateway/get-started/
   - text: Authenticate connections to Kafka using SASL/PLAIN
     url: /event-gateway/configure-sasl-plain-backend-cluster-auth/
+
+min_version:
+  event_gateway: '1.1.0'
+
+automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster by presenting a mutual TLS client certificate.
@@ -233,8 +238,9 @@ body_cmd: $(cat mtls_backend_cluster.json)
 extract_body:
   - name: id
     variable: MTLS_BACKEND_CLUSTER_ID
-capture: MTLS_BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+    - variable: MTLS_BACKEND_CLUSTER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -261,8 +267,9 @@ body:
 extract_body:
   - name: id
     variable: MTLS_VC_ID
-capture: MTLS_VC_ID
-jq: ".id"
+capture:
+  - variable: MTLS_VC_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -284,8 +291,9 @@ body:
 extract_body:
   - name: id
     variable: MTLS_LISTENER_ID
-capture: MTLS_LISTENER_ID
-jq: ".id"
+capture:
+    - variable: MTLS_LISTENER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

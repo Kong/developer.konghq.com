@@ -42,7 +42,7 @@ See the [breaking changes entry for metrics naming](/event-gateway/breaking-chan
 
 - **Minimum runtime version**: Event gateway control planes can now be configured to enforce a minimum version on connecting nodes. Some features are gated behind this setting because they depend on support in the data plane node.
 - **mTLS to backend Kafka clusters**: You can now configure mutual TLS authentication between the gateway and your backend Kafka clusters, enabling encrypted and authenticated connections to brokers. 
-  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using mTLS](event-gateway/configure-mtls-backend-cluster-auth/)
+  - [How-to: Authenticate {{site.event_gateway}} connections to Kafka using mTLS](/event-gateway/configure-mtls-backend-cluster-auth/)
   - [Backend cluster reference](/event-gateway/entities/backend-cluster/)
 - **mTLS between clients and the gateway**: Clients can now authenticate to the gateway using TLS client certificates. Supports principal mapping to extract identity information from certificates for
 use in authorization policies.
@@ -56,6 +56,7 @@ are being rejected without overwhelming your logging pipeline.
   - [Metrics reference](/event-gateway/metrics/)
 - **Header modification policy**: A new policy execution model is now available for header modification policies, providing a more flexible and extensible approach to transforming Kafka request and response headers.
 - **Backend clusters sharing SNI suffix**: Multiple backend clusters can now share a common SNI suffix, simplifying TLS configuration when clusters are behind a shared domain.
+  - [Example: Forward via SNI routing with shared suffix](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing-shared-suffix/)
 - **Analytics for record count and message size**: Analytics events now include the number of records and byte sizes, giving you more granular visibility into traffic patterns in the Konnect analytics dashboard.
 - **Long polling for control plane configuration**: The gateway now supports long polling when fetching configuration from the Konnect control plane, reducing latency for configuration updates.
 - **Enhanced `validate` subcommand**: The `validate` CLI command now performs more thorough validation of your configuration, catching additional issues before startup.

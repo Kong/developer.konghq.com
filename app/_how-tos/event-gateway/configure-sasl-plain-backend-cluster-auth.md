@@ -46,6 +46,8 @@ related_resources:
     url: /event-gateway/get-started/
   - text: Authenticate connections to Kafka using mTLS
     url: /event-gateway/configure-mtls-backend-cluster-auth/
+
+automated_tests: false
 ---
 
 In this guide you'll configure {{site.event_gateway_short}} to connect to a secured Kafka cluster using SASL/PLAIN credentials.
@@ -172,8 +174,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_BACKEND_CLUSTER_ID
-capture: SASL_BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+    - variable: SASL_BACKEND_CLUSTER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -197,8 +200,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_VC_ID
-capture: SASL_VC_ID
-jq: ".id"
+capture:
+    - variable: SASL_VC_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -220,8 +224,9 @@ body:
 extract_body:
   - name: id
     variable: SASL_LISTENER_ID
-capture: SASL_LISTENER_ID
-jq: ".id"
+capture:
+    - variable: SASL_LISTENER_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

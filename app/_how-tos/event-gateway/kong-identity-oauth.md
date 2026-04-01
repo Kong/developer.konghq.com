@@ -20,7 +20,7 @@ description: "Learn how to secure Kafka traffic in {{site.event_gateway_short}} 
 tldr:
   q: "How do I secure Kafka traffic in {{site.event_gateway_short}} with Kong Identity?"
   a: |
-    1. Create a Kong Identity auth server, scope, claim and client.
+    1. Create a Kong Identity auth server, scope, claim, and client.
     1. Create a {{site.event_gateway}} with a virtual cluster that can verify OAuth tokens from clients.
     1. Create an ACL policy to restrict access to a specific client.
 
@@ -55,6 +55,9 @@ related_resources:
     url: /kong-identity/#dynamic-claim-templates
   - text: Event Gateway ACL policy
     url: /event-gateway/policies/acl/
+
+min_version:
+  event_gateway: '1.1.0'
 ---
 
 ## Create an auth server in Kong Identity
@@ -79,14 +82,13 @@ extract_body:
     variable: AUTH_SERVER_ID
   - name: 'issuer'
     variable: ISSUER_URL
+capture:
+    - variable: AUTH_SERVER_ID
+      jq: '.id'
+    - variable: ISSUER_URL
+      jq: '.issuer'
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export the auth server ID and issuer URL:
-```sh
-export AUTH_SERVER_ID='YOUR-AUTH-SERVER-ID'
-export ISSUER_URL='YOUR-ISSUER-URL'
-```
 
 ## Configure the auth server with scopes
 
@@ -108,8 +110,9 @@ body:
 extract_body:
   - name: 'id'
     variable: SCOPE_ID
-capture: SCOPE_ID
-jq: ".id"
+capture:
+    - variable: SCOPE_ID
+      jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -167,14 +170,13 @@ extract_body:
     variable: CLIENT_SECRET
   - name: 'id'
     variable: CLIENT_ID
+capture:
+  - variable: CLIENT_SECRET
+    jq: '.client_secret'
+  - variable: CLIENT_ID
+    jq: '.id'
 {% endkonnect_api_request %}
 <!--vale on-->
-
-Export your client secret and client ID:
-```sh
-export CLIENT_SECRET='YOUR-CLIENT-SECRET'
-export CLIENT_ID='YOUR-CLIENT-ID'
-```
 
 ## Add a backend cluster
 
@@ -199,8 +201,9 @@ body:
 extract_body:
   - name: id
     variable: BACKEND_CLUSTER_ID
-capture: BACKEND_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: BACKEND_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -229,8 +232,9 @@ body:
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
-capture: VIRTUAL_CLUSTER_ID
-jq: ".id"
+capture:
+  - variable: VIRTUAL_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -256,8 +260,9 @@ body:
 extract_body:
 - name: id
   variable: LISTENER_ID
-capture: LISTENER_ID
-jq: ".id"
+capture:
+  - variable: LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -402,16 +407,16 @@ command: |
 expected:
   return_code: 0
   message: |
-    TOPIC             PARTITIONS     REPLICATION FACTOR
-    products-topic    1              1
+    TOPIC              PARTITIONS     REPLICATION FACTOR
+    products-topic     1              1
 render_output: false
 {% endvalidation %}
 
 The output should look like this:
 
 ```shell
-TOPIC             PARTITIONS     REPLICATION FACTOR
-products-topic    1              1
+TOPIC           PARTITIONS     REPLICATION FACTOR
+products-topic  1              1
 ```
 {:.no-copy-code}
 

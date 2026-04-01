@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.3.2
+  version: 3.3.3
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@598598bb85b241381bb4cc9f7a88f7b6204b275f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/598598bb85b241381bb4cc9f7a88f7b6204b275f'
+  x-oas-source: kong/platform-api@13b85f000e8c385052e0d65bdd3ee1a08eff8174
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/13b85f000e8c385052e0d65bdd3ee1a08eff8174'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4702,6 +4702,7 @@ components:
         - account-access-revoked
         - api-key-expiring-soon
         - api-key-expired
+        - developer-invitation
     EmailTemplateVariableName:
       description: |
         Enum for available portal email template variables.
@@ -5792,7 +5793,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -5803,7 +5804,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
