@@ -80,15 +80,17 @@ faqs:
 related_resources:
   - text: Dev Portal Markdown components reference
     url: https://portaldocs.konghq.com/
-  - text: Portal customization reference
-    url: /dev-portal/portal-customization/
   - text: Custom domains
     url: /dev-portal/custom-domains/
   - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
+  - text: Dev Portal VS Code extension (tech preview)
+    url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
 ---
 
 In your Dev Portal, you can create pages that contain content such as text, buttons, tabs, and more. Pages are used to convey information about your API and Dev Portal to users. They are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs or slugs. You can also stage new pages or restrict access to logged-in developers by using visibility controls and publishing status.
+
+You need the [Content Editor role](/konnect-platform/teams-and-roles/#dev-portal) to edit snippets, pages, and customization.
 
 ![Dev Portal Editor](/assets/images/dev-portal/dev-portal-editor.png)
 > _**Figure 1:** The Portal Editor UI in Dev Portal._
@@ -96,6 +98,8 @@ In your Dev Portal, you can create pages that contain content such as text, butt
 ## Pages
 
 You can create multiple pages in the Dev Portal, similar to how a website is structured. Pages can contain text and other objects, like containers and buttons. To get started creating pages, navigate to your Dev Portal and click **Portal Editor** in the sidebar. Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).
+
+Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
 
 ### Page structure
 
@@ -131,10 +135,10 @@ columns:
     key: regexp
 rows:
   - path: "`/login/*`"
-    description: Login
+    description: The login page is itself customizable, but the path is enforced for authentication to work properly.
     regexp: "`^/login(?:\\/.*)?`"
   - path: "`/register`"
-    description: Registration
+    description: The registration page is customizable; however, a default page is provided at this path if it does not exist.
     regexp: "`^/register`"
   - path: "`/forgot-password`"
     description: Forgot password
@@ -147,7 +151,10 @@ rows:
     regexp: "`^/logout`"
   - path: "`/apps/*`"
     description: Developer applications
-    regexp: "`^/apps`"
+    regexp: "`^/apps(?:\/.*)?`"
+  - path: "`/account/*`"
+    description: Developer account, including Teams
+    regexp: "`^/account(?:\/.*)?`"
   - path: "`/api/v*/`"
     description: Portal API
     regexp: "`^/api\\/v\\d+\\/.*`"
@@ -162,7 +169,7 @@ rows:
     regexp: "`^/_api\\/.*`"
   - path: "`/api/oauth/*`"
     description: OAuth endpoints
-    regexp: "`^/api//oauth\\/.*`"
+    regexp: "`^/api/oauth\\/.*`"
   - path: "`/npm/*`"
     description: CDN proxy
     regexp: "`^/npm\\/.*`"

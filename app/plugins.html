@@ -6,11 +6,39 @@ edit_and_issue_links: false
 description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations.
 ---
 
+{%- assign categories = site.data.plugin_categories | sort: "text" -%}
+{%- assign kong_plugins = site.data.kong_plugins | where_exp: "plugin", "plugin.published != false" -%}
+{%- assign act_as_plugins = site.data.act_as_plugins | where_exp: "plugin", "plugin.published != false" -%}
+{%- assign plugins = kong_plugins | concat: act_as_plugins -%}
+{%- assign third_party_plugins = plugins | where: "third_party", true -%}
+
+{% if page.output_format == 'markdown'%}
+{% for cat in categories %}
+{%- assign plugins_for_category = plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort:
+"name" -%}
+{% if plugins_for_category.size > 0 %}
+## {{ cat.text }}
+
+{% for plugin in plugins_for_category %}
+### {{plugin.name | liquify}}
+Description: {{plugin.description | liquify}}
+Documentation: {{plugin.url}}
+{% endfor %}{% endif %}{% endfor %}
+
+{% if third_party_plugins.size > 0 %}
+## 3rd Party Plugins
+
+{% for plugin in third_party_plugins %}
+### {{plugin.name | liquify}}
+Description: {{plugin.description | liquify}}
+Documentation: {{plugin.url}}
+{% endfor %}{% endif %}
+{% else %}
 <div class="flex flex-col gap-12 w-full">
   <div class="flex justify-between gap-[60px]">
     <div class="flex flex-col gap-6 py-24 self-center">
       <div class="flex flex-col gap-2">
-        <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Plugin Hub</h1>
+        <div class="flex items-center gap-3"><h1 class="font-extrabold text-[40px] leading-[60px]">Kong Plugin Hub</h1>{% include components/llm_dropdown.html url=page.url %}</div>
         <span class="leading-7">Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations</span>
       </div>
       <div class="flex gap-3 items-center lg:w-3/5">
@@ -62,12 +90,6 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
     </div>
   </div>
 
-
-  {% assign categories = site.data.plugin_categories | sort: "text" %}
-  {% assign kong_plugins = site.data.kong_plugins | where_exp: "plugin", "plugin.published != false" %}
-  {% assign act_as_plugins = site.data.act_as_plugins | where_exp: "plugin", "plugin.published != false" %}
-  {% assign plugins = kong_plugins | concat: act_as_plugins %}
-
   <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
     <div id="filters" class="filters md:flex">
 
@@ -91,8 +113,9 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                   {% for tier in site.data.products.gateway.tiers %}
                   {% assign tier_value = tier[0] %}
                   {% assign tier_text = tier[1].text %}
+                  {% assign text = site.data.tooltips.tier[tier_value]%}
                   {% include checkbox.html value=tier_value name="tier"
-                  label=tier_text %}
+                  label=tier_text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -100,8 +123,9 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="text-sm text-brand font-semibold">Deployment Platforms</div>
                 <div class="flex flex-col gap-3">
                   {% for deployment_topology in site.data.products.gateway.deployment_topologies %}
+                  {% assign text = site.data.tooltips.deployment_topology[deployment_topology.slug]%}
                   {% include checkbox.html value=deployment_topology.slug name="deployment-topology"
-                  label=deployment_topology.text %}
+                  label=deployment_topology.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -110,7 +134,8 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="flex flex-col gap-3">
 
                   {% for support in site.data.plugin_support.support_by %}
-                  {% include checkbox.html value=support.slug name="support" label=support.text %}
+                  {% assign text = site.data.tooltips.support_by[support.slug]%}
+                  {% include checkbox.html value=support.slug name="support" label=support.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -119,7 +144,8 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
                 <div class="flex flex-col gap-3">
 
                   {% for trust in site.data.plugin_support.trusted_content %}
-                  {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text %}
+                  {% assign text = site.data.tooltips.trusted_content[trust.slug]%}
+                  {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text tooltip=text %}
                   {% endfor %}
                 </div>
               </div>
@@ -175,7 +201,6 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
         {% endif %}
         {% endfor %}
 
-        {% assign third_party_plugins = plugins | where: "third_party", true %}
         {% if third_party_plugins.size > 0 %}
         <div class="flex flex-col gap-4" id="third-party">
           <h2>3rd Party Plugins</h2>
@@ -191,3 +216,4 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
     </div>
   </div>
 </div>
+{% endif %}

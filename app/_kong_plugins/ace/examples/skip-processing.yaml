@@ -1,0 +1,29 @@
+description: 'Configures the anonymous Consumer to allow anonymous access or multi-authentication.'
+extended_description: |
+  Configure the anonymous Consumer to allow anonymous access or multi-authentication.
+
+  When setting the `anonymous` config, there are two outcomes to be aware of:
+
+  * Requests that have authenticated with another, higher priority authentication plugin will bypass the ACE plugin, removing the requirement to authenticate as a portal application and be authorized for the given operation.
+  * Requests that don't authenticate as a Dev Portal application or another authenticated credential will be allowed to pass through the ACE plugin, opening access to all traffic. If this outcome is not desired, a [`request-termination`](/plugins/request-termination/) or similar plugin must be applied to the anonymous consumer, ensuring that unauthenticated access is not allowed.
+title: 'Multi-authentication'
+
+weight: 900
+
+requirements: 
+- "An API or API package in Dev Portal"
+- "Another [authentication plugin](/plugins/?category=authentication) configured with `config.anonymous`."
+
+config: 
+  match_policy: if_present
+  anonymous: anonymous
+
+min_version:
+  gateway: '3.13'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

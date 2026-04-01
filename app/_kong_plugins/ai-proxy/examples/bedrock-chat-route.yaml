@@ -4,7 +4,7 @@ description: 'Configure a chat route using Amazon Bedrock with the Meta Llama 3 
 extended_description: |
   Configure a chat route using Amazon Bedrock with the Meta Llama 3 70B Instruct model and the US East 1 AWS region.
 
-  The following configuration shows how to set up the AI Proxy plugin using AWS Access Key and AWS Secret Key credentials. Note that Kong AI Gateway can automatically fetch IAM role credentials based on your AWS environment, observing the following precedence order:
+  The following configuration shows how to set up the AI Proxy plugin using AWS Access Key and AWS Secret Key credentials. Note that {{site.ai_gateway}} can automatically fetch IAM role credentials based on your AWS environment, observing the following precedence order:
   - Fetch from credentials defined in environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
   - Fetch from profile and credential file, defined by `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE`.
   - Fetch from an ECS [container credential provider](https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html).

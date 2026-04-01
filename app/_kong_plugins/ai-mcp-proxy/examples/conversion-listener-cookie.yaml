@@ -1,0 +1,87 @@
+description: 'Generate an MCP server from {{ site.base_gateway }} Service with cookie conversion'
+
+title: 'Generate an MCP server in conversion-listener mode with cookie conversion'
+
+extended_description: |
+  {% new_in %} Generate an MCP server from {{ site.base_gateway }} Services with cookie-based authentication.
+
+  {:.info}
+  > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
+  > ```yaml
+  > services:
+  > - name: mcp-service
+  >   url: http://host.docker.internal:3000
+  >   routes:
+  >   - name: mcp-route
+  >     paths:
+  >     - /marketplace
+  > ```
+
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you'll need an upstream HTTP API to expose.
+  Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+  ```bash
+    curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
+    npm install express
+    node api.js
+  ```
+
+  This example uses [`config.tools.annotations.title`](/plugins/ai-mcp-proxy/reference/#schema--config-tools-annotations-title) to add a meaningful name to the tool to simplify human debugging. The configuration requires a `session_id` cookie for authentication, which the plugin extracts from incoming requests and forwards to the upstream service.
+
+weight: 900
+
+min_version:
+  gateway: 3.13
+requirements:
+- "A running and exposed API"
+- "Valid session_id cookie set by your authentication service"
+
+config:
+  mode: conversion-listener
+  tools:
+  - description: Get users
+    method: GET
+    path: /marketplace/users
+    annotations:
+      title: Get users
+    parameters:
+    - name: id
+      in: query
+      required: false
+      schema:
+        type: string
+      description: Optional user ID
+    - name: session_id
+      in: cookie
+      description: "Session identifier set by the authentication service. Treated as the proof of an authenticated session."
+      required: true
+      schema:
+        type: string
+  - description: Get orders for a user
+    method: GET
+    path: /marketplace/orders
+    annotations:
+      title: Get users orders
+    parameters:
+    - name: userid
+      in: query
+      required: true
+      schema:
+        type: string
+      description: User ID to filter orders
+    - name: session_id
+      in: cookie
+      description: "Session identifier set by the authentication service. Treated as the proof of an authenticated session."
+      required: true
+      schema:
+        type: string
+  server:
+    timeout: 60000
+  max_request_body_size: 8192
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -1,0 +1,13 @@
+name: Run site
+description: Run site
+runs:
+  using: composite
+  steps:
+    - name: Build and run the site
+      shell: bash
+      env:
+        ENABLE_ALGOLIA: 0
+        LC_CTYPE: en_US.UTF-8
+        LANG: C.UTF-8
+      run: |
+        npx netlify dev & npx wait-on http://localhost:8888

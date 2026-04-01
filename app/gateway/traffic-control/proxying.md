@@ -201,7 +201,7 @@ rows:
 {:.warning}
 > **Important:** These latency headers are reported during the `header_filter` phase, which may occur before the full response body has been processed.
 <br><br>
-> In scenarios where body processing takes significant time, the latency values in these headers might not reflect the complete duration of the request lifecycle. For more accurate and comprehensive latency data, consider using the [Debugger in {{site.konnect_short_name}}](/gateway/debugger/), the [Analytics feature in {{site.konnect_short_name}}](/advanced-analytics/), a metrics plugin like [Prometheus](/plugins/prometheus/), or a [logging plugin](/plugins/?category=logging). 
+> In scenarios where body processing takes significant time, the latency values in these headers might not reflect the complete duration of the request lifecycle. For more accurate and comprehensive latency data, consider using the [Debugger in {{site.konnect_short_name}}](/observability/debugger/), the [Analytics feature in {{site.konnect_short_name}}](/observability/), a metrics plugin like [Prometheus](/plugins/prometheus/), or a [logging plugin](/plugins/?category=logging). 
 
 Once the headers are sent to the client, {{site.base_gateway}} starts executing plugins for the Route or Service that implement the
 `body_filter` hook. 

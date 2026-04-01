@@ -3,7 +3,7 @@
     {% include_cached breadcrumbs.html breadcrumbs=include.breadcrumbs %}
 
 
-    {% if include.layout == 'plugins/example' or include.layout == 'landing_page' %}{% assign no_aside = true %}{% endif %}
+    {% if include.layout == 'plugins/example' or include.layout == 'landing_page' or include.no_edit_link %}{% assign no_aside = true %}{% endif %}
     <div class="flex gap-3 text-xs xl:basis-1/4 items-center {% if no_aside == true %}justify-end{% endif %}">
         {% include_cached edit_and_issue_links.html edit_link=include.edit_link %}
     </div>

@@ -1,0 +1,35 @@
+
+title: 'Chat route with xAI'
+description: 'Configure a chat route using the xAI Grok 4 model.'
+
+weight: 900
+
+min_version:
+  gateway: '3.13'
+
+requirements:
+- xAI account
+
+config:
+  route_type: llm/v1/chat
+  auth:
+    header_name: Authorization
+    header_value: Bearer ${key}
+  model:
+    provider: xai
+    name: grok-4
+    options:
+      max_tokens: 512
+      temperature: 1.0
+
+variables:
+  key:
+    value: $XAI_API_KEY
+    description: The API key to use to connect to xAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

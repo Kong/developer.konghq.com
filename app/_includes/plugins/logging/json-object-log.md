@@ -29,7 +29,7 @@ rows:
   - log: "`latencies.kong`"
     description: |
       The internal {{site.base_gateway}} latency, in milliseconds, that it takes to process the request.
-      * For requests that are proxied to an upstream service, it is equivalent to the `X-Kong-Proxy-Latency` [response header](/gateway/configuration/#headers).
+      * For requests that are proxied to an upstream service, it is equivalent to the `X-Kong-Proxy-Latency` [response header](/gateway/configuration/#headers). It describes the time, in milliseconds, that has elapsed before transmitting the request to upstream. If there are retries to the upstream, it includes the time taken by all but the last retry. The latency of each retry is recorded by `balancer_latency` or `balancer_latency_ns`.
       * For requests that generate a response within {{ site.base_gateway }} (typically the result of an error or a plugin-generated response), it is equivalent to the `X-Kong-Response-Latency` [response header](/gateway/configuration/#headers).
       * In {{site.base_gateway}} 3.6 or earlier, it only consists of the time it took to find the right upstream service, receive the whole response from the upstream service, and run all plugins executed before the log phase.
   - log: "`latencies.request`"

@@ -37,7 +37,7 @@ tags:
 search_aliases:
   - kafka-log
   - events
-  - event-gateway
+  - protocol mediation
 
 min_version:
   gateway: '1.3'

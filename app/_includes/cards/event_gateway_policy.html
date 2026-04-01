@@ -1,0 +1,19 @@
+{% assign policy = include.policy %}
+<div
+  class="card card__bordered min-h-[260px]"
+  data-card="plugin"
+  data-policy-target="{{policy.policy_target}}"
+  data-phases="{{policy.phases | join: ','}}"
+>
+    <a href="{{policy.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+        <img src="{{ policy.icon }}" class="w-8 h-8"/>
+
+        <div class="flex flex-col gap-3 flex-grow">
+            <h4>{{ policy.name | liquify }}</h4>
+
+            <p class="text-sm line-clamp-3">
+                {{ policy.description | liquify | markdownify | markdown }}
+            </p>
+        </div>
+    </a>
+</div>

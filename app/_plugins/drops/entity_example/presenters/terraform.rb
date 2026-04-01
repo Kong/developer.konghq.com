@@ -16,16 +16,37 @@ module Jekyll
             end
 
             def target
-              return nil if @example_drop.target.key == "global"
+              return nil if @example_drop.target.key == 'global'
+
               @example_drop.target.key
             end
 
+            def product
+              @product ||= @example_drop.product
+            end
+
+            def provider_source
+              @provider_source ||= if @example_drop.product == 'gateway'
+                                     'konnect'
+                                   else
+                                     'konnect-beta'
+                                   end
+            end
+
             def provider
-              "konnect_gateway"
+              @provider ||= if @example_drop.product == 'gateway'
+                              'konnect_gateway'
+                            else
+                              'konnect_event_gateway'
+                            end
             end
 
             def resource_name
               "#{provider}_#{entity_type}"
+            end
+
+            def terraform_resource_name
+              @terraform_resource_name ||= resource_name.gsub('-', '_')
             end
 
             def render
@@ -72,6 +93,8 @@ module Jekyll
               input.each do |v|
                 s += if v.is_a?(Hash)
                        output_hash_in_list(v, depth)
+                     elsif v.is_a?(Array)
+                       "#{render_inline_list(v)}, "
                      else
                        "#{line(quote(v), (depth + 1), '').strip}, "
                      end
@@ -79,6 +102,17 @@ module Jekyll
 
               s = s.rstrip.chomp(',')
               s + end_list(input, depth)
+            end
+
+            def render_inline_list(input)
+              items = input.map do |v|
+                if v.is_a?(Array)
+                  render_inline_list(v)
+                else
+                  quote(v)
+                end
+              end
+              "[#{items.join(', ')}]"
             end
 
             def end_list(input, depth)
@@ -94,6 +128,14 @@ module Jekyll
 
             def quote(input)
               return '' if input.nil?
+
+              # Replace patterns like ${env["MY_SECRET"]} or ${env['MY_SECRET']} with var.my_secret
+              if input.is_a?(String)
+                input = input.gsub(/\$\{env\[\s*["']([^"']+)["']\s*\]\}/) do
+                  var_name = Regexp.last_match(1).downcase
+                  "var.#{var_name}"
+                end
+              end
 
               return input if input.is_a?(String) && input.start_with?("var.")
 
@@ -128,7 +170,40 @@ module Jekyll
             def variable_names
               keys = []
               variables.each do |k, v|
-                keys = v['value'].gsub("$","").downcase
+                keys = v['value'].gsub('$', '').downcase
+              end
+              keys
+            end
+          end
+
+          class EventGatewayPolicy < Base
+            def terraform_resource_name
+              @terraform_resource_name ||= if policy_target == 'listener'
+                                             "konnect_event_gateway_#{policy_target}_policy_#{@example_drop.data['type']}"
+                                           else
+                                             "konnect_event_gateway_#{@example_drop.target.key}_policy_#{@example_drop.data['type']}"
+                                           end.gsub('-', '_')
+            end
+
+            def policy_target
+              @policy_target ||= @example_drop.policy_target
+            end
+
+            def entity_type
+              "#{@example_drop.policy_target}_policy_#{@example_drop.data['type']}"
+            end
+
+            def data
+              @data ||= Utils::VariableReplacer::TerraformData.run(
+                data: @example_drop.data,
+                variables: variables
+              )
+            end
+
+            def variable_names
+              keys = []
+              variables.each do |k, v|
+                keys = v['value'].gsub('$', '').downcase
               end
               keys
             end

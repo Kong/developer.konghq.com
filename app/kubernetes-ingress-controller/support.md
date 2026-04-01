@@ -31,7 +31,7 @@ LTS versions of {{site.kic_product_name}} are supported for 3 years after releas
 
 ## Supported versions
 
-The following table lists {{site.kic_product_name}} compatibility with versions of other dependencies.
+{{site.kic_product_name}} can run on supported [Kubernetes distributions certified by the CNCF](https://www.cncf.io/training/certification/software-conformance/). The following table lists {{site.kic_product_name}} compatibility with versions of other dependencies.
 
 {:.info}
 > **Note**: The {{site.base_gateway}} versions listed here may or may not be currently supported by Kong. 
@@ -40,8 +40,6 @@ See the [{{site.base_gateway}} support policy](/gateway/version-support-policy/)
 > If a Gateway version is out of support, we recommend [upgrading to a newer {{site.kic_product_name}} version](/kubernetes-ingress-controller/faq/upgrading-ingress-controller/).
 
 {% include_cached k8s/supported-versions.md show_kic=true %}
-
-> _Table 1: Version support for dependencies of {{site.kic_product_name}}_
 
 ## {{site.kic_product_name}} versions
 
@@ -61,13 +59,10 @@ columns:
 rows:
   - version: "3.5.x"
     release: "2025-07-04"
-    support: "2026-07-04"
+    support: "2027-12-18"
   - version: "**3.4.x**"
     release: "**2024-12-18**"
     support: "**2027-12-18**"
-  - version: "3.3.x"
-    release: "2024-08-26"
-    support: "2025-08-26"
   - version: "**2.12.x**"
     release: "**2023-09-25**"
     support: "**2026-09-25**"
@@ -85,6 +80,9 @@ columns:
   - title: End of Support
     key: support
 rows:
+  - version: "3.3.x"
+    release: "2024-08-26"
+    support: "2025-08-26"
   - version: "3.2.x"
     release: "2024-06-12"
     support: "2025-06-12"
@@ -148,7 +146,7 @@ rows:
 {% endtable %}
 > _Table 3: Unsupported versions of {{site.kic_product_name}}_
 
-{% include kong-support-policy.md %}
+{% include support/support-policy.md %}
 
 ## Helm chart compatibility
 

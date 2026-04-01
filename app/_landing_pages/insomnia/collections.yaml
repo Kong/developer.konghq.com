@@ -166,3 +166,6 @@ rows:
                 - WSDL files
             - q: Can I run collections in CI/CD environments?
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
+            - q: Can I set authentication headers at the collection level so I do not repeat them on every request?
+              a: |
+                No. As a workaround, group the relevant requests in a **folder** and then set authentication at the folder level for that group to avoid duplicating headers on each request.  

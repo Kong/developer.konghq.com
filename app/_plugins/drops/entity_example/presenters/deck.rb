@@ -13,6 +13,8 @@ module Jekyll
             def entity
               @entity ||= if @example_drop.entity_type == 'target'
                             'upstreams'
+                          elsif @example_drop.entity_type == 'sni'
+                            'certificates'
                           else
                             "#{@example_drop.entity_type}s"
                           end
@@ -44,6 +46,11 @@ module Jekyll
             def _data
               if @example_drop.entity_type == 'target'
                 { 'name' => 'example_upstream', 'targets' => [@example_drop.data] }
+              elsif @example_drop.entity_type == 'sni'
+                { 'id' => @example_drop.data.dig('certificate', 'id'),
+                  'cert' => "-----BEGIN CERTIFICATE-----\n-----END CERTIFICATE-----",
+                  'key' => "-----BEGIN RSA PRIVATE KEY-----\n-----END RSA PRIVATE KEY",
+                  'snis' => [@example_drop.data.except('certificate')] }
               else
                 @example_drop.data
               end

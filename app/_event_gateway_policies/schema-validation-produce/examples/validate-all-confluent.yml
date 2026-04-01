@@ -1,0 +1,21 @@
+title: Validate messages against a Confluent Schema Registry
+
+description: Ensure that messages produced to any topic are validated against a Confluent Schema Registry, and mark messages that don't conform.
+
+weight: 900
+
+requirements:
+  - A [schema registry](/event-gateway/entities/schema-registry/) configured in the {{site.event_gateway_short}} control plane.
+
+name: validate-all-topics
+type: schema_validation
+config:
+  type: confluent_schema_registry
+  schema_registry:
+    name: my-schema-registry
+  key_validation_action: mark
+  value_validation_action: mark
+
+tools:
+  - konnect-api
+  - terraform

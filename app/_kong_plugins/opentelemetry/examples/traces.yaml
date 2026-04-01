@@ -1,0 +1,21 @@
+description: "Enables the OTEL plugin with an endpoint for traces."
+extended_description: "Enables the OTEL plugin with an endpoint for tracing. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
+
+title: 'Enable the OTEL plugin for traces'
+
+weight: 890
+
+requirements: 
+  - "An OpenTelemetry backend"
+  - "Set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) in `kong.conf`"
+  - "Set [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
+
+config:
+  traces_endpoint: http://localhost:4318/v1/traces
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

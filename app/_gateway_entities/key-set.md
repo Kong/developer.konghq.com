@@ -15,7 +15,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 
 tools:
@@ -47,10 +47,6 @@ Key Sets can be used with the following plugins:
 - [JWE Decrypt](/plugins/jwe-decrypt/), with the `config.key_sets` parameter
 - [JWT Signer](/plugins/jwt-signer/), with the `config.access_token_keyset` parameter
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Key Set
 
 {% entity_example %}
@@ -58,3 +54,7 @@ type: key-set
 data:
   name: example-key-set
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

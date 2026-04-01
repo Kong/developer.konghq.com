@@ -4,6 +4,7 @@
       <div class="tablist">
         <a class="tab-button__horizontal{% if page.overview? %} tab-button__horizontal--active{% endif %}" href="{{page.overview_url}}">Overview</a>
         <a class="tab-button__horizontal{% if page.example? %} tab-button__horizontal--active{% endif %}" href="{{page.get_started_url}}">Examples</a>
+        {%- unless page.third_party -%}<a class="tab-button__horizontal" href="/how-to/?kong_plugins={{page.slug}}" target="_blank" rel="noopener noreferrer">Guides</a>{%- endunless -%}
         <a class="tab-button__horizontal{% if page.reference? %} tab-button__horizontal--active{% endif %}" href="{{page.reference_url}}">Configuration reference</a>
         {% if page.changelog_exists? %}
           <a class="tab-button__horizontal{% if page.changelog? %} tab-button__horizontal--active{% endif %}" href="{{page.changelog_url}}">Changelog</a>

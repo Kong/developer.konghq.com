@@ -14,7 +14,7 @@ related_resources:
   - text: Using SSL certificates in {{site.base_gateway}}
     url: /gateway/ssl-certificates/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
       
 tools:
     - admin-api
@@ -68,10 +68,6 @@ The prioritization for matching SNIs to Certificates follows this order:
  4. Search for a certificate associated with the SNI `*`
  5. The default certificate on the file system
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up an SNI
 
 {% entity_example %}
@@ -81,3 +77,7 @@ data:
   certificate:
     id: 2e013e8-7623-4494-a347-6d29108ff68b
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

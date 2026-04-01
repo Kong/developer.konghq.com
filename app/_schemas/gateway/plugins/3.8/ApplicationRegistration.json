@@ -1,0 +1,61 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "auto_approve": {
+          "default": false,
+          "description": "If enabled, all new Service Contracts requests are automatically approved.",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "Unique description displayed in information about a Service in the Developer Portal.",
+          "type": "string",
+          "unique": true
+        },
+        "display_name": {
+          "description": "Unique display name used for a Service in the Developer Portal.",
+          "type": "string"
+        },
+        "enable_proxy_with_consumer_credential": {
+          "default": false,
+          "description": "If enabled, the Route of the Service can be accessed using the Consumer's credential",
+          "type": "boolean"
+        },
+        "show_issuer": {
+          "default": false,
+          "description": "Displays the **Issuer URL** in the **Service Details** dialog.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "display_name"
+      ],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "required": [
+
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}

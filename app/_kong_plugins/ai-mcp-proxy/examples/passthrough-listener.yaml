@@ -1,35 +1,46 @@
-description: 'Configure AI Gateway passthrough for existing MCP Servers'
+description: 'Configure {{site.ai_gateway}} passthrough for existing MCP Servers'
 
-title: 'Configure AI Gateway passthrough for existing MCP Servers'
+title: 'Configure {{site.ai_gateway}} passthrough for existing MCP Servers'
 
 extended_description: |
-  Configure AI Gateway passthrough for existing MCP Servers to enable proxying and observability.
+  Configure {{site.ai_gateway}} passthrough for existing MCP Servers to enable proxying and observability.
 
   {:.warning}
   > For this configuration to work properly, you need a [Service](/gateway/entities/service/#set-up-a-gateway-service) and a [Route](/gateway/entities/route/#set-up-a-route) with the following configuration:
   > ```yaml
   > services:
   > - name: mcp-service
-  >   url: http://host.docker.internal:3000
+  >   url: http://host.docker.internal:3001
   >   routes:
   >   - name: mcp-route
   >     paths:
-  >     - /marketplace
+  >     - /mcp
   > ```
 
-  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin, you’ll need an upstream HTTP API to expose.
-  Use this mock API to test the plugin without relying on an external service; it simulates a small marketplace with sample users and orders exposed through `/marketplace/users` and `/marketplace/{userId}/orders` endpoints:
+  Before using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin in `passthrough-listener` mode, you need an upstream MCP-compatible HTTP server.
 
+  For this example, use a simple Express-based MCP server that simulates a marketplace system. It provides read-only access to sample users and their orders through the following tools:
+  * `list_users`
+  * `get_user`
+  * `list_orders`
+  * `list_orders_for_user`
+  * `search_orders`
+
+  Run the following command to clone the repository, install dependencies, build the server, and start it:
   ```bash
-  curl -s -o api.js "https://gist.githubusercontent.com/subnetmarco/5ddb23876f9ce7165df17f9216f75cce/raw/a44a947d69e6f597465050cc595b6abf4db2fbea/api.js"
-  npm install express
-  node api.js
+  git clone https://github.com/tomek-labuk/marketplace-acl.git && \
+  cd marketplace-acl && \
+  npm install && \
+  npm run build && \
+  node dist/server.js
   ```
+
+  When the server starts, it listens at `http://localhost:3001/mcp`.
 
 weight: 900
 
 requirements:
-- "A running and exposed API"
+- "A running MCP server"
 
 config:
   mode: passthrough-listener

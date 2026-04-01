@@ -39,6 +39,16 @@ categories:
 tags:
   - ai
 
+faqs:
+  - q: Can I use a custom PII anonymization service instead of Kong's AI PII Anonymizer?
+    a: |
+      To use a custom PII service, configure the [Request Callout](/plugins/request-callout/) or [Datakit](/plugins/datakit/) plugin to:
+      1. Send the request payload to your PII service.
+      2. Receive the sanitized response.
+      3. Forward the transformed payload to the upstream service.
+
+      Your custom service must implement Kong's PII service interface if you want to use the AI PII Sanitizer plugin with it.
+
 related_resources:
   - text: Use AI PII Sanitizer plugin to protect sensitive information in requests
     url: /how-to/protect-sensitive-information-with-ai/
@@ -104,12 +114,12 @@ sequenceDiagram
 
 Kong provides several [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
-* `service:v0.1.2-en`: English model, version 0.1.2
-* `service:v0.1.2-it`: Italian model, version 0.1.2
-* `service:v0.1.2-fr`: French model, version 0.1.2
+* `service:v0.1.4-en`: English model, version 0.1.4
+* `service:v0.1.4-it`: Italian model, version 0.1.4
+* `service:v0.1.4-fr`: French model, version 0.1.4
 
 {:.info}
-> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.2`
+> All models are bundled into a single image per version, tagged using the format `v<version>`. For example: `v0.1.4`
 > If you need to add or modify models, edit the configuration file at `ai_pii_service/nlp_engine_conf.yml`.
 
 ### Access the Docker images
@@ -145,7 +155,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/IMAGE-NAME:TAG
 Replace `IMAGE-NAME` and `TAG` with the appropriate image and version, such as:
 
 ```bash
-docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
+docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.4-en
 ```
 
 #### AI PII service Dockerfile usage
@@ -153,7 +163,7 @@ docker pull docker.cloudsmith.io/kong/ai-pii/service:v0.1.2-en
 To use an image in a `Dockerfile`, reference it as follows:
 
 ```dockerfile
-FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.2-en
+FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.4-en
 ```
 
 ### Available language tags
@@ -161,12 +171,14 @@ FROM docker.cloudsmith.io/kong/ai-pii/ai-pii-service:v0.1.2-en
 The following language-specific images are currently available:
 
 * `-en` (English)
+* `-es` (Spanish)
 * `-fr` (French)
 * `-de` (German)
 * `-it` (Italian)
 * `-ja` (Japanese)
-* `-pt` (Portuguese)
 * `-ko` (Korean)
+* `-pt` (Portuguese)
+* `-tr` (Turkish)
 
 {:.info}
 > The PII Anonymizer service loads one NLP model by default. Ensure at least **600MB of free memory** is available when running the container.
@@ -182,6 +194,8 @@ This service takes the following optional environment variables at startup:
 
 * `POST /llm/v1/sanitize`: Sanitize specified types of PII information, including credentials, and custom patterns
 * `POST /llm/v1/sanitize_credentials`: Only for sanitizing credentials
+
+See the [AI PII Sanitizer OpenAPI specification](/plugins/ai-sanitizer/api/) for complete details.
 
 ### Available anonymization modes
 
@@ -218,7 +232,7 @@ You can use the following fields in the `anonymize` array:
 * `ip`: Anonymizes IP addresses (both IPv4 and IPv6).
 * `nrp`: Anonymizes a person’s nationality, religious, or political group.
 * `ssn`: Anonymizes Social Security Numbers (SSN) and other related identifiers like ITIN, NIF, ABN, and more.
-* `domain`: Anonymizes domain names.
+* `domain`: Anonymizes domain names. It was deprecated, use `url` instead.
 * `url`: Anonymizes web URLs.
 * `medical`: Anonymizes medical identifiers (for example, medical license numbers, NHS numbers, medicare numbers).
 * `driverlicense`: Anonymizes driver's license numbers.

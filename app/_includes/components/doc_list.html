@@ -3,11 +3,17 @@
 <ul class="flex flex-col bg-secondary shadow-primary  rounded-md text-sm ml-0 gap-0">
   {% for doc in docs %}
     <li class="flex gap-2 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md items-center border-b border-primary/5">
-      <a class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline" href="{{ doc.url }}">{{ doc.title | liquify }}<span class="text-terciary flex flex-shrink-0">View &rarr;</span></a>
+      <a class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline" href="{{ doc.url }}">{{ doc.title | liquify }}
+      <!-- {% if config.description %}
+      <p class="py-4 px-5 w-full text-secondary">{{ doc.description | liquify }}</p>
+      {% endif %} -->
+      <span class="text-terciary flex flex-shrink-0">View &rarr;</span></a>
     </li>
   {% endfor %}
+  {% unless config.view_more == false %}
   <li class="flex gap-2 hover:bg-hover-component/100 hover:last:rounded-b-md">
     <a class="py-4 px-5 w-full hover:no-underline" href="{{ include.view_more }}">View More &rarr;</a>
   </li>
+  {% endunless %}
 </ul>
 {% endif %}

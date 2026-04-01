@@ -34,18 +34,36 @@ rows:
       text: Install Insomnia
     columns:
       - blocks:
-        - type: tabs
-          tab_group: install-on-os
+        - type: card
           config:
-            - title: macOS
-              include_content: tools/insomnia/install/osx
-            - title: Windows
-              include_content: tools/insomnia/install/windows
-            - title: Linux
-              include_content: tools/insomnia/install/linux
+            title: macOS
+            description: Download and install Insomnia for macOS.
+            icon:  /assets/icons/third-party/mac.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/mac/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Windows
+            description: Download and install Insomnia for Windows.
+            icon: /assets/icons/third-party/windows.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/windows/latest?app=com.insomnia.app&source=website
+      - blocks:
+        - type: card
+          config:
+            title: Linux
+            description: Download and install Insomnia for Linux.
+            icon: /assets/icons/third-party/linux.svg
+            cta:
+              text: Download
+              url: https://updates.insomnia.rest/downloads/ubuntu/latest?&app=com.insomnia.app&source=website
   - header:
       type: h2
       text: Get started
+  - column_count: 3  
     columns:
       - blocks:
         - type: card
@@ -68,6 +86,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: MCP Clients
+            description: Use MCP clients to connect Insomnia to Konnect for mocking, validating, and protecting requests in real time.
+            icon: /assets/icons/network.svg
+            cta:
+              text: Learn more
+              url: /insomnia/mcp-clients-in-insomnia/       
+      - blocks:
+        - type: card
+          config:
             title: Mock servers
             description: Use mock servers to simulate API endpoints when building features.
             icon: /assets/icons/server.svg
@@ -83,7 +110,19 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/environments/
+      - blocks:
+        - type: card
+          config:
+            title: Inso CLI
+            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
+            icon:  /assets/icons/terminal.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/        
 
+  - header:
+      type: h2
+      text: Account management      
   - columns:
       - blocks:
         - type: card
@@ -103,15 +142,6 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/manage-insomnia/
-      - blocks:
-        - type: card
-          config:
-            title: Inso CLI
-            description: Include Inso CLI in your CI/CD pipelines to automate Insomnia tasks.
-            icon:  /assets/icons/terminal.svg
-            cta:
-              text: Learn more
-              url: /inso-cli/
       - blocks:
         - type: card
           config:
@@ -152,7 +182,7 @@ rows:
             icon: /assets/icons/git.svg
             cta:
               text: Learn more
-              url: /insomnia/storage/#git-sync
+              url: /insomnia/git-sync/
 
   - header:
       type: h2
@@ -194,8 +224,8 @@ rows:
           - type: feature_table
             config:
               columns:
-                - title: Hobby
-                  key: hobby
+                - title: Essentials
+                  key: essentials
                 - title: Pro
                   key: pro
                 - title: Enterprise
@@ -203,49 +233,49 @@ rows:
               features:
                 - title: |
                     [Local storage](/insomnia/storage/#local-vault)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [API testing](/insomnia/test/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud-hosted mock server](/insomnia/mock-servers/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Automated API testing](/inso-cli/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [End-to-End Encryption](/insomnia/end-to-end-encryption/)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Cloud Sync](/insomnia/storage/#cloud-sync)
-                  hobby: true
+                  essentials: true
                   pro: true
                   ee: true
                 - title: |
                     [Git Sync](/insomnia/storage/#git-sync)
-                  hobby: false
+                  essentials: true
                   individual: false
                   pro: true
                   ee: true
                 - title: |
                     [Enterprise SSO (SAML, OIDC)](/insomnia/sso/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
                 - title: |
                     [Enterprise support](/insomnia/enterprise/)
-                  hobby: false
+                  essentials: false
                   individual: false
                   pro: false
                   ee: true
@@ -293,5 +323,10 @@ rows:
             - q: Where can I find the Insomnia changelog?
               a: Insomnia release notes are published at [https://insomnia.rest/changelog](https://insomnia.rest/changelog).
             - q: How often does Insomnia release updates?
-              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog). 
+              a: Insomnia releases a major version update twice a year, publishes minor updates approximately every three weeks, and issues patches as needed. Insomnia beta builds are available roughly one week before each release. To view the latest versions, betas, and changelogs, go to the [Insomnia changelog](https://insomnia.rest/changelog).
+            - q: Does Insomnia automatically update to the latest version?
+              a: |
+                On macOS and Windows, Insomnia can update automatically. To enable automatic updates in Insomnia, go to **Preferences > General > Software Updates > Automatically download and install updates** and check the checkbox.
+
+                On Linux, update behavior depends on how you install Insomnia. For example, some installation methods like Flatpak or if your Linux system manages the app, then the app can't update itself. Because Insomnia doesn't own or maintain all Linux distribution mechanisms, automatic updates aren't guaranteed on Linux.
             

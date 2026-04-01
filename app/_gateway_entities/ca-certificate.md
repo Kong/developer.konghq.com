@@ -26,7 +26,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 tools:
     - admin-api
@@ -60,10 +60,6 @@ To verify server certificates, you can define your CA Certificate:
 
 To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/) or the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a CA Certificate
 
 {% entity_example %}
@@ -84,3 +80,7 @@ data:
     qKjBs0k=
     -----END CERTIFICATE-----
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

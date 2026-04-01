@@ -1,0 +1,58 @@
+title: 'Configure AI Proxy for Claude Code with Google Vertex AI'
+description: 'Set up the AI Proxy plugin to work with Claude Code, using Google Vertex AI with Gemini 2.5 Flash model.'
+
+extended_description: |
+  {% new_in 3.13 %}Set up the AI Proxy plugin to work with Claude Code, using Google Vertex AI with Gemini 2.5 Flash model.
+  For a detailed guide on how to use Google Vertex AI with Claude Code see [this guide](/how-to/use-claude-code-with-ai-gateway-vertex/)
+
+show_in_api: true
+weight: 904
+
+requirements:
+- Google Cloud Platform account
+- Vertex AI API enabled
+- Service account with Vertex AI permissions
+
+config:
+  llm_format: anthropic
+  targets:
+  - route_type: llm/v1/chat
+    logging:
+      log_payloads: false
+      log_statistics: true
+    auth:
+      allow_override: false
+      gcp_use_service_account: true
+      gcp_service_account_json: "${gcp_service_account_json}"
+    model:
+      provider: gemini
+      name: gemini-2.5-flash
+      options:
+        anthropic_version: vertex-2023-10-16
+        gemini:
+          api_endpoint: "${vertex_api_endpoint}"
+          project_id: "${gcp_project_id}"
+          location_id: "${gcp_location_id}"
+
+variables:
+  gcp_service_account_json:
+    value: $GCP_SERVICE_ACCOUNT_JSON
+    description: The GCP service account JSON credentials for authentication.
+  vertex_api_endpoint:
+    value: $VERTEX_API_ENDPOINT
+    description: The Vertex AI API endpoint (e.g., us-east5-aiplatform.googleapis.com).
+  gcp_project_id:
+    value: $GCP_PROJECT_ID
+    description: The GCP project ID.
+  gcp_location_id:
+    value: $GCP_LOCATION_ID
+    description: The GCP location/region ID (e.g., us-east5).
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code

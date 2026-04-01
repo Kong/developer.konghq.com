@@ -57,7 +57,7 @@ faqs:
       You can remove the `X-Cache-Key` header from the response by applying a serverless [Post-Function plugin](/plugins/post-function/) in the `header_filter` phase.
 
 notes: |
-  In Serverless gateways only the <code>memory</code> config strategy is supported.
+  In Serverless gateways only the `memory` config strategy is supported.
 
 min_version:
   gateway: '1.0'
@@ -95,3 +95,5 @@ This plugin extends the [Proxy Cache plugin](/plugins/proxy-cache/) with Redis, 
 ## Managing cache entities
 
 {% include_cached /plugins/caching/api.md name=page.name slug=page.slug %}
+
+{% include plugins/redis-cloud-auth.md %}

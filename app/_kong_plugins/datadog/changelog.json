@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added a configuration option to tag the metrics with the Kong route name, or the route ID if the name is empty.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.6.0.0": [
     {
       "message": "Fix a bug that datadog plugin is not triggered for serviceless routes. In this fix, datadog plugin is always triggered, and the value of tag `name`(service_name) is set as an empty value.",

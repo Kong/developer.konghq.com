@@ -67,7 +67,7 @@ CORS errors are shown in the browser developer console with
 explanations of the specific issue. ACAO/Origin mismatches are most common, but
 other error conditions can appear as well.
 
-For example, if you mistyped your `admin_api_uri`, you will see something
+For example, if you mistyped your `admin_gui_api_url`, you will see something
 like the following:
 
 ```

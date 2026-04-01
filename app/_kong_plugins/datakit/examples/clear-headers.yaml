@@ -1,0 +1,43 @@
+description: |
+  Use the Datakit plugin to dynamically clear headers from inputs to service_request and response nodes.
+
+extended_description: |
+  Use the Datakit plugin to dynamically clear headers from inputs to `service_request` and `response` nodes. To clear a header, set its value to `null` or `~`.
+
+  This example contains the following nodes:
+  1. The node `HEADERS` adds a header and clears another header. 
+  2. The node `API` sends the updated request headers to an external API. The node input contains `{ "X-Add-Me": "added" }` only, since `X-Ignored` was cleared.
+  3. The node `EXIT` sends a response to the client with the API headers and body. As with the API node, the input only contains `{ "X-Add-Me": "added" }`.
+  
+title: Clear request headers
+weight: 900
+
+config:
+  nodes:
+  - name: HEADERS
+    type: static
+    values:
+      X-Ignored: null
+      X-Add-Me: "added"
+
+  - name: API
+    type: call
+    url: https://example.com/
+    inputs:
+      headers: HEADERS
+
+  - name: EXIT
+    type: exit
+    inputs:
+      headers: HEADERS
+    status: 200
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.13'

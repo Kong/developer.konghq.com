@@ -3,20 +3,23 @@
 module Jekyll
   module EntityExampleBlock
     class Base
-      attr_reader :example
+      attr_reader :example, :product
 
-      def self.make_for(example:)
+      def self.make_for(example:, product:)
         raise ArgumentError, 'Missing `type` for entity_example.' unless example['type']
 
         if example['type'] == 'plugin'
-          Plugin.new(example:)
+          Plugin.new(example:, product:)
+        elsif example['type'] == 'event_gateway_policy'
+          EventGatewayPolicy.new(example:, product:)
         else
-          new(example:)
+          new(example:, product:)
         end
       end
 
-      def initialize(example:)
+      def initialize(example:, product:)
         @example = example
+        @product = product
 
         validate!
       end
@@ -44,7 +47,11 @@ module Jekyll
       def to_drop
         Object.const_get(
           "Jekyll::Drops::EntityExample::#{self.class.name.split('::').last}"
-        ).new(example: self)
+        ).new(example: self, **options)
+      end
+
+      def options
+        {}
       end
 
       def validate!

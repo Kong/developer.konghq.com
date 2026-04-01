@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class EntityExample < Liquid::Block
@@ -19,14 +20,15 @@ module Jekyll
               "Missing key `tools` in metadata, or `formats` in entity_example block on page #{@page['path']}"
       end
 
-      entity_example = EntityExampleBlock::Base.make_for(example: example)
+      entity_example = EntityExampleBlock::Base.make_for(example: example, product: product(@page))
       entity_example_drop = entity_example.to_drop
 
       template = File.read(entity_example_drop.template)
 
       output = context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['entity_example'] = entity_example_drop
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
 
       if example['indent']
@@ -40,7 +42,6 @@ module Jekyll
             line.sub!(/^#{indent}/, '') # Remove the indent from the line
           end
         end
-
 
         output = output.join("\n")
       end
@@ -57,11 +58,17 @@ module Jekyll
 
     def formats(page, site)
       return page['tools'] unless page['layout'] == 'gateway_entity'
+      return page['tools'].dup << 'ui' if page['products']&.include?('event-gateway')
 
       supported_entities = site.data.dig('entity_examples', 'config', 'formats', 'ui', 'entities') || []
       return page['tools'] unless supported_entities.include?(page['entities'].first)
 
       page['tools'].dup << 'ui'
+    end
+
+    def product(page)
+      products = page['products'] || []
+      products.include?('gateway') ? 'gateway' : products.first || 'gateway'
     end
   end
 end

@@ -1,18 +1,27 @@
-description: "Enables the OTEL plugin with an endpoint for tracing and logs."
-extended_description: "Enables the OTEL plugin with an endpoint for tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
+description: "Enables the OTEL plugin with an endpoint for metrics, tracing and logs."
+extended_description: |
+  Enables the OTEL plugin with endpoints for metrics, tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server.
+  For complete tutorials with OpenTelemetry Collector and Grafana, see:
+  * [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/)
+  * [Send OpenTelemetry data to Grafana Cloud](/how-to/send-otel-data-to-grafana-cloud/)
 
-title: 'Enable the OTEL plugin'
+title: 'Enable the OTEL plugin for metrics, traces and logs'
 
-weight: 900
+weight: 1000
+
+min_version:
+  gateway: '3.13'
 
 requirements: 
   - "An OpenTelemetry backend"
-  - "Set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) in `kong.conf`"
-  - "Set [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
+  - "To enable tracing, set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) and [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
 
 config:
   traces_endpoint: http://localhost:4318/v1/traces
   logs_endpoint: http://localhost:4318/v1/logs
+  access_logs_endpoint: http://localhost:4318/v1/logs
+  metrics:
+    endpoint: http://localhost:4318/v1/metrics
   headers:
     X-Auth-Token: secret-token
 

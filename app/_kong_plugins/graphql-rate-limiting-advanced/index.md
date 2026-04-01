@@ -47,8 +47,8 @@ related_resources:
     url: https://konghq.com/blog/engineering/governing-graphql-apis-with-kong-gateway
 
 notes: |
-  In DB-less, hybrid mode, and Konnect, the <code>cluster</code> config strategy
-  is not supported. Use <code>redis</code> instead.
+  In DB-less, hybrid mode, and Konnect, the `cluster` config strategy
+  is not supported. Use `redis` instead.
 
 min_version:
   gateway: '1.3'
@@ -396,3 +396,5 @@ You can use the Admin API to:
 
 To access these endpoints, [enable the plugin](/plugins/graphql-rate-limiting-advanced/examples/) first.
 The GraphQL cost management endpoints will appear once the plugin has been enabled.
+
+{% include plugins/redis-cloud-auth.md %}

@@ -1,0 +1,60 @@
+name: Sync kongctl
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [KONGCTL_UPDATED]
+
+permissions:
+  contents: read
+
+jobs:
+  kongctl-versions:
+    name: Fetch kongctl Versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - uses: kong/setup-kongctl@659d5c2b0f4db2e25d63797035358a22907421db # v1
+
+      - name: Verify kongctl install
+        run: kongctl version --full
+
+      - name: Clean kongctl setup artifacts
+        run: |
+          find . -maxdepth 1 -mindepth 1 -type d -name 'kongctl-*-linux' -exec rm -rf {} +
+
+      - name: Fetch versions
+        run: |
+          cd tools/kongctl-versions
+          npm ci
+          node extract-help.js
+          node fetch-versions.js
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8
+        with:
+          title: Sync kongctl Releases
+          commit-message: Sync kongctl Releases
+          branch: sync-kongctl-releases
+          labels: skip-changelog,review:general
+          token: ${{ steps.app-token.outputs.token }}
+          add-paths: |
+            app/_includes/kongctl/help/**
+            app/kongctl/**
+            app/_data/tools/kongctl.yml

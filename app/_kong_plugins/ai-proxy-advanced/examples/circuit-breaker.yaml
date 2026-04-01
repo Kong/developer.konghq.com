@@ -1,0 +1,67 @@
+title: 'Health check and circuit breaker'
+description: Configure the plugin to circuit-break a target when it's considered unhealthy.
+extended_description: |
+
+  Configure the plugin to circuit-break a target when it's considered unhealthy.
+
+  In this example, after 3 unsuccessful attempts, a target will be considered as unavailable and be circuit-break'ed.
+  It will be reconsidered after 10 seconds. And `failover_criteria` defines what is considered as an unsuccessful attempt.
+
+weight: 106
+
+requirements:
+  - An OpenAI account
+
+config:
+  balancer:
+    algorithm: round-robin
+    failover_criteria:
+    - error
+    - timeout
+    - invalid_header
+    - http_500
+    - http_502
+    - http_503
+    - http_504
+    - http_403
+    - http_404
+    - http_429
+    max_fails: 3
+    fail_timeout: 10000
+  targets:
+  - model:
+      name: gpt-4
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    weight: 100
+  - model:
+      name: gpt-3
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    weight: 100
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: load-balancing

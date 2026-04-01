@@ -1,4 +1,16 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support for the `tls_certificate_verify` global option.\nWhen this option is enabled, the plugin's `ssl_verify` flag\ncannot be disabled.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added the flag `ssl_verify` to control certificate\nverification when pushing logs to the configured `http_endpoint`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fix an issue where the plugin doesn't include port information in the HTTP host header when sending requests to the log server.",

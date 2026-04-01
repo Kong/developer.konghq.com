@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.0.29
+  version: 3.3.0
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -396,7 +398,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestError'
               examples:
-                ReplacePortalImageAssetBadRequestExample1:
+                ReplacePortalCustomizationBadRequestExample1:
                   $ref: '#/components/examples/ReplacePortalCustomizationBadRequestExample1'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -424,7 +426,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestError'
               examples:
-                ReplacePortalImageAssetBadRequestExample1:
+                ReplacePortalCustomizationBadRequestExample1:
                   $ref: '#/components/examples/UpdatePortalCustomizationBadRequestExample1'
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -434,6 +436,80 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Portal Customization
+  '/portals/{portalId}/integrations':
+    get:
+      operationId: get-portal-integrations
+      summary: Get Portal Integration Configurations
+      description: Returns the portal integration configurations.
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Integrations
+    put:
+      operationId: upsert-portal-integrations
+      summary: Replace Integration Configurations
+      description: Replace the portal integration configurations.
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+      requestBody:
+        $ref: '#/components/requestBodies/ReplacePortalIntegrations'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                ReplacePortalIntegrationsBadRequestExample1:
+                  $ref: '#/components/examples/ReplacePortalIntegrationsBadRequestExample1'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Integrations
+    patch:
+      operationId: update-portal-integrations
+      summary: Update Integration Configurations
+      description: 'Update the portal integration configurations, merging properties.'
+      parameters:
+        - $ref: '#/components/parameters/PortalId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePortalIntegrations'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                ReplacePortalIntegrationsBadRequestExample1:
+                  $ref: '#/components/examples/UpdatePortalIntegrationsBadRequestExample1'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Integrations
   '/portals/{portalId}/pages':
     get:
       operationId: list-portal-pages
@@ -730,8 +806,8 @@ paths:
   '/portals/{portalId}/default-content':
     post:
       operationId: create-default-content
-      summary: Creates Default Pages
-      description: Creates the default pages for a portal if they do not already exists.
+      summary: Create Boilerplate Content
+      description: 'Creates a default collection of pages, snippets, and customization config for a portal if they do not already exist. This endpoint is optional, you can call it to populate a newly created developer portal with default content, but it is not required. Existing pages and snippets will not be modified or deleted. If used, it is typically called once per portal shortly after creation.'
       parameters:
         - $ref: '#/components/parameters/PortalId'
       responses:
@@ -760,12 +836,7 @@ paths:
           description: Filter applications returned in the response.
           required: false
           schema:
-            type: object
-            properties:
-              developer_id:
-                $ref: '#/components/schemas/UuidFieldFilter'
-              name:
-                $ref: '#/components/schemas/StringFieldFilter'
+            $ref: '#/components/schemas/FilterApplications'
           style: deepObject
       responses:
         '200':
@@ -885,6 +956,34 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/GetApplication'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Applications
+  '/portals/{portalId}/applications/{applicationId}/credentials':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/ApplicationId'
+    get:
+      operationId: list-credentials-by-application
+      summary: List Credentials by Application
+      description: 'Lists all credentials for an application. This endpoint returns both API key credentials and DCR credentials, depending on the auth strategy the application uses: - For DCR applications: Credential information is retrieved from the identity provider using provider-specific APIs - For Key-Auth applications: Returns information about credentials Basic information about the credential is returned, but not the credential secret itself.'
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListApplicationCredentials'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1080,7 +1179,7 @@ paths:
         **Pre-release Endpoint**
         This endpoint is currently in beta and is subject to change.
 
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On (SSO) through an OIDC Identity Provider (IdP). Developers can be automatically assigned to teams by mapping claims from thier IdP account.
+        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -2472,13 +2571,13 @@ components:
       description: ID of the team.
   schemas:
     PortalImageDataUri:
-      description: 'must be a data URL with base64 image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
-      type: string
-      format: uri
-      example: 'data:image/png;base64,YW5faW1hZ2VfZmlsZQ=='
-      pattern: '^data:image/(png|jpeg|svg\+xml|x-icon|ico|icon|vnd.microsoft.icon|gif)(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      oneOf:
+        - $ref: '#/components/schemas/ImagePNGDataUri'
+        - $ref: '#/components/schemas/ImageJPGDataUri'
+        - $ref: '#/components/schemas/ImageGIFDataUri'
+        - $ref: '#/components/schemas/ImageICODataUri'
+        - $ref: '#/components/schemas/ImageSVGDataUri'
       title: PortalImageDataUri
-      x-validation-message: 'must be a data URL with base64 image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
     PortalImageAssetBlob:
       description: Raw binary image data
       type: string
@@ -2651,9 +2750,9 @@ components:
       title: MovePage
     PageSlug:
       description: |
-        The slug of a page in a portal, used to compute its full URL path within the portal hierarchy. 
-        When a page has a `parent_page_id`, its full path is built by joining the parent’s slug with its own. 
-        For example, if a parent page has the slug `slug1` and this page’s slug is `slug2`, the resulting path will be `/slug1/slug2`. 
+        The slug of a page in a portal, used to compute its full URL path within the portal hierarchy.
+        When a page has a `parent_page_id`, its full path is built by joining the parent’s slug with its own.
+        For example, if a parent page has the slug `slug1` and this page’s slug is `slug2`, the resulting path will be `/slug1/slug2`.
         This enables nested page structures like `/slug1/slug2/slug3`.
       type: string
       example: /my-page
@@ -3703,46 +3802,25 @@ components:
       maxProperties: 3
       minProperties: 0
       title: PortalClaimMappings
-    PortalOIDCConfig:
-      description: Configuration properties for an OpenID Connect Identity Provider.
-      type: object
-      properties:
-        issuer:
-          type: string
-          example: 'https://identity.example.com/v2'
-        client_id:
-          type: string
-          example: x7id0o42lklas0blidl2
-        scopes:
-          type: array
-          items:
-            type: string
-            default: openid
-          example:
-            - email
-            - openid
-            - profile
-          default:
-            - email
-            - openid
-            - profile
-        claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
-      example:
-        issuer: 'https://identity.example.com/v2'
-        client_id: x7id0o42lklas0blidl2
-        scopes:
-          - email
-          - openid
-          - profile
-        claim_mappings:
-          name: name
-          email: email
-          groups: custom-group-claim
-      required:
-        - issuer
-        - client_id
-      title: PortalOIDCConfig
+    OIDCAuthEnabled:
+      description: The portal has OIDC enabled or disabled.
+      type: boolean
+      example: false
+      deprecated: true
+    SAMLAuthEnabled:
+      description: A Konnect Identity Admin assigns teams to a developer.
+      type: boolean
+      example: false
+      deprecated: true
+    OIDCIdpMappingEnabled:
+      description: IdP groups determine the Portal Teams a developer has. Replaced by idp_mapping_enabled.
+      type: boolean
+      example: true
+      deprecated: true
+    IDPMappingEnabled:
+      description: Whether IdP groups determine the Konnect Portal teams a developer has.
+      type: boolean
+      example: true
     PortalAuthenticationSettingsResponse:
       description: The developer authentication settings for a portal.
       type: object
@@ -3752,27 +3830,59 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The portal has OIDC enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/OIDCAuthEnabled'
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
-          type: boolean
-          example: false
+          $ref: '#/components/schemas/SAMLAuthEnabled'
         oidc_team_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         idp_mapping_enabled:
-          description: IdP groups determine the Portal Teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         konnect_mapping_enabled:
           description: A Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         oidc_config:
-          $ref: '#/components/schemas/PortalOIDCConfig'
+          description: Configuration properties for an OpenID Connect Identity Provider.
+          type: object
+          example:
+            issuer: 'https://identity.example.com/v2'
+            client_id: x7id0o42lklas0blidl2
+            scopes:
+              - email
+              - openid
+              - profile
+            claim_mappings:
+              name: name
+              email: email
+              groups: custom-group-claim
+          deprecated: true
+          properties:
+            issuer:
+              type: string
+              example: 'https://identity.example.com/v2'
+            client_id:
+              type: string
+              example: x7id0o42lklas0blidl2
+            scopes:
+              type: array
+              items:
+                type: string
+                default: openid
+              example:
+                - email
+                - openid
+                - profile
+              default:
+                - email
+                - openid
+                - profile
+            claim_mappings:
+              $ref: '#/components/schemas/PortalClaimMappings'
+          readOnly: true
+          required:
+            - issuer
+            - client_id
+          title: PortalOIDCConfig
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
@@ -3820,7 +3930,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer
@@ -4003,6 +4113,11 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignRoleRequest
     PortalAuthenticationSettingsUpdateRequest:
       description: Properties to update a portal's developer auth settings.
@@ -4013,32 +4128,37 @@ components:
           type: boolean
           example: true
         oidc_auth_enabled:
-          description: The organization has OIDC disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         saml_auth_enabled:
-          description: The portal has SAML enabled or disabled.
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: boolean
           example: false
+          deprecated: true
         oidc_team_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/OIDCIdpMappingEnabled'
         konnect_mapping_enabled:
           description: Whether a Konnect Identity Admin assigns teams to a developer.
           type: boolean
           example: false
         idp_mapping_enabled:
-          description: Whether IdP groups determine the Konnect Portal teams a developer has. This will soon replace oidc_team_mapping_enabled.
-          type: boolean
-          example: true
+          $ref: '#/components/schemas/IDPMappingEnabled'
         oidc_issuer:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_id:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_client_secret:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: string
+          deprecated: true
         oidc_scopes:
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
           type: array
           items:
             type: string
@@ -4047,8 +4167,31 @@ components:
             - email
             - openid
             - profile
+          deprecated: true
         oidc_claim_mappings:
-          $ref: '#/components/schemas/PortalClaimMappings'
+          description: 'Deprecated. Use the [Identity Provider API](https://developer.konghq.com/api/konnect/portal-management/v3/#/operations/update-portal-identity-provider) instead.'
+          type: object
+          example:
+            name: name
+            email: email
+            groups: custom-group-claim
+          deprecated: true
+          maxProperties: 3
+          minProperties: 0
+          properties:
+            name:
+              type: string
+              example: name
+              default: name
+            email:
+              type: string
+              example: email
+              default: email
+            groups:
+              type: string
+              example: custom-group-claim
+              default: groups
+          title: PortalClaimMappings
       example:
         basic_auth_enabled: true
         oidc_auth_enabled: true
@@ -4245,6 +4388,12 @@ components:
         entity_id: 18ee2573-dec0-4b83-be99-fa7700bcdc61
         entity_type_name: Services
         entity_region: us
+      required:
+        - id
+        - role_name
+        - entity_id
+        - entity_type_name
+        - entity_region
       title: PortalAssignedRoleResponse
     ListDomains:
       type: object
@@ -4313,7 +4462,7 @@ components:
           format: email
           nullable: true
         reply_to_email:
-          description: The email address to use in the 'Reply-To' field.
+          description: 'The email address to use in the ''Reply-To'' field. If set to null, ''Reply-To'' header is omitted.'
           type: string
           format: email
           nullable: true
@@ -4335,7 +4484,7 @@ components:
           format: email
           nullable: true
         reply_to_email:
-          description: The email address to use in the 'Reply-To' field.
+          description: The email address to use in the 'Reply-To' field. 'Reply-To' header is omitted if omitted or null.
           type: string
           format: email
           nullable: true
@@ -4355,14 +4504,17 @@ components:
         from_name:
           description: The name displayed in the 'From' field of emails.
           type: string
+          nullable: true
         from_email:
           description: The email address used in the 'From' field.
           type: string
           format: email
+          nullable: true
         reply_to_email:
-          description: The email address used in the 'Reply-To' field.
+          description: The email address used in the 'Reply-To' field. 'Reply-To' header is omitted when null.
           type: string
           format: email
+          nullable: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -4477,6 +4629,8 @@ components:
         - account-access-approved
         - account-access-rejected
         - account-access-revoked
+        - api-key-expiring-soon
+        - api-key-expired
     EmailTemplateVariableName:
       description: |
         Enum for available portal email template variables.
@@ -4492,6 +4646,8 @@ components:
         - api_name
         - api_version
         - application_name
+        - credential_name
+        - credential_expires_at
     DefaultEmailTemplate:
       type: object
       properties:
@@ -4635,111 +4791,85 @@ components:
         - description
         - scope
         - example
+    FilterApplications:
+      type: object
+      properties:
+        developer_id:
+          $ref: '#/components/schemas/UuidFieldFilter'
+        name:
+          $ref: '#/components/schemas/StringFieldFilter'
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        oeq:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
+    StringFieldFilter:
+      oneOf:
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
+          type: string
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
     BooleanFieldFilter:
       description: Filter by a boolean value (true/false).
       type: boolean
@@ -5131,6 +5261,46 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    ImagePNGDataUri:
+      description: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/png,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/png(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImagePNGDataUri
+      x-validation-message: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+    ImageJPGDataUri:
+      description: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/jpeg,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/jpeg(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageJPGDataUri
+      x-validation-message: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+    ImageGIFDataUri:
+      description: 'must be a data URL with base64 GIF image data, e.g., data:image/gif;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/gif,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/gif(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageGIFDataUri
+      x-validation-message: 'must be a data URL with base64 GIF image data, e.g., data:image/gif;base64,<BASE64_IMAGE_DATA>'
+    ImageICODataUri:
+      description: 'must be a data URL with base64 ICO image data, e.g., data:image/ico;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/ico,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/(x-icon|ico|icon|vnd.microsoft.icon)(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageICODataUri
+      x-validation-message: 'must be a data URL with base64 ICO image data, e.g., data:image/ico;base64,<BASE64_IMAGE_DATA>'
+    ImageSVGDataUri:
+      description: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/svg+xml,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/svg\+xml(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageSVGDataUri
+      x-validation-message: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
     PortalMenuItem:
       type: object
       properties:
@@ -5232,7 +5402,7 @@ components:
               type: boolean
               default: true
             try_it_insomnia:
-              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
               type: boolean
               default: true
             infinite_scroll:
@@ -5260,6 +5430,250 @@ components:
           nullable: true
       additionalProperties: false
       title: PortalCustomization
+    GoogleTagManagerIntegrationConfigProperties:
+      description: Configuration data for the Google Tag Manager integration
+      type: object
+      properties:
+        id:
+          description: The Google Tag Manager container ID
+          type: string
+          example: GTM-XXXXXX
+          maxLength: 20
+          minLength: 5
+          pattern: '^GTM-[A-Za-z0-9]+$'
+          x-validation-message: 'must be a valid GTM container ID (format: GTM-XXXXXX)'
+        l:
+          description: Optional dataLayer variable name
+          type: string
+          example: myNewName
+          maxLength: 100
+          nullable: true
+        preview:
+          description: Preview environment name
+          type: string
+          example: preview
+          maxLength: 100
+          nullable: true
+        cookies_win:
+          description: Forces GTM cookies to take precedence when true
+          type: boolean
+          nullable: true
+        debug:
+          description: Enables debug mode when true
+          type: boolean
+          nullable: true
+        npa:
+          description: No Personal Advertising - disables advertising features when true
+          type: boolean
+          nullable: true
+        data_layer:
+          description: Custom dataLayer name (alternative to "l" property)
+          type: string
+          example: myNewName
+          maxLength: 100
+          nullable: true
+        env_name:
+          description: Environment name for environment-specific container
+          type: string
+          example: production
+          maxLength: 100
+          nullable: true
+        auth_referrer_policy:
+          description: Referrer policy for analytics requests
+          type: string
+          example: no-referrer
+          maxLength: 100
+          nullable: true
+      additionalProperties: false
+    GoogleTagManagerIntegration:
+      description: Google Tag Manager integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - tracking
+        config_data:
+          description: Configuration data for the Google Tag Manager integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Tag Manager container ID
+              type: string
+              example: GTM-XXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^GTM-[A-Za-z0-9]+$'
+              x-validation-message: 'must be a valid GTM container ID (format: GTM-XXXXXX)'
+            l:
+              description: Optional dataLayer variable name
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            preview:
+              description: Preview environment name
+              type: string
+              example: preview
+              maxLength: 100
+              nullable: true
+            cookies_win:
+              description: Forces GTM cookies to take precedence when true
+              type: boolean
+              nullable: true
+            debug:
+              description: Enables debug mode when true
+              type: boolean
+              nullable: true
+            npa:
+              description: No Personal Advertising - disables advertising features when true
+              type: boolean
+              nullable: true
+            data_layer:
+              description: Custom dataLayer name (alternative to "l" property)
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            env_name:
+              description: Environment name for environment-specific container
+              type: string
+              example: production
+              maxLength: 100
+              nullable: true
+            auth_referrer_policy:
+              description: Referrer policy for analytics requests
+              type: string
+              example: no-referrer
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
+    GoogleAnalytics4IntegrationConfigProperties:
+      description: Configuration data for the Google Analytics integration
+      type: object
+      properties:
+        id:
+          description: The Google Analytics measurement ID
+          type: string
+          example: G-XXXXXXX
+          maxLength: 20
+          minLength: 5
+          pattern: '^G-[A-Za-z0-9-]+$'
+          x-validation-message: 'must be a valid Google Analytics ID (format: G-XXXXXXX)'
+        l:
+          description: The datalayer's name you want data to be associated with
+          type: string
+          example: myNewName
+          maxLength: 100
+          nullable: true
+      additionalProperties: false
+    GoogleAnalytics4Integration:
+      description: Google Analytics integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - analytics
+        config_data:
+          description: Configuration data for the Google Analytics integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Analytics measurement ID
+              type: string
+              example: G-XXXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^G-[A-Za-z0-9-]+$'
+              x-validation-message: 'must be a valid Google Analytics ID (format: G-XXXXXXX)'
+            l:
+              description: The datalayer's name you want data to be associated with
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
+    PortalIntegrations:
+      description: Configuration data for Dev Portal integrations
+      type: object
+      properties:
+        google_tag_manager:
+          $ref: '#/components/schemas/GoogleTagManagerIntegration'
+        google_analytics_4:
+          $ref: '#/components/schemas/GoogleAnalytics4Integration'
+      default: {}
+      additionalProperties: false
+      title: Portal Integrations
+    UpdateGoogleTagManagerIntegration:
+      description: Partially update Google Tag Manager integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - tracking
+        config_data:
+          type: object
+          $ref: '#/components/schemas/GoogleTagManagerIntegrationConfigProperties'
+      additionalProperties: false
+      nullable: true
+    UpdateGoogleAnalytics4Integration:
+      description: Partially update Google Analytics 4 integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - analytics
+        config_data:
+          type: object
+          $ref: '#/components/schemas/GoogleAnalytics4IntegrationConfigProperties'
+      additionalProperties: false
+      nullable: true
+    UpdatePortalIntegrations:
+      description: Partially update configuration data for Dev Portal integrations
+      type: object
+      properties:
+        google_tag_manager:
+          $ref: '#/components/schemas/UpdateGoogleTagManagerIntegration'
+        google_analytics_4:
+          $ref: '#/components/schemas/UpdateGoogleAnalytics4Integration'
+      default: {}
+      additionalProperties: false
+      title: Update Portal Integrations
     DateTimeFieldFilter:
       description: Filters on the given datetime (RFC-3339) field value.
       oneOf:
@@ -5402,12 +5816,113 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id
         - name
         - credential_type
         - key_names
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - display_name
+        - created_at
+    ClientSecretCredentialListItem:
+      description: Client secret credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          description: May not be available for all Client Credentials applications
+          type: string
+          nullable: true
+        client_id:
+          description: OAuth2 client identifier
+          type: string
+          readOnly: true
+        created_at:
+          description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - created_at
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
+        - $ref: '#/components/schemas/ClientSecretCredentialListItem'
+    ListCredentialsResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialListItem'
+      additionalProperties: false
+      required:
+        - data
+        - meta
     EntityType:
       description: The type of entity that is being published. Can be either an API or an API Package.
       type: string
@@ -5442,6 +5957,12 @@ components:
       type: string
       example: YOUR_CLIENT_ID
       title: OIDC Identity Provider Login Client Id Property
+    OIDCIdentityProviderClientSecret:
+      description: The Client Secret assigned to your application by the identity provider.
+      type: string
+      example: YOUR_CLIENT_SECRET
+      title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -5482,6 +6003,8 @@ components:
           $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
         client_id:
           $ref: '#/components/schemas/OIDCIdentityProviderClientId'
+        client_secret:
+          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
         scopes:
           $ref: '#/components/schemas/OIDCIdentityProviderScopes'
         claim_mappings:
@@ -5553,30 +6076,6 @@ components:
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
-    OIDCIdentityProviderClientSecret:
-      description: The Client Secret assigned to your application by the identity provider.
-      type: string
-      example: YOUR_CLIENT_SECRET
-      title: OIDC Identity Provider Login Client Secret Property
-    ConfigureOIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        client_secret:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientSecret'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
     CreateIdentityProvider:
       description: The identity provider that contains configuration data for creating an authentication integration.
       type: object
@@ -5588,7 +6087,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
     UpdateIdentityProvider:
@@ -5600,7 +6099,7 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
   examples:
@@ -5908,6 +6407,28 @@ components:
             reason: '"my_property" is not allowed'
             source: body
     ReplacePortalCustomizationBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: my_property
+            rule: unknown_property
+            reason: '"my_property" is not allowed'
+            source: body
+    UpdatePortalIntegrationsBadRequestExample1:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:1433447772874964729'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: my_property
+            rule: unknown_property
+            reason: '"my_property" is not allowed'
+            source: body
+    ReplacePortalIntegrationsBadRequestExample1:
       value:
         status: 400
         title: Invalid Request
@@ -6620,7 +7141,7 @@ components:
           - id: b02e23c5-8ee4-4e5a-99f4-43329923adce
             role_name: API Consumer
             entity_id: 437c7192-fea0-4f35-8478-c8d57783f8c1
-            entity_type: Services
+            entity_type_name: Services
             entity_region: us
           - id: 869d9402-f117-4f9a-840f-69acaf70a81a
             role_name: API Viewer
@@ -7223,6 +7744,33 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ListApiKeyCredentialsExample:
+      value:
+        data:
+          - type: api_key
+            id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            display_name: My API Key
+            status: active
+            expires_at: '2025-12-31T23:59:59.000Z'
+            created_at: '2025-01-01T00:00:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ListClientSecretCredentialsExample:
+      value:
+        data:
+          - type: client_secret
+            id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+            display_name: null
+            client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+            created_at: '2024-01-15T10:30:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
     IdentityProviders:
       value:
         - id: a2c3156d-ebb1-432b-b2f1-edcc5f133c60
@@ -7568,6 +8116,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomization'
+    ReplacePortalIntegrations:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIntegrations'
+    UpdatePortalIntegrations:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePortalIntegrations'
     CreatePortalPage:
       description: Create a page in a portal.
       required: true
@@ -8161,6 +8719,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomization'
+    PortalIntegrationsResponse:
+      description: The current integration configurations for a portal.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIntegrations'
     DefaultContentResponse:
       description: Summary of created default content
       content:
@@ -8228,6 +8792,17 @@ components:
               $ref: '#/components/examples/GetApplicationExampleDcr'
             Client Credentials Application without DCR:
               $ref: '#/components/examples/GetApplicationExampleOIDC'
+    ListApplicationCredentials:
+      description: A paginated list of credentials for an application.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListCredentialsResponse'
+          examples:
+            ListApiKeyCredentials:
+              $ref: '#/components/examples/ListApiKeyCredentialsExample'
+            ListClientSecretCredentials:
+              $ref: '#/components/examples/ListClientSecretCredentialsExample'
     ListApplicationDevelopers:
       description: A paginated list developers of an application.
       content:
@@ -8560,6 +9135,8 @@ tags:
     description: APIs related to Konnect Developer Portal developer team membership.
   - name: Portal Team Roles
     description: APIs related to Konnect Developer Portal developer team roles.
+  - name: Portal Integrations
+    description: APIs to configure Konnect Developer Portal integrations.
   - name: Assets
     description: APIs for managing static assets for Konnect Developer Portals.
   - name: Pages

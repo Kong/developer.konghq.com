@@ -1,4 +1,5 @@
 title: All KIC Documentation
+description: Index containing all documentation for {{site.kic_product_name}}.
 sections:
   - title: Overview
     items:

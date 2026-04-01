@@ -18,7 +18,7 @@ config:
   auth_methods:
   - bearer
   proof_of_possession_mtls: strict
-  proof_of_possession_auth_methods_validation: on
+  proof_of_possession_auth_methods_validation: true
 
 variables:
   issuer:

@@ -8,12 +8,19 @@ breadcrumbs:
   - /mesh/
 description: Bundled features for your service traffic and network configuration.
 ---
-
+{%- assign policies = site.data.mesh_policies | where_exp: "policy", "policy.published != false" | sort: "title" -%}
+{% if page.output_format == 'markdown' %}
+{% for policy in policies %}
+## {{ policy.title }}
+Description: {{ policy.description | liquify}}
+Documentation: {{ policy.url }}
+{% endfor %}
+{%- else -%}
 <div class="flex flex-col gap-12 w-full">
     <div class="flex justify-between gap-[60px]">
       <div class="flex flex-col gap-6 py-24 self-center">
         <div class="flex flex-col gap-2">
-          <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Mesh Policies Hub</h1>
+          <div class="flex items-center gap-3"><h1 class="font-extrabold text-[40px] leading-[60px]">Kong Mesh Policies Hub</h1>{% include components/llm_dropdown.html url=page.url %}</div>
           <span class="leading-7">
             Policies are a key component of Kong Mesh. They allow you to modify, observe and control network traffic between services.  Before diving into each Policy, <a href="/mesh/policies-introduction/">take a look</a> at how Policies work and how they are defined.
           </span>
@@ -67,20 +74,18 @@ description: Bundled features for your service traffic and network configuration
       </div>
     </div>
 
-    {% assign mesh_policies = site.data.mesh_policies | where_exp: "policy", "policy.published != false" %}
-
     <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
 
       <div class="flex flex-col md:col-span-4 w-full gap-16" id="plugin-cards">
-        {% assign mesh_policies = mesh_policies | sort: "title" %}
         <div class="flex flex-col gap-4">
 
           <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-4 gap-8">
-            {% for policy in mesh_policies %}
-            {% include cards/mesh_policy.html policy=policy %}
+            {% for policy in policies %}
+            {% include cards/policy.html policy=policy %}
             {% endfor %}
           </div>
         </div>
       </div>
     </div>
   </div>
+{% endif %}

@@ -23,7 +23,7 @@ related_resources:
     - text: Reserved entity names
       url: /gateway/reserved-entity-names/
     - text: "{{site.konnect_short_name}} Control Plane resource limits"
-      url: /gateway-manager/control-plane-resource-limits/
+      url: /gateway/control-plane-resource-limits/
 
 
 api_specs:
@@ -127,10 +127,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Consumer Group
 
 {% entity_example %}
@@ -138,3 +134,7 @@ type: consumer_group
 data:
     name: my_group
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

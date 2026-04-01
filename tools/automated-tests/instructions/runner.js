@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import yaml from "js-yaml";
 import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
+import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
 import { executeCommand } from "../docker-helper.js";
@@ -51,10 +52,18 @@ async function runConfig(config, container) {
 }
 
 async function checkSetup(setup, runtimeConfig, container) {
-  const { runtime, version: minVersion } = await getSetupConfig(setup);
-  if (runtime !== runtimeConfig.runtime) {
+  const { runtime: setupIdentifier, version: minVersion } = await getSetupConfig(setup);
+
+  // The setup identifier can be:
+  // - A product name (e.g. "gateway") from setup like {"gateway": "3.9"}
+  // - A deployment model name (e.g. "konnect") from setup like "konnect"
+  // We check it against both the product and deployment model.
+  if (
+    setupIdentifier !== runtimeConfig.product &&
+    setupIdentifier !== runtimeConfig.deploymentModel
+  ) {
     throw new Error(
-      "The instructions files setup does not match the current runtime."
+      "The instructions files setup does not match the current product or deployment model."
     );
   }
 
@@ -74,12 +83,30 @@ async function checkSetup(setup, runtimeConfig, container) {
   return true;
 }
 
-async function runPrereqs(prereqs, container) {
+async function runPrereqs(prereqs, container, runtimeConfig) {
   log("Running prereqs...");
   if (prereqs) {
     const config = await processPrereqs(prereqs);
+
+    if (config.commands) {
+      for (const command of config.commands) {
+        if (typeof command === "string") {
+          await executeCommand(container, command);
+        } else {
+          await validate(container, command, runtimeConfig);
+        }
+      }
+      log(`   prereq ✅ .`);
+    }
+  }
+}
+
+async function runCleanup(cleanup, container) {
+  log("Running cleanup...");
+  if (cleanup) {
+    const config = await processCleanup(cleanup);
     await runConfig(config, container);
-    log(`   prereq ✅ .`);
+    log(`   cleanup ✅ .`);
   }
 }
 
@@ -131,18 +158,18 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       return result;
     }
 
-    if (rbac) {
+    if (rbac && runtimeConfig.setup?.rbac?.commands) {
       for (const command of runtimeConfig.setup.rbac.commands) {
         await executeCommand(container, command);
       }
     }
-    if (wasm) {
+    if (wasm && runtimeConfig.setup?.wasm?.commands) {
       for (const command of runtimeConfig.setup.wasm.commands) {
         await executeCommand(container, command);
       }
     }
 
-    await runPrereqs(instructions.prereqs, container);
+    await runPrereqs(instructions.prereqs, container, runtimeConfig);
 
     const assertions = await runSteps(
       instructions.steps,
@@ -161,11 +188,13 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
   }
 
-  if (rbac || wasm) {
+  if ((rbac || wasm) && runtimeConfig.setup?.commands) {
     for (const command of runtimeConfig.setup.commands) {
       await executeCommand(container, command);
     }
   }
+
+  await runCleanup(instructions.cleanup, container);
 
   return result;
 }

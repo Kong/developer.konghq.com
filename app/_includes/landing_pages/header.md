@@ -1,9 +1,21 @@
 {% capture header %}
-<{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>
-
-    {% if include.config.type == 'h1' and page.tier %}
+{% capture heading %}<{{ include.config.type }} id="{{ include.config.text | liquify | slugify }}" class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text | liquify }}</{{ include.config.type }}>{% endcapture%}
+{% if include.config.type == 'h1' %}
+<div class="flex items-center">
+{{heading}}
+{% unless page.llm == false %}{% include components/llm_dropdown.html url=page.url css_classes="ml-auto" %}{% endunless %}
+</div>
+{% else %}
+{{heading}}
+{% endif %}
+    {% if include.config.type == 'h1' %}
         <div class="flex gap-2 items-center">
+        {% if page.tier %}
             {% include tier.html products=page.products tier=page.tier %}
+        {% endif %}
+         {%- if page.beta == true or page.tech_preview == true -%}
+            {%- include_cached badges/stage.html beta=page.beta tech_preview=page.tech_preview -%}
+         {% endif %}
         </div>
     {% endif %}
 

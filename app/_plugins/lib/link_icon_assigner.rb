@@ -50,10 +50,15 @@ module Jekyll
     end
 
     def icon_for_content_type
+      return 'service-document' if ENV['KONG_PRODUCTS']
+
       url = URI.parse(@resource['url']).path
       final_url = resolve_final_path(url, site_redirects)
+
       page = site.pages.detect { |p| p.url == final_url }
       page ||= site.documents.detect { |d| d.url == final_url }
+
+      raise ArgumentError, "Cannot determine icon for resource with URL #{@resource['url']}" unless page
 
       CONTENT_TYPE_ICON_MAP.fetch(page.data['content_type'], 'service-document')
     end
@@ -63,6 +68,7 @@ module Jekyll
 
       while redirects.key?(url)
         return nil if visited.include?(url)
+
         visited.add(url)
         url = redirects[url]
       end

@@ -11,8 +11,9 @@ module Jekyll
 
         def values
           @values ||= site.data.dig(
+            'plugins',
             'referenceable_fields',
-            @release.number,
+            @release.number.gsub('.', ''),
             @plugin['slug']
           )&.sort
         end

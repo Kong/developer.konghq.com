@@ -1,7 +1,9 @@
 openapi: 3.0.3
 info:
   title: Konnect Sliver
-  version: 0.0.1
+  version: 1.0.0
+  x-oas-source: kong/platform-api@bcf101f12410300cbb1a157c569049ead20dd78e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bcf101f12410300cbb1a157c569049ead20dd78e'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -107,10 +109,22 @@ paths:
     delete:
       operationId: deleteAuthServer
       summary: Delete an auth server
-      description: Delete an auth server. All resources associated with the auth server will also be deleted. This action is irreversible.
+      description: 'Delete an auth server. If force=true, delete the auth server and all its associated resources. If force=false, only allow deletion if no resources are associated with the auth server. This action is irreversible.'
+      parameters:
+        - name: force
+          in: query
+          description: 'If true, delete the specified auth server and all its associated resources. If false, only allow deletion if no clients, scopes or claims are associated with the auth server.'
+          schema:
+            type: string
+            default: 'false'
+            enum:
+              - 'true'
+              - 'false'
       responses:
         '204':
           description: Success
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
@@ -608,7 +622,6 @@ components:
       description: OAuth 2.0 grant type
       type: string
       enum:
-        - authorization_code
         - implicit
         - client_credentials
     GrantTypes:
@@ -706,6 +719,18 @@ components:
       enum:
         - client_secret_post
         - none
+    TrustedOrigins:
+      description: A list or trusted origins to apply the CORS header on for the auth server
+      type: array
+      items:
+        $ref: '#/components/schemas/TrustedOrigin'
+      maxLength: 16
+      uniqueItems: true
+    TrustedOrigin:
+      description: A trusted origin for the auth server
+      type: string
+      format: uri
+      example: 'https://example.com'
     AuthServer:
       type: object
       properties:
@@ -733,6 +758,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        trusted_origins:
+          $ref: '#/components/schemas/TrustedOrigins'
       required:
         - id
         - name
@@ -949,7 +976,6 @@ components:
         - redirect_uris
         - allow_all_scopes
         - allow_scopes
-        - login_uri
         - access_token_duration
         - id_token_duration
         - labels
@@ -1028,40 +1054,32 @@ components:
       title: SortQuery
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
         example-2:
           eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
-        contains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -1593,7 +1611,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         response_types:
@@ -1616,7 +1633,6 @@ components:
           - id: kYa9iQFU5xPDSIUH9z1z
             name: Client 1
             grant_types:
-              - authorization_code
               - implicit
             allow_all_scopes: false
             allow_scopes:
@@ -1624,7 +1640,6 @@ components:
               - b5525b78-f3a0-4bd6-befc-7696be58717e
             redirect_uris:
               - 'https://client.com/callback'
-            login_uri: 'https://client.com/login'
             access_token_duration: 3600
             id_token_duration: 3600
             labels:
@@ -1641,7 +1656,6 @@ components:
             allow_all_scopes: true
             allow_scopes: []
             redirect_uris: []
-            login_uri: null
             access_token_duration: 3600
             id_token_duration: 3600
             labels:
@@ -1662,7 +1676,6 @@ components:
         name: Client 1
         grant_types:
           - client_credentials
-          - authorization_code
           - implicit
         allow_all_scopes: false
         allow_scopes:
@@ -1670,7 +1683,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         labels:
@@ -1692,7 +1704,6 @@ components:
           - b5525b78-f3a0-4bd6-befc-7696be58717e
         redirect_uris:
           - 'https://client.com/callback'
-        login_uri: 'https://client.com/login'
         access_token_duration: 3600
         id_token_duration: 3600
         labels:
@@ -1767,6 +1778,8 @@ components:
                 $ref: '#/components/schemas/Algorithm'
               labels:
                 $ref: '#/components/schemas/Labels'
+              trusted_origins:
+                $ref: '#/components/schemas/TrustedOrigins'
             required:
               - name
               - audience
@@ -1791,6 +1804,8 @@ components:
                 $ref: '#/components/schemas/UpdateAlgorithm'
               labels:
                 $ref: '#/components/schemas/LabelsUpdate'
+              trusted_origins:
+                $ref: '#/components/schemas/TrustedOrigins'
           examples:
             AuthServer:
               $ref: '#/components/examples/UpdateAuthServer'

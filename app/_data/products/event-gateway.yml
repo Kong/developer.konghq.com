@@ -2,7 +2,7 @@ name: Event Gateway
 icon: /_assets/icons/products/event-gateway.svg
 
 releases:
-  - release: "0.1"
-    version: "0.1.0-beta"
-    name: "v0"
+  - release: "1.0"
+    version: "1.0.0"
+    name: "v1"
     latest: true

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../monkey_patch'
+
 module Jekyll
   class RenderReferenceListt < Liquid::Tag # rubocop:disable Style/Documentation
     def initialize(tag_name, param, _tokens)
@@ -11,41 +13,54 @@ module Jekyll
       raise ArgumentError, 'Missing param for {% reference_list %}'
     end
 
-    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity,Metrics/MethodLength
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
+      @page = context.environments.first['page']
       keys = @param.split('.')
       config = keys.reduce(context) { |c, key| c[key] }
 
-      quantity = config.fetch('quantity', 10)
+      references = fetch_references(config)
 
-      references = @site.pages.select { |p| p.data['content_type'] == 'reference' }.each_with_object([]) do |p, result|
-        next if p.data['auto_generated']
-
-        match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
-                (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
-                (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools']))
-
-        result << p if match
-        break result if result.size == quantity
-      end
-
-      if references.empty? && !config.fetch('allow_empty', false)
+      if references.empty? && !config.fetch('allow_empty', false) && ENV['KONG_PRODUCTS'].nil?
         raise "No references found for #{@context['page']['path']} - #{config}"
       end
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['references'] = references
         context['view_more_url'] = view_more_url(config)
         context['config'] = config
-        Liquid::Template.parse(template).render(context)
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     end
 
     private
 
+    def fetch_references(config)
+      if config['pages']
+        @site.pages.select { |p| config['pages'].include?(p.url) }
+      else
+        quantity = config.fetch('quantity', 10)
+        @site.pages.select { |p| p.data['content_type'] == 'reference' }.each_with_object([]) do |p, result|
+          next if p.data['auto_generated']
+
+          match = (!config.key?('tags') || p.data.fetch('tags', []).intersect?(config['tags'])) &&
+                  (!config.key?('products') || p.data.fetch('products', []).intersect?(config['products'])) &&
+                  (!config.key?('tools') || p.data.fetch('tools', []).intersect?(config['tools']))
+
+          result << p if match
+          break result if result.size == quantity
+        end
+      end
+    end
+
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/reference_list.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/reference_list.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/reference_list.html'))
+      end
     end
 
     def view_more_url(config)

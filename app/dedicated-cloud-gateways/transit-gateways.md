@@ -32,10 +32,13 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-peering/
   - text: Private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
-  - text: Create a Transit Gateway with {{ site.gateway_operator_product_name }} and AWS
+  - text: Create a Transit Gateway with {{ site.operator_product_name }} and AWS
     url: /how-to/create-transit-gateway-with-operator-and-aws/
   - text: Use AWS workload identities
     url: /dedicated-cloud-gateways/reference/#aws-workload-identities
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 ---
 
 When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
@@ -97,7 +100,7 @@ This process includes three main steps:
     1. Open the **Resource Access Manager**, and select **Create Resource Share**.
     1. Choose **Transit Gateways** as the resource type and select the newly created gateway.
     1. Name the resource share and retain default managed permission settings.
-    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**Gateway Manager > Networks**).
+    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**API Gateway > Networks**).
     1. Create the resource share and save the resulting **RAM Share ARN**.
 
 2. Accept the Transit Gateway Attachment in AWS:
@@ -113,13 +116,19 @@ This process includes three main steps:
 
 To finish setup in {{site.konnect_short_name}}:
 
-1. Go to **[Gateway Manager](https://cloud.konghq.com/gateway-manager/), select your Dedicated Cloud Gateway, and click **Networks** in the sidebar.
+1. In the {{site.konnect_short_name}} menu, navigate to **[API Gateway](https://cloud.konghq.com/gateway-manager/)**.
+1. Click your Dedicated Cloud Gateway.
+1. In the sidebar, navigate to **Networks**.
 1. Select your network and click **Attach Transit Gateway**.
 1. Provide the following information:
   * Transit Gateway Name
   * One or more CIDR blocks (must not overlap with your {{site.konnect_short_name}} network)
   * RAM Share ARN
   * Transit Gateway ID
+
+   {:.info}
+   > **Note:** You can edit the CIDR blocks after the initial configuration if needed. This capability is specific to Transit Gateway peering and doesn't apply to VPC peering connections.
+  
 1. Add the IP addresses of DNS servers that will resolve to your private domains, along with any domains you want associated with your DNS. {{site.konnect_short_name}} supports the following mappings:
 {% table %}
 columns:

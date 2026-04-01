@@ -50,7 +50,7 @@ related_resources:
   - text: Import content from Postman to multiple Insomnia projects
     url: /how-to/import-content-from-postman-to-multiple-insomnia-projects/
   - text: Migrate collections and environments from Postman to Insomnia
-    url: /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/
+    url: /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 ---
 
 Insomnia offers a unified workflow for importing and exporting API artifacts. Whether you're using the desktop UI or automating tasks through the Inso CLI, this page outlines the methods, their compatibility, and the practical use cases to fit a variety of developer workflows.
@@ -80,7 +80,7 @@ rows:
   - use_case: Automate test execution from Insomnia test suites in CI
     method: |
       In CI, use `inso run test <identifier>` to run defined tests and return pass/fail exit codes.
-  - use_case: {% new_in 11.5 %} Import a Postman environment into Insomnia
+  - use_case: Import a Postman environment into Insomnia
     method: | 
       1. Organize each project into its own folder.
       1. Use **Import > From Folder** from within the Insomnia UI.

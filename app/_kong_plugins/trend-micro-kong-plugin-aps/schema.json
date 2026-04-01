@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "fqdn": {
+          "type": "string",
+          "required": true
+        },
+        "token": {
+          "type": "string",
+          "encrypted": true,
+          "required": true,
+          "referenceable": true
+        }
+      },
+      "required": ["fqdn", "token"],
+      "type": "object"
+    }
+  },
+  "required": []
+}

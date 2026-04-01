@@ -12,6 +12,9 @@ platform:
     - text: decK
       url: /deck/
       icon: /assets/icons/codeblock.svg
+    - text: kongctl
+      url: /kongctl/
+      icon: /assets/icons/code.svg
     - text: Inso CLI
       url: /inso-cli/
       icon: /assets/icons/code.svg
@@ -63,9 +66,12 @@ platform:
           product: operator
     - title: Govern APIs
       links:
-        - text: Analytics
-          url: /advanced-analytics/
-          product: advanced-analytics
+        - text: Observability
+          url: /observability/
+          product: observability
+        - text: Metering & Billing
+          url: /metering-and-billing/
+          product: metering-and-billing
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /catalog/scorecards/

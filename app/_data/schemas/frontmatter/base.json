@@ -43,7 +43,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["ai-gateway", "gateway", "insomnia", "mesh", "kic", "catalog", "advanced-analytics", "dev-portal", "operator", "konnect", "event-gateway", "konnect-reference-platform"]
+        "enum": ["ai-gateway", "gateway", "insomnia", "mesh", "kic", "catalog", "observability", "dev-portal", "operator", "konnect", "event-gateway", "konnect-reference-platform", "metering-and-billing"]
       }
     },
     "tools": {
@@ -54,6 +54,7 @@
           "deck",
           "inso-cli",
           "kic",
+          "kongctl",
           "operator",
           "terraform",
           "admin-api",

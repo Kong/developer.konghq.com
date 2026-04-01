@@ -1,11 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.0
+  version: 3.0.2
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@da4167d67de6f8881284da915b708556e37d8a99
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/da4167d67de6f8881284da915b708556e37d8a99'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -95,7 +97,7 @@ paths:
       operationId: get-identity-providers
       summary: List Identity Providers
       description: |
-        Retrieves the identity providers available within the organization. This operation provides information about 
+        Retrieves the identity providers available within the organization. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
         - name: filter
@@ -121,7 +123,7 @@ paths:
       operationId: create-identity-provider
       summary: Create Identity Provider
       description: |
-        Creates a new identity provider. This operation allows the creation of a new identity provider for 
+        Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
         $ref: '#/components/requestBodies/CreateIdentityProviderRequest'
@@ -152,7 +154,7 @@ paths:
       operationId: get-identity-provider
       summary: Get Identity Provider
       description: |
-        Retrieves the configuration of a single identity provider. This operation returns information about a 
+        Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
         '200':
@@ -171,7 +173,7 @@ paths:
       operationId: update-identity-provider
       summary: Update Identity Provider
       description: |
-        Updates the configuration of an existing identity provider. This operation allows modifications to be made 
+        Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
         $ref: '#/components/requestBodies/UpdateIdentityProviderRequest'
@@ -194,7 +196,7 @@ paths:
       operationId: delete-identity-provider
       summary: Delete Identity Provider
       description: |
-        Deletes an existing identity provider configuration. This operation removes a specific identity provider 
+        Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the organization.
       responses:
         '204':
@@ -761,6 +763,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -1076,6 +1080,8 @@ paths:
           schema:
             type: object
             properties:
+              entity_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
               role_name:
                 $ref: '#/components/schemas/StringFieldEqualsFilter'
               entity_type_name:
@@ -1522,6 +1528,7 @@ components:
       type: string
       example: YOUR_CLIENT_SECRET
       title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -1576,16 +1583,16 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/IdentityProviderType'
-        login_path:
-          $ref: '#/components/schemas/IdentityProviderLoginPath'
         enabled:
           $ref: '#/components/schemas/IdentityProviderEnabled'
+        login_path:
+          $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Create Identity Provider
     UpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
@@ -1597,9 +1604,9 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Update Identity Provider
     IdentityProvider:
       description: The identity provider that contains configuration data for authentication integration.
       type: object
@@ -1623,23 +1630,6 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
     OIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
-    ConfigureOIDCIdentityProviderConfig:
       description: The identity provider that contains configuration data for the OIDC authentication integration.
       type: object
       properties:
@@ -2366,16 +2356,9 @@ components:
               example: Conflict
     StringFieldEqualsFilter:
       description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
+      properties:
+        eq:
+          type: string
       title: StringFieldEqualsFilter
       x-examples:
         example-1: equals-some-value
@@ -2422,25 +2405,24 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
+    LegacyStringFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
       properties:
-        contains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
       additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
       x-examples:
         example-1:
           contains: some-value
-    LegacyStringFieldFilter:
-      description: Filter a string value field either by exact match or partial contains.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-      title: StringFieldFilter
+        example-2:
+          eq: some-value
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -3060,18 +3042,18 @@ components:
         title: Unauthorized
         instance: 'kong:trace:8347343766220159418'
         detail: Unauthorized
-    ForbiddenExample:
-      value:
-        status: 403
-        title: Forbidden
-        instance: 'kong:trace:2723154947768991354'
-        detail: You do not have permission to perform this action
     NotFoundExample:
       value:
         status: 404
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ForbiddenExample:
+      value:
+        status: 403
+        title: Forbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
   requestBodies:
     UpdateImpersonationSettingsRequest:
       content:
@@ -3099,6 +3081,7 @@ components:
                 description: The user's full name.
                 type: string
                 example: James C. Woods
+                maxLength: 250
                 pattern: '^[\w \W]+$'
                 writeOnly: true
               preferred_name:
@@ -3260,6 +3243,7 @@ components:
                   - Deployer
                   - Discovery Admin
                   - Discovery Viewer
+                  - Editor
                   - Gateway Service Admin
                   - Integration Admin
                   - Integration Viewer
@@ -3282,6 +3266,8 @@ components:
                   - Upstream Admin
                   - Vault Admin
                   - Viewer
+                  - Registration Approver
+                  - Content Editor
               entity_id:
                 description: The ID of the entity.
                 type: string
@@ -3303,6 +3289,7 @@ components:
                   - Mesh Control Planes
                   - Networks
                   - Portals
+                  - Reports
                   - Service Hub
               entity_region:
                 description: Region of the team.
@@ -3500,7 +3487,7 @@ components:
       description: The request schema for the update IdP configuration request.
     CreateIdentityProviderRequest:
       description: |
-        An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for creating a new identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -3515,7 +3502,7 @@ components:
               $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadata'
     UpdateIdentityProviderRequest:
       description: |
-        An object representing the configuration for updating an identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for updating an identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -4045,6 +4032,22 @@ components:
                         required:
                           - name
                           - description
+                      debug_session_creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Debug Session Creator
+                          description:
+                            type: string
+                            example: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                            enum:
+                              - This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                        required:
+                          - name
+                          - description
                       deployer:
                         type: object
                         additionalProperties: false
@@ -4455,6 +4458,54 @@ components:
                   roles:
                     type: object
                     properties:
+                      admin:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Admin
+                          description:
+                            type: string
+                            example: 'Allows users to edit, delete, and share a Dashboard in Konnect Analytics.'
+                            enum:
+                              - 'Allows users to edit, delete, and share a Dashboard in Konnect Analytics.'
+                        required:
+                          - name
+                          - description
+                      creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Creator
+                          description:
+                            type: string
+                            example: Allows users to create a new Dashboard in Konnect Analytics.
+                            enum:
+                              - Allows users to create a new Dashboard in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      editor:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Editor
+                          description:
+                            type: string
+                            example: Allows users to edit a Dashboard in Konnect Analytics.
+                            enum:
+                              - Allows users to edit a Dashboard in Konnect Analytics.
+                        required:
+                          - name
+                          - description
                       viewer:
                         type: object
                         additionalProperties: false
@@ -4468,6 +4519,84 @@ components:
                             example: Allows users to view any Dashboards content in Konnect Analytics.
                             enum:
                               - Allows users to view any Dashboards content in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                required:
+                  - name
+                  - roles
+              reports:
+                type: object
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                    enum:
+                      - Reports
+                  roles:
+                    type: object
+                    properties:
+                      admin:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Admin
+                          description:
+                            type: string
+                            example: 'Allows users to edit, delete, and share a Report in Konnect Analytics.'
+                            enum:
+                              - 'Allows users to edit, delete, and share a Report in Konnect Analytics.'
+                        required:
+                          - name
+                          - description
+                      creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Creator
+                          description:
+                            type: string
+                            example: Allows users to create a new Report in Konnect Analytics.
+                            enum:
+                              - Allows users to create a new Report in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      editor:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Editor
+                          description:
+                            type: string
+                            example: Allows users to edit a Report in Konnect Analytics.
+                            enum:
+                              - Allows users to edit a Report in Konnect Analytics.
+                        required:
+                          - name
+                          - description
+                      viewer:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Viewer
+                          description:
+                            type: string
+                            example: Allows users to view a Report in Konnect Analytics.
+                            enum:
+                              - Allows users to view a Report in Konnect Analytics.
                         required:
                           - name
                           - description
@@ -4493,6 +4622,9 @@ components:
                     creator:
                       name: Creator
                       description: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                    debug_session_creator:
+                      name: Debug Session Creator
+                      description: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                     deployer:
                       name: Deployer
                       description: 'This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Hub.'
@@ -4708,6 +4840,7 @@ components:
               updated_at: '2022-08-02T08:35:49Z'
               expires_at: '2022-12-31T12:52:23Z'
               last_used_at: '2022-10-24T13:05:42Z'
+              token: spat_12345678901234567890123456789012345678901234567890
             title: System Account Access Token Created Response
           examples:
             Sample Access Token:
@@ -4718,7 +4851,7 @@ components:
                 updated_at: '2019-08-24T14:15:22Z'
                 expires_at: '2019-08-24T14:15:22Z'
                 last_used_at: '2019-08-24T14:15:22Z'
-                token: npat_12345678901234567890123456789012345678901234567890
+                token: spat_12345678901234567890123456789012345678901234567890
     MeOrganization:
       description: Me Organization
       content:
@@ -4797,7 +4930,7 @@ components:
               $ref: '#/components/examples/SAMLIdentityProviderWithMetadata'
     IdentityProviders:
       description: |
-        A collection of identity providers. This response contains a collection of identity providers, which may  include both OIDC and SAML identity providers.
+        A collection of identity providers. This response contains a collection of identity providers, which may include both OIDC and SAML identity providers.
       content:
         application/json:
           schema:
@@ -4851,12 +4984,6 @@ components:
           examples:
             Personal Access Token List Response:
               $ref: '#/components/examples/PersonalAccessTokenListResponse'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ConflictError'
     BadRequest:
       description: Bad Request
       content:
@@ -4872,15 +4999,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/UnauthorizedExample'
-    Forbidden:
-      description: Forbidden
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ForbiddenError'
-          examples:
-            UnauthorizedExample:
-              $ref: '#/components/examples/ForbiddenExample'
     NotFound:
       description: Not Found
       content:
@@ -4890,6 +5008,21 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            UnauthorizedExample:
+              $ref: '#/components/examples/ForbiddenExample'
   securitySchemes:
     systemAccountAccessToken:
       type: http

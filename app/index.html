@@ -2,6 +2,7 @@
 layout: default
 title: "Kong Developer"
 get_help: false
+llm: false
 edit_and_issue_links: false
 ---
 
@@ -14,15 +15,18 @@ edit_and_issue_links: false
                 </h1>
                 <span class="leading-7">Discover Kong’s tools, APIs, and tutorials to help you build, secure, and scale your services.</span>
             </div>
-            <div class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-4 items-center lg:w-3/5 cursor-pointer ask-ai-button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
-                </svg>
-                <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
+            <div class="flex flex-col gap-2">
+                <div class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-4 items-center lg:w-3/5 cursor-pointer ask-ai-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 12.0884V12.4355C15.7128 12.4355 14.5598 16.2296 14.5598 19.3252H14.2229C14.2229 16.2296 12.8732 12.4355 8.78272 12.4355V12.0884C13.497 12.0884 14.2229 8.29432 14.2229 5.19878H14.5598C14.5598 8.29432 15.2977 12.0884 20 12.0884ZM7.28629 11.0361C7.28629 9.27503 7.94267 7.11656 10.3813 7.11656V6.91952C7.70577 6.91952 7.28629 4.76104 7.28629 3H7.09502C7.09502 4.76104 6.68206 6.91952 4 6.91952V7.11656C6.32779 7.11656 7.09502 9.27503 7.09502 11.0361H7.28629ZM9.21089 14.1529H9.04788C9.04788 15.6531 8.69578 17.4925 6.41038 17.4925V17.6604C8.39367 17.6604 9.04788 19.4998 9.04788 21H9.21089C9.21089 19.4998 9.76948 17.6604 11.8484 17.6604V17.4925C9.56843 17.4925 9.21089 15.6531 9.21089 14.1529Z" fill="rgb(var(--color-text-secondary)"/>
+                    </svg>
+                    <span class="text-sm">Ask AI for concepts, guides, and tutorials</span>
+                </div>
+                <span class="text-brand text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
             </div>
         </div>
         <div class="hidden lg:flex pt-[70px] pr-[68px] relative">
-            <div class="hidden lg:flex shadow-primary absolute border rounded-md border-transparent background-gradient h-fit bottom-0 right-11 w-full max-w-80">
+            <div class="hidden lg:flex shadow-primary absolute border rounded-md border-transparent background-gradient h-fit bottom-0 right-11 w-full max-w-80 z-10">
                 <a href="https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=homepage" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
                     <div class="flex flex-col gap-1">
                         <span class="text-sm text-primary font-semibold">Get hands-on with Konnect</span>
@@ -86,12 +90,12 @@ edit_and_issue_links: false
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/analytics.svg" class="w-8 h-8" alt="Analytics icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
-                    <h3>Advanced Analytics</h3>
-                    <p class="text-sm text-secondary">Gain visibility into API performance and usage patterns with Kong's Advanced Analytics</p>
+                    <h3>Observability</h3>
+                    <p class="text-sm text-secondary">Gain visibility into API performance and usage patterns with {{site.konnect_short_name}}'s {{site.observability}}</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/advanced-analytics/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/advanced-analytics/">All documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/observability/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/observability/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
@@ -106,28 +110,6 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/gateway.svg" class="w-8 h-8" alt="Kong Gateway Manager icon"/>
-                <div class="flex flex-col gap-3 flex-grow">
-                    <h3>Gateway Manager</h3>
-                    <p class="text-sm text-secondary">Catalog, connect to, and monitor the status of all Control Planes (CPs) and Data Plane nodes (DPs) in one place</p>
-                </div>
-                <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/gateway-manager/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/gateway/#gateway-manager">All documentation<span class="text-terciary">&rarr;</span></a>
-                </div>
-            </div>
-            <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/mesh.svg" class="w-8 h-8" alt="Kong Mesh Manager icon"/>
-                <div class="flex flex-col gap-3 flex-grow">
-                    <h3>Mesh Manager</h3>
-                    <p class="text-sm text-secondary">Create, manage, and view your Kong Mesh service meshes using the Konnect platform</p>
-                </div>
-                <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/mesh-manager/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/search/?tags=mesh-manager">All documentation<span class="text-terciary">&rarr;</span></a>
-                </div>
-            </div>
-            <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/insomnia/insomnia-logo-bug.svg" class="w-8 h-8" alt="Insomnia icon" />
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Insomnia</h3>
@@ -137,6 +119,17 @@ edit_and_issue_links: false
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/insomnia/">Overview <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=insomnia">How-to guides <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/insomnia">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+             <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/analytics.svg" class="w-8 h-8" alt="Metering icon"/>
+                <div class="flex flex-col gap-3 flex-grow">
+                    <h3>Metering & Billing</h3>
+                    <p class="text-sm text-secondary">Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements.</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/metering-and-billing/">Metering & Billing overview<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/metering-and-billing/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
         </div>
@@ -198,14 +191,14 @@ edit_and_issue_links: false
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
-                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8" alt="Kong Gateway Operator icon"/>
+                <img src="/assets/icons/kubernetes.svg" class="w-8 h-8" alt="Kong Operator icon"/>
                 <div class="flex flex-col gap-3 flex-grow">
                     <h3>Operator</h3>
                     <p class="text-sm text-secondary">Deploy and manage Kong on Kubernetes using Kubernetes resources</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/operator/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/operator/install/">Install <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/operator/get-started/gateway-api/install/">Install <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=operator">How-to guides <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/operator/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
@@ -264,6 +257,7 @@ edit_and_issue_links: false
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/audit-logs/">Konnect audit logs reference<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
+           
         </div>
     </div>
 </div>

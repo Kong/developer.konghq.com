@@ -1,0 +1,53 @@
+description: 'Enable the Noma Runtime Protection plugin.'
+
+extended_description: |
+  Enable the Noma Runtime Protection plugin.
+
+  In this example, monitor mode is enabled, which means that the plugin will only monitor and log attacks.
+  If you want to enable blocking, set `monitor_mode` to `false`.
+
+  This plugin also requires the following {{site.base_gateway}} entity configuration:
+  1. [Set up {{site.ai_gateway}}](/ai-gateway/get-started/) by creating a Service, a Route, and enabling the AI Proxy plugin.
+  1. [Create a Consumer and an auth key](/how-to/enable-key-authentication-on-a-service-with-kong-gateway/) to identify the application/client calling the API.
+  1. [Group Consumers](/gateway/entities/consumer-group/) (Optional): If you want to set up shared runtime policies, group your Consumers into Consumer Groups.
+
+title: 'Enable Noma Runtime Protection'
+
+weight: 900
+
+requirements:
+  - "(Optional) You have created an application in Noma and copied its application's ID. If you don't specify an application ID, it will automatically take the name of the {{site.base_gateway}} Consumer."
+  - "The Noma Runtime Protection plugin is [installed](/plugins/noma-runtime-protection/#install-the-noma-runtime-protection-plugin)."
+
+
+variables:
+  api-base:
+    value: https://api.noma.security
+    description: |
+      The base URL for the Noma API. The default value is `https://api.noma.security`.
+  app-id:
+    value: $NOMA_APPLICATION_ID
+    description: Your Noma Application ID.
+  client_id:
+    value: $NOMA_CLIENT_ID
+    description: Your Noma Client ID. Contact your Noma Technical Account Manager to receive this.
+  client_secret:
+    value: $NOMA_CLIENT_SECRET
+    description: Your Noma Client Secret. Contact your Noma Technical Account Manager to receive this.
+
+config:
+  API_base: https://api.noma.security
+  monitor_mode: true
+  application_id: ${app-id}
+  client_id: ${client_id}
+  client_secret: ${client_secret}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.12'

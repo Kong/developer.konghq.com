@@ -8,8 +8,9 @@ module Jekyll
     class KonnectApiRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
 
-      def initialize(yaml:) # rubocop:disable Lint/MissingSuper
+      def initialize(yaml:, format:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
+        @format = format
 
         validate_yaml!
       end
@@ -25,22 +26,32 @@ module Jekyll
         end
       end
 
+      def data_validate_konnect
+        JSON.dump({ name: 'konnect-api-request', config: config.merge(url: url) })
+      end
+
       def url
         "https://#{self['region']}.api.konghq.com#{@yaml['url']}"
       end
 
       def headers
-        h = @yaml['headers'] || []
-        h.unshift('Authorization: Bearer $KONNECT_TOKEN')
-        h
+        @headers ||= begin
+          h = @yaml['headers'] || []
+          h.unshift('Authorization: Bearer $KONNECT_TOKEN')
+          h.uniq
+        end
       end
 
       def config
-        @config ||= @yaml 
+        @config ||= @yaml.merge('headers' => headers)
       end
 
       def template_file
-        @template_file ||= 'app/_includes/konnect_api_request.html'
+        if @format == 'markdown'
+          'app/_includes/konnect_api_request.md'
+        else
+          'app/_includes/konnect_api_request.html'
+        end
       end
 
       def method

@@ -35,18 +35,20 @@ icon: ai-rag-injector.png
 categories:
   - ai
 related_resources:
-  - text: All AI Gateway plugins
+  - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
-  - text: About AI Gateway
+  - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: AI Semantic Cache plugin
     url: /plugins/ai-semantic-cache/
   - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
     url: /how-to/use-ai-rag-injector-plugin/
-
+  - text: Control access to knowledge base collections with the AI RAG Injector plugin
+    url: /how-to/use-ai-rag-injector-acls/
+  - text: Filter knowledge base queries with the AI RAG Injector plugin
+    url: /how-to/filter-knowledge-based-queries-with-rag-injector/
 tags:
   - ai
-
 search_aliases:
   - ai-semantic-cache
   - ai
@@ -91,8 +93,13 @@ faqs:
       failed to create memorydb instance failed to create index: LIMIT Number of indexes (11) exceeds the limit (10)
       ```
 
-      This means that the hardcoded MemoryDB instance limit has been reached. 
+      This means that the hardcoded MemoryDB instance limit has been reached.
       To resolve this, create more MemoryDB instances to handle multiple {{page.name}} plugin instances.
+  - q: Does the AI RAG Injector plugin work with GCP Memorystore Redis clusters?
+    a: |
+      No. GCP Memorystore Redis clusters do not support the AI RAG Injector plugin. The Redis JSON module required for vector operations is not available in GCP's managed Redis service.
+
+      Attempting to ingest chunks with GCP Redis results in the following error:
 ---
 
 ## What is Retrieval Augmented Generation (RAG)?
@@ -129,7 +136,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 
 * **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context without custom retrieval logic.
 * **Platform-level control:** Shifts RAG logic from app code to infrastructure, allowing platform teams to enforce global policies, update configurations centrally, and reduce developer overhead.
-* **Improved security:** Vector DB access is limited to the AI Gateway, eliminating the need to expose it to individual dev teams or AI agents.
+* **Improved security:** Vector DB access is limited to the {{site.ai_gateway}}, eliminating the need to expose it to individual dev teams or AI agents.
 * **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
 * **Developer productivity:** Developers can focus on building AI features without needing to manage embeddings, similarity search, or context handling.
 * {% new_in 3.11 %} **Save LLM costs:** When using the AI RAG Injector plugin with the AI Prompt Compressor, you can wrap specific prompt parts in `<LLMLINGUA>` tags within your template to target only those sections for compression, preserving the rest of the prompt unchanged.
@@ -141,7 +148,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model.
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
-1. When a request reaches the AI Gateway, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
+1. When a request reaches the {{site.ai_gateway}}, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
 1. The plugin injects the retrieved content from the vector search result into the request body, and forwards the request to the upstream service.
 
 The following diagram is a simplified overview of how the plugin works.  See the [following section](#rag-generation-process) for a more detailed description.
@@ -241,8 +248,245 @@ sequenceDiagram
 <!-- vale on -->
 
 
-Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which will dramatically reduce hallucinations and increase the accuracy of the AI output.
+Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which reduces hallucinations and increases the accuracy of the AI output.
 
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+## Access control and metadata filtering {% new_in 3.13 %}
+
+Once you've configured your vector database and ingested content, you can control which [Consumers](/gateway/entities/consumer/) access specific knowledge base articles and refine query results using metadata filters.
+
+### Collections
+
+A collection is a logical grouping of knowledge base articles with independent access control rules. When you ingest content via the Admin API, assign it to a collection using the `collection` field in the metadata.
+
+Example metadata structure:
+
+```json
+{
+  "content": "Quarterly revenue increased 15%...",
+  "metadata": {
+    "collection": "finance-reports",
+    "date": "2023-10-14",
+    "tags": ["finance", "quarterly"],
+    "source": "internal"
+  }
+}
+```
+
+### Configuration
+
+Two independent mechanisms control which results consumers receive:
+
+- **ACL filtering**: Server restricts collections based on [Consumer Groups](/gateway/entities/consumer-group/)
+- **Metadata filtering**: Clients specify criteria (tags, dates, sources) to narrow results within authorized collections
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: |
+      [`consumer_identifier`](/#schema--config-consumer-identifier)
+    description: |
+      Determines which consumer attribute is matched against ACL rules. Options: `consumer_group`, `username`, `custom_id`, or `consumer_id`
+  - field: |
+      [`global_acl_config.allow[]`](/#schema--config-global-acl-config-allow)
+    description: |
+      Group names with access to all collections (unless overridden)
+  - field: |
+      [`global_acl_config.deny[]`](/#schema--config-global-acl-config-deny)
+    description: |
+      Group names explicitly denied access to all collections
+  - field: |
+      [`collection_acl_config.<name>.allow[]`]()
+    description: |
+      Group names with access to this specific collection. Empty list means allow all
+  - field: |
+      [`collection_acl_config.<name>.deny[]`](/#schema--config-collection-acl-config)
+    description: |
+      Group names explicitly denied access to this specific collection
+{% endtable %}
+<!-- vale on -->
+
+This configuration creates the following access rules:
+- `finance-reports`: Accessible only to Consumers in the `finance` or `admin` groups. Contractors are explicitly denied.
+- `public-docs`: Accessible to all Consumers (empty allow and deny lists).
+- Other collections: No access (empty global ACL means deny by default).
+
+
+```yaml
+plugins:
+  - name: ai-rag-injector
+    config:
+      ...
+      consumer_identifier: consumer_group
+      global_acl_config:
+        allow: []
+        deny: []
+      collection_acl_config:
+        finance-reports:
+          allow:
+            - finance
+            - admin
+          deny:
+            - contractor
+        public-docs:
+          allow: []
+          deny: []
+```
+
+In this configuration, collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+
+{:.info}
+> Check the [how-to guide](/how-to/use-ai-rag-injector-acls/) for details about how ACLs work in the AI RAG Injector plugin.
+
+### ACL evaluation
+
+The plugin checks access in this order:
+
+1. **Deny list**: If subject matches, deny access
+2. **Allow list**: If list exists and subject doesn't match, deny access
+3. **Empty ACL**: If both lists are empty, allow access
+
+{:.info}
+> Collections with their own ACL in `collection_acl_config` ignore `global_acl_config` entirely. They must explicitly list all allowed subjects.
+
+### Metadata filtering
+
+LLM clients can refine search results by specifying filter criteria in the query request. Filters apply within the collections. The AI RAG Injector plugin uses a Bedrock-compatible filter grammar with the following operators:
+
+- `equals`: Exact match
+- `greaterThan`: Greater than (>)
+- `greaterThanOrEquals`: Greater than or equal to (>=)
+- `lessThan`: Less than (<)
+- `lessThanOrEquals`: Less than or equal to (<=)
+- `in`: Match any value in array
+- `andAll`: Combine multiple filter clauses
+
+{:.info}
+> Review the [how-to guide](/how-to/filter-knowledge-based-queries-with-rag-injector/) for details about how metadata filtering works.
+
+You can combine multiple conditions with `andAll`:
+
+<!-- vale off -->
+```json
+{
+  "andAll": [
+    {"equals": {"key": "source", "value": "internal"}},
+    {"in": {"key": "tags", "value": ["finance", "quarterly"]}},
+    {"greaterThanOrEquals": {"key": "date", "value": "2023-01-01"}}
+  ]
+}
+```
+<!-- vale on -->
+
+Filter parameters:
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - parameter: |
+      `filters`
+    description: |
+      JSON object with filter clauses using the grammar above
+  - parameter: |
+      `filter_mode`
+    description: |
+      Controls how chunks with no metadata are handled:<br/>
+      • `"compatible"`: Includes chunks matching filter OR chunks with no metadata<br/>
+      • `"strict"`: Includes only chunks matching filter
+  - parameter: |
+      `stop_on_filter_error`
+    description: |
+      Fail query on filter parse error (default: `false`)
+{% endtable %}
+<!-- vale on -->
+
+You can include filters in the `ai_rag_injector` parameter of your request:
+
+<!-- vale off -->
+```json
+curl "http://localhost:8000/" \
+     -H "Content-Type: application/json" \
+     --json '{
+       "messages": [
+         {
+           "role": "user",
+           "content": "What were Q4 results?"
+         }
+       ],
+       "ai-rag-injector": {
+         "filters": {
+           "andAll": [
+             {
+               "equals": {
+                 "key": "source",
+                 "value": "internal"
+               }
+             },
+             {
+               "in": {
+                 "key": "tags",
+                 "value": [
+                   "q4",
+                   "quarterly"
+                 ]
+               }
+             }
+           ]
+         },
+         "filter_mode": "strict",
+         "stop_on_filter_error": false
+       }
+     }'
+```
+<!-- vale on -->
+
+### Query flow
+
+The following diagram shows how ACL and metadata filtering work together during query processing:
+
+{% mermaid %}
+flowchart TB
+    Start([Query Request]) --> Auth[Authenticate Consumer]
+    Auth --> CheckACL{Authorized<br/>Collections?}
+    CheckACL -->|No| Deny[❌ Access Denied]
+    CheckACL -->|Yes| HasFilter{Metadata<br/>Filters<br/>Specified?}
+    HasFilter -->|No| SearchAll[Search all chunks<br/>in authorized collections]
+    HasFilter -->|Yes| FilterMode{filter_mode<br/>setting?}
+    FilterMode -->|compatible| SearchCompat[Return chunks matching filter<br/>OR chunks with no metadata]
+    FilterMode -->|strict| SearchStrict[Return only chunks<br/>matching filter]
+    SearchAll --> Return[✓ Return Results]
+    SearchCompat --> Return
+    SearchStrict --> Return
+{% endmermaid %}
+
+### Admin API
+
+Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metadata and collection assignments.
+
+- Ingest chunk:
+
+  ```bash
+  POST /ai-rag-injector/{pluginID}/ingest_chunk
+  {"content": "...", "metadata": {"collection": "finance-reports", ...}}
+  ```
+
+- Lookup chunks:
+
+  ```bash
+  POST /ai-rag-injector/{pluginID}/lookup_chunks
+  {"prompt": "...", "collection": "finance-reports", "filters": {...}}
+  ```
+{% include plugins/redis-cloud-auth.md %}

@@ -27,8 +27,6 @@ related_resources:
     url: /custom-plugins/
   - text: Custom plugins reference
     url: /custom-plugins/reference/
-  - text: Gateway Manager
-    url: /gateway-manager/
 
 faqs:
   - q: What does a non-breaking change to a plugin schema look like?
@@ -84,9 +82,9 @@ faqs:
 
 ---
 
-You can add custom plugins to the Gateway Manager by uploading a Lua schema file to a Control Plane.
+You can add custom plugins to API Gateway in {{site.konnect_short_name}} by uploading a Lua schema file to a Control Plane.
 
-Using that schema, Gateway Manager creates a plugin configuration object in {{site.konnect_short_name}},
+Using that schema, Gateway creates a plugin configuration object in {{site.konnect_short_name}},
 making the plugin available for configuration alongside all the Kong bundled plugins. 
 This means that {{site.konnect_short_name}} only sees a custom plugin's configuration options, and doesn't see any other plugin code.
 
@@ -107,7 +105,8 @@ To run in {{site.konnect_short_name}}, a custom plugin must meet the following r
 * The plugin must not contain the `dao.lua` or `migrations.lua` files, as custom data entities are not supported.
 
 **Code and language requirements:** 
-* The schema for your custom plugin must be written in Lua. {{site.konnect_short_name}} doesn't support custom plugins developed using the Go, Python, or JavaScript PDKs.
+* The schema for your custom plugin must be written in Lua, even if the custom plugin is written in [another supported language](/custom-plugins/#plugin-development-kits-pdks).
+  If you have a custom plugin written in a language other than Lua, convert the schema into a `schema.lua` file before uploading it to {{site.konnect_short_name}}. 
 * Custom validation functions must be written in Lua and be self-contained within the `schema.lua` file.
 * The `schema.lua` file must not contain any `require()` statements.
 * Plugins that require third-party libraries must reference them in the `handler.lua` file.

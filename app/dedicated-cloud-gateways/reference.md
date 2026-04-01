@@ -58,6 +58,16 @@ faqs:
       * [decK](/deck/)
       * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
       * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
+  - q: How can I check if my Dedicated Cloud Gateway data plane is running?
+    a: |
+      You can use the `___konnect/healthz` endpoint to check if the data plane is up and ready. 
+      For example: `https://dcgw-domain-here.aws-us-east-2.edge.gateways.konggateway.com/___konnect/healthz`
+
+      This endpoint returns a `200 OK` response when the gateway is running. 
+      
+      {:.info}
+      > **Note:** This is a basic health check and only confirms that the gateway process is up and running. 
+      It doesn't verify routing, plugins, upstreams, or networking configurations.
 
 related_resources:
   - text: Dedicated Cloud Gateways 
@@ -68,24 +78,20 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
-  - text: Dedicated Cloud Gateway domain breaking changes
-    url: /dedicated-cloud-gateways/breaking-changes/
-
+next_steps:
+  - text: Dedicated Cloud Gateways production readiness checklist
+    url: /dedicated-cloud-gateways/production-readiness/
 tags:
   - dedicated-cloud-gateways
 ---
-
-{:.warning}
-> **Dedicated Cloud Gateways domain breaking changes:** [Review domain breaking changes](/dedicated-cloud-gateways/breaking-changes/) for Dedicated Cloud Gateways and migrate to the new domain before September 30, 2025.
 
 ## How do Dedicated Cloud Gateways work? 
 
 When you create a Dedicated Cloud Gateway, {{site.konnect_short_name}} creates a **Control Plane**. 
 This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-platform/geos/#dedicated-cloud-gateways).
 
-Dedicated Cloud Gateways support two different configuration modes:
-* **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.
-* **Custom Mode:** Manually specify the instance size, type, and number of nodes per cluster.
+Dedicated Cloud Gateways configures expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the data plane nodes automatically.
+
 <!-- vale off -->
 {% mermaid %}
 flowchart TD
@@ -155,6 +161,74 @@ body:
 {% endcapture %}
 {{request | indent: 3}}
 <!--vale on -->
+
+## How do I segment the Dedicated Cloud Gateway by teams?
+
+To isolate the Gateway configuration by team while still sharing a Dedicated Cloud Gateway cluster, you can use a Dedicated Cloud [control plane group](/gateway/control-plane-groups/). A Dedicated Cloud control plane group consists of hybrid control planes (typically segmented to teams) and Dedicated Cloud Gateway data plane nodes assigned to the control plane group. This allows you to segment your Dedicated Cloud Gateway like the following:
+
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+ subgraph ORG["**KONNECT ORG**"]
+    subgraph CPG["Dedicated Cloud CPG"]
+        CP1("Control Plane: Payments team config")
+        CPP("Control Plane: Platform Global global config")
+        CP2("Control Plane: Orders team config")
+    end
+  end
+
+ subgraph RUNTIME["Dedicated Cloud runtime"]
+    direction LR
+        DPGA("DP: AWS us-east-1")
+        DPGB("DP: AWS eu-west-1")
+        DPGC("DP: Azure eastus2")
+        DPGD("DP: Azure westeurope")
+  end
+    A("Team Payments") -- deck gateway sync --> CP1
+    B("Team Orders") -- deck gateway sync --> CP2
+    P("Platform Team") -- deck gateway sync --> CPP
+    CPG -- Effective merged config --> RUNTIME
+{% endmermaid %}
+<!--vale on-->
+
+In this example, the teams control the following:
+
+**Team Payments control plane:**
+* Payments Gateway Service
+* Payments Routes
+* Payments-specific rate limits
+
+**Team Orders control plane:**
+* Orders Gateway Service
+* Orders Routes
+* Orders-specific plugins
+
+**Platform global control plane:**
+* Global auth plugin
+* Global logging plugin
+* Managed cache config
+
+The control plane group aggregates the hybrid control plane's configurations and passes them on to the Dedicated Cloud Gateway data plane nodes.
+
+To configure a Dedicated Cloud control plane group, do the following:
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click **New**.
+1. Select **New control plane group**.
+1. In the **Name** field, enter `dcgw-control-plane-group`.
+1. From the **Control Planes** dropdown menu, select your hybrid control plane that doesn't contain data plane nodes. 
+1. For the Node Type, select **Dedicated Cloud**.
+1. Click **Save**.
+1. Click **Configure data plane**.
+1. From the **Provider** dropdown menu, select the provider you want to configure.
+1. From the **Region** dropdown menu, select the region you want to configure the cluster in. 
+1. Edit the Network range as needed.
+   
+   {:.danger}
+   > **Important:** Your provider network **must** use a different IP than your network in {{site.konnect_short_name}}, which is `10.0.0.0/16` by default but can be edited.
+1. From the **Access** dropdown menu, select "Public" or "Private".
+1. Click **Create data plane node**.
+1. Click **Go to overview**.
 
 ## AWS workload identities
 
@@ -377,6 +451,188 @@ body:
           value: "0.01"
 {% endkonnect_api_request %}
 <!-- vale on -->
+
+## CIDR size requirements
+
+{% include /konnect/cidr-minimum-requirements.md %}
+
+## Managed cache for Redis {% new_in 3.13 %}
+
+{:.success}
+> **Getting started with managed cache?**<br>
+> For complete tutorials, see the following:
+> * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/aws-managed-cache-control-plane/)
+> * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/aws-managed-cache-control-plane-group/)
+> * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/azure-managed-cache-control-plane/)
+> * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
+
+{% include_cached /sections/managed-cache-intro.md %}
+Only AWS and Azure are supported as providers currently.
+
+Managed caches are either created at the control plane or control plane group-level. 
+
+{% navtabs "managed-cache" %}
+{% navtab "Control plane" %}
+1. List your existing Dedicated Cloud Gateway control planes:
+{% capture list_cp %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes?filter%5Bcloud_gateway%5D=true
+status_code: 201
+method: GET
+region: global
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ list_cp | indent: 3}}
+
+1. Copy and export the control plane you want to configure the managed cache for:
+   ```sh
+   export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
+   ```
+
+1. Create a managed cache using the Cloud Gateways add-ons API:
+
+   {% capture create_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons
+   status_code: 201
+   method: POST
+   region: global
+   body:
+       name: managed-cache
+       owner:
+           kind: control-plane
+           control_plane_id: $CONTROL_PLANE_ID
+           control_plane_geo: us
+       config:
+           kind: managed-cache.v0
+           capacity_config:
+               kind: tiered
+               tier: small
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ create_addon | indent: 3}}
+
+   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions are supported and you can configure the managed cache for multiple regions.
+
+1. Export the ID of your managed cache from the response:
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
+
+1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
+
+   {% capture get_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
+   status_code: 200
+   method: GET
+   region: global
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ get_addon | indent: 3}}
+
+   This can take about 15 minutes. 
+
+For control plane managed caches, you don't need to manually configure a Redis partial. 
+After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
+[Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
+You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
+{% endnavtab %}
+{% navtab "Control plane group" %}
+1. Create a managed cache using the Cloud Gateways add-ons API:
+
+   {% capture create_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons
+   status_code: 201
+   method: POST
+   region: global
+   body:
+       name: managed-cache
+       owner:
+           kind: control-plane-group
+           control_plane_group_id: $CONTROL_PLANE_GROUP_ID
+           control_plane_group_geo: us
+       config:
+           kind: managed-cache.v0
+           capacity_config:
+               kind: tiered
+               tier: small
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ create_addon | indent: 3}}
+
+   When you configure a managed cache, you can select the small (~1 GiB capacity) cache size. Additional cache sizes will be supported in future updates. All regions are supported and you can configure the managed cache for multiple regions.
+
+1. Export the ID of your managed cache from the response:
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
+
+1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
+
+   {% capture get_addon %}
+   <!--vale off-->
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/add-ons/$MANAGED_CACHE_ID
+   status_code: 200
+   method: GET
+   region: global
+   {% endkonnect_api_request %}
+   <!--vale on-->
+   {% endcapture %}
+   {{ get_addon | indent: 3}}
+
+   This can take about 15 minutes. 
+1. Create a Redis partial configuration. The following example is for AWS:
+
+{% capture create_redis_partial %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/partials
+status_code: 201
+method: POST
+region: us
+body:
+  name: konnect-managed
+  type: redis-ee
+  config:
+    cloud_authentication:
+      auth_provider: "{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}"
+      aws_cache_name: "{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}"
+      aws_region: "{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}"
+      aws_is_serverless: false
+      aws_assume_role_arn: "{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}"
+    connect_timeout: 2000
+    connection_is_proxied: false
+    database: 0
+    host: "{vault://env/ADDON_MANAGED_CACHE_HOST}"
+    keepalive_backlog: 512
+    keepalive_pool_size: 256
+    port: "{vault://env/ADDON_MANAGED_CACHE_PORT}"
+    read_timeout: 5000
+    send_timeout: 2000
+    server_name: "{vault://env/ADDON_MANAGED_CACHE_SERVER_NAME}"
+    ssl_verify: true
+    ssl: true
+    username: "{vault://env/ADDON_MANAGED_CACHE_USERNAME}"
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{ create_redis_partial | indent: 3 }}
+1. Repeat the previous step for all the control planes in your control plane group.
+
+You can apply the managed cache to any Redis-backed plugin by selecting the {{site.konnect_short_name}} partial for the shared Redis configuration.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Securing backend communication
 

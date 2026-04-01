@@ -1,7 +1,5 @@
 description: Configure the Solace Consume plugin to consume messages over SSL.
 
-weight: 850
-
 extended_description: |
   Configure the Solace Consume plugin to consume messages over SSL.
 

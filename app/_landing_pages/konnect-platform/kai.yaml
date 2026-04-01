@@ -1,0 +1,208 @@
+metadata:
+  title: "Kong AI assistant"
+  content_type: landing_page
+  description: Learn how to use Kong's AI assistant, KAi.
+  products:
+    - konnect
+  breadcrumbs:
+    - /konnect/
+  tags:
+    - ai
+    - mcp
+  beta: true
+
+rows:
+
+  - header:
+      type: h1
+      text: "Kong AI assistant"
+      sub_text: KAi is Kong's AI assistant that can help you detect issues, suggest fixes, and accelerate your workflows.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong's AI assistant, KAi, can detect issues, suggest fixes, and accelerate your workflows all without leaving the {{site.konnect_short_name}} UI.
+                    KAi is enabled by default for {{site.konnect_short_name}} Plus and trial accounts.
+                    KAi is always disabled by default for Enterprise accounts.
+                    Enterprise accounts can enable KAi by contacting their Kong account manager or [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+
+                    KAi can help you do the following:
+                    * **Find information on {{site.konnect_short_name}}:** Ask questions about {{site.konnect_short_name}} features, settings and configurations.
+                    * **Explore gateway entities:** View and explore API gateway entities: Services, Routes, plugins, and more.
+                    * **Debug and analyze API traffic:** Get real-time insights and troubleshoot performance bottlenecks and issues.
+
+          - type: button
+            config:
+              text: "Try KAi in {{site.konnect_short_name}} &rarr;"
+              url: https://cloud.konghq.com/global/organization/labs/kai
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/kai.png
+              alt_text: "KAi"
+
+  - header:
+      text: "How KAi works"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  KAi is made up of a series of components running inside {{site.konnect_short_name}}.
+                  The agent can perform smart orchestration and analysis of {{site.konnect_short_name}} data and entities.
+                  You can interact with the agent in the following ways:
+                  * Use the chat in the {{site.konnect_short_name}} UI by clicking **Ask KAi** on the top right.
+                  * Use the `kongctl` command-line tool with the `kongctl kai` command.
+
+                  The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data.
+                  Because the MCP server is authenticated via the logged-in user's session, it only has access to data and resources that the user themselves has permission to access.
+
+                  KAi also has access to Kong's documentation and support knowledge base, so it can provide guidance on configuration, architecture, and troubleshooting.
+
+                  Like other AI chatbots, KAi uses sessions. 
+                  KAi can remember context within a session, but doesn't share context between sessions. 
+                  You can have a maximum of three current sessions with KAi.
+
+      - blocks:
+        - type: mermaid
+          config:
+            diagram: |
+              flowchart LR
+                subgraph backends["<b>Backends & data sources</b>"]
+                  direction LR
+                  LLM["LLM backend"]
+                  MCP["Konnect MCP Server"]
+                  KB["Kong Docs & support knowledge base"]
+                end
+
+                subgraph kai["<b>KAi Agent</b>"]
+                  direction LR
+                  UI["Konnect UI chat"]
+                  CLI["<code>kongctl kai</code>"]
+                end
+
+                User(("User"))
+
+                User --> kai
+                kai --> backends
+                click MCP "/konnect-platform/konnect-mcp/"
+
+  - header:
+      text: "How to interact with KAi in the UI"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  To start a chat with KAi, click **Ask KAi** on the top right of the {{site.konnect_short_name}} UI.
+
+                  KAi is context-sensitive, so if you navigate to a control plane or Gateway Service, KAi will use that entity context to answer questions. We recommend adding context, like your control plane, to get the best possible answer from KAi.
+                  You can create a new session from the **Active session** dropdown menu by selecting "New conversation". Each user is limited to three sessions. To delete a session, click the action menu icon next to the session and click **Delete**.
+  - header:
+      text: "Use the {{site.konnect_short_name}} MCP Server with external tools"
+      type: h2
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The same {{site.konnect_short_name}} MCP Server that powers KAi is available for use with external AI assistants and IDE copilots. This allows you to interact with your {{site.konnect_short_name}} resources directly from your development environment.
+
+                  With the MCP server, you can:
+                  * Query gateway entities (control planes, Gateway Services, Routes, Consumers, plugins)
+                  * Create and analyze debug sessions for performance issues
+                  * Search Kong documentation
+                  * Analyze API traffic
+        - type: button
+          config:
+            text: "Learn how to configure the MCP server"
+            url: /konnect-platform/konnect-mcp/
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: Supported product areas
+        blocks:
+        - type: text
+          config: |
+            KAi can help you in the following product areas:
+            * Gateway control planes
+            * Gateway configurations (Services, Routes, Vaults, Consumers, Debugger)
+
+      - header:
+          type: h2
+          text: What's new in KAi
+        blocks:
+        - type: text
+          config: |
+            The following are the latest changes in KAi:
+            * Beta trial is available for Enterprise accounts in [{{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+
+            For a complete changelog of all KAi releases, see the [KAi changelog](/konnect-platform/kai/changelog/).
+  
+  - header:
+      text: "Example prompts"
+      type: h2
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Use the following example prompts to get started with KAi:
+
+                    **Debugging & performance:**
+                    - Why is my `/api/checkout` endpoint slow? Create a debugging session, focusing on high-latency requests, and summarize where time is being spent.
+                    - Help me diagnose intermittent 502s on my `ROUTE_NAME` Route.
+                    - What is the plugin execution order for my `ROUTE_NAME` Route?
+                    - Why are Consumers in `CONSUMER_GROUP` getting 401s? Walk me through likely causes and how to verify them in {{site.konnect_short_name}}.
+
+                    **Configuration discovery:**
+                    - What plugins affect the `ROUTE_NAME` Route? List them in order and explain what each one does.
+                    - Show me all rate limiting plugins across production control planes.
+                    - List all Routes associated with the `SERVICE_NAME` Gateway Service and tell me which auth and security plugins apply to each.
+
+                    **Security & governance checks:**
+                    - Audit my `CONTROL_PLANE` control plane for common security misconfigurations (for example: auth missing, weak TLS, or overly broad CORS). Suggest prioritized fixes.
+                    - Check if any Routes in my `CONTROL_PLANE` control plane expose endpoints without authentication, and list them.
+                    - Suggest a safe baseline policy set for a public API (rate limiting, authentication, and logging) and show how to apply it to the `SERVICE_NAME` Gateway Service.
+
+                    **Questions about {{site.konnect_short_name}}:**
+                    - How do I set up the plugin `PLUGIN_NAME` in {{site.konnect_short_name}} for a particular use case? Give me the exact steps and the limitations.
+                    - Explain the difference between Gateway Service vs Route in {{site.konnect_short_name}}, with an example from my current control plane.
+                    - What’s the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
+                    - Search the Kong docs for best practices on rate limiting and summarize the key steps for my setup.
+  - header:
+      text: "Frequently asked questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Is the KAi AI assistant enabled by default?
+              a: It is enabled by default for {{site.konnect_short_name}} Plus and trial accounts. Only organization owners can choose to enable or disable KAi for an organization. KAi is always disabled by default for Enterprise accounts. Enterprise accounts can enable it by contacting their Kong account manager or by [enabling it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+            - q: Does KAi automatically modify {{site.konnect_short_name}} configuration when it finds an issue?
+              a: No. KAi can start a debug sesssion, but will not make any changes to your {{site.konnect_short_name}} configuration.
+            - q: Can all users see the same resources with the AI assistant KAi?
+              a: No. Users can only see the {{site.konnect_short_name}} entities in KAi that they have permissions to via [teams and roles](/konnect-platform/teams-and-roles/). For example, if a user is a Portal Admin, they can see Dev Portal entities, but they can't ask KAi about control planes.
+            - q: Is there an additional cost to using KAi?
+              a: During the Beta period, access to KAi is included in your existing Plus and Trial plans. Enterprise users should contact their Kong account manager or [enable it in {{site.konnect_short_name}} Labs](https://cloud.konghq.com/global/organization/labs).
+            - q: Does KAi train on any of my data?
+              a: No. Neither Kong nor any downstream LLMs that KAi uses train on user data.
+            - q: Which models does KAi use?
+              a: We currently use Anthropic Claude provided by AWS Bedrock. Review the Terms for Anthropic on the [AWS Third-Party Models page](https://aws.amazon.com/legal/bedrock/third-party-models/).
+            - q: What regions is KAi available in?
+              a: KAi is currently available in US, EU, and AU. Other regions will be added as the product moves out of Beta.

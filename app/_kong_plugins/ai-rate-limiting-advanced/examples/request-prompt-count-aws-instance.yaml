@@ -1,0 +1,92 @@
+description: Rate limit requests based on a custom token with AWS ElastiCache instance auth
+extended_description: |
+  Protect your LLM services with rate limiting and AWS ElastiCache instance auth.
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response
+  to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses request prompt rate limiting, which lets you you rate limit requests based on a custom token. See the [how-to guide](/how-to/use-custom-function-for-ai-rate-limiting/) for a step-by-step walkthrough.
+
+title: 'Request prompt function with AWS ElastiCache instance auth'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - A running Redis instance on an [AWS ElastiCache instance](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html) for Valkey 7.2 or later or ElastiCache for Redis OSS version 7.0 or later
+  -  "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - The [ElastiCache user needs to set "Authentication mode" to "IAM"](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup)
+  - |
+    The following policy assigned to the IAM user/IAM role that is used to connect to the ElastiCache:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+              "Effect": "Allow",
+              "Action": [
+                  "elasticache:Connect"
+              ],
+              "Resource": [
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE",
+                  "arn:aws:elasticache:ARN_OF_THE_ELASTICACHE_USER"
+              ]
+          }
+      ]
+    }
+    ```
+
+weight: 900
+
+config:
+  strategy: redis
+  redis:
+    host: ${instance_address}
+    username: ${instance_username}
+    port: 6379
+    cloud_authentication:
+      auth_provider: aws
+      aws_cache_name: ${aws_cache}
+      aws_is_serverless: false
+      aws_region: ${aws_region}
+      aws_access_key_id: ${aws_key_id}
+      aws_secret_access_key: ${aws_secret_key}
+  sync_rate: 0
+  llm_providers:
+  - name: cohere
+    limit:
+    - 100
+    - 1000
+    window_size:
+    - 60
+    - 3600
+  request_prompt_count_function: |
+    local header_count = tonumber(kong.request.get_header("x-prompt-count"))
+    if header_count then
+      return header_count
+    end
+    return 0
+
+variables:
+  instance_address:
+    value: $INSTANCE_ADDRESS
+    description: The ElastiCache instance address.
+  instance_username:
+    value: $INSTANCE_USERNAME
+    description: The ElastiCache username with [IAM Auth mode configured](https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/auth-iam.html#auth-iam-setup).
+  aws_cache:
+    value: $AWS_CACHE_NAME
+    description: Name of your AWS ElastiCache instance.
+  aws_region:
+    value: $AWS_REGION 
+    description: Your AWS ElastiCache instance region.
+  aws_key_id:
+    value: $AWS_ACCESS_KEY_ID 
+    description: (Optional) Your AWS access key ID. 
+  aws_secret_key:
+    value: $AWS_ACCESS_SECRET_KEY 
+    description: (Optional) Your AWS secret access key.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

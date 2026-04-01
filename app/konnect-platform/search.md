@@ -21,10 +21,14 @@ related_resources:
     url: /api/konnect/ksearch/
 ---
 
-{{site.konnect_short_name}} Search allows you to perform simple and advanced searches across all {{site.konnect_short_name}} entities within an organization. 
-You can access search using the search bar (_Command+K_) at the top of every page in {{site.konnect_short_name}} or using the [{{site.konnect_short_name}} Search API](/api/konnect/ksearch/).
+{{site.konnect_short_name}} Search allows to search across all {{site.konnect_short_name}} entities within an organization using simple keywords as well as precise query syntax.. 
+You can access search using the search bar (_Command+K_ or _Control+K_) at the top of every page in {{site.konnect_short_name}} or using the [{{site.konnect_short_name}} Search API](/api/konnect/ksearch/).
 
-The {{site.konnect_short_name}} Search API is available in global and regional locations with regional-awareness, ensuring that returned entities are relevant to their geographical location. 
+The {{site.konnect_short_name}} Search, by default, searches for both global and regional entities (with regional-awareness for the [currently selected region](/konnect-platform/geos/)). This ensures that returned entities are relevant to their geographical location. By default, every search performs:
+* A global resources fetch for global {{site.konnect_short_name}} entities, such as users, teams, and networks
+* A geo-scoped fetch, searching through [entities](/gateway/entities/) in the current {{site.konnect_short_name}} geo. For example, if you've selected the US geo, {{site.konnect_short_name}} search will only search for entities in the US geo.
+
+{{site.konnect_short_name}} allows you to perform basic search (simple keyword match) as well as advanced search (query syntax). To perform a basic search, click the **Basic** tab. You can search for a known entity, like a Service, API, or team, using basic search. You can also perform an advanced search by clicking the **Advanced** tab and using {{site.konnect_short_name}}'s [query syntax](#query-syntax) to get more precise results or results that match a specified criteria.
 
 Here are a few example use cases where you can use the {{site.konnect_short_name}} Search capabilities:
 
@@ -38,23 +42,20 @@ columns:
 rows:
   - use_case: Navigate to a specific entity that you know exists
     method: |
-      You search for the name or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate the various pages in {{site.konnect_short_name}}.
+      Click the **Basic** tab and search for the name, ID, description, or keywords of the entity in the {{site.konnect_short_name}} search bar to quickly navigate to the entity page in {{site.konnect_short_name}}.
   - use_case: |
-      Find entities that are "not compliant"
+      Find entities that match specific criteria
     method: |
-      You can use search to find all entities that don't comply with your rules, such as all Routes that don't have a path that starts with `/api`.
+      Click the **Advanced** search tab and specify your search criteria using [query syntax](#query-syntax).
 {% endtable %}
 <!--vale on-->
 
 ## Query syntax
 
-The {{site.konnect_short_name}} Search API provides selectors, reserved characters, and logical operators that you can use to narrow your entity search. 
-By combining these selectors, reserved characters, and logical operators, you can construct complex and precise queries to effectively use the {{site.konnect_short_name}} Search API.
+{{site.konnect_short_name}} Search provides selectors, reserved characters, and logical operators that you can use to narrow your entity search. 
+By combining these selectors, reserved characters, and logical operators, you can construct complex and precise queries to effectively use {{site.konnect_short_name}} Search. 
 
-To perform a simple search, you can just search by the name of an entity, like a Service, API product, or name of a team. 
-You can also perform an advanced search using {{site.konnect_short_name}}'s query syntax to get more granular results.
-
-The following is an example advanced search query syntax:
+Perform an advanced search with query syntax by clicking the **Advanced** tab. The following is an example advanced search query syntax:
 
 ```
 type:team AND NOT label.department:eng AND name:*_qa
@@ -71,6 +72,7 @@ In this example, the query syntax is made up of the following components:
 
 The following {{site.konnect_short_name}} entity types are supported: 
 
+- `api`
 - `api_product`  
 - `api_product_version`  
 - `application`
@@ -80,10 +82,10 @@ The following {{site.konnect_short_name}} entity types are supported:
 - `consumer`  
 - `consumer_group`  
 - `control_plane`
+- `dashboard`
 - `data_plane`  
 - `developer`  
-- `developer_team`  
-- `gateway_service`  
+- `developer_team`    
 - `key`  
 - `key_set`   
 - `mesh`  
@@ -91,7 +93,8 @@ The following {{site.konnect_short_name}} entity types are supported:
 - `plugin`  
 - `portal`  
 - `report`  
-- `route`  
+- `route`
+- `service`  
 - `sni`  
 - `system_account`  
 - `target`  
@@ -117,6 +120,8 @@ Additional entities may be added in future releases. You can view a list of all 
 
 For each entity type, there is a list of entity specific attributes that are searchable. 
 These attributes are returned in the attributes object in the search response, while the schema of the searchable attributes can be found in the `/types` endpoint.
+
+To search by an attribute in the {{site.konnect_short_name}} UI, use syntax like `@{attribute_key}:{attribute_value}`. For example, to search by entities that were updated at a certain date, you'd use `@updated_at:2026-02-24`. 
 
 ### Selectors
 
@@ -167,9 +172,14 @@ rows:
     example: "`@public_labels.env:prod`"
   - selector: |
       `@{attribute_key}:{attribute_value}`
-    function: "Searches for an exact match for an entity specific attribute."
+    function: |
+      Searches for an exact match for an entity specific attribute.
+      <br><br>
+      If you're searching for a date, the value _must_ be in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format of `YYYY-MM-DD`.
     example: |
       `@email:"admin@domain.com"`
+      <br>
+      `@updated_at:2026-02-24`
 {% endtable %}
 <!--vale on-->
 
@@ -249,6 +259,12 @@ rows:
     description: |
       This query finds teams in the QA department. 
       It combines multiple selectors: `type:team` limits the search to the `teams` entity type and `name:*_qa` filters for teams that have a `_qa` suffix.
+  - type: Logical
+    query: |
+      `type:service AND @updated_at:2026-02-24`
+    description: |
+      This query finds services that were updated on 24 February 2026. 
+      It combines multiple selectors: `type:service` limits the search to the `service` entity type and `@updated_at:2026-02-24` filters for services that match that date. When you search by date, you _must_ use the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format of `YYYY-MM-DD`.
   - type: Logical
     query: |
       `name:*dev* OR name:*qa* OR name:*test`

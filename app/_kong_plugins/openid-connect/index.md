@@ -562,6 +562,45 @@ To enable DPoP for OpenID Connect:
 
 See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
 
+## Multiple clients
+
+You can configure the OIDC plugin with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
+client secrets ([`config.client_secret`](./reference/#schema--config-client-secret)), where the ID and client pairs correspond based on their locations in the array.
+
+For example:
+
+```yaml
+config:
+  issuer: example-issuer-url
+  client_id:
+    - my-first-client
+    - my-second-client
+  client_secret:
+    - first-client-secret
+    - second-client-secret
+```
+
+When making a request, you can specify which client to target to use by including a client ID argument.
+For example, after configuring the plugin with two client IDs and client secrets, you can target a client by name:
+
+```sh
+curl -X GET "http://localhost:8000?client_id=my-second-client"
+```
+
+Or by its index value (starting with 1):
+
+```sh
+curl -X GET "http://localhost:8000?client_id=2"
+```
+
+{{site.base_gateway}} will look for the client ID in the following locations, in order of precedence:
+1. If [`config.client_arg`](./reference/#schema--config-client-arg) is set, {{site.base_gateway}} checks for that value in the following order: in the request header, URI argument, and body.
+1. If `config.client_arg` is not set, {{site.base_gateway}} checks for a `client_id` in the following order: in the request header, URI argument, and body.
+1. If no client is found in either of those places, {{site.base_gateway}} uses the first client ID and client secret pair.
+
+{:.info}
+> **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
@@ -588,6 +627,8 @@ If one of these other applications is causing issues, looking into using the fol
   * [Port maps](/gateway/configuration/#port-maps)
   * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
 
+{% include plugins/redis-cloud-auth.md %}
+
 ## Supported identity providers
 
 The plugin has been tested with several OpenID Connect providers:
@@ -597,7 +638,7 @@ The plugin has been tested with several OpenID Connect providers:
 - [Connect2id](https://connect2id.com/products/server)
 - [Curity](https://curity.io/resources/learn/openid-connect-overview/)
 - [Dex](https://dexidp.io/docs/openid-connect/)
-- [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api/)
+- [Gluu](https://docs-4.gluu.org/gluu-server/admin-guide/openid-connect/)
 - [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect)
 - [IdentityServer](https://duendesoftware.com/)
 - [Keycloak](http://www.keycloak.org/documentation.html)

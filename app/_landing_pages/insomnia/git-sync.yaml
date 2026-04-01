@@ -1,0 +1,144 @@
+metadata:
+  title: Git Sync
+  content_type: landing_page
+  description: Connect Insomnia directly to your Git repository.
+  products:
+    - insomnia
+  tags:
+    - design-apis
+    - test-apis
+
+rows:
+  - header:
+      type: h1
+      text: "Git Sync"
+      sub_text: Connect Insomnia directly to your Git repository.
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  **What is Git Sync?**
+
+                  Git Sync connects Insomnia directly to your Git repository. Your project data stays in your repository. Insomnia does not host or manage it.
+
+                  Changes move between your local environment and your Git provider through standard Git workflows.
+
+                  Git Sync is designed for teams that:
+                  - Require full data ownership.
+                  - Enforce repository-level governance.
+                  - Already collaborate using Git.
+                  - Need their API workflow to align with existing Git processes.
+
+                  Supported providers include GitHub, GitLab, and Bitbucket. Other providers work with manual credential configuration.
+    - blocks:
+        - type: text
+          config: |
+            **How it works**
+
+
+            Insomnia acts as a Git client inside the application.
+            - Insomnia stores project resources as YAML files in your repository.
+            - Each collaborator clones the repository locally.
+            - Commits, branches, merges, and pulls follow standard Git workflows.
+            - Repository protections and access controls are enforced by your Git provider.
+
+
+  - columns:
+    - blocks:
+        - type: image
+          config:
+            url: /assets/images/insomnia/insomnia-cloud-sync.svg
+            alt_text: "Insomnia Git Sync architecture"
+
+  - header:
+      type: h2
+      text: Version control and conflict handling
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              **Version control inside Insomnia**
+
+              Git Sync brings standard Git workflows into the Insomnia interface.
+
+              From the version control panel, you can:
+              - Create and switch branches.
+              - Stage and commit changes.
+              - Push and pull updates.
+              - Merge branches.
+              - Resolve conflicts.
+
+              All operations follow your repository’s existing rules and protections.
+
+              When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
+      - blocks:
+          - type: text
+            config: |
+              **Repository rules and boundaries**
+
+              Branch protections configured in your Git provider are enforced. If a branch is protected, it cannot be pushed to from Insomnia.
+
+              Commit reverts are performed using your Git provider or local Git tooling.
+
+  - header:
+      type: h2
+      text: Authentication and automation
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              **Authentication**
+
+              Git credentials can be configured through Git Sync project settings, Insomnia preferences, or your local Git configuration. For the full setup and security guidance, see [Git Sync credentials](/insomnia/storage/#git-sync).
+      - blocks:
+          - type: text
+            config: |
+              **Automation and local tooling**
+
+              Git Sync works with the Inso CLI and other local tooling.
+
+              Project resources are stored as YAML files in your repository.
+
+              Example:
+
+              ```sh
+              inso run collection <collection-name>.yaml
+              ```
+
+              The CLI operates on locally available data.
+
+  - header:
+      type: h2
+      text: Metadata Changes
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Git Sync stores project data directly in your repository. To support certain application features, Insomnia also writes additional metadata alongside that data.
+
+              As a result, you may occasionally see metadata updates in your repository even when no request content has changed. These updates:
+
+              - Maintain project structure and consistency.
+              - Support feature compatibility across versions.
+              - Ensure reliable collaboration between contributors.
+
+              These metadata updates are part of how Git Sync operates.
+
+  - header:
+      text: Frequently asked questions
+      type: h2
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: Does Git Sync respect branch protections?
+                a: Yes. Repository branch protections are enforced by your Git provider and cannot be bypassed from Insomnia.
+              - q: Can I revert commits from the Git Sync UI?
+                a: No. Reverts must be performed using your Git provider or local Git tooling.
+              - q: Can administrators restrict available storage types?
+                a: |
+                  Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.

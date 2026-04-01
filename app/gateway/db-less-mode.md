@@ -31,9 +31,11 @@ related_resources:
     url: /gateway/traditional-mode/
   - text: "CLI reference: kong config"
     url: /gateway/cli/reference/#kong-config
+  - text: "{{site.base_gateway}} entity references"
+    url: /gateway/entities/
 ---
 
-{{site.base_gateway}} can be run without a database using only in-memory storage for entities. 
+{{site.base_gateway}} can be run without a database using only in-memory storage for [entities](/gateway/entities/). 
 We call this DB-less mode. When running {{site.base_gateway}} DB-less, the configuration of 
 entities is done in a second configuration file, in YAML or JSON, using declarative configuration.
 
@@ -111,7 +113,7 @@ This will return the entire {{site.base_gateway}} configuration. Verify that `da
 
 ## Generate a declarative configuration file
 
-To get started using declarative configuration, you need a JSON or YAML file containing {{site.base_gateway}} entity definitions.
+To get started using declarative configuration, you need a JSON or YAML file containing [{{site.base_gateway}} entity definitions](/gateway/entities/).
 
 The following command generates a file named `kong.yml` in the current directory containing configuration examples:
 

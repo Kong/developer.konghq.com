@@ -31,6 +31,8 @@ module Jekyll
       page.data['layout'] = 'indices'
       page.data['toc_depth'] = 3
       page.data['toc_skip_page_title'] = true
+      page.data['description'] = index['description']
+      page.data['llm'] = false
       page.data['slug'] = File.basename(file, File.extname(file))
 
       # Needed for edit link and site regeneration
@@ -219,9 +221,10 @@ module Jekyll
     def render(index, groups, site)
       context = {
         'index' => index,
-        'groups' => groups
+        'groups' => groups,
+        'site' => site.config
       }
-      Liquid::Template.parse(template).render(context, registers: { site: site })
+      Liquid::Template.parse(template, { line_numbers: true }).render(context, registers: { site: site })
     end
   end
 end

@@ -24,5 +24,5 @@
     },
     "min_version": { "$ref": "schema:base#/definitions/min_version" }
   },
-  "required": ["tldr", "content_type", "title", "products"]
+  "required": ["tldr", "content_type", "title", "products", "permalink"]
 }

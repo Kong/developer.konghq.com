@@ -36,6 +36,9 @@ config:
       value_schema:
         subject_name: kong-value
         schema_version: latest
+  message_by_lua_functions:
+  - "return function(message) return message.body end"
+
 
 tools:
   - deck

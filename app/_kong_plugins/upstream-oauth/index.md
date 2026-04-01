@@ -43,7 +43,7 @@ related_resources:
   - text: Configure the Upstream OAuth plugin with Kong Identity
     url: /how-to/configure-kong-identity-upstream-oauth/
 notes: |
-  In Serverless gateways only the <code>memory</code> cache strategy is supported.
+  In Serverless gateways only the `memory` cache strategy is supported.
 ---
 
 The Upstream OAuth plugin allows {{site.base_gateway}} to support OAuth flows between {{site.base_gateway}} and the upstream API.
@@ -112,3 +112,5 @@ The plugin supports the following caching [strategies](/plugins/upstream-oauth/r
 
 * `memory`: A locally stored `lua_shared_dict`. The default dictionary, `kong_db_cache`, is also used by other plugins and {{site.base_gateway}} elements to store unrelated database cache entities.
 * `redis`: Supports Redis, Redis Cluster, and Redis Sentinel deployments.
+
+{% include plugins/redis-cloud-auth.md %}

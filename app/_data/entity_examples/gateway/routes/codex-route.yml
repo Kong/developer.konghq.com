@@ -1,0 +1,8 @@
+name: codex-route
+paths:
+  - /codex
+service:
+  name: codex-service
+protocols:
+  - http
+  - https

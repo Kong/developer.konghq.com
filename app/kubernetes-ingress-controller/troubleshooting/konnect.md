@@ -34,7 +34,7 @@ related_resources:
     url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 ---
 
-{{ site.kic_product_name }} must communicate with the {{ site.konnect_short_name }} APIs to provide an integration with [Gateway Manager](/gateway-manager/). If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
+{{ site.kic_product_name }} must communicate with the {{ site.konnect_short_name }} APIs to provide an integration with {{site.konnect_short_name}}. If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
 
 ## Prometheus Metrics
 

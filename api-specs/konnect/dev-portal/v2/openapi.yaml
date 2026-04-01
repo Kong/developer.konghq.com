@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -958,10 +960,11 @@ components:
       name: credentialId
       in: path
       required: true
-      description: Id of the targeted credential
+      description: |
+        Id of the targeted credential.
+        Use the list-credentials endpoint to obtain the `id` field for each credential.
       schema:
         type: string
-        format: uuid
     DocumentId:
       schema:
         type: string
@@ -1694,6 +1697,29 @@ components:
             type: string
           example:
             - apikey
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            Always `true` for KEY_AUTH.
+          type: boolean
+          default: true
+          readOnly: true
       required:
         - id
         - name
@@ -1737,6 +1763,13 @@ components:
             - self_managed_client_credentials
         auth_methods:
           $ref: '#/components/schemas/AuthMethods'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            - `true` for Key Auth strategies and when supported for Client Credentials strategies
+            - `false` when not supported for Client Credentials strategies
+          type: boolean
+          readOnly: true
       required:
         - id
         - name
@@ -2206,6 +2239,78 @@ components:
         - client_id
         - client_secret
       title: Refresh token response
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - display_name
+        - created_at
+    ClientSecretCredentialListItem:
+      description: Client secret credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          description: May not be available for all Client Credentials applications
+          type: string
+          nullable: true
+        client_id:
+          description: OAuth2 client identifier
+          type: string
+          readOnly: true
+        created_at:
+          description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - created_at
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
+        - $ref: '#/components/schemas/ClientSecretCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -2214,16 +2319,7 @@ components:
         data:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            properties:
-              id:
-                $ref: '#/components/schemas/UUID'
-              display_name:
-                type: string
-            required:
-              - id
-              - display_name
+            $ref: '#/components/schemas/CredentialListItem'
       additionalProperties: false
       required:
         - data
@@ -2235,20 +2331,83 @@ components:
           type: string
           maxLength: 255
       additionalProperties: false
-    CredentialCreationResponse:
+    ApiKeyCredentialCreationResponse:
+      description: Response when creating an API key credential.
       type: object
       properties:
-        credential:
+        type:
           type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        credential:
+          description: The API key value (only returned on creation)
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
-        - credential
+        - type
         - id
         - display_name
+        - credential
+        - created_at
+    ClientSecretCredentialCreationResponse:
+      description: Response when creating a client secret credential.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          type: string
+          nullable: true
+        client_id:
+          type: string
+          readOnly: true
+        client_secret:
+          description: Client secret value (only returned on creation)
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - client_secret
+        - created_at
+    CredentialCreationResponse:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
+        - $ref: '#/components/schemas/ClientSecretCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:
@@ -2936,6 +3095,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id
@@ -3825,6 +4000,50 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ListApiKeyCredentialsExample:
+      value:
+        data:
+          - type: api_key
+            id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            display_name: My API Key
+            status: active
+            expires_at: '2025-12-31T23:59:59.000Z'
+            created_at: '2025-01-01T00:00:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ListClientSecretCredentialsExample:
+      value:
+        data:
+          - type: client_secret
+            id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+            display_name: null
+            client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+            created_at: '2024-01-15T10:30:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ApiKeyCredentialCreationResponseExample:
+      value:
+        type: api_key
+        id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        display_name: My API Key
+        credential: sk_live_abc123def456
+        status: active
+        expires_at: null
+        created_at: '2025-01-01T00:00:00.000Z'
+    AzureClientSecretCredentialCreationResponseExample:
+      value:
+        type: client_secret
+        id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+        display_name: null
+        client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+        client_secret: azR~8Q~abcdefghijklmnopqrstuvwxyz123456
+        created_at: '2024-01-15T10:30:00.000Z'
     PostCredentials403Example:
       value:
         status: 403
@@ -4125,12 +4344,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ListCredentialsResponse'
+          examples:
+            ListApiKeyCredentials:
+              $ref: '#/components/examples/ListApiKeyCredentialsExample'
+            ListClientSecretCredentials:
+              $ref: '#/components/examples/ListClientSecretCredentialsExample'
     CredentialCreation:
       description: Credential Creation success
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/CredentialCreationResponse'
+          examples:
+            ApiKeyCredentialCreationResponse:
+              $ref: '#/components/examples/ApiKeyCredentialCreationResponseExample'
+            ClientSecretCredentialCreationResponse:
+              $ref: '#/components/examples/AzureClientSecretCredentialCreationResponseExample'
     PostCredentials403Response:
       description: Error returned when the number of credentials exceed the quota.
       content:

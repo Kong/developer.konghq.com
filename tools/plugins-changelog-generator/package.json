@@ -9,7 +9,7 @@
     "dependencies": {
         "fast-glob": "^3.3.3",
         "gray-matter": "^4.0.3",
-        "js-yaml": "^4.1.0",
+        "js-yaml": "^4.1.1",
         "minimist": "^1.2.8",
         "semver": "^7.7.2"
     }

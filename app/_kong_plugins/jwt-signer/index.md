@@ -12,6 +12,7 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 
 topologies:
@@ -62,10 +63,14 @@ specify some options to actually make the plugin work:
 ## Manage key signing
 
 If you specify [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) or [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset) with either an
-`http://` or `https://` prefix, it means that token signing keys are externally managed by you.
+`http://` or `https://` prefix, it means that token signing keys are externally managed by you in a JWKS document.
+
 In that case, the plugin loads the keys just like it does for [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri)
 and [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri). If the prefix is not `http://` or `https://`
 (such as `"my-company"` or `"kong"`), {{site.base_gateway}} autogenerates JWKS for supported algorithms.
+
+{:.info}
+> When this plugin is used in Konnect, key sets are not currently supported. The token signing keys MUST be specified as a URI to a JWKS document. In addition, JWKS of public keys are not auto-generated.
 
 External JWKS specified with [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) or
 [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset) should also contain private keys with supported `alg`,
@@ -183,5 +188,8 @@ You can also specify optional and required claims with the following:
 * `config.access_token_introspection_required_claims`
 * `config.channel_token_introspection_required_claims`
 
+## Limitations in {{site.konnect_short_name}}
 
-
+The JWT Signer plugin is available in {{site.konnect_short_name}} with the following limitations:
+* {{site.konnect_short_name}} doesn't support JWKS publishing or any interactions with the [plugin API](/plugins/jwt-signer/api/).
+* You can't reference a [Key Set](/gateway/entities/key-set/) in the `config.access_token_keyset` or `config.channel_token_keyset` fields. You must use a URL instead.

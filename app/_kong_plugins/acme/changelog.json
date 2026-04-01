@@ -1,4 +1,21 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Enabled at-rest keyring encryption for sensitive fields in ACME plugin.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `storage_config.vault.tls_verify` setting cannot be disabled.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the plugin would not properly handle cases when a referenced key_set does not exist, now returns a clear error message instead of causing unexpected behavior.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.8.0.0": [
     {
       "message": "Fixed an issue of DP reporting that deprecated config fields are used when configuration from CP is pushed",

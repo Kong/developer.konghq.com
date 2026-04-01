@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where blocking an IP over TCP would log error: \"function cannot be called in preread phase\" (#14749)\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.6.0.0": [
     {
       "message": "add support for consumer group scoping",

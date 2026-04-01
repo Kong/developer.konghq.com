@@ -1,0 +1,179 @@
+{
+  "acme": [
+    "config.account_email",
+    "config.eab_kid",
+    "config.eab_hmac_key",
+    "config.storage_config.redis.username",
+    "config.storage_config.redis.password",
+    "config.storage_config.consul.token",
+    "config.storage_config.vault.token"
+  ],
+  "ai-azure-content-safety": [
+    "config.content_safety_url",
+    "config.content_safety_key"
+  ],
+  "ai-proxy": [
+    "config.auth.header_name",
+    "config.auth.header_value",
+    "config.auth.param_name",
+    "config.auth.param_value",
+    "config.auth.azure_client_id",
+    "config.auth.azure_client_secret",
+    "config.auth.azure_tenant_id"
+  ],
+  "ai-rate-limiting-advanced": [
+    "config.redis.username",
+    "config.redis.password",
+    "config.redis.sentinel_username",
+    "config.redis.sentinel_password"
+  ],
+  "ai-request-transformer": [
+    "config.llm.auth.header_name",
+    "config.llm.auth.header_value",
+    "config.llm.auth.param_name",
+    "config.llm.auth.param_value",
+    "config.llm.auth.azure_client_id",
+    "config.llm.auth.azure_client_secret",
+    "config.llm.auth.azure_tenant_id"
+  ],
+  "ai-response-transformer": [
+    "config.llm.auth.header_name",
+    "config.llm.auth.header_value",
+    "config.llm.auth.param_name",
+    "config.llm.auth.param_value",
+    "config.llm.auth.azure_client_id",
+    "config.llm.auth.azure_client_secret",
+    "config.llm.auth.azure_tenant_id"
+  ],
+  "aws-lambda": [
+    "config.aws_key",
+    "config.aws_secret",
+    "config.aws_assume_role_arn"
+  ],
+  "azure-functions": [
+    "config.apikey",
+    "config.clientid"
+  ],
+  "datadog": [
+    "config.host"
+  ],
+  "forward-proxy": [
+    "config.auth_username",
+    "config.auth_password"
+  ],
+  "graphql-proxy-cache-advanced": [
+    "config.redis.username",
+    "config.redis.password",
+    "config.redis.sentinel_username",
+    "config.redis.sentinel_password"
+  ],
+  "graphql-rate-limiting-advanced": [
+    "config.redis.username",
+    "config.redis.password",
+    "config.redis.sentinel_username",
+    "config.redis.sentinel_password"
+  ],
+  "http-log": [
+    "config.http_endpoint",
+    "config.headers"
+  ],
+  "jwt-signer": [
+    "config.access_token_keyset_client_username",
+    "config.access_token_keyset_client_password",
+    "config.access_token_jwks_uri_client_username",
+    "config.access_token_jwks_uri_client_password",
+    "config.channel_token_keyset_client_username",
+    "config.channel_token_keyset_client_password",
+    "config.channel_token_jwks_uri_client_username",
+    "config.channel_token_jwks_uri_client_password"
+  ],
+  "kafka-log": [
+    "config.authentication.user",
+    "config.authentication.password"
+  ],
+  "kafka-upstream": [
+    "config.authentication.user",
+    "config.authentication.password"
+  ],
+  "ldap-auth-advanced": [
+    "config.ldap_password",
+    "config.bind_dn"
+  ],
+  "loggly": [
+    "config.key"
+  ],
+  "oauth2-introspection": [
+    "config.authorization_value"
+  ],
+  "openid-connect": [
+    "config.client_id",
+    "config.client_secret",
+    "config.client_jwk.k",
+    "config.client_jwk.d",
+    "config.client_jwk.p",
+    "config.client_jwk.q",
+    "config.client_jwk.dp",
+    "config.client_jwk.dq",
+    "config.client_jwk.qi",
+    "config.client_jwk.oth",
+    "config.client_jwk.r",
+    "config.client_jwk.t",
+    "config.login_redirect_uri",
+    "config.logout_redirect_uri",
+    "config.scopes",
+    "config.introspection_headers_values",
+    "config.session_secret",
+    "config.session_redis_username",
+    "config.session_redis_password"
+  ],
+  "opentelemetry": [
+    "config.endpoint",
+    "config.headers"
+  ],
+  "proxy-cache-advanced": [
+    "config.redis.username",
+    "config.redis.password",
+    "config.redis.sentinel_username",
+    "config.redis.sentinel_password"
+  ],
+  "rate-limiting": [
+    "config.redis.username",
+    "config.redis.password"
+  ],
+  "rate-limiting-advanced": [
+    "config.redis.username",
+    "config.redis.password",
+    "config.redis.sentinel_username",
+    "config.redis.sentinel_password"
+  ],
+  "request-transformer-advanced": [
+    "config.rename.body",
+    "config.rename.headers",
+    "config.rename.querystring",
+    "config.replace.body",
+    "config.replace.headers",
+    "config.replace.querystring",
+    "config.add.body",
+    "config.add.headers",
+    "config.add.querystring",
+    "config.append.body",
+    "config.append.headers",
+    "config.append.querystring"
+  ],
+  "response-ratelimiting": [
+    "config.redis.username",
+    "config.redis.password"
+  ],
+  "saml": [
+    "config.idp_certificate",
+    "config.response_encryption_key",
+    "config.request_signing_key",
+    "config.request_signing_certificate",
+    "config.session_secret",
+    "config.session_redis_username",
+    "config.session_redis_password"
+  ],
+  "session": [
+    "config.secret"
+  ]
+}

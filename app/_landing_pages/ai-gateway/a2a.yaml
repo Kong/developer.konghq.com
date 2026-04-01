@@ -1,0 +1,177 @@
+metadata:
+  title: "A2A Traffic Gateway"
+  content_type: landing_page
+  description: Observe Agent-to-Agent (A2A) protocol traffic through {{site.ai_gateway}}.
+  products:
+    - ai-gateway
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+    - a2a
+
+rows:
+  - header:
+      type: h1
+      text: "Observability and control layer for Agent-to-Agent protocol traffic"
+      sub_text: Route A2A traffic through {{site.ai_gateway}} with protocol-aware metrics, tracing, and agent card rewriting
+
+  - header:
+      type: h2
+      text: Route A2A traffic through {{site.ai_gateway}}
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              The [Agent-to-Agent (A2A)](https://a2aproject.github.io/A2A/) protocol defines how AI agents communicate with each other over HTTP using JSON-RPC and REST bindings. As agent-to-agent communication moves into production, teams need visibility into A2A traffic and control over how it flows.
+
+              {{site.ai_gateway}} can act as a transparent proxy for A2A traffic. The [AI A2A Proxy](/plugins/ai-a2a-proxy/) plugin auto-detects A2A requests, extracts task metadata, rewrites agent card URLs, and feeds structured metrics into the Konnect analytics pipeline and [OpenTelemetry](/plugins/opentelemetry/) tracing.
+
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/ai-gateway/a2a.svg
+              alt_text: Overview of A2A traffic flowing through AI Gateway
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h2
+                text: "Proxy A2A Traffic"
+              blocks:
+                - type: text
+                  text: |
+                    The AI A2A Proxy plugin records A2A protocol metadata so you can analyze how agent-to-agent requests are processed.
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h4
+                text: "Secure A2A endpoints"
+              blocks:
+                - type: text
+                  text: |
+                    The AI A2A Proxy plugin handles A2A protocol concerns independently of authentication. Apply any {{site.base_gateway}} authentication plugin to the same service or route to secure your A2A endpoints.
+
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/ai.svg
+              title: Proxy A2A traffic
+              description: |
+                Export A2A metrics and traces with the AI A2A Proxy plugin and OpenTelemetry.
+              ctas:
+                - text: AI A2A Proxy plugin overview
+                  url: "/plugins/ai-a2a-proxy/"
+                - text: Proxy A2A agents through AI Gateway
+                  url: "/how-to/proxy-a2a-agents/"
+                - text: Set up Jaeger with Gen AI OpenTelemetry
+                  url: "/how-to/set-up-jaeger-with-gen-ai-otel/"
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/lock.svg
+              title: Secure A2A endpoints
+              description: Apply authentication to A2A routes using standard gateway plugins.
+              ctas:
+                - text: Key Authentication plugin
+                  url: "/plugins/key-auth/"
+                - text: OpenID Connect plugin
+                  url: "/plugins/openid-connect/"
+                - text: Secure A2A endpoints with Key Authentication
+                  url: "/how-to/secure-a2a-endpoints/"
+
+  - header:
+      type: h2
+      text: "A2A traffic observability"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.ai_gateway}} records A2A protocol traffic data so you can analyze how agent-to-agent requests are processed and resolved.
+                    - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
+                    - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
+                    - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
+  - column_count: 4
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: A2A audit logs
+            description: Review AI A2A Proxy log output fields, task states, and payload capture.
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: A2A OpenTelemetry spans
+            description: Inspect A2A-specific span attributes in distributed traces.
+            cta:
+              url: /ai-gateway/llm-open-telemetry/#a2a-agent-traffic
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: OpenTelemetry plugin
+            description: Export traces to Jaeger, Zipkin, or any OTLP-compatible backend.
+            cta:
+              url: /plugins/opentelemetry/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Logging plugins
+            description: Send A2A traffic data to File Log, HTTP Log, TCP Log, and other destinations.
+            cta:
+              url: /plugins/?category=logging
+              align: end
+
+  - header:
+      type: h2
+      text: "Govern A2A traffic"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
+  - column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Rate limit A2A traffic
+            description: Apply rate limiting to A2A routes using standard gateway plugins.
+            cta:
+              url: /how-to/rate-limit-a2a-traffic/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Limit A2A request size
+            description: Use the Request Size Limiting plugin to restrict the size of A2A requests and responses
+            cta:
+              url: /how-to/limit-a2a-request-size/
+              align: end
+  - header:
+      type: h2
+      text: A2A how-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - a2a
+              quantity: 5
+              allow_empty: true

@@ -1,0 +1,36 @@
+title: 'Brute force protection with Redis'
+description: 'Protect against brute force attacks.'
+extended_description: |
+  [Protect against brute force attacks](#brute-force-protection) by enabling `config.brute_force_protection` and the `redis` strategy.
+  This will return an `429 Too Many Requests` error after the fourth failed login attempt.
+
+  For a complete tutorial, see [Protect against brute force attacks with basic authentication](/how-to/protect-against-brute-force-attacks/).
+weight: 900
+
+requirements: 
+- "A [Consumer](/gateway/entities/consumer/) with a username and password"
+min_version:
+    gateway: '3.13'
+
+config:
+  brute_force_protection:
+    strategy: redis
+    redis:
+      host: ${redis_host}
+      port: 6379
+      database: 0
+      timeout: 2000
+      ssl: false
+      ssl_verify: false
+variables:
+  redis_host:
+    value: $REDIS_HOST
+  redis_password:
+    value: $REDIS_PASSWORD
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

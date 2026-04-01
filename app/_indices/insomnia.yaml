@@ -1,4 +1,5 @@
 title: Insomnia Documentation
+description: Index containing all documentation for Insomnia.
 sections:
   - title: Overview
     items:
@@ -99,7 +100,6 @@ sections:
       - path: /insomnia/organizations/
       - path: /how-to/synchronize-with-git/
       - path: /insomnia/verify-binary-provenance/
-      - path: /insomnia/version-control/
       - path: /insomnia/keyboard-shortcuts/
       - path: /insomnia/import-export/
       - path: /insomnia/terminology/

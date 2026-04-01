@@ -22,7 +22,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 
 tools:
@@ -77,10 +77,6 @@ data:
   snis: ["*"]
 {% endentity_example %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Certificate
 
 {% entity_example %}
@@ -110,6 +106,7 @@ data:
       PXy3PkB8++6U4Y3vdk2Ni2WYYlIls8yqbM4327IKmkDc2TimS8u60CT47mKU7aDY
       cbTV5RDkrlaYwm5yqlTIglvCv7o=
       -----END CERTIFICATE-----
+  id: e95962d1-0793-40a1-8e99-252a45664d7a
   key: |
       -----BEGIN RSA PRIVATE KEY-----
       MIIEowIBAAKCAQEAvpnaPKLIKdvx98KW68lz8pGaRRcYersNGqPjpifMVjjE8LuC
@@ -140,3 +137,6 @@ data:
       -----END RSA PRIVATE KEY-----
 {% endentity_example %}
 
+## Schema
+
+{% entity_schema %}

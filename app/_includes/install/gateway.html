@@ -1,3 +1,52 @@
+{% if page.output_format == 'markdown' %}
+## Linux
+
+{% navtabs "distro" %}
+{% navtab "Debian" %}
+{%- include install/gateway/linux.html os="debian"-%}
+{% endnavtab %}
+{% navtab "Ubuntu" %}
+{%- include install/gateway/linux.html os="ubuntu" -%}
+{% endnavtab %}
+{% navtab "Redhat" %}
+{%- include install/gateway/linux.html os="rhel" -%}
+{% endnavtab %}
+{% navtab "Amazon Linux" %}
+{%- include install/gateway/linux.html os="amazonlinux" -%}
+{% endnavtab %}
+{% endnavtabs %}
+
+## Docker
+
+### Using Docker Compose
+
+{{site.base_gateway}} is available as a Docker image, making it easy to deploy in containerized environments.
+
+- [Install via Docker](/gateway/install/docker/)
+- [Install via Docker in read-only mode](/gateway/install/docker-read-only/)
+
+### Build your own
+
+{{site.base_gateway}} is distributed as prebuilt `deb` and `rpm` packages, in addition to official Docker images hosted on [Docker Hub](https://hub.docker.com/r/kong).
+
+- [Build your own Docker image](/how-to/build-custom-docker-image/)
+
+## Kubernetes
+
+### Deploy {{site.base_gateway}} on Kubernetes
+
+Deploy {{site.base_gateway}} on Kubernetes, and configure it using the UI, decK or Terraform.
+
+- [Install via Helm](/gateway/install/kubernetes/konnect/)
+- [Install via Kong Operator](/operator/get-started/gateway-api/install/)
+
+### Install {{site.kic_product_name}} (KIC)
+
+Configure {{site.base_gateway}} using Kubernetes-native resources such as `httproute` and `ingress`.
+
+- [Install via Helm](/kubernetes-ingress-controller/install/)
+- [Install via Kong Operator](/operator/get-started/gateway-api/install/)
+{% else %}
 {% include install/konnect-cta.html %}
 
 <div class="flex flex-col gap-5 p-5 shadow-primary bg-secondary rounded-md heading-section">
@@ -93,8 +142,8 @@
             Install via Helm
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
-        <a href="/operator/dataplanes/get-started/hybrid/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
-            Install via Kong Gateway Operator
+        <a href="/operator/get-started/gateway-api/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via Kong Operator
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
         </div>
@@ -118,10 +167,11 @@
             Install via Helm
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
-        <a href="/operator/dataplanes/get-started/kic/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
-            Install via Kong Gateway Operator
+        <a href="/operator/get-started/gateway-api/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via Kong Operator
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
         </div>
     </div>
 </div>
+{% endif %}

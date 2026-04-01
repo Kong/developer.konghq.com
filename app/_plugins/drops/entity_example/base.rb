@@ -11,10 +11,11 @@ module Jekyll
 
         attr_reader :example
 
-        def_delegators :@example, :variables, :headers, :tags
+        def_delegators :@example, :variables, :headers, :tags, :product
 
-        def initialize(example:)
+        def initialize(example:, **options)
           @example = example
+          @options = options
         end
 
         def entity_type
@@ -22,7 +23,7 @@ module Jekyll
         end
 
         def template
-          @template ||= File.expand_path('app/_includes/components/entity_example.html')
+          @template ||= File.expand_path('app/_includes/components/entity_example.md')
         end
 
         def id

@@ -14,7 +14,7 @@ related_resources:
   - text: Custom plugins
     url: /custom-plugins/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 
 tools:
@@ -245,10 +245,6 @@ See the following table for plugins and their compatible (default) protocols:
 
 {% plugin_protocols %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Plugin
 
 Kong has many bundled plugins available, all of which have their own specific configurations and examples. See all 
@@ -266,3 +262,7 @@ data:
       - admin
     hide_groups_header: false
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

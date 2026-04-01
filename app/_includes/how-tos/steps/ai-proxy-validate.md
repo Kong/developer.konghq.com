@@ -3,7 +3,7 @@ Send a request to the Route to validate.
 
 {% validation request-check %}
 url: /anything
-status_code: 201
+status_code: 200
 method: POST
 headers:
     - 'Accept: application/json'

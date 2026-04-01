@@ -19,6 +19,14 @@ description: "Learn how to use AWS Identity and Access Management (IAM) authenti
 related_resources:
   - text: "Install {{site.base_gateway}}"
     url: /gateway/install/
+  - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Managed Identity
+    url: /gateway/azure-pg-authentication-with-azure-managed-identity/
+  - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Service Principal
+    url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
+  - text: "{{site.base_gateway}} Google Cloud Postgres database authentication with GCP IAM and Workload Identity"
+    url: /gateway/gcp-postgres-authentication/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 works_on:
   - on-prem

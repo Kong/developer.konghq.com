@@ -1,42 +1,19 @@
-title: 'Traffic split'
-description: 'Use MeshHTTPRoute to split an HTTP traffic between different MeshServices.'
+title: 'Allow traffic to a service'
+description: 'Use MeshTrafficPermission to allow traffic to a specific MeshService.'
 
 weight: 900
 
-namespace: kuma-demo
-use_meshservice: true
+namespace: kong-mesh-demo
 config:
-  type: MeshHTTPRoute
-  name: http-split
+  type: MeshTrafficPermission
+  name: mtp
   mesh: default
   spec:
     targetRef:
-      kind: Dataplane
-      labels:
-        app: frontend
-    to:
-      - targetRef:
-          kind: MeshService
-          name: backend
-          namespace: kuma-demo
-          sectionName: http
-          _port: 3001
-        rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            default:
-              backendRefs:
-                - kind: MeshService
-                  name: backend
-                  namespace: kuma-demo
-                  port: 3001
-                  _version: v1
-                  weight: 90
-                - kind: MeshService
-                  name: backend
-                  namespace: kuma-demo
-                  port: 3001
-                  _version: v2
-                  weight: 10
+      kind: MeshService
+      name: service_name
+    from:
+      - targetRef: 
+          kind: Mesh
+        default:
+          action: Allow

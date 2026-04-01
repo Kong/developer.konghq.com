@@ -27,7 +27,7 @@ With the GA release of the new Dev Portal (v3) in June 2025, some features and A
 
 ## Dev Portal default domain names
 
-During Tech Preview and Beta, new Dev Portals were served on `https://{portalId}.edge.{geo}.portal.konghq.tech`. The `https://{portalId}.edge.{geo}.portal.konghq.tech` domain name will be discontinued on October 1, 2025 in favor of the `https://{portalId}.{geo}.kongportals.com` domain. During the transition period from Dev Portal v3 release to October 2025, both domain names will be served, but Kong recommends updating your domain names to the new naming convention during the transition period. 
+During Tech Preview and Beta, new Dev Portals were served on `https://{portalId}.edge.{geo}.portal.konghq.tech`. The `https://{portalId}.edge.{geo}.portal.konghq.tech` domain name was discontinued on October 1, 2025 in favor of the `https://{portalId}.{geo}.kongportals.com` domain. During the transition period from Dev Portal v3 release to October 2025, both domain names will be served, but Kong recommends updating your domain names to the new naming convention during the transition period. 
 
 You must update Dev Portal domain names everywhere they are referenced, including the following:
 
@@ -39,7 +39,7 @@ You must update Dev Portal domain names everywhere they are referenced, includin
 
 ## Migrate your custom domain
 
-If you're using a [custom domain](/dev-portal/custom-domains/) that hasn't been migrated to the new DNS zone yet, you must follow additional migration steps. The new DNS zone is available concurrently with the old DNS zone until October 1, 2025. On October 1, 2025, the old DNS zone will be deactivated and custom domains that haven't been migrated will stop working.
+If you're using a [custom domain](/dev-portal/custom-domains/) that hasn't been migrated to the new DNS zone yet, you must follow additional migration steps. The old DNS zone is no longer available as of October 1, 2025. On October 1, 2025, the old DNS zone was deactivated and custom domains that haven't been migrated will stop working.
 
 ### Dev Portal custom domain migration steps
 
@@ -62,12 +62,12 @@ Review the following Dev Portal breaking changes and make any necessary updates 
 
 ### API specifications deprecated in favor of API versions
 
-The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) is being deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). 
+The [API specification endpoint](/api/konnect/api-builder/v3/#/operations/create-api-spec) was deprecated on October 1, 2025 in favor of the [API versions endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version). 
 Moving to the `/apis/{id}/versions` endpoints allows you to support additional versions of a spec. 
 Existing automation with specifications operations should work in parallel during this transition. 
 Each existing specification will be mapped one-to-one with a wrapping version entity.
 
-The following `/apis/{id}/specifications` endpoints will be deprecated on October 1, 2025 and replaced with `/apis/{id}/versions` endpoints:
+The following `/apis/{id}/specifications` endpoints were deprecated on October 1, 2025 and replaced with `/apis/{id}/versions` endpoints:
 
 {% table %}
 columns:

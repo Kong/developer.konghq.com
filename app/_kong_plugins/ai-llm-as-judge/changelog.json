@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Added validation to prevent disabling `https_verify` when the global `tls_certificate_verify` configuration option is enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fix an issue where the ai-llm-as-judge plugin didn't work with non-OpenAI provider configuration.\n",

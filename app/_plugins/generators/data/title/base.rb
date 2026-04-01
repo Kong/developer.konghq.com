@@ -9,15 +9,15 @@ module Jekyll
             APIPage.new(page:, site:)
           elsif page.url.start_with?('/plugins/')
             Plugin.new(page:, site:)
-          elsif page.url.start_with?('/mesh/policies/')
-            MeshPolicy.new(page:, site:)
+          elsif page.url.start_with?('/mesh/policies/') || page.url.start_with?('/event-gateway/policies/')
+            Policy.new(page:, site:)
           elsif page.data['content_type'] && page.data['content_type'] == 'reference'
             Reference.new(page:, site:)
           elsif page.data['content_type'] && page.data['content_type'] == 'how_to'
             HowTo.new(page:, site:)
           else
             # for plain html pages or pages that don't require anything specific
-            OpenStruct.new(title_sections: [page.data['title']])
+            OpenStruct.new(title_sections: [page.data['title']], llm_title: page.data['title'])
           end
         end
 

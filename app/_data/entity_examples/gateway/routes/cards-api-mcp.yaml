@@ -1,0 +1,7 @@
+name: cards-api-mcp
+paths:
+  - /cards-api
+service:
+  name: deck-of-cards
+protocols:
+  - https

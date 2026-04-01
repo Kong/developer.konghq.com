@@ -13,22 +13,25 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      @format = @page['output_format'] || 'html'
 
       contents = super
 
       products = @page.fetch('products', [])
 
-      unless products.include?('gateway') || products.include?('kic') || products.include?('ai-gateway') || products.include?('operator')
+      unless %w[gateway kic ai-gateway operator event-gateway metering-and-billing].any? { |p| products.include?(p) }
         raise ArgumentError,
               "Unsupported product for {% validation #{@name} %}"
       end
 
       config = YAML.load(contents)
-      drop = Drops::Validations::Base.make_for(yaml: config, id: @name)
+      drop = Drops::Validations::Base.make_for(yaml: config, id: @name, format: @format)
 
       output = context.stack do
         context['config'] = drop
-        Liquid::Template.parse(File.read(drop.template_file)).render(context)
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
+
+        Liquid::Template.parse(File.read(drop.template_file), { line_numbers: true }).render(context)
       end
 
       if config['indent']

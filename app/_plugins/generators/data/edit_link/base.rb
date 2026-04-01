@@ -10,6 +10,7 @@ module Jekyll
         end
 
         def process
+          return if @page.data['no_edit_link']
           return if @page.data['edit_link']
 
           @page.data['edit_link'] = edit_link

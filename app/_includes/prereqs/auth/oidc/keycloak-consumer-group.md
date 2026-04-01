@@ -1,6 +1,7 @@
 This tutorial requires an identity provider (IdP). If you don't have one, you can use [Keycloak](http://www.keycloak.org/). The steps will be similar in other standard identity providers.
 
 #### Create a client
+
 1. Install [Keycloak](https://www.keycloak.org/guides) (version 26 or later) on your platform.
 
     For example, you can use the Keycloak Docker image:
@@ -11,9 +12,11 @@ This tutorial requires an identity provider (IdP). If you don't have one, you ca
       -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
       quay.io/keycloak/keycloak start-dev
     ```
+
 1. Open the admin console.
-    
+
     The default URL of the console is `http://$YOUR_KEYCLOAK_HOST:8080/admin/master/console/`.
+
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 
@@ -56,7 +59,7 @@ rows:
 Export your client secret and issuer URL to environment variables so that you can pass them more securely.
 For example:
 
-{% env_variables %}
-DECK_ISSUER: http://host.docker.internal:8080/realms/master
-CLIENT_SECRET: UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW
-{% endenv_variables %}
+```sh
+export DECK_ISSUER='http://host.docker.internal:8080/realms/master'
+export CLIENT_SECRET='UNT3GPzCKI7zUbhAmFSUGbj4wmiBDGiW'
+```

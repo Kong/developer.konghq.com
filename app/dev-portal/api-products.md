@@ -55,7 +55,7 @@ Here are some of the things you can do from the API Product dashboard:
 
 ## API product versions
 
-A {{site.konnect_short_name}} API product version is linked to a Gateway Service inside a [control plane](/gateway-manager/#control-plane-architecture). As such, the configurations or plugins that are associated with the Gateway Service are also associated with the API product version. 
+A {{site.konnect_short_name}} API product version is linked to a Gateway Service inside a control plane. As such, the configurations or plugins that are associated with the Gateway Service are also associated with the API product version. 
 
 API products can have multiple API product versions, and each version can be linked to a Gateway Service. API products can be made available in multiple environments by linking API product versions to Gateway Services in different control planes. You can also associate an API spec with a product version and make the spec accessible in the v2 Dev Portal.
 

@@ -75,3 +75,66 @@ If the live system has changed without a corresponding change to the state file,
 ## Command usage
 
 {% include_cached deck/help/gateway/diff.md %}
+
+### Inspect detailed configuration changes
+
+By default, `deck gateway diff` prints a unified diff that highlights changes line by line. This output is optimized for quick human review, but it can be difficult to interpret when configuration objects are large or when you need to inspect values in more detail.
+
+Use the `--json-output` flag to generate a JSON report that includes:
+- A `summary` of changes. For example, creating, updating, deleting, and total
+- A `changes` object grouped by operation type
+- For each updated entity, both the `old` and `new` configuration objects
+
+Use `--json-output` when you need to:
+- Inspect old and new configuration objects separately during troubleshooting
+- Parse diff output in scripts or CI pipelines
+- Investigate noisy diffs where ordering changes or large objects make unified diffs hard to read
+
+Run `deck gateway diff` with JSON output enabled:
+```bash
+deck gateway diff ./kong.yaml --json-output
+```
+
+An example of a change report from the `--json-output` flag:
+```bash
+{
+  "changes": {
+    "creating": [],
+    "updating": [
+      {
+        "kind": "plugin",
+        "name": "basic-auth (global)",
+        "body": {
+          "old": {
+            "config": {
+              "brute_force_protection": {
+                "redis": {
+                  "timeout": 2000
+                }
+              }
+            }
+          },
+          "new": {
+            "config": {
+              "brute_force_protection": {
+                "redis": {
+                  "timeout": 2001
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "deleting": []
+  },
+  "summary": {
+    "creating": 0,
+    "updating": 1,
+    "deleting": 0,
+    "total": 1
+  },
+  "warnings": [],
+  "errors": []
+}
+```

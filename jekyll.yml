@@ -21,6 +21,7 @@ title: Kong Docs
 description: "Documentation for Kong, the Cloud Connectivity Company for APIs and Microservices."
 
 links:
+  share: https://developer.konghq.com
   web: https://developer.konghq.com
   direct: https://packages.konghq.com/public
 
@@ -34,8 +35,6 @@ include:
 # Collections
 collections:
   gateway_entities:
-    output: true
-  event_gateway_policies:
     output: true
   how-tos:
     output: true
@@ -62,17 +61,6 @@ defaults:
       breadcrumbs:
         - "/gateway/"
         - "/gateway/entities/"
-  - scope:
-      path: "_event_gateway_policies"
-      type: "event_gateway_policies"
-    values:
-      layout: "gateway_entity"
-      permalink: "/event-gateway/policies/:path/"
-      products:
-        - event-gateway
-      breadcrumbs:
-        - "/event-gateway/"
-        - "/event-gateway/policies/"
   - scope:
       path: "_references"
       type: "references"
@@ -106,7 +94,10 @@ insomnia_run: https://insomnia.rest/run/
 
 # product name vars
 base_gateway: Kong Gateway
+ai_gateway: AI Gateway
+ai_gateway_name: Kong AI Gateway
 ee_product_name: Kong Gateway Enterprise
+ee_product_name_official: Kong API Gateway Enterprise
 konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
 mesh_product_name: Kong Mesh
@@ -116,18 +107,19 @@ konnect_saas: Kong Konnect
 gateway_operator_product_name: Kong Gateway Operator
 operator_product_name: Kong Operator
 operator_product_name_short: KO
-event_gateway: Kong Native Event Proxy
-event_gateway_short: KNEP
+event_gateway: Kong Event Gateway
+event_gateway_short: Event Gateway
 konnect_catalog: Catalog
+metering_and_billing: Metering & Billing
+observability: Observability
+dev_portal: Dev Portal
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
 
-plugin_schemas_path: app/.repos/kong-plugins/json_schemas
-plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
-plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
+plugin_schemas_path: app/_schemas/gateway/plugins
 
 mesh_policy_schemas_path: app/.repos/kuma/app/assets/
 
@@ -171,4 +163,15 @@ latest_gateway_oss_version: "3.9.1"
 operator_gatewayconfiguration_api_version: "v2beta1"
 operator_konnectgatewaycontrolplane_api_version: "v1alpha2"
 operator_konnectextension_api_version: "v1alpha2"
+operator_kongservice_api_version: "v1alpha1"
+operator_kongroute_api_version: "v1alpha1"
+operator_kongcertificate_api_version: "v1alpha1"
+operator_kongreferencegrant_api_version: "v1alpha1"
+operator_kongpluginbinding_api_version: "v1alpha1"
+gwapi_version: "1.4.1" 
 render_banner: false
+
+# Copy
+llm_copy:
+  on_prem_snippet: 'On-prem deployments'
+  konnect_snippet: 'Konnect deployments'

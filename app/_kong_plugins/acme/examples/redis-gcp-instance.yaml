@@ -1,0 +1,58 @@
+title: ACME with Redis storage and Google Cloud Memorystore instance auth
+description: |
+  Configure the ACME plugin with Redis as a storage backend using Google Cloud Memorystore instance auth
+
+weight: 860
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+-  |
+  Assign the principal to the corresponding role: 
+    * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
+    * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: redis
+  storage_config:
+    redis:
+      host: ${instance_address}
+      port: 6379
+      cloud_authentication:
+        auth_provider: gcp
+        gcp_service_account_json: ${service_account}
+
+variables:
+  email:
+    value: $EMAIL
+    description: The account identifier.
+  key_id:
+    value: $KEY_ID
+    description: The kid of a [Key](/gateway/entities/key/).
+  key_set:
+    value: $KEY_SET
+    description: The name of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
+  domain:
+    value: $DOMAIN
+    description: An array of strings representing hosts.
+  instance_address:
+    value: $INSTANCE_ADDRESS
+    description: The Memorystore instance address.
+  service_account:
+    value: $GCP_SERVICE_ACCOUNT
+    description: The GCP service account JSON.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

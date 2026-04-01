@@ -47,6 +47,10 @@ The **AI LLM as Judge** plugin enables automated evaluation of prompt-response p
 
 This plugin is part of the [**AI plugin suite**](/plugins/?category=ai), making it easy to integrate LLM-based evaluation workflows into your API pipelines.
 
+## Prerequisites
+
+This plugin requires the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin with [`config.balancer.tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) set to `llm-accuracy`. The balancer compares responses from at least two LLM models. When you enable AI LLM as Judge on a service or route, it evaluates all LLM requests handled by that service or route.
+
 ## Features
 
 The AI LLM as Judge plugin offers several configurable features that control how the LLM evaluates prompts and responses:
@@ -82,14 +86,20 @@ The following sequence diagram illustrates this simplified flow:
 
 {% mermaid %}
 sequenceDiagram
-    actor User as User
-    participant Plugin as AI LLM as Judge Plugin
-    participant LLM as Configured LLM
+    actor Client
+    participant AIP as AI Proxy Advanced
+    participant LLM as LLM Model (A or B)
+    participant Judge as AI LLM as Judge
+    participant JudgeLLM as Judge LLM
 
-    User->>Plugin: Sends prompt and response
-    Plugin->>LLM: Forward data for evaluation
-    LLM-->>Plugin: Returns numeric score (1 to 100)
-    Plugin->>User: Score available for downstream workflows
+    Client->>AIP: Send prompt
+    AIP->>LLM: Forward prompt (balancer selects model)
+    LLM-->>AIP: Response
+    AIP->>Judge: Prompt + response
+    Judge->>JudgeLLM: Evaluate response
+    JudgeLLM-->>Judge: Score (1–100)
+    Judge-->>AIP: Evaluation result
+    AIP-->>Client: Response
 {% endmermaid %}
 
 ## Recommended LLM settings

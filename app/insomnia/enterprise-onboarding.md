@@ -33,23 +33,74 @@ next_steps:
   - text: Scripts
     url: /insomnia/scripts/
 
+faqs:
+  - q: What happens when my trial ends?
+    a: |
+      The trial expires automatically after 14 days and reverts to your previous plan. 
+      You do not need to cancel manually.
+  - q: Who can access organization data after downgrade?
+    a: |
+      Only the **Organization Owner** can access exported data from inactive organizations. 
+      Co-owners and members lose access.
+  - q: Can I upgrade from a trial to a paid plan before it ends?
+    a: |
+      No. Trials cannot be converted mid-cycle. 
+      When the trial ends, you can upgrade to a paid plan from your organization settings.
+  - q: How many seats are available during the trial?
+    a: Each Enterprise trial includes **50 seats**.
+  - q: How can I restore Git Sync if I reach the Essentials plan limit?
+    a: |
+      Reduce the number of active users to three or fewer, 
+      or disable Git Sync to continue adding users.
+  - q: What data access do I have after I downgrade?
+    a: |
+      When an Enterprise or Trial subscription ends:
+      1. The organization is marked as **inactive**.
+      2. Only the **Organization Owner** can access exported data from inactive organizations.  
+        Co-owners and other members lose access to that data.
+      3. All advanced operations for inactive organizations are disabled.
+
+      Organization data is retained according to Kong’s data retention policies 
+      but cannot be modified until reactivated under a supported plan.
+  - q: What happens if I downgrade?
+    a: |
+      Insomnia supports both **manual** and **automatic** downgrades, depending on subscription and renewal status.
+      When a paid plan expires without renewal:
+      - **Enterprise** downgrades to **Essentials**  
+      - **Pro** downgrades to **Essentials**  
+      - **Trial** downgrades to the **previous plan**
+  - q: Do I need an activation code to start using Insomnia Enterprise?  
+    a: |
+      Subscriptions that are paid for by credit card are called **Self-serve Enterprise** subscriptions and don't require an activation code.  
+      Access is granted automatically once payment is completed.  
+    
+      If you purchased Enterprise through the **sales team**, you will receive an activation code as part of the onboarding process.
+  - q: How do I know that I have successfully upgraded to Insomnia Enterprise?
+    a: |
+      Look for the **Enterprise** badge in the top-right corner of the app.
+
+      If you don’t see the badge, you're either not part of an Enterprise workspace, or you don't have an **Owner** or **Co-owner** role. If you require support, reach out to **Insomnia Support** at support@insomnia.rest or [https://support.konghq.com/support/s/](https://support.konghq.com/support/s/).
+    
 ---
 
 If you're new to Insomnia Enterprise, this document will guide you through the full setup of your instance in [**Insomnia Admin**](https://app.insomnia.rest/).
 
+{:.decorative}
+> **Start a 14-day trial of Insomnia Enterprise:** Any Owner or Co-owner can start a 14-day trial to evaluate Enterprise features in Insomnia. To activate your trial, from the Insomnia application, click **Start 14 day trial** and then confirm. To learn more about Enterprise features, go to the [Insomnia pricing page](https://insomnia.rest/pricing/).
+
 ## 1. Activate your Enterprise membership
 
-Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code.
-The first thing you'll need to do is:
+Once you've signed up for the Insomnia Enterprise plan through the [sales team](https://insomnia.rest/pricing/contact), you'll get an activation code. If you're already an **Owner** or **Co-owner** of an upgraded Enterprise workspace, skip this step.
 
-1. In the Insomnia Admin app, click **Upgrade**.
-1. On the [Change subscription plan](https://app.insomnia.rest/app/subscription/update) page, select the Enterprise plan.
-1. Enter your activation code.
-1. Click **Verify activation code**.
+To activate the code, complete the following steps:
+
+1. From the [Insomnia Admin](https://app.insomnia.rest/app/home) console, click [**Plan & billing**](https://app.insomnia.rest/app/billing) in the sidebar.
+1. Click **Enter Activation Code**.
+1. In the **Activation code** field, enter your activation code.
    
-   Once this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
-1. Click your email address in the header and make sure that your Enterprise instance is selected.
-1. Click **Enterprise Controls** to access your Enterprise configuration options.
+
+After this is done, you'll be the owner of the Enterprise instance and have access to all the Enterprise features.
+
 
 ## 2. Create organizations
 
@@ -172,5 +223,5 @@ Now that your Insomnia Enterprise instance is configured, you and your collabora
 
 * [Import and export reference for Insomnia](/insomnia/import-export/)
 * [Migrate collections and environments from Postman to Insomnia](/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/)
-* {% new_in 11.6 %} [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
+* [Import content from Postman to multiple Insomnia projects](/how-to/import-content-from-postman-to-multiple-insomnia-projects/)
 * [Import an API specification as a design document in Insomnia](/how-to/import-an-api-spec-as-a-document/)

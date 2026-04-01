@@ -1,0 +1,45 @@
+description: |
+  Use the Datakit plugin to transform JSON request bodies into XML before sending them to an external service, then convert the XML response back into JSON.
+
+extended_description: |
+  Use the Datakit plugin to transform JSON request bodies into XML before sending them to an external service, then convert the XML response back into JSON.
+
+  This example contains the following nodes:
+  1. The node `JSON_XML` converts the incoming JSON request body into XML format.
+  2. The node `CALL` sends the XML data to an external SOAP API.
+  3. The node `XML_JSON` converts the XML response from the external SOAP API back into JSON format and sets it as the response body.
+  
+title: Transform JSON into XML and back
+weight: 900
+
+
+config:
+  debug: true
+  nodes:
+    - name: JSON_XML
+      type: json_to_xml
+      attributes_block_name: "#attr"
+      input: request.body
+  
+    - name: CALL
+      type: call
+      url: http://localhost:7180
+      method: POST
+      inputs:
+        body: JSON_XML
+
+    - name: XML_JSON
+      type: xml_to_json
+      input: CALL.body
+      attributes_block_name: "#attr"
+      output: response.body
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.13'

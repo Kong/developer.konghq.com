@@ -72,10 +72,10 @@ sequenceDiagram
     Client->>Kong: Sends a request
     Kong->>Plugin: Evaluates for regex match
 
-    alt No regex match
+    alt If no regex match
         Plugin->>Client: 200 OK
         Plugin->>Upstream: Proxies request
-    else Regex match
+    else If regex matches
         Plugin->>Client: 400 Bad Request
         Plugin->>Kong: Logs injection 
     end
@@ -93,7 +93,7 @@ Logs are automatically collected when you enable the Injection Protection plugin
     * [Kafka Log](/plugins/kafka-log/)
     * [TCP Log](/plugins/tcp-log/)
     * [UDP Log](/plugins/udp-log/)
-* [{{site.konnect_short_name}} Advanced Analytics](/advanced-analytics/)
+* [{{site.konnect_short_name}} {{site.observability}}](/observability/)
 
 Here's a sample log entry created by the Injection Protection plugin. 
 

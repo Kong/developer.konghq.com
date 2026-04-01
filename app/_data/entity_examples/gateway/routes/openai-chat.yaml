@@ -1,0 +1,7 @@
+name: openai-chat
+paths:
+  - /
+service:
+  name: ai-proxy
+protocols:
+  - https

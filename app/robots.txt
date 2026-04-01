@@ -1,5 +1,6 @@
 ---
 layout: none
+llm: false
 ---
 User-agent: Algolia Crawler
 Allow: *
@@ -7,9 +8,15 @@ Allow: *
 User-agent: Screaming Frog SEO Spider
 Allow: *
 
+User-agent: Baiduspider-render
+Disallow: /
+
 User-agent: *
 {% unless jekyll.environment == "production" %}
 Disallow: /
 {% endunless %}
+
+User-agent: *
+Disallow: /search/
 
 Sitemap: {{ site.links.web }}/sitemap.xml

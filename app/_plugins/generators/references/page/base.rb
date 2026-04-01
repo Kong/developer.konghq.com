@@ -8,7 +8,7 @@ module Jekyll
     module Page
       class Base
         def self.make_for(site:, page:, release:)
-          if page.data['plugin?']
+          if page.data['plugin?'] && (page.data['reference_type'].nil? || page.data['reference_type'] != 'base')
             Plugin.new(site:, page:, release:)
           else
             new(site:, page:, release:)
@@ -50,6 +50,14 @@ module Jekyll
 
         def content
           @content ||= @page.content.deep_dup
+        end
+
+        def markdown_content
+          @markdown_content ||= if @page.respond_to?(:markdown_content)
+                                  @page.markdown_content
+                                else
+                                  content
+                                end
         end
 
         def url

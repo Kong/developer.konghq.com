@@ -1,4 +1,5 @@
 title: Gateway Documentation
+description: Index containing all documentation for {{site.base_gateway}}.
 sections:
   - title: Overview
     items:
@@ -44,20 +45,20 @@ sections:
     items:
     - path: /gateway/topology-hosting-options/
     - title: Choose a hosting strategy
-      description: Decide which Data Plane node strategy to use based on your use case.
-      url: /gateway-manager/data-plane-reference/#choose-a-data-plane-node-hosting-strategy
+      description: Decide which data plane node strategy to use based on your use case.
+      url: /gateway/data-plane-reference/#choose-a-data-plane-node-hosting-strategy
     - title: Serverless Gateways
-      description: Lightweight API gateways, where the Control Plane is hosted by Konnect and Data Plane nodes are automatically provisioned. 
+      description: Lightweight API gateways, where the control plane is hosted by Konnect and data plane nodes are automatically provisioned. 
       url: /gateway/topology-hosting-options/#serverless-gateways
     - path: /dedicated-cloud-gateways/
-    - title: Self-managed Data Planes
-      description: Host your own Data Plane nodes on the supported system of your choice.
+    - title: Self-managed data planes
+      description: Host your own data plane nodes on the supported system of your choice.
       url: /gateway/install/
   
   - title: Serverless Gateways
     items:
     - title: Provision a serverless gateway
-      description: Create a serverless Control Plane and hosted Data Plane.
+      description: Create a serverless control plane and hosted data plane.
       url: /serverless-gateways/reference/#how-do-i-provision-a-serverless-gateway
     - title: Custom domains
       description: Konnect integrates domain name management and configuration with serverless gateways.
@@ -69,17 +70,17 @@ sections:
   - title: Dedicated Cloud Gateways
     items:
     - title: Provision a Dedicated Cloud Gateway
-      description: Use the Konnect Cloud Gateways API to provision a Control Plane.
+      description: Use the Konnect Cloud Gateways API to provision a control plane.
       url: /dedicated-cloud-gateways/reference/#how-do-i-provision-a-control-plane
     - title: Custom plugin streaming
-      description: Stream custom plugins from the Control Plane to the Data Plane. 
+      description: Stream custom plugins from the control plane to the data plane. 
       url: /dedicated-cloud-gateways/reference/#custom-plugins
     - title: Supported geos
       description: Supported geos for Dedicated Cloud Gateways.
       url: /konnect-platform/geos/#dedicated-cloud-gateways
-    - title: Upgrade Data Planes
-      description: Upgrade Data Plane nodes in a Dedicated Cloud Gateway.
-      url: /gateway-manager/data-plane-reference/#upgrade-data-planes
+    - title: Upgrade data planes
+      description: Upgrade data plane nodes in a Dedicated Cloud Gateway.
+      url: /gateway/data-plane-reference/#upgrade-data-planes
     - title: Cloud Gateways API
       description: Konnect API for managing Dedicated Cloud Gateways infrastructure.
       url: /api/konnect/cloud-gateways/
@@ -91,6 +92,7 @@ sections:
       - path: /gateway/entities/license/
       - path: /gateway/install/
       - path: /gateway/resource-sizing-guidelines/
+      - path: /gateway/performance/large-payloads/
       - path: /gateway/sbom/
       - path: /gateway/security/
       - path: /gateway/secure-the-admin-api/
@@ -98,6 +100,7 @@ sections:
       - path: /gateway/cp-outage/
       - path: /gateway/incremental-config-sync/
       - path: /how-to/build-a-custom-docker-image/
+      - path: /gateway/cloud-provider-support-matrix/
 
   - title: Upgrade and Migration
     items:
@@ -257,13 +260,16 @@ sections:
           - gateway
         tags:
           - kong-manager
-  - title: Gateway Manager
+  - title: "API Gateway in {{site.konnect_short_name}}"
     items:
-      - path: /gateway-manager/
-      - path: /gateway-manager/**/*
-      - text: Troubleshoot Data Plane nodes
-        description: Learn how to resolve some common issues with Data Plane nodes
-        url: /gateway-manager/data-plane-reference/#troubleshoot-data-plane-nodes
+      - path: /gateway/data-plane-reference/
+      - path: /gateway/data-plane-version-compatibility/
+      - path: /gateway/control-plane-groups/
+      - path: /gateway/control-plane-resource-limits/
+      - path: /gateway/aws-private-link/
+      - title: Troubleshoot data plane nodes
+        description: Learn how to resolve some common issues with data plane nodes
+        url: /gateway/data-plane-reference/#troubleshoot-data-plane-nodes
 
   - title: Reference
     allow_duplicates: true

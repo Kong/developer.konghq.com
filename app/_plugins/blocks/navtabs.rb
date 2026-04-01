@@ -2,6 +2,7 @@
 
 require 'erb'
 require 'securerandom'
+require_relative '../monkey_patch'
 
 module Jekyll
   module NavTabs
@@ -9,6 +10,7 @@ module Jekyll
       def initialize(tag_name, markup, tokens)
         super
 
+        @has_heading_level = markup.match(/heading_level(?:=(\d+))?/)
         @tab_group = markup.strip
       end
 
@@ -39,18 +41,36 @@ module Jekyll
           group = keys.reduce(context) { |c, key| c[key] } || @tab_group
         end
 
-        Liquid::Template
-          .parse(File.read(File.join(@site.source, '_includes/components/tabs.html')))
-          .render(
-            {
-              'site' => @site.config,
-              'page' => context['page'],
-              'tab_group' => group,
-              'environment' => environment,
-              'navtabs_id' => navtabs_id
-            },
-            { registers: context.registers, context: context }
-          )
+        context.stack do
+          context['tab_group'] = group
+          context['environment'] = environment
+          context['navtabs_id'] = navtabs_id
+          context['heading_level'] = parse_heading_level(context)
+
+          Liquid::Template
+            .parse(template, { line_numbers: true })
+            .render(context)
+        end
+      end
+
+      def template
+        if @page['output_format'] == 'markdown'
+          File.read(File.join(@site.source, '_includes/components/tabs.md'))
+        else
+          File.read(File.join(@site.source, '_includes/components/tabs.html'))
+        end
+      end
+
+      def parse_heading_level(context)
+        if @has_heading_level
+          if @has_heading_level[1]
+            @has_heading_level[1].to_i
+          else
+            Liquid::Template.parse('{{heading_level}}').render(context)
+          end
+        else
+          Jekyll::ClosestHeading.new(@page, @line_number, context).level
+        end
       end
     end
 
@@ -91,17 +111,32 @@ module Jekyll
 
         # Set a default slug if not provided
         evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
-
-        site = context.registers[:site]
-        converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
         environment = context.environments.first
+        @page = context.environments.first['page']
 
         navtabs_id = environment['navtabs-stack'].last
+
+        context['tab_id'] = navtabs_id
+        contents = super
+        context['tab_id'] = nil
+
         environment["navtabs-#{navtabs_id}"][evaluated_title] = {
-          'content' => converter.convert(render_block(context)),
+          'content' => block_content(context, contents),
           'attributes' => evaluated_attributes
         }
         ''
+      end
+
+      def block_content(context, contents)
+        page = context.environments.first['page']
+
+        if page['output_format'] == 'markdown'
+          contents
+        else
+          site = context.registers[:site]
+          converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
+          converter.convert(render_block(context))
+        end
       end
     end
   end

@@ -2,9 +2,9 @@ metadata:
   title: 'Custom Dashboards'
   content_type: landing_page
   description: 'Build and manage dashboards for API analytics with reusable templates and automation support.'
-  breadcrumb: /advanced-analytics/
+  breadcrumb: /observability/
   products:
-    - advanced-analytics
+    - observability
     - konnect
   works_on:
     - konnect
@@ -27,7 +27,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Custom dashboards in {{site.konnect_short_name}} Advanced Analytics allow you to visualize and share key API metrics and insights with flexibility and control. Organization admins can create dashboards manually or automate their provisioning via API and CI/CD.
+                    Custom dashboards in {{site.konnect_short_name}} {{site.observability}} allow you to visualize and share key API metrics and insights with flexibility and control. Organization admins can create dashboards manually or automate their provisioning via API and CI/CD.
 
                     Custom dashboards support:
                     * Templates for fast creation
@@ -38,7 +38,7 @@ rows:
         - type: image
           config:
             url: /assets/images/analytics/templates-aa.png
-            alt_text: "Summary dashboard of Konnect Advanced Analytics"
+            alt_text: "Summary dashboard of {{site.konnect_short_name}} {{site.observability}}"
 
   - columns:
       - blocks:
@@ -66,7 +66,7 @@ rows:
               description: Custom dashboard reference
               icon: /assets/icons/lock.svg
               cta:
-                url: /advanced-analytics/custom-dashboards-reference/
+                url: /observability/custom-dashboards-reference/
                 align: end
 
   - header:
@@ -81,7 +81,8 @@ rows:
                   The Org Admin and Analytics Admin roles can create and manage custom dashboards in {{site.konnect_short_name}}.
               - q: How can I give my team read-only access to dashboards?
                 a: |
-                  [Assign the Viewer role](/advanced-analytics/custom-dashboards-reference/#Role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
+                  [Assign the Viewer role](/observability/custom-dashboards-reference/#role-based-access) to your team. They will be able to view dashboards shared with their group but not create or edit them.
+
               - q: Can I automate dashboard creation?
                 a: |
                   Yes. You can use the [API](/api/konnect/analytics-dashboards/) or [Terraform](/how-to/automate-dashboard-terraform/) to create dashboards from reusable definitions.

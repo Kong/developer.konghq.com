@@ -23,7 +23,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 schema:
     api: gateway/admin-ee
@@ -72,10 +72,6 @@ When a DNS record has `ttl=0`, the hostname is added as a single target, with th
 
 {% include_cached /gateway/failover-targets.md %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Target
 
 {% entity_example %}
@@ -84,3 +80,7 @@ data:
   target: httpbun.com:80
   weight: 100
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

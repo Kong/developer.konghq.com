@@ -3,10 +3,11 @@ title: 'Solace Upstream'
 name: 'Solace Upstream'
 
 content_type: plugin
-
+tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Solace messages in a Solace queue or topic'
 beta: true
+premium_partner: true
 
 products:
   - gateway
@@ -41,7 +42,7 @@ categories:
 search_aliases:
   - solace-upstream
   - events
-  - event gateway
+  - protocol mediation
 ---
 
 This plugin converts requests (or custom data) into [Solace](https://solace.com/) messages and publishes them to specified

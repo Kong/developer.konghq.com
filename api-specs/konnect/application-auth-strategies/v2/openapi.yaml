@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.2
+  version: 2.0.4
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@0e77dc57fc4df0691cacc2945820eb1f19a60fa2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0e77dc57fc4df0691cacc2945820eb1f19a60fa2'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -502,6 +504,11 @@ components:
       description: This flag disable the refresh-secret endpoint on the application flow for the DCR provider.
       type: boolean
       title: DcrConfigPropertyDisableRefreshSecret
+    DcrConfigPropertyAllowMultipleCredentials:
+      description: 'When enabled, indicates that the HTTP DCR provider supports creating and managing multiple credentials per application.'
+      type: boolean
+      default: false
+      title: DcrConfigPropertyAllowMultipleCredentials
     DcrConfigAuth0InResponse:
       description: A DCR provider configuration for Auth0
       type: object
@@ -555,6 +562,8 @@ components:
       properties:
         initial_client_id:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - initial_client_id
@@ -567,6 +576,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
         initial_client_secret:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - initial_client_id
@@ -580,6 +591,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientId'
         initial_client_secret:
           $ref: '#/components/schemas/DcrConfigPropertyInitialClientSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: DcrConfigAzureAdInRequest
     DcrConfigCurityInResponse:
@@ -618,6 +631,9 @@ components:
     DcrConfigOktaInResponse:
       description: A DCR provider configuration for Okta
       type: object
+      properties:
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: DcrConfigOktaInResponse
     CreateDcrConfigOktaInRequest:
@@ -626,6 +642,8 @@ components:
       properties:
         dcr_token:
           $ref: '#/components/schemas/DcrConfigPropertyDcrToken'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_token
@@ -636,6 +654,8 @@ components:
       properties:
         dcr_token:
           $ref: '#/components/schemas/DcrConfigPropertyDcrToken'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: DcrConfigOktaInRequest
     DcrConfigHttpInResponse:
@@ -649,6 +669,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_base_url
@@ -665,6 +687,8 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       required:
         - dcr_base_url
@@ -682,18 +706,10 @@ components:
           $ref: '#/components/schemas/DcrConfigPropertyDisableEventHooks'
         disable_refresh_secret:
           $ref: '#/components/schemas/DcrConfigPropertyDisableRefreshSecret'
+        allow_multiple_credentials:
+          $ref: '#/components/schemas/DcrConfigPropertyAllowMultipleCredentials'
       additionalProperties: false
       title: CreateDcrConfigHttpInRequest
-    DcrProviderType:
-      description: 'The type of DCR provider. Can be one of the following - auth0, azureAd, curity, okta, http'
-      type: string
-      enum:
-        - auth0
-        - azureAd
-        - curity
-        - okta
-        - http
-      title: DcrProviderType
     DcrProviderBase:
       description: Properties common to all DCR Providers.
       type: object
@@ -1052,8 +1068,57 @@ components:
             maxLength: 256
           maxItems: 10
           minItems: 1
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       title: AppAuthStrategyConfigKeyAuth
+    PartialAppAuthStrategyConfigKeyAuth:
+      description: |
+        Key Auth configuration for updating an Application Auth Strategy.
+        The ttl field can be set to null to unset the Time-To-Live.
+      type: object
+      properties:
+        key_names:
+          description: The names of the headers containing the API key. You can specify multiple header names.
+          type: array
+          items:
+            type: string
+            maxLength: 256
+          maxItems: 10
+          minItems: 1
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy. Set to null to unset.
+          type: object
+          nullable: true
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
+      additionalProperties: false
+      title: PartialAppAuthStrategyConfigKeyAuth
     PartialAppAuthStrategyConfigOpenIDConnect:
       description: |
         A more advanced mode to configure an API Product Version’s Application Auth Strategy. 
@@ -1191,7 +1256,14 @@ components:
             display_name:
               $ref: '#/components/schemas/DcrProviderDisplayName'
             provider_type:
-              $ref: '#/components/schemas/DcrProviderType'
+              description: The type of DCR provider.
+              type: string
+              enum:
+                - auth0
+                - azureAd
+                - curity
+                - okta
+                - http
           required:
             - id
             - name
@@ -1202,6 +1274,13 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            Always `true` for KEY_AUTH.
+          type: boolean
+          default: true
+          readOnly: true
       additionalProperties: false
       required:
         - id
@@ -1287,7 +1366,14 @@ components:
             display_name:
               $ref: '#/components/schemas/DcrProviderDisplayName'
             provider_type:
-              $ref: '#/components/schemas/DcrProviderType'
+              description: The type of DCR provider.
+              type: string
+              enum:
+                - auth0
+                - azureAd
+                - curity
+                - okta
+                - http
           required:
             - id
             - name
@@ -1298,6 +1384,13 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            - `true` for Key Auth strategies and when supported for Client Credentials strategies
+            - `false` when not supported for Client Credentials strategies
+          type: boolean
+          readOnly: true
       additionalProperties: false
       required:
         - id
@@ -1373,7 +1466,7 @@ components:
       type: object
       properties:
         key-auth:
-          $ref: '#/components/schemas/AppAuthStrategyConfigKeyAuth'
+          $ref: '#/components/schemas/PartialAppAuthStrategyConfigKeyAuth'
       additionalProperties: false
       required:
         - key-auth
@@ -1798,111 +1891,68 @@ components:
       maxProperties: 50
       nullable: true
       writeOnly: true
-    StringFieldEqualsFilter:
-      description: Filters on the given string field value by exact match.
+    StringFieldFilter:
       oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
+        - title: Filter by operator
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
           properties:
             eq:
+              description: The field exactly matches the provided value.
               type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
-      x-examples:
-        example-1: equals-some-value
-        example-2:
-          eq: some-value
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          type: object
+          additionalProperties: false
+        - title: Filter by exact string match
           type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
+          description: The field exactly matches the provided value.
+          example: '?filter[title]=foo'
+    UuidFieldFilter:
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        ocontains:
+        eq:
+          description: The field exactly matches the provided value.
           type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
+          example: '?filter[field_name_here][eq]=foo'
         oeq:
+          description: The field matches any of the provided values.
           type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
       additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
       x-examples:
         example-1:
           oeq: 'some-value,some-other-value'
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
           neq: not-this-value
-    StringFieldFilter:
-      description: Filters on the given string field value by either exact or fuzzy match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: StringFieldFilter
-      x-examples:
-        example-1: equals-some-value
         example-2:
           eq: some-value
-        example-3:
-          contains: some-value
-        example-4:
-          ocontains: 'some-potential,value'
-        example-5:
-          oeq: 'some-potential,value'
-        example-6:
-          neq: not-this-value
-    UuidFieldFilter:
-      description: Filters on the given UUID field value by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/StringFieldEqualsFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-      title: UuidFieldFilter
-      x-examples:
-        example-1: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-2:
-          eq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-3:
-          oeq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
-        example-4:
-          neq: 3bbfd3a-e9ab-48a9-9881-ed589e4615d1
     ConflictError:
       allOf:
         - $ref: '#/components/schemas/BaseError'

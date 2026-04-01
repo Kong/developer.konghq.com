@@ -1,0 +1,41 @@
+title: 'Configure AI Proxy Advanced for Claude Code with Anthropic'
+description: 'Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider.'
+
+extended_description: |
+  {% new_in 3.13 %} Set up the AI Proxy Advanced plugin to work with Claude Code, using Anthropic as the LLM provider.
+  For a detailed guide on how to use Anthropic with Claude Code see [this-guide](/how-to/use-claude-code-with-ai-gateway-anthropic/)
+
+show_in_api: true
+weight: 905
+
+requirements:
+- Anthropic subscription
+
+config:
+  llm_format: anthropic
+  targets:
+    - route_type: llm/v1/chat
+      logging:
+        log_statistics: true
+      auth:
+        header_name: x-api-key
+        header_value: ${key}
+      model:
+        name: claude-sonnet-4-5-20250929
+        provider: anthropic
+        options:
+          anthropic_version: '2023-06-01'
+
+variables:
+  key:
+    value: $ANTHROPIC_API_KEY
+    description: The API key to use to connect to Anthropic.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: claude-code

@@ -104,6 +104,19 @@ When a Service or Route is **created** or **modified**, the {{site.base_gateway}
     1. If the host field doesn't match, the operation proceeds.
     1. If the host is an absolute value, a `409 Conflict` error is returned.
 
+You can adjust collision settings for {{site.base_gateway}} through `kong.conf`:
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: route_validation_strategy
+  - name: enforce_route_path_pattern
+{% endkong_config_table %}
+<!--vale on-->
+
+{:.warning}
+> **Note**: Route collision detection **does not** work with [expression-based routing](/gateway/routing/expressions/).
+
 ## Roles, groups, and permissions
 
 Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. Users will require either a Super Admin or Admin role to configure Workspaces. 
@@ -170,11 +183,6 @@ deck gateway sync default.yaml --workspace default
 
 decK can't delete Workspaces. However, using `deck gateway reset` in combination with the `--workspace` or `--all-workspaces` flags forces decK to delete the entire configuration inside the Workspace, but not the Workspace itself.
 
-
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Workspace
 
 {% entity_example %}
@@ -183,3 +191,6 @@ data:
   name: "my-workspace"
 {% endentity_example %}
 
+## Schema
+
+{% entity_schema %}

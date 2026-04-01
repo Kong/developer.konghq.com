@@ -6,6 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
+  x-oas-source: kong/platform-api@9898d47ea8c8b00eb1db4933b6639f62c862682b
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9898d47ea8c8b00eb1db4933b6639f62c862682b'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -215,11 +217,36 @@ components:
         match:
           description: The matched text from the record.
           type: string
+        relations_list:
+          description: The relations tree with child and sibling relations.
+          type: array
+          items:
+            $ref: '#/components/schemas/Relation'
+          nullable: true
       required:
         - id
         - type
         - name
       title: SearchResultItem
+    Relation:
+      type: object
+      properties:
+        type:
+          description: The type of the related entity.
+          type: string
+        id:
+          description: The unique identifier of the related entity.
+          type: string
+        child_relations:
+          description: The child relations of the related entity.
+          type: array
+          items:
+            $ref: '#/components/schemas/Relation'
+          nullable: true
+      required:
+        - type
+        - id
+        - child_relations
     BaseError:
       description: standard error
       type: object
@@ -511,6 +538,23 @@ components:
             attributes:
               created_at: '2023-05-10T12:00:00.00Z'
               updated_at: '2023-05-10T12:00:00.00Z'
+            relations_list:
+              - type: system_account
+                id: c0010105-e840-4824-b7ee-787f22267c39
+                child_relations:
+                  - type: api_product
+                    id: ap0010105-e840-4824-b7ee-787f22267c40
+              - type: api_product
+                id: ap0010105-e840-4824-b7ee-787f22267c41
+                child_relations:
+                  - type: system_account
+                    id: c0010105-e840-4824-b7ee-787f22267c42
+                  - type: system_account
+                    id: c0010105-e840-4824-b7ee-787f22267c43
+                  - type: system_account
+                    id: c0010105-e840-4824-b7ee-787f22267c44
+              - type: system_account
+                id: c0010105-e840-4824-b7ee-787f22267c45
         meta:
           page:
             size: 3

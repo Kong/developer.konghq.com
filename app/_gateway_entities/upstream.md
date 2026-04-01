@@ -34,7 +34,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} Control Plane resource limits"
-    url: /gateway-manager/control-plane-resource-limits/
+    url: /gateway/control-plane-resource-limits/
 
 schema:
     api: gateway/admin-ee
@@ -303,10 +303,6 @@ rows:
 
 {% include_cached /gateway/failover-targets.md %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up an Upstream
 
 {% entity_example %}
@@ -315,3 +311,7 @@ data:
   name: example-upstream
   algorithm: round-robin
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

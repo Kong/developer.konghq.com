@@ -49,7 +49,7 @@ faqs:
     a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 
 notes: |
-   <b>Dedicated and Serverless Cloud Gateways</b>: This plugin is not supported in Dedicated or
+   **Dedicated and Serverless Cloud Gateways**: This plugin is not supported in Dedicated or
    Serverless Cloud Gateways because it depends on the Admin API and the Status API, which aren't
    accessible in that setup.
 
@@ -89,7 +89,7 @@ license signature. Those metrics are only exported on self-managed {{site.base_g
     measures the current number of database entities.
 - **Number of Nginx timers** : A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
-- **[AI LLM metrics](#ai-llm-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
+- **[AI LLM metrics](#llm-traffic-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
 
 ### Optional metrics
 The following metrics are disabled by default as it may create high cardinality of metrics and may

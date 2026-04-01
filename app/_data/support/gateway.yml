@@ -21,8 +21,8 @@
   konnect: true
   beginning: "3.9.0.0"
   release_date: "2025-01-08"
-  eol: "2025-12-30"
-  sunset: "2026-12-30"
+  eol: "2025-12-12"
+  sunset: "2026-12-12"
 - release: "3.8"
   konnect: true
   beginning: "3.8.0.0"

@@ -1,0 +1,88 @@
+metadata:
+  title: "{{site.event_gateway}} entities"
+  content_type: landing_page
+  description: This page lists the different entities that make up {{site.event_gateway}}.
+  breadcrumbs:
+    - /event-gateway/
+  products:
+    - event-gateway
+  works_on:
+    - konnect
+rows:
+  -  header:
+        type: h1
+        text: "{{site.event_gateway}} entities"
+        sub_text: "Entities are the components and objects that make up {{site.event_gateway}} and its ecosystem"
+
+  - header:
+      type: h2
+      text: "Core entities"
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Backend clusters"
+              description: |
+                Physical Kafka clusters that are proxied by {{site.event_gateway_short}}
+              cta:
+                text: See reference
+                url: /event-gateway/entities/backend-cluster/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Virtual clusters"
+              description: |
+                Core abstraction for client isolation when connecting to the same backend cluster
+              cta:
+                text: See reference
+                url: /event-gateway/entities/virtual-cluster/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Listeners"
+              description: |
+                Network interfaces for Kafka client connections
+              cta:
+                text: See reference
+                url: /event-gateway/entities/listener/
+                align: end
+      
+      - blocks:
+          - type: card
+            config:
+              title: "Policies"
+              description: |
+                 Control how Kafka protocol traffic is modified between the client and the backend cluster
+              cta:
+                text: See reference
+                url: /event-gateway/entities/policy/
+                align: end
+
+  - header:
+      type: h2
+      text: "Resources"
+    column_count: 4
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "Schema registries"
+              description: |
+                Manage and enforce message schemas for Kafka topics
+              cta:
+                text: See reference
+                url: /event-gateway/entities/schema-registry/
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Static keys"
+            description: |
+              Manage static encryption keys for use by Encrypt and Decrypt policies
+            cta:
+              text: See reference
+              url: /event-gateway/entities/static-key/
+              align: end

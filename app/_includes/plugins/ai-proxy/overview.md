@@ -23,7 +23,7 @@ For {{ site.base_gateway }} versions 3.6 or earlier:
   {:.warning}
   > OpenAI has marked this endpoint as [legacy](https://platform.openai.com/docs/api-reference/completions) and recommends using the [Chat Completions API](https://platform.openai.com/docs/guides/text?api-mode=responses) for developing new applications.
 
-See the following table for capabilities supported in {{ site.base_gateway }} version {% new_in 3.11 %} or later:
+See the following table for capabilities supported in {{site.ai_gateway}}:
 
 <!-- vale off -->
 {% if plugin == "AI Proxy" %}
@@ -39,11 +39,23 @@ columns:
     key: openai_compatible
 
 features:
+  - title: "Chat completions"
+    description: Generates conversational responses from a sequence of messages using supported LLM providers.
+    openai_compatible: true
+    examples: |
+      * [`llm/v1/chat`](./examples/openai-chat-route/)<br>
+
   - title: "Embeddings"
-    description: Offers unified text-to-vector embedding with support for multiple providers and analytics.
+    description: Converts text to vector representations for semantic search and similarity matching.
     openai_compatible: true
     examples: |
       * [`llm/v1/embeddings`](./examples/embeddings-route-type/)<br>
+
+  - title: "Function calling"
+    description: Allows models to invoke external tools and APIs based on conversation context.
+    openai_compatible: true
+    examples: |
+      * llm/v1/chat
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
@@ -51,45 +63,60 @@ features:
     examples: |
       * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
       * [`llm/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
 
-  - title: "Batch and files"
-    description: Supports parallel LLM requests and file upload for long documents and structured input.
+  - title: "Batches and files"
+    description: Supports asynchronous bulk LLM requests and file uploads for long documents and structured input.
     openai_compatible: true
     examples: |
-      * [`llm/v1/batch`](./examples/batches-route-type/)<br>
+      * [`llm/v1/batches`](./examples/batches-route-type/)<br>
       * [`llm/v1/files`](./examples/files-route-type/)<br>
-      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+      * [Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
 
   - title: "Audio"
-    description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
+    description: Enables speech-to-text, text-to-speech, and translation for voice applications.
     openai_compatible: true
     examples: |
-      * [`/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
-      * [`/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+      * [`audio/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
+      * [`audio/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+      * [`audio/v1/audio/translations`](./examples/audio-translation-openai/)<br>
 
   - title: "Image generation and editing"
-    description: Generates or modifies images from text prompts for multimodal agent input/output.
+    description: Generates or modifies images from text prompts.
     openai_compatible: true
     examples: |
-      * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
-      * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
+      * [`image/v1/images/generations`](./examples/image-generation-openai/)<br>
+      * [`image/v1/images/edits`](./examples/image-edits-openai/)<br>
 
-  - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+  - title: "Video generation"
+    description: Generates videos from text prompts.
+    openai_compatible: true
+    examples: |
+      * [`video/v1/videos/generations`](./examples/video-generation-openai/)<br>
+
+  - title: "AWS Bedrock native APIs"
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "Hugging Face native APIs"
+    description: |
+      Provides text generation and streaming using Hugging Face models.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Hugging Face.
     openai_compatible: false
     examples: |
-      * [`/text-generation`](./#supported-native-llm-formats)<br>
+      * [`/generate`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context.
+    description: |
+      Reorders documents by relevance for RAG pipelines using Bedrock or Cohere rerank APIs.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
@@ -108,63 +135,90 @@ columns:
     key: openai_compatible
 
 features:
-  - title: "Embeddings"
-    description: Offers unified text-to-vector embedding with support for multiple providers and analytics.
+  - title: "Chat completions"
+    description: Generates conversational responses from a sequence of messages using supported LLM providers.
     openai_compatible: true
     examples: |
-      * [`/v1/embeddings`](./examples/embeddings-route-type/)
+      * [`llm/v1/chat`](./examples/openai-chat-route/)<br>
+
+  - title: "Embeddings"
+    description: Converts text to vector representations for semantic search and similarity matching.
+    openai_compatible: true
+    examples: |
+      * [`llm/v1/embeddings`](./examples/embeddings-route-type/)<br>
+
+  - title: "Function calling"
+    description: Allows models to invoke external tools and APIs based on conversation context.
+    openai_compatible: true
+    examples: |
+      * "`llm/v1/chat`"
 
   - title: "Assistants and responses"
     description: Powers persistent tool-using agents and exposes metadata for debugging and evaluation.
     openai_compatible: true
     examples: |
-      * [`/v1/assistants`](./examples/assistants-route-type/)<br>
-      * [`/v1/responses`](./examples/responses-route-type/)<br>
-      * [Secure GitHub MCP Server traffic using `llm/v1/responses` route type](/mcp/secure-mcp-traffic/)<br>
+      * [`llm/v1/assistants`](./examples/assistants-route-type/)<br>
+      * [`llm/v1/responses`](./examples/responses-route-type/)<br>
 
-  - title: "Batch and files"
-    description: Supports parallel LLM requests and file upload for long documents and structured input.
+  - title: "Batches and files"
+    description: Supports asynchronous bulk LLM requests and file uploads for long documents and structured input.
     openai_compatible: true
     examples: |
-      * [`/v1/batch`](./examples/batches-route-type/)<br>
-      * [`/v1/files`](./examples/files-route-type/)<br>
-      * [`llm/v1/batches` Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
+      * [`llm/v1/batches`](./examples/batches-route-type/)<br>
+      * [`llm/v1/files`](./examples/files-route-type/)<br>
+      * [Send asynchronous requests to LLMs](/how-to/send-asychronous-llm-requests/)
 
   - title: "Audio"
-    description: Enables speech-to-text, text-to-speech, and real-time translation for voice agents and multilingual UIs.
+    description: Enables speech-to-text, text-to-speech, and translation for voice applications.
     openai_compatible: true
     examples: |
-      * [`/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
-      * [`/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+      * [`audio/v1/audio/transcriptions`](./examples/audio-transcription-openai/)<br>
+      * [`audio/v1/audio/speech`](./examples/audio-speech-openai/)<br>
+      * [`audio/v1/audio/translations`](./examples/audio-translation-openai/)<br>
 
   - title: "Image generation and editing"
-    description: Generates or modifies images from text prompts for multimodal agent input/output.
+    description: Generates or modifies images from text prompts.
     openai_compatible: true
     examples: |
-      * [`/v1/images/generations`](./examples/image-generation-openai/)<br>
-      * [`/v1/images/edits`](./examples/image-edits-openai/)<br>
+      * [`image/v1/images/generations`](./examples/image-generation-openai/)<br>
+      * [`image/v1/images/edits`](./examples/image-edits-openai/)<br>
 
-  - title: "Realtime streaming"
-    description: "Stream completions token-by-token for low-latency, interactive experiences, and live analytics."
+  - title: "Video generation"
+    description: Generates videos from text prompts.
     openai_compatible: true
     examples: |
-      * [`/v1/realtime`](./examples/realtime-route-openai/)<br>
+      * [`video/v1/videos/generations`](./examples/video-generation-openai/)<br>
 
-  - title: "AWS Bedrock agent APIs"
-    description: Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+  - title: "Realtime"
+    description: Bidirectional WebSocket streaming for low-latency, interactive voice and text applications.
+    openai_compatible: true
+    examples: |
+      * [`realtime/v1/realtime`](./examples/realtime-route-openai/)<br>
+
+  - title: "AWS Bedrock native APIs"
+    description: |
+      Enables advanced orchestration and real-time RAG via Converse and RetrieveAndGenerate endpoints.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Bedrock.
     openai_compatible: false
     examples: |
       * [`/converse`](./#supported-native-llm-formats)<br>
       * [`/retrieveAndGenerate`](./#supported-native-llm-formats)<br>
 
-  - title: "Hugging Face text generation"
-    description: Provides text generation and streaming using open-source Hugging Face models.
+  - title: "Hugging Face native APIs"
+    description: |
+      Provides text generation and streaming using Hugging Face models.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Hugging Face.
     openai_compatible: false
     examples: |
-      * [`/text-generation`](./#supported-native-llm-formats)<br>
+      * [`/generate`](./#supported-native-llm-formats)<br>
 
   - title: "Rerank"
-    description: Improves relevance in RAG pipelines by reordering documents based on context using Bedrock or Cohere `/rerank` APIs.
+    description: |
+      Reorders documents by relevance for RAG pipelines using Bedrock or Cohere rerank APIs.
+      <br><br>
+      Available only when using [native LLM format](./#supported-native-llm-formats) for Bedrock and Cohere.
     openai_compatible: false
     examples: |
       * [`/rerank`](./#supported-native-llm-formats)<br>
@@ -173,14 +227,6 @@ features:
 {% endif %}
 
 <!-- vale on -->
-
-### Core text generation
-
-The following reference tables detail feature availability across supported LLM providers when used with the {{ plugin }} plugin.
-
-Support for chat, completions, and embeddings:
-
-{% include plugins/ai-proxy/tables/supported-providers-text.html providers=providers %}
 
 {:.neutral}
 > The following providers are supported by the legacy [Completions API](https://platform.openai.com/docs/api-reference/completions):
@@ -192,23 +238,31 @@ Support for chat, completions, and embeddings:
 > * Gemini
 > * Hugging Face
 
-### Advanced text generation {% new_in 3.11 %}
+## Supported AI providers
 
-Support for function calling, tool use, and batch processing:
+{{site.ai_gateway}} supports proxying requests to the following AI providers. Each provider page documents supported capabilities, configuration requirements, and provider-specific details.
 
-{% include plugins/ai-proxy/tables/supported-providers-processing.html providers=providers %}
+{:.info}
+> For detailed capability support, configuration requirements, and provider-specific limitations, see the individual [provider reference pages](/ai-gateway/ai-providers/).
 
-### Audio features {% new_in 3.11 %}
-
-Support for text-to-speech, transcription, and translation:
-
-{% include plugins/ai-proxy/tables/supported-providers-audio.html providers=providers %}
-
-### Image features {% new_in 3.11 %}
-
-Support for image generation, image editing{% if plugin == "AI Proxy Advanced" %}, and realtime streaming{% endif %} interaction:
-
-{% include plugins/ai-proxy/tables/supported-providers-image.html providers=providers plugin=plugin %}
+{% html_tag type="div" css_classes="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" %}
+{% icon_card icon="openai.svg" title="OpenAI" cta_url="/ai-gateway/ai-providers/openai/" %}
+{% icon_card icon="azure.svg" title="Azure OpenAI" cta_url="/ai-gateway/ai-providers/azure/" %}
+{% icon_card icon="bedrock.svg" title="Amazon Bedrock" cta_url="/ai-gateway/ai-providers/bedrock/" %}
+{% icon_card icon="anthropic.svg" title="Anthropic" cta_url="/ai-gateway/ai-providers/anthropic/" %}
+{% icon_card icon="gemini.svg" title="Gemini" cta_url="/ai-gateway/ai-providers/gemini/" %}
+{% icon_card icon="vertex.svg" title="Vertex AI" cta_url="/ai-gateway/ai-providers/vertex/" %}
+{% icon_card icon="cohere.svg" title="Cohere" cta_url="/ai-gateway/ai-providers/cohere/" %}
+{% icon_card icon="mistral.svg" title="Mistral" cta_url="/ai-gateway/ai-providers/mistral/" %}
+{% icon_card icon="huggingface.svg" title="Hugging Face" cta_url="/ai-gateway/ai-providers/huggingface/" %}
+{% icon_card icon="metaai.svg" title="Llama" cta_url="/ai-gateway/ai-providers/llama/" %}
+{% icon_card icon="xai.svg" title="xAI" cta_url="/ai-gateway/ai-providers/xai/" %}
+{% icon_card icon="dashscope.svg" title="Alibaba Cloud DashScope" cta_url="/ai-gateway/ai-providers/dashscope/" %}
+{% icon_card icon="cerebras.svg" title="Cerebras" cta_url="/ai-gateway/ai-providers/cerebras/" %}
+{% icon_card icon="deepseek.svg" title="DeepSeek" cta_url="/ai-gateway/ai-providers/deepseek/" %}
+{% icon_card icon="ollama.svg" title="Ollama" cta_url="/ai-gateway/ai-providers/ollama/" %}
+{% icon_card icon="databricks.svg" title="Databricks" cta_url="/ai-gateway/ai-providers/databricks/" %}
+{% endhtml_tag %}
 
 ## How it works
 

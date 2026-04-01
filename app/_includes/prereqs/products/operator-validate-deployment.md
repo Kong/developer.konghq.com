@@ -4,4 +4,5 @@ command: |
 expected:
   stdout: "deployment.apps/kong-operator-kong-operator-controller-manager condition met"
   return_code: 0
+render_output: false
 {% endvalidation %}

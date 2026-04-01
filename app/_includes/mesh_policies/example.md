@@ -3,12 +3,12 @@
 {% if page_title == empty %}{% assign page_title = 'EMPTY TITLE' %}{% endif %}
 {%- capture title -%}{{ page_title | liquify }}{% if page.min_version %}{% new_in page.min_version.mesh %}{% endif %}{%- endcapture -%}
 
-## {{title}}
+## {{title | liquify }}
 
 {% if page.example.extended_description %}
-{{ page.example.extended_description | liquify | markdownify }}
+{{ page.example.extended_description | liquify }}
 {% else %}
-{{ page.example.description | liquify | markdownify }}
+{{ page.example.description | liquify }}
 {% endif %}
 
 {% unless page.example.requirements == empty %}
@@ -25,6 +25,6 @@
 
 {% policy_yaml namespace=page.example.namespace use_meshservice=page.example.use_meshservice %}
 ```yaml
-{{page.example.config}}
+{{page.example.yaml_config}}
 ```
 {% endpolicy_yaml %}

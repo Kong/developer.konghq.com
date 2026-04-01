@@ -48,7 +48,7 @@ export default class ToggleSwitchManager {
     });
 
     this.topologySwitcherOption = document.querySelector(
-      "[data-topology-switcher]"
+      "[data-topology-switcher]",
     );
 
     this.addEventListeners();
@@ -59,24 +59,34 @@ export default class ToggleSwitchManager {
     if (this.switches.length > 0) {
       this.setType();
       this.setInitialValue();
+    } else {
+      const value = document.querySelector("[data-works-on]")?.dataset.worksOn;
+      this.setInitialValue(value);
     }
   }
 
-  setInitialValue() {
-    if (this.getStoredValue()) {
-      this.initialValue = this.getStoredValue();
-    }
-    if (this.getParamValue()) {
-      this.initialValue = this.getParamValue();
-    }
-    if (this.getURLValue()) {
-      this.initialValue = this.getURLValue();
+  setInitialValue(value) {
+    if (value !== undefined) {
+      this.initialValue = value;
+    } else {
+      if (this.getStoredValue()) {
+        this.initialValue = this.getStoredValue();
+      }
+      if (this.getParamValue()) {
+        this.initialValue = this.getParamValue();
+      }
+      if (this.getURLValue()) {
+        this.initialValue = this.getURLValue();
+      }
     }
 
     const initialEvent = new CustomEvent("switch-state-change", {
       detail: { selectedValue: this.initialValue },
     });
-    document.dispatchEvent(initialEvent);
+
+    if (this.initialValue !== undefined) {
+      document.dispatchEvent(initialEvent);
+    }
   }
 
   setType() {
@@ -152,6 +162,7 @@ export default class ToggleSwitchManager {
         // Don't reload the page
         window.history.pushState({}, "", url);
       }
+
       this.switches.forEach((instance) => {
         instance.updateState(selectedValue);
       });

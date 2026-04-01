@@ -60,11 +60,6 @@ faqs:
       It is governed by the [Apache License 2.0](https://opensource.org/license/apache-2-0/), along with our [Terms of Service](https://insomnia.rest/terms) and [Privacy Policy](https://insomnia.rest/privacy). 
       A formal EULA may be introduced in the future.
 
-  - q: What is the team size limit for a free trial?
-    a: |
-      The free trial supports up to five team members. After the trial, you will be billed based on the number of member seats in your subscription. 
-      See our [pricing page](https://insomnia.rest/pricing) for more details.
-
   - q: How do I increase the number of seats on my team?
     a: |
       The team owner can update the subscription to include more seats by:
@@ -117,7 +112,7 @@ If needed, you can click **Upgrade** from the Insomnia dashboard to upgrade to a
 Owners and admins can invite users to collaborate on projects by adding them to organizations.
 
 1. Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select the organization in which you want to invite users, and go to **Collaborators** tab to invite them.
-1. {% new_in 10.1 %} In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
+1. In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
 
 Invited users will receive an email. They will need to log in to Insomnia and accept the invite.
 

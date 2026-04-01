@@ -1,0 +1,8 @@
+name: gemini-route
+paths:
+  - /gemini
+service:
+  name: gemini-service
+protocols:
+  - http
+  - https

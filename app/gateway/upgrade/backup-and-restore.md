@@ -78,17 +78,16 @@ See the reference for [Entities managed by decK](/deck/reference/entities/) for 
 
 Due to these limitations, we recommend prioritizing the [database-native method](#database-native-backup) in deployments using a database.
 
-## Back up and restore Gateway entities for a {{site.konnect_short_name}} Control Plane
+## Back up and restore Gateway entities for a {{site.konnect_short_name}} control plane
 
-If you're running {{site.base_gateway}} as a Control Plane in {{site.konnect_short_name}}, use decK for backup and restore.
+If you're running {{site.base_gateway}} as a control plane in {{site.konnect_short_name}}, use decK for backup and restore.
 Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
 
 {:.info}
-> **Note:** This method only backs up Control Plane configurations in Gateway Manager. 
 It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on. 
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
-### Back up a {{site.konnect_short_name}} Control Plane
+### Back up a {{site.konnect_short_name}} control plane
 
 Use `deck gateway dump` to back up your configuration:
 
@@ -98,7 +97,7 @@ deck gateway dump -o my-backup.yaml \
   --konnect-control-plane-name $CONTROL_PLANE_NAME
 ```
 
-This command generates a state file for the Control Plane's entity
+This command generates a state file for the control plane's entity
 configuration, for example:
 
 ```yaml
@@ -117,14 +116,14 @@ services:
     ...
 ```
 
-### Restore a {{site.konnect_short_name}} Control Plane
+### Restore a {{site.konnect_short_name}} control plane
 
-You can restore entity configuration for a Control Plane using a declarative configuration file.
+You can restore entity configuration for a control plane using a declarative configuration file.
 You must do this for one group at a time.
 
 Assuming you have a backup file, for example, `my-backup.yaml`:
 
-1. Run a diff between your backup file and the Control Plane in {{site.konnect_short_name}} to 
+1. Run a diff between your backup file and the control plane in {{site.konnect_short_name}} to 
 make sure you're applying the configuration you want:
 
    ```sh
@@ -134,7 +133,7 @@ make sure you're applying the configuration you want:
    ```
 
 2. If you're satisfied with the diff result, run `deck gateway sync` to sync your configuration to 
-a Control Plane:
+a control plane:
 
    ```sh
    deck gateway sync my-backup.yaml \
@@ -142,8 +141,8 @@ a Control Plane:
      --konnect-control-plane-name $CONTROL_PLANE_NAME
    ```
 
-Check your Control Plane in {{site.konnect_short_name}} to make sure the sync worked. 
-Open [Gateway Manager](https://cloud.konghq.com/gateway-manager/), select your Control Plane, and check through the configured entities.
+Check your control plane in {{site.konnect_short_name}} to make sure the sync worked. 
+Open [**API Gateway**](https://cloud.konghq.com/gateway-manager/), select your control plane, and check through the configured entities.
 
 ## Back up and restore Gateway entities in a self-managed deployment
 

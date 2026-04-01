@@ -40,7 +40,7 @@ tags:
 
 search_aliases:
   - events
-  - event gateway
+  - protocol mediation
 
 related_resources:
   - text: Kafka Log plugin

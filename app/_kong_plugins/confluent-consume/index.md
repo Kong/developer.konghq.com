@@ -44,6 +44,7 @@ search_aliases:
   - events
   - confluent cloud
   - kafka
+  - protocol mediation
 
 related_resources:
   - text: Confluent plugin

@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "Fixed an issue where path match pattern failed when `()[]` were in the path pattern.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where empty arrays defined in the mocking plugin schema were incorrectly returned as object types instead of array types in response bodies.\n",

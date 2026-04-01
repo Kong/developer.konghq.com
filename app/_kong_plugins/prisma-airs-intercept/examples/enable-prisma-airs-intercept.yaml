@@ -1,0 +1,24 @@
+description: 'Enable the Prisma AI Runtime Security (AIRS) API Intercept plugin in {{site.base_gateway}} to scan API chat completions traffic for threats.'
+
+title: 'Enable Prisma AIRS API Intercept'
+
+weight: 900
+
+requirements:
+ - "The Prisma AI Runtime Security (AIRS) API Intercept plugin is [installed](/plugins/prisma-airs-intercept/#install-the-prisma-airs-api-intercept-plugin)."
+ - "You have a valid [Prisma AIRS API key](https://docs.paloaltonetworks.com/ai-runtime-security/administration/prevent-network-security-threats/airs-apirs-manage-api-keys-profile-apps)."
+ - "You have created a [Prisma AIRS AI security profile](https://docs.paloaltonetworks.com/network-security/security-policy/administration/security-profiles/ai-security-profile)."
+
+config:
+  api_key: YOUR_API_KEY
+  profile_name: YOUR_PROFILE_NAME
+
+min_version:
+  gateway: '3.4'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

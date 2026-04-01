@@ -1,3 +1,8 @@
 <div class="flex">
-    <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center"><input class="checkbox" type="checkbox" value="{{include.value}}" name="{{include.name}}">{{include.label}}</label>
+    <label class="flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center">
+        <input class="checkbox" type="checkbox" value="{{include.value}}" name="{{include.name}}">{{include.label}}
+        {% if include.tooltip %}
+        {% include tooltip.html text=include.tooltip %}
+        {% endif %}
+    </label>
 </div>

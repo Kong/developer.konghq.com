@@ -1,5 +1,36 @@
+# kongctl
+/kongctl/create/   /kongctl/
+/kongctl/create/*  /kongctl/
+/kongctl/delete/gateway/   /kongctl/delete/
+/kongctl/delete/gateway/*  /kongctl/delete/
+/kongctl/delete/konnect/   /kongctl/delete/
+/kongctl/delete/konnect/*  /kongctl/delete/
+/kongctl/delete/portal/    /kongctl/delete/
+/kongctl/delete/portal/*   /kongctl/delete/
+
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+# Renames
+/mesh-manager/federate-zone/  /mesh/federate-zone/
+/mesh-manager/migrate-zone/  /mesh/migrate-zone/
+/mesh-manager/service-mesh/  /mesh/konnect-global-control-plane/
+/mesh-manager/ /mesh/
+/gateway-manager/aws-private-link/ /gateway/aws-private-link/
+/gateway-manager/data-plane-reference/ /gateway/data-plane-reference/
+/gateway-manager/control-plane-groups/ /gateway/control-plane-groups/
+/gateway-manager/control-plane-resource-limits/ /gateway/control-resource-limits/
+/gateway-manager/konnect-labels/ /konnect-platform/konnect-labels/
+/gateway-manager/version-compatibility/ /gateway/data-plane-version-compatibility/
+/gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
+/gateway-manager/ /gateway/
+/ai-manager/ /ai-gateway/
+/mesh/requirements/ /mesh/version-compatibility/
+/mesh/cp-config/    /mesh/control-plane-configuration/
+/mesh/about/    /mesh/service-mesh/
+/mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
+/mesh/use-kuma/ /mesh/interact-with-control-plane/
+/mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
+/mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
@@ -10,6 +41,11 @@
 ## How-to renames
 /how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
+/mesh/add-builtin-gateway/  /how-to/set-up-a-built-in-mesh-gateway/
+/mesh/gateway-api/  /how-to/set-up-a-built-in-kubernetes-gateway/
+/how-to/send-asychronous-llm-requests/ /how-to/send-asynchronous-llm-requests/
+/how-to/encrypt-kafka-messages-with-event-gateway/ /event-gateway/encrypt-kafka-messages-with-event-gateway/
+/how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
 
 # Mesh redirects
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
@@ -18,14 +54,14 @@
 /mesh/quickstart/universal-demo    /mesh/universal/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
-/mesh/guides/gateway-builtin    /mesh/add-builtin-gateway/
+/mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
 /mesh/guides/gateway-delegated  /mesh/gateway-delegated/
 /mesh/guides/federate   /mesh/federate/
-/mesh/guides/gateway-api    /mesh/gateway-api/
+/mesh/guides/gateway-api    /how-to/set-up-a-built-in-kubernetes-gateway/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
-/mesh/documentation/configuration    /mesh/cp-config/
+/mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
-/mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/managing-ingress-traffic/gateway/
+/mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
 /mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
 /mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/ingress-gateway-delegated/
 /mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/gateway-pods-k8s/
@@ -40,12 +76,12 @@
 /mesh/:version/reference/kuma-cp    /mesh/reference/kuma-cp/
 /mesh/introduction/install/     /mesh/#get-started
 /mesh/explore/cli       /mesh/cli/
-/mesh/production/gui    /mesh/kuma-user-interface-gui/
+/mesh/production/gui    /mesh/interact-with-control-plane/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/mesh   /mesh/mesh-multi-tenancy/
 /mesh/production/dp-config/cni      /mesh/cni/
-/mesh/production/dp-config/transparent-proxying     /mesh/configure-transparent-proxying/
+/mesh/production/dp-config/transparent-proxying     /mesh/transparent-proxying/
 /mesh/production/dp-config/ipv6     /mesh/ipv6-support/
 /mesh/production/secure-deployment/api-access-control   /mesh/enterprise/
 /mesh/production/secure-deployment/dp-auth  /mesh/dp-auth/
@@ -54,7 +90,7 @@
 /mesh/production/deployment/multi-zone      /mesh/mesh-multizone-service-deployment/
 /mesh/production/dp-config/dpp-on-universal     /mesh/data-plane-universal/
 /mesh/production/dp-config/dpp  /mesh/data-plane-proxy/
-/mesh/production/use-mesh       /mesh/use-kuma/
+/mesh/production/use-mesh       /mesh/interact-with-control-plane/
 /mesh/production/cp-deployment/zoneegress   /mesh/zone-egress/
 /mesh/:version/production/cp-deployment/zoneegress   /mesh/zone-egress/
 /mesh/production/secure-deployment/certificates/    /mesh/secure-access/
@@ -62,7 +98,7 @@
 /mesh/production/upgrades-tuning/fine-tuning    /mesh/performance-tuning/
 /mesh/production/cp-deployment/zone-ingress     /mesh/zone-ingress/
 /mesh/production/secure-deployment/api-server-auth  /mesh/authentication-with-the-api-server/
-/mesh/production/upgrades-tuning/upgrade-notes  /mesh/upgrade-notes/
+/mesh/production/upgrades-tuning/upgrade-notes  /mesh/version-specific-upgrade-notes/
 /mesh/production/upgrades-tuning/upgrades      /mesh/upgrade/
 /mesh/production/cp-deployment/zoneproxy-auth   /mesh/zone-proxy-auth/
 /mesh/meshtrafficpermission     /mesh/policies/meshtrafficpermission/
@@ -113,6 +149,10 @@
 ## Event gateway
 
 /knep/get-started/  /event-gateway/get-started/
+/event-gateway/policies/schema-validation/* /event-gateway/policies/
+/event-gateway/get-started/topic-filtering/ /event-gateway/policies/skip-record/
+/event-gateway/get-started/topic-name-aliasing/ /event-gateway/entities/virtual-cluster/#namespaces
+/api/event-gateway/knep/*   /api/konnect/event-gateway/
 
 ## Dev Portal
 
@@ -121,6 +161,8 @@
 /dev-portal/application-registration/   /dev-portal/self-service/
 /dev-portal/access-and-approval/    /dev-portal/self-service/
 /dev-portal/publishing/ /catalog/apis/
+/dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
+/dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
 
 
 # Gateway LTS
@@ -132,20 +174,38 @@
 
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
+/gateway/debugger/  /observability/debugger/
+/gateway/debugger-spans/  /observability/debugger-spans/
 
 
 ## Insomnia
+/insomnia/version-control/ /insomnia/storage/
 /insomnia/concepts/ /insomnia/terminology/
 /insomnia/install/ /insomnia/#install-insomnia
+/how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 
 ## Indices
 
 /index/konnect-platform/  /index/konnect/
 
 
-## KGO
+## Kong Operator
 
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
+/operator/konnect/crd/gateway/hybrid/ /operator/get-started/gateway-api/deploy-gateway/
+/operator/konnect/get-started/install/ /operator/get-started/konnect-crds/install/
+/operator/konnect/get-started/authentication/ /operator/get-started/konnect-crds/authentication/
+/operator/konnect/get-started/control-plane/ /operator/get-started/konnect-crds/controlplane/
+/operator/konnect/get-started/service-and-route/ /operator/get-started/konnect-crds/service-and-route/
+/operator/konnect/get-started/proxy-caching/ /operator/get-started/konnect-crds/proxy-caching/
+/operator/konnect/get-started/key-authentication/ /operator/get-started/konnect-crds/key-authentication/
+/operator/dataplanes/get-started/hybrid/deploy-dataplane/ /operator/konnect/crd/dataplane/hybrid/
+/operator/dataplanes/get-started/hybrid/create-route/ /operator/get-started/gateway-api/create-route/
+/operator/dataplanes/get-started/hybrid/install/ /operator/get-started/gateway-api/install/
+/operator/dataplanes/get-started/kic/create-gateway/ /operator/get-started/gateway-api/deploy-gateway/
+/operator/dataplanes/get-started/kic/create-route/ /operator/get-started/gateway-api/create-route/
+/operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
+/operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
 
 # Service Catalog rename
 
@@ -154,3 +214,18 @@
 /dev-portal/apis/ /catalog/apis/
 /index/service-catalog/ /index/catalog/
 /index/reference-platform/ /index/konnect-reference-platform/
+
+# Cloud Gateways
+
+/dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
+/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/reference/#managed-cache-for-redis 301
+
+# Observability rename
+/advanced-analytics/*   /observability/:splat   301
+/advanced-analytics     /observability          301
+/index/advanced-analytics/  /index/observability/  301
+/advanced-analytics/custom-dashboards/    /custom-dashboards/ 301
+
+# Kong Konnect MCP server
+/mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
+/mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/

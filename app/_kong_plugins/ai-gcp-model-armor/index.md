@@ -64,7 +64,7 @@ next_steps:
     url: /how-to/use-ai-gcp-model-armor-plugin/
 ---
 
-The **GCP Model Armor** plugin integrates Kong AI Gateway with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
+The **GCP Model Armor** plugin integrates {{site.ai_gateway}} with [Google Cloud’s Model Armor](https://cloud.google.com/security-command-center/docs/model-armor-overview) service to enforce content safety guardrails on AI requests and responses.
 It leverages GCP SaaS APIs to inspect prompts and model outputs, preventing unsafe content from being processed or returned to users.
 
 ## Features
@@ -154,6 +154,16 @@ rows:
 {:.warning}
 > **Caution**: Do **not** set the Model Armor Floor Setting directly in GCP, as it will cause conflicts with this plugin.
 See the [FAQ entry for this error](#what-do-i-do-if-i-see-the-error-blocked-by-model-armor-floor-setting) for more information.
+
+## Unrecognized filters {% new_in 3.14 %}
+
+The plugin now blocks requests when GCP Model Armor returns a filter result with an unrecognized or new filter type. Previously, unrecognized filter types were silently ignored. To avoid blocked requests, review your Model Armor template and ensure it only includes filter types the plugin supports.
+
+## Logging
+
+The AI GCP Model Armor plugin emits structured log data for every inspected request and response. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-gcp-model-armor-logs).
+
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/plugins/ai-gcp-model-armor/reference/#schema--config-log-blocked-content). {% new_in 3.14 %} When enabled, the blocked prompt or response body appears under `ai.proxy.gcp-model-armor.input_faulty_prompt` and `ai.proxy.gcp-model-armor.output_faulty_response` in the log entry.
 
 ## Limitations
 

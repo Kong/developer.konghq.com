@@ -1,4 +1,11 @@
 {
+  "3.13.0.0": [
+    {
+      "message": "added support for the `tls_certificate_verify` global option.\nWhen this option is enabled, the plugin's `https_verify` flag cannot be disabled.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.6.0.0": [
     {
       "message": "azure-functions plugin now eliminates upstream/request URI and only use `routeprefix` configuration field to construct request path when requesting Azure API",

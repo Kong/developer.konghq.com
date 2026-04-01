@@ -1,11 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.0.10
+  version: 3.3.0
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
+  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -434,6 +436,9 @@ paths:
       summary: List Credentials
       description: |
         Lists the credentials for an application.
+        Response varies by auth strategy type:
+        - For Client-Credential applications: Returns the ID of each credential
+        - For Key-Auth applications: Returns the ID and name of each credential
         Basic information about the credential is returned, but not the credential secret itself.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
@@ -455,7 +460,13 @@ paths:
     post:
       operationId: create-credential
       summary: Create Credential
-      description: Allows a developer to create a credential for an application they own.
+      description: |
+        Allows a developer to create a credential for an application they own.
+        Creates credential based on application's auth strategy:
+        - For Client-Credential applications: Creates new client secret
+        - For Key-Auth applications: Creates new API key credential
+        Some Client Credentials applications may not support setting a display_name.
+        Secret value (`client_secret` for Client Credentials, `credential` for Key Auth API keys) is only returned on creation (one-time), not in subsequent list operations.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
       requestBody:
@@ -479,7 +490,11 @@ paths:
     put:
       operationId: update-credential
       summary: Update Credential
-      description: Updates a credential for an application owned by the current logged in developer.
+      description: |
+        Updates a credential for an application owned by the current logged in developer.
+        Updates credential metadata (display_name).
+        Some Client Credentials applications may not support setting a display_name.
+        Returns 400 error if operation not supported for Client Credentials.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
         - $ref: '#/components/parameters/CredentialId'
@@ -501,7 +516,8 @@ paths:
     delete:
       operationId: delete-credential
       summary: Delete Credential
-      description: Deletes a credential for an application they own.
+      description: |
+        Deletes a credential for an application they own.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
         - $ref: '#/components/parameters/CredentialId'
@@ -687,7 +703,7 @@ paths:
       security:
         - {}
       tags:
-        - Content
+        - Portal
   /api/v3/developer:
     post:
       operationId: register
@@ -852,6 +868,18 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/integrations:
+    get:
+      operationId: get-portal-integrations
+      summary: Get Portal Integration Configurations
+      description: Returns the portal's integration configurations.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+      security:
+        - {}
+      tags:
+        - Portal
   /api/v3/pages:
     get:
       operationId: list-portal-pages
@@ -1083,10 +1111,11 @@ components:
       name: credentialId
       in: path
       required: true
-      description: Id of the targeted credential
+      description: |
+        Id of the targeted credential.
+        Use the list-credentials endpoint to obtain the `id` field for each credential.
       schema:
         type: string
-        format: uuid
     DocumentIdOrSlug:
       name: documentIdOrSlug
       schema:
@@ -2380,6 +2409,22 @@ components:
           type: array
           items:
             type: string
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
       additionalProperties: false
       required:
         - id
@@ -3115,6 +3160,29 @@ components:
             type: string
           example:
             - apikey
+        ttl:
+          description: Default maximum Time-To-Live for keys created under this strategy.
+          type: object
+          properties:
+            value:
+              type: integer
+              minimum: 1
+            unit:
+              type: string
+              enum:
+                - days
+                - weeks
+                - years
+          required:
+            - value
+            - unit
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            Always `true` for KEY_AUTH.
+          type: boolean
+          default: true
+          readOnly: true
       required:
         - id
         - name
@@ -3143,6 +3211,13 @@ components:
             - self_managed_client_credentials
         auth_methods:
           $ref: '#/components/schemas/AuthMethods'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            - `true` for Key Auth strategies and when supported for Client Credentials strategies
+            - `false` when not supported for Client Credentials strategies
+          type: boolean
+          readOnly: true
       required:
         - id
         - name
@@ -3195,6 +3270,78 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Too Many Requests
+    ApiKeyCredentialListItem:
+      description: API key credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - api_key
+          readOnly: true
+        id:
+          $ref: '#/components/schemas/UUID'
+        display_name:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - display_name
+        - created_at
+    ClientSecretCredentialListItem:
+      description: Client secret credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          description: May not be available for all Client Credentials applications
+          type: string
+          nullable: true
+        client_id:
+          description: OAuth2 client identifier
+          type: string
+          readOnly: true
+        created_at:
+          description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - created_at
+    CredentialListItem:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialListItem'
+        - $ref: '#/components/schemas/ClientSecretCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -3203,16 +3350,7 @@ components:
         data:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            properties:
-              id:
-                $ref: '#/components/schemas/UUID'
-              display_name:
-                type: string
-            required:
-              - id
-              - display_name
+            $ref: '#/components/schemas/CredentialListItem'
       additionalProperties: false
       required:
         - data
@@ -3224,20 +3362,83 @@ components:
           type: string
           maxLength: 255
       additionalProperties: false
-    CredentialCreationResponse:
+    ApiKeyCredentialCreationResponse:
+      description: Response when creating an API key credential.
       type: object
       properties:
-        credential:
+        type:
           type: string
+          enum:
+            - api_key
+          readOnly: true
         id:
           $ref: '#/components/schemas/UUID'
         display_name:
           type: string
+        credential:
+          description: The API key value (only returned on creation)
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
-        - credential
+        - type
         - id
         - display_name
+        - credential
+        - created_at
+    ClientSecretCredentialCreationResponse:
+      description: Response when creating a client secret credential.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          type: string
+          nullable: true
+        client_id:
+          type: string
+          readOnly: true
+        client_secret:
+          description: Client secret value (only returned on creation)
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - client_secret
+        - created_at
+    CredentialCreationResponse:
+      type: object
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
+        - $ref: '#/components/schemas/ClientSecretCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:
@@ -3542,7 +3743,7 @@ components:
               type: boolean
               default: true
             try_it_insomnia:
-              description: Enables users to open the API spec in Insomnia to explore and send requests with the native client.
+              description: Enables users to open API specifications in Insomnia to explore and send requests with the native client. Only public API specifications are supported.
               type: boolean
               default: true
             infinite_scroll:
@@ -3570,6 +3771,17 @@ components:
           nullable: true
       additionalProperties: false
       title: PortalCustomization
+    PortalIntegrations:
+      description: Configuration data for Dev Portal integrations
+      type: object
+      properties:
+        google_tag_manager:
+          $ref: '#/components/schemas/GoogleTagManagerIntegration'
+        google_analytics_4:
+          $ref: '#/components/schemas/GoogleAnalytics4Integration'
+      default: {}
+      additionalProperties: false
+      title: Portal Integrations
     PageId:
       description: The unique identifier of the page
       type: string
@@ -3828,6 +4040,120 @@ components:
       required:
         - title
         - items
+    GoogleTagManagerIntegration:
+      description: Google Tag Manager integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - tracking
+        config_data:
+          description: Configuration data for the Google Tag Manager integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Tag Manager container ID
+              type: string
+              example: GTM-XXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^GTM-[A-Za-z0-9]+$'
+              x-validation-message: 'must be a valid GTM container ID (format: GTM-XXXXXX)'
+            l:
+              description: Optional dataLayer variable name
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            preview:
+              description: Preview environment name
+              type: string
+              example: preview
+              maxLength: 100
+              nullable: true
+            cookies_win:
+              description: Forces GTM cookies to take precedence when true
+              type: boolean
+              nullable: true
+            debug:
+              description: Enables debug mode when true
+              type: boolean
+              nullable: true
+            npa:
+              description: No Personal Advertising - disables advertising features when true
+              type: boolean
+              nullable: true
+            data_layer:
+              description: Custom dataLayer name (alternative to "l" property)
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            env_name:
+              description: Environment name for environment-specific container
+              type: string
+              example: production
+              maxLength: 100
+              nullable: true
+            auth_referrer_policy:
+              description: Referrer policy for analytics requests
+              type: string
+              example: no-referrer
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
+    GoogleAnalytics4Integration:
+      description: Google Analytics integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - analytics
+        config_data:
+          description: Configuration data for the Google Analytics integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Analytics measurement ID
+              type: string
+              example: G-XXXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^G-[A-Za-z0-9-]+$'
+              x-validation-message: 'must be a valid Google Analytics ID (format: G-XXXXXXX)'
+            l:
+              description: The datalayer's name you want data to be associated with
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
     CreateApiRegistrationPayload:
       description: The payload to create a registration.
       type: object
@@ -4489,6 +4815,50 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ListApiKeyCredentialsExample:
+      value:
+        data:
+          - type: api_key
+            id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            display_name: My API Key
+            status: active
+            expires_at: '2025-12-31T23:59:59.000Z'
+            created_at: '2025-01-01T00:00:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ListClientSecretCredentialsExample:
+      value:
+        data:
+          - type: client_secret
+            id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+            display_name: null
+            client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+            created_at: '2024-01-15T10:30:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ApiKeyCredentialCreationResponseExample:
+      value:
+        type: api_key
+        id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        display_name: My API Key
+        credential: sk_live_abc123def456
+        status: active
+        expires_at: null
+        created_at: '2025-01-01T00:00:00.000Z'
+    AzureClientSecretCredentialCreationResponseExample:
+      value:
+        type: client_secret
+        id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+        display_name: null
+        client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+        client_secret: azR~8Q~abcdefghijklmnopqrstuvwxyz123456
+        created_at: '2024-01-15T10:30:00.000Z'
     PostCredentials403Example:
       value:
         status: 403
@@ -4944,12 +5314,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ListCredentialsResponse'
+          examples:
+            ListApiKeyCredentials:
+              $ref: '#/components/examples/ListApiKeyCredentialsExample'
+            ListClientSecretCredentials:
+              $ref: '#/components/examples/ListClientSecretCredentialsExample'
     CredentialCreation:
       description: Credential Creation success
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/CredentialCreationResponse'
+          examples:
+            ApiKeyCredentialCreationResponse:
+              $ref: '#/components/examples/ApiKeyCredentialCreationResponseExample'
+            ClientSecretCredentialCreationResponse:
+              $ref: '#/components/examples/AzureClientSecretCredentialCreationResponseExample'
     PostCredentials403Response:
       description: Error returned when the number of credentials exceed the quota.
       content:
@@ -5125,6 +5505,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomization'
+    PortalIntegrationsResponse:
+      description: Response for portal integration configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIntegrations'
     CreateAPIRegistration:
       description: Registration creation response.
       content:

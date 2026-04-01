@@ -18,12 +18,12 @@ class Accordion {
     if (this.allExpanded) {
       if (!this.multipleItems) {
         console.log(
-          'Accordion Error: data-all-expanded is valid only if data-multiple="true".'
+          'Accordion Error: data-all-expanded is valid only if data-multiple="true".',
         );
       }
       if (this.defaultItem) {
         console.log(
-          "Accordion Error: data-all-expanded and data-default are mutually exclusive."
+          "Accordion Error: data-all-expanded and data-default are mutually exclusive.",
         );
       }
     }
@@ -41,7 +41,7 @@ class Accordion {
     let hashItemIndex;
     if (hash) {
       const itemIndex = this.items().findIndex((item) =>
-        item.querySelector(`:scope > .accordion-trigger[id="${hash}"]`)
+        item.querySelector(`:scope > .accordion-trigger[id="${hash}"]`),
       );
       if (itemIndex !== -1) {
         hashItemIndex = itemIndex;
@@ -69,7 +69,7 @@ class Accordion {
     if (item.getAttribute("aria-expanded") === "true") {
       this.closeItem(index);
     } else {
-      this.openItem(index);
+      this.openItem(index, true);
     }
   }
 
@@ -84,7 +84,7 @@ class Accordion {
     panel.setAttribute("aria-hidden", "true");
   }
 
-  openItem(index) {
+  openItem(index, scroll) {
     const item = this.items().at(index);
     item.setAttribute("aria-expanded", "true");
     item.querySelector("span.chevron-icon").classList.add("rotate-180");
@@ -93,6 +93,13 @@ class Accordion {
     panel.classList.remove("hidden");
     panel.hidden = false;
     panel.setAttribute("aria-hidden", "false");
+
+    // Scroll into view after a brief delay to account for content expansion
+    if (scroll) {
+      setTimeout(() => {
+        this.accordion.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 50);
+    }
   }
 
   addEventListeners() {
@@ -130,7 +137,7 @@ class Accordion {
 
   items() {
     return Array.from(
-      this.accordion.querySelectorAll(":scope > .accordion-item:not(.hidden)")
+      this.accordion.querySelectorAll(":scope > .accordion-item:not(.hidden)"),
     );
   }
 }

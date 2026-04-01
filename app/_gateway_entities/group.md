@@ -68,11 +68,7 @@ This happens in the following order:
 
 <!--For more information, read the [LDAP Service Directory Mapping](/gateway/ldap-service-directory-mapping/) documentation.-->
 
-## Schema
-
-{% entity_schema %}
-
-## Create a group
+## Create an RBAC Group
 
 Creating an RBAC Group requires [RBAC to be enabled](/gateway/entities/rbac/#enable-rbac) for {{site.base_gateway}}.
 
@@ -82,3 +78,7 @@ data:
   name: my-group
   comment: A description associated with this group.
 {% endentity_example %}
+
+## Schema
+
+{% entity_schema %}

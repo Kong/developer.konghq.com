@@ -64,6 +64,8 @@ module Jekyll
               keys = foreign_keys.map do |key|
                 next '`service`' if key == 'Service'
                 next '`httproute` or `ingress`' if key == 'Route'
+                next '`KongRoute`' if key == 'Kongroute'
+                next '`KongService`' if key == 'Kongservice'
 
                 "`Kong#{key}`"
               end

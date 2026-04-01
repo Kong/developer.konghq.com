@@ -54,4 +54,4 @@ To migrate from Dev Portal classic (v2) to the new Dev Portal (v3), do the follo
    1. Add the custom domain to the v3 Dev Portal.
 1. If you've enabled developer RBAC, manually assign developers to teams and roles by navigating to your v3 Dev Portal in {{site.konnect_short_name}}, clicking **Access and approvals** in the sidebar, and click the **Teams** tab.
    {:.warning}
-   > For self-hosted Dev Portals, [contact Kong support](https://support.konghq.com) for help.
+   > For self-hosted Dev Portals, contact Kong Support by navigating to the **?** icon on the top right menu and clicking **Create support case** or from the [Kong Support portal](https://support.konghq.com).

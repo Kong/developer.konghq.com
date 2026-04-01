@@ -43,10 +43,16 @@ related_resources:
   - text: Link static clients with self-managed OIDC
     url: /dev-portal/auth-strategies/#link-static-clients-with-self-managed-oidc
 faqs:
+  - q: What should I do if my IdP is not natively supported for the DCR flow?
+    a: "{{site.konnect_short_name}} supports a custom HTTP DCR bridge that you can use with any third-party IdP that isn't natively supported."
   - q: What connections and protocols are involved between Dev Portal and our organization when DCR is enabled?
     a: "{{site.konnect_short_name}} will make HTTP requests to the IdP for DCR. The details of the request are IdP-specific."
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
     a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
+  - q: Does revoking a credential immediately invalidate it, or can it still be used for some time after revocation?
+    a: |
+      By default, credentials are cached and can be used for a short time period even after they have been revoked. 
+      If you want credentials to be revoked immediately, edit the auth strategy that uses HTTP DCR bridge to set `cache_tokens` to `false`.
 ---
 Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
@@ -209,15 +215,7 @@ After successfully authenticating using either client credentials or a bearer ac
 
 ## Configure a custom IdP for Dynamic Client Registration
 
-{{site.konnect_short_name}} Dev Portal supports a variety of the most widely adopted identity provider (IdP) for Dynamic Client Registration (DCR):
-
-* Auth0
-* Azure
-* Curity
-* Okta
-* Kong Identity
-
-If your third-party IdP is not on this list, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP.
+If your third-party IdP isn't natively supported, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP, and add additional functionality such as making API calls to other systems as part of the DCR flow.
 
 {% mermaid %}
 sequenceDiagram
@@ -240,3 +238,37 @@ sequenceDiagram
 To use an unsupported IdP with DCR, you must implement an API that conforms to the [{{site.konnect_short_name}} Dev Portal DCR Handler spec](https://github.com/Kong/konnect-portal-dcr-handler/blob/main/openapi/openapi.yaml). Kong provides an example reference implementation in the [{{site.konnect_short_name}} Dev Portal DCR Handler repository](https://github.com/Kong/konnect-portal-dcr-handler). This is an example HTTP DCR bridge implementation and is not meant to be deployed in production. We encourage you to use this implementation as a guide to create your own implementation.
 
 Any request that does not return a `2xx` status code is considered a failure and will halt the application creation process in your {{site.konnect_short_name}} Dev Portal.
+
+### Managing credentials
+
+Dev Portal developers can manage their application credentials through their applications page without needing a Dev Portal admin's assistance. 
+Developers can maintain multiple active credentials, allowing them to assign different credentials to each service consuming their application and revoke credentials as needed. The number of active credentials supported per application is determined by the identity provider configured in the HTTP DCR bridge.
+
+{:.warning}
+> Maintaining multiple credentials for one application is currently available only for HTTP DCR bridge.
+
+Dev Portal admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and Dev Portal admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
+
+Developers can view credential IDs by opening an application in their Dev Portal, and checking its **Credentials** tab. Application credentials values are not visible after creation. Developers can revoke credentials directly from the **Credentials** tab.
+
+#### Rotate a credential
+
+When developers need to replace a credential with a new one, they can rotate the credential manually through an application's configuration page in their Dev Portal:
+
+1. In your Dev Portal, click your profile and select **My applications**.
+1. Open an application.
+1. Click the **Credentials** tab.
+1. Click **New Credential**.
+1. Copy and save the secret somewhere safe. You won't see this key again.
+1. Click **Copy and close** to save.
+1. Test the new credential by using it in the same workflow as the old one.
+1. When you're ready, delete the old credential:
+   1. Click the **Credentials** tab.
+   1. Click the action menu for the old credential.
+   1. Select **Revoke**.
+   1. Enter `revoke`.
+   1. Click **Revoke**.
+
+Developers can also manage their application credentials using the [Portal API](/api/konnect/portal-management/v3/).
+
+To make sure that their developers have access to the credential API endpoints, Dev Portal admins must ensure that the HTTP DCR bridge supports credential rotation based on the provided API spec.

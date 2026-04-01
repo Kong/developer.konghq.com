@@ -18,7 +18,7 @@ breadcrumbs:
 ## Using DataPlane
 
 {:.warning}
-> This method is only available when running in [hybrid mode](/operator/dataplanes/get-started/hybrid/install/).
+> This method is only available when running in [hybrid mode](/operator/get-started/gateway-api/install/).
 
 To change the image used for your `DataPlane` resources, set the `spec.deployment.podTemplateSpec.spec.containers[].image` field in your resource:
 
@@ -31,7 +31,7 @@ Once the resource is saved, Kubernetes will perform a rolling upgrade of your `P
 ## Using GatewayConfiguration
 
 {:.warning}
-> This method is only available when running in [KIC mode](/operator/dataplanes/get-started/kic/install/).
+> This method is only available when running in [KIC mode](/operator/get-started/gateway-api/install/).
 
 The `GatewayConfiguration` API can be used to provide the image and the image version desired for either the `ControlPlane` or `DataPlane` component of the `Gateway`. For example:
 

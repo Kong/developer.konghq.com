@@ -27,6 +27,13 @@ related_resources:
     url: /dev-portal/authentication-strategies/
   - text: Dev Portal developer RBAC
     url: /dev-portal/developer-rbac/
+
+faqs:
+  - q: |
+      I've logged into the Dev Portal and want to use the Dev Portal API to manage my assets, but it asks for a `portalaccesstoken`. 
+      What is this token and where can I find it?
+    a: |
+      {% include_cached /dev-portal/portal-access-token.md %}
 ---
 
 The Dev Portal enables you to quickly get access to your APIs of interest, in a self-serve way. 

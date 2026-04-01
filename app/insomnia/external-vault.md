@@ -22,13 +22,25 @@ related_resources:
     url: /insomnia/storage/
   - text: Git sync
     url: /insomnia/storage/#git-sync
-min_version:
-  insomnia: '11'
+
+faqs:
+  - q: What happens if I clear cloud credentials when I sign out of Insomnia?
+    a: | 
+      When you sign out of Insomnia, you can choose to clear all of your stored cloud credentials. This removes any saved credentials used by External Vault providers from your local Insomnia configuration.
+
+      Clearing cloud credentials doesn't break External Vault integrations. Insomnia supports External Vault providers even when credential fields are empty. This allows you to sign out securely without losing your vault setup.
+
+      After signing back in, you might need to re-authenticate or provide credentials again, depending on how the cloud provider handles authentication.
+  - q: Do empty credential configurations work across all External Vault cloud providers?
+    a: | 
+      Yes. External Vault supports empty credential configurations across all supported cloud providers.
+
+      This means that your external vault integrations continue to work even when credential fields are empty. Insomnia can operate without permanently storing cloud credentials in the configuration.
 ---
 
 Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
 
-You can configure vault integration from the Insomnia UI, in **Preferences > Cloud Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
+You can configure vault integration from the Insomnia UI, in **Preferences > Credentials**, and in [Inso CLI](/inso-cli/), using environment variables.
 
 Insomnia supports the following vault services:
 
@@ -43,8 +55,9 @@ Insomnia supports the following vault services:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials** and select **AWS**.
+1. Navigate to **Preferences > Credentials** or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **AWS**.
 1. Select a **Credential Type** and fill in the required fields.
     
 {% endnavtab %}
@@ -98,8 +111,9 @@ There are three options to authenticate to your AWS vault from Inso CLI:
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
+1. Navigate to **Preferences > Credentials** or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **GCP**, and upload your [service account key](https://cloud.google.com/iam/docs/keys-create-delete).
 {% endnavtab %}
 
 {% navtab "Inso CLI" %}
@@ -116,8 +130,10 @@ export INSOMNIA_GCP_SERVICEACCOUNTKEYFILEPATH = 'GCP SERVICE ACCOUNT KEY FILE PA
 
 {% navtab "Insomnia UI" %}
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **HashiCorp**, and choose your environment:
+1. Navigate to **Preferences > Credentials** or **Cloud Credentials**.
+1. For Service Provider Credential List, click **Add Credentials**.
+1. Select **HashiCorp**.
+1. Choose your environment:
     * For HashiCorp Cloud Platform, select **Cloud** and provide credentials using a [service principal](https://developer.hashicorp.com/hcp/docs/hcp/iam/service-principal#create-a-service-principal) client ID and client secret.
     * For HashiCorp Vault Server, select **On-Premises** and choose an authentication method:
         * With [**AppRole**](https://developer.hashicorp.com/vault/docs/auth/approle), enter the server address, role ID, and secret ID.
@@ -157,10 +173,27 @@ For HashiCorp, the environment variables to define for Inso CLI depend on the pl
 
 ## Azure Key Vault
 
-1. Navigate to **Preferences > Cloud Credentials**.
-1. Click **Add Credentials**, select **Azure**.
+When you connect Insomnia to Azure Key Vault, Azure prompts for OAuth consent in a browser. The requested scopes define the permissions Insomnia uses to authenticate and access secrets.
+
+Use the following required scopes:
+- `openid`: Support sign-in with Microsoft Entra ID.
+- `profile`: Provide basic account information that's required for authentication.
+- `offline_access`: Allow authentication to persist without repeated sign-in.
+- `user_impersonation`: Grant delegated access to Azure Key Vault and allow secret retrieval using the signed-in user’s existing permissions.
+
+Azure enforces these permissions during consent and applies Key Vault access control based on the user’s assigned roles. For more information about required scopes, go to [Scopes and permissions](https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc).
+
+To choose Azure Key Vault:
+1. In the Insomnia app, from your account settings, click **Preferences**.
+1. Click the **Cloud Credentials** tab.
+1. Click **Add Credentials**.
+1. Click **Azure**.
 1. You will be redirected to authorize Insomnia in your browser.
 1. After authorization, you'll return to Insomnia with your Azure account credential added.
+
+{:.info}
+> Azure Key Vault access uses delegated permissions. The Azure account that you sign in with in Insomnia, the Azure app registration, and the Azure Key Vault must belong to the same Azure organization, unless cross-organization access is explicitly configured in Azure. If these are in different organizations, Azure can deny access even when the correct scopes are granted.
+
 
 ## Using secrets
 
@@ -174,4 +207,4 @@ External vault secrets can be referenced anywhere in Insomnia requests using [te
 Vault secret caching works like the following in Insomnia:
 - Secrets retrieved from cloud vault services are cached in memory for 30 minutes by default.
 - If the cache expires or is missing, Insomnia re-fetches the secret automatically.
-- You can configure cache duration and reset the cache in **Preferences > Cloud Credentials**.
+- You can configure cache duration and reset the cache in **Preferences > Credentials**.

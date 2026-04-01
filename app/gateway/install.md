@@ -1,6 +1,6 @@
 ---
 title: Install {{site.base_gateway}}
-subtitle: "{{site.base_gateway}} is a low-demand, high-performing API gateway. You can set up {{site.base_gateway}} with Konnect, or install it on various self-managed systems."
+subtitle: "Set up {{site.base_gateway}} with {{site.konnect_short_name}}, or install it on self-managed infrastructure."
 
 description: "Install {{site.base_gateway}} on your preferred platform."
 
@@ -40,6 +40,28 @@ faqs:
 
         1. Confirm that all of the entities are now available on your {{site.ee_product_name}} node.
         1. (Optional) [Upgrade](/gateway/upgrade/) to your desired version of {{site.ee_product_name}}. 
+  - q: "How do I install {{site.base_gateway}} on Windows?"
+    a: |
+      To install {{site.base_gateway}} on Windows, use [Docker](#docker). Kong does not provide a native Windows install method for {{site.base_gateway}}.
+  - q: Where can I find all supported platforms and packaging options? 
+    a: |
+      To find all supported platforms and package types for {{site.base_gateway}}, see the [supported platforms and versions](/gateway/version-support-policy/#supported-versions) in the {{site.base_gateway}} version support policy.
+      
+      If you don't see your {{site.base_gateway}} version here, it has reached end of life and Kong no longer publishes any packages or images for it.
+  - q: How do I install a downloaded package file?
+    a: |
+      If you have already downloaded a {{site.base_gateway}} package file, you can install it using your package manager. 
+      
+      For `.deb` files:
+
+      ```sh
+      sudo apt install --yes /path/to/kong-enterprise-edition_{{ include.release.major_minor_version }}_amd64.deb
+      ```
+
+      For `.rpm` files:
+      ```
+      sudo yum install -y kong-enterprise-edition-{{ include.release.major_minor_version }}
+      ```
 
 no_wrap: true
 versioned: true
@@ -50,6 +72,8 @@ next_steps:
 
 {% include install/gateway.html %}
 
+{% unless page.output_format == 'markdown' %}
 {% include sections/faq.html %}
 
 {% include sections/next_steps.html %}
+{% endunless %}
