@@ -13,11 +13,11 @@ works_on:
     - konnect
 
 tags:
-    - event-gateway
-    - kafka
-    - confluent
-    - schema-registry
-    - avro
+  - event-gateway
+  - kafka
+  - confluent
+  - schema-registry
+  - avro
 
 description: "Enforce Avro schema validation on produced messages using the Confluent Schema Registry and {{site.event_gateway}}."
 
@@ -100,8 +100,9 @@ body:
 extract_body:
   - name: id
     variable: VIRTUAL_CLUSTER_ID
-capture: VIRTUAL_CLUSTER_ID
-jq: ".id"
+capture: 
+  - variable: VIRTUAL_CLUSTER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -123,8 +124,9 @@ body:
 extract_body:
   - name: id
     variable: LISTENER_ID
-capture: LISTENER_ID
-jq: ".id"
+capture:
+  - variable: LISTENER_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -165,8 +167,9 @@ body:
 extract_body:
   - name: id
     variable: SCHEMA_REGISTRY_ID
-capture: SCHEMA_REGISTRY_ID
-jq: ".id"
+capture:
+  - variable: SCHEMA_REGISTRY_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 
