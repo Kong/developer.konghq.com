@@ -28,6 +28,21 @@ features:
       * `\t`: Horizontal tab character
       * `\\`: The `\` character
       * `\"`: The `"` character
+      <br><br>
+       
+      In addition, expressions support raw string literals, like `r#"content"#`. This feature is useful if you want to write a regex and repeated escaping becomes tedious to deal with.
+      <br><br>
+      For example, if you want to match `http.path` against `/\d+\-\d+` using the regex `~` operator, the predicate will be written as the following with string literals:
+      <br>
+      ```text
+      http.path ~ "/\\d+\\-\\d+"
+      ```
+      <br>
+      With raw string literals, you can write:
+      <br>
+      ```text
+      http.path ~ r#"/\d+\-\d+"#
+      ```
     field_type: true
     constant_type: true
   - title: |
