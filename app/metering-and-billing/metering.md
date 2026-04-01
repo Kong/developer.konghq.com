@@ -135,6 +135,7 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+For {{site.konnect_short_name}}, you can either use the built-in {{site.metering_and_billing}} event ingestion that uses events from Advanced Analytics or use the [Metering & Billing plugin](/plugins/metering-and-billing/).
 {% include /plugins/metering-and-billing/konnect-use-case-table.md %}
 For more information, see the [Metering & Billing plugin](/plugins/metering-and-billing/).
 
