@@ -17,9 +17,9 @@ config:
   policies:
   - match:
     - type: header
-      key: ${name}
+      key: ${header_name}
       values:
-      - ${value}
+      - ${header_value}
     limits:
       - limit: 100
         window_size: 60
@@ -27,10 +27,10 @@ config:
         window_size: 3600
 
 variables:
-  name:
+  header_name:
     value: $HEADER_NAME
     description: The name of the header.
-  value:
+  header_value:
     value: $HEADER_VALUE
     description: The value of the header to rate limit.
 

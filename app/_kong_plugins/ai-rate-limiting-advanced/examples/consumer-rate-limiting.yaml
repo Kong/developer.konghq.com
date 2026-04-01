@@ -20,7 +20,7 @@ config:
     - type: consumer
       key: id
       values:
-      - ${consumer}
+      - ${consumer_id}
     limits:
       - limit: 100
         window_size: 60
@@ -28,7 +28,7 @@ config:
         window_size: 3600
 
 variables:
-  consumer:
+  consumer_id:
     value: $CONSUMER_ID
     description: The ID of the Consumer to rate limit.
 
