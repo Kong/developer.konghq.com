@@ -630,8 +630,8 @@
     "config.key"
   ],
   "metering-and-billing": [
-    "config.auth_token",
-    "config.http_endpoint"
+    "config.api_token",
+    "config.ingest_endpoint"
   ],
   "oauth2-introspection": [
     "config.authorization_value"
