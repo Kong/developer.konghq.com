@@ -195,7 +195,7 @@ rows:
 
 Choose the method your IdP supports. Most IdPs support both; some (e.g., certain enterprise IdPs) may only accept one.
 
-### Example 1: Client Credentials Grant (with token_endpoint)
+### Client credentials grant (with token endpoint)
 
 This is the most common pattern for service-to-service authentication, where {{site.base_gateway}} uses `client_id` and `client_secret` to obtain a token.
 
@@ -236,7 +236,7 @@ pg_ssl_verify=on
 {% endnavtab %}
 {% endnavtabs %}
 
-### Example 2: Client Credentials Grant (with discovery_endpoint)
+### Client credentials grant (with discovery endpoint)
 
 Use this variant when you prefer not to hardcode the token endpoint URL, {{site.base_gateway}} resolves it automatically from the OIDC discovery document.
 
@@ -277,7 +277,7 @@ pg_ssl_verify=on
 {% endnavtab %}
 {% endnavtabs %}
 
-### Example 3: Password Grant
+### Password grant
 
 Use this grant type when the IdP requires resource owner credentials.
 
@@ -322,7 +322,7 @@ pg_ssl_verify=on
 {% endnavtab %}
 {% endnavtabs %}
 
-### Example 4: Password Grant with ADFS
+### Password grant with ADFS
 
 ADFS (Active Directory Federation Services) typically uses password grant with a `resource` parameter to identify the target application, and may use a public client (no `client_secret`).
 
@@ -432,5 +432,5 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{:.note}
+{:.info}
 > All parameters also have `pg_ro_oauth_*` variants for read-only replica connections.
