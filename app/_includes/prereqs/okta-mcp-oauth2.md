@@ -49,7 +49,7 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 3. Application type: **Web Application**
 4. App integration name: `Kong MCP Gateway`
 5. Grant types: check **Client Credentials** and **Authorization Code**.
-6. Sign-in redirect URIs: Select **Allow wildcard * in login URI redirect** set to any valid URL (for example, `http://127.0.0.1/*/callback`). {{site.ai_gateway}} does not use the redirect flow for this app, but Okta requires the field.
+6. Set Sign-in redirect URIs to any valid URL (for example, `http://localhost/unused`). Kong does not use the redirect flow for this app, but Okta requires the field.
 7. Assignments: **Skip group assignment for now**
 8. Click **Save**.
 9. Copy the **Client ID** and **Client Secret**. These go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config.
