@@ -2,59 +2,108 @@
 title: Kong PostgreSQL OAUTHBEARER Authentication
 content_type: reference
 layout: reference
+
+breadcrumbs:
+  - /gateway/
+
 products:
   - gateway
+
 works_on:
-  - self-managed
-description: Configure Kong Gateway to authenticate to PostgreSQL using OAUTHBEARER SASL and an OAuth access token.
+  - on-prem
+
+min_version:
+  gateway: '3.14'
+
+tags:
+  - database
+  - authentication
+
+description: Configure {{site.base_gateway}} to authenticate to PostgreSQL using OAUTHBEARER SASL and an OAuth access token.
+
+related_resources:
+  - text: PostgreSQL TLS configuration reference
+    url: /gateway/postgresql-tls-reference/
+  - text: "{{site.base_gateway}} Amazon RDS database authentication with AWS IAM"
+    url: /gateway/amazon-rds-authentication-with-aws-iam/
+  - text: Connect a {{site.base_gateway}} Azure PostgreSQL Server using Azure Managed Identity
+    url: /gateway/azure-pg-authentication-with-azure-managed-identity/
+  - text: "{{site.base_gateway}} Google Cloud Postgres database authentication with GCP IAM"
+    url: /gateway/gcp-postgres-authentication/
+
+faqs:
+  - q: What must match between pg_hba.conf and Kong's configuration?
+    a: |
+      The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` Kong configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid.
+  - q: Why does my connection fail even though the token is valid?
+    a: |
+      The `pg_user` Kong configuration parameter (environment variable `KONG_PG_USER`) must be set to the PostgreSQL role name that the validator maps from the token. If they don't match, the connection will fail.
 ---
-## Introduction
 
-[PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/)) introduces a native OAuth2 authentication method based on the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism, by using a [server-side validator](https://github.com/percona/pg_oidc_validator).
+[PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) introduces a native OAuth2 authentication method based on the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism, by using a [server-side validator](https://github.com/percona/pg_oidc_validator).
 
-Based on that, {{site.ee_product_name}} adds support for connecting to PostgreSQL 18 using OAuth2 authentication, starting from version 3.14.
+Based on that, {{site.base_gateway}} adds support for connecting to PostgreSQL 18 using OAuth2 authentication, starting from version 3.14.
 
 ## Architecture
 
-```
-┌──────┐    1. Request Token     ┌─────┐
-│ Kong │ ──────────────────────> │ IdP │
-│      │ <────────────────────── │     │
-└──┬───┘    2. Return Token      └──┬──┘
-   │                                │
-   │ 3. Connect with OAUTHBEARER    │ 4. Validate Token
-   │    (send access token)         │
-   ▼                                │
-┌─────────────────┐                 │
-│ PostgreSQL 18   │ ────────────────┘
-│ (oauth validator)│
-└─────────────────┘
-```
+The following diagram shows how {{site.base_gateway}} authenticates to PostgreSQL using OAUTHBEARER:
 
-**Flow:**
-
-1. Kong obtains an OAuth access token from the IdP (using client_credentials or password grant)
-2. Kong connects to PostgreSQL using OAUTHBEARER SASL mechanism, sending the token
+1. {{site.base_gateway}} obtains an OAuth access token from the IdP (using client_credentials or password grant)
+2. {{site.base_gateway}} connects to PostgreSQL using OAUTHBEARER SASL mechanism, sending the token
 3. PostgreSQL's OAuth validator plugin contacts the IdP to validate the token
 4. The validator verifies the token and maps it to a PostgreSQL role
 5. If the role exists and the token is valid, the connection succeeds
 
-**Key constraint:** A PostgreSQL role must exist that matches the identity the validator extracts from the token. How this mapping works (which claim, what format) is determined entirely by the validator plugin or cloud provider.
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    participant Kong as {{site.base_gateway}}
+    participant IdP
+    participant PG as PostgreSQL 18 (oauth validator)
 
-## Version Requirements
+    Kong->>IdP: 1. Request token
+    IdP-->>Kong: 2. Return token
+    Kong->>PG: 3. Connect with OAUTHBEARER (send access token)
+    PG->>IdP: 4. Validate token
+{% endmermaid %}
+<!--vale on-->
 
-| Component | Minimum Version | Notes |
-|-----------|----------------|-------|
-| {{site.ee_product_name}} | 3.14+ | First version to support OAUTHBEARER SASL |
-| PostgreSQL | **18+** | First version to support OAUTHBEARER authentication |
-| [OAuth Validator](https://github.com/percona/pg_oidc_validator) | - | Required for self-managed PostgreSQL; cloud-managed services may have built-in support |
-| IdP | - | Any OIDC-compliant identity provider |
+A PostgreSQL role must exist that matches the identity the validator extracts from the token. How this mapping works (which claim, what format) is determined entirely by the validator plugin or cloud provider.
 
-## SSL Requirements
+## Version requirements
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Minimum Version
+    key: version
+  - title: Notes
+    key: notes
+rows:
+  - component: "{{site.base_gateway}}"
+    version: "3.14+"
+    notes: First version to support OAUTHBEARER SASL
+  - component: PostgreSQL
+    version: "**18+**"
+    notes: First version to support OAUTHBEARER authentication
+  - component: "[OAuth Validator](https://github.com/percona/pg_oidc_validator)"
+    version: "-"
+    notes: Required for self-managed PostgreSQL; cloud-managed services may have built-in support
+  - component: IdP
+    version: "-"
+    notes: Any OIDC-compliant identity provider
+{% endtable %}
+<!--vale on-->
+
+## SSL requirements
 
 OAUTHBEARER transmits tokens over the connection, so SSL is mandatory. When `pg_oauth_auth=on`, Kong automatically forces `pg_ssl=on` and `pg_ssl_required=on`.
 
 **PostgreSQL must be configured with SSL enabled.** If PostgreSQL does not have SSL configured, the connection will fail.
+
+## PostgreSQL setup
 
 ### 1. Install an OAuth validator plugin
 
@@ -62,7 +111,7 @@ Self-managed PostgreSQL 18 requires an `oauth_validator_libraries` plugin to val
 
 ### 2. Configure postgresql.conf
 
-```ini
+```
 ssl = on
 ssl_cert_file = '<path_to_server_certificate>'
 ssl_key_file = '<path_to_server_private_key>'
@@ -81,14 +130,22 @@ host     all       all       all      oauth   issuer=https://<idp-host>/realms/<
 
 Rules are evaluated top-down, first match wins:
 
-| Rule | Meaning |
-|------|---------|
-| `local all all trust` | Local Unix socket connections are trusted (no authentication) |
-| `host all postgres all trust` | The `postgres` superuser can connect via TCP without authentication |
-| `host all all all oauth ...` | All other TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope` |
-
-{:.important}
-> The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` Kong configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid
+<!--vale off-->
+{% table %}
+columns:
+  - title: Rule
+    key: rule
+  - title: Meaning
+    key: meaning
+rows:
+  - rule: "`local all all trust`"
+    meaning: Local Unix socket connections are trusted (no authentication)
+  - rule: "`host all postgres all trust`"
+    meaning: The `postgres` superuser can connect via TCP without authentication
+  - rule: "`host all all all oauth ...`"
+    meaning: All other TCP connections must authenticate via OAUTHBEARER, with the specified `issuer` and `scope`
+{% endtable %}
+<!--vale on-->
 
 ### 4. Create a database role matching the token identity
 
@@ -98,19 +155,26 @@ The validator plugin determines how to map a token to a PostgreSQL role (e.g., w
 CREATE ROLE "<matched_identity>" WITH LOGIN;
 ```
 
-{:.important}
-> The `pg_user` Kong configuration parameter (environment variable `KONG_PG_USER`) must be set to this role name. Kong uses `pg_user` as the PostgreSQL username in the connection, and it must match the role that the validator maps from the token. If they don't match, the connection will fail.
-
-## Kong Configuration
+## Kong configuration
 
 ### Token endpoint vs Discovery endpoint
 
 Kong needs to know where to request tokens. There are two mutually exclusive ways to configure this:
 
-| Parameter | Description |
-|-----------|-------------|
-| `pg_oauth_token_endpoint` | The IdP's token endpoint URL directly. Use this when you know the exact URL. |
-| `pg_oauth_discovery_endpoint` | The IdP's OIDC discovery URL (`.well-known/openid-configuration`). Kong will fetch this document and extract the `token_endpoint` automatically. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Description
+    key: description
+rows:
+  - parameter: "`pg_oauth_token_endpoint`"
+    description: The IdP's token endpoint URL directly. Use this when you know the exact URL.
+  - parameter: "`pg_oauth_discovery_endpoint`"
+    description: "The IdP's OIDC discovery URL (`.well-known/openid-configuration`). Kong will fetch this document and extract the `token_endpoint` automatically."
+{% endtable %}
+<!--vale on-->
 
 One of the two is **required**. If both are set, `token_endpoint` takes precedence. Discovery mode is useful when you prefer not to hardcode the token endpoint, or when the IdP may change its endpoint URL.
 
@@ -118,10 +182,20 @@ One of the two is **required**. If both are set, `token_endpoint` takes preceden
 
 `pg_oauth_token_endpoint_auth_method` controls how Kong sends client credentials to the IdP's token endpoint:
 
-| Value | Behavior |
-|-------|----------|
-| `client_secret_post` (default) | Sends `client_id` and `client_secret` in the request body |
-| `client_secret_basic` | Sends credentials via HTTP Basic Authentication header |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Value
+    key: value
+  - title: Behavior
+    key: behavior
+rows:
+  - value: "`client_secret_post` (default)"
+    behavior: Sends `client_id` and `client_secret` in the request body
+  - value: "`client_secret_basic`"
+    behavior: Sends credentials via HTTP Basic Authentication header
+{% endtable %}
+<!--vale on-->
 
 Choose the method your IdP supports. Most IdPs support both; some (e.g., certain enterprise IdPs) may only accept one.
 
@@ -129,6 +203,8 @@ Choose the method your IdP supports. Most IdPs support both; some (e.g., certain
 
 The most common pattern for service-to-service authentication. Kong uses `client_id` + `client_secret` to obtain a token.
 
+{% navtabs "example-1" %}
+{% navtab "Environment variables" %}
 ```bash
 KONG_PG_HOST=127.0.0.1
 KONG_PG_PORT=5432
@@ -142,14 +218,34 @@ KONG_PG_OAUTH_TOKEN_ENDPOINT=https://<idp-host>/token
 KONG_PG_OAUTH_SCOPE=openid
 KONG_PG_OAUTH_GRANT_TYPE=client_credentials
 
-# pg_ssl and pg_ssl_required are automatically enabled when pg_oauth_auth=on
 KONG_PG_SSL_VERIFY=on
 ```
+{% endnavtab %}
+{% navtab "kong.conf" %}
+```text
+pg_host=127.0.0.1
+pg_port=5432
+pg_database=kong
+pg_user=<db_role>
+
+pg_oauth_auth=on
+pg_oauth_client_id=<client_id>
+pg_oauth_client_secret=<client_secret>
+pg_oauth_token_endpoint=https://<idp-host>/token
+pg_oauth_scope=openid
+pg_oauth_grant_type=client_credentials
+
+pg_ssl_verify=on
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Example 2: Client Credentials Grant (with discovery_endpoint)
 
 Same as above, but using OIDC discovery to automatically resolve the token endpoint.
 
+{% navtabs "example-2" %}
+{% navtab "Environment variables" %}
 ```bash
 KONG_PG_HOST=127.0.0.1
 KONG_PG_PORT=5432
@@ -165,20 +261,38 @@ KONG_PG_OAUTH_GRANT_TYPE=client_credentials
 
 KONG_PG_SSL_VERIFY=on
 ```
+{% endnavtab %}
+{% navtab "kong.conf" %}
+```text
+pg_host=127.0.0.1
+pg_port=5432
+pg_database=kong
+pg_user=<db_role>
+
+pg_oauth_auth=on
+pg_oauth_client_id=<client_id>
+pg_oauth_client_secret=<client_secret>
+pg_oauth_discovery_endpoint=https://<idp-host>/.well-known/openid-configuration
+pg_oauth_scope=openid
+pg_oauth_grant_type=client_credentials
+
+pg_ssl_verify=on
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Example 3: Password Grant
 
 Used when the IdP requires resource owner credentials.
 
+{% navtabs "example-3" %}
+{% navtab "Environment variables" %}
 ```bash
-# kong.conf or environment variables
-
 KONG_PG_HOST=127.0.0.1
 KONG_PG_PORT=5432
 KONG_PG_DATABASE=kong
 KONG_PG_USER=<db_role>
 
-# Enable OAuth authentication
 KONG_PG_OAUTH_AUTH=on
 KONG_PG_OAUTH_CLIENT_ID=<client_id>
 KONG_PG_OAUTH_CLIENT_SECRET=<client_secret>
@@ -188,15 +302,36 @@ KONG_PG_OAUTH_GRANT_TYPE=password
 KONG_PG_OAUTH_USERNAME=<username>
 KONG_PG_OAUTH_PASSWORD=<password>
 
-# pg_ssl and pg_ssl_required are automatically enabled when pg_oauth_auth=on
-# Optionally configure SSL verification
 KONG_PG_SSL_VERIFY=on
 ```
+{% endnavtab %}
+{% navtab "kong.conf" %}
+```text
+pg_host=127.0.0.1
+pg_port=5432
+pg_database=kong
+pg_user=<db_role>
+
+pg_oauth_auth=on
+pg_oauth_client_id=<client_id>
+pg_oauth_client_secret=<client_secret>
+pg_oauth_token_endpoint=https://<idp-host>/token
+pg_oauth_scope=openid
+pg_oauth_grant_type=password
+pg_oauth_username=<username>
+pg_oauth_password=<password>
+
+pg_ssl_verify=on
+```
+{% endnavtab %}
+{% endnavtabs %}
 
 ### Example 4: Password Grant with ADFS
 
 ADFS (Active Directory Federation Services) typically uses password grant with a `resource` parameter to identify the target application, and may use a public client (no `client_secret`).
 
+{% navtabs "example-4" %}
+{% navtab "Environment variables" %}
 ```bash
 KONG_PG_HOST=127.0.0.1
 KONG_PG_PORT=5432
@@ -213,25 +348,93 @@ KONG_PG_OAUTH_RESOURCE=https://<database-resource-uri>
 
 KONG_PG_SSL_VERIFY=on
 ```
+{% endnavtab %}
+{% navtab "kong.conf" %}
+```text
+pg_host=127.0.0.1
+pg_port=5432
+pg_database=kong
+pg_user=<db_role>
 
-> Note: `pg_oauth_resource` is only sent with the `password` grant type. `pg_oauth_client_secret` can be omitted for ADFS public clients.
+pg_oauth_auth=on
+pg_oauth_client_id=<client_id>
+pg_oauth_token_endpoint=https://<adfs-host>/adfs/oauth2/token
+pg_oauth_grant_type=password
+pg_oauth_username=<domain\\user>
+pg_oauth_password=<password>
+pg_oauth_resource=https://<database-resource-uri>
 
-## All Kong Configuration Parameters
+pg_ssl_verify=on
+```
+{% endnavtab %}
+{% endnavtabs %}
 
-| Parameter | Default | Values | Description |
-|-----------|---------|--------|-------------|
-| `pg_oauth_auth` | `off` | `on` / `off` | Enable OAUTHBEARER authentication. Automatically enables `pg_ssl` and `pg_ssl_required`. |
-| `pg_oauth_client_id` | - | string | OAuth client ID. Required. |
-| `pg_oauth_client_secret` | - | string | OAuth client secret. Required for `client_credentials` grant. |
-| `pg_oauth_token_endpoint` | - | URL | IdP token endpoint URL. One of `token_endpoint` or `discovery_endpoint` is required. |
-| `pg_oauth_discovery_endpoint` | - | URL | OIDC discovery URL (`.well-known/openid-configuration`). Alternative to `token_endpoint`. |
-| `pg_oauth_scope` | - | string | OAuth scope to request (e.g., `openid`). |
-| `pg_oauth_audience` | - | string | OAuth audience parameter. |
-| `pg_oauth_grant_type` | `client_credentials` | `client_credentials` / `password` | OAuth grant type. |
-| `pg_oauth_token_endpoint_auth_method` | `client_secret_post` | `client_secret_post` / `client_secret_basic` | How to send client credentials to the IdP. |
-| `pg_oauth_username` | - | string | Username. Required when `grant_type` is `password`. |
-| `pg_oauth_password` | - | string | Password. Required when `grant_type` is `password`. |
-| `pg_oauth_resource` | - | string | OAuth resource parameter. |
+`pg_oauth_resource` is only sent with the `password` grant type. `pg_oauth_client_secret` can be omitted for ADFS public clients.
 
+## Configuration parameters
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Default
+    key: default
+  - title: Values
+    key: values
+  - title: Description
+    key: description
+rows:
+  - parameter: "`pg_oauth_auth`"
+    default: "`off`"
+    values: "`on` / `off`"
+    description: "Enable OAUTHBEARER authentication. Automatically enables `pg_ssl` and `pg_ssl_required`."
+  - parameter: "`pg_oauth_client_id`"
+    default: "-"
+    values: string
+    description: OAuth client ID. Required.
+  - parameter: "`pg_oauth_client_secret`"
+    default: "-"
+    values: string
+    description: "OAuth client secret. Required for `client_credentials` grant."
+  - parameter: "`pg_oauth_token_endpoint`"
+    default: "-"
+    values: URL
+    description: "IdP token endpoint URL. One of `token_endpoint` or `discovery_endpoint` is required."
+  - parameter: "`pg_oauth_discovery_endpoint`"
+    default: "-"
+    values: URL
+    description: "OIDC discovery URL (`.well-known/openid-configuration`). Alternative to `token_endpoint`."
+  - parameter: "`pg_oauth_scope`"
+    default: "-"
+    values: string
+    description: "OAuth scope to request (e.g., `openid`)."
+  - parameter: "`pg_oauth_audience`"
+    default: "-"
+    values: string
+    description: OAuth audience parameter.
+  - parameter: "`pg_oauth_grant_type`"
+    default: "`client_credentials`"
+    values: "`client_credentials` / `password`"
+    description: OAuth grant type.
+  - parameter: "`pg_oauth_token_endpoint_auth_method`"
+    default: "`client_secret_post`"
+    values: "`client_secret_post` / `client_secret_basic`"
+    description: How to send client credentials to the IdP.
+  - parameter: "`pg_oauth_username`"
+    default: "-"
+    values: string
+    description: "Username. Required when `grant_type` is `password`."
+  - parameter: "`pg_oauth_password`"
+    default: "-"
+    values: string
+    description: "Password. Required when `grant_type` is `password`."
+  - parameter: "`pg_oauth_resource`"
+    default: "-"
+    values: string
+    description: OAuth resource parameter.
+{% endtable %}
+<!--vale on-->
+
+{:.note}
 > All parameters also have `pg_ro_oauth_*` variants for read-only replica connections.
-
