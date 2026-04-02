@@ -41,7 +41,7 @@ rows:
   - component: "`operationId`"
     map: "Tool name (kebab-case normalized)"
   - component: "Summary/description"
-    mapping: "Tool description"
+    map: "Tool description"
   - component: Parameters
     map: Tool parameters array
   - component: "`requestBody`"
