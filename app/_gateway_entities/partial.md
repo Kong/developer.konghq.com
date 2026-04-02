@@ -202,7 +202,9 @@ The [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) supports all three A
 > The following examples use OpenAI as the embeddings and model provider, and pgvector as the vector database.
 > You'll need an [OpenAI API key](https://platform.openai.com/api-keys) and a running pgvector instance.
 
-**`vectordb` Partial (pgvector):**
+#### VectorDB Partial (pgvector)
+
+Create a Partial with `type: vectordb`:
 
 {% entity_example %}
 type: partial
@@ -229,7 +231,9 @@ variables:
     description: The password for your pgvector database.
 {% endentity_example %}
 
-**Embeddings Partial (OpenAI):**
+#### Embeddings Partial (OpenAI)
+
+Create a Partial with `type: embeddings`:
 
 {% entity_example %}
 type: partial
@@ -250,7 +254,9 @@ variables:
     description: Your OpenAI API key.
 {% endentity_example %}
 
-**Model Partial (OpenAI GPT-4o):**
+#### Model Partial (OpenAI GPT-4o)
+
+Create a Partial with `type: model`:
 
 {% entity_example %}
 type: partial
@@ -276,7 +282,9 @@ variables:
 
 Pass the Partial ID in the `partials` array when configuring a plugin.
 
-**AI Semantic Cache plugin with `vectordb` and `embeddings` Partials:**
+#### AI Semantic Cache plugin example
+
+Set up an AI Semantic Cache plugin with `vectordb` and `embeddings` Partials:
 
 {% entity_example %}
 type: plugin
@@ -298,7 +306,9 @@ variables:
     description: The ID of the embeddings Partial.
 {% endentity_example %}
 
-**AI Proxy Advanced plugin with a model Partial:**
+#### AI Proxy Advanced example
+
+Set up an AI Proxy Advanced plugin with a model Partial:
 
 {% entity_example %}
 type: plugin
@@ -317,7 +327,7 @@ variables:
 {% endentity_example %}
 
 {:.info}
-> You cannot provide inline configuration for the same fields covered by a linked Partial. Either define the settings directly in the plugin, or leave that block empty and use a Partial.
+> You cannot provide inline configuration for the same fields that a linked Partial covers. Either define the settings directly in the plugin, or leave that block empty and use a Partial instead.
 
 ## Enable Partials support in custom plugins
 

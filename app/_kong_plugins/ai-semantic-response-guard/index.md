@@ -88,7 +88,7 @@ To enforce these rules, the plugin:
 {:.info}
 > If a response is blocked or if a system error occurs during evaluation, the plugin returns a `403 Forbidden` to the client without exposing that the Semantic Response Guard blocked it.
 
-{% include plugins/ai-partials-vectordb-embeddings.md %}
+{% include_cached plugins/ai-partials-vectordb-embeddings.md %}
 
 ## Vector databases
 
