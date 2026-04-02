@@ -45,7 +45,7 @@ search_aliases:
 tldr:
     q: How do I configure HashiCorp Vault to authenticate using AWS IAM?
     a: |
-      Enable the AWS auth method in HashiCorp Vault, configure it with credentials that can verify IAM identity, and create an IAM role bound to {{site.base_gateway}}'s IAM principal ARN.
+      Enable the AWS auth method in HashiCorp Vault, configure it with credentials that can verify IAM identity.
 
       Then in {{site.base_gateway}}, configure a Vault entity with the following:
       * Set `config.auth_method` to `aws_iam`.
@@ -61,25 +61,28 @@ prereqs:
   inline:
     - title: AWS IAM principal for {{site.base_gateway}}
       content: |
-        You need an [AWS IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-workloads.html) that {{site.base_gateway}} will use to authenticate to HashiCorp Vault.
-
-        {{site.base_gateway}}'s IAM principal doesn't need any additional IAM policies. The `sts:GetCallerIdentity` action that Vault uses to verify the identity is available to all authenticated AWS principals by default.
-
-        Export {{site.base_gateway}}'s AWS credentials and the ARN of the IAM principal:
-        ```sh
-        export AWS_ACCESS_KEY_ID="KONG-ACCESS-KEY-ID"
-        export AWS_SECRET_ACCESS_KEY="KONG-SECRET-ACCESS-KEY"
-        export AWS_AUTH_REGION="us-east-1"
-        export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
-        ```
+        In this how-to, you'll be running two Elastic Compute Cloud VMs: one with {{site.base_gateway}} and another with HashiCorp Vault. 
+        Since you'll be using two VMs, you'll need two AWS IAM roles so that the two VMS can communicate:
+        1. [Create an IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) for the {{site.base_gateway}} VM with the following permissions:
+           * Trust: `ec2.amazonaws.com`
+           * Permission: `sts:AssumeRole` on the HashiCorp Vault role ARN
+        1. [Create an IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) for the HashiCorp Vault VM with the following permissions: 
+           * Trust: `ec2.amazonaws.com`
+           * Trust {{site.base_gateway}} role ARN (cross-role assume)
+           * Permission: `iam:getRole`
+        1. Export {{site.base_gateway}}'s AWS region and the ARN of the IAM user that is associated with the EC2 VM that will be running HashiCorp Vault:
+           ```sh
+           export AWS_AUTH_REGION="us-east-1"
+           export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
+           ```
+        1. [Create two EC2 VMs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html), one with [{{site.base_gateway}} installed and running](/gateway/install/), and one for HashiCorp Vault and associate the respective IAM roles with the VMs.
       icon_url: /assets/icons/aws.svg
     - title: HashiCorp Vault
       content: |
-        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your VM. 
+        You need [HashiCorp Vault installed](https://developer.hashicorp.com/vault/install) on your [EC2 VM](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html). 
 
-        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on the same VM. 
-        Production instances will often install HashiCorp Vault and {{site.base_gateway}} on separate VMS. 
-        If this is the case, see the [HashiCorp Vault AWS authentication documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for the configuration changes you'll need to make.
+        The steps in this how to assume that HashiCorp Vault and {{site.base_gateway}} are installed on separate EC2 VMs.  
+        If your VM configuration is different, see the [HashiCorp Vault AWS authentication documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for the configuration changes you'll need to make.
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -106,9 +109,6 @@ faqs:
   - q: Do I have to provide `aws_access_key_id` and `aws_secret_access_key` in the Vault entity?
     a: |
       No, these fields are optional. If omitted, {{site.base_gateway}} uses the default AWS credentials provider chain, which checks environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`), shared credential files, and EC2 instance profiles in order. Providing them explicitly in the entity is useful when you want to configure {{site.base_gateway}}'s AWS identity independently of the host environment.
-  - q: How does Vault verify the AWS IAM identity without requiring extra IAM permissions?
-    a: |
-      {{site.base_gateway}} signs an AWS `sts:GetCallerIdentity` request using the configured AWS credentials and sends it to HashiCorp Vault. Vault then forwards the signed request to AWS STS and checks the returned identity against the `bound_iam_principal_arn` configured in the role. The `sts:GetCallerIdentity` action requires no explicit IAM policy — it is available to all authenticated AWS identities by default.
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
   - q: |
@@ -142,11 +142,9 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
    vault auth enable aws
    ```
 
-1. (skip to try out) Configure the AWS client with access keys:
+1. Configure the AWS client:
    ```sh
    vault write auth/aws/config/client \
-    secret_key=$AWS_SECRET_ACCESS_KEY \
-    access_key=$AWS_ACCESS_KEY_ID \
     use_sts_region_from_client=true
    ```
 
@@ -207,20 +205,17 @@ body:
     auth_method: aws_iam
     aws_auth_role: $AWS_AUTH_ROLE
     aws_auth_region: $AWS_AUTH_REGION
+    aws_role_session_name: kong
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-{:.info}
-> **Cross-account access:** If {{site.base_gateway}} and your Vault server are in different AWS accounts, configure `aws_assume_role_arn` with the ARN of the role Kong should assume in the target account, and `aws_role_session_name` with a session identifier. If you configure the Vault this way for cross-account access, `aws_access_key_id` and `aws_secret_access_key` are optional.
-
 ## Validate
 
-To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command within the Data Plane container.
+To validate that the secret was stored correctly in HashiCorp Vault, call a secret from your vault using the `kong vault get` command:
 
-{% validation vault-secret %}
-secret: '{vault://hashicorp-vault/headers/request/header}'
-value: 'x-kong:test'
-{% endvalidation %}
+```sh
+kong vault get {vault://hashicorp-vault/headers/request/header}
+```
 
 If the vault was configured correctly, this command returns the value of the secret. You can use `{vault://hashicorp-vault/headers/request/header}` to reference the secret in any referenceable field.
 
