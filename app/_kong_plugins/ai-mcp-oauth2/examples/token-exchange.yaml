@@ -3,8 +3,10 @@ description: 'Swap the client access token for a different token before forwardi
 
 extended_description: |
   Use token exchange to replace the incoming access token with a token issued by a
-  different authorization server or a token with different scopes before the request reaches
-  the upstream MCP server.
+  different authorization server or with different scopes before the request reaches
+  the upstream MCP server. This example also includes actor token configuration, which
+  is required by identity providers like Okta that need the original token passed as
+  the actor token during the exchange.
 
   When `token_exchange.enabled` is `true`, the plugin:
 
@@ -40,6 +42,8 @@ config:
     request:
       requested_token_type: urn:ietf:params:oauth:token-type:access_token
       subject_token_type: urn:ietf:params:oauth:token-type:access_token
+      actor_token_source: header
+      actor_token_header: X-Actor-Token
       scopes:
         - mcp:read
     cache:
