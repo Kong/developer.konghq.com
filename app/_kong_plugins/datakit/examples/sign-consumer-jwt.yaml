@@ -3,7 +3,7 @@ description: |
 
 extended_description: |
   Sign an outgoing JWT in a request header using the authenticated Consumer's ID as the subject.
-  This example assumes a Consumer has already been authenticated before DataKit runs.
+  This example assumes a Consumer has already been authenticated before Datakit runs.
   This example contains the following nodes:
   1. The node `GET_CONSUMER` retrieves the currently authenticated Consumer object.
   1. The node `BUILD_CLAIMS` uses jq to extract the Consumer's `id` and build a `sub` claim.
@@ -11,9 +11,7 @@ extended_description: |
   1. The node `BUILD_HEADER` injects the signed token into an `X-Consumer-JWT` request header sent to the upstream service.
 
   {:.info}
-  > **Note**: Datakit, with a priority of 810, currently runs after rate limiting plugins, which have priorities at or above 900.
-  With JWT consumer authentication, you may need Datakit to run before rate limiting to set Consumers for Consumer-based rate limits. 
-  You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
+  > **Note**: Datakit has a priority of 810, which means it runs after rate limiting plugins (priority 900 and above). If you use Consumer-based rate limits, Datakit must run first so the Consumer is set before rate limiting executes. You can adjust this with [dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering).
 title: Sign JWT with Consumer ID
 weight: 900
 

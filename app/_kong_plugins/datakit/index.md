@@ -584,7 +584,7 @@ rows:
     outputs: XML formatted data
   - nodetype: |
       [JWT decode (`jwt_decode`)](#jwt-decode-node) {% new_in 3.14 %}
-    description: "Decode a JWT token without verifying its signature."
+    description: "Decode a JWT without verifying its signature."
     inputs: |
       * `$self`: JWT token string (with or without `Bearer` prefix)
     outputs: |
@@ -614,7 +614,7 @@ rows:
 <!--vale on-->
 
 {:.info}
-> **Note:** `$self` indicates that a node accepts a single value directly via `input:`, not named fields via `inputs:`. For example, you would use `input: request.headers.authorization` rather than `inputs: {token: ...}`.
+> **Note:** `$self` indicates that a node accepts a single value directly via `input:`, not named fields via `inputs:`. For example, you would use `input: request.headers` rather than `inputs: {token: ...}`.
 
 You can learn more about the supported configuration parameters for each node in the [configuration reference](/plugins/datakit/reference/#schema--config-nodes).
 
@@ -1598,9 +1598,9 @@ For a more detailed example, see [Convert JSON into XML](/plugins/datakit/exampl
 
 For an example of using this node as part of a workflow, see [Transform JSON into XML and back](/plugins/datakit/examples/convert-json-to-xml-and-back/).
 
-### JWT Decode node {% new_in 3.14 %}
+### JWT decode node {% new_in 3.14 %}
 
-Decode a JWT token without verifying its signature. 
+Decode a JWT without verifying its signature. 
 Accepts tokens with or without a `Bearer` prefix (case-insensitive).
 
 The node will fail the request if the token can't be parsed for any reason. No partial results are returned.
@@ -1615,7 +1615,7 @@ See the [configuration reference](/plugins/datakit/reference/#schema--config-nod
   input: request.headers.authorization
 ```
 
-### JWT Sign node {% new_in 3.14 %}
+### JWT sign node {% new_in 3.14 %}
 
 Create and sign a JWT with the provided key.
 Automatically adds `iat`, `exp`, and `nbf` time claims.
