@@ -15,8 +15,11 @@ extended_description: |
   * An introspection response
   * A user info response
 
-  The following example assumes that the token payload contains the claim `preferred_username`, 
-  and that you want to pass it to an `Authenticated-User` upstream header.
+  This example uses [`config.upstream_headers`](./reference/#schema--config-upstream-headers) to map claims using a path array. 
+  This lets you access claims at any depth in the token payload. 
+  
+  The example assumes that the token payload contains the claim `preferred_username`, 
+  and that you want to pass it to an `X-Authenticated-User` upstream header. 
 
   {% include_cached plugins/oidc/client-auth.md %}
 
@@ -35,10 +38,10 @@ config:
     - client_secret_post
   auth_methods:
     - password
-  upstream_headers_claims: 
-    - preferred_username
-  upstream_headers_names: 
-    - authenticated_user
+  upstream_headers:
+    - header: X-Authenticated-User
+      path:
+        - preferred_username
 
 variables:
   issuer:
