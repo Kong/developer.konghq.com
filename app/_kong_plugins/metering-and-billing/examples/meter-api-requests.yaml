@@ -5,7 +5,8 @@ extended_description: |
   The plugin emits one CloudEvent per request to the configured ingest endpoint. 
   Collecting events alone doesn't produce invoices. 
   To aggregate usage and generate invoices, you need either [{{site.konnect_short_name}} Metering & Billing](/metering-and-billing/) or a self-hosted [OpenMeter](https://openmeter.io/) instance.
-
+  
+  For a complete tutorial on this example, see [Meter API requests by Consumer with {{site.metering_and_billing}}](/how-to/meter-api-requests-by-consumer/).
 title: 'Meter API requests by Consumer'
 
 weight: 999

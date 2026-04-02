@@ -46,6 +46,8 @@ related_resources:
     url: /metering-and-billing/
   - text: "{{site.konnect_short_name}} metering"
     url: /metering-and-billing/metering/
+  - text: Meter API requests by Consumer with {{site.metering_and_billing}}
+    url: /how-to/meter-api-requests-by-consumer/
 ---
 
 The Metering & Billing plugin allows you to meter API requests and AI token usage for usage-based billing for both {{site.base_gateway}} on-prem and {{site.konnect_short_name}} deployments. 
