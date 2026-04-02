@@ -29,11 +29,24 @@ The `openapi2mcp` command converts OpenAPI files to Kong's decK format with MCP 
 This command generates a {{site.base_gateway}} Service with an MCP route that includes the 
 [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) configured with tools derived from the OpenAPI specification operations.
 
-Each OpenAPI operation is mapped to an MCP tool definition:
-- `operationId` -> Tool name (kebab-case normalized)
-- Summary/description -> Tool description
-- Parameters -> Tool parameters array
-- `requestBody` -> tool `request_body`
+Each OpenAPI spec component is mapped to an MCP tool definition:
+
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: MCP tool mapping
+    key: map
+rows:
+  - component: `operationId`
+    map: "Tool name (kebab-case normalized)"
+  - component: "Summary/description"
+    mapping: "Tool description"
+  - component: Parameters
+    map: Tool parameters array
+  - component: `requestBody`
+    map: "Tool `request_body`"
+{% endtable %}
 
 ## Security/ACL generation
 
@@ -86,7 +99,7 @@ rows:
   - annotation: "`x-kong-mcp-exclude`"
     description: Exclude operation from tool generation (boolean).
   - annotation: "`x-kong-mcp-proxy`"
-    description: Override ai-mcp-proxy plugin config at document level.
+    description: Override AI MCP Proxy plugin config at document level.
 {% endtable %}
 <!--vale on-->
 
@@ -100,7 +113,7 @@ columns:
     key: description
 rows:
   - annotation: "`x-kong-mcp-acl`"
-    description: "ACL config on oauth2 security scheme (`acl_attribute_type`, `access_token_claim_field`)."
+    description: "ACL config on OAuth2 security scheme (`acl_attribute_type`, `access_token_claim_field`)."
   - annotation: "`x-kong-mcp-default-acl`"
     description: "Default ACL array at document level (`scope`, `allow`)."
 {% endtable %}
