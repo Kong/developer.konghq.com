@@ -162,6 +162,20 @@ All how-to guides share this base structure. Adjust `products`, `works_on`, `plu
 `tags`, `tools`, `prereqs`, and `cleanup` based on what the guide covers. 
 Use `docs/front-matter-reference.md` as the format source of truth and reference.
 
+### Prereqs
+
+* For Kong product prerequisites that are more than just installing the product and obtaining a service account token or personal access token, make sure to explicitly describe the steps if they are long instead of vaguely describe them in paragraph format.
+* For third-party products, if they must be set up in a way specific to Kong, you must provide the step-by-step instructions for them. 
+  If their set up isn't specific to Kong (for example, you need an IAM role with certain assume role permissions, but those permissions aren't Kong-specific), you don't need detailed steps, generic steps that describe what is required with a relevant link to the third-party product will suffice.
+* For how-tos on Konnect, add the required teams and/or roles for the how-to to work. Source of truth for roles/teams is `api-specs/konnect/identity/v3/openapi.yaml`
+* Prerequisites must contain any environment variables that are used in the body of the how-to, but aren't already set in the body. 
+  For example, if you configure a third-party provider and need an API key, access key, etc. for a Kong configuration, you must add the `export VARIABLE_NAME='YOUR NAME HERE' step to the associated prereq.
+
+### TLDR
+
+The `tldr` frontmatter `a` portion should be written in a way that someone who is familiar with the product can read the few sentences there and know exactly what they need to do without having to read the whole how-to. 
+This section is for expert users.
+
 ### Tag validation
 
 Before writing the `tags:` field, read `app/_data/schemas/frontmatter/tags.json` and use only
