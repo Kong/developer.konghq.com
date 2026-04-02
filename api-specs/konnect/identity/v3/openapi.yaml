@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@da4167d67de6f8881284da915b708556e37d8a99
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/da4167d67de6f8881284da915b708556e37d8a99'
+  x-oas-source: kong/platform-api@8f51814a808a50184f0263e1c635fb7e5f3def83
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f51814a808a50184f0263e1c635fb7e5f3def83'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -1995,6 +1995,21 @@ components:
       maxLength: 256
       minLength: 1
       pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.'']*[\p{L}\p{N}]$'
+    PersonalAccessTokenCreateRequestWithExpiresAt:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PATName'
+        expires_at:
+          description: An ISO-8601 timestamp representation of entity expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: false
+      additionalProperties: false
+      required:
+        - name
+        - expires_at
     PersonalAccessTokenCreateResponse:
       description: Details of the created personal access token.
       type: object
@@ -3240,6 +3255,7 @@ components:
                   - Consumer Admin
                   - Connector
                   - Creator
+                  - Debug Session Creator
                   - Deployer
                   - Discovery Admin
                   - Discovery Viewer
@@ -3520,21 +3536,10 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                $ref: '#/components/schemas/PATName'
-              expires_at:
-                description: An ISO-8601 timestamp representation of entity expiration date.
-                type: string
-                format: date-time
-                example: '2022-11-04T20:10:06.927Z'
-                readOnly: false
-            required:
-              - name
-              - expires_at
+            oneOf:
+              - $ref: '#/components/schemas/PersonalAccessTokenCreateRequestWithExpiresAt'
           examples:
-            Example Request Body:
+            With expires_at:
               $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
     PersonalAccessTokenUpdateRequest:
       description: Request body schema for updating personal access tokens.

@@ -12,7 +12,7 @@ module Jekyll
       end
 
       def path
-        @path ||= File.expand_path(relative_path.prepend('../'), @site.source)
+        @path ||= File.expand_path(relative_path.dup.prepend('../'), @site.source)
       end
 
       def exist?

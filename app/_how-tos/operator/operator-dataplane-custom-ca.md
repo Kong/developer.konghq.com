@@ -60,9 +60,9 @@ Fetch the client certificate:
 url: /v2/control-planes/$CONTROL_PLANE_ID/dp-client-certificates
 status_code: 2010
 method: GET
-jq: |
-  .items[].cert
-capture: DP_CERT
+capture:
+  - variable: DP_CERT
+    jq: ".items[].cert"
 {% endkonnect_api_request %}
 <!--vale on-->
 

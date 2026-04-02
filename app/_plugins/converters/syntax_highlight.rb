@@ -22,6 +22,7 @@ module Kramdown
             'codeblock' => {
               'copy' => copy,
               'css_classes' => el.attr['class'],
+              'collapsible' => el.attr.fetch('class', '').include?('collapsible'),
               'render_header' => !data['data-file'].nil?,
               'id' => id,
               'data' => data,

@@ -254,6 +254,12 @@ Rather than guessing from memory, the LLM paired with the RAG pipeline now has t
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
+
 ## Access control and metadata filtering {% new_in 3.13 %}
 
 Once you've configured your vector database and ingested content, you can control which [Consumers](/gateway/entities/consumer/) access specific knowledge base articles and refine query results using metadata filters.

@@ -29,7 +29,6 @@ min_version:
 plugins:
   - ai-mcp-proxy
   - key-auth
-  - request-transformer-advanced
 
 entities:
   - service
@@ -157,27 +156,9 @@ entities:
 
 In this how-to, we'll use the WeatherAPI to demonstrate how you can enforce access limits on aggregated MCP servers by configuring it as an MCP tool.
 
-### Add an API key using the Request Transformer Advanced plugin
-
-To authenticate to WeatherAPI, configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin automatically appends your API key to the query string so that all requests are authenticated.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: request-transformer-advanced
-      service: weather-internet-service
-      config:
-        add:
-          querystring:
-            - key:${key}
-variables:
-  key:
-    value: $WEATHERAPI_API_KEY
-{% endentity_examples %}
-
 ### Configure the AI MCP Proxy plugin for WeatherAPI
 
-Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the WeatherAPI endpoint into an MCP tool and define access controls. The `tags` field enables the listener to discover this tool during aggregation. The `acl` block specifies which Consumer Groups can call this tool.
+Configure the AI MCP Proxy plugin in `conversion-only` mode to convert the WeatherAPI endpoint into an MCP tool and define access controls. This configuration also includes the WeatherAPI key in `tools[].query`, while the `tags` field enables the listener to discover this tool during aggregation. The `acl` block specifies which Consumer Groups can call this tool.
 
 {% entity_examples %}
 entities:
@@ -197,6 +178,9 @@ entities:
             description: Get current weather for a location
             method: GET
             path: "./v1/current.json"
+            query:
+              key:
+                - ${key}
             acl:
               allow:
                 - gold-partner
@@ -211,6 +195,9 @@ entities:
                 schema:
                   type: string
                   default: London
+variables:
+  key:
+    value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
 ## Configure the Deck of Cards MCP tools

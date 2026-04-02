@@ -170,13 +170,14 @@ This IP allow list applies to all {{site.konnect_short_name}} communication that
 * If the source IP address you have allow-listed is no longer reachable and IP allow list enforcement is enabled, access to {{site.konnect_short_name}} will be blocked.
 > * If you're configuring IP allow list for the first time, it takes effect immediately. If you're editing existing IP allow list values, the changes will take effect after five minutes.
 
-To configure IP allow list for {{site.konnect_short_name}}, send a PATCH request to the `/source-ip-restriction` endpoint:
+To configure IP allow list for {{site.konnect_short_name}}, send a PUT request to the `/organizations/$ORG_ID/ip-allow-list` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v3/source-ip-restriction
+url: /v3/organizations/$ORG_ID/ip-allow-list
 status_code: 201
-method: PATCH
+region: global
+method: PUT
 body:
     enabled: true
     allowed_ips:

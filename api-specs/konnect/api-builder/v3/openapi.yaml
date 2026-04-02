@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.1.0
+  version: 3.1.1
   description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9d47d3e4ebb79171c257794acb968935c046f2e9
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d47d3e4ebb79171c257794acb968935c046f2e9'
+  x-oas-source: kong/platform-api@6cb9649a40615364d0387167345de620a37b4fa8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6cb9649a40615364d0387167345de620a37b4fa8'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2979,7 +2979,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2990,7 +2990,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time

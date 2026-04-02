@@ -3,6 +3,7 @@
   "type": "string",
   "enum": [
     "1password",
+    "a2a",
     "access-control",
     "account-management",
     "after-response-scripts",
@@ -28,6 +29,7 @@
     "azure",
     "backup",
     "bedrock",
+    "billing",
     "blue-green",
     "caching",
     "cerebras",
@@ -128,6 +130,7 @@
     "logging",
     "mcp",
     "mesh-manager",
+    "metering",
     "metrics",
     "migration",
     "mistral",

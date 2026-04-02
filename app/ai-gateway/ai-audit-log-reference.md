@@ -598,6 +598,11 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
+### AI A2A Proxy logs {% new_in 3.14 %}
+
+If you're using the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), {{site.ai_gateway}} logs include additional fields under the `ai.a2a` object when [`config.logging.log_statistics`](/plugins/ai-a2a-proxy/reference/#schema--config-logging-log-statistics) is enabled. These fields provide observability into Agent-to-Agent (A2A) protocol traffic, including operation names, task lifecycle state, latency, streaming metrics, and optional request/response payloads.
+
+{% include /plugins/ai-a2a-proxy/log-output-fields.md %}
 
 ## Example log entries
 

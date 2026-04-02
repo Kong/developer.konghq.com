@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.0
+  version: 3.3.2
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b14ed6a374c9334393d0dc1936514787a83e8c87
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b14ed6a374c9334393d0dc1936514787a83e8c87'
+  x-oas-source: kong/platform-api@eaa4b06a60ffa41480a66fa5899617b0de2d4543
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eaa4b06a60ffa41480a66fa5899617b0de2d4543'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -850,6 +850,71 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/developer/teams:
+    get:
+      operationId: get-developer-teams
+      summary: Get Developer Teams
+      description: Retrieve all portal facing teams the developer is a member of.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}':
+    get:
+      operationId: get-developer-team
+      summary: Get Developer Team
+      description: Retrieve a portal facing team a developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetDeveloperTeamResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}/developers':
+    get:
+      operationId: get-developer-team-developers
+      summary: Get Developer Team Members
+      description: Retrieve developers on a portal facing team that the current developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamDevelopersResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
   /api/v3/developer/verify-email:
     post:
       operationId: verify-email
@@ -2873,7 +2938,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2884,7 +2949,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2998,6 +3063,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3027,6 +3094,8 @@ components:
           $ref: '#/components/schemas/AuthStrategyId'
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - name
@@ -3057,6 +3126,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3087,6 +3158,8 @@ components:
           maxLength: 255
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       title: UpdateApplicationPayload
     ApplicationUpdateResponse:
@@ -3115,6 +3188,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3235,6 +3310,11 @@ components:
       type: array
       items:
         type: string
+    TeamId:
+      description: ID of the team to assign the application to.
+      type: string
+      format: uuid
+      nullable: true
     AuthStrategyId:
       description: 'ID of the auth strategy to use for the application. If null or not included, the default application auth strategy will be used.'
       type: string
@@ -3325,6 +3405,12 @@ components:
           readOnly: true
         created_at:
           description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
@@ -3421,6 +3507,12 @@ components:
           description: Client secret value (only returned on creation)
           type: string
         created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
           type: string
           format: date-time
           nullable: true
@@ -3640,6 +3732,72 @@ components:
       required:
         - email
       title: ResetPasswordPayload
+    DeveloperTeam:
+      description: A portal facing team that a developer is a member of
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: IDM - Developers
+          maxLength: 250
+        description:
+          type: string
+          example: The Identity Management (IDM) team.
+          maxLength: 250
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      title: DeveloperTeam
+    ListDeveloperTeamsResponse:
+      description: A paginated list of teams the developer is a member of
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeam'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamsResponse
+    DeveloperTeamDeveloper:
+      description: A developer who is a member of a team
+      allOf:
+        - $ref: '#/components/schemas/Developer'
+        - type: object
+          required:
+            - id
+            - created_at
+            - updated_at
+      title: DeveloperTeamDeveloper
+    ListDeveloperTeamDevelopersResponse:
+      description: A paginated list of developers who are members of a team
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeamDeveloper'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamDevelopersResponse
     PortalContext:
       description: Describes the portal execution context
       type: object
@@ -5396,6 +5554,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Developer'
+    ListDeveloperTeamsResponse:
+      description: Response from list developer teams endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamsResponse'
+    GetDeveloperTeamResponse:
+      description: Response from get developer team endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeveloperTeam'
+    ListDeveloperTeamDevelopersResponse:
+      description: Response from list developer team developers endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamDevelopersResponse'
     ListPortalPagesResponse:
       description: Paginated list of portal pages
       content:
@@ -5568,6 +5744,8 @@ tags:
     description: The API for Konnect Portal developer credentials within a private portal (i.e. requires registration/authentication).
   - name: Developer
     description: API for managing a Konnect Portal Developer.
+  - name: Developer Teams
+    description: API for managing developer teams.
   - name: Portal
     description: The API for retrieving details about a single Konnect Portal.
   - name: Content

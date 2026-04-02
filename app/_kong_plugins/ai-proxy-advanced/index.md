@@ -190,4 +190,8 @@ A `model` Partial applies to each entry in the `config.targets` array, so you ca
 
 For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-plugin-partials).
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

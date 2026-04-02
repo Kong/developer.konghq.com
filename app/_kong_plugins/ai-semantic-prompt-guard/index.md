@@ -96,4 +96,8 @@ The matching behavior is as follows:
 
 {% include plugins/ai-partials-vectordb-embeddings.md %}
 
-{% include plugins/redis-cloud-auth.md %}
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}
