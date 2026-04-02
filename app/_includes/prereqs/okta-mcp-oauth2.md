@@ -1,6 +1,6 @@
 You need an [Okta](https://login.okta.com/) admin account with a developer organization.
 
-Complete the following steps to configure Okta for MCP OAuth2 authentication. This setup creates two application registrations: a **Web Application** (used by {{site.base_gateway}} for token introspection) and a **Native Application** (used by MCP Inspector for the authorization code flow).
+Complete the following steps to configure Okta for MCP OAuth2 authentication. This setup creates two application registrations: a **Web Application** (used by {{site.ai_gateway}} for token introspection) and a **Native Application** (used by MCP Inspector for the authorization code flow).
 
 ### Add a custom scope
 
@@ -42,7 +42,7 @@ export DECK_OKTA_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
 export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/default/v1/introspect'
 ```
 
-### Create the web application (used by {{site.base_gateway}} for introspection)
+### Create the web application (used by {{site.ai_gateway}} for introspection)
 
 1. Go to **Applications > Applications > Create App Integration**.
 1. Sign-in method: **OIDC - OpenID Connect**
@@ -52,7 +52,7 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 1. Set Sign-in redirect URIs to any valid URL (for example, `http://localhost/unused`). Kong does not use the redirect flow for this app, but Okta requires the field.
 1. Assignments: **Skip group assignment for now**
 1. Click **Save**.
-1. Copy the **Client ID** and **Client Secret**. These go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config.
+1. Copy the **Client ID** and **Client Secret**. These go into the {{site.ai_gateway}} `ai-mcp-oauth2` Plugin config.
 1. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
 1. Export the credentials:
 
@@ -74,4 +74,4 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 1. Copy the **Client ID**. This is the Client ID you enter in MCP Inspector. No secret is needed for this public client.
 
 {:.info}
-> The two applications serve different purposes. The **Web Application** Client ID and Client Secret go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config for token introspection. The **Native Application** Client ID is what you enter in MCP Inspector when connecting to the OAuth-protected MCP endpoint.
+> The two applications serve different purposes. The **Web Application** Client ID and Client Secret go into the {{site.ai_gateway}} `ai-mcp-oauth2` Plugin config for token introspection. The **Native Application** Client ID is what you enter in MCP Inspector when connecting to the OAuth-protected MCP endpoint.
