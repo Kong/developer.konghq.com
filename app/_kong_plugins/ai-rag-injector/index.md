@@ -497,4 +497,4 @@ Use the [Admin API](/plugins/ai-rag-injector/api/) to ingest content with metada
   ```
 {% include plugins/ai-partials-vectordb-embeddings.md %}
 
-{% include plugins/redis-cloud-auth.md %}
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
