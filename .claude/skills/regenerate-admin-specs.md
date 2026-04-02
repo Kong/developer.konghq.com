@@ -5,19 +5,20 @@ generate or regenerate the Kong Gateway Admin API OpenAPI specs for one or more 
 ## Usage
 
 ```
-/regenerate-admin-specs [versions]
+/regenerate-admin-specs [versions] [image]:[tag]
 ```
 
 Examples:
 
-- `/regenerate-admin-specs 3.13` — regenerate a single version
-- `/regenerate-admin-specs 3.11 3.12 3.13` — regenerate specific versions
+- `/regenerate-admin-specs 3.13 kong-gateway-dev:3.13.0.0` — regenerate a single version
+- `/regenerate-admin-specs 3.11 3.12 3.13` — regenerate specific versions and use the default image for each version
 
 ## What this skill does
 
 1. Checks that the generator repo exists at `../kong-admin-spec-generator`
 2. For each requested version:
-   - Runs `DOCKER_IMAGE=kong/kong-gateway:{version} make setup-kong`
+   - If no `{image}:{tag}` is specified, runs `DOCKER_IMAGE=kong/kong-gateway:{version} make setup-kong`
+   - If `{image}:{tag}` exists in the prompt, runs `DOCKER_IMAGE=kong/{image}:{tag} make setup-kong`
    - Runs `make kong` to generate the spec
    - Diffs the generated spec against the existing one in `api-specs/gateway/admin-ee/{version}/openapi.yaml`
    - Copies the new spec into place if there are changes
@@ -54,7 +55,8 @@ When this skill is invoked:
    - Verify `GENERATOR_DIR` exists before proceeding. If it doesn't, tell the user to clone `kong-admin-spec-generator` as a sibling of this repo and stop.
 3. Run each version sequentially (not in parallel — Docker containers conflict)
 4. For each version:
-   - Run `cd $GENERATOR_DIR && DOCKER_IMAGE=kong/kong-gateway:{version} make setup-kong`. If it fails, log the error, skip the version, continue.
+   - If prompt has `{image}:{tag}`, run `cd $GENERATOR_DIR && DOCKER_IMAGE=kong/{image}:{tag} make setup-kong`. If it fails, log the error, skip the version, continue.
+   - If prompt doesn't have `{image}:{tag}`, run `cd $GENERATOR_DIR && DOCKER_IMAGE=kong/kong-gateway:{version} make setup-kong`. If it fails, log the error, skip the version, continue.
    - Run `make kong` from `$GENERATOR_DIR`. If it fails, run `make clean` and skip.
    - Diff: `diff $GENERATOR_DIR/work/openapi.yaml $DOCS_REPO/api-specs/gateway/admin-ee/{version}/openapi.yaml`
    - If diff exits 1 (changes exist), copy with `cp $GENERATOR_DIR/work/openapi.yaml $DOCS_REPO/api-specs/gateway/admin-ee/{version}/openapi.yaml` and report a brief summary of what changed
