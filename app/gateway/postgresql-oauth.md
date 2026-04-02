@@ -1,5 +1,5 @@
 ---
-title: Kong PostgreSQL OAUTHBEARER Authentication
+title: "{{site.base_gateway}} PostgreSQL OAuth2 authentication"
 content_type: reference
 layout: reference
 
@@ -32,17 +32,15 @@ related_resources:
     url: /gateway/gcp-postgres-authentication/
 
 faqs:
-  - q: What must match between pg_hba.conf and Kong's configuration?
+  - q: What must match between pg_hba.conf and the {{site.base_gateway}} configuration?
     a: |
-      The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` Kong configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid.
+      The `scope` value in `pg_hba.conf` must match the `pg_oauth_scope` {{site.base_gateway}} configuration parameter (environment variable `KONG_PG_OAUTH_SCOPE`). If they don't match, PostgreSQL will reject the token even if it is otherwise valid.
   - q: Why does my connection fail even though the token is valid?
     a: |
-      The `pg_user` Kong configuration parameter (environment variable `KONG_PG_USER`) must be set to the PostgreSQL role name that the validator maps from the token. If they don't match, the connection will fail.
+      The `pg_user` {{site.base_gateway}} configuration parameter (environment variable `KONG_PG_USER`) must be set to the PostgreSQL role name that the validator maps from the token. If they don't match, the connection will fail.
 ---
 
-[PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) introduces a native OAuth2 authentication method based on the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism, by using a [server-side validator](https://github.com/percona/pg_oidc_validator).
-
-Based on that, {{site.base_gateway}} adds support for connecting to PostgreSQL 18 using OAuth2 authentication, starting from version 3.14.
+Starting from version 3.14, {{site.base_gateway}} supports connecting to [PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) using OAuth2 authentication via the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism and a [server-side validator](https://github.com/percona/pg_oidc_validator).
 
 ## Architecture
 
@@ -99,15 +97,13 @@ rows:
 
 ## SSL requirements
 
-OAUTHBEARER transmits tokens over the connection, so SSL is mandatory. When `pg_oauth_auth=on`, Kong automatically forces `pg_ssl=on` and `pg_ssl_required=on`.
-
-**PostgreSQL must be configured with SSL enabled.** If PostgreSQL does not have SSL configured, the connection will fail.
+Because OAUTHBEARER transmits tokens in plaintext, SSL is required. When `pg_oauth_auth=on`, {{site.base_gateway}} automatically enforces `pg_ssl=on` and `pg_ssl_required=on` — PostgreSQL must also have SSL enabled or the connection will fail.
 
 ## PostgreSQL setup
 
 ### 1. Install an OAuth validator plugin
 
-Self-managed PostgreSQL 18 requires an `oauth_validator_libraries` plugin to validate tokens. Install and configure one according to your chosen plugin's documentation.
+Self-managed PostgreSQL 18 requires a validator library configured via the `oauth_validator_libraries` parameter. Install and configure one according to your chosen library's documentation.
 
 ### 2. Configure postgresql.conf
 
@@ -159,7 +155,7 @@ CREATE ROLE "<matched_identity>" WITH LOGIN;
 
 ### Token endpoint vs Discovery endpoint
 
-Kong needs to know where to request tokens. There are two mutually exclusive ways to configure this:
+{{site.base_gateway}} needs to know where to request tokens. There are two mutually exclusive ways to configure this:
 
 <!--vale off-->
 {% table %}
@@ -180,7 +176,7 @@ One of the two is **required**. If both are set, `token_endpoint` takes preceden
 
 ### Token endpoint auth method
 
-`pg_oauth_token_endpoint_auth_method` controls how Kong sends client credentials to the IdP's token endpoint:
+`pg_oauth_token_endpoint_auth_method` controls how {{site.base_gateway}} sends client credentials to the IdP's token endpoint:
 
 <!--vale off-->
 {% table %}
@@ -201,7 +197,7 @@ Choose the method your IdP supports. Most IdPs support both; some (e.g., certain
 
 ### Example 1: Client Credentials Grant (with token_endpoint)
 
-The most common pattern for service-to-service authentication. Kong uses `client_id` + `client_secret` to obtain a token.
+This is the most common pattern for service-to-service authentication, where {{site.base_gateway}} uses `client_id` and `client_secret` to obtain a token.
 
 {% navtabs "example-1" %}
 {% navtab "Environment variables" %}
@@ -242,7 +238,7 @@ pg_ssl_verify=on
 
 ### Example 2: Client Credentials Grant (with discovery_endpoint)
 
-Same as above, but using OIDC discovery to automatically resolve the token endpoint.
+Use this variant when you prefer not to hardcode the token endpoint URL, {{site.base_gateway}} resolves it automatically from the OIDC discovery document.
 
 {% navtabs "example-2" %}
 {% navtab "Environment variables" %}
@@ -283,7 +279,7 @@ pg_ssl_verify=on
 
 ### Example 3: Password Grant
 
-Used when the IdP requires resource owner credentials.
+Use this grant type when the IdP requires resource owner credentials.
 
 {% navtabs "example-3" %}
 {% navtab "Environment variables" %}
