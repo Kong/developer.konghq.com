@@ -45,16 +45,16 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 ### Create the web application (used by {{site.base_gateway}} for introspection)
 
 1. Go to **Applications > Applications > Create App Integration**.
-2. Sign-in method: **OIDC - OpenID Connect**
-3. Application type: **Web Application**
-4. App integration name: `Kong MCP Gateway`
-5. Grant types: check **Client Credentials** and **Authorization Code**.
-6. Set Sign-in redirect URIs to any valid URL (for example, `http://localhost/unused`). Kong does not use the redirect flow for this app, but Okta requires the field.
-7. Assignments: **Skip group assignment for now**
-8. Click **Save**.
-9. Copy the **Client ID** and **Client Secret**. These go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config.
-10. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
-11. Export the credentials:
+1. Sign-in method: **OIDC - OpenID Connect**
+1. Application type: **Web Application**
+1. App integration name: `Kong MCP Gateway`
+1. Grant types: check **Client Credentials** and **Authorization Code**.
+1. Set Sign-in redirect URIs to any valid URL (for example, `http://localhost/unused`). Kong does not use the redirect flow for this app, but Okta requires the field.
+1. Assignments: **Skip group assignment for now**
+1. Click **Save**.
+1. Copy the **Client ID** and **Client Secret**. These go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config.
+1. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
+1. Export the credentials:
 
     ```sh
     export DECK_OKTA_CLIENT_ID='your-kong-web-app-client-id'
@@ -64,14 +64,14 @@ export DECK_OKTA_INTROSPECTION_ENDPOINT='https://your-org.okta.com/oauth2/defaul
 ### Create the native application (used by MCP Inspector)
 
 1. Go to **Applications > Applications > Create App Integration**.
-2. Sign-in method: **OIDC - OpenID Connect**
-3. Application type: **Native Application**
-4. App integration name: `MCP Inspector`
-5. Grant types: check **Authorization Code**.
-6. Sign-in redirect URIs: `http://localhost:6274/oauth/callback/debug`
-7. Assignments: assign your user.
-8. Click **Save**.
-9. Copy the **Client ID**. This is the Client ID you enter in MCP Inspector. No secret is needed for this public client.
+1. Sign-in method: **OIDC - OpenID Connect**
+1. Application type: **Native Application**
+1. App integration name: `MCP Inspector`
+1. Grant types: check **Authorization Code**.
+1. Sign-in redirect URIs: `http://localhost:6274/oauth/callback/debug`
+1. Go to the **Assignments** tab, click **Assign > Assign to People**, and assign your user.
+1. Click **Save**.
+1. Copy the **Client ID**. This is the Client ID you enter in MCP Inspector. No secret is needed for this public client.
 
 {:.info}
 > The two applications serve different purposes. The **Web Application** Client ID and Client Secret go into the {{site.base_gateway}} `ai-mcp-oauth2` Plugin config for token introspection. The **Native Application** Client ID is what you enter in MCP Inspector when connecting to the OAuth-protected MCP endpoint.
