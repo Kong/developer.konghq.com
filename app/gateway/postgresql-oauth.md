@@ -66,7 +66,6 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-A PostgreSQL role must exist that matches the identity the validator extracts from the token. How this mapping works (which claim, what format) is determined entirely by the validator plugin or cloud provider.
 The token-to-role mapping in step 4 is critical: a PostgreSQL role must exist that matches the identity the validator extracts from the token. Which claim is used and how it maps to a role is determined entirely by the validator library or cloud provider.
 
 ## Version requirements
