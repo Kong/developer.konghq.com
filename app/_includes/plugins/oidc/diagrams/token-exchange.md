@@ -1,53 +1,22 @@
-<!--vale off-->
 {% mermaid %}
 sequenceDiagram
+    participant C as Client<br>(e.g. mobile app)
+    participant K as API Gateway <br>with OIDC plugin
+    participant A as Authorization server<br>(e.g. Keycloak)
+    participant U as Upstream<br>(backend service,<br>e.g. httpbin)
 
-participant s1 as IDP1<br>(e.g. Okta)
-participant c1 as Client1<br>(e.g. App1)
-
-c1<<->>+s1: token
-
-participant s2 as IDP2<br>(e.g. GitHub)
-participant c2 as Client2<br>(e.g. App2)
- 
-c2<<->>+s2: token
-participant kong as API Gateway<br>(Kong) 
-
-participant u as Upstream<br>(protected by target IdP)
-participant t as Target IdP
-
-loop Protected by
-    t->>+u: 
-end
-activate c1 
-c1->>kong: Service with access token 
-deactivate c1 
-activate c2
-c2->>kong: Service with access token 
-deactivate c2
-activate kong 
-loop check incoming token
-    kong->>kong: load access token 
-    kong->>kong: verify claims (iss,nbf,exp) 
-    kong->>kong: check conditions for exchange
-end  
-kong->>t: Trigger exchange token   
-deactivate kong
-activate t
-t->>kong: Respond with exchanged token 
-deactivate t
-activate kong 
-loop check exchanged token
-    kong->>kong: Validate newly exchanged token
-end    
-kong->>u: Proxy request to upstream
-deactivate kong
-activate u
-u->>kong: Response
-deactivate u
-activate kong
-kong->>c2: Respond to client
-kong->>c1: Respond to client
-deactivate kong
+    C->>K: Request with subject token
+    activate K
+    note over K: Validate subject token<br>(iss, exp, nbf)
+    K->>A: Token exchange request
+    activate A
+    A-->>K: Exchanged access token
+    deactivate A
+    K->>K: Validate exchanged token
+    K->>U: Proxy request with exchanged token
+    activate U
+    U-->>K: Response
+    deactivate U
+    K-->>C: Response
+    deactivate K
 {% endmermaid %}
-<!--vale on-->

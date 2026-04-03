@@ -590,10 +590,10 @@ The trust model must strictly define which clients are allowed to exchange token
 
 In a typical [OAuth flow](#kong-oauth-token-authentication-flow), a token is obtained to access a resource. 
 However, in a token exchange, a client already has a token (the "subject token"). 
-{{ite.base_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
+{{site.base_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
 The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
 
-{% include_cached plugins/oidc/diagrams/token-exchange.md %}
+{% include_cached /plugins/oidc/diagrams/token-exchange.md %}
 
 The OpenID Connect plugin performs the following checks on the incoming token before triggering the exchange:
 1. Checks the incoming subject token meets the following criteria:

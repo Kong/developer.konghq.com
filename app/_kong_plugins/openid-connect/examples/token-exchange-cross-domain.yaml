@@ -13,7 +13,7 @@ extended_description: |
 
   Here's how token exchange works with the OIDC plugin:
 
-  {% include_cached plugins/oidc/diagrams/token-exchange.md %}
+  {% include_cached /plugins/oidc/diagrams/token-exchange.md %}
 
 weight: 701
 
