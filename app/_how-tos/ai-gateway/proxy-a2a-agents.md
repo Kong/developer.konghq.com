@@ -303,3 +303,95 @@ Span #5
     ID             : 1c44c62490a
 ```
 {:.collapsible}
+
+## Validate metrics
+
+You should also see metrics data in the OpenTelemetry Collector output. Search for `kong.gen_ai.a2a` in the `collector-output.txt` file. You should see the following data:
+
+```
+ResourceMetrics #0
+Resource SchemaURL: 
+Resource attributes:
+     -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
+     -> service.name: Str(kong-a2a)
+     -> service.version: Str(3.14.0.0)
+ScopeMetrics #0
+ScopeMetrics SchemaURL: 
+InstrumentationScope kong-internal 0.1.0
+Metric #0
+Descriptor:
+     -> Name: kong.gen_ai.a2a.request.duration
+     -> Description: Measures A2A request duration in seconds.
+     -> Unit: s
+     -> DataType: Histogram
+     -> AggregationTemporality: Cumulative
+HistogramDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.823196672 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141009664 +0000 UTC
+Count: 3
+Sum: 20.365000
+Min: 5.692000
+Max: 8.950000
+Metric #1
+Descriptor:
+     -> Name: kong.gen_ai.a2a.response.size
+     -> Description: Measures A2A response body size in bytes.
+     -> Unit: By
+     -> DataType: Histogram
+     -> AggregationTemporality: Cumulative
+HistogramDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.823648 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141217024 +0000 UTC
+Count: 3
+Sum: 3994.000000
+Min: 1304.000000
+Max: 1345.000000
+Metric #2
+Descriptor:
+     -> Name: kong.gen_ai.a2a.request.count
+     -> Description: Counts A2A requests.
+     -> Unit: {request}
+     -> DataType: Sum
+     -> IsMonotonic: true
+     -> AggregationTemporality: Cumulative
+NumberDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.822096128 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.14095616 +0000 UTC
+Value: 3
+Metric #3
+Descriptor:
+     -> Name: kong.gen_ai.a2a.task.state.count
+     -> Description: Counts A2A task state transitions.
+     -> Unit: {state}
+     -> DataType: Sum
+     -> IsMonotonic: true
+     -> AggregationTemporality: Cumulative
+NumberDataPoints #0
+Data point attributes:
+     -> kong.workspace.name: Str(default)
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.task.state: Str(completed)
+StartTimestamp: 2026-04-03 06:40:44.824023552 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141275648 +0000 UTC
+Value: 3
+```
+{:.collapsible}
