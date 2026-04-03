@@ -75,7 +75,7 @@ prereqs:
            export AWS_AUTH_REGION="us-east-1"
            export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
            ```
-        1. [Create two EC2 VMs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html), one with [{{site.base_gateway}} installed and running](/gateway/install/), and one for HashiCorp Vault and associate the respective IAM roles with the VMs.
+        1. [Create two EC2 VMs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html), one with [{{site.base_gateway}} installed and running](/gateway/install/), and one for HashiCorp Vault and associate the respective IAM roles with the VMs. Open 8200 ports on the vault EC2 instance to allow requests from other EC2 VMs. We recommend creating two AWS EC2 VMs in the same VPC for simplicity.
       icon_url: /assets/icons/aws.svg
     - title: HashiCorp Vault
       content: |
