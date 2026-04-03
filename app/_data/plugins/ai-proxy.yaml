@@ -771,8 +771,8 @@ providers:
         - 'No statistics logging for assistants, batch, or audio APIs'
 
   - name: 'vLLM'
-    url_patterns: []
-    url_is_variable: true
+    url_patterns:
+      - '$UPSTREAM_URL'
     min_version: '3.14'
     chat:
       supported: true
