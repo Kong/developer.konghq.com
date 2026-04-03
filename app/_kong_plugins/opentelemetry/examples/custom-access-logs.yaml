@@ -1,0 +1,33 @@
+description: "Add custom attributes to your access logs using the OpenTelemetry plugin."
+extended_description: |
+  Add custom attributes to your access logs using the OpenTelemetry plugin.
+
+  Using the [`config.access_logs.custom_attributes_by_lua`](/plugins/opentelemetry/reference/#schema--config-custom-attributes-by-lua) configuration, 
+  define multiple key-value pairs, where each key represents an attribute name and each value is dynamically computed using Lua code.
+
+title: 'Add custom attributes to your access logs'
+
+weight: 1000
+
+min_version:
+  gateway: '3.14'
+
+requirements: 
+  - "An OpenTelemetry backend"
+
+config:
+  access_logs: 
+    endpoint: "http://localhost:4318/v1/logs"
+    custom_attributes_by_lua:
+      foo: 'return "bar"'
+      kong.workspace.name: 'return "updated by custom Lua code"'
+      kong.version: 'return kong.version'
+      upstream_host: 'return ngx.var.upstream_host or "unknown"'
+      upstream_addr: 'return ngx.var.upstream_addr or "unknown"'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

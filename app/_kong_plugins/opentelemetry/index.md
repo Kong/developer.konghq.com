@@ -328,6 +328,10 @@ for each different header format, as in the following example:
 },
 ```
 
+## Custom attributes by Lua {% new_in 3.14 %}
+
+{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_attributes_by_lua' custom_fields_by_lua_slug='config-custom-attributes-by-lua' name=page.name slug=page.slug %}
+
 ## Troubleshooting
 
 The OpenTelemetry spans are printed to the console when the log level is set to `debug` in the {{site.base_gateway}} configuration file.

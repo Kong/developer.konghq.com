@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes and known issues"
+title: "{{site.base_gateway}} breaking changes, deprecations, and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -16,7 +16,7 @@ tags:
 
 
 
-description: "Review {{site.base_gateway}} version breaking changes before upgrading."
+description: "Review {{site.base_gateway}} version breaking changes, deprecations, and known issues before upgrading."
 
 related_resources:
   - text: Upgrading {{site.base_gateway}}
@@ -159,6 +159,11 @@ rows:
 {% endtable %}
 
 To revert to the old behavior, set `tls_certificate_verify` to `off`.
+
+#### OpenTelemetry: Access logs endpoint parameter
+
+The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
+We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
 
 ## 3.13.x breaking changes
 
