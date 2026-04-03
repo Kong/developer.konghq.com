@@ -6,7 +6,7 @@ extended_description: |
   Valkey is automatically detected when using the `redis` vectordb strategy. {{site.base_gateway}} queries the server and uses the Valkey-specific driver when it detects a Valkey backend.
 
   {:.info}
-  > If you use the `text-embedding-ada-002` as an embedding model, you must set a fixed dimension of `1536`, as required by the official model specification. Alternatively, use the `text-embedding-3-small` model, which supports dynamic dimensions and works without specifying a fixed value.
+  > This example uses `text-embedding-3-large`, which supports up to `3072` dimensions. If you use `text-embedding-ada-002` instead, you must set `dimensions` to exactly `1536`.
 
 title: RAG injection with OpenAI and Valkey
 
@@ -47,7 +47,7 @@ config:
       host: ${valkey}
       port: 6379
     distance_metric: cosine
-    dimensions: 76
+    dimensions: 3072
 
 tools:
   - deck
