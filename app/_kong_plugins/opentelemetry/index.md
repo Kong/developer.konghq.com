@@ -330,7 +330,12 @@ for each different header format, as in the following example:
 
 ## Custom attributes by Lua {% new_in 3.14 %}
 
-{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_attributes_by_lua' custom_fields_by_lua_slug='config-custom-attributes-by-lua' name=page.name slug=page.slug %}
+{% include /plugins/logging/log-custom-fields-by-lua.md 
+custom_fields_by_lua='config.access_logs.custom_attributes_by_lua' 
+custom_fields_by_lua_slug='config-access-logs-custom-attributes-by-lua' 
+custom_fields_by_lua_name='custom_attributes_by_lua' 
+name=page.name 
+slug=page.slug %}
 
 ## Troubleshooting
 
@@ -354,5 +359,4 @@ Span #6 name=balancer try #1 duration=0.99328ms attributes={"net.peer.ip":"104.2
 - May impact the performance of {{site.base_gateway}}.
   We recommend setting the sampling rate (`tracing_sampling_rate`)
   via the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/) when using the OpenTelemetry plugin for tracing.
-- Doesn't support `custom_fields_by_lua`.
 - Doesn't support {{site.ai_gateway}} and MCP metrics and access logs. You can use [Prometheus](/plugins/prometheus/) for metrics, and [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/) for access logs.
