@@ -63,6 +63,7 @@ autoscaling
 Avalara
 Avro
 aws
+aws_iam
 Adyen
 AZs
 Backblaze
@@ -292,6 +293,8 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+gcp_gce
+gcp_iam
 generationConfig
 geo
 geos
