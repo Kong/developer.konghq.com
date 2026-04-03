@@ -24,6 +24,8 @@ related_resources:
     url: /dev-portal/portal-settings/
   - text: About Dev Portal customizations
     url: /dev-portal/customizations/dev-portal-customizations/
+  - text: Specify IP addresses that can connect to your Dev Portal
+    url: /dev-portal/security-settings/#specify-ip-addresses-that-can-connect-to-your-dev-portal
 faqs:
   - q: How do I delete a custom domain from a Dev Portal?
     a: |
