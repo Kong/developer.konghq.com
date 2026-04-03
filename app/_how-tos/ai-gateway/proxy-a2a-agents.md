@@ -220,24 +220,24 @@ You should see data in your OpenTelemetry Collector terminal. You can also searc
 
 ```
 ResourceSpans #0
-Resource SchemaURL:
+Resource SchemaURL: 
 Resource attributes:
      -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
      -> service.name: Str(kong-a2a)
      -> service.version: Str(3.14.0.0)
 ScopeSpans #0
-ScopeSpans SchemaURL:
+ScopeSpans SchemaURL: 
 InstrumentationScope kong-internal 0.1.0
 Span #0
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
-    Parent ID      :
+    Parent ID      : 
     ID             : 779db508077de69f
     Name           : kong
     Kind           : Server
     Start time     : 2026-04-03 06:48:41.446000128 +0000 UTC
     End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
     Status code    : Unset
-    Status message :
+    Status message : 
 Attributes:
      -> http.flavor: Str(1.1)
      -> http.route: Str(/a2a)
@@ -258,7 +258,7 @@ Span #1
     Start time     : 2026-04-03 06:48:41.446752256 +0000 UTC
     End time       : 2026-04-03 06:48:41.44679424 +0000 UTC
     Status code    : Unset
-    Status message :
+    Status message : 
 Span #2
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -268,7 +268,7 @@ Span #2
     Start time     : 2026-04-03 06:48:41.446919936 +0000 UTC
     End time       : 2026-04-03 06:48:41.447105024 +0000 UTC
     Status code    : Unset
-    Status message :
+    Status message : 
 Span #3
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : de4e6ed2c16a2dd3
@@ -278,7 +278,7 @@ Span #3
     Start time     : 2026-04-03 06:48:41.44707456 +0000 UTC
     End time       : 2026-04-03 06:48:47.140356608 +0000 UTC
     Status code    : Unset
-    Status message :
+    Status message : 
 Attributes:
      -> kong.a2a.protocol.version: Str(unknown)
      -> rpc.system: Str(jsonrpc)
@@ -296,11 +296,57 @@ Span #4
     Start time     : 2026-04-03 06:48:41.447129088 +0000 UTC
     End time       : 2026-04-03 06:48:41.447464448 +0000 UTC
     Status code    : Unset
-    Status message :
+    Status message : 
 Span #5
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
-    ID             : 1c44c62490a
+    ID             : 1c44c62490a4dc00
+    Name           : kong.dns
+    Kind           : Client
+    Start time     : 2026-04-03 06:48:41.44754304 +0000 UTC
+    End time       : 2026-04-03 06:48:41.447862272 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> dns.record.port: Double(10000)
+     -> dns.record.ip: Str(172.18.0.2)
+     -> dns.record.domain: Str(a2a-currency-agent)
+Span #6
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : 811a109d1908068d
+    Name           : kong.header_filter.plugin.ai-a2a-proxy
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:47.139697664 +0000 UTC
+    End time       : 2026-04-03 06:48:47.139731712 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #7
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : ff3f295f3b8cf464
+    Name           : kong.header_filter.plugin.opentelemetry
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:47.139753728 +0000 UTC
+    End time       : 2026-04-03 06:48:47.1397632 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #8
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : f8718c5342d3bc70
+    Name           : kong.balancer
+    Kind           : Client
+    Start time     : 2026-04-03 06:48:41.447897088 +0000 UTC
+    End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> net.peer.ip: Str(172.18.0.2)
+     -> net.peer.port: Double(10000)
+     -> net.peer.name: Str(a2a-currency-agent)
+     -> try_count: Double(1)
+     -> peer.service: Str(a2a-currency-agent)
 ```
 {:.collapsible}
 
