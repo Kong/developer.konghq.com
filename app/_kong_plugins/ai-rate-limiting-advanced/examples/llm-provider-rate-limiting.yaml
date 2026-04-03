@@ -7,7 +7,7 @@ extended_description: |
   The following example uses OpenAI, but you can apply the same strategies to any [supported LLM provider](/plugins/ai-rate-limiting-advanced/reference/#schema--config-llm-providers-name).
 
   {:.warning}
-  > {% new_in 3.14 %} This method is deprecated, use the [policy-based configuration](./llm-provider-policy-based-rate-limiting) instead.
+  > {% new_in 3.14 %} This method is deprecated, use the [policy-based configuration](/plugins/ai-rate-limiting-advanced/examples/llm-provider-policy-based-rate-limiting/) instead
 
 title: 'Enable LLM provider rate limiting'
 
