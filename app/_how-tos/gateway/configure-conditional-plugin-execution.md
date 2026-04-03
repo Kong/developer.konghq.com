@@ -61,7 +61,7 @@ faqs:
       ```
       {:.no-copy-code}
 
-      The log line shows the plugin name, its ID, the expression that was evaluated, and the result.
+      The log line shows the plugin name, its ID, and the result.
       When `result=false`, the plugin was skipped for that request.
 ---
 
