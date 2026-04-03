@@ -104,7 +104,7 @@ We recommend updating your configurations, as the old `config.consumer_claim` fi
 
 #### OpenID Connect: header claims fields
   
-The header claims fields in the in the [OpenID Connect plugin](/plugins/openid-connect/) have been replaced with new fields:
+The header claims fields in the [OpenID Connect plugin](/plugins/openid-connect/) have been replaced with new fields:
 * `config.upstream_headers_claims` and `config.upstream_headers_names` -> replaced by `config.upstream_headers`
 * `config.downstream_headers_claims` and `config.downstream_headers_names` -> replaced by `config.downstream_headers`
 
