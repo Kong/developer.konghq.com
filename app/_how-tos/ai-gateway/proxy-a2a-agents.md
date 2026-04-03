@@ -182,6 +182,8 @@ entities:
         traces_endpoint: "http://${jaeger-host}:4318/v1/traces"
         resource_attributes:
           service.name: kong-a2a
+        metrics:
+          enable_ai_metrics: true
 variables:
   jaeger-host:
     value: $JAEGER_HOST
