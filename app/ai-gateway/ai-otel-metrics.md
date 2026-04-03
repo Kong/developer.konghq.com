@@ -50,6 +50,8 @@ works_on:
 
 {% new_in 3.14 %} {{site.ai_gateway}} can export OpenTelemetry (OTLP) metrics for generative AI, MCP, and A2A traffic through the [OpenTelemetry plugin](/plugins/opentelemetry/). These metrics are aggregated time-series data points (counters, histograms) pushed to a configured OTLP metrics endpoint on a regular interval. They are separate from the per-request [Gen AI span attributes](/ai-gateway/llm-open-telemetry/) emitted on traces.
 
+For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/). To visualize Gen AI traces in Jaeger, see [Set up Jaeger with Gen AI OpenTelemetry](/how-to/set-up-jaeger-with-gen-ai-otel/).
+
 Use these metrics to:
 
 * Track LLM request latency and upstream provider processing time
