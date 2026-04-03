@@ -1,5 +1,5 @@
 ---
-title: Meter API requests by Consumer with {{site.metering_and_billing}}
+title: Track API requests by Consumer with {{site.metering_and_billing}}
 permalink: /how-to/meter-api-requests-by-consumer/
 description: Learn how to emit a usage event for every API request using the {{site.metering_and_billing}} plugin on {{site.base_gateway}}, attributed to the authenticated Consumer.
 content_type: how_to
@@ -170,3 +170,7 @@ Now verify that the events were received:
 1. Click the **Events** tab.
 
 You'll see three events listed, each with `subject: alice`, one for each request that passed through {{site.base_gateway}}.
+
+You'll also see an error message like `no customer found for event subject: consumer` associated with the event.
+This is expected since we're only tracking API usage.
+If you want to meter and bill Consumer's usage, see [Metering](/metering-and-billing/metering/), [Customers and usage attribution](/metering-and-billing/customer/), and [Billing, invoicing, and subscriptions](/metering-and-billing/billing-invoicing-subscriptions/).
