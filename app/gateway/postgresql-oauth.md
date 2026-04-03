@@ -40,17 +40,17 @@ faqs:
       The `pg_user` {{site.base_gateway}} configuration parameter (environment variable `KONG_PG_USER`) must be set to the PostgreSQL role name that the validator maps from the token. If they don't match, the connection will fail.
 ---
 
-Starting from version 3.14, {{site.base_gateway}} supports connecting to [PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) using OAuth2 authentication via the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism and a [server-side validator](https://github.com/percona/pg_oidc_validator). This is a more secure alternative to password-based authentication that enables single sign-on (SSO) and centralized access management through any OIDC-compliant identity provider such as Okta, Azure AD, Google, or Keycloak.
+{{site.base_gateway}} supports connecting to [PostgreSQL 18](https://www.postgresql.org/about/news/postgresql-18-rc-1-released-3130/) using OAuth2 authentication via the [SASL OAUTHBEARER](https://datatracker.ietf.org/doc/html/rfc7628) mechanism and a [server-side validator](https://github.com/percona/pg_oidc_validator). This is a more secure alternative to password-based authentication that enables single sign-on (SSO) and centralized access management through any OIDC-compliant identity provider such as Okta, Azure AD, Google, or Keycloak.
 
 ## Architecture
 
 The following diagram shows how {{site.base_gateway}} authenticates to PostgreSQL using OAUTHBEARER:
 
-1. {{site.base_gateway}} obtains an OAuth access token from the IdP (using client_credentials or password grant)
-2. {{site.base_gateway}} connects to PostgreSQL using OAUTHBEARER SASL mechanism, sending the token
-3. PostgreSQL's OAuth validator plugin contacts the IdP to validate the token
-4. The validator verifies the token's authenticity (issuer, signature, expiration) and extracts the user's identity, typically the `sub` claim, which is mapped to an existing PostgreSQL role
-5. If the role exists and the token is valid, the connection succeeds
+1. {{site.base_gateway}} obtains an OAuth access token from the IdP (using client_credentials or password grant).
+2. {{site.base_gateway}} connects to PostgreSQL using OAUTHBEARER SASL mechanism, sending the token.
+3. PostgreSQL's OAuth validator plugin contacts the IdP to validate the token.
+4. The validator verifies the token's authenticity (issuer, signature, expiration) and extracts the user's identity, typically the `sub` claim, which is mapped to an existing PostgreSQL role.
+5. If the role exists and the token is valid, the connection succeeds.
 
 <!--vale off-->
 {% mermaid %}
@@ -84,7 +84,7 @@ rows:
     version: "3.14+"
     notes: First version to support OAUTHBEARER SASL
   - component: PostgreSQL
-    version: "**18+**"
+    version: "18+"
     notes: First version to support OAUTHBEARER authentication
   - component: "[OAuth Validator](https://github.com/percona/pg_oidc_validator)"
     version: "-"
@@ -97,13 +97,13 @@ rows:
 
 ## SSL requirements
 
-Because OAUTHBEARER transmits tokens in plaintext, SSL is required. When `pg_oauth_auth=on`, {{site.base_gateway}} automatically enforces `pg_ssl=on` and `pg_ssl_required=on`. PostgreSQL must also have SSL enabled or the connection will fail.
+Because OAUTHBEARER transmits tokens in plaintext, SSL is required. When `pg_oauth_auth` is set to `on`, {{site.base_gateway}} automatically enforces `pg_ssl=on` and `pg_ssl_required=on`. PostgreSQL must also have SSL enabled or the connection will fail.
 
 ## PostgreSQL setup
 
 ### 1. Install an OAuth validator plugin
 
-PostgreSQL 18 introduced OAuth support but delegates token validation entirely to third-party libraries, it does not implement token verification itself. Self-managed deployments therefore require a validator library configured via the `oauth_validator_libraries` parameter. Kong supports [pg_oidc_validator](https://www.percona.com/blog/postgresql-oidc-authentication-with-pg_oidc_validator/) from Percona. Install and configure it according to its documentation.
+PostgreSQL 18 introduced OAuth support but delegates token validation entirely to third-party libraries, it does not implement token verification itself. Self-managed deployments therefore require a validator library configured via the `oauth_validator_libraries` parameter. Kong supports [`pg_oidc_validator`](https://www.percona.com/blog/postgresql-oidc-authentication-with-pg_oidc_validator/) from Percona. Install and configure it according to its documentation.
 
 ### 2. Configure postgresql.conf
 
