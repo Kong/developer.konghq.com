@@ -54,6 +54,8 @@ When an incoming message exceeds the limit:
 2. A close frame with status code `1001` is sent to the peer
 3. Both sides of the connection are closed
 
+{% include_cached /gateway/expressions/limitation-note.md %}
+
 ## How it works
 
 Size limits can be applied to client messages, upstream messages, or both.
