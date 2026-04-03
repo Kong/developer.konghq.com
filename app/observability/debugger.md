@@ -114,6 +114,8 @@ In critical scenarios, having access to payload details can help identify and pi
 ### Payload collection and sanitization
 When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload.
 
+Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
+
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
 
