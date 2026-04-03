@@ -7,7 +7,7 @@ extended_description: |
   This is useful when you have APIs protected by different authorization servers, but you want to allow clients to access all of them with a single token.
 
   In this scenario:
-  1. The client issued a token from AuthZ Server A.
+  1. The client is issued a token from AuthZ Server A.
   1. APIs are protected by AuthZ Server B.
   1. The OIDC plugin is configured to exchange tokens from Server A with Server B.
 

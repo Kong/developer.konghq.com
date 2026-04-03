@@ -18,7 +18,7 @@ extended_description: |
 weight: 700
 
 requirements:
-  - A an identity provider (IdPs) that supports token exchange, configured with two clients. Client A has limited in what it can request, while Client 2 is authorized to do token exchange and request specific scopes.
+  - An identity provider (IdPs) that supports token exchange, configured with two clients. Client A is limited in what it can request, while Client 2 is authorized to do token exchange and request specific scopes.
 
 config:
   issuer: ${issuer}

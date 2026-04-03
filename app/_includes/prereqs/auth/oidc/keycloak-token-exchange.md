@@ -127,7 +127,7 @@ Find the credentials for the first client:
    In this guide, we're going to use an example user named `alex` with the password `doe`.
 
 Find the credentials for the second client:
-1. In the open **Clients**, and select `client-2`.
+1. In the sidebar, open **Clients**, and select `client-2`.
 1. Open the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
