@@ -1,28 +1,33 @@
-description: Configure the AI RAG Injector plugin to inject content to use Redis as vector database and the OpenAI text-embedding-3-large model for embedding.
+description: Configure the AI RAG Injector plugin to use Valkey as a vector database and the OpenAI text-embedding-3-large model for embedding.
 
 extended_description: |
-  Configure the AI RAG Injector plugin to inject content to use Redis as vector database and the OpenAI text-embedding-3-large model for embedding.
+  Configure the AI RAG Injector plugin to use Valkey as a vector database and the OpenAI text-embedding-3-large model for embedding.
+
+  Valkey is automatically detected when using the `redis` vectordb strategy. {{site.base_gateway}} queries the server and uses the Valkey-specific driver when it detects a Valkey backend.
 
   {:.info}
   > This example uses `text-embedding-3-large`, which supports up to `3072` dimensions. If you use `text-embedding-ada-002` instead, you must set `dimensions` to exactly `1536`.
 
-title: RAG injection with OpenAI and Redis
+title: RAG injection with OpenAI and Valkey
 
-weight: 900
+weight: 899
+
+min_version:
+  gateway: '3.14'
 
 requirements:
   - "You have enabled the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin"
   - You have an OpenAI account
-  - "A [Redis](https://redis.io/docs/latest/) instance."
-  - "Port `6379`, or your custom Redis port is open and reachable from {{site.base_gateway}}."
+  - "A [Valkey](https://valkey.io/) 8.x instance."
+  - "Port `6379`, or your custom Valkey port is open and reachable from {{site.base_gateway}}."
 
 variables:
   key:
     value: $OPENAI_API_KEY
     description: The API key to use to connect to OpenAI.
-  redis:
-    value: $REDIS_HOST
-    description: The Redis server's host
+  valkey:
+    value: $VALKEY_HOST
+    description: The Valkey server's host
 
 config:
   inject_template: |
@@ -39,7 +44,7 @@ config:
   vectordb:
     strategy: redis
     redis:
-      host: ${redis}
+      host: ${valkey}
       port: 6379
     distance_metric: cosine
     dimensions: 3072
@@ -50,4 +55,3 @@ tools:
   - konnect-api
   - kic
   - terraform
-

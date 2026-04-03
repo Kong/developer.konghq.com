@@ -161,7 +161,7 @@ If you use {{site.konnect_short_name}} to manage your service mesh, you must add
 
 ## Specify IP addresses that can connect to {{site.konnect_short_name}}
 
-Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin AP](/admin-api/), [decK](/decK/), and [Terraform](/terraform/).
+Org Admins can specify an IP address or a range of IP addresses that are allowed to connect to {{site.konnect_short_name}} through its supported interfaces. This includes the UI, the {{site.konnect_short_name}} [APIs](/konnect-api/), the [Admin API](/admin-api/), [decK](/decK/), and [Terraform](/terraform/).
 
 This IP allow list applies to all {{site.konnect_short_name}} communication that goes through the Admin API.
 
@@ -185,4 +185,6 @@ body:
     - 192.168.1.0/22
 {% endkonnect_api_request %}
 <!--vale on-->
+
+You can also configure allowed IPs for your Dev Portals. For more information, see [Specify IP addresses that can connect to your Dev Portal](/dev-portal/security-settings/#specify-ip-addresses-that-can-connect-to-your-dev-portal).
 
