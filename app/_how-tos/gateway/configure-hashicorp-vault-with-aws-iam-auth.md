@@ -64,16 +64,127 @@ prereqs:
         In this how-to, you'll be running two Elastic Compute Cloud VMs: one with {{site.base_gateway}} and another with HashiCorp Vault. 
         Since you'll be using two VMs, you'll need two AWS IAM roles so that the two VMS can communicate:
         1. [Create an IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) for the {{site.base_gateway}} VM with the following permissions:
-           * Trust: `ec2.amazonaws.com`
-           * Permission: `sts:AssumeRole` on the HashiCorp Vault role ARN
+           * Trust: `ec2.amazonaws.com`:
+             ```json
+             {
+                 "Version": "2012-10-17",
+                 "Statement": [
+                     {
+                         "Effect": "Allow",
+                         "Principal": {
+                             "Service": "ec2.amazonaws.com"
+                         },
+                         "Action": "sts:AssumeRole"
+                     },
+                     {
+                         "Effect": "Allow",
+                         "Principal": {
+                             "AWS": "arn:aws:iam::123456789012:role/VaultRole"
+                         },
+                         "Action": "sts:AssumeRole"
+                     }
+                 ]
+             }
+             ```
+           * Permission: `sts:AssumeRole` on the HashiCorp Vault role ARN:
+             ```json
+             {
+                 "Version": "2012-10-17",
+                 "Statement": [
+                     {
+                         "Sid": "Statement1",
+                         "Effect": "Allow",
+                         "Action": [
+                             "ec2:DescribeInstances"
+                         ],
+                         "Resource": [
+                             "*"
+                         ]
+                     },
+                     {
+                         "Effect": "Allow",
+                         "Action": [
+                             "iam:GetRole"
+                         ],
+                         "Resource": [
+                             "arn:aws:iam::123456789012:role/KongRole"
+                         ]
+                     }
+                 ]
+             }
+             ```
+             This has more permission than minimal permission for vault authentication because we need to allow the {{site.base_gateway}} process to communicate with AWS identity service on the EC2 VM where {{site.base_gateway}} is running.
         1. [Create an IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create.html) for the HashiCorp Vault VM with the following permissions: 
-           * Trust: `ec2.amazonaws.com`
-           * Trust {{site.base_gateway}} role ARN (cross-role assume)
-           * Permission: `iam:getRole`
+           * Trust: `ec2.amazonaws.com` and {{site.base_gateway}} role ARN (cross-role assume)
+             ```json
+             {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": "ec2.amazonaws.com"
+                        },
+                        "Action": "sts:AssumeRole"
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "AWS": "arn:aws:iam::123456789012:role/KongRole"
+                        },
+                        "Action": "sts:AssumeRole"
+                    }
+                ]
+             }
+             ```
+           * Permission: `iam:getRole`:
+             ```json
+             {
+                "Version": "2012-10-17",
+                  "Statement": [
+                      {
+                          "Sid": "Statement1",
+                          "Effect": "Allow",
+                          "Action": [
+                              "ec2:DescribeInstances"
+                          ],
+                          "Resource": [
+                              "*"
+                          ]
+                      },
+                      {
+                          "Effect": "Allow",
+                          "Action": [
+                              "iam:GetRole"
+                          ],
+                          "Resource": [
+                              "arn:aws:iam::123456789012:role/VaultRole"
+                          ]
+                      }
+                  ]
+               }
+               ```
+               ```json
+               {
+                   "Version": "2012-10-17",
+                   "Statement": [
+                       {
+                           "Effect": "Allow",
+                           "Action": [
+                               "sts:AssumeRole"
+                           ],
+                           "Resource": [
+                               "arn:aws:iam::123456789012:role/KongRole"
+                           ]
+                       }
+                   ]
+               }
+               ```
+               This has more permission than minimal permission for vault authentication because we need to allow the {{site.base_gateway}} process to communicate with AWS identity service on the EC2 VM where {{site.base_gateway}} is running.
         1. Export {{site.base_gateway}}'s AWS region and the ARN of the IAM user that is associated with the EC2 VM that will be running HashiCorp Vault:
            ```sh
            export AWS_AUTH_REGION="us-east-1"
-           export KONG_IAM_PRINCIPAL_ARN="arn:aws:iam::123456789012:user/kong"
+           export IAM_VAULT_ROLE_ARN="arn:aws:iam::123456789012:role/VaultRole"
            ```
         1. [Create two EC2 VMs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html), one with [{{site.base_gateway}} installed and running](/gateway/install/), and one for HashiCorp Vault and associate the respective IAM roles with the VMs. Open 8200 ports on the vault EC2 instance to allow requests from other EC2 VMs. We recommend creating two AWS EC2 VMs in the same VPC for simplicity.
       icon_url: /assets/icons/aws.svg
@@ -152,7 +263,7 @@ Before you can configure the Vault entity in {{site.base_gateway}}, you must con
    ```sh
    vault write auth/aws/role/kong-role \
      auth_type=iam \
-     bound_iam_principal_arn="$KONG_IAM_PRINCIPAL_ARN" \
+     bound_iam_principal_arn="$IAM_VAULT_ROLE_ARN" \
      token_policies="rw-secrets"
    ```
 
@@ -205,6 +316,7 @@ body:
     auth_method: aws_iam
     aws_auth_role: $AWS_AUTH_ROLE
     aws_auth_region: $AWS_AUTH_REGION
+    aws_assume_role_arn: $IAM_VAULT_ROLE_ARN
     aws_role_session_name: kong
 {% endcontrol_plane_request %}
 <!--vale on-->
