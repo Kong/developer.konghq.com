@@ -1,0 +1,34 @@
+description: Protect your LLM services with path rate limiting.
+extended_description: |
+  Protect your LLM services with path rate limiting. 
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response 
+  to provide an enterprise-grade rate limiting strategy.
+
+title: 'Enable rate limiting for a path'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+
+weight: 900
+
+config:
+  policies:
+  - match:
+    - type: path
+      values:
+      - /v1/chat
+    limits:
+      - limit: 100
+        window_size: 60
+      - limit: 1000
+        window_size: 3600
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
