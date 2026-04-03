@@ -60,10 +60,10 @@ You can access the MCP Registry by navigating to **Catalog** > **MCP Registries*
 
 ## Create an MCP Registry
 
-Send a POST request to the `/registries` endpoint:
+Send a POST request to the `/mcp-registries` endpoint:
 
 ```sh
-curl -X POST "https://klabs.us.api.konghq.com/v0/registries" \
+curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries" \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   --json '{
     "name": "internal-mcp-registry",
@@ -80,10 +80,10 @@ An MCP server represents an agent-facing service definition. It describes:
 * Its version  
 * How agents can connect to it
 
-To add an MCP server, send a POST request to the `/registries/{registryIdentifier}/v0.1/publish` endpoint:
+To add an MCP server, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
 
 ```sh
-curl -X POST "https://klabs.us.api.konghq.com/v0/registries/internal-mcp-registry/v0.1/publish" \
+curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/publish" \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   --json '{
     "name": "com.example/expense-reimbursement",
@@ -138,7 +138,7 @@ An MCP server can define multiple packages and multiple remotes simultaneously. 
 Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
 
 ```sh
-curl -X GET "https://klabs.us.api.konghq.com/v0/registries/internal-mcp-registry/v0.1/servers" \
+curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/servers" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 
