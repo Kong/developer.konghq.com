@@ -1004,6 +1004,8 @@ vararg
 vc
 viewport
 viewports
+vLLM
+vllm
 vms
 vnet
 vpc

@@ -146,6 +146,13 @@ rows:
             icon: /assets/icons/deepseek.svg
             cta:
               url: /ai-gateway/ai-providers/deepseek/
+      - blocks:
+        - type: icon_card
+          config:
+            title: vLLM
+            icon: /assets/icons/vllm.svg
+            cta:
+              url: /ai-gateway/ai-providers/vllm/
   - columns:
       - blocks:
           - type: structured_text

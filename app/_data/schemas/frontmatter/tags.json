@@ -213,6 +213,7 @@
     "vault",
     "versioning",
     "vertex-ai",
+    "vllm",
     "vulnerabilities",
     "webhook",
     "websocket",
