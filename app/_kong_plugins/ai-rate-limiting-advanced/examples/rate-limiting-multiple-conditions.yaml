@@ -20,6 +20,7 @@ config:
   policies:
   - match:
     - type: provider
+      partition_by: true
       values:
       - openai
     - type: consumer

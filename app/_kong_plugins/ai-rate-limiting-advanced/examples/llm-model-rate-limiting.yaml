@@ -17,6 +17,7 @@ config:
   policies:
   - match:
     - type: model
+      partition_by: true
       values:
       - gpt-5.1
     limits:

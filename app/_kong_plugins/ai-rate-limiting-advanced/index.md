@@ -76,6 +76,9 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Policy-based rate limiting {% new_in 3.14 %}
 
+{:.info}
+> The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
+
 The [`config.policies`](./reference/#schema--config-policies) field allows you to define rate limiting at the [Consumer](./examples/consumer-rate-limiting), [Consumer Group](./examples/consumer-group-rate-limiting), [IP address](./examples/ip-rate-limiting), [header](./examples/header-rate-limiting), [path](./examples/path-rate-limiting), [model](./examples/llm-model-rate-limiting), and [provider](./examples/llm-provider-policy-based-rate-limiting) level. The match conditions under [`config.policies.match`](./reference/#schema--config-policies-match) use an `AND` logic, so you can combine these to set up [multi-dimensional rate limiting](./examples/rate-limiting-multiple-conditions). For example, you can set different rate limiting policies for a specific Consumer and model:
 
 {% entity_example %}
@@ -90,6 +93,7 @@ data:
         values:
           - $CONSUMER_ID
       - type: model
+        partition_by: true
         values:
         - gpt-4o
       limits:
@@ -101,15 +105,14 @@ data:
 
 In this example, the limits will apply only to requests made by the specified Consumer to the `gpt-4o` model.
 
-{:.info}
-> Policies without match conditions act as fallback and match all requests.
+Policies without match conditions act as fallback and match all requests.
 
 {:.warning}
 > When defining rate limits for a specific model, these limits apply to the **requested** model. If a request is redirected to a different model after a failover, the request may succeed even if the final model has reached its limit.
 
-{:.info}
-> The [`config.llm_providers`](./reference/#schema--config-llm-providers) field is deprecated, but existing configurations will still work.
+### Known issues
 
+When defining a policy matching a model and/or a provider, you must set the [`config.policies.match.partition_by`](./reference/#schema--config-policies-match-patition-by) field to `true`, otherwise the policy is not enforced.
 
 
 ## Headers sent to the client
