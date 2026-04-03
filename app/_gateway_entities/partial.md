@@ -63,18 +63,6 @@ Each plugin supports only the Partial types listed in its documentation.
 {:.info}
 > In {{site.konnect_short_name}}, Partials are only supported for bundled {{site.konnect_short_name}} plugins. Custom plugins don't support Partials.
 
-## Set up a Partial
-
-{% entity_example %}
-type: partial
-data:
-  name: my-redis-config
-  type: redis-ee
-  config:
-    host: host.docker.internal
-    port: 6379
-{% endentity_example %}
-
 ## Redis Partials
 
 Define a Redis Partial once and reference it across plugins to avoid repeating connection details, reduce configuration errors, and ensure consistent Redis behavior. The following plugins use Redis for storing counters, sessions, or cached data:
@@ -127,6 +115,18 @@ rows:
     Partial: "`redis-ee`"
     Benefit: "Centralize session handling so all SAML flows share the same Redis configuration."
 {% endtable %}
+
+### Set up a Redis Partial
+
+{% entity_example %}
+type: partial
+data:
+  name: my-redis-config
+  type: redis-ee
+  config:
+    host: host.docker.internal
+    port: 6379
+{% endentity_example %}
 
 The following examples describe how to use Partials with plugins.
 
@@ -280,51 +280,7 @@ variables:
 
 ### Link AI Partials to plugins
 
-Pass the Partial ID in the `partials` array when configuring a plugin.
-
-#### AI Semantic Cache plugin example
-
-Set up an AI Semantic Cache plugin with `vectordb` and `embeddings` Partials:
-
-{% entity_example %}
-type: plugin
-data:
-  name: ai-semantic-cache
-  partials:
-    - id: ${vectordb_partial_id}
-    - id: ${embeddings_partial_id}
-  config:
-    embeddings: {}
-    vectordb: {}
-
-variables:
-  vectordb_partial_id:
-    value: $VECTORDB_PARTIAL_ID
-    description: The ID of the vectordb Partial.
-  embeddings_partial_id:
-    value: $EMBEDDINGS_PARTIAL_ID
-    description: The ID of the embeddings Partial.
-{% endentity_example %}
-
-#### AI Proxy Advanced example
-
-Set up an AI Proxy Advanced plugin with a model Partial:
-
-{% entity_example %}
-type: plugin
-data:
-  name: ai-proxy-advanced
-  partials:
-    - id: ${model_partial_id}
-  config:
-    targets:
-      - {}
-
-variables:
-  model_partial_id:
-    value: $MODEL_PARTIAL_ID
-    description: The ID of the model Partial.
-{% endentity_example %}
+Once created, link AI Partials to plugins the same way as Redis Partials — pass the Partial ID in the `partials` array. See [Add a Partial to a plugin](#add-a-partial-to-a-plugin).
 
 {:.info}
 > You cannot provide inline configuration for the same fields that a linked Partial covers. Either define the settings directly in the plugin, or leave that block empty and use a Partial instead.
