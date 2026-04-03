@@ -1,0 +1,37 @@
+description: Protect your LLM services with rate limiting.
+extended_description: |
+  Protect your LLM services with rate limiting. 
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response 
+  to provide an enterprise-grade rate limiting strategy.
+
+  The following example uses OpenAI, but you can apply the same strategies to any supported LLM provider.
+
+title: 'Enable LLM provider policy-based rate limiting'
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+
+weight: 900
+
+config:
+  policies:
+  - match:
+    - type: provider
+      partition_by: true
+      values:
+      - openai
+    limits:
+      - limit: 100
+        window_size: 60
+      - limit: 1000
+        window_size: 3600
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'
