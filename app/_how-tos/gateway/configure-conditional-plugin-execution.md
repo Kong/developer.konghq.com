@@ -57,8 +57,7 @@ faqs:
 
       ```
       [kong] plugin_condition.lua:234 plugin condition evaluated for plugin
-      'request-termination' (ID: 66a1adbb-0179-49af-a065-4d0bc6c28cd6):
-      expression="http.headers.x_block == "true"", result=false
+      'request-termination' (ID: 66a1adbb-0179-49af-a065-4d0bc6c28cd6), result=false
       ```
       {:.no-copy-code}
 
