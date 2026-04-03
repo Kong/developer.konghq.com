@@ -102,6 +102,25 @@ config:
 
 We recommend updating your configurations, as the old `config.consumer_claim` field is deprecated and will be removed in a future version.
 
+#### OpenID Connect: header claims fields
+  
+The header claims fields in the [OpenID Connect plugin](/plugins/openid-connect/) have been replaced with new fields:
+* `config.upstream_headers_claims` and `config.upstream_headers_names` -> replaced by `config.upstream_headers`
+* `config.downstream_headers_claims` and `config.downstream_headers_names` -> replaced by `config.downstream_headers`
+
+The new fields support nested claims, which lets you access claims at any depth in the token payload.
+For example:
+
+```yaml
+upstream_headers:
+  - header: X-Org-Id
+    path:
+      - org
+      - id
+```
+
+We recommend updating your configurations, as the old `config.upstream_headers_claims`, `config.upstream_headers_names`, `config.downstream_headers_claims`, and `config.downstream_headers_names` fields are deprecated and will be removed in a future version.
+
 #### TLS certificate verify by default
 
 Starting in 3.14, the {{site.base_gateway}} global configuration option [`tls_certificate_verify`](/gateway/configuration/#tls-certificate-verify) now defaults to `on`, requiring TLS/SSL certificate verification by default.
