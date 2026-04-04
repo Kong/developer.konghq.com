@@ -105,13 +105,19 @@ In the authorization code flow:
 {% endcomment %}
 
 ## Kong Consumer Group claim authorization flow
-When using plugins scoped to Consumer Groups:
-1. In **{{site.konnect_short_name}} > API Gateway > Consumers**, the client creates the Consumer. Each user that needs access is represented as a Consumer.
 
-   {:.info}
-   > If using OIDC, you don’t need to manually map credentials. The OIDC plugin automatically maps clients to Consumers based on token claims.
-2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the Consumer Group scope.
-3. The client assigns each Consumer to the appropriate Consumer Group. Once assigned, the plugin configuration at the group level automatically applies to the Consumer.
+To apply plugins to OIDC clients, the Gateway must map the incoming token to a **Consumer** entity. This is handled by the [OIDC plugin](https://developer.konghq.com/plugins/openid-connect/) at request time:
+
+* **Map the Identity**: Ensure the Consumer's `username` or `custom_id` matches a unique claim in the OIDC token. The `sub` claim is included in Kong Identity tokens by default.
+* **Link via Plugin**: Configure the following fields in the OIDC plugin:
+    * [`config.consumer_claim`](https://developer.konghq.com/plugins/openid-connect/reference/#config-consumer_claim): The token field to identify the client (e.g., `["sub"]` or `["client_id"]`).
+    * [`config.consumer_by`](https://developer.konghq.com/plugins/openid-connect/reference/#config-consumer_by): The Consumer field to match against (e.g., `["username"]` or `["custom_id"]`).
+* **Apply Scoped Plugins**:
+    * **Consumer-scoped**: Apply plugins directly to the individual Consumer entity.
+    * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](https://docs.konghq.com/gateway/latest/admin-api/consumer-groups/reference/) to inherit shared policies across multiple clients.
+
+{:.info}
+> You do not need to migrate or create client credentials (like API keys) for these Consumers. The OIDC token serves as the authenticated credential for the mapped Consumer.
 
 ## Claim configuration
 
