@@ -94,6 +94,8 @@ The matching behavior is as follows:
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
 
+{% include_cached /plugins/ai-partials-vectordb-embeddings.md %}
+
 ### Using cloud authentication with Redis {% new_in 3.13 %}
 
 {% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
