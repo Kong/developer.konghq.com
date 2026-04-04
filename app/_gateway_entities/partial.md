@@ -280,7 +280,7 @@ variables:
 
 ### Link AI Partials to plugins
 
-Once created, link AI Partials to plugins the same way as Redis Partials — pass the Partial ID in the `partials` array. See [Add a Partial to a plugin](#add-a-partial-to-a-plugin).
+Once created, link AI Partials to plugins the same way as Redis Partials: pass the Partial ID in the `partials` array. See [Add a Partial to a plugin](#add-a-partial-to-a-plugin).
 
 {:.info}
 > You cannot provide inline configuration for the same fields that a linked Partial covers. Either define the settings directly in the plugin, or leave that block empty and use a Partial instead.
