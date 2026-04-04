@@ -5,12 +5,15 @@ extended_description: |
   * [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/)
   * [Send OpenTelemetry data to Grafana Cloud](/how-to/send-otel-data-to-grafana-cloud/)
 
+  {:.info}
+  > If you are running {{site.base_gateway}} in 3.13, use `access_logs_endpoint` instead of `access_logs.endpoint`.
+
 title: 'Enable the OTEL plugin for metrics, traces and logs'
 
 weight: 1000
 
 min_version:
-  gateway: '3.13'
+  gateway: '3.14'
 
 requirements: 
   - "An OpenTelemetry backend"
@@ -19,7 +22,8 @@ requirements:
 config:
   traces_endpoint: http://localhost:4318/v1/traces
   logs_endpoint: http://localhost:4318/v1/logs
-  access_logs_endpoint: http://localhost:4318/v1/logs
+  access_logs:
+    endpoint: http://localhost:4318/v1/logs
   metrics:
     endpoint: http://localhost:4318/v1/metrics
   headers:

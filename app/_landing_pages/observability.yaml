@@ -82,7 +82,7 @@ rows:
               icon: /assets/icons/logs.svg
               cta:
                 text: Set up LLM reporting
-                url: /observability/llm-reporting/
+                url: /observability/explorer/
   
   - columns:
       - blocks:

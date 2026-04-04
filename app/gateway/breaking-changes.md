@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes and known issues"
+title: "{{site.base_gateway}} breaking changes, deprecations, and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -16,7 +16,7 @@ tags:
 
 
 
-description: "Review {{site.base_gateway}} version breaking changes before upgrading."
+description: "Review {{site.base_gateway}} version breaking changes, deprecations, and known issues before upgrading."
 
 related_resources:
   - text: Upgrading {{site.base_gateway}}
@@ -102,6 +102,25 @@ config:
 
 We recommend updating your configurations, as the old `config.consumer_claim` field is deprecated and will be removed in a future version.
 
+#### OpenID Connect: header claims fields
+  
+The header claims fields in the [OpenID Connect plugin](/plugins/openid-connect/) have been replaced with new fields:
+* `config.upstream_headers_claims` and `config.upstream_headers_names` -> replaced by `config.upstream_headers`
+* `config.downstream_headers_claims` and `config.downstream_headers_names` -> replaced by `config.downstream_headers`
+
+The new fields support nested claims, which lets you access claims at any depth in the token payload.
+For example:
+
+```yaml
+upstream_headers:
+  - header: X-Org-Id
+    path:
+      - org
+      - id
+```
+
+We recommend updating your configurations, as the old `config.upstream_headers_claims`, `config.upstream_headers_names`, `config.downstream_headers_claims`, and `config.downstream_headers_names` fields are deprecated and will be removed in a future version.
+
 #### TLS certificate verify by default
 
 Starting in 3.14, the {{site.base_gateway}} global configuration option [`tls_certificate_verify`](/gateway/configuration/#tls-certificate-verify) now defaults to `on`, requiring TLS/SSL certificate verification by default.
@@ -159,6 +178,11 @@ rows:
 {% endtable %}
 
 To revert to the old behavior, set `tls_certificate_verify` to `off`.
+
+#### OpenTelemetry: Access logs endpoint parameter
+
+The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
+We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
 
 ## 3.13.x breaking changes
 

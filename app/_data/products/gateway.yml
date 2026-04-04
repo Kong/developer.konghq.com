@@ -1432,6 +1432,7 @@ releases:
 
   - release: "3.14"
     latest: true
+    lts: true
     ee-version: "3.14.0.0"
     eol: tba
     distributions:
