@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@8f51814a808a50184f0263e1c635fb7e5f3def83
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f51814a808a50184f0263e1c635fb7e5f3def83'
+  x-oas-source: kong/platform-api@d35c56e673948dcbd3a1d4b115039ff5366f9784
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d35c56e673948dcbd3a1d4b115039ff5366f9784'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -608,6 +608,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-team-role
+      summary: Get Team Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: teams-remove-role
       summary: Remove Team Role
@@ -818,6 +835,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-user-role
+      summary: Get User Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: users-remove-role
       summary: Remove Role
@@ -1133,6 +1167,23 @@ paths:
         required: true
         schema:
           type: string
+    get:
+      operationId: get-system-account-role
+      summary: Get System Account Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - System Accounts - Roles
     delete:
       operationId: delete-system-accounts-accountId-assigned-roles-roleId
       summary: Delete Assigned Role from System Account
