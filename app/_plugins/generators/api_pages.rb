@@ -28,7 +28,9 @@ module Jekyll
 
       before = site.pages.size
 
-      Dir.glob(File.join(site.source, '_api/**/**/_index.md')).each do |file|
+      current_mtimes.each_key do |file|
+        next unless file.end_with?('/_index.md')
+
         frontmatter = page_frontmatter(file)
         product = page_product(frontmatter)
 

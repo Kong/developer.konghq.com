@@ -6,7 +6,7 @@ module Jekyll
 
     POLICIES_FOLDER = '_event_gateway_policies'
 
-    def generate(site) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    def generate(site)
       site.data['event_gateway_policies'] ||= {}
 
       unless Utils::Incremental.enabled?
@@ -15,26 +15,12 @@ module Jekyll
       end
 
       @policy_cache ||= {}
-      skipped = 0
       generator = Jekyll::EventGatewayPolicyPages::Generator.new(site)
-
-      Dir.glob(File.join(site.source, "#{POLICIES_FOLDER}/*/")).each do |folder|
-        slug = folder.gsub("#{site.source}/#{POLICIES_FOLDER}/", '').chomp('/')
-        current_mtimes = Utils::Incremental.collect_mtimes("#{folder}**/*")
-        cached = @policy_cache[slug]
-
-        if cached && !Utils::Incremental.mtimes_changed?(current_mtimes, cached[:mtimes])
-          site.pages.concat(cached[:pages])
-          Utils::Incremental.skip_regeneration(site, cached[:pages])
-          site.data['event_gateway_policies'][slug] = cached[:data]
-          skipped += 1
-        else
-          before = site.pages.size
-          policy = Jekyll::EventGatewayPolicyPages::Policy.new(folder:, slug:)
-          generator.generate_pages(policy)
-          new_pages = site.pages[before..]
-          @policy_cache[slug] = { mtimes: current_mtimes, pages: new_pages, data: site.data['event_gateway_policies'][slug] }
-        end
+      skipped = Utils::Incremental.generate_items_with_cache(
+        site, cache: @policy_cache, parent_folder: POLICIES_FOLDER, data_key: 'event_gateway_policies'
+      ) do |slug, folder|
+        policy = Jekyll::EventGatewayPolicyPages::Policy.new(folder:, slug:)
+        generator.generate_pages(policy)
       end
 
       Jekyll.logger.info 'IncrementalGen:', "EventGatewayPoliciesGenerator: #{skipped} policies restored from cache" if skipped.positive?

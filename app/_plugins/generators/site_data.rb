@@ -9,8 +9,11 @@ module Jekyll
 
     def generate(site)
       current_mtimes = Utils::Incremental.collect_mtimes(
-        File.join(site.source, '_data/**/*.{yml,yaml,json}')
+        File.join(site.source, Utils::Incremental::DATA_FILES_GLOB)
       )
+
+      # Share data mtimes with PageDataGenerator to avoid re-globbing
+      site.data['_incremental_data_mtimes'] = current_mtimes
 
       if Utils::Incremental.enabled? && @cached_mtimes && @cached_data && !Utils::Incremental.mtimes_changed?(current_mtimes, @cached_mtimes)
         @cached_data.each { |key, value| site.data[key] = value }

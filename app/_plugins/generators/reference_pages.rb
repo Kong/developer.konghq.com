@@ -27,12 +27,14 @@ module Jekyll
 
     def collect_reference_source_mtimes(site)
       mtimes = {}
-      (site.pages + site.documents).each do |page|
-        next if page.data['content_type'] != 'reference'
-        next if page.data['auto_generated']
+      [site.pages, site.documents].each do |collection|
+        collection.each do |page|
+          next if page.data['content_type'] != 'reference'
+          next if page.data['auto_generated']
 
-        source_path = page.respond_to?(:path) ? page.path : site.in_source_dir(page.relative_path)
-        mtimes[source_path] = File.mtime(source_path) if File.exist?(source_path)
+          source_path = page.respond_to?(:path) ? page.path : site.in_source_dir(page.relative_path)
+          mtimes[source_path] = File.mtime(source_path) if File.exist?(source_path)
+        end
       end
       mtimes
     end

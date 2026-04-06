@@ -15,8 +15,8 @@ module Jekyll
       data_changed = true
 
       if incremental
-        data_mtimes = Utils::Incremental.collect_mtimes(
-          File.join(site.source, '_data/**/*.{yml,yaml,json}')
+        data_mtimes = site.data['_incremental_data_mtimes'] || Utils::Incremental.collect_mtimes(
+          File.join(site.source, Utils::Incremental::DATA_FILES_GLOB)
         )
         data_changed = @cached_data_mtimes.nil? || Utils::Incremental.mtimes_changed?(data_mtimes, @cached_data_mtimes)
 
@@ -92,12 +92,10 @@ module Jekyll
     end
 
     def page_source_mtime(site, page)
-      source_path = if page.respond_to?(:path) && File.exist?(page.path)
-                      page.path
-                    else
-                      site.in_source_dir(page.relative_path)
-                    end
-      File.exist?(source_path) ? File.mtime(source_path) : nil
+      path = page.respond_to?(:path) ? page.path : site.in_source_dir(page.relative_path)
+      File.mtime(path)
+    rescue Errno::ENOENT
+      nil
     end
 
     def restore_from_cache(site, page)
