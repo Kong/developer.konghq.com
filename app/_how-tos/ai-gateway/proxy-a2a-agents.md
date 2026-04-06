@@ -63,33 +63,28 @@ prereqs:
   - title: Tracing environment variables
     position: before
     content: |
-      Set the following Jaeger tracing variables before you configure the Data Plane:
+      Set the following OTel tracing variables before you configure the Data Plane:
       ```sh
       export KONG_TRACING_INSTRUMENTATIONS=all
       export KONG_TRACING_SAMPLING_RATE=1.0
       ```
-  - title: Jaeger
-    icon_url: /assets/icons/third-party/jaeger.svg
+  - title: OpenTelemetry Collector
     content: |
-      Deploy a Jaeger instance with Docker in `all-in-one` mode:
+      In this tutorial, we'll collect data in OpenTelemetry Collector. Use the following command to launch a Collector instance with default configuration that listens on port 4318 and writes its output to a text file:
 
       ```sh
-      docker run --rm --name jaeger \
-        -e COLLECTOR_OTLP_ENABLED=true \
-        -p 16686:16686 \
-        -p 4317:4317 \
-        -p 4318:4318 \
-        -p 5778:5778 \
-        -p 9411:9411 \
-        jaegertracing/jaeger:2.5.0
+      docker run \
+        --name otel-collector \
+        -p 127.0.0.1:4319:4318 \
+        otel/opentelemetry-collector:0.141.0 \
+        2>&1 | tee collector-output.txt
       ```
 
-      The `COLLECTOR_OTLP_ENABLED` environment variable must be set to `true` to enable the OpenTelemetry Collector.
-
-      In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that Jaeger is using because {{site.base_gateway}} is running in a container that has a different `localhost` than yours. Export the host as an environment variable in the terminal window you used to set the other {{site.base_gateway}} environment variables:
+      In a new terminal, export the OTEL Collector host. In this example, use the following host:
       ```sh
-      export DECK_JAEGER_HOST=host.docker.internal
+      export DECK_OTEL_HOST=host.docker.internal
       ```
+    icon: assets/icons/opentelemetry.svg
   - title: A2A agent
     include_content: prereqs/a2a-agent
     icon_url: /assets/icons/ai.svg
@@ -102,14 +97,14 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-    - title: Stop the A2A agent and Jaeger
+    - title: Stop the A2A agent and OpenTelemetry Collector
       icon_url: /assets/icons/ai.svg
       content: |
-        Stop and remove the sample A2A agent container:
+        Stop and remove the sample A2A agent and OpenTelemetry Collector containers:
 
         ```sh
         docker compose down
-        docker rm -f jaeger
+        docker rm -f otel-collector
         ```
 
 faqs:
@@ -179,17 +174,18 @@ entities:
   plugins:
     - name: opentelemetry
       config:
-        traces_endpoint: "http://${jaeger-host}:4318/v1/traces"
+        traces_endpoint: http://${otel-host}:4319/v1/traces
+        metrics:
+          endpoint: http://${otel.host}:4319/v1/metrics
+          enable_ai_metrics: true
         resource_attributes:
           service.name: kong-a2a
-        metrics:
-          enable_ai_metrics: true
 variables:
-  jaeger-host:
-    value: $JAEGER_HOST
+  otel-host:
+    value: $OTEL_HOST
 {% endentity_examples %}
 
-The `traces_endpoint` points to Jaeger's OTLP HTTP receiver on port 4318. The `service.name` attribute identifies this {{site.ai_gateway}} instance in the Jaeger UI.
+The `traces_endpoint` points to the OpenTelemetry Collector's OTLP HTTP receiver on port 4318. The `service.name` attribute identifies this {{site.ai_gateway}} instance in the collector output.
 
 ## Send an A2A request
 
@@ -219,14 +215,230 @@ body:
 
 {{site.base_gateway}} proxies the request to the A2A agent and returns the agent's JSON-RPC response. A successful response contains either a completed task with artifacts, or a task in `input-required` state if the agent needs more information.
 
-## Validate traces in Jaeger
+## Validate traces
 
-1. Open the Jaeger UI at `http://localhost:16686/`.
-2. In the **Service** dropdown, select `kong-a2a`.
-3. Click **Find Traces**.
-4. Click a trace result. The trace includes the following spans:
-   * `kong.access.plugin.ai-a2a-proxy` with a child span `kong.a2a` containing A2A-specific attributes
-   * `kong.access.plugin.opentelemetry`
-   * `kong.dns` for upstream DNS resolution
-   * `kong.balancer` showing the request forwarded to the A2A agent
-   * `kong.header_filter.plugin.ai-a2a-proxy` and `kong.header_filter.plugin.opentelemetry` for response processing
+You should see data in your OpenTelemetry Collector terminal. You can also search for `kong-a2a` in the `collector-output.txt` output file. You should see the following data:
+
+```
+ResourceSpans #0
+Resource SchemaURL: 
+Resource attributes:
+     -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
+     -> service.name: Str(kong-a2a)
+     -> service.version: Str(3.14.0.0)
+ScopeSpans #0
+ScopeSpans SchemaURL: 
+InstrumentationScope kong-internal 0.1.0
+Span #0
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 
+    ID             : 779db508077de69f
+    Name           : kong
+    Kind           : Server
+    Start time     : 2026-04-03 06:48:41.446000128 +0000 UTC
+    End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> http.flavor: Str(1.1)
+     -> http.route: Str(/a2a)
+     -> http.url: Str(http://localhost/a2a)
+     -> http.scheme: Str(http)
+     -> http.client_ip: Str(192.168.65.1)
+     -> http.method: Str(POST)
+     -> net.peer.ip: Str(192.168.65.1)
+     -> http.status_code: Int(200)
+     -> http.host: Str(localhost)
+     -> kong.request.id: Str(8221291c2cac1842d7c77118ca409e6a)
+Span #1
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : a3b699c33700feee
+    Name           : kong.router
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:41.446752256 +0000 UTC
+    End time       : 2026-04-03 06:48:41.44679424 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #2
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : de4e6ed2c16a2dd3
+    Name           : kong.access.plugin.ai-a2a-proxy
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:41.446919936 +0000 UTC
+    End time       : 2026-04-03 06:48:41.447105024 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #3
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : de4e6ed2c16a2dd3
+    ID             : 240b2b9ac3ac9e38
+    Name           : kong.a2a
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:41.44707456 +0000 UTC
+    End time       : 2026-04-03 06:48:47.140356608 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> kong.a2a.protocol.version: Str(unknown)
+     -> rpc.system: Str(jsonrpc)
+     -> rpc.method: Str(message/send)
+     -> kong.a2a.task.id: Str(8a98bbbf-7d09-4336-b3aa-afe73e3a38d3)
+     -> kong.a2a.task.state: Str(completed)
+     -> kong.a2a.context.id: Str(df2e34aa-27ce-44ee-b5d3-3130b4f10985)
+     -> kong.a2a.operation: Str(message/send)
+Span #4
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : c1573adfe53ae258
+    Name           : kong.access.plugin.opentelemetry
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:41.447129088 +0000 UTC
+    End time       : 2026-04-03 06:48:41.447464448 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #5
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : 1c44c62490a4dc00
+    Name           : kong.dns
+    Kind           : Client
+    Start time     : 2026-04-03 06:48:41.44754304 +0000 UTC
+    End time       : 2026-04-03 06:48:41.447862272 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> dns.record.port: Double(10000)
+     -> dns.record.ip: Str(172.18.0.2)
+     -> dns.record.domain: Str(a2a-currency-agent)
+Span #6
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : 811a109d1908068d
+    Name           : kong.header_filter.plugin.ai-a2a-proxy
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:47.139697664 +0000 UTC
+    End time       : 2026-04-03 06:48:47.139731712 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #7
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : ff3f295f3b8cf464
+    Name           : kong.header_filter.plugin.opentelemetry
+    Kind           : Internal
+    Start time     : 2026-04-03 06:48:47.139753728 +0000 UTC
+    End time       : 2026-04-03 06:48:47.1397632 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Span #8
+    Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
+    Parent ID      : 779db508077de69f
+    ID             : f8718c5342d3bc70
+    Name           : kong.balancer
+    Kind           : Client
+    Start time     : 2026-04-03 06:48:41.447897088 +0000 UTC
+    End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> net.peer.ip: Str(172.18.0.2)
+     -> net.peer.port: Double(10000)
+     -> net.peer.name: Str(a2a-currency-agent)
+     -> try_count: Double(1)
+     -> peer.service: Str(a2a-currency-agent)
+```
+{:.collapsible}
+
+## Validate metrics
+
+You should also see metrics data in the OpenTelemetry Collector output. Search for `kong.gen_ai.a2a` in the `collector-output.txt` file. You should see the following data:
+
+```
+ResourceMetrics #0
+Resource SchemaURL: 
+Resource attributes:
+     -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
+     -> service.name: Str(kong-a2a)
+     -> service.version: Str(3.14.0.0)
+ScopeMetrics #0
+ScopeMetrics SchemaURL: 
+InstrumentationScope kong-internal 0.1.0
+Metric #0
+Descriptor:
+     -> Name: kong.gen_ai.a2a.request.duration
+     -> Description: Measures A2A request duration in seconds.
+     -> Unit: s
+     -> DataType: Histogram
+     -> AggregationTemporality: Cumulative
+HistogramDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.823196672 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141009664 +0000 UTC
+Count: 3
+Sum: 20.365000
+Min: 5.692000
+Max: 8.950000
+Metric #1
+Descriptor:
+     -> Name: kong.gen_ai.a2a.response.size
+     -> Description: Measures A2A response body size in bytes.
+     -> Unit: By
+     -> DataType: Histogram
+     -> AggregationTemporality: Cumulative
+HistogramDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.823648 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141217024 +0000 UTC
+Count: 3
+Sum: 3994.000000
+Min: 1304.000000
+Max: 1345.000000
+Metric #2
+Descriptor:
+     -> Name: kong.gen_ai.a2a.request.count
+     -> Description: Counts A2A requests.
+     -> Unit: {request}
+     -> DataType: Sum
+     -> IsMonotonic: true
+     -> AggregationTemporality: Cumulative
+NumberDataPoints #0
+Data point attributes:
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.method: Str(message/send)
+     -> kong.workspace.name: Str(default)
+     -> kong.gen_ai.a2a.binding: Str(jsonrpc)
+StartTimestamp: 2026-04-03 06:40:44.822096128 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.14095616 +0000 UTC
+Value: 3
+Metric #3
+Descriptor:
+     -> Name: kong.gen_ai.a2a.task.state.count
+     -> Description: Counts A2A task state transitions.
+     -> Unit: {state}
+     -> DataType: Sum
+     -> IsMonotonic: true
+     -> AggregationTemporality: Cumulative
+NumberDataPoints #0
+Data point attributes:
+     -> kong.workspace.name: Str(default)
+     -> kong.service.name: Str(a2a-currency-agent)
+     -> kong.route.name: Str(a2a-route)
+     -> kong.gen_ai.a2a.task.state: Str(completed)
+StartTimestamp: 2026-04-03 06:40:44.824023552 +0000 UTC
+Timestamp: 2026-04-03 06:48:47.141275648 +0000 UTC
+Value: 3
+```
+{:.collapsible}
