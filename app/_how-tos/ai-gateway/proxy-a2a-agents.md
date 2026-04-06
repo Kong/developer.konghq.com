@@ -96,14 +96,14 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
-    - title: Stop the A2A agent and Jaeger
+    - title: Stop the A2A agent and OpenTelemetry Collector
       icon_url: /assets/icons/ai.svg
       content: |
-        Stop and remove the sample A2A agent container:
+        Stop and remove the sample A2A agent and OpenTelemetry Collector containers:
 
         ```sh
         docker compose down
-        docker rm -f jaeger
+        docker rm -f $(docker ps -aq --filter ancestor=otel/opentelemetry-collector:0.141.0)
         ```
 
 faqs:
@@ -184,7 +184,7 @@ variables:
     value: $OTEL_HOST
 {% endentity_examples %}
 
-The `traces_endpoint` points to Jaeger's OTLP HTTP receiver on port 4318. The `service.name` attribute identifies this {{site.ai_gateway}} instance in the Jaeger UI.
+The `traces_endpoint` points to the OpenTelemetry Collector's OTLP HTTP receiver on port 4318. The `service.name` attribute identifies this {{site.ai_gateway}} instance in the collector output.
 
 ## Send an A2A request
 

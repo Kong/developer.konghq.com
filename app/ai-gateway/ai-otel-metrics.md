@@ -34,6 +34,8 @@ related_resources:
     url: /ai-gateway/llm-open-telemetry/
   - text: "Monitor AI LLM metrics (Prometheus)"
     url: /ai-gateway/monitor-ai-llm-metrics/
+  - text: "Proxy A2A agents through {{site.ai_gateway}}"
+    url: /how-to/proxy-a2a-agents/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} plugins"
