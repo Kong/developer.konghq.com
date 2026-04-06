@@ -153,14 +153,37 @@ rows:
 
   - category: Plugins
     impact: |
-      Any plugin configured with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false` is affected by this change.
+      Any plugin configured with the following options is affected by this change:
+      * [AI AWS Guardrails](/plugins/ai-aws-guardrails/): `ssl_verify`
+      * [AI Azure Content Safety](/plugins/ai-azure-content-safety/): `ssl_verify`
+      * [AWS Lambda](/plugins/aws-lambda/): `ssl_verify`
+      * [Azure Functions](/plugins/azure-functions/): `https_verify`
+      * [Confluent Consume](/plugins/confluent-consume/): `ssl_verify`
+      * [Confluent](/plugins/confluent/): `security.ssl_verify`
+      * [Datakit](/plugins/datakit/): call node's `ssl_verify`
+      * [Forward Proxy](/plugins/forward-proxy/): `https_proxy_host`
+      * [Header Cert Auth](/plugins/header-cert-auth/): `ssl_verify`
+      * [HTTP Log](/plugins/http-log/): `ssl_verify`
+      * [JWT Signer](/plugins/jwt-signer/):
+        * `access_token_endpoints_ssl_verify` and `channel_token_endpoints_ssl_verify`
+        * The `/rotate` endpoint now enables certificate verification by default
+      * [Kafka Log](/plugins/kafka-log/): `security.ssl_verify`
+      * [Kafka Upstream](/plugins/kafka-upstream/): `ssl_verify`
+      * [LDAP Auth](/plugins/ldap-auth/): `verify_ldap_host`
+      * [LDAP Auth Advanced](/plugins/ldap-auth-advanced/): `verify_ldap_host`
+      * [mTLS Auth](/plugins/mtls-auth/): `ssl_verify`
+      * [OAuth2](/plugins/oauth2/): `ssl_verify`
+      * [OpenID Connect](/plugins/openid-connect/): `ssl_verify`
+      * [TCP Log](/plugins/tcp-log/): `ssl_verify`
+      * [Redis Partials](/gateway/entities/partial/): `ssl_verify`
+
       <br><br>
-      The behavior differs based on deployment mode:
-      - **Traditional mode:** Existing plugins with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false` can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
-      - **DB-less mode:** If the declarative configuration contains plugins with `ssl_verify = false`, `tls_verify = false`, or `https_verify = false`, {{site.base_gateway}} will fail to boot.
-      - **Hybrid mode (on-prem):** The data plane cannot receive a valid configuration from the control plane, and errors will appear in the data plane log.
+      If you have existing plugins using these values, {{site.base_gateway}}'s behavior differs based on deployment mode:
+      - **Traditional mode:** Plugins can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
+      - **DB-less mode:** If the declarative configuration contains these values, {{site.base_gateway}} will fail to boot.
+      - **Hybrid mode (on-prem):** The data plane can't receive a valid configuration from the control plane, and errors will appear in the data plane log.
     action: |
-      Update the schema for all affected plugins by setting `ssl_verify = true`, `tls_verify = true`, or `https_verify =  true`. 
+      Update the schema for all affected plugins by setting these values to `true`.
       <br>
       To see your plugin's schema, find your plugin on the [Plugin Hub](/plugins/), then open the **Configuration reference** tab.
 
