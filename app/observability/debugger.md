@@ -112,7 +112,7 @@ In critical scenarios, having access to payload details can help identify and pi
 ```
 
 ### Payload collection and sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload. Authentication and identity headers (e.g., Authorization, API keys, consumer IDs) are also masked by default.
+When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
 
 {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
 
@@ -124,7 +124,7 @@ When a debug session is initiated with payload capture, the debugger captures re
 You can define custom payload sanitization rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
 
 {:.info}
-> Custom sanitization rules require data plane version 3.14 or later.
+> Custom sanitization rules require {{site.base_gateway}} version 3.14 or later.
 
 **Header rules**
 
@@ -135,7 +135,7 @@ Header sanitization rules let you redact the value of specific headers by name.
 Body sanitization rules support two strategies:
 
 * **JSONPath ([RFC 9535](https://www.rfc-editor.org/rfc/rfc9535)):** Target specific fields in JSON payloads using standard JSONPath expressions. This includes support for dot notation (`$.field`), bracket notation, wildcards (`[*]`), recursive descent (`$..`), array slicing, and filter expressions.
-* **Regex ([PCRE](https://perldoc.perl.org/perlre)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
+* **Regex ([PCRE](https://www.pcre.org/current/doc/html/pcre2pattern.html)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
 
 The redaction is done by replacing the matched content with `*`.
 
