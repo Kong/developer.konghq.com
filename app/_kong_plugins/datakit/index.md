@@ -546,6 +546,7 @@ rows:
       * `body`: The response body
       * `headers`: The response headers
       * `status`: The HTTP status code of the response
+      * `raw_body`: The raw, non-normalized response body {% new_in 3.14 %}
   - nodetype: |
       [jq (`jq`)](#jq-node)
     description: "Transform data and cast variables with `jq` to be shared with other nodes."
@@ -1682,34 +1683,46 @@ columns:
     key: inputs
   - title: Outputs
     key: outputs
-  - title: declaration
-    key: declaration
 rows:
   - node: "`request`"
     description: Reads incoming client request properties
     inputs: none
-    outputs: "`body`, `headers`, `query`"
-    declaration: none
+    outputs: |
+      * `body`: The request body
+      * `headers`: The request headers
+      * `query`: The request query
+      * `path` {% new_in 3.14 %}: The normalized path component of the client HTTP request URL 
+      * `raw_path` {% new_in 3.14 %}: The raw, non-normalized path component of the client HTTP request URL
+      * `port` {% new_in 3.14 %}: The port component of the client HTTP request URL
+      * `method` {% new_in 3.14 %}: The client HTTP request method
+      * `scheme` {% new_in 3.14 %}: The client request scheme, one of `http` or `https
+      * `version` {% new_in 3.14 %}: The HTTP version of the client request
   - node: "`service_request`"
     description: Updates properties of the request sent to the service being proxied to
-    inputs: "`body`, `headers`, `query`"
+    inputs: |
+      * `body`: The request body
+      * `headers`: The request headers
+      * `query`: The request query
     outputs: none
-    declaration: none
   - node: "`service_response`"
     description: Reads response properties from the service being proxied to
     inputs: none
-    outputs: "`body`, `headers`"
-    declaration: none
+    outputs: |
+      * `body`: The response body
+      * `headers`: The response headers
+      * `status` {% new_in 3.14 %}: The HTTP status code of the response
+      * `raw_body` {% new_in 3.14 %}: The raw, non-normalized response body
   - node: "`response`"
     description: Updates properties of the outgoing client response
-    inputs: "`body`, `headers`"
+    inputs: |
+      * `body`: The response body
+      * `headers`: The response headers
     outputs: none
-    declaration: none
-  - node: "`vault`"
+  - node: "`resources.vault`"
     description: Vault reference to hold secret values
     inputs: none
-    outputs: "`$self`"
-    declaration: "resources.vault"
+    outputs: |
+      * `$self`: The secret value retrieved from the vault reference
 {% endtable %}
 <!--vale off-->
 
