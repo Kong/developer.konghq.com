@@ -13,7 +13,7 @@
         "@dotenvx/dotenvx": "^1.51.1",
         "debug": "^4.4.0",
         "dockerode": "^4.0.3",
-        "fast-glob": "^3.3.3",
+        "tinyglobby": "^0.2.12",
         "fetch-cookie": "^3.1.0",
         "formdata-node": "^6.0.3",
         "gray-matter": "^4.0.3",
