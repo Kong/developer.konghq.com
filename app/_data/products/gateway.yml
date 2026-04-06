@@ -1434,7 +1434,7 @@ releases:
     latest: true
     lts: true
     ee-version: "3.14.0.0"
-    eol: tba
+    eol: 2027-04-07
     distributions:
       - amazonlinux2:
           package: true
