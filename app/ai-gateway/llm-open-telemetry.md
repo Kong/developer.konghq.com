@@ -1,5 +1,5 @@
 ---
-title: "Gen AI OpenTelemetry attributes reference"
+title: "Gen AI OpenTelemetry spans attributes reference"
 content_type: reference
 layout: reference
 
@@ -28,6 +28,8 @@ tech_preview: true
 description: "Reference for OpenTelemetry Gen AI span attributes emitted by {{site.ai_gateway}} for generative AI requests."
 
 related_resources:
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
   - text: "{{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} plugins"
@@ -60,6 +62,9 @@ You can export these attributes via a supported backend such as [Jaeger](/how-to
 * Monitor token usage (input vs. output) for cost or performance analysis
 
 The span data is sent to the configured OTEL endpoint through the existing tracing plugins. Use the OpenTelemetry plugin or Zipkin plugin to export these spans to backends such as Jaeger.
+
+{:.info}
+> This page covers **span attributes** (per-request tracing data). {{site.ai_gateway}} also supports **OTLP metrics** (aggregated counters and histograms for latency, token usage, cost, and error rates). See the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/) for details.
 
 {% include plugins/otel/collecting-otel-data.md  %}
 
