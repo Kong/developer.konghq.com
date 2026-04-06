@@ -149,6 +149,16 @@ rows:
                     [Workflow diagram &rarr;](/plugins/openid-connect/#password-grant-workflow)
                   example: "[Password grant example](/plugins/openid-connect/examples/password/)"
                   howto: "[OpenID Connect and Keycloak with the password grant](/how-to/configure-oidc-with-password-grant/)"
+                - auth: Token exchange
+                  description: |
+                    The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#token-exchange)
+                  example: | 
+                    * [Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
+                    * [Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+                  howto: |
+                    [Token exhange with OpenID Connect and Keycloak](/how-to/configure-oidc-with-token-exchange/)
   
   - header:
       type: h2
@@ -306,5 +316,7 @@ rows:
                 - openid-connect
               products:
                 - gateway
+              plugins:
+                - openid-connect
               quantity: 6
               allow_empty: true
