@@ -119,18 +119,18 @@ When a debug session is initiated with payload capture, the debugger captures re
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
 
-#### Custom masking rules
+#### Custom masking rules {% new_in 3.14 %}
 
 You can define custom payload masking rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
 
 {:.info}
 > Custom masking rules require {{site.base_gateway}} version 3.14 or later.
 
-**Header rules**
+#### Header rules
 
 Header masking rules let you redact the value of specific headers by name.
 
-**Body rules**
+#### Body rules
 
 Body masking rules support two strategies:
 
