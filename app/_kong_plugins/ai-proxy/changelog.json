@@ -1,4 +1,31 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added native Anthropic streaming mode support, enabling direct passthrough of Anthropic SSE events with proper message reordering for tool calls.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for batch API in openai-compatible mode when providers are anthropic, bedrock, gemini and gemini vertex.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a crash in the observability module when upstream returned `choices: null` (JSON null). The `header_filter` phase would crash with \"attempt to get length of field 'choices' (a userdata value)\" because `ngx.null` is truthy in Lua.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where format-compatible streaming routes did not collect metrics and logging.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed streaming token count metrics for third-party models hosted on Vertex AI (claude-*, mistral-*, jamba-*) that reported inflated totals because incremental counts were treated as cumulative.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added dimension configuration support for Amazon Titan Embed v2 models.\n",
