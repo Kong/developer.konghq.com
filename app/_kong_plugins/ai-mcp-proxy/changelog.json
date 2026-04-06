@@ -1,4 +1,56 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added support for ACL with OAuth claim.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for session sharing and active notice when doing MCP conversion.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the latest 2025-11-25 spec defines the Authorization error codes which are different from ours.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where ACL denial caused parsing body failure.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where the ACL metric label value was incorrect.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where `tools/list` could expose tools to consumers denied by tool ACL in listener mode.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't keep the port after MCP conversion.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we have not reported metrics to konnect since 3.13.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where PATCHing the tool caused an error.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "reduced tool cache build time and avoided long blocking.\n",
+      "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",
