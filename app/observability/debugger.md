@@ -119,20 +119,20 @@ When a debug session is initiated with payload capture, the debugger captures re
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
 
-#### Custom sanitization rules
+#### Custom masking rules
 
-You can define custom payload sanitization rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
+You can define custom payload masking rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
 
 {:.info}
-> Custom sanitization rules require {{site.base_gateway}} version 3.14 or later.
+> Custom masking rules require {{site.base_gateway}} version 3.14 or later.
 
 **Header rules**
 
-Header sanitization rules let you redact the value of specific headers by name.
+Header masking rules let you redact the value of specific headers by name.
 
 **Body rules**
 
-Body sanitization rules support two strategies:
+Body masking rules support two strategies:
 
 * **JSONPath ([RFC 9535](https://www.rfc-editor.org/rfc/rfc9535)):** Target specific fields in JSON payloads using standard JSONPath expressions. This includes support for dot notation (`$.field`), bracket notation, wildcards (`[*]`), recursive descent (`$..`), array slicing, and filter expressions.
 * **Regex ([PCRE](https://www.pcre.org/current/doc/html/pcre2pattern.html)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
@@ -140,7 +140,7 @@ Body sanitization rules support two strategies:
 The redaction is done by replacing the matched content with `*`.
 
 {:.info}
-> Custom sanitization rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
+> Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
 ### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
