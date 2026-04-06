@@ -74,6 +74,7 @@ prereqs:
 
       ```sh
       docker run \
+        --name otel-collector \
         -p 127.0.0.1:4319:4318 \
         otel/opentelemetry-collector:0.141.0 \
         2>&1 | tee collector-output.txt
@@ -103,7 +104,7 @@ cleanup:
 
         ```sh
         docker compose down
-        docker rm -f $(docker ps -aq --filter ancestor=otel/opentelemetry-collector:0.141.0)
+        docker rm -f otel-collector
         ```
 
 faqs:
