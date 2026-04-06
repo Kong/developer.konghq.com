@@ -34,14 +34,22 @@ Then proceed.
 
 ### 2. Get new vs updated files
 
-Run both of these, filtering to `.md` files under `app/` only (exclude `app/_includes/` and `app/assets/`):
+Run both of these. Capture both `.md` page files and `.yaml` example files, excluding `_includes` and `assets`:
 
 ```bash
 # Newly added files
-git diff origin/main --name-only --diff-filter=A | grep '^app/.*\.md$' | grep -v '^app/_includes/' | grep -v '^app/assets/'
+git diff origin/main --name-only --diff-filter=A \
+  | grep '^app/' \
+  | grep -v '^app/_includes/' \
+  | grep -v '^app/assets/' \
+  | grep -E '\.(md|yaml)$'
 
 # Modified existing files
-git diff origin/main --name-only --diff-filter=M | grep '^app/.*\.md$' | grep -v '^app/_includes/' | grep -v '^app/assets/'
+git diff origin/main --name-only --diff-filter=M \
+  | grep '^app/' \
+  | grep -v '^app/_includes/' \
+  | grep -v '^app/assets/' \
+  | grep -E '\.(md|yaml)$'
 ```
 
 If the user specified a different base branch, replace `origin/main` accordingly.
@@ -82,12 +90,16 @@ If the diff is noise (e.g. only whitespace, formatting, or frontmatter version b
 
 New files speak for themselves. List them with just the title and link, grouped by feature. Optionally add a one-line description from the frontmatter `description` field if it's useful context.
 
-### 5. Read frontmatter for each file
+### 5. Read metadata for each file
 
-For each file (new or modified), read YAML frontmatter for:
+**For `.md` page files**, read YAML frontmatter for:
 - `title` — link text
 - `permalink` — canonical URL path
 - `description` — optional context for new files
+
+**For `.yaml` example files** (under `_kong_plugins/{plugin}/examples/`), read the top-level YAML fields directly (no frontmatter delimiters):
+- `title` — link text. If absent, derive from filename (replace hyphens with spaces, title-case)
+- URL is always derived from path: `app/_kong_plugins/{plugin}/examples/{name}.yaml` → `/plugins/{plugin}/examples/{name}/`
 
 If `permalink` is missing, derive from path:
 - `app/_how-tos/*/foo.md` → `/how-to/foo/`
