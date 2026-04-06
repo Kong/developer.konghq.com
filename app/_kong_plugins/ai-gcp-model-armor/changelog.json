@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "By default now blocks unrecognized/new filters added to GCP Model Armor.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where SDP (Sensitive Data Protection) filter violations were not detected. The plugin now correctly handles both RAI-style results (matchState + confidenceLevel) and SDP-style results (matchState + findings array with infoType and likelihood).\n",

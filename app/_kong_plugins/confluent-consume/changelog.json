@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `ssl_verify` option to validate the server\ncertificate is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added new config option `tls_certificate_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `tls_certificate_verify` setting cannot be disabled.",

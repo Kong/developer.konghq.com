@@ -1,4 +1,21 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `ssl_verify` option to validate verification of the\ncertificate presented by the server of the OCSP responder's URL and by the\nserver of the CRL Distribution Point is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added WebSocket protocol support. This authentication plugin can now protect WebSocket connections (`ws` and `wss` protocols) in addition to HTTP/HTTPS. In hybrid mode, using `ws`/`wss` with this plugin requires data planes running DP >= 3.14, or explicit removal of `ws`/`wss` protocols from configurations targeting older data planes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where client certificates with Subject Alternative Name (SAN) DirectoryName extensions caused authentication errors. Added a new `san_dirname_matcher` configuration option to specify which Distinguished Name attributes from the SAN DirectoryName extension should be used for consumer lookup.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option.\nWhen this option is enabled, the plugin's `ssl_verify` flag\ncannot be disabled.\n",

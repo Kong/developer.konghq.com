@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `https_verify` option to validate the `https_proxy_host`\nserver certificate is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `https_verify` setting cannot be disabled.",

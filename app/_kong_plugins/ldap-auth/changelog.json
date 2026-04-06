@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed a security issue.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "the `verify_ldap_host` option to validate the LDAP server\ncertificate is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where a failed ssl handshake with the ldap server would return 401 instead of 500.\n",

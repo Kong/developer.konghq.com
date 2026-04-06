@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed an issue where the plugin could fail\nto connect to the upstream server to introspect the upstream schema.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for passing all downstream headers to GraphQL upstream servers in introspection requests.\n",
