@@ -112,12 +112,35 @@ In critical scenarios, having access to payload details can help identify and pi
 ```
 
 ### Payload collection and sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload.
+When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
 
 {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
 
 {:.info}
 > Log sanitizer uses the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), a well-known algorithm to validate credit card numbers, International Mobile Equipment Identity (IMEI) numbers, and other sensitive numerical data. The redaction is done by replacing the matched characters with `*`
+
+#### Custom masking rules {% new_in 3.14 %}
+
+You can define custom payload masking rules to target specific sensitive data in your requests and responses. Custom rules allow you to redact data in both headers and body content.
+
+{:.info}
+> Custom masking rules require {{site.base_gateway}} version 3.14 or later.
+
+#### Header rules
+
+Header masking rules let you redact the value of specific headers by name.
+
+#### Body rules
+
+Body masking rules support two strategies:
+
+* **JSONPath ([RFC 9535](https://www.rfc-editor.org/rfc/rfc9535)):** Target specific fields in JSON payloads using standard JSONPath expressions. This includes support for dot notation (`$.field`), bracket notation, wildcards (`[*]`), recursive descent (`$..`), array slicing, and filter expressions.
+* **Regex ([PCRE](https://www.pcre.org/current/doc/html/pcre2pattern.html)):** Match and redact patterns in the raw body content using PCRE-compatible regular expressions.
+
+The redaction is done by replacing the matched content with `*`.
+
+{:.info}
+> Custom masking rules are applied in addition to the built-in credit card redaction. The built-in Luhn algorithm-based redaction is always active and cannot be disabled.
 
 ### Payload ingestion, storage and retention
 By default, {{site.konnect_short_name}} encrypts the captured payload with a default encryption key that has been provisioned for your org. However, you can configure {{site.konnect_short_name}} to use a [customer-managed encryption keys (CMEK)](/konnect-platform/cmek/). {{site.konnect_short_name}} supports symmetric key encryption and integrates with AWS Key Management Services (KMS). 
