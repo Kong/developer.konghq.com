@@ -1,5 +1,5 @@
 ---
-content_type: ai_cookbook
+content_type: cookbook
 products:
     - ai-gateway
 tools:
