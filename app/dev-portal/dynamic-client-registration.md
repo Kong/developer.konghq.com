@@ -256,7 +256,7 @@ This is supported by the following IdPs:
 
 {{site.dev_portal}} admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and {{site.dev_portal}} admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
 
-Developers can view credential IDs by opening an application in their {{site.dev_portal}}, and checking its **Credentials** tab. Application credentials values are not visible after creation. Developers can revoke credentials directly from the **Credentials** tab.
+Developers can view credential IDs by opening an application in their {{site.dev_portal}}, and checking its **Credentials** tab. Application credential values are not visible after creation. Developers can revoke credentials directly from the **Credentials** tab.
 
 ### Rotate a credential
 
