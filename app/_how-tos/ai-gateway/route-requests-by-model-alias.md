@@ -34,7 +34,7 @@ tags:
 
 tldr:
   q: How do I route AI requests to different models based on the model field in the request body?
-  a: Configure the AI Proxy Advanced plugin with multiple targets, each with a unique model_alias. When a request arrives, Kong matches the model field in the body to the alias and routes to the corresponding target.
+  a: Configure the AI Proxy Advanced plugin with multiple targets, each with a unique `model_alias`. When a request arrives, Kong matches the model field in the body to the alias and routes to the corresponding target.
 
 tools:
   - deck
