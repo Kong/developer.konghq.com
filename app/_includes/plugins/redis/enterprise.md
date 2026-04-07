@@ -366,7 +366,7 @@ config:
   cluster_cache_redis:
     host: $INSTANCE_ADDRESS
     username: $INSTANCE_USERNAME
-    port: 6379
+    port: 10000
     cloud_authentication:
       auth_provider: azure
       azure_client_id: $AZURE_CLIENT_ID
