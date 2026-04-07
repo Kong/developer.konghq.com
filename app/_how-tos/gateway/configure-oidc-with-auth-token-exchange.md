@@ -55,7 +55,7 @@ search_aliases:
 tldr:
   q: How do I configure {{site.base_gateway}} to automatically exchange an incoming bearer token for one scoped to a different client?
   a: |
-    Configure the OpenID Connect plugin with `token_exchange` settings, using `subject_token_issuers` to define which incoming tokens are eligible for exchange. {{site.base_gateway}} will perform an [OAuth 2.0 token exchange (RFC 8693)](https://curity.io/resources/learn/token-exchange-flow/) with your IdP, replacing the incoming token with a new one issued to a different client before forwarding it upstream.
+    Configure the OpenID Connect plugin with `token_exchange` settings, using `subject_token_issuers` to define which incoming tokens are eligible for exchange. {{site.base_gateway}} will perform an [OAuth 2.0 token exchange (RFC 8693)](https://www.rfc-editor.org/rfc/rfc8693) with your IdP, replacing the incoming token with a new one issued to a different client before forwarding it upstream.
 
 cleanup:
   inline:
@@ -94,7 +94,7 @@ entities:
                   - client-2
           request:
             scopes:
-            - profile
+              - profile
 variables:
   issuer:
     value: $ISSUER
@@ -138,14 +138,14 @@ If you decode the token, the resulting access token will have an `aud` claim con
   "exp": 1775253107, "iat": 1775253047
 }
 ```
-{:.no_copy_code}
+{:.no-copy-code}
 
 Send the token to {{site.base_gateway}}:
 
 {% validation request-check %}
 url: /anything
 method: GET
-status_code: 302
+status_code: 200
 display_headers: true
 headers:
   - "Authorization: Bearer $TOKEN"
@@ -164,4 +164,4 @@ The response shows the Authorization header that {{site.base_gateway}} forwarded
 ```
 {:.no-copy-code}
 
-The token should be a different one, with `azp` set to `client-2`, no `client-1` in `aud`, and scope narrowed to `profile`, confirming the token exchange and scope narrowing took effect.
+The token should be a different one, with `azp` set to `client-2`, no `client-1` in `aud`, and scope narrowed to `profile` (or `profile email` for Keycloak), confirming the token exchange and scope narrowing took effect.

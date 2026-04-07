@@ -158,7 +158,7 @@ rows:
                     * [Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
                     * [Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
                   howto: |
-                    [Token exhange with OpenID Connect and Keycloak](/how-to/configure-oidc-with-token-exchange/)
+                    [Token exchange with OpenID Connect and Keycloak](/how-to/configure-oidc-with-token-exchange/)
   
   - header:
       type: h2
