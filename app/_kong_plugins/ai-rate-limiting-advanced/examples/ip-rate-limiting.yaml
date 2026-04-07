@@ -7,7 +7,7 @@ extended_description: |
 title: 'Enable rate limiting for IP addresses'
 
 requirements:
-  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - "[AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
 
 weight: 900
 
