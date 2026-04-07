@@ -1,0 +1,93 @@
+metadata:
+  title: Learning Paths
+  content_type: landing_page
+  description: Structured guides that combine conceptual knowledge with hands-on practice to help you master Kong's products.
+
+
+rows:
+  - header:
+      type: h1
+      text: Learning Paths
+      sub_text: Structured guides combining conceptual knowledge with hands-on practice. Each path has a Learn section covering the key concepts and a Practice section where you apply them step by step.
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: How learning paths work
+              blocks:
+                - type: text
+                  text: |
+                    Each learning path is split into two collapsible sections:
+
+                    - **Learn** — Reference and conceptual content that explains the technology, its purpose, and how the pieces fit together.
+                    - **Practice** — A step-by-step guide that applies the concepts from the Learn section to a real-world scenario.
+
+                    Work through the Learn section first to build your mental model, then follow the Practice section to put it into action.
+
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: Browse by product or persona
+              blocks:
+                - type: text
+                  text: |
+                    Browse by **product** below, or [browse by persona](/learning-paths/personas/) if you'd prefer paths matched to your role.
+
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}}"
+              description: Routes, services, plugins, and deployments.
+              cta:
+                url: /learning-paths/gateway/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}}"
+              description: Service mesh policies, observability, and security.
+              cta:
+                url: /learning-paths/mesh/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.konnect_short_name}}"
+              description: Konnect platform, control planes, and API management.
+              cta:
+                url: /learning-paths/konnect/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.kic_product_name}}"
+              description: Ingress controller configuration and routing.
+              cta:
+                url: /learning-paths/kic/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.ai_gateway_name}}"
+              description: AI providers, routing, and prompt management.
+              cta:
+                url: /learning-paths/ai-gateway/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.operator_product_name}}"
+              description: Kubernetes Operator for declarative configuration.
+              cta:
+                url: /learning-paths/operator/
+                text: View paths

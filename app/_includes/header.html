@@ -206,6 +206,26 @@
             </li>
             <li class="navbar-item group" aria-haspopup="true" role="menuitem" aria-expanded="false">
               <span class="navbar-item__trigger" tabindex="0">
+                <span class="navbar-item__trigger_text">Learning Paths</span>
+                <span class="navbar-item__trigger_icon">
+                  {% include_svg '/assets/icons/chevron-down.svg' %}
+                  {% include_svg '/assets/icons/chevron-right.svg' %}
+                </span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <ul class="navbar-item__menu gap-6 grid-cols-2" role="menu">
+                {% for lp in site.data.top_navigation.learning_paths %}
+                <li class="flex">
+                  {% include header/item.html url=lp.url product=lp.product text=lp.text icon=lp.icon %}
+                </li>
+                {% endfor %}
+                <li class="flex gap-4" style="grid-column: 1 / span 2;">
+                  <a class="text-base lg:text-sm text-brand w-full" href="/learning-paths/">View all &rarr;</a>
+                </li>
+              </ul>
+            </li>
+            <li class="navbar-item group" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
                 <span class="navbar-item__trigger_text">Plugins</span>
                 <span class="navbar-item__trigger_icon">
                   {% include_svg '/assets/icons/chevron-down.svg' %}
