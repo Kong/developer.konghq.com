@@ -1228,7 +1228,7 @@ rows:
     desc: "`kong.client.get_credential()`"
     type: "`object`"
 
-  - property: "`kong.client.get_identity_realm_source`"
+  - property: "`kong.client.identity_realm_source`"
     desc: "`kong.client.get_identity_realm_source()`"
     type: "`object`"
 
@@ -1304,9 +1304,17 @@ rows:
     desc: Gets the Kong version
     type: "`string`"
 
+  - property: "`kong.nginx.subsystem`"
+    desc: "`kong.nginx.get_subsystem()`"
+    type: "`string`"
+
   - property: "`kong.node.id`"
     desc: "`kong.node.get_id()`"
     type: "`string`"
+
+  - property: "`kong.node.memory_stats`"
+    desc: "`kong.node.get_memory_stats()`"
+    type: "`object`"
 
   - property: "`kong.configuration.{key}`"
     desc: Reads `{key}` from the node configuration
@@ -1331,9 +1339,17 @@ rows:
     desc: "`kong.service.set_target({host}, {port})`"
     type: "`string` (`{host}:{port}`)"
 
-  - property: "`kong.service.request_scheme`"
-    desc: "`kong.service.set_service_request_scheme({scheme})`"
+  - property: "`kong.service.request.scheme`"
+    desc: "`kong.service.request.set_scheme({scheme})`"
     type: "`string` (`{scheme}`)"
+
+  - property: "`kong.response.status`"
+    desc: "`kong.response.set_status()`"
+    type: "`number`"
+
+  - property: "`kong.service.upstream`"
+    desc: "`kong.service.set_upstream()`"
+    type: "`string`"
 
   - property: |
       `kong.client.consumer` {% new_in 3.14 %}
