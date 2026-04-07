@@ -15,7 +15,7 @@ Generates a grouped, formatted changelog of new and updated docs for a Kong Gate
 ```
 
 - `VERSION` — release version number (e.g. `3.14`). Used as the filename when saving.
-- `BASE_BRANCH` — branch to diff against (default: `main`).
+- `BASE_BRANCH` — branch to diff from (default: `main`).
 
 ## Step-by-Step Instructions
 
