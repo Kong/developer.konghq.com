@@ -14,7 +14,10 @@ module Jekyll
         @content = ''
         # Merge path-level metadata so products/tags/min_version/personas are
         # available on the step page (needed for the info box).
-        @data = path_data.fetch('metadata', {}).merge(
+        # Step-level how-to fields override path-level metadata when present.
+        step_how_to_fields = step_data.slice('prereqs', 'cleanup', 'faqs', 'next_steps', 'works_on')
+
+        @data = path_data.fetch('metadata', {}).merge(step_how_to_fields).merge(
           'title' => step_data['title'],
           'learn' => step_data['learn'],
           'practice' => step_data['practice'],

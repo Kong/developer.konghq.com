@@ -8,6 +8,7 @@ metadata:
     - platform-engineer
   tools:
     - deck
+    - admin-api
   min_version:
     gateway: "3.4"
   tags:
@@ -17,6 +18,10 @@ metadata:
 steps:
   - title: "Step 1: Services and Routes"
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-1/
+    prereqs:
+      inline:
+        - title: decK
+          include_content: prereqs/tools/deck
     learn:
       title: "Learn: Core concepts"
       include: learning-paths/gateway/intro-step-1-learn
@@ -26,6 +31,17 @@ steps:
 
   - title: "Step 2: Plugins"
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-2/
+    prereqs:
+      inline:
+        - title: Complete Step 1
+          content: Complete [Step 1](/learning-paths/gateway/intro-to-kong-gateway/step-1/) before continuing. You need the running {{site.base_gateway}} container and `kong.yaml` from that step.
+    next_steps:
+      - text: Add Proxy Cache to cache upstream responses
+        url: /hub/kong-inc/proxy-cache/
+      - text: Browse the full Plugin Hub
+        url: /hub/
+      - text: Write your own plugin in Lua or Go
+        url: /custom-plugins/
     learn:
       title: "Learn: The plugin system"
       include: learning-paths/gateway/intro-step-2-learn
