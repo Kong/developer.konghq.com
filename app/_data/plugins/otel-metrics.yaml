@@ -136,6 +136,57 @@ metrics:
     description: Number of errors that occurred while collecting license information.
     unit: "{error}"
     type: Sum
+  - name: kong.websocket.server.total_connections
+    description: Total number of incoming WebSocket connections, including active and previously closed connections.
+    unit: "{request}"
+    type: Sum
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.websocket.server.active_connections
+    description: Number of currently active WebSocket connections.
+    unit: "{request}"
+    type: Gauge
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.websocket.server.received.message.size
+    description: Size of incoming WebSocket message bodies in bytes, from the client.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.websocket.server.sent.message.size
+    description: Size of WebSocket messages sent back to the client in bytes.
+    unit: "By"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+      - kong.auth.consumer.name
+  - name: kong.websocket.handshake.error.count
+    description: Number of errors seen during the WebSocket handshake.
+    unit: "{error}"
+    type: Sum
+    attributes:
+      - error.type
+  - name: kong.websocket.connection.duration
+    description: Duration of successfully established WebSocket connections in seconds.
+    unit: "s"
+    type: Histogram
+    attributes:
+      - kong.service.name
+      - kong.route.name
+      - kong.workspace.name
+      - kong.auth.consumer.name
 
 access_logs:
   - client.address
@@ -309,3 +360,4 @@ attributes:
   kong.auth.consumer.*: Consumer entity accessing the resource.
   kong.auth.authenticated_entity.*: Credential used for authentication.
   kong.response.status_code: HTTP status code of the response.
+  error.type: Type of error that occurred.
