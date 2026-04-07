@@ -29,7 +29,6 @@
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
-/mesh/progressively-rolling-in-strict-mtls/ /how-to/progressively-roll-in-strict-mtls/
 /mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
 /mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 

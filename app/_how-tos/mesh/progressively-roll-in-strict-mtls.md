@@ -3,7 +3,7 @@ title: Progressively roll in strict mTLS with {{site.mesh_product_name}}
 description: Progressively roll in mutual TLS with the MeshTLS policy in {{site.mesh_product_name}} without disrupting traffic.
     
 content_type: how_to
-permalink: /how-to/progressively-roll-in-strict-mtls/
+permalink: /mesh/progressively-rolling-in-strict-mtls/
 
 bread-crumbs: 
   - /mesh/
