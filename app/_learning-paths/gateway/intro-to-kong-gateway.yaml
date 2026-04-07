@@ -8,7 +8,6 @@ metadata:
     - platform-engineer
   tools:
     - deck
-    - admin-api
   min_version:
     gateway: "3.4"
   tags:
