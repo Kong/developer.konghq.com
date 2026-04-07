@@ -11,7 +11,7 @@ extended_description: |
 title: 'Enable rate limiting with multiple conditions'
 
 requirements:
-  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - "[AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
   - An existing [Consumer](/gateway/entities/consumer/)
 
 weight: 900

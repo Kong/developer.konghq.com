@@ -9,7 +9,7 @@ extended_description: |
 title: 'Enable Consumer Group rate limiting'
 
 requirements:
-  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - "[AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
   - An existing [Consumer Group](/gateway/entities/consumer-group/)
 
 weight: 900
