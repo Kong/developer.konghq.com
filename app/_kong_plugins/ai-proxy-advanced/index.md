@@ -75,7 +75,9 @@ examples_groups:
 faqs:
   - q: Can I override `config.model.name` by specifying a different model name in the request?
     a: |
-      No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+      By default, no. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+
+      However, if you set [`model_alias`](./reference/#schema--config-targets-model-model_alias) on a target, clients can send the alias value in the `model` field instead of the actual provider model name. The plugin matches the request to the target with the corresponding alias. See [Route requests to different models using model aliases](/how-to/route-requests-by-model-alias/) for an example.
   - q: |
       Can I override `temperature`, `top_p`, and `top_k` from the request?
     a: |
