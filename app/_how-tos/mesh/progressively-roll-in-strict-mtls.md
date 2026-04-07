@@ -182,7 +182,7 @@ spec:
    
    {:.info}
    > * This can take a few minutes, make sure to wait until it's completed to move on to the next step.
-   > * Once the restart is done, port-forwarding will stop for this Service.
+   > * Once the restart is done, port-forwarding should stop for this Service.
 
 
 ## Validate
@@ -191,6 +191,9 @@ spec:
    ```sh
    kubectl port-forward svc/demo-app -n kong-mesh-demo-migration 5052:5050
    ```
+
+   {:.info}
+   > If you get an error, it may be because the port-forward hasn't stopped on its own. In this case, close the terminal window in which you started the `5052:5050` port-forward and try again.
 
 1. Go to <http://localhost:5052/> and select the **Auto Increment** checkbox to send requests to the Service.
 
