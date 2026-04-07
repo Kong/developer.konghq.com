@@ -9,7 +9,7 @@ description: >
 argument-hint: <topic-description>
 ---
 
-# How-To Guide Contributor
+# How-To guide contributor
 
 You help contributors write and edit how-to guides for developer.konghq.com. Guides live under
 `app/_how-tos/`, organized by primary product.
@@ -45,6 +45,34 @@ If any of these sources are missing, incomplete, or contradictory, stop and ask.
 
 ---
 
+## Step 0: Gate — evaluate request specificity
+
+**Run this before doing anything else, including reading any files.**
+
+Check the contributor's request against all of the following criteria. 
+If any criterion fails, stop immediately and ask for the missing information. 
+Do not read any files, search the repo, or plan anything until the request passes all criteria.
+
+**Required before proceeding:**
+
+- [ ] **Use case scoped** — the contributor has described what the guide will help a user accomplish (e.g., "rate limit requests by Consumer", "store plugin secrets in AWS Secrets Manager", "authenticate users with OIDC"). A request like "write a how-to about rate limiting" with no further detail fails this check.
+- [ ] **Kong product(s) and tool(s) identified, optionally third-party products** — the contributor has named the Kong product(s) (Gateway, Konnect, KIC, Mesh, Operator) and the tool(s) the guide will use (decK, Admin API, Terraform, kubectl, UI). If third-party products are involved, users must specify the third-party product or tool involved. A request with no product or tool context fails this check.
+- [ ] **All of the following is provided:**
+  - Example config (decK YAML, curl command, Terraform HCL, Kubernetes manifest, rough UI steps, link to an existing plugin example, link to an existing how to guide with similar steps)
+  - Context (Engineering brief, PRD, notes, or draft doc)
+  - A draft or notes describing the steps the guide will walk through
+  - If a third-party product is involved, link to a relevant third-party doc or draft of third-party steps
+
+If any criterion above fails, respond with **only** the following (do not read other files, no planning, no additional output):
+
+> This request needs more context before I can start. Please provide:
+>
+> - **Use case:** What will the user accomplish by following this guide? (e.g., "rate limit requests by Consumer Group", "configure OIDC auth for the Dev Portal", "store plugin secrets in HashiCorp Vault")
+> - **Kong product(s) and tool(s):** Which product(s) and tool(s) does this guide target? (e.g., Kong Gateway + decK, Konnect + Admin API, KIC + kubectl, Kong Mesh) Are third-party products (ex. AWS, Azure, HashiCorp, Datadog) also used?
+> - **Example config or reference:** Paste example configs, curl commands, Terraform HCL, engineering briefs, draft docs, step outline, or link to relevant docs. If a third-party product is involved, include a link to the relevant third-party documentation.
+
+**Do not proceed to Step 1 until all criteria are met. If the contributor sends you a link or file you cannot read, tell them so and do not continue to Step 1 until they provide context you can read.**
+
 ## Step 1: Build context
 
 Before writing anything, read the following:
@@ -59,7 +87,6 @@ Before writing anything, read the following:
    `app/_includes/cleanup/`. Check what already exists before writing new inline content.
 5. **Valid tags** in `app/_data/schemas/frontmatter/tags.json`. Read the `enum` array before
    writing any tag. Don't invent tags.
-6. **`app/_data/series.yml`** if the guide might be part of a series.
 7. **`app/_includes/how-tos/steps/`** for reusable step templates that can be included directly.
 8. **Other authoritative sources:** If the contributor provides any other authoritative sources (ex. API specs, Terraform resources, decK YAML, kongctl configuration, third-party documentation), read those.
 
@@ -122,7 +149,10 @@ Check whether other pages should link to the new guide:
 - Product indices in `app/_indices`
 - Feature/use case related landing pages and indices
 - Related reference pages that cover the same/similar topic
-- Other how-to guides in the same series or product area
+- Other how-to guides in the same product area
+
+These links can be added inline or to `related_resources` in the frontmatter. 
+Make sure to also add links to existing pages to the new guide.
 
 ---
 
@@ -147,7 +177,7 @@ These rules have no exceptions.
 - Gateway entities are capitalized: Service, Route, Plugin, Consumer, Consumer Group, Upstream,
   Certificate, SNI, Vault, Key, Key Set.
 - Cross-link every Kong product, plugin, or entity to its reference page on first use per section.
-- Use site variables for product names (see `jekyll.yml` for the full list):
+- Use site variables for product names (see `jekyll.yml` for the full list), if you don't use the site variables for something, warn the contributor:
   - `{{site.base_gateway}}` for Kong Gateway
   - `{{site.konnect_short_name}}` for Konnect
   - `{{site.ai_gateway}}` for AI Gateway
@@ -183,25 +213,9 @@ values present in the `enum` array.
 If a needed tag is missing, add it to the schema file in
 alphabetical order and note this in the PR.
 
-### Series guides
+### Related resources
 
-A series groups related how-tos into a numbered sequence. Use a series when a single workflow
-spans multiple guides that must be read in order.
-
-1. Check `app/_data/series.yml` for an existing series. If none exists, add a new entry:
-   ```yaml
-   <series-id>:
-     title: <Series display title>
-     url: /<permalink-of-position-1-guide>/
-   ```
-   The `url` must point to the position 1 guide's permalink. Add entries in alphabetical order.
-
-2. Add `series:` to each guide's frontmatter. The `id` must match the key in `series.yml` exactly.
-   Positions are 1-based with no gaps.
-
-3. Add `breadcrumbs:` to each guide if the series lives under a section other than `/how-to/`.
-
-4. Cross-link guides within the series using `related_resources`.
+Cross link related pages (ex. references, how tos, landing pages) with the `related_resources` frontmatter on the page you're creating. Add cross links to the new how to guide in the `related_resources` frontmatter on the pages you've linked as well.
 
 ---
 
@@ -334,6 +348,8 @@ checkboxes, tabs, sidebar items, and more. Follow those conventions exactly.
 
 Set `automated_tests: false` for any guide that contains UI-only steps.
 
+Never guess UI steps, ask the contributor to supply them if you aren't exactly sure.
+
 ---
 
 ## Automated tests
@@ -403,7 +419,7 @@ then post the full list with each item marked pass or fix. Fix all failures befo
 - [ ] For decK how-tos for entities other than plugins, YAML configurations are read or contributor asked to supply them.
 
 **Workflow**
-- [ ] Step 1 complete: existing guides, plugin docs, schemas, prereqs, tags.json, and series.yml read.
+- [ ] Step 1 complete: existing guides, plugin docs, schemas, prereqs, and tags.json read.
   Summary presented and contributor approved.
 - [ ] Step 2 complete: plan presented and contributor approved before writing started.
 - [ ] Step 3 complete: draft written and checklist run through.
@@ -424,7 +440,6 @@ then post the full list with each item marked pass or fix. Fix all failures befo
 - [ ] `automated_tests: false` set when the guide contains UI-only, SSO, webhook, or
   unprovisionable steps.
 - [ ] Cleanup block present when guide creates gateway entities or infrastructure.
-- [ ] Series: `series.id` matches key in `series.yml` exactly; positions are 1-based with no gaps.
 - [ ] `prereqs.entities` included only when a pre-existing entities are required.
 
 **Body**
