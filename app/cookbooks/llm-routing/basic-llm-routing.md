@@ -1,403 +1,290 @@
 ---
-content_type: cookbook
-products:
-    - ai-gateway
-tools:
-    - deck
-layout: reference
 title: Basic LLM Routing
 description: Route requests to any supported LLM provider through Kong AI Gateway.
+content_type: cookbook
+products:
+  - ai-gateway
+tools:
+  - deck
+canonical: true
+works_on:
+  - konnect
+layout: cookbook
+# Machine-readable fields for AI agent setup
+agent_setup_url: "/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/basic-llm-routing/"
+plugins:
+  - ai-proxy-advanced
+requires_embeddings: false
+providers:
+  - openai
+  - anthropic
+  - bedrock
+  - azure
+  - gemini
+  - mistral
+
+prereqs:
+  inline:
+    - title: Python
+      include_content: prereqs/python
+      icon_url: /assets/icons/python.svg
+    - title: AI Credentials
+      include_content: prereqs/ai-providers-credentials
+
 ---
+
+{:.info}
+> **Deploy this recipe automatically with an AI assistant.**
+> <br/>
+> Set `KONNECT_TOKEN` in your terminal, create a new directory for this recipe, then copy this link and provide it to your AI coding agent:
+> `https://developer.konghq.com/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/basic-llm-routing/`
+> Read through this page while the agent sets things up — it explains how the configuration works and what to expect.
 
 ## Overview
 
-Route chat requests to any supported LLM provider through Kong AI Gateway — without changing your client code. The `ai-proxy-advanced` plugin sits between your application and the upstream provider: it injects auth credentials, translates the request to the provider's native format, and normalises the response back to OpenAI format before returning it to the caller.
+Route chat requests to any supported LLM provider through Kong AI Gateway — without changing your
+client code. The [ai-proxy-advanced](/plugins/ai-proxy-advanced/) plugin sits between your
+application and the upstream provider: it injects auth credentials, translates the request to the
+provider's native format, and normalises the response back to OpenAI format before returning it to
+the caller.
 
-This solves a common problem: you want to swap providers (or test multiple providers) without touching application code or distributing API keys to every service that makes LLM calls. Kong holds the credentials; clients talk to a single stable endpoint.
+This solves a common problem: you want to swap providers (or test multiple providers) without
+touching application code or distributing API keys to every service that makes LLM calls. Kong
+holds the credentials; clients talk to a single stable endpoint.
 
-**Request flow:**
-
-```
-Client (OpenAI SDK)
-       │  POST /basic-llm-routing
-       ▼
-Kong AI Gateway
-  └─ ai-proxy-advanced
-       │  injects auth, translates format
-       ▼
-LLM Provider (OpenAI / Anthropic / Bedrock / Azure / Gemini / Mistral)
-       │  native response
-       ▼
-Kong AI Gateway
-  └─ normalises to OpenAI format
-       │
-       ▼
-Client ← standard ChatCompletion response
-```
+{% mermaid %}
+flowchart LR
+    Client -->|"POST /basic-llm-routing<br>(OpenAI format)"| Kong[Kong AI Gateway]
+    Kong -->|"injects auth<br>translates format"| LLM[LLM Provider]
+    LLM -->|native response| Kong
+    Kong -->|"OpenAI-format<br>response"| Client
+{% endmermaid %}
 
 ## Prerequisites
 
-- [Docker Compose](https://docs.docker.com/compose/install/) installed
-- [deck CLI](https://docs.konghq.com/deck/latest/installation/) installed and on `PATH`
-- Python 3.9+
-- Credentials for at least one supported provider (OpenAI API key, AWS credentials for Bedrock, etc.)
+### Google Gemini
 
-## Setup
+This tutorial uses Google Gemini via Vertex AI:
 
-**1. Start Kong Gateway, PostgreSQL, and Redis:**
+1. [Create a Google Cloud project](https://console.cloud.google.com/) with Vertex AI enabled.
+1. Create a service account and mount the JSON key file in your Kong container.
+1. Create decK variables:
 
-First, we need to create a `docker-compose.yaml` file. This file will define the services we want to run in our local environment:
+   ```sh
+   export DECK_GCP_API_ENDPOINT='your-api-endpoint'
+   export DECK_GCP_PROJECT_ID='your-project-id'
+   export DECK_GCP_LOCATION_ID='us-central1'
+   ```
 
-```bash
-cat <<EOF > docker-compose.yaml
-version: "2.2"
+## How it works
 
-# Specify which Kong image to run
-x-kong-image: &kong-image
-  # image: kong/kong-gateway-dev:master
-  # image: kong/kong-gateway:3.12
-  # image: kongcx/kongps-public:3.11.0.3-arm
-  image: kong/kong-gateway:3.13
+The recipe creates a single Kong service and route, with
+[ai-proxy-advanced](/plugins/ai-proxy-advanced/) attached as a plugin. The plugin intercepts
+each request, injects provider credentials, translates the request body to the provider's native
+format, and normalises the response back to OpenAI format.
 
-# Prompt compressor image — update the tag here to upgrade
-x-compressor-image: &compressor-image
-  image: docker.cloudsmith.io/kong/ai-compress/service:v0.0.2
+### Plugin config walkthrough
 
-# Kong database config
-x-kong-db-config: &kong-db-config
-  KONG_DATABASE: postgres
-  KONG_PG_HOST: db
-  KONG_PG_DATABASE: kong
-  KONG_PG_USER: kong
-  KONG_PG_PASSWORD: kong
-  KONG_PASSWORD: password
-
-x-kong-container-common: &kong-container-common
-  healthcheck:
-    test: ["CMD", "kong", "health"]
-    interval: 3s
-    timeout: 3s
-    retries: 10
-    start_period: 3s
-  restart: on-failure
-  tmpfs:
-    - /tmp
-networks:
-  kong:
-    name: kong
-    driver: bridge
-
-services:
-  kong-migrations:
-    <<: *kong-image
-    networks:
-      - kong
-    command: "kong migrations bootstrap"
-    env_file:
-      - "./.env"
-    environment:
-      <<: [*kong-db-config]
-    restart: on-failure
-
-  kong-migrations-upgrade:
-    <<: *kong-image
-    profiles: ["upgrade", "everything"]
-    networks:
-      - kong
-    command: "kong migrations up"
-    env_file:
-      - "./.env"
-    environment:
-      <<: [*kong-db-config]
-      KONG_ANONYMOUS_REPORTS: "off"
-    restart: on-failure
-
-  kong-migrations-finish:
-    <<: *kong-image
-    profiles: ["upgrade-finish", "everything"]
-    networks:
-      - kong
-    command: "kong migrations finish"
-    env_file:
-      - "./.env"
-    environment:
-      <<: [*kong-db-config]
-      KONG_ANONYMOUS_REPORTS: "off"
-    restart: on-failure
-
-  kong-gateway:
-    <<: [*kong-container-common, *kong-image]
-    deploy:
-      replicas: 1
-    mem_limit: 2g
-    cpus: 4
-    networks:
-      - kong
-    user: "${KONG_USER:-kong}"
-    ports:
-      - 8000:8000
-      - 8001:8001
-      - 8002:8002
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - "$HOME/.aws:/home/kong/.aws"
-    env_file:
-      - "./.env"
-    environment:
-      <<: [*kong-db-config]
-      KONG_ANONYMOUS_REPORTS: "off"
-      KONG_PROXY_LISTEN: "0.0.0.0:8000,0.0.0.0:8443 ssl"
-      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
-      KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002"
-      KONG_LOG_LEVEL: "debug"
-      KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: cjson,kong,resty.http,kong.constants
-      KONG_RESOLVER_FAMILY: "A"
-      AWS_PROFILE: "sandbox"
-      KONG_LICENSE_DATA: ${KONG_LICENSE_DATA}
-
-  redis:
-    image: redis/redis-stack-server
-    deploy:
-      replicas: 1
-    mem_limit: 1g
-    cpus: 1
-    ports:
-      - 6378:6379
-    networks:
-      - kong
-
-  # Required for: cost-optimization/prompt-compression
-  # The image is hosted in Kong's private Cloudsmith registry.
-  # Contact Kong support or your account team to obtain registry credentials,
-  # then add them to docker_username.txt and docker_password.txt at the repo root.
-  # Start with: docker-compose --profile compression up -d
-  prompt-compressor:
-    <<: *compressor-image
-    profiles: ["compression"]
-    deploy:
-      replicas: 1
-    mem_limit: 2g
-    cpus: 1
-    ports:
-      - 8080:8080
-    networks:
-      - kong
-    environment:
-      LLMLINGUA_DEVICE_MAP: "cpu"
-    secrets:
-      - kong_registry_username
-      - kong_registry_password
-
-  #########################################################
-  # AI PII SERVICE DOES NOT WORK WITH ARM64 ARCHITECTURE
-  #########################################################
-  # AI PII SERVICE DOES NOT WORK WITH ARM64 ARCHITECTURE
-  # ai-pii-service:
-  #   image: kong/ai-pii-service:latest
-  #   deploy:
-  #     replicas: 1
-  #   mem_limit: 1g
-  #   cpus: 1
-  #   ports:
-  #     - 9000:9000
-  #   networks:
-  #     - kong
-  #     # - aigateway-net
-  #     # - aigateway-net-internal
-
-  db:
-    networks:
-      - kong
-    image: postgres:14-alpine
-    environment:
-      POSTGRES_DB: kong
-      POSTGRES_PASSWORD: kong
-      POSTGRES_USER: kong
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "kong"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
-      start_period: 3s
-    restart: on-failure
-    stdin_open: true
-    tty: true
-
-secrets:
-  kong_registry_username:
-    file: ./docker_username.txt
-  kong_registry_password:
-    file: ./docker_password.txt
-EOF
-```
-{:.collapsible}
-
-Now, let’s start the local setup:
-
-```bash
-docker-compose up -d
+```yaml
+plugins:
+  - name: ai-proxy-advanced
+    config:
+      llm_format: openai
+      targets:
+        - route_type: llm/v1/chat
+          auth:
+            header_name: Authorization
+            header_value: "Bearer <your-key>"
+            allow_override: false
+          logging:
+            log_statistics: true
+            log_payloads: true
+          model:
+            provider: openai
+            name: gpt-4o
 ```
 
-**2. Configure credentials:**
+{:.no-copy-code}
 
+**`route_type: llm/v1/chat`** — Selects the chat completions translation path. Kong accepts an
+OpenAI-format `POST /v1/chat/completions` body and converts it to whatever format the upstream
+provider expects (e.g. Anthropic's `messages` API, Bedrock's `invoke-model` body). The response
+is always normalised back to OpenAI format.
 
-```bash
-cat <<EOF > .env
-# ============================================================
-# Kong AI Gateway Cookbook — Environment Variables
-# ============================================================
-# Copy this file to .env and fill in your credentials.
-# You only need to configure the providers you plan to use.
-#
-# MINIMUM REQUIRED: At least one LLM provider credential
-# ============================================================
+**`auth`** — Kong holds provider credentials in the plugin config and injects them into every
+upstream request. The client sends any value for `api_key` (the OpenAI SDK requires the field,
+but Kong replaces it before forwarding). Set `auth.allow_override: true` if you want
+client-provided credentials to pass through to the provider instead of being replaced — useful
+when clients manage their own API keys and Kong is purely a routing layer.
 
-# ------------------------------------------------------------
-# Provider Credentials
-# ------------------------------------------------------------
+**`logging.log_statistics`** — When enabled, Kong appends token usage data (`prompt_tokens`,
+`completion_tokens`, `total_tokens`) to any attached logging plugin's output (e.g.
+`http-log`, `file-log`). Useful for cost attribution.
 
-# OpenAI
-# Get your key: https://platform.openai.com/api-keys
-# Include the Bearer prefix: DECK_OPENAI_TOKEN=Bearer sk-...
-DECK_OPENAI_TOKEN=
+**`logging.log_payloads`** — When enabled, the full request and response bodies are included in
+the output of any attached logging plugin (`http-log`, `file-log`, etc.). Whether to enable this
+depends on your organization's observability and compliance requirements.
 
-# Anthropic
-# Get your key: https://console.anthropic.com/
-DECK_ANTHROPIC_TOKEN=
+**`model.name`** — Set this to the model you want to use — `gpt-4o`, `o3`, `claude-sonnet-4-5-20250929`,
+etc. Change it and re-apply to switch models without changing any client code.
 
-# AWS Bedrock
-# Note: Alternatively, mount $HOME/.aws credentials (see docker-compose.yaml)
-DECK_AWS_ACCESS_KEY_ID=
-DECK_AWS_SECRET_ACCESS_KEY=
-DECK_AWS_REGION=
+**Alternative configurations worth knowing about:**
 
-# Azure OpenAI
-# Get your key: Azure Portal > Your OpenAI resource > Keys and Endpoint
-DECK_AZURE_API_KEY=
-DECK_AZURE_INSTANCE=
-DECK_AZURE_DEPLOYMENT_ID=
-DECK_AZURE_EMBEDDINGS_DEPLOYMENT_ID=
-DECK_AZURE_API_VERSION=
+- **`llm_format`** — This recipe uses the default (`openai`), which accepts OpenAI-format
+  requests and normalises all provider responses back to OpenAI format. You can also set
+  `llm_format` to a provider's native format (`anthropic`, `bedrock`, `gemini`, etc.) if your
+  client already speaks that format and you don't want translation overhead.
+- **`route_type: preserve`** — Instead of `llm/v1/chat`, you can use `preserve` to forward
+  requests to an `upstream_path` without any body transformation. Useful when you need Kong for
+  auth injection but want to call a provider-specific endpoint directly.
 
-# Google Gemini (via Vertex AI)
-# Requires a service account JSON file mounted in the Kong container
-DECK_GCP_API_ENDPOINT=
-DECK_GCP_PROJECT_ID=
-DECK_GCP_LOCATION_ID=
+### Example request and response
 
-# Mistral
-# Get your key: https://console.mistral.ai/api-keys/
-# Include the Bearer prefix: DECK_MISTRAL_TOKEN=Bearer ...
-DECK_MISTRAL_TOKEN=
+Request (sent by the OpenAI SDK to Kong):
 
-# ------------------------------------------------------------
-# Model Selection
-# ------------------------------------------------------------
-# Set these to the model IDs for the provider you are deploying.
-# Valid model IDs vary by provider — see supported providers:
-# https://developer.konghq.com/plugins/ai-proxy-advanced/#supported-ai-providers
-
-# Chat model used by all recipes.
-# Examples:
-#   OpenAI:      gpt-4o, gpt-4o-mini, o3
-#   Anthropic:   claude-sonnet-4-5-20250929
-#   Bedrock:     global.anthropic.claude-sonnet-4-5-20250929-v1:0, amazon.nova-pro-v1:0
-#   Azure:       gpt-4o  (matches your deployment name)
-#   Gemini:      gemini-2.0-flash
-#   Mistral:     mistral-large-latest
-DECK_CHAT_MODEL=
-
-# Embeddings model — used by semantic-caching and semantic-prompt-guard.
-# Only required for providers with embeddings support (OpenAI, Bedrock, Azure).
-# Examples:
-#   OpenAI:  text-embedding-3-large, text-embedding-3-small
-#   Bedrock: amazon.titan-embed-text-v2:0
-#   Azure:   text-embedding-3-large  (matches your embeddings deployment name)
-DECK_EMBEDDINGS_MODEL=
-
-# Embedding vector dimensions — must exactly match your chosen embeddings model.
-# Getting this wrong causes silent cache failures (wrong vector size in Redis).
-# Common values:
-#   text-embedding-3-large       → 3072
-#   text-embedding-3-small       → 1536
-#   text-embedding-ada-002       → 1536
-#   amazon.titan-embed-text-v2:0 → 1024
-DECK_EMBEDDINGS_DIMENSIONS=
-
-# ------------------------------------------------------------
-# Recipe-Specific Config
-# ------------------------------------------------------------
-
-# AWS Guardrails (required for guardrails/aws-guardrails)
-DECK_AWS_GUARDRAIL_ID=
-DECK_AWS_GUARDRAIL_VERSION=
-
-# Azure Content Safety (required for guardrails/azure-content-safety)
-# Get your endpoint and key: Azure Portal > Content Safety resource
-DECK_AZURE_CONTENT_SAFETY_URL=
-DECK_AZURE_CONTENT_SAFETY_KEY=
-
-# PII Sanitizer service (required for guardrails/sanitize-pii-data)
-# Host of the external PII detection service reachable from Kong container
-DECK_PII_SERVICE_HOST=
-
-# Prompt Compression service (required for cost-optimization/prompt-compression)
-# URL of the LLMLingua-compatible compression service
-DECK_COMPRESSOR_URL=
-EOF
-```
-{:.collapsible}
-
-Edit `.env` and fill in the credentials for your chosen provider.
-
-**3. Export env vars for deck:**
-
-```bash
-set -a; source .env; set +a
+```json
+POST http://localhost:8000/basic-llm-routing
+{
+  "model": "gpt-4o",
+  "messages": [
+    { "role": "user", "content": "What is the capital of France?" }
+  ]
+}
 ```
 
-**4. Create and activate a virtual environment** (optional but recommended):
+{:.no-copy-code}
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
+Response (Kong normalises the upstream reply to OpenAI format):
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "object": "chat.completion",
+  "model": "gpt-4o",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Paris is the capital of France."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 14,
+    "completion_tokens": 9,
+    "total_tokens": 23
+  }
+}
 ```
 
-**5. Install Python dependencies:**
+{:.no-copy-code}
 
-First, create a file with the dependencies.
+Kong adds the following response headers:
 
-```bash
-cat <<EOF > requirements.txt
-openai>=1.0.0
-EOF
-```
+| Header                    | Description                                                      |
+| ------------------------- | ---------------------------------------------------------------- |
+| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the provider to respond         |
+| `X-Kong-Proxy-Latency`    | Time (ms) Kong spent processing the request (excluding upstream) |
+| `X-Kong-LLM-Model`        | Model name selected for this request                             |
 
-Then, install them:
+## Apply the Kong configuration
 
-```bash
-pip install -r requirements.txt
-```
+The following configuration creates a Kong Gateway service and route at `/basic-llm-routing`,
+with the [ai-proxy-advanced](/plugins/ai-proxy-advanced/) plugin attached to handle provider
+auth injection and format translation. All resources are scoped using `select_tags` and a kongctl
+`namespace`, so they can be cleanly torn down without affecting other configurations on the same
+control plane. See the [kongctl documentation](/kongctl/) for more on federated configuration
+management.
 
-**6. Sync the recipe config to Kong:**
-
-Create a directory to store the deck files:
-
-```bash
-mkdir deck
-```
+Select your provider below, export the required environment variables, and apply.
 
 {% navtabs "Providers" %}
-{% tab Anthropic %}
+{% tab OpenAI %}
+
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_OPENAI_TOKEN='Bearer sk-YOUR-KEY'
+export DECK_CHAT_MODEL='gpt-4o'  # or gpt-4o-mini, o3
+```
+
+Apply the Kong configuration:
+
 ```bash
 {%- raw %}
-cat <<'EOF' > deck/anthropic.yaml
+cat <<'EOF' > kong-recipe.yaml
 _format_version: '3.0'
 _info:
   select_tags:
-  - basic-llm-routing
+  - basic-llm-routing-recipe
+services:
+- name: basic-llm-routing
+  url: http://localhost
+  routes:
+  - name: basic-llm-routing
+    paths:
+    - /basic-llm-routing
+    methods:
+    - POST
+    - OPTIONS
+    strip_path: true
+  plugins:
+  - name: ai-proxy-advanced
+    instance_name: basic-llm-routing-proxy
+    config:
+      targets:
+      - route_type: llm/v1/chat
+        auth:
+          header_name: Authorization
+          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
+        logging:
+          log_statistics: true
+          log_payloads: true
+        model:
+          provider: openai
+          name: ${{ env "DECK_CHAT_MODEL" }}
+EOF
+{% endraw -%}
+
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" }
+
+{% endtab %}
+{% tab Anthropic %}
+
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+export DECK_CHAT_MODEL='claude-sonnet-4-5-20250929'  # or claude-haiku-4-5-20251001
+```
+
+Apply the Kong configuration:
+
+```bash
+{%- raw %}
+cat <<'EOF' > kong-recipe.yaml
+_format_version: '3.0'
+_info:
+  select_tags:
+  - basic-llm-routing-recipe
 services:
 - name: basic-llm-routing
   url: http://localhost
@@ -426,22 +313,116 @@ services:
           name: ${{ env "DECK_CHAT_MODEL" }}
 EOF
 {% endraw -%}
-```
 
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/anthropic.yaml
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
+
+rm -f kong-recipe.yaml
 ```
+{: data-test-step="block" }
+
 {% endtab %}
+{% tab AWS Bedrock %}
 
-{% tab Azure %}
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_AWS_ACCESS_KEY_ID='your-access-key'
+export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
+export DECK_AWS_REGION='us-east-1'
+export DECK_CHAT_MODEL='amazon.nova-pro-v1:0'  # or global.anthropic.claude-sonnet-4-5-20250929-v1:0
+```
+
+Apply the Kong configuration:
+
 ```bash
 {%- raw %}
-cat <<'EOF' > deck/azure.yaml
+cat <<'EOF' > kong-recipe.yaml
 _format_version: '3.0'
 _info:
   select_tags:
-  - basic-llm-routing
+  - basic-llm-routing-recipe
+services:
+- name: basic-llm-routing
+  url: http://localhost
+  routes:
+  - name: basic-llm-routing
+    paths:
+    - /basic-llm-routing
+    methods:
+    - POST
+    - OPTIONS
+    strip_path: true
+  plugins:
+  - name: ai-proxy-advanced
+    instance_name: basic-llm-routing-proxy
+    config:
+      targets:
+      - route_type: llm/v1/chat
+        auth:
+          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
+          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
+        logging:
+          log_statistics: true
+          log_payloads: true
+        model:
+          provider: bedrock
+          name: ${{ env "DECK_CHAT_MODEL" }}
+          options:
+            bedrock:
+              aws_region: ${{ env "DECK_AWS_REGION" }}
+EOF
+{% endraw -%}
+
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
+
+rm -f kong-recipe.yaml
+```
+{: data-test-step="block" }
+
+{% endtab %}
+{% tab Azure %}
+
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_AZURE_API_KEY='your-azure-api-key'
+export DECK_AZURE_INSTANCE='your-instance-name'
+export DECK_AZURE_DEPLOYMENT_ID='your-deployment-id'
+export DECK_AZURE_API_VERSION='2024-12-01-preview'
+export DECK_CHAT_MODEL='gpt-4o'  # matches your Azure deployment name
+```
+
+Apply the Kong configuration:
+
+```bash
+{%- raw %}
+cat <<'EOF' > kong-recipe.yaml
+_format_version: '3.0'
+_info:
+  select_tags:
+  - basic-llm-routing-recipe
 services:
 - name: basic-llm-routing
   url: http://localhost
@@ -474,69 +455,45 @@ services:
             azure_instance: ${{ env "DECK_AZURE_INSTANCE" }}
 EOF
 {% endraw -%}
-```
 
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/azure.yaml
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
+
+rm -f kong-recipe.yaml
 ```
+{: data-test-step="block" }
+
 {% endtab %}
+{% tab Google Gemini %}
 
-{% tab Bedrock %}
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_GCP_API_ENDPOINT='your-api-endpoint'
+export DECK_GCP_PROJECT_ID='your-project-id'
+export DECK_GCP_LOCATION_ID='us-central1'
+export DECK_CHAT_MODEL='gemini-2.0-flash'  # or gemini-1.5-pro
+```
+
+Apply the Kong configuration:
+
 ```bash
 {%- raw %}
-cat <<'EOF' > deck/bedrock.yaml
+cat <<'EOF' > kong-recipe.yaml
 _format_version: '3.0'
 _info:
   select_tags:
-  - basic-llm-routing
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          aws_access_key_id: ${{ env "DECK_AWS_ACCESS_KEY_ID" }}
-          aws_secret_access_key: ${{ env "DECK_AWS_SECRET_ACCESS_KEY" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: bedrock
-          name: ${{ env "DECK_CHAT_MODEL" }}
-          options:
-            bedrock:
-              aws_region: ${{ env "DECK_AWS_REGION" }}
-EOF
-{% endraw -%}
-```
-
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/bedrock.yaml
-```
-{% endtab %}
-
-{% tab Gemini %}
-```bash
-{%- raw %}
-cat <<'EOF' > deck/gemini.yaml
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing
+  - basic-llm-routing-recipe
 services:
 - name: basic-llm-routing
   url: http://localhost
@@ -569,22 +526,43 @@ services:
               location_id: ${{ env "DECK_GCP_LOCATION_ID" }}
 EOF
 {% endraw -%}
-```
 
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/gemini.yaml
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
+
+rm -f kong-recipe.yaml
 ```
+{: data-test-step="block" }
+
 {% endtab %}
-
 {% tab Mistral %}
+
+Export your environment variables:
+
+```bash
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe'
+export DECK_MISTRAL_TOKEN='Bearer your-mistral-key'
+export DECK_CHAT_MODEL='mistral-large-latest'  # or mistral-small-latest
+```
+
+Apply the Kong configuration:
+
 ```bash
 {%- raw %}
-cat <<'EOF' > deck/mistral.yaml
+cat <<'EOF' > kong-recipe.yaml
 _format_version: '3.0'
 _info:
   select_tags:
-  - basic-llm-routing
+  - basic-llm-routing-recipe
 services:
 - name: basic-llm-routing
   url: http://localhost
@@ -613,147 +591,38 @@ services:
           name: ${{ env "DECK_CHAT_MODEL" }}
 EOF
 {% endraw -%}
-```
 
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/mistral.yaml
-```
-{% endtab %}
+echo "
+_defaults:
+  kongctl:
+    namespace: basic-llm-routing-recipe
+control_planes:
+  - ref: recipe-cp
+    name: \"${KONNECT_CONTROL_PLANE_NAME}\"
+    _deck:
+      files:
+        - kong-recipe.yaml
+" | kongctl apply -f - -o text --auto-approve
 
-{% tab OpenAI %}
-```bash
-cat <<'EOF' > deck/openai.yaml
-{%- raw %}
-_format_version: '3.0'
-_info:
-  select_tags:
-  - basic-llm-routing
-services:
-- name: basic-llm-routing
-  url: http://localhost
-  routes:
-  - name: basic-llm-routing
-    paths:
-    - /basic-llm-routing
-    methods:
-    - POST
-    - OPTIONS
-    strip_path: true
-  plugins:
-  - name: ai-proxy-advanced
-    instance_name: basic-llm-routing-proxy
-    config:
-      targets:
-      - route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: ${{ env "DECK_OPENAI_TOKEN" }}
-        logging:
-          log_statistics: true
-          log_payloads: true
-        model:
-          provider: openai
-          name: ${{ env "DECK_CHAT_MODEL" }}
-EOF
-{% endraw -%}
+rm -f kong-recipe.yaml
 ```
+{: data-test-step="block" }
 
-Sync the config:
-```bash
-deck gateway sync --no-mask-deck-env-vars-value deck/openai.yaml
-```
 {% endtab %}
 {% endnavtabs %}
 
+## Try it out
 
-## How it works
+The demo script sends a single chat request through Kong to your configured provider. It
+uses the OpenAI SDK pointed at the Kong route — demonstrating that your client code stays
+the same regardless of which provider is behind the gateway. Look for the `[LATENCY]` line
+to confirm the request flowed through Kong, and the `[MODEL]` line to verify which model
+responded.
 
-The recipe creates a single Kong service and route, with [ai-proxy-advanced](/plugins/ai-proxy-advanced/) attached as a plugin.
-
-### Plugin config walkthrough
-
-```yaml
-plugins:
-  - name: ai-proxy-advanced
-    config:
-      targets:
-        - route_type: llm/v1/chat   # Tells Kong this is a chat completions operation.
-                                    # Kong translates the OpenAI-format body to the
-                                    # provider's native format before forwarding.
-          auth:
-            header_name: Authorization
-            header_value: "Bearer <your-key>"  # Injected by Kong; never sent by the client.
-          logging:
-            log_statistics: true   # Adds token usage and model metrics to Kong log output.
-            log_payloads: true     # Logs the full request/response body for debugging.
-          model:
-            provider: openai       # Resolved from the provider registry at generate time.
-            name: gpt-4o           # Resolved from DECK_CHAT_MODEL env var at sync time.
-```
- {:.no-copy-code}
-
-- **`route_type: llm/v1/chat`** — Selects the chat completions translation path. Kong accepts an OpenAI-format `POST /v1/chat/completions` body and converts it to whatever format the upstream provider expects (e.g. Anthropic's `messages` API, Bedrock's `invoke-model` body). The response is always normalised back to OpenAI format.
-
-- **`auth`** — Credentials are stored in Kong config (sourced from env vars at `deck gateway sync` time). The client sends `api_key="placeholder"`; Kong replaces the Authorization header before forwarding the request upstream.
-
-- **`logging.log_statistics`** — When enabled, Kong appends token usage data (`prompt_tokens`, `completion_tokens`, `total_tokens`) to any attached logging plugin's output (e.g. `http-log`, `file-log`). Useful for cost attribution.
-
-- **`model.name`** — Resolves to `{%raw%}${{ env "DECK_CHAT_MODEL" }}{%endraw%}` in the generated deck file. The actual model name is substituted at `deck gateway sync` time, so you can change models by updating `.env` and re-syncing without regenerating files.
-
-### Example request and response
-
-Request (sent by the OpenAI SDK to Kong):
-
-```json
-POST http://localhost:8000/basic-llm-routing
-{
-  "model": "gpt-4o",
-  "messages": [
-    { "role": "user", "content": "What is the capital of France?" }
-  ]
-}
-```
- {:.no-copy-code}
-
-Response (Kong normalises the upstream reply to OpenAI format):
-
-```json
-{
-  "id": "chatcmpl-abc123",
-  "object": "chat.completion",
-  "model": "gpt-4o",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Paris is the capital of France."
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 14,
-    "completion_tokens": 9,
-    "total_tokens": 23
-  }
-}
-```
- {:.no-copy-code}
- 
-Kong adds the following response headers:
-
-| Header | Description |
-|--------|-------------|
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the provider to respond |
-| `X-Kong-Proxy-Latency` | Time (ms) Kong spent processing the request (excluding upstream) |
-| `X-Kong-LLM-Model` | Model name selected for this request |
-
-## Verify it's working
+Create the demo script:
 
 ```bash
-cat <<EOF > demo.py
+cat <<'EOF' > demo.py
 """
 Basic LLM Routing — demo script
 ================================
@@ -767,14 +636,12 @@ Expected output:
   [MODEL] gpt-4o
 
 How to run:
-  1. Sync the recipe:
-       deck gateway sync --no-mask-deck-env-vars-value \\
-         recipes/llm-routing/basic-llm-routing/deck/openai.yaml
+  1. Apply the recipe config (see README for the full kongctl apply command)
   2. Run:
-       python recipes/llm-routing/basic-llm-routing/demo.py
+       python demo.py
   3. Or pipe a prompt:
-       echo "What is the capital of France?" | \\
-         python recipes/llm-routing/basic-llm-routing/demo.py
+       echo "What is the capital of France?" | \
+         python demo.py
 """
 
 import os
@@ -785,9 +652,11 @@ from openai import OpenAI, APIStatusError
 
 CHAT_MODEL = os.getenv("CHAT_MODEL", "gpt-4o")
 
+PROXY_URL = os.getenv("PROXY_URL", "http://localhost:8000")
+
 # Kong overrides provider auth — the api_key value is required by the SDK but ignored
 client = OpenAI(
-    base_url="http://localhost:8000/basic-llm-routing",
+    base_url=f"{PROXY_URL}/basic-llm-routing",
     api_key="placeholder",
 )
 
@@ -828,7 +697,7 @@ EOF
 ```
 {:.collapsible}
 
-Run the demo script:
+Run it:
 
 ```bash
 python demo.py
@@ -844,30 +713,37 @@ Ask: What is the capital of France?
 [LATENCY] upstream=312ms  proxy=4ms  total=320ms
 [MODEL] gpt-4o
 ```
- {:.no-copy-code}
 
-Confirm the plugin is active via the Admin API:
+{:.no-copy-code}
+
+The `[RESPONSE]` line shows the LLM's answer — Kong translated the request to the provider's
+native format, forwarded it, and normalised the response back to OpenAI format before returning
+it. The `[LATENCY]` breakdown shows how long the provider took (`upstream`) versus Kong's own
+processing overhead (`proxy`). The `[MODEL]` header confirms which model actually served the
+request, which is especially useful when testing provider switches.
+
+## Cleanup
+
+Because the recipe scoped all resources with `select_tags` and a kongctl `namespace`, the
+teardown cleanly removes just this recipe's configuration without affecting anything else on the
+control plane. Tear down the local data plane and delete the control plane from Konnect:
 
 ```bash
-curl -s http://localhost:8001/plugins \
-  | jq '[.data[] | select(.name == "ai-proxy-advanced")] | .[0] | {id, name, enabled}'
+export KONNECT_CONTROL_PLANE_NAME='basic-llm-routing-recipe' && curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -k $KONNECT_TOKEN
 ```
-
-Expected output:
-
-```json
-{
-  "id": "a1b2c3d4-...",
-  "name": "ai-proxy-advanced",
-  "enabled": true
-}
-```
-{:.no-copy-code}
 
 ## Variations and next steps
 
-**Switch providers without changing client code** — run `deck gateway sync` with a different provider file (e.g. `deck/anthropic.yaml`) and update `DECK_CHAT_MODEL` in `.env` to a model that provider supports. The client endpoint stays the same.
+**Switch models** — update `DECK_CHAT_MODEL` to a different model (e.g. `gpt-4o-mini`, `o3`)
+and re-apply. No other changes needed — the client endpoint stays the same.
 
-**Add load balancing across providers** — extend `scaffold.yaml` with a second entry in the `targets` list and set `weight` values. `ai-proxy-advanced` will distribute traffic between providers. See the [llm-load-balancing](../llm-load-balancing/) recipe for a complete example.
+**Switch providers** — select a different provider tab above, export that provider's credential
+env vars alongside `DECK_CHAT_MODEL`, and re-apply. Note that switching providers requires
+updating the auth-related env vars too, not just the config tab. For setups that route to
+multiple providers simultaneously, see the
+[ai-proxy-advanced load balancing documentation](/plugins/ai-proxy-advanced/).
 
-**Add rate limiting** — attach the `ai-rate-limiting-advanced` plugin to the same route to enforce per-consumer token quotas. See the [rate-limiting](../../rate-limiting/) recipes for patterns.
+**Add rate limiting** — attach the [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/)
+plugin to the same route to enforce per-consumer token quotas. See the
+[AI rate limiting how-to guide](https://docs.konghq.com/gateway/latest/how-to/ai-gateway/ai-rate-limiting/)
+for patterns.

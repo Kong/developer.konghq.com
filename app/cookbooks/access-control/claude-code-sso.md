@@ -6,7 +6,7 @@ tools:
     - kongctl
 works_on:
     - konnect
-layout: reference
+layout: cookbook
 title: Claude Code SSO
 description: Authenticate Claude Code requests via Okta SSO with consumer-based model routing and per-tier rate limiting.
 canonical: true
@@ -22,10 +22,10 @@ extra_services:
 hint: "Create a Native Application in Okta with PKCE flow and configure an API Authorization Server with a groups claim. See the Okta section in Prerequisites."
 ---
 
-{:.note}
-> **Deploy this recipe automatically with an AI assistant.**
-> Set `KONNECT_TOKEN` in your terminal, create a new directory for this recipe, then copy this link and provide it to your AI coding agent:
-> `https://developer.konghq.com/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/claude-code-sso/`
+{:.info}
+> **Deploy this recipe automatically with an AI assistant.**<br>
+> Set `KONNECT_TOKEN` in your terminal, create a new directory for this recipe, then copy this link and provide it to your AI coding agent:<br>
+> `https://developer.konghq.com/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/claude-code-sso/`<br>
 > Read through this page while the agent sets things up — it explains how the configuration works and what to expect.
 
 ## Overview
@@ -462,7 +462,6 @@ plugins:
         - X-Authenticated-User
         - X-User-Email
 ```
-
 {:.no-copy-code}
 
 **`issuer`** — The Okta Authorization Server's base URL. Kong appends
@@ -524,7 +523,6 @@ plugins:
             provider: anthropic
             name: claude-sonnet-4-6
 ```
-
 {:.no-copy-code}
 
 **`llm_format: anthropic`** — Claude Code sends requests in Anthropic's native format
@@ -596,7 +594,6 @@ plugins:
       tokens_count_strategy: total_tokens
       llm_format: anthropic
 ```
-
 {:.no-copy-code}
 
 **`llm_providers`** — An array of provider-specific rate limit configurations. Each entry
@@ -681,7 +678,6 @@ Authorization: Bearer eyJhbG...
   ]
 }
 ```
-
 {:.no-copy-code}
 
 Response (Anthropic format, passed through or translated from provider):
@@ -704,7 +700,6 @@ Response (Anthropic format, passed through or translated from provider):
   }
 }
 ```
-
 {:.no-copy-code}
 
 ## Apply the Kong configuration
