@@ -18,7 +18,7 @@
     },
     "content_type": {
       "type": "string",
-      "enum": ["landing_page", "how_to", "reference", "concept", "plugin", "plugin_example", "api", "policy", "support", "ai_cookbook"]
+      "enum": ["landing_page", "how_to", "reference", "concept", "plugin", "plugin_example", "api", "policy", "support", "cookbook"]
     },
     "description": {
       "type": "string"

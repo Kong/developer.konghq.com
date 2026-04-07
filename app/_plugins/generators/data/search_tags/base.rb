@@ -14,7 +14,7 @@ module Jekyll
           'reference' => 'Reference',
           'policy' => 'Policy',
           'support' => 'Support',
-          'ai_cookbook' => 'Reference'
+          'cookbook' => 'Reference'
         }.freeze
 
         def self.make_for(site:, page:)
