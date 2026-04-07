@@ -10,13 +10,13 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
     For example, you can use the Keycloak Docker image:
 
     ```
-    docker run -p 8080:8080 \
+    docker run -p 127.0.0.1:8080:8080 \
       -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
       -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
-      quay.io/keycloak/keycloak start-dev
+      quay.io/keycloak/keycloak start-dev --features=token-exchange
     ```
 
-1. Export your issuer URL and Keycloak host to an environment variable so that you can pass them more securely. The issuer consists of your host, port, and realm name. For example, using Docker and the default `master` realm:
+1. Export your issuer URL and Keycloak host to environment variables so that you can pass them more securely. The issuer consists of your host, port, and realm name. For example, using Docker and the default `master` realm:
 
    ```sh
    export DECK_ISSUER='http://host.docker.internal:8080/realms/master'
@@ -25,7 +25,7 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
 
 1. Open the admin console.
 
-    The default URL of the console is `http://$KEYCLOAK_HOST:8080/admin/master/console/`.
+    The default URL of the console is `http://localhost:8080/admin/master/console/`.
 
 #### Create and configure first client
 
