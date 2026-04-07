@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import fastGlob from "fast-glob";
+import { glob } from "tinyglobby";
 import matter from "gray-matter";
 import path from "path";
 import yaml from "js-yaml";
@@ -63,7 +63,7 @@ export async function testeableUrlsFromFiles(config, files) {
 }
 
 export async function instructionFileFromConfig(config) {
-  const files = await fastGlob("**/*", { cwd: config.instructionsDir });
+  const files = await glob("**/*", { cwd: config.instructionsDir });
   if (files.length === 0) {
     console.error(
       `The platform couldn't find any instructions files to run in ${config.instructionsDir}.`
@@ -75,23 +75,20 @@ export async function instructionFileFromConfig(config) {
   return files.map((f) => path.join(config.instructionsDir, f));
 }
 
-export async function groupInstructionFilesByProductAndRuntime(files) {
+export async function groupInstructionFilesByDeploymentModelAndProduct(files) {
   const groupedFiles = {};
 
   for (const file of files) {
-    const data = yaml.load(await fs.readFile(`./${file}`, "utf-8"));
+    // Deployment model is the parent directory name (e.g., "on-prem" or "konnect")
+    const deploymentModel = path.basename(path.dirname(file));
 
-    const products = data.products;
-    let mainProduct = products[0];
-    if (products.includes("ai-gateway") && mainProduct !== "ai-gateway") {
-      mainProduct = "ai-gateway";
-    }
-    let runtime = path.basename(file, path.extname(file));
+    // Product is the file basename without extension (e.g., "gateway", "operator")
+    const product = path.basename(file, path.extname(file));
 
-    groupedFiles[mainProduct] = groupedFiles[mainProduct] || {};
-    groupedFiles[mainProduct][runtime] =
-      groupedFiles[mainProduct][runtime] || [];
-    groupedFiles[mainProduct][runtime].push(file);
+    groupedFiles[deploymentModel] = groupedFiles[deploymentModel] || {};
+    groupedFiles[deploymentModel][product] =
+      groupedFiles[deploymentModel][product] || [];
+    groupedFiles[deploymentModel][product].push(file);
   }
 
   return groupedFiles;

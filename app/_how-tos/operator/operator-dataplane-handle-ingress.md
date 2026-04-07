@@ -45,6 +45,7 @@ spec:
       replicas: 1
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the DataPlane
 
@@ -66,6 +67,7 @@ spec:
           image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the ControlPlane
 
@@ -87,13 +89,16 @@ spec:
   ingressClass: kong
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Create the echo Service
 
 Run the following command to create a sample echo Service:
+
 ```bash
 kubectl apply -f https://developer.konghq.com/manifests/kic/echo-service.yaml -n kong
 ```
+{: data-test-step="block" }
 
 ## Create the Ingress
 
@@ -120,6 +125,7 @@ spec:
               number: 1027
 ' | kubectl apply -f -
 ```
+{: data-test-step="block" }
 
 ## Validate
 

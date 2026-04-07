@@ -7,6 +7,7 @@ tier: enterprise
 publisher: kong-inc
 description: 'Transform requests into Solace messages in a Solace queue or topic'
 beta: true
+premium_partner: true
 
 products:
   - gateway

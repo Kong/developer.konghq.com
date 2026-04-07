@@ -27,8 +27,6 @@ faqs:
     a: Both allow you to use version control and collaborate with your team. You should use Git Sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
   - q: Can I create branch protections in Insomnia for Cloud Sync?
     a: No.
-  - q: I'm using Git Sync, does Insomnia uphold the branch protections we have in our repository?
-    a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git Sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
     a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository. 
   - q: Can I bulk import across multiple Cloud Sync projects?
@@ -160,7 +158,7 @@ Before you log in to Insomnia, you can use scratch pad by clicking **Use the loc
 
 ## Cloud Sync
 
-Cloud Sync enables users to store and synchronize their project data in the cloud securely, and use [version control](/insomnia/version-control/).
+Cloud Sync enables users to store and synchronize their project data in the cloud securely, and use version control.
 
 This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
 
@@ -170,6 +168,8 @@ Cloud Sync provides the following abilities on top of the base Insomnia function
 * Share commits across devices or with members of your organization
 * Create and work on separate branches
 * Store MCP Client configuration as part of the project
+
+Branches are object-specific. The branches in a collection are specific to that collection and aren't shared with other collections or workspaces like mock servers or global environments.
 
 Key use case features:
 * **End-to-End Encryption (E2EE):** Ensures data is encrypted during transmission and storage.
@@ -217,7 +217,7 @@ Git Sync allows users to use a third-party Git repository for storing project da
 This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:
-* **Version control:** Leverage Git’s [version control](/insomnia/version-control/) capabilities for your projects.
+* **Version control:** Leverage Git’s version control capabilities for your projects.
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.
@@ -228,12 +228,9 @@ Key features:
 > When you create a project with Git sync in an organization, it's only available to you. The project name, its metadata, and the corresponding Git URL are not shared with other users in the organization. To collaborate on a Git sync project, each user must create a project and connect to the Git repository. This allows you to control who can access the project within the organization. <br><br>
 > You can also create the Git Sync project now and add a repository later. 
 
-To use Git Sync, either create a new project or edit the settings of an existing project. From the **Type** dropdown menu, select "Git Sync". 
+To use Git Sync, either create a new project or edit the settings of an existing project. From the **Type** dropdown menu, select "Git Sync".
 
-Configure the credentials for your Git repository using one of the following options:
-* Add the credentials here, in the Git Sync config
-* Add the credentials to your local `git.config` file
-* Configure the credentials in **Preferences** > **Credentials** {% new_in 12.3 %}
+{% include insomnia/git-sync-credentials.md %}
 
 
 

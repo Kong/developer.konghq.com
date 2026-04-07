@@ -4,6 +4,7 @@ sections:
   - title: Overview
     items:
       - path: /metering-and-billing/
+      - path: /metering-and-billing/overview/
       - path: /metering-and-billing/metering/
       - path: /metering-and-billing/product-catalog/
       - path: /metering-and-billing/customer/
@@ -18,18 +19,13 @@ sections:
         url: /how-to/meter-llm-traffic/
       - title: Generic metering
         description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
-        url: /metering-and-billing/metering/?tab=generic-meters#create-a-meter
+        url: /how-to/get-started-with-metering-and-billing-generic-meters/
       - title: Common metering examples
         description: Examples to meter AI, API, compute, GPUs, and storage usage.
         url: /metering-and-billing/metering/#example-meter-use-cases
       - title: Collectors
         description: Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
         url: /metering-and-billing/collectors/
-  - title: Collectors
-    items:
-      - path: /metering-and-billing/collectors/**/*
-  - title: Usage metering
-    items:
       - title: Features
         description: Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
         url: /metering-and-billing/product-catalog/#features
@@ -42,6 +38,9 @@ sections:
       - title: Entitlements
         description: Entitlements describe customer access, usage-limits, and configuration to features.
         url: /metering-and-billing/product-catalog/#entitlements
+  - title: Collectors
+    items:
+      - path: /metering-and-billing/collectors/**/*
   - title: Billing
     items:
       - title: Customers
@@ -56,3 +55,17 @@ sections:
       - title: Invoicing
         description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
         url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+      - path: /metering-and-billing/stripe-integration/
+  - title: How tos 
+    items:
+      - title: Get started with generic metering
+        description: Meter any billable usage, like compute, storage, or application layer. Learn how to ingest usage events.
+        url: /how-to/get-started-with-metering-and-billing-generic-meters/
+      - title: API gateway metering
+        description: Real-time usage metering for {{site.base_gateway}} API requests. Monetize API traffic with flexible pricing models.
+        url: /metering-and-billing/get-started/
+      - title: LLM token metering
+        description: Learn how to meter and bill AI Gateway LLM tokens.
+        url: /how-to/meter-llm-traffic/
+      - title: Meter and bill active users
+        url: /how-to/meter-and-bill-active-users/

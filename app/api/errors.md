@@ -32,21 +32,27 @@ columns:
     key: resolution
 rows:
   - code: bad-request
+    id: bad-request
     description: Your API request did not match the expected schema
     resolution: "Check the [request schema](/api/) for the API that you're calling"
   - code: unauthorized
+    id: unauthorized
     description: "The `Authorization` header is missing from your request, or an invalcode token has been provided"
     resolution: "Ensure that your have specified a `Authorization: Bearer TOKEN_HERE` header in your request"
   - code: forbidden
+    id: forbidden
     description: "You do not have permission to call the specified API"
     resolution: "Reach out to your organization administrator to request elevated permissions"
   - code: not-found
+    id: not-found
     description: The endpoint that you have requested does not exist, or belongs to a different organization
     resolution: "Check your request URL and try again"
   - code: conflict
+    id: conflict
     description: The resource could not be created due to an existing resource on the remote server
     resolution: "Change your API request to contain unique details"
   - code: internal
+    id: internal
     description: There has been a server error. This requires intervention from the Kong team to fix.
     resolution: "Check the [Kong Status Page](https://kong.statuspage.io/) for any updates"
 {% endtable %}

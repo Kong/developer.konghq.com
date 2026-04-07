@@ -79,7 +79,14 @@ rows:
                 1. Sign in to your Konnect account at [cloud.konghq.com](https://cloud.konghq.com/).
                 1. In the menu, navigate to **Event Gateway**.
                 1. Click **New Gateway**.
-                1. Fill in the required fields.
+                1. Fill in the fields:
+                   * **Name**: A unique name for your control plane.
+                   * **Description**: An optional description for your control plane.
+                   * **Minimum supported data plane version**: The minimum allowed data plane version for this control plane. 
+                   We recommend setting this to the latest version.
+                  
+                      For example, if you select 1.1, you will be able to use features introduced in 1.1, but
+                      you won't be able to run 1.0 data planes with this control plane.
                 1. Click **Create** to save.
                 1. Select a platform for your data plane.
                 1. Click **Generate Certificate**.
@@ -209,24 +216,121 @@ rows:
                 url: /event-gateway/entities/policy/
                 align: end
           
+  - header:
+      type: h2
+      text: "Use cases for {{site.event_gateway}}"
+    columns:
+      - blocks:
+          - type: table
+            config:
+              columns:
+                - title: |
+                    **Use case**
+                    <br>
+                    (You're trying to...)
+                  key: usecase
+                - title: |
+                    **Outcomes**
+                    <br>
+                    (...so that you can...)
+                  key: outcome
+                - title: |
+                    **Features**
+                    <br>
+                    (...using these solutions...)
+                  key: feature
+                - title: |
+                     **How-to guide or example**
+                     <br>
+                     (...implemented like this)
+                  key: guide
+              rows:
+                - usecase: |
+                    **Govern Kafka** to enforce security and guidelines in an automated fashion
+                  outcome: |
+                    Centrally manage and instantly update access control policies without touching individual brokers
+                  feature: |
+                    [ACL policy](/event-gateway/policies/acl/)
+                  guide: |
+                    [Get started with {{site.event_gateway_short}} and ACLs](/event-gateway/get-started/)
+                - usecase: ""
+                  outcome: |
+                    Replace legacy auth methods with modern enterprise identity standards your team already uses
+                  feature: |
+                    [OAuth](/kong-identity/)
+                  guide: |
+                    [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                - usecase: ""
+                  outcome: |
+                    Know exactly which teams and topics are driving cluster load, in real time, via in-platform dashboards or exported to your preferred tooling
+                  feature: |
+                    [Observability](/event-gateway/configure-observability-with-otel/)
+                  guide: |
+                    [Configure observability with OpenTelemetry](/event-gateway/configure-observability-with-otel/)
+                - usecase: ""
+                  outcome: |
+                    Demonstrate compliance with data privacy regulations through auditable, enforceable controls
+                  feature: |
+                    [Encryption policy](/event-gateway/policies/encrypt/) and
+                    [Decryption policy](/event-gateway/policies/decrypt/)
+                  guide: |
+                    [Encrypt and decrypt Kafka messages](/event-gateway/encrypt-kafka-messages-with-event-gateway/)
+                - usecase: |
+                    **Simplify your Kafka deployment** because it's too complicated and expensive
+                  outcome: |
+                    Isolate teams or environments on a shared cluster without complex infrastructure duplication
+                  feature: |
+                    [Virtual clusters](/event-gateway/entities/virtual-cluster/)
+                  guide: |
+                    [Set up virtual clusters](/event-gateway/get-started/)
+                - usecase: ""
+                  outcome: |
+                    Automatically enforce access rules based on identity metadata with no manual ACL management
+                  feature: |
+                    [OAuth](/kong-identity/)
+                  guide: |
+                    [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                - usecase: |
+                    **Improve the developer experience** to increase adoption and achieve faster time-to-value
+                  outcome: |
+                    Prevent malformed messages from ever reaching consumers
+                  feature: |
+                    [Schema validation - produce phase](/event-gateway/policies/schema-validation-produce/)
+                    <br><br>
+                    [Schema validation - consume phase](/event-gateway/policies/schema-validation-consume/)
+                  guide: |
+                    [Ensure data quality with schema validation](/event-gateway/filter-records-by-classification/)
+                - usecase: ""
+                  outcome: |
+                    Onboard apps using OAuth flows developers already know, with no Kafka expertise required
+                  feature: |
+                    [OAuth](/kong-identity/)
+                  guide: |
+                    [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+                - usecase: ""
+                  outcome: |
+                    Let any developer produce and consume Kafka events using standard REST - no Kafka client needed
+                  feature: |
+                    [Protocol mediation](/plugins/?terms=events)
+                  guide: "--"
+                - usecase: |
+                    **Productize Kafka data into** "data products" with self-service access that you can monetize
+                  outcome: |
+                    Package raw topic data into clean, audience-specific products without duplicating data
+                  feature: |
+                    [Namespaces](/event-gateway/entities/virtual-cluster/#namespaces)
+                  guide: |
+                    [Set up namespaces and enforce access control with ACLs](/event-gateway/productize-kafka-topics/)
+                - usecase: ""
+                  outcome: |
+                    Ensure each consumer only sees the records they're entitled to, enforced automatically
+                  feature: |
+                    [Modify Headers policy](/event-gateway/policies/modify-headers/) and [Skip Records policy](/event-gateway/policies/skip-record/)
+                  guide: |
+                    [Filter Kafka records by classification headers](/event-gateway/filter-records-by-classification/)
 
   - header:
     columns:
-      # - header:
-      #     type: h2
-      #     text: "Common use cases"
-      #   blocks:
-      #   - type: structured_text
-      #     config:
-      #       blocks:
-      #       - type: unordered_list
-      #         items:
-      #           - "[Productizing Kafka topics](/how-to/event-gateway/productize-kafka-topics/): Create virtual clusters to expose and isolate topics for different environments and customers."
-      #           - "[Rewriting topics](/how-to/event-gateway/rewrite-kafka-topics/): Use the topic rewrite policy to map topics between clients and backend clusters."
-      #           - "[Using SNIs for hostname mapping](/how-to/event-gateway/sni-hostname-mapping/): Route client connections to different backend clusters based on the SNI hostname."
-      #           - "[Setting up Kong Identity for OAuth](/how-to/event-gateway/kong-identity-oauth/): Secure client connections with OAuth 2.0 using Kong Identity as the authorization server."
-      #           - "[Using ACLs for topic-level access control](/how-to/event-gateway/acls/): Control which topics clients can access using allow and deny lists."
-
       - header:
           type: h2
           text: Tools to manage {{site.event_gateway}}
@@ -243,7 +347,7 @@ rows:
   - header:
       type: h2
       text: Key references
-  - column_count: 3
+  - column_count: 4
     columns:
       - blocks:
         - type: card
@@ -313,6 +417,18 @@ rows:
             ctas:
               - text: See reference
                 url: /event-gateway/entities/
+                align: end
+
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.event_gateway}} changelog"
+            description: |
+              Changelog for supported {{site.event_gateway}} versions.
+            icon: /assets/icons/service-document.svg
+            ctas:
+              - text: See changelog
+                url: /event-gateway/changelog/
                 align: end
 
   - header:

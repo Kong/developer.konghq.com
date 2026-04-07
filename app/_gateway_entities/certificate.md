@@ -77,10 +77,6 @@ data:
   snis: ["*"]
 {% endentity_example %}
 
-## Schema
-
-{% entity_schema %}
-
 ## Set up a Certificate
 
 {% entity_example %}
@@ -141,3 +137,6 @@ data:
       -----END RSA PRIVATE KEY-----
 {% endentity_example %}
 
+## Schema
+
+{% entity_schema %}

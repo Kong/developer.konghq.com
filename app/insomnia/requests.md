@@ -81,10 +81,12 @@ rows:
   - option: Create a request from scratch
     steps: Select the type or request to create (HTTP, Event Stream, GraphQL, gRPC, or WebSocket).
   - option: Import a cURL command
-    steps: Select **From Curl**, then paste your command and click Import.
+    steps: Select **cURL**, paste your command, and click **Import**. Insomnia converts the command into a request and opens it automatically.
   - option: Import from a file (Postman collection, Swagger, OpenAPI, HAR, WSDL)
     steps: Click **From File**, select an import option (file, URL, or clipboard), specify the file to import, then click **Scan** and **Import**.
 {% endtable %}
+
+After creating or importing a request, Insomnia automatically opens it in the editor so you can review and send it immediately.
 
 ## How can I configure requests?
 

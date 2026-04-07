@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.1.0
+  version: 3.3.2
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@1b94df122ca52e0f3a915ec4c8b9c2a56234b12c
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1b94df122ca52e0f3a915ec4c8b9c2a56234b12c'
+  x-oas-source: kong/platform-api@eaa4b06a60ffa41480a66fa5899617b0de2d4543
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eaa4b06a60ffa41480a66fa5899617b0de2d4543'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -850,6 +850,71 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/developer/teams:
+    get:
+      operationId: get-developer-teams
+      summary: Get Developer Teams
+      description: Retrieve all portal facing teams the developer is a member of.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}':
+    get:
+      operationId: get-developer-team
+      summary: Get Developer Team
+      description: Retrieve a portal facing team a developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetDeveloperTeamResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
+  '/api/v3/developer/teams/{teamId}/developers':
+    get:
+      operationId: get-developer-team-developers
+      summary: Get Developer Team Members
+      description: Retrieve developers on a portal facing team that the current developer is a member of.
+      parameters:
+        - name: teamId
+          in: path
+          description: The team ID
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDeveloperTeamDevelopersResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+      tags:
+        - Developer Teams
   /api/v3/developer/verify-email:
     post:
       operationId: verify-email
@@ -868,6 +933,18 @@ paths:
           $ref: '#/components/responses/Gone'
       tags:
         - Developer
+  /api/v3/integrations:
+    get:
+      operationId: get-portal-integrations
+      summary: Get Portal Integration Configurations
+      description: Returns the portal's integration configurations.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIntegrationsResponse'
+      security:
+        - {}
+      tags:
+        - Portal
   /api/v3/pages:
     get:
       operationId: list-portal-pages
@@ -2861,7 +2938,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2872,7 +2949,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2986,6 +3063,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3015,6 +3094,8 @@ components:
           $ref: '#/components/schemas/AuthStrategyId'
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - name
@@ -3045,6 +3126,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3075,6 +3158,8 @@ components:
           maxLength: 255
         scopes:
           $ref: '#/components/schemas/Scopes'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       title: UpdateApplicationPayload
     ApplicationUpdateResponse:
@@ -3103,6 +3188,8 @@ components:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
           $ref: '#/components/schemas/UpdatedAt'
+        team_id:
+          $ref: '#/components/schemas/TeamId'
       additionalProperties: false
       required:
         - id
@@ -3164,6 +3251,13 @@ components:
           required:
             - value
             - unit
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            Always `true` for KEY_AUTH.
+          type: boolean
+          default: true
+          readOnly: true
       required:
         - id
         - name
@@ -3192,6 +3286,13 @@ components:
             - self_managed_client_credentials
         auth_methods:
           $ref: '#/components/schemas/AuthMethods'
+        supports_multiple_credentials:
+          description: |
+            Indicates whether this auth strategy supports multiple credentials.
+            - `true` for Key Auth strategies and when supported for Client Credentials strategies
+            - `false` when not supported for Client Credentials strategies
+          type: boolean
+          readOnly: true
       required:
         - id
         - name
@@ -3209,6 +3310,11 @@ components:
       type: array
       items:
         type: string
+    TeamId:
+      description: ID of the team to assign the application to.
+      type: string
+      format: uuid
+      nullable: true
     AuthStrategyId:
       description: 'ID of the auth strategy to use for the application. If null or not included, the default application auth strategy will be used.'
       type: string
@@ -3269,17 +3375,59 @@ components:
           format: date-time
           nullable: true
           readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
         - type
         - id
         - display_name
+        - created_at
+    ClientSecretCredentialListItem:
+      description: Client secret credential returned when listing credentials.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          description: May not be available for all Client Credentials applications
+          type: string
+          nullable: true
+        client_id:
+          description: OAuth2 client identifier
+          type: string
+          readOnly: true
+        created_at:
+          description: 'Creation timestamp, if available'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - created_at
     CredentialListItem:
       type: object
       discriminator:
         propertyName: type
       oneOf:
         - $ref: '#/components/schemas/ApiKeyCredentialListItem'
+        - $ref: '#/components/schemas/ClientSecretCredentialListItem'
     ListCredentialsResponse:
       type: object
       properties:
@@ -3328,18 +3476,61 @@ components:
           format: date-time
           nullable: true
           readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
       additionalProperties: false
       required:
         - type
         - id
         - display_name
         - credential
+        - created_at
+    ClientSecretCredentialCreationResponse:
+      description: Response when creating a client secret credential.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - client_secret
+          readOnly: true
+        id:
+          description: Credential identifier
+          type: string
+        display_name:
+          type: string
+          nullable: true
+        client_id:
+          type: string
+          readOnly: true
+        client_secret:
+          description: Client secret value (only returned on creation)
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        expires_at:
+          description: 'Expiration timestamp, if applicable'
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - client_id
+        - client_secret
+        - created_at
     CredentialCreationResponse:
       type: object
       discriminator:
         propertyName: type
       oneOf:
         - $ref: '#/components/schemas/ApiKeyCredentialCreationResponse'
+        - $ref: '#/components/schemas/ClientSecretCredentialCreationResponse'
     UpdateCredentialRequest:
       type: object
       properties:
@@ -3541,6 +3732,72 @@ components:
       required:
         - email
       title: ResetPasswordPayload
+    DeveloperTeam:
+      description: A portal facing team that a developer is a member of
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: IDM - Developers
+          maxLength: 250
+        description:
+          type: string
+          example: The Identity Management (IDM) team.
+          maxLength: 250
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      title: DeveloperTeam
+    ListDeveloperTeamsResponse:
+      description: A paginated list of teams the developer is a member of
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeam'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamsResponse
+    DeveloperTeamDeveloper:
+      description: A developer who is a member of a team
+      allOf:
+        - $ref: '#/components/schemas/Developer'
+        - type: object
+          required:
+            - id
+            - created_at
+            - updated_at
+      title: DeveloperTeamDeveloper
+    ListDeveloperTeamDevelopersResponse:
+      description: A paginated list of developers who are members of a team
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeveloperTeamDeveloper'
+        meta:
+          $ref: '#/components/schemas/PaginatedMeta'
+      additionalProperties: false
+      required:
+        - data
+        - meta
+      title: ListDeveloperTeamDevelopersResponse
     PortalContext:
       description: Describes the portal execution context
       type: object
@@ -3672,6 +3929,17 @@ components:
           nullable: true
       additionalProperties: false
       title: PortalCustomization
+    PortalIntegrations:
+      description: Configuration data for Dev Portal integrations
+      type: object
+      properties:
+        google_tag_manager:
+          $ref: '#/components/schemas/GoogleTagManagerIntegration'
+        google_analytics_4:
+          $ref: '#/components/schemas/GoogleAnalytics4Integration'
+      default: {}
+      additionalProperties: false
+      title: Portal Integrations
     PageId:
       description: The unique identifier of the page
       type: string
@@ -3930,6 +4198,120 @@ components:
       required:
         - title
         - items
+    GoogleTagManagerIntegration:
+      description: Google Tag Manager integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - tracking
+        config_data:
+          description: Configuration data for the Google Tag Manager integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Tag Manager container ID
+              type: string
+              example: GTM-XXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^GTM-[A-Za-z0-9]+$'
+              x-validation-message: 'must be a valid GTM container ID (format: GTM-XXXXXX)'
+            l:
+              description: Optional dataLayer variable name
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            preview:
+              description: Preview environment name
+              type: string
+              example: preview
+              maxLength: 100
+              nullable: true
+            cookies_win:
+              description: Forces GTM cookies to take precedence when true
+              type: boolean
+              nullable: true
+            debug:
+              description: Enables debug mode when true
+              type: boolean
+              nullable: true
+            npa:
+              description: No Personal Advertising - disables advertising features when true
+              type: boolean
+              nullable: true
+            data_layer:
+              description: Custom dataLayer name (alternative to "l" property)
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+            env_name:
+              description: Environment name for environment-specific container
+              type: string
+              example: production
+              maxLength: 100
+              nullable: true
+            auth_referrer_policy:
+              description: Referrer policy for analytics requests
+              type: string
+              example: no-referrer
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
+    GoogleAnalytics4Integration:
+      description: Google Analytics integration configuration
+      type: object
+      properties:
+        enabled:
+          description: Whether the integration is enabled
+          type: boolean
+        type:
+          description: The type of the integration for categorization
+          type: string
+          enum:
+            - analytics
+        config_data:
+          description: Configuration data for the Google Analytics integration
+          type: object
+          additionalProperties: false
+          properties:
+            id:
+              description: The Google Analytics measurement ID
+              type: string
+              example: G-XXXXXXX
+              maxLength: 20
+              minLength: 5
+              pattern: '^G-[A-Za-z0-9-]+$'
+              x-validation-message: 'must be a valid Google Analytics ID (format: G-XXXXXXX)'
+            l:
+              description: The datalayer's name you want data to be associated with
+              type: string
+              example: myNewName
+              maxLength: 100
+              nullable: true
+          required:
+            - id
+      additionalProperties: false
+      nullable: true
+      required:
+        - enabled
+        - type
+        - config_data
     CreateApiRegistrationPayload:
       description: The payload to create a registration.
       type: object
@@ -4591,6 +4973,50 @@ components:
         title: Not Found
         instance: 'kong:trace:6816496025408232265'
         detail: Not Found
+    ListApiKeyCredentialsExample:
+      value:
+        data:
+          - type: api_key
+            id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            display_name: My API Key
+            status: active
+            expires_at: '2025-12-31T23:59:59.000Z'
+            created_at: '2025-01-01T00:00:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ListClientSecretCredentialsExample:
+      value:
+        data:
+          - type: client_secret
+            id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+            display_name: null
+            client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+            created_at: '2024-01-15T10:30:00.000Z'
+        meta:
+          page:
+            number: 1
+            size: 10
+            total: 1
+    ApiKeyCredentialCreationResponseExample:
+      value:
+        type: api_key
+        id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        display_name: My API Key
+        credential: sk_live_abc123def456
+        status: active
+        expires_at: null
+        created_at: '2025-01-01T00:00:00.000Z'
+    AzureClientSecretCredentialCreationResponseExample:
+      value:
+        type: client_secret
+        id: 6e5f4d3c-2b1a-0987-6543-210fedcba987
+        display_name: null
+        client_id: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
+        client_secret: azR~8Q~abcdefghijklmnopqrstuvwxyz123456
+        created_at: '2024-01-15T10:30:00.000Z'
     PostCredentials403Example:
       value:
         status: 403
@@ -5046,12 +5472,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ListCredentialsResponse'
+          examples:
+            ListApiKeyCredentials:
+              $ref: '#/components/examples/ListApiKeyCredentialsExample'
+            ListClientSecretCredentials:
+              $ref: '#/components/examples/ListClientSecretCredentialsExample'
     CredentialCreation:
       description: Credential Creation success
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/CredentialCreationResponse'
+          examples:
+            ApiKeyCredentialCreationResponse:
+              $ref: '#/components/examples/ApiKeyCredentialCreationResponseExample'
+            ClientSecretCredentialCreationResponse:
+              $ref: '#/components/examples/AzureClientSecretCredentialCreationResponseExample'
     PostCredentials403Response:
       description: Error returned when the number of credentials exceed the quota.
       content:
@@ -5118,6 +5554,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Developer'
+    ListDeveloperTeamsResponse:
+      description: Response from list developer teams endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamsResponse'
+    GetDeveloperTeamResponse:
+      description: Response from get developer team endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeveloperTeam'
+    ListDeveloperTeamDevelopersResponse:
+      description: Response from list developer team developers endpoint
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListDeveloperTeamDevelopersResponse'
     ListPortalPagesResponse:
       description: Paginated list of portal pages
       content:
@@ -5227,6 +5681,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PortalCustomization'
+    PortalIntegrationsResponse:
+      description: Response for portal integration configurations
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIntegrations'
     CreateAPIRegistration:
       description: Registration creation response.
       content:
@@ -5284,6 +5744,8 @@ tags:
     description: The API for Konnect Portal developer credentials within a private portal (i.e. requires registration/authentication).
   - name: Developer
     description: API for managing a Konnect Portal Developer.
+  - name: Developer Teams
+    description: API for managing developer teams.
   - name: Portal
     description: The API for retrieving details about a single Konnect Portal.
   - name: Content

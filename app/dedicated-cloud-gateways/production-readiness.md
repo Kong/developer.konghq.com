@@ -61,19 +61,18 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 * Verify that ACME domain is correct and the challenge path is accessible.
 * Verify that the custom domain is healthy in the {{site.konnect_short_name}} UI.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Custom Domains**.
-1. Verify that the status of your custom domain displays as `HEALTHY`. Monitor this for certificate issuance and readiness.
-1. Click the more options menu icon next to your custom domain.
-1. Click **Configure DNS**.
-1. The first CNAME value should match the CNAME domain in your DNS records.
-1. The second CNAME value is the ACME domain you must use for automated certificate management. Make sure that this challenge path is accessible.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  2. Select your Dedicated Cloud Gateway.
+  3. In the API Gateway sidebar, click **Custom Domains**.
+  4. Verify that the status of your custom domain displays as `HEALTHY`. Monitor this for certificate issuance and readiness.
+  5. Click the more options menu icon next to your custom domain.
+  6. Click **Configure DNS**.
+  7. The first CNAME value should match the CNAME domain in your DNS records.
+  8. The second CNAME value is the ACME domain you must use for automated certificate management. Make sure that this challenge path is accessible.
+{% enddetails %}
 {% endnavtab %}
 {% navtab "Data planes" %}
 
@@ -82,21 +81,20 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 * Verify that the data planes are being reported as in-sync with the control plane configuration. Look for configuration drift or synchronization errors.
 * Verify the number of data planes deployed meets the your organization's minimum redundancy and scale requirements. Compare these numbers with initial sizing discussions.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Data Plane Nodes**.
-1. Verify that the number of data planes meets your organization's minimum redundancy and scale requirements. Compare these numbers with initial sizing discussions.
-1. Verify that data plane nodes have the following statuses:
-   * **Connected:** `Connected`
-   * **Sync Status:** `In Sync`
-   * **Errors:** None
-1. In the API Gateway sidebar, click **Control Plane Logs**. 
-1. Verify that the data plane logs don't report any deployment errors.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  1. Select your Dedicated Cloud Gateway.
+  1. In the API Gateway sidebar, click **Data Plane Nodes**.
+  1. Verify that the number of data planes meets your organization's minimum redundancy and scale requirements. Compare these numbers with initial sizing discussions.
+  1. Verify that data plane nodes have the following statuses:
+     * **Connected:** `Connected`
+     * **Sync Status:** `In Sync`
+     * **Errors:** None
+  1. In the API Gateway sidebar, click **Control Plane Logs**. 
+  1. Verify that the data plane logs don't report any deployment errors.
+{% enddetails %}
 {% endnavtab %}
 {% navtab "Control planes" %}
 
@@ -106,33 +104,32 @@ If you're using a [custom domain](/dedicated-cloud-gateways/reference/#custom-dn
 * Verify that production Routes correctly map to Services and the Route host, path, and methods are accurate. Test all production Routes.
 * Verify the [TLS/SSL configuration](/gateway/entities/route/#tls-route-configuration) is configured correctly for all production Routes and Services. Ensure the correct certificates are used.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Gateway Services**.
-1. To verify production Service configuration, do the following:
-   1. Click a Service that is intended for production traffic.
-   1. Click the **Configuration** tab.
-   1. Verify that your Service upstream URLs, health checks, and load balancing configurations are accurate. 
-   1. Repeat these steps for all production Services.
-1. In the API Gateway sidebar, click **Routes**.
-1. To verify production Route configuration, do the following:
-   1. Click a Route that is intended for production traffic.
-   1. Click the **Configuration** tab.
-   1. Verify that your Route host, path, and methods correctly map to the corresponding Services. 
-   1. If you're using TLS/SSL, verify that these are configured correctly with [Certificates or SNIs associated with the Route](/gateway/entities/route/#tls-route-configuration).
-   1. Repeat these steps for all production Routes.
-1. In the API Gateway sidebar, click **Plugins**.
-1. To verify production plugin configuration, do the following:
-   1. Click a plugin that is intended for production traffic.
-   1. Click the **Configuration** tab.
-   1. Verify that your plugins are configured correctly and have the correct scope. 
-   1. Repeat these steps for all production plugins.
-1. Test all production Routes by sending a request and verifying that the response is as expected based on the Route and Service configurations and the applied plugins.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  2. Select your Dedicated Cloud Gateway.
+  3. In the API Gateway sidebar, click **Gateway Services**.
+  4. To verify production Service configuration, do the following:
+     1. Click a Service that is intended for production traffic.
+     2. Click the **Configuration** tab.
+     3. Verify that your Service upstream URLs, health checks, and load balancing configurations are accurate. 
+     4. Repeat these steps for all production Services.
+  5. In the API Gateway sidebar, click **Routes**.
+  6. To verify production Route configuration, do the following:
+     1. Click a Route that is intended for production traffic.
+     2. Click the **Configuration** tab.
+     3. Verify that your Route host, path, and methods correctly map to the corresponding Services. 
+     4. If you're using TLS/SSL, verify that these are configured correctly with [Certificates or SNIs associated with the Route](/gateway/entities/route/#tls-route-configuration).
+     5. Repeat these steps for all production Routes.
+  7. In the API Gateway sidebar, click **Plugins**.
+  8. To verify production plugin configuration, do the following:
+     1. Click a plugin that is intended for production traffic.
+     2. Click the **Configuration** tab.
+     3. Verify that your plugins are configured correctly and have the correct scope. 
+     4. Repeat these steps for all production plugins.
+  9. Test all production Routes by sending a request and verifying that the response is as expected based on the Route and Service configurations and the applied plugins.
+{% enddetails %}
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -179,16 +176,15 @@ See the section for your cloud provider for more information about how to config
 * Verify that the [private hosted zone is shared](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-associate-vpcs.html) with the Dedicated Cloud Gateway VPC correctly.
 * Verify if the DNS is resolvable from the Dedicated Cloud Gateway network by sending a request to the upstream using its private hostname. [Perform `nslookup`](https://learn.microsoft.com/windows-server/administration/windows-commands/nslookup) or a connection test.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Networks**.
-1. From the more options menu next to your network, select "Configure private DNS".
-1. Verify that the private hosted zone configuration matches what's configured in AWS.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  2. Select your Dedicated Cloud Gateway.
+  3. In the API Gateway sidebar, click **Networks**.
+  4. From the more options menu next to your network, select "Configure private DNS".
+  5. Verify that the private hosted zone configuration matches what's configured in AWS.
+{% enddetails %}
 
 {% endnavtab %}
 {% navtab "Outbound DNS resolver" %}
@@ -198,17 +194,16 @@ See the section for your cloud provider for more information about how to config
 * Verify if the domain is mapped to the correct DNS resolvers for resolution. Check conditional forwarding rules.
 * Verify if the DNS is resolvable from the Dedicated Cloud Gateway network by sending a request to the upstream using its private hostname. [Perform `nslookup`](https://learn.microsoft.com/windows-server/administration/windows-commands/nslookup) or a connection test.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Networks**.
-1. From the more options menu next to your network, select "Configure private DNS".
-1. Click **Outbound DNS resolver**.
-1. Verify that the outbound DNS resolver configuration matches what's configured in AWS.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  1. Select your Dedicated Cloud Gateway.
+  1. In the API Gateway sidebar, click **Networks**.
+  1. From the more options menu next to your network, select "Configure private DNS".
+  1. Click **Outbound DNS resolver**.
+  1. Verify that the outbound DNS resolver configuration matches what's configured in AWS.
+{% enddetails %}
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -339,16 +334,15 @@ You can optionally choose to expose upstream services only via load balancers (f
 * Load testing: Execute representative load/soak tests against the Dedicated Cloud Gateway deployment. Check for unexpected performance degradation or scaling issues.
 * Cutover plan: Finalize and communicate the detailed traffic cutover plan (for example, DNS TTL changes and staged traffic migration). Ensure a rollback plan is also documented.
 
-<details markdown="1">
-<summary><b>How to verify in {{site.konnect_short_name}}</b></summary>
-
-1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
-1. Select your Dedicated Cloud Gateway.
-1. On your Dedicated Cloud Gateway overview, verify that analytics like latency and error rate are collected.
-1. In the API Gateway sidebar, click **Control Plane Logs**.
-1. Verify that your Dedicated Cloud Gateways are collected. Check the initial log samples.
-1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
-1. In the Observability sidebar, click **Dashboards**.
-1. Set up initial Dedicated Cloud Gateway dashboards.
-
-</details>
+{% details %}
+summary: "**How to verify in {{site.konnect_short_name}}**"
+content: |
+  1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+  1. Select your Dedicated Cloud Gateway.
+  1. On your Dedicated Cloud Gateway overview, verify that analytics like latency and error rate are collected.
+  1. In the API Gateway sidebar, click **Control Plane Logs**.
+  1. Verify that your Dedicated Cloud Gateways are collected. Check the initial log samples.
+  1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
+  1. In the Observability sidebar, click **Dashboards**.
+  1. Set up initial Dedicated Cloud Gateway dashboards.
+{% enddetails %}

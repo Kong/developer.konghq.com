@@ -86,17 +86,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: E2EE
-            description: Learn about how End-to-End Encryption (E2EE) works in Insomnia.
-            icon: /assets/icons/lock.svg
-            cta:
-              text: Learn more
-              url: /insomnia/end-to-end-encryption/
-      - blocks:
-        - type: card
-          config:
             title: Data security
-            description: Learn about the data models, keys, and salts used in Insomnia.
+            description: Learn about the data models, keys, salts, and end-to-end encryption used in Insomnia.
             icon: /assets/icons/security.svg
             cta:
               text: Learn more

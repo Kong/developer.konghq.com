@@ -6,7 +6,7 @@ networks:
 
 services:
   kafka1:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka1
@@ -25,7 +25,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   kafka2:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka2
@@ -44,7 +44,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
   kafka3:
-    image: apache/kafka:4.1.1
+    image: apache/kafka:4.2.0
     networks:
       - kafka
     container_name: kafka3
@@ -61,3 +61,18 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka1:9093,1@kafka2:9093,2@kafka3:9093
       KAFKA_CLUSTER_ID: 'abcdefghijklmnopqrstuv'
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.8.7
+    networks:
+      - kafka
+    container_name: schema-registry
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka1:9092,kafka2:9092,kafka3:9092

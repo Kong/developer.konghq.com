@@ -60,6 +60,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+Avalara
 Avro
 aws
 Adyen
@@ -194,7 +195,9 @@ dcr
 DECK_
 deck_files
 declaratively
+dedupe
 deduplicate
+deduplicates
 deduplication
 degraphql
 degraphql_routes
@@ -345,6 +348,7 @@ hotfix
 how_to
 href
 http
+httproute
 httpbin
 HTTPie
 HTTPie
@@ -476,6 +480,7 @@ KPI
 KPI
 KPIs
 KPIs
+kscheme
 ksearch
 kubeconfig
 kubectl
@@ -495,6 +500,7 @@ Kustomize
 Kustomize
 kustomize
 kustomize
+keystores
 kv
 Lakera
 langchain
@@ -773,6 +779,7 @@ saml
 sandboxed
 sandboxing
 sanitization
+sasl_oauth_bearer
 sbom
 SBOM
 sboms
@@ -796,6 +803,7 @@ shm
 show_in_api
 Sigstore
 slas
+Slowloris
 slsa
 slos
 SLT_Enc
@@ -804,6 +812,7 @@ snis
 sonarqube
 Splunk
 Splunk
+sse
 ssl
 ssl_cert_key
 ssl_certificate
@@ -901,6 +910,7 @@ transcoded
 transcoder
 transpile
 transpiled
+trendai
 trusted_ips
 truststore
 truthy

@@ -1,0 +1,19 @@
+{
+    "name": "plugin-examples-validator",
+    "version": "1.0.0",
+    "description": "Validates plugin example configs against JSON schemas",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+      "validate": "node index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "ajv": "^8.17.1",
+        "ajv-formats": "^3.0.1",
+        "tinyglobby": "^0.2.12",
+        "yaml": "^2.6.0"
+    }
+}

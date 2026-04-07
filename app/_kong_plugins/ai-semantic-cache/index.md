@@ -122,10 +122,6 @@ sequenceDiagram
     {{site.base_gateway}}/AI Semantic Cache plugin-->>User: Return realtime response
 {% endmermaid %}
 
-### Vector databases
-
-{% include_cached /plugins/ai-vector-db.md name=page.name %}
-
 ### Cache management
 
 With the AI Semantic Cache plugin, you can configure a cache of your choice to store the responses from the LLM.
@@ -175,4 +171,12 @@ The plugin respects cache control headers to determine if requests and responses
 {:.info}
 > As most AI services always send `no-cache` in the response headers, setting `cache_control` to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
 
-{% include plugins/redis-cloud-auth.md %}
+## Vector databases
+
+{% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+### Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=3 %}

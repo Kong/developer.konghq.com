@@ -82,7 +82,7 @@ rows:
               icon: /assets/icons/logs.svg
               cta:
                 text: Set up LLM reporting
-                url: /observability/llm-reporting/
+                url: /observability/explorer/
   
   - columns:
       - blocks:
@@ -106,3 +106,45 @@ rows:
                     
                     {{site.observability}} includes the ability to build organization-specific views with [Custom Dashboards](/custom-dashboards/).
                     You can create them from scratch or use existing templates. The functionality is powered by a robust [API](/api/konnect/analytics-dashboards/), and [Terraform integration](/how-to/automate-dashboard-terraform/).
+
+  - header:
+      type: h2
+      text: "Access and permissions"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} {{site.observability}} uses role-based access control to determine what each user can view. 
+                    Users added to one of the predefined Analytics [teams](/konnect-platform/teams-and-roles/#predefined-teams) have full access to all {{site.observability}} and analytics features.
+                    Users not in one of these teams can still view analytics data relevant to them based on their other assigned Konnect roles and teams.
+                    This applies across permission types in Konnect, including control plane permissions, API permissions, and Portal permissions. For example, a user with access to a specific control plane will see analytics data for that control plane only.
+
+                    Keep the following in mind when you are determining access and permissions to {{site.observability}}:
+                    * Explorer and Debugger are available to all {{site.observability}} users without extra role assignments.
+                    Users only see traffic and metrics for the control planes within their permissions scope.
+                    * Organization Admins and users in the Analytics Admin or Analytics Viewer prebuilt teams have access to {{site.observability}} data across the entire organization.
+                    * Access to Dashboards and Reports requires additional role assignments, such as Dashboard Viewer or Report Viewer. 
+          - type: button
+            config:
+              text: Manage teams and roles
+              url: /konnect-platform/teams-and-roles/
+  - header:
+      type: h2
+      text: "Frequently asked questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: How do I get access to Dashboards or Reports?
+                a: |
+                  Dashboards and Reports require additional role assignments beyond the default {{site.observability}} access.
+                  Contact your organization admin to be assigned a role such as Dashboard Viewer or Report Viewer.
+                  For a full list of available roles, see [Teams and roles](/konnect-platform/teams-and-roles/).
+              - q: If I have access to {{site.observability}} Dashboards, can I see all data in the organization?
+                a: |
+                  No. Dashboard access controls which dashboard objects you can view, not the underlying data.
+                  You will only see traffic and metrics for the control planes within your existing permissions scope,
+                  regardless of dashboard access level.

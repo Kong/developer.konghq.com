@@ -62,7 +62,9 @@ To ensure consistency and interoperability, tracing adheres to OpenTelemetry nam
 For deeper insights, logs can be captured along with traces. When initiating a debug session, administrators can choose to capture logs. Detailed {{site.base_gateway}} logs are captured for the duration of the session. These logs are then correlated with traces using `trace_id` and `span_id` providing a comprehensive and drill-down view of logs generated during specific trace or span.
 
 ## Reading traces and logs 
-Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper.
+Traces captured during a debug session can be visualized in debugger's built-in trace viewer. The trace viewer displays  **Summary**, **Spans**  and **Logs** view. You can gain instant insights with the summary view while the spans and logs view help you to dive deeper. You can also download captured traces. 
+
+All {{site.konnect_short_name}} users can upload a trace `.json` or `.zip` file (for example, one downloaded from a debug session) to view by navigating to **{{site.observability}}** > **Debugger** and clicking **Upload trace**. This lets users view traces even if they don't have permission to create or start debug sessions.   
 
 ### Summary view
 Summary view helps you visualize the entire API request-response flow in a single glance. This view provides a concise overview of critical latency metrics and a transaction map. The lifecycle map includes the different phases of {{site.base_gateway}} and the plugins executed by {{site.base_gateway}} on both the request and the response along with the times spent in each phase. 
@@ -129,7 +131,7 @@ To begin using the Debugger, ensure the following requirements are met:
 
 * Your data plane nodes are running {{site.base_gateway}} version 3.9.1 or later.
 * Logs require {{site.base_gateway}} version 3.11.0 or later.
-* You should either be a control plane admin or an org admin to use Debugger
+* You need Debug Session Creator, Control Plane Admin, or Org Admin permissions to create debug sessions.
 * Your {{site.konnect_short_name}} data planes are hosted using self-managed hybrid, Dedicated Cloud Gateways, or serverless gateways. {{site.kic_product_name}} or {{site.event_gateway}} Gateways aren't currently supported.
 * For version 3.9.x only: set the following environment variables in `kong.conf`:
   * `KONG_CLUSTER_RPC=on`

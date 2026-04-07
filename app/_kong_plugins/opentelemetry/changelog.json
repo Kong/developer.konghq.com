@@ -40,10 +40,34 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.3": [
+    {
+      "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added a new configuration field `sampling_strategy` to the plugin. The field allowed you to specify the sampling strategies for OTLP `traces`.\nSet `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise.\nSet `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.\nThe default value is `parent_drop_probability_fallback` and keeps the instrumentation, sampling and exporting behaviour as before.",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.11.0.7": [
+    {
+      "message": "Fixed an issue where invalid `x-b3-flags` header values caused 500 responses.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the instrumentation started unexpectedly on control planes of hybird mode.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

@@ -37,4 +37,8 @@ releases:
     version: "12.2.0"
   - release: "12.3"
     version: "12.3.0"
+  - release: "12.4"
+    version: "12.4.0"
+  - release: "12.5"
+    version: "12.5.0"
     latest: true

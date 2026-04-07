@@ -15,8 +15,8 @@ search_aliases:
 related_resources:
   - text: Manage Insomnia
     url: /insomnia/manage-insomnia/
-  - text: End-to-End Encryption
-    url: /insomnia/end-to-end-encryption/
+  - text: Data security
+    url: /insomnia/data-security/
   - text: Insomnia Enterprise
     url: /insomnia/enterprise/
   - text: Enterprise user management
@@ -60,11 +60,6 @@ faqs:
       It is governed by the [Apache License 2.0](https://opensource.org/license/apache-2-0/), along with our [Terms of Service](https://insomnia.rest/terms) and [Privacy Policy](https://insomnia.rest/privacy). 
       A formal EULA may be introduced in the future.
 
-  - q: What is the team size limit for a free trial?
-    a: |
-      The free trial supports up to five team members. After the trial, you will be billed based on the number of member seats in your subscription. 
-      See our [pricing page](https://insomnia.rest/pricing) for more details.
-
   - q: How do I increase the number of seats on my team?
     a: |
       The team owner can update the subscription to include more seats by:
@@ -105,7 +100,7 @@ faqs:
 
 ## Create an Insomnia account
 
-To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [End-to-End Encryption](/insomnia/end-to-end-encryption/).
+To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app/authorize) and select a sign up option. You'll be prompted to create a [passphrase](#passphrase) to enable [End-to-end encryption](/insomnia/data-security/#end-to-end-encryption).
 
 {:.danger}
 > **Warning**: If you reset your passphrase, you will lose the data encrypted with the previous passphrase. To avoid this, make sure to securely back up your passphrase in a password manager, for example.
@@ -121,13 +116,13 @@ Owners and admins can invite users to collaborate on projects by adding them to 
 
 Invited users will receive an email. They will need to log in to Insomnia and accept the invite.
 
-## End-to-End Encryption
+## End-to-end encryption
 
 Hobby accounts created from June 4th 2024 onwards have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data so that only the parties involved in the communication can decrypt it.
 
 You can enable or disable E2EE from the **Encryption** tab in your account settings.
 
-For more details about how E2EE works, see [End-to-End Encryption](/insomnia/end-to-end-encryption/).
+For more details about how E2EE works, see [Data security](/insomnia/data-security/#end-to-end-encryption).
 
 ### Passphrase
 

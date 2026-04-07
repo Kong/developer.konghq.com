@@ -27,7 +27,6 @@ min_version:
 
 plugins:
   - ai-mcp-proxy
-  - request-transformer-advanced
 
 entities:
   - service
@@ -77,30 +76,9 @@ prereqs:
 
 ---
 
-## Add an API key using the Request Transformer Advanced plugin
-
-First, we'll configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin. This plugin modifies outgoing requests before they reach the upstream API. In this example, it automatically appends your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key to the query string so that all requests are authenticated without needing to manually provide the key each time.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: request-transformer-advanced
-      route: weather-route
-      enabled: true
-      config:
-        add:
-          querystring:
-            - key:${key}
-variables:
-  key:
-    value: $WEATHERAPI_API_KEY
-{% endentity_examples %}
-
 ## Configure the AI MCP Proxy plugin
 
-We can move on to configuring the AI MCP Proxy plugin. This setup exposes the upstream WeatherAPI endpoint as an MCP tool, enabling our AI client, Cursor, to call it directly.
-
-In this configuration, we also define the tool along with its parameters—including the configured API key—so that the MCP client can make tool calls for our weather queries.
+Configure the [AI MCP Proxy](/plugins/ai-mcp-proxy/) plugin to expose the upstream WeatherAPI endpoint as an MCP tool. This setup also includes your [WeatherAPI](https://www.weatherapi.com/api-explorer.aspx) API key in `tools[].query`, so every MCP tool call includes the required `key` query parameter.
 
 {% entity_examples %}
 entities:
@@ -113,6 +91,9 @@ entities:
         - description: Get current weather for a location
           method: GET
           path: "/weather"
+          query:
+            key:
+              - ${key}
           parameters:
           - name: q
             in: query
@@ -123,6 +104,9 @@ entities:
               IP address, latitude/longitude, or city name.
         server:
           timeout: 60000
+variables:
+  key:
+    value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
 

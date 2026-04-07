@@ -101,7 +101,8 @@ rows:
     description: |
       The type of authentication used
     availability: |
-      Cluster, Produce and Consume policies
+      * `condition` field in Cluster, Produce, and Consume policies
+      * `resource_names` field in ACL policies
     example: |
       `context.auth.type == 'anonymous'`
   - variable: "`context.auth.principal.name`"
@@ -109,15 +110,26 @@ rows:
     description: |
       The name of the principal for this connection
     availability: |
-      Cluster, Produce and Consume policies
+      * `condition` field in Cluster, Produce, and Consume policies
+      * `resource_names` field in ACL policies
     example: |
       `context.auth.principal.name == 'user1'`
+  - variable: |
+      `context.auth.token.claims` {% new_in 1.1 %}
+    type: "`map<string, any>`"
+    description: |
+      Only populated for `sasl_oauth_bearer` authentication. Contains all claims from the JWT token. Claims can be strings, numbers, booleans, arrays, or nested JSON objects.
+    availability: |
+      * `condition` field in Cluster, Produce, and Consume policies
+      * `resource_names` field in ACL policies
+    example: |
+      `'test-claim' in context.auth.token.claims`
   - variable: "`context.topic.name`"
     type: "`string`"
     description: |
       The name of the topic of the record
     availability: |
-      Produce and Consume policies
+      * `condition` field in Produce and Consume policies
     example: |
       `context.topic.name == 'my-ns.my-topic'`
   - variable: "`record.headers`"
@@ -125,7 +137,7 @@ rows:
     description: |
       The headers of the record
     availability: |
-      Produce and Consume policies
+      * `condition` field in Produce and Consume policies
     example: |
       `record.headers['skip-record'] == 'true'`
   - variable: "`record.value.content`"
@@ -133,7 +145,7 @@ rows:
     description: |
       The value of the record. Deep fields can be accessed using json object notation
     availability: |
-      Produce and Consume policies used as children of Schema Validation
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
       `record.value.content['sub.other'] == 3`
   - variable: "`record.value.validated`"
@@ -141,7 +153,7 @@ rows:
     description: |
       Whether record validation succeeded or not
     availability: |
-      Produce and Consume policies used as children of Schema Validation
+      * `condition` field in Produce and Consume policies used as children of Schema Validation
     example: |
       `record.value.validated == true`
 {% endtable %}

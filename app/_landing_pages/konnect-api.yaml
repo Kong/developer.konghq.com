@@ -54,23 +54,23 @@ rows:
   - header:
       type: h3
       text: Dev Portal APIs
-  - columns:
-    - blocks:
-      - type: api
-        config:
-          title: Konnect Developer Portal
-    - blocks:
-      - type: api
-        config:
-          title: Konnect API Builder
-    - blocks:
-      - type: api
-        config:
-          title: Application Auth Strategies
-    - blocks:
-      - type: api
-        config:
-          title: Konnect Portal Management
+    columns:
+      - blocks:
+        - type: api
+          config:
+            title: Konnect Developer Portal
+      - blocks:
+        - type: api
+          config:
+            title: Konnect API Builder
+      - blocks:
+        - type: api
+          config:
+            title: Application Auth Strategies
+      - blocks:
+        - type: api
+          config:
+            title: Konnect Portal Management
 
   - header:
       type: h2

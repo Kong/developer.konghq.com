@@ -16,8 +16,7 @@ breadcrumbs:
   - /konnect/
 
 api_specs:
-    - gateway/admin-ee
-    - konnect/control-planes-config
+    - konnect/kong-identity
 
 related_resources:
   - text: Configure the OIDC plugin with Kong Identity
@@ -90,6 +89,7 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
+{% comment %}
 ## Kong Identity authorization code flow
 
 In the authorization code flow:
@@ -102,6 +102,7 @@ In the authorization code flow:
 4. The authorization server ({{site.base_gateway}} with OAuth2 plugin) validates the client credentials and returns an authorization code.
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
+{% endcomment %}
 
 ## Kong Consumer Group claim authorization flow
 When using plugins scoped to Consumer Groups:

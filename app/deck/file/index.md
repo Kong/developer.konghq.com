@@ -1,6 +1,6 @@
 ---
 title: File manipulation using decK file
-short_title: decK file overview
+short_title: decK file
 description: Manipulate a decK configuration file programmatically. Layer in additional configuration and lint against your governance rules.
 weight: 1000
 
@@ -42,6 +42,9 @@ rows:
   - command: |
       [openapi2kong](/deck/file/openapi2kong/)
     description: Convert an OpenAPI specification to {{ site.base_gateway }} Services and Routes.
+  - command: |
+      [openapi2mcp](/deck/file/openapi2mcp/)
+    description: Convert an OpenAPI specification to a {{ site.base_gateway }} Services with an MCP Route and an AI MCP Proxy plugin with MCP tools.
   - command: |
       [kong2kic](/deck/file/kong2kic/)
     description: Convert a {{site.base_gateway}} declarative configuration file to [{{site.kic_product_name}}](/kubernetes-ingress-controller/) compatible CRDs. Supports both Gateway API and Ingress resources.

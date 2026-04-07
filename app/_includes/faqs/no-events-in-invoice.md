@@ -1,0 +1,1 @@
+One reason why you might not see events in a customer's invoice is if the event was sent _before_ the subscription was created. {{site.metering_and_billing}} only invoices and meters events that are sent _after_ the subscription is created.

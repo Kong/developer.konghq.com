@@ -135,10 +135,10 @@ columns:
     key: regexp
 rows:
   - path: "`/login/*`"
-    description: Login
+    description: The login page is itself customizable, but the path is enforced for authentication to work properly.
     regexp: "`^/login(?:\\/.*)?`"
   - path: "`/register`"
-    description: Registration
+    description: The registration page is customizable; however, a default page is provided at this path if it does not exist.
     regexp: "`^/register`"
   - path: "`/forgot-password`"
     description: Forgot password
@@ -151,7 +151,10 @@ rows:
     regexp: "`^/logout`"
   - path: "`/apps/*`"
     description: Developer applications
-    regexp: "`^/apps`"
+    regexp: "`^/apps(?:\/.*)?`"
+  - path: "`/account/*`"
+    description: Developer account, including Teams
+    regexp: "`^/account(?:\/.*)?`"
   - path: "`/api/v*/`"
     description: Portal API
     regexp: "`^/api\\/v\\d+\\/.*`"
@@ -166,7 +169,7 @@ rows:
     regexp: "`^/_api\\/.*`"
   - path: "`/api/oauth/*`"
     description: OAuth endpoints
-    regexp: "`^/api//oauth\\/.*`"
+    regexp: "`^/api/oauth\\/.*`"
   - path: "`/npm/*`"
     description: CDN proxy
     regexp: "`^/npm\\/.*`"

@@ -58,7 +58,7 @@ sections:
   - title: Upgrade
     items:
       - path: /mesh/upgrade/
-      - path: /mesh/upgrade-notes/
+      - path: /mesh/version-specific-upgrade-notes/
       - path: /mesh/migration-to-the-new-policies/
 
   - title: Policies

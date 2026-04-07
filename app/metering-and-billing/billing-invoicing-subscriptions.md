@@ -14,6 +14,12 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Integrate Stripe with {{site.metering_and_billing}}
+    url: /metering-and-billing/stripe-integration/
+faqs:
+  - q: Why don't I see any events in my customer's invoice?
+    a: |
+      {% include faqs/no-events-in-invoice.md %}
 ---
 
 ## Billing profiles

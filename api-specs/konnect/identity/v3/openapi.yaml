@@ -1,13 +1,13 @@
 openapi: 3.0.2
 info:
   title: Konnect Identity
-  version: 3.0.1
+  version: 3.0.2
   description: The management API for Kong Konnect Identity resources.
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@32f132716d696635a0ba267d833570da64a9aa83
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/32f132716d696635a0ba267d833570da64a9aa83'
+  x-oas-source: kong/platform-api@d35c56e673948dcbd3a1d4b115039ff5366f9784
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d35c56e673948dcbd3a1d4b115039ff5366f9784'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -97,7 +97,7 @@ paths:
       operationId: get-identity-providers
       summary: List Identity Providers
       description: |
-        Retrieves the identity providers available within the organization. This operation provides information about 
+        Retrieves the identity providers available within the organization. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
         - name: filter
@@ -123,7 +123,7 @@ paths:
       operationId: create-identity-provider
       summary: Create Identity Provider
       description: |
-        Creates a new identity provider. This operation allows the creation of a new identity provider for 
+        Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
         $ref: '#/components/requestBodies/CreateIdentityProviderRequest'
@@ -154,7 +154,7 @@ paths:
       operationId: get-identity-provider
       summary: Get Identity Provider
       description: |
-        Retrieves the configuration of a single identity provider. This operation returns information about a 
+        Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
         '200':
@@ -173,7 +173,7 @@ paths:
       operationId: update-identity-provider
       summary: Update Identity Provider
       description: |
-        Updates the configuration of an existing identity provider. This operation allows modifications to be made 
+        Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
         $ref: '#/components/requestBodies/UpdateIdentityProviderRequest'
@@ -196,7 +196,7 @@ paths:
       operationId: delete-identity-provider
       summary: Delete Identity Provider
       description: |
-        Deletes an existing identity provider configuration. This operation removes a specific identity provider 
+        Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the organization.
       responses:
         '204':
@@ -608,6 +608,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-team-role
+      summary: Get Team Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: teams-remove-role
       summary: Remove Team Role
@@ -818,6 +835,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-user-role
+      summary: Get User Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: users-remove-role
       summary: Remove Role
@@ -1133,6 +1167,23 @@ paths:
         required: true
         schema:
           type: string
+    get:
+      operationId: get-system-account-role
+      summary: Get System Account Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - System Accounts - Roles
     delete:
       operationId: delete-system-accounts-accountId-assigned-roles-roleId
       summary: Delete Assigned Role from System Account
@@ -1528,6 +1579,7 @@ components:
       type: string
       example: YOUR_CLIENT_SECRET
       title: OIDC Identity Provider Login Client Secret Property
+      writeOnly: true
     OIDCIdentityProviderScopes:
       description: The scopes requested by your application when authenticating with the identity provider.
       type: array
@@ -1582,16 +1634,16 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/IdentityProviderType'
-        login_path:
-          $ref: '#/components/schemas/IdentityProviderLoginPath'
         enabled:
           $ref: '#/components/schemas/IdentityProviderEnabled'
+        login_path:
+          $ref: '#/components/schemas/IdentityProviderLoginPath'
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Create Identity Provider
     UpdateIdentityProvider:
       description: The identity provider that contains configuration data for updating an authentication integration.
       type: object
@@ -1603,9 +1655,9 @@ components:
         config:
           type: object
           oneOf:
-            - $ref: '#/components/schemas/ConfigureOIDCIdentityProviderConfig'
+            - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
-      title: Identity Provider
+      title: Update Identity Provider
     IdentityProvider:
       description: The identity provider that contains configuration data for authentication integration.
       type: object
@@ -1629,23 +1681,6 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
       title: Identity Provider
     OIDCIdentityProviderConfig:
-      description: The identity provider that contains configuration data for the OIDC authentication integration.
-      type: object
-      properties:
-        issuer_url:
-          $ref: '#/components/schemas/OIDCIdentityProviderIssuer'
-        client_id:
-          $ref: '#/components/schemas/OIDCIdentityProviderClientId'
-        scopes:
-          $ref: '#/components/schemas/OIDCIdentityProviderScopes'
-        claim_mappings:
-          $ref: '#/components/schemas/OIDCIdentityProviderClaimMappings'
-      additionalProperties: false
-      required:
-        - issuer_url
-        - client_id
-      title: OIDC Identity Provider Config
-    ConfigureOIDCIdentityProviderConfig:
       description: The identity provider that contains configuration data for the OIDC authentication integration.
       type: object
       properties:
@@ -2011,6 +2046,21 @@ components:
       maxLength: 256
       minLength: 1
       pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.'']*[\p{L}\p{N}]$'
+    PersonalAccessTokenCreateRequestWithExpiresAt:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PATName'
+        expires_at:
+          description: An ISO-8601 timestamp representation of entity expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: false
+      additionalProperties: false
+      required:
+        - name
+        - expires_at
     PersonalAccessTokenCreateResponse:
       description: Details of the created personal access token.
       type: object
@@ -3256,6 +3306,7 @@ components:
                   - Consumer Admin
                   - Connector
                   - Creator
+                  - Debug Session Creator
                   - Deployer
                   - Discovery Admin
                   - Discovery Viewer
@@ -3282,6 +3333,8 @@ components:
                   - Upstream Admin
                   - Vault Admin
                   - Viewer
+                  - Registration Approver
+                  - Content Editor
               entity_id:
                 description: The ID of the entity.
                 type: string
@@ -3501,7 +3554,7 @@ components:
       description: The request schema for the update IdP configuration request.
     CreateIdentityProviderRequest:
       description: |
-        An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for creating a new identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -3516,7 +3569,7 @@ components:
               $ref: '#/components/examples/CreateSAMLIdentityProviderWithMetadata'
     UpdateIdentityProviderRequest:
       description: |
-        An object representing the configuration for updating an identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
+        An object representing the configuration for updating an identity provider. This configuration may pertain to either an OIDC or a SAML identity provider.
       required: true
       content:
         application/json:
@@ -3534,21 +3587,10 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                $ref: '#/components/schemas/PATName'
-              expires_at:
-                description: An ISO-8601 timestamp representation of entity expiration date.
-                type: string
-                format: date-time
-                example: '2022-11-04T20:10:06.927Z'
-                readOnly: false
-            required:
-              - name
-              - expires_at
+            oneOf:
+              - $ref: '#/components/schemas/PersonalAccessTokenCreateRequestWithExpiresAt'
           examples:
-            Example Request Body:
+            With expires_at:
               $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
     PersonalAccessTokenUpdateRequest:
       description: Request body schema for updating personal access tokens.
@@ -4043,6 +4085,22 @@ components:
                             example: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
                             enum:
                               - Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                        required:
+                          - name
+                          - description
+                      debug_session_creator:
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          name:
+                            type: string
+                            enum:
+                              - Debug Session Creator
+                          description:
+                            type: string
+                            example: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
+                            enum:
+                              - This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                         required:
                           - name
                           - description
@@ -4620,6 +4678,9 @@ components:
                     creator:
                       name: Creator
                       description: Creates a new Control Plane in an organization. The creator becomes the owner of the Control Plane they create.
+                    debug_session_creator:
+                      name: Debug Session Creator
+                      description: This role grants access to create debug sessions. This role also grants read-only access to all entities within a control plane.
                     deployer:
                       name: Deployer
                       description: 'This role grants full write access to administer services, routes and plugins necessary to deploy services in Service Hub.'
@@ -4925,7 +4986,7 @@ components:
               $ref: '#/components/examples/SAMLIdentityProviderWithMetadata'
     IdentityProviders:
       description: |
-        A collection of identity providers. This response contains a collection of identity providers, which may  include both OIDC and SAML identity providers.
+        A collection of identity providers. This response contains a collection of identity providers, which may include both OIDC and SAML identity providers.
       content:
         application/json:
           schema:
