@@ -1,0 +1,47 @@
+title: Route by model alias
+description: Route requests to different OpenAI models based on the model field in the request body using model aliases.
+extended_description: |
+  {new_in 3.14} Use `model_alias` to map client-facing model names to upstream provider models.
+  Clients send a logical name like `powerful` or `fast` in the `model` field,
+  and the plugin routes to the matching target.
+
+weight: 105
+
+min_version:
+    gateway: '3.14'
+
+requirements:
+- OpenAI account
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: gpt-4o
+        model_alias: powerful
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${key}
+      model:
+        provider: openai
+        name: gpt-4o-mini
+        model_alias: fast
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+group: open-ai
