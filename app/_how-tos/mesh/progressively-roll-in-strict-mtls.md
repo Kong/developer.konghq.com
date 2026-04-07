@@ -198,6 +198,7 @@ spec:
 
    ```sh
    export KV_DPP_NAME_2=$(curl -s http://localhost:5681/meshes/default/dataplanes/_overview\?name\=kv | jq -c '.items[] | select( .labels["k8s.kuma.io/namespace"]=="kong-mesh-demo-migration")' | jq -r '.name')
+   export KV_DPP_NAME_2=$(curl -s http://localhost:5681/meshes/default/dataplanes/_overview\?name\=kv | jq -c '.items[] | select( .labels["k8s.kuma.io/namespace"]=="kong-mesh-demo-migration")' | jq -r '.name')
    for i in {1..2}; do
     sleep 30
     curl -s http://localhost:5681/meshes/default/dataplanes/$KV_DPP_NAME_2/stats | grep http.localhost_5050.rbac.allowed
