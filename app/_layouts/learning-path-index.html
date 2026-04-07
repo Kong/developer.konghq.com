@@ -1,0 +1,41 @@
+---
+layout: default
+---
+<div class="flex flex-col gap-12 w-full">
+  <div class="flex flex-col gap-3">
+    <h1>{{ page.title }}</h1>
+    {% if page.description %}<p class="text-xl font-light">{{ page.description }}</p>{% endif %}
+    <a href="/learning-paths/" class="text-sm text-brand hover:underline">&larr; All learning paths</a>
+  </div>
+
+  {% if page.learning_paths != empty %}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for lp in page.learning_paths %}
+    <a href="{{ lp.url }}"
+       class="flex flex-col gap-3 p-6 rounded-lg border border-primary/10 bg-secondary hover:shadow-md hover:no-underline transition-shadow">
+      <h2 class="text-lg font-semibold m-0">{{ lp.title }}</h2>
+      {% if lp.description %}
+      <p class="text-sm text-secondary m-0">{{ lp.description }}</p>
+      {% endif %}
+      <div class="flex gap-1.5 flex-wrap mt-auto pt-2">
+        {% if lp.products and lp.products != empty %}
+          {% for product_id in lp.products %}
+            {% assign product = site.data.products[product_id] %}
+            <span class="text-xs px-2 py-0.5 rounded-full bg-secondary border border-primary/10 text-secondary">
+              {{ product.name | default: product_id }}
+            </span>
+          {% endfor %}
+        {% endif %}
+        {% if lp.tags and lp.tags != empty %}
+          {% for tag in lp.tags %}
+          <span class="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand">#{{ tag }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No learning paths available for this product yet.</p>
+  {% endif %}
+</div>

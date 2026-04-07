@@ -1,0 +1,93 @@
+<div class="flex flex-col gap-6">
+
+  <p>
+    In this guide you'll stand up a local {{site.base_gateway}} instance in DB-less mode,
+    define a Service and Route, and verify that traffic is proxied correctly.
+    You'll then attach the <strong>Rate Limiting</strong> plugin to see the plugin system in action.
+  </p>
+
+  <section class="flex flex-col gap-3">
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Docker installed and running</li>
+      <li><a href="/deck/">decK</a> CLI installed (<code>deck version</code> should succeed)</li>
+    </ul>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h3>Step 1: Start Kong Gateway in DB-less mode</h3>
+    <p>Run a minimal {{site.base_gateway}} container that reads its configuration from a file:</p>
+    <pre><code class="language-bash">docker run -d --name kong-gateway \
+  -e "KONG_DATABASE=off" \
+  -e "KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yaml" \
+  -e "KONG_PROXY_ACCESS_LOG=/dev/stdout" \
+  -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
+  -e "KONG_PROXY_ERROR_LOG=/dev/stderr" \
+  -e "KONG_ADMIN_ERROR_LOG=/dev/stderr" \
+  -e "KONG_ADMIN_LISTEN=0.0.0.0:8001" \
+  -v "$(pwd)/kong.yaml:/kong/declarative/kong.yaml" \
+  -p 8000:8000 \
+  -p 8001:8001 \
+  kong/kong-gateway:{{site.latest_gateway_oss_version}}</code></pre>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h3>Step 2: Write a declarative configuration</h3>
+    <p>Create a file named <code>kong.yaml</code> in your working directory:</p>
+    <pre><code class="language-yaml">_format_version: "3.0"
+
+services:
+  - name: httpbin
+    url: https://httpbin.konghq.com
+    routes:
+      - name: httpbin-route
+        paths:
+          - /httpbin</code></pre>
+    <p>
+      This defines one Service (<code>httpbin</code>) pointing to a public echo API,
+      and one Route matching any request whose path starts with <code>/httpbin</code>.
+    </p>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h3>Step 3: Verify the proxy</h3>
+    <p>Send a request through the gateway:</p>
+    <pre><code class="language-bash">curl -i http://localhost:8000/httpbin/get</code></pre>
+    <p>You should receive a <code>200 OK</code> response from httpbin with your request details.</p>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h3>Step 4: Add the Rate Limiting plugin</h3>
+    <p>Update <code>kong.yaml</code> to attach the plugin to the Route:</p>
+    <pre><code class="language-yaml">_format_version: "3.0"
+
+services:
+  - name: httpbin
+    url: https://httpbin.konghq.com
+    routes:
+      - name: httpbin-route
+        paths:
+          - /httpbin
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 5
+              policy: local</code></pre>
+    <p>Reload the configuration using decK:</p>
+    <pre><code class="language-bash">deck gateway sync kong.yaml --kong-addr http://localhost:8001</code></pre>
+    <p>
+      Now send more than five requests within a minute. After the fifth, {{site.base_gateway}} returns
+      <code>429 Too Many Requests</code> — the plugin is active.
+    </p>
+  </section>
+
+  <section class="flex flex-col gap-3">
+    <h3>Next steps</h3>
+    <ul>
+      <li>Add authentication with the <a href="/hub/kong-inc/key-auth/">Key Auth plugin</a></li>
+      <li>Explore <a href="/gateway/deployment-topologies/">hybrid mode</a> for production deployments</li>
+      <li>Manage configuration at scale with <a href="/deck/">decK</a></li>
+    </ul>
+  </section>
+
+</div>

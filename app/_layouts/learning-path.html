@@ -1,0 +1,30 @@
+---
+layout: with_aside
+---
+{% if page.description %}
+<p class="text-lg">{{ page.description | liquify }}</p>
+{% endif %}
+
+{% if page.steps != empty %}
+<div class="flex flex-col gap-4">
+  <h2>Steps in this path</h2>
+  <ol class="flex flex-col gap-3 list-none p-0">
+    {% for step in page.steps %}
+    <li>
+      <a href="{{ step.permalink }}"
+         class="flex flex-col gap-1 p-5 rounded-lg border border-primary/10 bg-secondary hover:shadow-md hover:no-underline">
+        <span class="text-xs text-secondary font-medium">Step {{ forloop.index }}</span>
+        <span class="font-semibold text-primary">{{ step.title }}</span>
+        {% if step.description %}
+        <span class="text-sm text-secondary">{{ step.description }}</span>
+        {% endif %}
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endif %}
+
+{% contentfor info_box %}
+{% include info_box/learning_path.html %}
+{% endcontentfor %}

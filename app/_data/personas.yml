@@ -1,0 +1,19 @@
+- id: api-developer
+  name: API Developer
+  description: Build, test, and consume APIs with Kong products.
+  icon: /assets/icons/code.svg
+
+- id: platform-engineer
+  name: Platform Engineer
+  description: Deploy and operate Kong infrastructure at scale.
+  icon: /assets/icons/server.svg
+
+- id: security-engineer
+  name: Security Engineer
+  description: Secure APIs with authentication, authorization, and policies.
+  icon: /assets/icons/monochrome/security.svg
+
+- id: devops-engineer
+  name: DevOps Engineer
+  description: Automate and manage Kong deployments with declarative tooling.
+  icon: /assets/icons/terraform.svg
