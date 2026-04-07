@@ -1,13 +1,8 @@
 In this guide you'll start a local {{site.base_gateway}} instance in DB-less mode, define a Service and Route, and verify that traffic is proxied correctly.
 
-## Prerequisites
-
-- Docker installed and running
-- [decK](/deck/) CLI installed (`deck version` should succeed)
-
 ## Step 1: Start {{site.base_gateway}} in DB-less mode
 
-Run a minimal {{site.base_gateway}} container:
+Run a minimal {{site.base_gateway}} container that reads its configuration from a file on startup:
 
 ```bash
 docker run -d --name kong-gateway \
@@ -24,25 +19,32 @@ docker run -d --name kong-gateway \
   kong/kong-gateway:{{site.latest_gateway_oss_version}}
 ```
 
-## Step 2: Write a declarative configuration
+## Step 2: Create a Service
 
-Create a file named `kong.yaml` in your working directory:
+A **Service** points to the upstream API you want to proxy. Create one targeting the public httpbin echo API:
 
-```yaml
-_format_version: "3.0"
+{% entity_example %}
+type: service
+data:
+  name: httpbin
+  url: https://httpbin.konghq.com
+{% endentity_example %}
 
-services:
-  - name: httpbin
-    url: https://httpbin.konghq.com
-    routes:
-      - name: httpbin-route
-        paths:
-          - /httpbin
-```
+## Step 3: Create a Route
 
-This defines one **Service** pointing to a public echo API, and one **Route** matching requests whose path starts with `/httpbin`.
+A **Route** matches incoming requests and forwards them to the Service. Create one that matches requests with the path prefix `/httpbin`:
 
-## Step 3: Verify the proxy
+{% entity_example %}
+type: route
+data:
+  name: httpbin-route
+  paths:
+    - /httpbin
+  service:
+    name: httpbin
+{% endentity_example %}
+
+## Step 4: Verify the proxy
 
 Send a request through the gateway:
 
@@ -54,8 +56,9 @@ You should receive a `200 OK` response from httpbin with your request details ec
 
 ## What you did
 
-- Started {{site.base_gateway}} in DB-less mode with a declarative config file
-- Defined a Service and a Route that together proxy traffic to an upstream
+- Started {{site.base_gateway}} in DB-less mode
+- Created a Service pointing to an upstream API
+- Created a Route that proxies `/httpbin` traffic to that Service
 - Confirmed the proxy is working end-to-end
 
 Move on to Step 2 to add plugins on top of this setup.

@@ -5,7 +5,8 @@ layout: with_aside
 <p class="text-sm text-secondary m-0">Step {{ page.series.position }} of {{ page.series.items | size }}</p>
 {% endif %}
 
-<div class="flex flex-col gap-6 accordion" data-all-expanded="true">
+<div class="flex flex-col gap-8 accordion" data-all-expanded="true">
+{% include sections/prerequisites.html tier=page.tier tools=page.tools %}
 
   {% if page.learn %}
   <div class="accordion-item flex flex-col border border-primary/10 rounded-lg overflow-hidden">
@@ -37,10 +38,21 @@ layout: with_aside
   </div>
   {% endif %}
 
+{% if page.cleanup %}
+{% include sections/cleanup.html %}
+{% endif %}
 </div>
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
 
 {% if page.navigation %}
 {% include sections/prev_next.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
 {% endif %}
 
 {% contentfor info_box %}

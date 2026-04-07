@@ -1,72 +1,47 @@
 Building on the Service and Route you created in Step 1, you'll now attach two plugins: **Rate Limiting** to cap request volume, and **Key Auth** to require an API key.
 
-## Prerequisites
-
-- The `kong.yaml` and running container from Step 1
-
 ## Step 1: Add the Rate Limiting plugin
 
-Update `kong.yaml` to attach the plugin to the Route:
+Attach Rate Limiting to the `httpbin-route` Route. This limits each client to 5 requests per minute:
 
-```yaml
-_format_version: "3.0"
-
-services:
-  - name: httpbin
-    url: https://httpbin.konghq.com
-    routes:
-      - name: httpbin-route
-        paths:
-          - /httpbin
-        plugins:
-          - name: rate-limiting
-            config:
-              minute: 5
-              policy: local
-```
-
-Sync the configuration:
-
-```bash
-deck gateway sync kong.yaml --kong-addr http://localhost:8001
-```
+{% entity_example %}
+type: plugin
+data:
+  name: rate-limiting
+  route: httpbin-route
+  config:
+    minute: 5
+    policy: local
+{% endentity_example %}
 
 Send more than five requests within a minute — after the fifth, {{site.base_gateway}} returns `429 Too Many Requests`.
 
 ## Step 2: Add Key Auth
 
-Add the Key Auth plugin on the same Route and create a Consumer with a key:
+Enable Key Auth on the same Route to require an API key on every request:
 
-```yaml
-_format_version: "3.0"
+{% entity_example %}
+type: plugin
+data:
+  name: key-auth
+  route: httpbin-route
+{% endentity_example %}
 
-consumers:
-  - username: alice
-    keyauth_credentials:
-      - key: my-secret-key
+## Step 3: Create a Consumer with a credential
 
-services:
-  - name: httpbin
-    url: https://httpbin.konghq.com
-    routes:
-      - name: httpbin-route
-        paths:
-          - /httpbin
-        plugins:
-          - name: rate-limiting
-            config:
-              minute: 5
-              policy: local
-          - name: key-auth
-```
+Create a Consumer named `alice` and issue her an API key:
 
-Sync again:
+{% entity_examples %}
+entities:
+  consumers:
+    - username: alice
+      keyauth_credentials:
+        - key: my-secret-key
+{% endentity_examples %}
 
-```bash
-deck gateway sync kong.yaml --kong-addr http://localhost:8001
-```
+## Step 4: Verify authentication
 
-Now test with and without the key:
+Test that unauthenticated requests are rejected and authenticated ones succeed:
 
 ```bash
 # Without key → 401 Unauthorized
@@ -78,13 +53,7 @@ curl -i http://localhost:8000/httpbin/get -H "apikey: my-secret-key"
 
 ## What you did
 
-- Applied the Rate Limiting plugin at the Route scope
+- Applied Rate Limiting at the Route scope
 - Added Key Auth to require API key credentials
 - Created a Consumer with a credential
 - Confirmed that unauthenticated requests are rejected
-
-## Next steps
-
-- Add [Proxy Cache](/hub/kong-inc/proxy-cache/) to cache upstream responses
-- Explore [Plugin Hub](/hub/) for the full list of available plugins
-- Learn about [custom plugins](/custom-plugins/) to extend the gateway with your own logic
