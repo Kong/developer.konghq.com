@@ -7,7 +7,8 @@ extended_description: |
 
 weight: 105
 
-min_version: '3.14'
+min_version:
+    gateway: '3.14'
 
 requirements:
 - OpenAI account
