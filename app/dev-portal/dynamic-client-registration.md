@@ -29,7 +29,7 @@ related_resources:
   - text: Configure Dynamic Client Registration with Auth0
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
-    url: /how-to/azure-dcr/
+    url: /how-to/azure-ad-dcr/
   - text: Configure Dynamic Client Registration with Kong Identity
     url: /how-to/kong-identity-dcr/
   - text: About OIDC Dynamic Client Registration
@@ -220,15 +220,15 @@ If your third-party IdP isn't natively supported, you can still use your IdP wit
 {% mermaid %}
 sequenceDiagram
     actor Developer
-    participant Konnect {{site.dev_portal}}
+    participant Konnect Dev Portal
     participant HTTP DCR Bridge
     participant IdP
-    Developer->>Konnect {{site.dev_portal}}: Create application
-    Konnect {{site.dev_portal}}->>HTTP DCR Bridge: POST Create application
+    Developer->>Konnect Dev Portal: Create application
+    Konnect Dev Portal->>HTTP DCR Bridge: POST Create application
     HTTP DCR Bridge->>IdP: POST Create application
     IdP--)HTTP DCR Bridge: 200 OK and credentials
-    HTTP DCR Bridge->>Konnect {{site.dev_portal}}: Create application response (with credentials from IdP)
-    Konnect {{site.dev_portal}}->>Developer: Show credentials
+    HTTP DCR Bridge->>Konnect Dev Portal: Create application response (with credentials from IdP)
+    Konnect Dev Portal->>Developer: Show credentials
 {% endmermaid %}
 
 > _**Figure 1:** This diagram illustrates how an HTTP DCR bridge creates an application in an IdP when a developer submits an application in the {{site.konnect_short_name}} {{site.dev_portal}}. First, the developer creates an application in the {{site.dev_portal}}, which triggers the portal to send the application details to the HTTP DCR bridge. The bridge then sends a `POST create application` request to the IdP. If the IdP successfully processes the request, it returns a `200` status code along with the credentials for the developer’s application. These credentials are then displayed to the developer in the {{site.dev_portal}}._
