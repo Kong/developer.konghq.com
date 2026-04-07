@@ -1344,12 +1344,12 @@ rows:
     type: "`string` (`{scheme}`)"
 
   - property: "`kong.response.status`"
-    desc: "`kong.response.set_status()`"
+    desc: "`kong.response.set_status({status})`"
     type: "`number`"
 
   - property: "`kong.service.upstream`"
-    desc: "`kong.service.set_upstream()`"
-    type: "`string`"
+    desc: "`kong.service.set_upstream({upstream})`"
+    type: "`string` (`{upstream}`)"
 
   - property: |
       `kong.client.consumer` {% new_in 3.14 %}
