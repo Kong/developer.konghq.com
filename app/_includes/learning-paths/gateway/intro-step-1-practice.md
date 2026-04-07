@@ -5,7 +5,7 @@ In this guide you'll start a local {{site.base_gateway}} instance in DB-less mod
 - Docker installed and running
 - [decK](/deck/) CLI installed (`deck version` should succeed)
 
-## Step 1: Start Kong Gateway in DB-less mode
+## Step 1: Start {{site.base_gateway}} in DB-less mode
 
 Run a minimal {{site.base_gateway}} container:
 
