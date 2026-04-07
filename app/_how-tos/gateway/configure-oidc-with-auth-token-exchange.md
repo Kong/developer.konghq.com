@@ -80,6 +80,9 @@ entities:
       route: example-route
       config:
         issuer: ${issuer}
+        using_pseudo_issuer: true
+        jwks_endpoint: ${jwks-endpoint}
+        token_endpoint: ${token-endpoint}
         client_id:
           - client-2
         client_secret:
@@ -98,19 +101,25 @@ entities:
 variables:
   issuer:
     value: $ISSUER
+  jwks-endpoint:
+    value: $JWKS_ENDPOINT
+  token-endpoint:
+    value: $TOKEN_ENDPOINT
   client-secret-2:
     value: $CLIENT_SECRET_2
 {% endentity_examples %}
 
 Auth configuration:
 * `issuer`, `client ID`, and `client secret`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
+* `using_pseudo_issuer`: Disables OIDC discovery from the `issuer` URL. This is required here because {{site.base_gateway}} runs inside Docker and cannot reach `localhost:8080` directly. The `issuer` value is still used to validate the `iss` claim in incoming tokens.
+* `jwks_endpoint` and `token_endpoint`: Explicit endpoint URLs that {{site.base_gateway}} uses to fetch signing keys and perform the token exchange. These use the `keycloak` container name, which is reachable from {{site.base_gateway}} over the shared Docker network.
 * `auth_methods`: Specifies that the plugin should use bearer auth.
 
 In this example, we are also using the following `token_exchange` settings:
 * `subject_token_issuers`: Defines which incoming tokens are eligible for exchange. The `issuer` field restricts exchange to tokens from the same IdP, and `conditions.has_audience` further limits it to tokens that carry `client-2` in their `aud` claim, which is the audience we explicitly added via the scope mapper in the [Keycloak setup](#set-up-keycloak-with-token-exchange).
-* `request.scopes`: The scopes that the exchanged token should be restricted to, narrowing the original broad-scoped token down to `profile` only.
+* `request.scopes`: The scopes that the exchanged token should be restricted to. In this case, the exchanged token's scope is narrowed to `profile` (Keycloak also includes `email` by default).
 
-This tells {{site.base_gateway}} to trigger a token exchange whenever an incoming bearer token was issued by the same IdP and has `client-2` in its `aud` claim, which is the audience we explicitly added via the scope mapper. The exchange requests a new token scoped only to `client-2`.
+This tells {{site.base_gateway}} to trigger a token exchange whenever an incoming bearer token was issued by the same IdP and has `client-2` in its `aud` claim, which is the audience we explicitly added via the scope mapper. The exchange requests a new token issued to `client-2` with a narrowed scope.
 
 ## Validate the flow
 
@@ -134,8 +143,9 @@ If you decode the token, the resulting access token will have an `aud` claim con
   "azp": "client-1",
   "aud": ["client-2", "account"],
   "scope": "openid profile email",
-  "iss": "http://host.docker.internal:8080/realms/master",
-  "exp": 1775253107, "iat": 1775253047
+  "iss": "http://localhost:8080/realms/master",
+  "exp": 1775253107, 
+  "iat": 1775253047
 }
 ```
 {:.no-copy-code}
@@ -158,10 +168,11 @@ The response shows the Authorization header that {{site.base_gateway}} forwarded
   "azp": "client-2",
   "aud": "account",
   "scope": "profile email",
-  "iss": "http://host.docker.internal:8080/realms/master",
-  "exp": 1775253114, "iat": 1775253054
+  "iss": "http://localhost:8080/realms/master",
+  "exp": 1775253114,
+  "iat": 1775253054
 }
 ```
 {:.no-copy-code}
 
-The token should be a different one, with `azp` set to `client-2`, no `client-1` in `aud`, and scope narrowed to `profile` (or `profile email` for Keycloak), confirming the token exchange and scope narrowing took effect.
+The token should be a different one, with `azp` set to `client-2`, no `client-1` in `aud`, and scope narrowed to `profile email`, confirming the token exchange and scope narrowing took effect.

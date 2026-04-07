@@ -7,21 +7,33 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
 
 1. Install [Keycloak](https://www.keycloak.org/guides) (version 26 or later) on your platform.
 
-    For example, you can use the Keycloak Docker image:
+    For example, you can use the Keycloak Docker image. The following command attaches Keycloak to the same network as {{site.base_gateway}} so that the OIDC plugin can reach it:
 
     ```
     docker run -p 127.0.0.1:8080:8080 \
+      --name keycloak \
+      --network kong-quickstart-net \
       -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
       -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
+      -e KC_HOSTNAME=http://localhost:8080 \
       quay.io/keycloak/keycloak start-dev --features=token-exchange
     ```
 
-1. Export your issuer URL and Keycloak host to environment variables so that you can pass them more securely. The issuer consists of your host, port, and realm name. For example, using Docker and the default `master` realm:
+1. Export your issuer URL, Keycloak host, and endpoint URLs to environment variables. For example, using Docker and the default `master` realm:
 
    ```sh
-   export DECK_ISSUER='http://host.docker.internal:8080/realms/master'
-   export KEYCLOAK_HOST='host.docker.internal'
+   export DECK_ISSUER='http://localhost:8080/realms/master'
+   export DECK_JWKS_ENDPOINT='http://keycloak:8080/realms/master/protocol/openid-connect/certs'
+   export DECK_TOKEN_ENDPOINT='http://keycloak:8080/realms/master/protocol/openid-connect/token'
+   export KEYCLOAK_HOST='localhost'
    ```
+
+   Because we're using Docker for this demo, we have to configure a few networking parameters:
+   * `DECK_ISSUER` and `KEYCLOAK_HOST` use `localhost` because that's how you access Keycloak from your machine. 
+   * `DECK_JWKS_ENDPOINT` and `DECK_TOKEN_ENDPOINT` use the container name `keycloak` because {{site.base_gateway}} runs inside Docker and reaches Keycloak over the shared `kong-quickstart-net` network.
+   * `KC_HOSTNAME=http://localhost:8080` ensures Keycloak always uses `localhost:8080` as its token issuer regardless of which URL it's accessed through. This is required because {{site.base_gateway}} performs token exchange via `keycloak:8080`, and Keycloak must recognize the subject token's `iss` claim (`localhost:8080`) as its own issuer.
+
+   In your own setup, especially running outside of a container, you may not need `DECK_JWKS_ENDPOINT` and `DECK_TOKEN_ENDPOINT`.
 
 1. Open the admin console.
 
