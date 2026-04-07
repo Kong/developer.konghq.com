@@ -178,7 +178,8 @@ spec:
    ```sh
    kubectl rollout restart deployment demo-app -n kong-mesh-demo-migration
    ```
-
+1. Run the following command to see the status of the migration:
+   
    {:.info}
    > * This can take a few minutes, make sure to wait until it's completed to move on to the next step.
    > * Once the restart is done, port-forwarding will stop for this Service.
