@@ -23,26 +23,26 @@ docker run -d --name kong-gateway \
 
 A **Service** points to the upstream API you want to proxy. Create one targeting the public httpbin echo API:
 
-{% entity_example %}
-type: service
-data:
-  name: httpbin
-  url: https://httpbin.konghq.com
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  services:
+    - name: httpbin
+      url: https://httpbin.konghq.com
+{% endentity_examples %}
 
 ## Step 3: Create a Route
 
 A **Route** matches incoming requests and forwards them to the Service. Create one that matches requests with the path prefix `/httpbin`:
 
-{% entity_example %}
-type: route
-data:
-  name: httpbin-route
-  paths:
-    - /httpbin
-  service:
-    name: httpbin
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  routes:
+    - name: httpbin-route
+      paths:
+        - /httpbin
+      service:
+        name: httpbin
+{% endentity_examples %}
 
 ## Step 4: Verify the proxy
 

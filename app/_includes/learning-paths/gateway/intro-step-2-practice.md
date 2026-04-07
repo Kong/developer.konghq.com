@@ -4,15 +4,15 @@ Building on the Service and Route you created in Step 1, you'll now attach two p
 
 Attach Rate Limiting to the `httpbin-route` Route. This limits each client to 5 requests per minute:
 
-{% entity_example %}
-type: plugin
-data:
-  name: rate-limiting
-  route: httpbin-route
-  config:
-    minute: 5
-    policy: local
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: rate-limiting
+      route: httpbin-route
+      config:
+        minute: 5
+        policy: local
+{% endentity_examples %}
 
 Send more than five requests within a minute — after the fifth, {{site.base_gateway}} returns `429 Too Many Requests`.
 
@@ -20,12 +20,12 @@ Send more than five requests within a minute — after the fifth, {{site.base_ga
 
 Enable Key Auth on the same Route to require an API key on every request:
 
-{% entity_example %}
-type: plugin
-data:
-  name: key-auth
-  route: httpbin-route
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      route: httpbin-route
+{% endentity_examples %}
 
 ## Step 3: Create a Consumer with a credential
 
