@@ -1,6 +1,6 @@
 metadata:
-  title: "Introduction to {{site.base_gateway}}"
-  description: "Understand the core building blocks of {{site.base_gateway}} — services, routes, and plugins — then deploy a working example and extend it with the plugin system."
+  title: "Introduction to Kong Gateway"
+  description: "Understand the core building blocks of Kong Gateway — services, routes, and plugins — then deploy a working example and extend it with the plugin system."
   products:
     - gateway
   personas:
