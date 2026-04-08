@@ -3,7 +3,7 @@ content_type: cookbook
 products:
     - ai-gateway
 tools:
-    - kongctl
+    - deck
 works_on:
     - konnect
 layout: cookbook
@@ -20,6 +20,254 @@ extra_services:
     - name: Okta
       env_vars: [DECK_OKTA_ISSUER, DECK_OKTA_AUDIENCE]
 hint: "Create a Native Application in Okta with PKCE flow and configure an API Authorization Server with a groups claim. See the Okta section in Prerequisites."
+
+prereqs:
+  inline:
+    - title: Python 3.11+
+      icon_url: /assets/icons/python.svg
+      content: |
+        The demo script requires Python 3.11 or later. Set up an isolated environment:
+
+        ```bash
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip install 'anthropic>=0.39.0'
+        ```
+    - title: Okta
+      icon_url: /assets/icons/okta.svg
+      content: |
+        This recipe requires an Okta organization with admin access. You will create an OIDC application and authorization server that issue JWTs for Claude Code to present to Kong.
+
+        Follow the [Okta Developer documentation](https://developer.okta.com/docs/guides/) to complete these steps:
+
+        1. **Create a Native Application** — In the Okta Admin Console, go to
+          **Applications → Create App Integration**. Select **OIDC — OpenID Connect** and
+          **Native Application**. Enable **Authorization Code + PKCE** as the grant type. Set the
+          sign-in redirect URI to `http://localhost:9876/callback`. Assign the application to your
+          engineering groups. No client secret is generated — PKCE replaces it. Note the **Client ID**.
+
+        2. **Create an API Authorization Server** — Go to **Security → API → Add Authorization Server**.
+          Set the audience to a value like `api://claude-proxy`. Add a scope named `groups` (in addition
+          to the defaults `openid`, `profile`, `email`, `offline_access`).
+
+        3. **Add a groups claim** — Under the authorization server, go to **Claims → Add Claim**.
+          Set the name to `groups`, include in the **Access Token**, value type **Groups**, and filter
+          with a regex like `.*` (or a prefix like `claude-`). This ensures the `groups` array is
+          present in the JWT so Kong can map it to consumers.
+
+        4. **Create user groups** — In **Directory → Groups**, create two groups:
+          - `claude-standard-users` — general engineering
+          - `claude-power-users` — senior engineers, ML team
+
+          Assign users to the appropriate group, and ensure both groups are assigned to the
+          Native Application.
+
+        After completing Okta setup, export the issuer URL and audience as decK variables:
+
+        ```bash
+        export DECK_OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
+        export DECK_OKTA_AUDIENCE='api://claude-proxy'
+        ```
+
+        #### Helper script: okta-claude-auth.sh
+
+        Claude Code's [`apiKeyHelper`](https://docs.anthropic.com/en/docs/claude-code/settings) setting
+        runs a script before each API call and uses its stdout as the `Authorization` header value.
+        The following script implements the OAuth 2.0 Authorization Code + PKCE flow against Okta,
+        caches the token locally, and refreshes silently when possible.
+
+        Save this script to `~/.claude/okta-claude-auth.sh` and make it executable:
+
+        ```bash
+        cat <<'SCRIPT' > ~/.claude/okta-claude-auth.sh
+        #!/usr/bin/env bash
+        # okta-claude-auth.sh — apiKeyHelper for Claude Code + Okta PKCE
+        set -euo pipefail
+
+        OKTA_DOMAIN="${OKTA_DOMAIN:-"https://your-org.okta.com"}"
+        CLIENT_ID="${OKTA_CLIENT_ID:-"0oa1b2c3d4YourClientId"}"
+        REDIRECT_PORT="${OKTA_REDIRECT_PORT:-"9876"}"
+        REDIRECT_URI="http://localhost:${REDIRECT_PORT}/callback"
+        SCOPES="openid profile email offline_access groups"
+        AUDIENCE="${OKTA_AUDIENCE:-"api://claude-proxy"}"
+
+        CACHE_DIR="${HOME}/.claude/okta-cache"
+        TOKEN_CACHE="${CACHE_DIR}/tokens.json"
+        LOCK_FILE="${CACHE_DIR}/auth.lock"
+
+        log()  { echo "[okta-auth] $*" >&2; }
+        die()  { echo "[okta-auth] ERROR: $*" >&2; exit 1; }
+        b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
+        random_str() { openssl rand -hex "${1:-32}"; }
+        json_get() { echo "$1" | grep -o "\"$2\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" | sed 's/.*: *"\([^"]*\)".*/\1/'; }
+        json_get_num() { echo "$1" | grep -o "\"$2\"[[:space:]]*:[[:space:]]*[0-9]*" | grep -o '[0-9]*$'; }
+
+        mkdir -p "$CACHE_DIR" && chmod 700 "$CACHE_DIR"
+
+        cache_read() { [[ -f "$TOKEN_CACHE" ]] && cat "$TOKEN_CACHE" || echo "{}"; }
+        cache_write() { echo "$1" > "$TOKEN_CACHE" && chmod 600 "$TOKEN_CACHE"; }
+
+        access_token_valid() {
+          local cache exp now tok
+          cache=$(cache_read)
+          tok=$(json_get "$cache" "access_token")
+          exp=$(json_get_num "$cache" "expires_at")
+          now=$(date +%s)
+          [[ -z "$tok" || -z "$exp" ]] && return 1
+          (( now < exp - 60 )) && { echo "$tok"; return 0; }
+          return 1
+        }
+
+        do_refresh() {
+          local cache refresh_tok response new_access new_refresh expires_in expires_at now
+          cache=$(cache_read)
+          refresh_tok=$(json_get "$cache" "refresh_token")
+          [[ -z "$refresh_tok" ]] && return 1
+          log "Attempting silent refresh..."
+          response=$(curl -sf -X POST "${OKTA_DOMAIN}/oauth2/default/v1/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=refresh_token&refresh_token=${refresh_tok}&client_id=${CLIENT_ID}&scope=${SCOPES// /%20}") || return 1
+          new_access=$(json_get "$response" "access_token")
+          new_refresh=$(json_get "$response" "refresh_token")
+          expires_in=$(json_get_num "$response" "expires_in")
+          [[ -z "$new_access" ]] && return 1
+          now=$(date +%s); expires_at=$(( now + ${expires_in:-3600} ))
+          cache_write "{\"access_token\":\"${new_access}\",\"refresh_token\":\"${new_refresh:-$refresh_tok}\",\"expires_at\":${expires_at}}"
+          log "Token refreshed successfully."
+          echo "$new_access"
+        }
+
+        start_callback_server() {
+          local expected_state="$1"
+          python3 - "$REDIRECT_PORT" "$expected_state" <<'PYEOF'
+        import sys, socket, urllib.parse
+        port, expected_state = int(sys.argv[1]), sys.argv[2]
+        HTML_OK = b"<html><body><h2>Authenticated! Close this tab.</h2><script>window.close();</script></body></html>"
+        HTML_ERR = b"<html><body><h2>Authentication failed.</h2></body></html>"
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(("127.0.0.1", port)); sock.listen(1); sock.settimeout(120)
+        try:
+            conn, _ = sock.accept(); data = b""
+            while b"\r\n\r\n" not in data:
+                chunk = conn.recv(4096)
+                if not chunk: break
+                data += chunk
+            path = data.decode(errors="replace").split(" ")[1] if b" " in data else "/"
+            params = urllib.parse.parse_qs(urllib.parse.urlparse(path).query)
+            code, state = params.get("code",[None])[0], params.get("state",[None])[0]
+            error = params.get("error",[None])[0]
+            ok = code and state == expected_state and not error
+            conn.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n" + (HTML_OK if ok else HTML_ERR))
+            conn.close()
+            if not ok: sys.exit(1)
+            print(code, end="")
+        except socket.timeout:
+            sys.stderr.write("[okta-auth] Timed out waiting for callback.\n"); sys.exit(1)
+        finally: sock.close()
+        PYEOF
+        }
+
+        do_auth_code_flow() {
+          local verifier challenge state auth_url code response access_tok refresh_tok expires_in expires_at now
+          verifier=$(random_str 32)
+          challenge=$(echo -n "$verifier" | openssl dgst -binary -sha256 | b64url)
+          state=$(random_str 16)
+          auth_url="${OKTA_DOMAIN}/oauth2/default/v1/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES// /+}&audience=${AUDIENCE}&state=${state}&code_challenge=${challenge}&code_challenge_method=S256"
+          log "Opening browser for Okta login..."
+          log "If the browser doesn't open, visit: ${auth_url}"
+          command -v open &>/dev/null && open "$auth_url" & || command -v xdg-open &>/dev/null && xdg-open "$auth_url" 2>/dev/null &
+          log "Waiting for callback on http://localhost:${REDIRECT_PORT}/callback ..."
+          code=$(start_callback_server "$state")
+          [[ -z "$code" ]] && die "No authorization code received."
+          log "Authorization code received. Exchanging for tokens..."
+          response=$(curl -sf -X POST "${OKTA_DOMAIN}/oauth2/default/v1/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}&client_id=${CLIENT_ID}&code_verifier=${verifier}") || die "Token exchange failed."
+          access_tok=$(json_get "$response" "access_token")
+          refresh_tok=$(json_get "$response" "refresh_token")
+          expires_in=$(json_get_num "$response" "expires_in")
+          [[ -z "$access_tok" ]] && die "No access_token in response."
+          now=$(date +%s); expires_at=$(( now + ${expires_in:-3600} ))
+          cache_write "{\"access_token\":\"${access_tok}\",\"refresh_token\":\"${refresh_tok}\",\"expires_at\":${expires_at}}"
+          log "Authentication successful. Token cached."
+          echo "$access_tok"
+        }
+
+        acquire_lock() {
+          local waited=0
+          while ! mkdir "$LOCK_FILE" 2>/dev/null; do
+            sleep 0.5; (( waited++ ))
+            (( waited > 30 )) && { log "Lock timeout — removing stale lock"; rm -rf "$LOCK_FILE"; }
+          done
+          trap 'rm -rf "$LOCK_FILE"' EXIT INT TERM
+        }
+
+        main() {
+          acquire_lock
+          tok=$(access_token_valid) && { echo "$tok"; exit 0; }
+          tok=$(do_refresh 2>/dev/null) && { echo "$tok"; exit 0; }
+          tok=$(do_auth_code_flow)
+          echo "$tok"
+        }
+
+        main "$@"
+        SCRIPT
+        chmod +x ~/.claude/okta-claude-auth.sh
+        ```
+        {:.collapsible}
+
+        Then set the following environment variables (add them to your `~/.zshrc` or `~/.bashrc`):
+
+        ```bash
+        export OKTA_DOMAIN='https://your-org.okta.com'
+        export OKTA_CLIENT_ID='0oa1b2c3d4YourClientId'
+        export OKTA_AUDIENCE='api://claude-proxy'
+        ```
+
+        The script requires `bash`, `curl`, `openssl`, and `python3` (for the local callback server).
+        Token files are stored at `~/.claude/okta-cache/` with `600`/`700` permissions.
+    - title: AI Credentials
+      content: |
+        {% navtabs "Providers" %}
+        {% navtab "Anthropic" %}
+        This tutorial uses Anthropic:
+
+        1. [Create an Anthropic account](https://console.anthropic.com/).
+        2. [Get an API key](https://console.anthropic.com/settings/keys).
+        3. Create a decK variable with the API key:
+
+          ```sh
+          export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+          ```
+        {% endnavtab %}
+        {% navtab "AWS Bedrock" %}
+        4. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
+        5. Create decK variables with your AWS credentials:
+
+        ```sh
+        export DECK_AWS_ACCESS_KEY_ID='your-access-key'
+        export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
+        export DECK_AWS_REGION='us-east-1'
+        ```
+        {% endnavtab %}
+        {% navtab "Azure AI Services" %}
+        This tutorial uses Azure AI Services hosting Claude models. Standard Azure OpenAI endpoints
+        do not support Anthropic-format requests — you need an Azure AI Services resource with a
+        Claude model deployment:
+
+        6. [Create an Azure AI Services resource](https://learn.microsoft.com/en-us/azure/ai-services/model-catalog/how-to/deploy-models-serverless) with a Claude model deployment.
+        7. Note your instance name, deployment ID, and API version.
+        8. Create decK variables:
+
+           ```sh
+           export DECK_AZURE_API_KEY='your-azure-api-key'
+           export DECK_AZURE_INSTANCE='your-instance-name'
+           export DECK_AZURE_DEPLOYMENT_ID='your-deployment-id'
+           export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
+           ```
+        {% endnavtab %}
+        {% endnavtabs %}
 ---
 
 {:.info}
@@ -118,7 +366,6 @@ Claude Code
                                                                                │
   ◄─── response ◄──────────────────────────────────────────────────────────────┘
 ```
-
 {:.no-copy-code}
 
 | Component | Responsibility |
@@ -137,295 +384,6 @@ Claude Code
 > Anthropic-compatible endpoints are supported: Anthropic (native), AWS Bedrock (Claude
 > models via InvokeModel), and Azure AI Services (Claude model deployments).
 
-## Prerequisites
-
-### Konnect deployments: Kong Konnect
-
-This is a Konnect tutorial and requires a Konnect personal access token.
-
-1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-
-1. Export your token to an environment variable:
-
-    ```bash
-    export KONNECT_TOKEN='YOUR_KONNECT_PAT'
-    ```
-
-1. Run the [quickstart script](https://get.konghq.com/quickstart) to provision a Control Plane and Data Plane:
-
-    ```bash
-    export KONNECT_CONTROL_PLANE_NAME='claude-code-sso-recipe'
-    curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN --deck-output
-    ```
-
-    Copy and paste the environment variable exports it prints into your terminal.
-
-1. Adopt the control plane so kongctl can manage it:
-
-    ```bash
-    export KONGCTL_DEFAULT_KONNECT_PAT=$KONNECT_TOKEN
-    kongctl adopt control-plane ${KONNECT_CONTROL_PLANE_NAME} --namespace ${KONNECT_CONTROL_PLANE_NAME} -o json
-    ```
-
-### kongctl + decK
-
-This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
-
-1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
-1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
-
-You can verify both are installed:
-
-```bash
-kongctl version
-deck version
-```
-
-### Okta
-
-This recipe requires an Okta organization with admin access. You will create an OIDC application and authorization server that issue JWTs for Claude Code to present to Kong.
-
-Follow the [Okta Developer documentation](https://developer.okta.com/docs/guides/) to complete these steps:
-
-1. **Create a Native Application** — In the Okta Admin Console, go to
-   **Applications → Create App Integration**. Select **OIDC — OpenID Connect** and
-   **Native Application**. Enable **Authorization Code + PKCE** as the grant type. Set the
-   sign-in redirect URI to `http://localhost:9876/callback`. Assign the application to your
-   engineering groups. No client secret is generated — PKCE replaces it. Note the **Client ID**.
-
-1. **Create an API Authorization Server** — Go to **Security → API → Add Authorization Server**.
-   Set the audience to a value like `api://claude-proxy`. Add a scope named `groups` (in addition
-   to the defaults `openid`, `profile`, `email`, `offline_access`).
-
-1. **Add a groups claim** — Under the authorization server, go to **Claims → Add Claim**.
-   Set the name to `groups`, include in the **Access Token**, value type **Groups**, and filter
-   with a regex like `.*` (or a prefix like `claude-`). This ensures the `groups` array is
-   present in the JWT so Kong can map it to consumers.
-
-1. **Create user groups** — In **Directory → Groups**, create two groups:
-   - `claude-standard-users` — general engineering
-   - `claude-power-users` — senior engineers, ML team
-
-   Assign users to the appropriate group, and ensure both groups are assigned to the
-   Native Application.
-
-After completing Okta setup, export the issuer URL and audience as decK variables:
-
-```bash
-export DECK_OKTA_ISSUER='https://your-org.okta.com/oauth2/default'
-export DECK_OKTA_AUDIENCE='api://claude-proxy'
-```
-
-#### Helper script: okta-claude-auth.sh
-
-Claude Code's [`apiKeyHelper`](https://docs.anthropic.com/en/docs/claude-code/settings) setting
-runs a script before each API call and uses its stdout as the `Authorization` header value.
-The following script implements the OAuth 2.0 Authorization Code + PKCE flow against Okta,
-caches the token locally, and refreshes silently when possible.
-
-Save this script to `~/.claude/okta-claude-auth.sh` and make it executable:
-
-```bash
-cat <<'SCRIPT' > ~/.claude/okta-claude-auth.sh
-#!/usr/bin/env bash
-# okta-claude-auth.sh — apiKeyHelper for Claude Code + Okta PKCE
-set -euo pipefail
-
-OKTA_DOMAIN="${OKTA_DOMAIN:-"https://your-org.okta.com"}"
-CLIENT_ID="${OKTA_CLIENT_ID:-"0oa1b2c3d4YourClientId"}"
-REDIRECT_PORT="${OKTA_REDIRECT_PORT:-"9876"}"
-REDIRECT_URI="http://localhost:${REDIRECT_PORT}/callback"
-SCOPES="openid profile email offline_access groups"
-AUDIENCE="${OKTA_AUDIENCE:-"api://claude-proxy"}"
-
-CACHE_DIR="${HOME}/.claude/okta-cache"
-TOKEN_CACHE="${CACHE_DIR}/tokens.json"
-LOCK_FILE="${CACHE_DIR}/auth.lock"
-
-log()  { echo "[okta-auth] $*" >&2; }
-die()  { echo "[okta-auth] ERROR: $*" >&2; exit 1; }
-b64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
-random_str() { openssl rand -hex "${1:-32}"; }
-json_get() { echo "$1" | grep -o "\"$2\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" | sed 's/.*: *"\([^"]*\)".*/\1/'; }
-json_get_num() { echo "$1" | grep -o "\"$2\"[[:space:]]*:[[:space:]]*[0-9]*" | grep -o '[0-9]*$'; }
-
-mkdir -p "$CACHE_DIR" && chmod 700 "$CACHE_DIR"
-
-cache_read() { [[ -f "$TOKEN_CACHE" ]] && cat "$TOKEN_CACHE" || echo "{}"; }
-cache_write() { echo "$1" > "$TOKEN_CACHE" && chmod 600 "$TOKEN_CACHE"; }
-
-access_token_valid() {
-  local cache exp now tok
-  cache=$(cache_read)
-  tok=$(json_get "$cache" "access_token")
-  exp=$(json_get_num "$cache" "expires_at")
-  now=$(date +%s)
-  [[ -z "$tok" || -z "$exp" ]] && return 1
-  (( now < exp - 60 )) && { echo "$tok"; return 0; }
-  return 1
-}
-
-do_refresh() {
-  local cache refresh_tok response new_access new_refresh expires_in expires_at now
-  cache=$(cache_read)
-  refresh_tok=$(json_get "$cache" "refresh_token")
-  [[ -z "$refresh_tok" ]] && return 1
-  log "Attempting silent refresh..."
-  response=$(curl -sf -X POST "${OKTA_DOMAIN}/oauth2/default/v1/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "grant_type=refresh_token&refresh_token=${refresh_tok}&client_id=${CLIENT_ID}&scope=${SCOPES// /%20}") || return 1
-  new_access=$(json_get "$response" "access_token")
-  new_refresh=$(json_get "$response" "refresh_token")
-  expires_in=$(json_get_num "$response" "expires_in")
-  [[ -z "$new_access" ]] && return 1
-  now=$(date +%s); expires_at=$(( now + ${expires_in:-3600} ))
-  cache_write "{\"access_token\":\"${new_access}\",\"refresh_token\":\"${new_refresh:-$refresh_tok}\",\"expires_at\":${expires_at}}"
-  log "Token refreshed successfully."
-  echo "$new_access"
-}
-
-start_callback_server() {
-  local expected_state="$1"
-  python3 - "$REDIRECT_PORT" "$expected_state" <<'PYEOF'
-import sys, socket, urllib.parse
-port, expected_state = int(sys.argv[1]), sys.argv[2]
-HTML_OK = b"<html><body><h2>Authenticated! Close this tab.</h2><script>window.close();</script></body></html>"
-HTML_ERR = b"<html><body><h2>Authentication failed.</h2></body></html>"
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.bind(("127.0.0.1", port)); sock.listen(1); sock.settimeout(120)
-try:
-    conn, _ = sock.accept(); data = b""
-    while b"\r\n\r\n" not in data:
-        chunk = conn.recv(4096)
-        if not chunk: break
-        data += chunk
-    path = data.decode(errors="replace").split(" ")[1] if b" " in data else "/"
-    params = urllib.parse.parse_qs(urllib.parse.urlparse(path).query)
-    code, state = params.get("code",[None])[0], params.get("state",[None])[0]
-    error = params.get("error",[None])[0]
-    ok = code and state == expected_state and not error
-    conn.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n" + (HTML_OK if ok else HTML_ERR))
-    conn.close()
-    if not ok: sys.exit(1)
-    print(code, end="")
-except socket.timeout:
-    sys.stderr.write("[okta-auth] Timed out waiting for callback.\n"); sys.exit(1)
-finally: sock.close()
-PYEOF
-}
-
-do_auth_code_flow() {
-  local verifier challenge state auth_url code response access_tok refresh_tok expires_in expires_at now
-  verifier=$(random_str 32)
-  challenge=$(echo -n "$verifier" | openssl dgst -binary -sha256 | b64url)
-  state=$(random_str 16)
-  auth_url="${OKTA_DOMAIN}/oauth2/default/v1/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPES// /+}&audience=${AUDIENCE}&state=${state}&code_challenge=${challenge}&code_challenge_method=S256"
-  log "Opening browser for Okta login..."
-  log "If the browser doesn't open, visit: ${auth_url}"
-  command -v open &>/dev/null && open "$auth_url" & || command -v xdg-open &>/dev/null && xdg-open "$auth_url" 2>/dev/null &
-  log "Waiting for callback on http://localhost:${REDIRECT_PORT}/callback ..."
-  code=$(start_callback_server "$state")
-  [[ -z "$code" ]] && die "No authorization code received."
-  log "Authorization code received. Exchanging for tokens..."
-  response=$(curl -sf -X POST "${OKTA_DOMAIN}/oauth2/default/v1/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "grant_type=authorization_code&code=${code}&redirect_uri=${REDIRECT_URI}&client_id=${CLIENT_ID}&code_verifier=${verifier}") || die "Token exchange failed."
-  access_tok=$(json_get "$response" "access_token")
-  refresh_tok=$(json_get "$response" "refresh_token")
-  expires_in=$(json_get_num "$response" "expires_in")
-  [[ -z "$access_tok" ]] && die "No access_token in response."
-  now=$(date +%s); expires_at=$(( now + ${expires_in:-3600} ))
-  cache_write "{\"access_token\":\"${access_tok}\",\"refresh_token\":\"${refresh_tok}\",\"expires_at\":${expires_at}}"
-  log "Authentication successful. Token cached."
-  echo "$access_tok"
-}
-
-acquire_lock() {
-  local waited=0
-  while ! mkdir "$LOCK_FILE" 2>/dev/null; do
-    sleep 0.5; (( waited++ ))
-    (( waited > 30 )) && { log "Lock timeout — removing stale lock"; rm -rf "$LOCK_FILE"; }
-  done
-  trap 'rm -rf "$LOCK_FILE"' EXIT INT TERM
-}
-
-main() {
-  acquire_lock
-  tok=$(access_token_valid) && { echo "$tok"; exit 0; }
-  tok=$(do_refresh 2>/dev/null) && { echo "$tok"; exit 0; }
-  tok=$(do_auth_code_flow)
-  echo "$tok"
-}
-
-main "$@"
-SCRIPT
-chmod +x ~/.claude/okta-claude-auth.sh
-```
-{:.collapsible}
-
-Then set the following environment variables (add them to your `~/.zshrc` or `~/.bashrc`):
-
-```bash
-export OKTA_DOMAIN='https://your-org.okta.com'
-export OKTA_CLIENT_ID='0oa1b2c3d4YourClientId'
-export OKTA_AUDIENCE='api://claude-proxy'
-```
-
-The script requires `bash`, `curl`, `openssl`, and `python3` (for the local callback server).
-Token files are stored at `~/.claude/okta-cache/` with `600`/`700` permissions.
-
-### Anthropic
-
-This tutorial uses Anthropic:
-
-1. [Create an Anthropic account](https://console.anthropic.com/).
-1. [Get an API key](https://console.anthropic.com/settings/keys).
-1. Create a decK variable with the API key:
-
-   ```sh
-   export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
-   ```
-
-### AWS Bedrock
-
-This tutorial uses AWS Bedrock:
-
-1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-1. Create decK variables with your AWS credentials:
-
-   ```sh
-   export DECK_AWS_ACCESS_KEY_ID='your-access-key'
-   export DECK_AWS_SECRET_ACCESS_KEY='your-secret-key'
-   export DECK_AWS_REGION='us-east-1'
-   ```
-
-### Azure AI Services
-
-This tutorial uses Azure AI Services hosting Claude models. Standard Azure OpenAI endpoints
-do not support Anthropic-format requests — you need an Azure AI Services resource with a
-Claude model deployment:
-
-1. [Create an Azure AI Services resource](https://learn.microsoft.com/en-us/azure/ai-services/model-catalog/how-to/deploy-models-serverless) with a Claude model deployment.
-1. Note your instance name, deployment ID, and API version.
-1. Create decK variables:
-
-   ```sh
-   export DECK_AZURE_API_KEY='your-azure-api-key'
-   export DECK_AZURE_INSTANCE='your-instance-name'
-   export DECK_AZURE_DEPLOYMENT_ID='your-deployment-id'
-   export DECK_AZURE_API_VERSION='YOUR-API-VERSION'  # check Azure docs for current version
-   ```
-
-### Python 3.11+
-
-The demo script requires Python 3.11 or later. Set up an isolated environment:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install 'anthropic>=0.39.0'
-```
 
 ## How it works
 
@@ -1217,7 +1175,6 @@ authentication. After authenticating, the terminal continues automatically:
 │ ✻  Welcome to Claude Code!      │
 ╰─────────────────────────────────╯
 ```
-
 {:.no-copy-code}
 
 Try asking a question. Claude Code sends the request through Kong, which validates your Okta JWT,
@@ -1430,7 +1387,6 @@ Example output:
 [REQUEST] (no Bearer token)
 [ERROR] 401 — Unauthorized
 ```
-
 {:.no-copy-code}
 
 The first request shows a successful authenticated call with consumer identification and token
