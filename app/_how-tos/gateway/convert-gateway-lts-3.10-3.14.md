@@ -98,6 +98,7 @@ Use `deck file convert` with version flags to convert the entity configuration:
 deck file convert \
     --from 3.10 \
     --to 3.14 \
+    --no-expand-env-vars \
     --input-file kong-3.10.yaml \
     --output-file kong-3.14.yaml
 ```

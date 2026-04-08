@@ -82,7 +82,7 @@ rows:
       - Routes without an explicit `protocols` field: Set `protocols` to `["http", "https"]` to preserve the 3.10 default (3.14 changes the default to `["https"]` only)
       - Services using secure protocols (`https`, `tls`, `grpcs`, `wss`) without an explicit `tls_verify` field: Set `tls_verify` to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default)
       - Key Auth, Key Auth Encrypted, Basic Auth, HMAC Auth, LDAP Auth, OAuth2, OAuth2 Introspection, Vault Auth, and LDAP Auth Advanced plugins without an explicit `hide_credentials` field: Set `hide_credentials` to `false` to preserve the 3.10 default (3.14 changes the default to `true`)
-      - Plugins that connect to external services over TLS (such as OpenID Connect, AI plugins, Kafka, and others) without an explicit `ssl_verify` or similar field: Set `ssl_verify` to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default). See [Gateway breaking changes in 3.14](/gateway/breaking-changes/#tls-certificate-verify-by-default) for the full list of plugins and changed fields.
+      - Plugins that connect to external services over TLS (such as OpenID Connect, AI plugins, Kafka, and others) without an explicit TLS verification field (for example `ssl_verify`, `tls_verify`, or `https_verify`): Set that field to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default). See [Gateway breaking changes in 3.14](/gateway/breaking-changes/#tls-certificate-verify-by-default) for the full list of plugins and changed fields.
 
 {% endtable %}
 
