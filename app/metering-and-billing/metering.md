@@ -19,7 +19,6 @@ related_resources:
 faqs:
   - q: Do I need to bill or create plans for my meters?
     a: No, you can use metering on it's own to track customer usage.
-stepper: true
 ---
 
 {{site.metering_and_billing}} provides a real-time event based usage metering to aggregate consumption over time precisely. It also provides deduplication and flexible usage attribution of events and consumers to billable customers.

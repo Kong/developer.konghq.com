@@ -5,7 +5,7 @@ layout: with_aside
 {% include how-tos/tldr.html %}
 {% endif %}
 
-<div class="flex flex-col gap-8 accordion{% if page.stepper %} stepper{% endif %}" data-all-expanded="true">
+<div class="flex flex-col gap-8 accordion stepper" data-all-expanded="true">
 {% include sections/prerequisites.html tier=page.tier tools=page.tools %}
 
 {{ content }}

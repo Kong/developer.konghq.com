@@ -708,7 +708,7 @@
   /* Vertical connecting line */
   .stepper > .accordion-item::before,
   .stepper > .heading-section:has(h2)::before {
-    @apply absolute left-[0.9375rem] top-8 bottom-0 w-px bg-primary/10 pointer-events-none;
+    @apply absolute left-[0.9375rem] top-[1.6875rem] bottom-0 w-px bg-primary/10 pointer-events-none;
     content: "";
   }
 
@@ -721,7 +721,7 @@
   /* Numbered circle */
   .stepper > .accordion-item::after,
   .stepper > .heading-section:has(h2)::after {
-    @apply absolute left-0 top-0 flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-full bg-brand text-white text-sm font-semibold pointer-events-none;
+    @apply absolute left-0 top-[-0.1875rem] flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-full bg-brand text-white text-sm font-semibold pointer-events-none;
     content: counter(stepper-counter);
   }
 
@@ -734,27 +734,27 @@
   .stepper .accordion-panel > ol,
   .stepper .heading-section > .content > ol,
   .stepper .navtab-content > ol {
-    @apply ml-0 pl-0 list-none;
+    @apply ml-0 pl-0 list-none gap-0;
     counter-reset: substep-counter;
   }
 
   .stepper .accordion-panel > ol > li,
   .stepper .heading-section > .content > ol > li,
   .stepper .navtab-content > ol > li {
-    @apply relative pl-8 pb-4 border-l border-primary/10 ml-[0.6875rem];
+    @apply relative pl-8 pb-6 border-l border-primary/10 ml-[0.6875rem];
     counter-increment: substep-counter;
   }
 
   .stepper .accordion-panel > ol > li:last-child,
   .stepper .heading-section > .content > ol > li:last-child,
   .stepper .navtab-content > ol > li:last-child {
-    @apply border-l-0 pb-0;
+    @apply border-l-transparent pb-0;
   }
 
   .stepper .accordion-panel > ol > li::before,
   .stepper .heading-section > .content > ol > li::before,
   .stepper .navtab-content > ol > li::before {
-    @apply absolute left-[-0.6875rem] top-0 flex items-center justify-center w-[1.375rem] h-[1.375rem] rounded-full border border-brand bg-secondary text-brand text-xs font-semibold;
+    @apply absolute left-[-0.6875rem] top-[0.1875rem] flex items-center justify-center w-[1.375rem] h-[1.375rem] rounded-full border border-brand bg-secondary text-brand text-xs font-semibold;
     content: counter(substep-counter);
   }
 
