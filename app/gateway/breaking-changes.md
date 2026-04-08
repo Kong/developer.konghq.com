@@ -154,7 +154,7 @@ rows:
 
   - category: Plugins
     impact: |
-      Any plugin configured with an SSL verify field is affected by this change. See the full list of plugins and fields in the following table.
+      Any plugin configured with one of the affected certificate verification fields below is affected by this change. See the full list of plugins and fields in the following table.
       <br><br>
       If you have existing plugins using these values, {{site.base_gateway}}'s behavior differs based on deployment mode:
       - **Traditional mode:** Plugins can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
@@ -236,7 +236,7 @@ rows:
       * `topics.schema_registry.confluent.authentication.oauth2_client.ssl_verify`
   - plugin: "[Datakit](/plugins/datakit/)"
     fields: |
-      * Call node's `ssl_verify`
+      * `nodes[].ssl_verify` (for nodes with `type: call`)
       * `resources.cache.redis.ssl_verify`
   - plugin: "[Forward Proxy](/plugins/forward-proxy/)"
     fields: "`https_verify`"
