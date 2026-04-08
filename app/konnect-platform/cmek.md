@@ -63,7 +63,7 @@ To configure CMEK, you need:
 
 1. Provision a new multi-region symmetric key in your AWS account using "Key Managed Service (KMS)". They key should be in the AWS region you intend to use in {{site.konnect_short_name}}. A multi-region key is recommended to replicate the key in multiple regions, which can be used for disaster recovery or compliance purposes. 
 
-1. Ensure the following access policy statement is included in your key policy to allow `cc-konnect` role ({{site.konnect_short_name}}) to use your key:
+1. Add the following access policy statement to your key policy to allow the `cc-konnect` role ({{site.konnect_short_name}}) to use your key:
 ```json
 {
   "Effect": "Allow",
@@ -98,7 +98,7 @@ When you configure CMEK, you are responsible for the following:
 
 * **Key rotation**: 
   * AWS KMS takes care of key rotation automatically. 
-  * Manual rotation with a new ARN requires updating the key in {{site.konnect_short_name}}. If the key's ARN changes, data encrypted with the previous key cannot be decrypted in {{site.konnect_short_name}}.
+  * Manual rotation with a new ARN requires updating the key in {{site.konnect_short_name}}. If the key's ARN changes, {{site.konnect_short_name}} cannot decrypt data encrypted with the previous key.
 * **Key revocation**: 
   * Revoking or deleting your key in AWS KMS renders associated data permanently unreadable.
 * **Performance impact**: 
@@ -118,7 +118,7 @@ See the following sections for information about how to manage CMEK keys.
 
 * Rotating keys within AWS KMS (without changing the ARN) is supported automatically.
 * If you change the ARN, you must update the key in {{site.konnect_short_name}} manually. 
-  * Data encrypted with the previous key cannot be decrypted and will be lost.
+  * {{site.konnect_short_name}} cannot decrypt data encrypted with the previous key, and that data will be lost.
 
 ### Key revocation
 
