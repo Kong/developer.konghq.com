@@ -41,6 +41,10 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 Breaking changes in the 3.14.0.0 release.
 
+#### Nested claims in OpenID Connect plugin
+
+In 3.14, the [OpenID Connect plugin](/plugins/openid-connect/) will return a `403 Forbidden` for requests that use nested claims. A fix will be released in an upcoming patch release.
+
 #### Route protocol defaults change
 
 The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`. 
