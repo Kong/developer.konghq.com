@@ -87,8 +87,7 @@ For example, list all Dev Portals in your organization:
 kongctl get portals
 ```
 
-If you are using a new account, you should see an empty response, otherwise the Dev Portals you have access to
-will be displayed. 
+If you are using a new account, you should see an empty response, otherwise {{site.konnect_short_name}} displays the Dev Portals you have access to.
 
 kongctl commands support different output formats, including `json`, `yaml`, or `text`. The same `get` command will output the data in `json` format if you run the following:
 
