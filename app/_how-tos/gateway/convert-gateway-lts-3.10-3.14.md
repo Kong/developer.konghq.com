@@ -1,10 +1,10 @@
 ---
-title: Convert Gateway entity configuration from 3.4 to 3.10
+title: Convert Gateway entity configuration from 3.10 to 3.14
 content_type: how_to
 
-description: Use decK to upgrade from {{ site.base_gateway }} 3.4 LTS to 3.10 LTS
+description: Use decK to upgrade from {{ site.base_gateway }} 3.10 LTS to 3.14 LTS
 
-permalink: /gateway/upgrade/convert-lts-34-310/
+permalink: /gateway/upgrade/convert-lts-310-314/
 
 products:
     - gateway
@@ -14,26 +14,26 @@ works_on:
     - konnect
 
 min_version:
-  gateway: '3.10'
+  gateway: '3.14'
 
 tags:
     - upgrade
 
 tldr:
-    q: How do I convert Gateway entity configuration from 3.4 to 3.10, as part of my upgrade process?
+    q: How do I convert Gateway entity configuration from 3.10 to 3.14, as part of my upgrade process?
     a: Run `deck file convert` and review the results.
 tools: []
 
 prereqs:
   skip_product: true
   inline:
-    - title: "{{site.base_gateway}} {% new_in 3.4 %}"
-      content: "You have {{site.base_gateway}} running on version 3.4."
+    - title: "{{site.base_gateway}} {% new_in 3.10 %}"
+      content: "You have {{site.base_gateway}} running on version 3.10."
     - title: |
-        decK &nbsp; {% new_in 1.51 %}
+        decK &nbsp; {% new_in 1.56.0 %}
       content: |
         decK is a CLI tool for managing {{site.base_gateway}} declaratively with state files.
-        To complete this tutorial, install [decK](/deck/) **version 1.51** or later.
+        To complete this tutorial, install [decK](/deck/) **version 1.56.0** or later.
 
         This guide uses `deck gateway apply`, which directly applies entity configuration to your Gateway instance.
         We recommend upgrading your decK installation to take advantage of this tool.
@@ -44,11 +44,9 @@ related_resources:
   - text: deck file convert
     url: /deck/file/convert/
   - text: Convert Gateway entity configuration from 2.8 to 3.4
-    url: /deck/reference/3.0-upgrade/
-  - text: Gateway LTS 3.4 to 3.10 upgrade guide
-    url: /gateway/upgrade/lts-upgrade-28-34/
-  - text: Gateway LTS 3.10 to 3.10 upgrade guide
-    url: /gateway/upgrade/lts-upgrade-34-310/
+    url: /gateway/upgrade/convert-lts-28-34/
+  - text: Convert Gateway entity configuration from 3.4 to 3.10
+    url: /gateway/upgrade/convert-lts-34-310/
 
 faqs:
   - q: I ran `deck file convert` but there are still errors or warnings, what do I do?
@@ -64,20 +62,21 @@ automated_tests: false
 ---
 
 
-You can use `deck file convert` to automatically perform many of the changes that occurred between {{site.base_gateway}} 3.4 LTS and 3.10 LTS versions.
+You can use `deck file convert` to automatically perform many of the changes that occurred between {{site.base_gateway}} 3.10 LTS and 3.14 LTS versions.
 
 See the [deck file convert](/deck/file/convert/) reference for a list of all the conversions that decK will perform.
 
 {:.info}
-> **Note:** Update your decK version to 1.51 or later before converting files.
+> **Note:** Update your decK version to 1.56.0 or later before converting files.
 
 ## Export configuration
 
-Use an existing backup file, or export the entity configuration an existing installation:
+Use an existing backup file, or export the entity configuration from an existing installation:
+
 {% konnect %}
 content: |
   ```sh
-  deck gateway dump -o kong-3.4.yaml \
+  deck gateway dump -o kong-3.10.yaml \
       --konnect-token "$YOUR_KONNECT_PAT" \
       --konnect-control-plane-name $YOUR_CP_NAME
   ```
@@ -86,7 +85,7 @@ content: |
 {% on_prem %}
 content: |
   ```sh
-  deck gateway dump -o kong-3.4.yaml --all-workspaces
+  deck gateway dump -o kong-3.10.yaml --all-workspaces
   ```
 {% endon_prem %}
 
@@ -97,10 +96,10 @@ Use `deck file convert` with version flags to convert the entity configuration:
 
 ```sh
 deck file convert \
-    --from 3.4 \
-    --to 3.10 \
-    --input-file kong-3.4.yaml \
-    --output-file kong-3.10.yaml
+    --from 3.10 \
+    --to 3.14 \
+    --input-file kong-3.10.yaml \
+    --output-file kong-3.14.yaml
 ```
 
 ## Review and validate
@@ -122,7 +121,7 @@ content: |
   Upload your new configuration to a {{site.konnect_short_name}} control plane:
 
   ```sh
-  deck gateway sync kong-3.10.yaml \
+  deck gateway sync kong-3.14.yaml \
       --konnect-token "$YOUR_KONNECT_PAT" \
       --konnect-control-plane-name $YOUR_CP_NAME
   ```
@@ -133,7 +132,7 @@ content: |
   Upload your new configuration to the new environment:
 
   ```sh
-  deck gateway sync kong-3.10.yaml \
+  deck gateway sync kong-3.14.yaml \
       --workspace default
   ```
 {% endon_prem %}

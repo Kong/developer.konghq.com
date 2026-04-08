@@ -73,7 +73,7 @@ See the [deck file convert](/deck/file/convert/) reference for a list of all the
 
 ## Export configuration
 
-Use an existing backup file, or export the entity configuration an existing installation, for example 3.4:
+Use an existing backup file, or export the entity configuration an existing installation:
 
 {% konnect %}
 content: |
