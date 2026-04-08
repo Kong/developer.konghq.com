@@ -42,6 +42,7 @@ The following objects are geo-specific:
 * [API products](/api/konnect/api-products/)
 * [Application registration](/dev-portal/self-service/#application-authentication-strategies)
 * [Dev portals](/dev-portal/)
+* [Metering & Billing end user data](/metering-and-billing/)
 * [Service meshes and mesh zones](/mesh/)
 * [Custom teams and roles](/konnect-platform/teams-and-roles/)
 
