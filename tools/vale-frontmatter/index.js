@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import { glob } from "tinyglobby";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -34,17 +35,7 @@ async function prepareMarkdownFilesForVale() {
     "utf-8"
   );
 
-  const frontmatterDictionary = await fs.readFile(
-    `../../.github/styles/frontmatter/Dictionary.txt`,
-    "utf-8"
-  );
-
   const keys = frontmatterKeys
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-
-  const frontmatterExceptions = frontmatterDictionary
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
@@ -54,23 +45,15 @@ async function prepareMarkdownFilesForVale() {
     const contents = await fs.readFile(`../../${path}`, "utf-8");
     if (contents) {
       const parsed = matter(contents);
-      let frontmatter = parsed.matter;
+      const data = parsed.data;
 
-      if (frontmatter) {
+      if (data && typeof data === "object") {
         for (const key of keys) {
-          const keyRegex = new RegExp(`^\\s*${key}:.*$`, "gm");
-
-          frontmatter = frontmatter.replace(keyRegex, "");
+          delete data[key];
         }
 
-        for (const word of frontmatterExceptions) {
-          frontmatter = frontmatter.replaceAll(word, "");
-        }
-
-        // Remove comments
-        frontmatter = frontmatter.replaceAll(new RegExp("^#.*$", "gm"), "");
-
-        await fs.writeFile(`../../${path}`, frontmatter, "utf-8");
+        const remaining = yaml.dump(data, { lineWidth: -1 });
+        await fs.writeFile(`../../${path}`, remaining, "utf-8");
       }
     }
     console.log("Done.");

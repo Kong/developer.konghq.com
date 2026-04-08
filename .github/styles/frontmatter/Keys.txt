@@ -1,5 +1,17 @@
 api_specs
 auto_generated
+breadcrumbs
+cleanup
+description
+entities
+layout
+name
+permalink
+plugins
+products
+tags
+title
+tools
 automated_tests
 content_type
 faqs
