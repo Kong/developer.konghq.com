@@ -46,4 +46,5 @@ input/instructions/how-to/set-up-ai-proxy-advanced-with-ollama-qwen/on-prem/gate
 input/instructions/how-to/set-up-ai-proxy-with-databricks/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 503."
 input/instructions/how-to/set-up-ai-proxy-advanced-with-databricks/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 503."
 input/instructions/how-to/set-up-ai-proxy-with-deepseek/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
+input/instructions/how-to/set-up-ai-proxy-advanced-with-deepseek/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
 input/instructions/how-to/route-requests-by-model-alias/on-prem/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 200, got: 401."
