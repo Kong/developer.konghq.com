@@ -87,7 +87,7 @@ entities:
 {% control_plane_request %}
 url: /routes/example-route/plugins
 method: POST
-status_code: 200
+status_code: 201
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
