@@ -19,3 +19,15 @@ For example, don't say "Change this variable.", instead, create a comment with a
 - When writing or editing UI steps, use the formats listed in docs/ui-steps-standards.md
 - When adding tags to the frontmatter, follow the instructions here: docs/update-tag-schema.md
 - For anything that is added to the frontmatter of a doc, use docs/front-matter-reference.md for a reference
+
+## Content to ignore
+Our repository contains some files that are generated from other sources. 
+These files are not meant to be edited or reviewed, and should be ignored when making changes to the repository. 
+This includes, but is not limited to:
+- Files in the `app/_references` directory
+- Files in the `app/_data/changelogs` directory
+- Files that follow the pattern `app/_kong_plugins/*/changelog.json`
+- Files that follow the pattern `app/_kong_plugins/*/schema.json`
+- Files in the `app/_schemas/gateway/plugins` directory
+- Files in the `developer.konghq.com/app/_includes/deck/help` directory
+- Files in the `developer.konghq.com/app/_includes/kongctl/help` directory
