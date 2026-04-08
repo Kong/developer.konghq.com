@@ -80,7 +80,23 @@ To configure CMEK, you need:
   ],
   "Resource": "*"
 }
-```
+   ```json
+   {
+   "Effect": "Allow",
+   "Principal": {
+   "AWS": "arn:aws:iam::333402130851:role/cc-konnect"
+   },
+   "Action": [
+   "kms:Encrypt",
+   "kms:Decrypt",
+   "kms:ReEncrypt*",
+   "kms:GetKeyRotationStatus",
+   "kms:GenerateDataKey*",
+   "kms:DescribeKey"
+   ],
+   "Resource": "*"
+   }
+   ```
 
 3. Ensure the multi-region key is replicated to all AWS regions that make up a [{{site.konnect_short_name}} region](/konnect-platform/geos/).
 {% include_cached /konnect/cmek-region-mapping.md %}
