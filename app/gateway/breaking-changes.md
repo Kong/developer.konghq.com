@@ -41,9 +41,6 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 Breaking changes in the 3.14.0.0 release.
 
-#### Nested claims in OpenID Connect plugin
-
-In 3.14, the [OpenID Connect plugin](/plugins/openid-connect/) will return a `403 Forbidden` for requests that use nested claims. A fix will be released in an upcoming patch release.
 
 #### Route protocol defaults change
 
@@ -210,6 +207,25 @@ To revert to the old behavior, set `tls_certificate_verify` to `off`.
 
 The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
 We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
+
+#### Known issues in 3.14.0.0
+
+The following is a list of known issues in 3.14.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenID Connect plugin: returns 403 for nested claims"
+    description: |
+      The [OpenID Connect plugin](/plugins/openid-connect/) returns a `403 Forbidden` for requests that use nested claims. A fix will be released in an upcoming patch release.
+    status: Not fixed
+{% endtable %}
 
 ## 3.13.x breaking changes
 
