@@ -84,7 +84,6 @@ rows:
     description: Offer limited-time free or discounted bundles to new users.
 {% endtable %}
 
-
 ## Features
 
 Features are part of your product offering and the building blocks of your plans and entitlements. They are the resource you want to govern and invoice for. For example, LLM Models, tokens, storage units. Features are associated with a meter, so that you can connect usage to a feature that you can then charge for.
