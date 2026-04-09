@@ -188,13 +188,13 @@ columns:
     key: best_practices
 rows:
   - name: "Slug (API Property: `meter.slug`)"
-    description: "The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain small letters, numbers, and underscore characters with a maximum length of 63."
+    description: "The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain lowercase letters, numbers, and underscore characters with a maximum length of 63."
     best_practices: |
       **Do**:
       - Use prefixes to set contexts like `http_server_` and `task_`
       - Use suffixes to include the unit in your meter, like `_total` and `_seconds`
       - Use SI units like `_seconds`
-      - Use plural like `requests` and `seconds`
+      - Use plurals like `requests` and `seconds`
 
       **Avoid**:
       - Adding group bys to the slug, like `http_server_requests_by_method_total`
@@ -207,10 +207,10 @@ rows:
       - Avoid using dynamic groups that are difficult to manage.
       - Instead of reporting HTTP paths like `/products/123`, report the route `/products/:id`.
   - name: "Event type (API Property: `meter.eventType`)"
-    description: "Event types are used to filter the incoming events. Multiple meters can listen to the same event type. This is useful, for example, if you want to meter various aspects of an HTTP request, like total count, duration, network used, etc. Multiple meters can listen to the same event type. For more details, see [Moving multiple meters with one event](#moving-multiple-meters-with-one-event)."
+    description: "Event types are used to filter the incoming events. Multiple meters can listen to the same event type. This is useful, for example, if you want to meter various aspects of an HTTP request, like total count, duration, network used, etc. For more details, see [Moving multiple meters with one event](#moving-multiple-meters-with-one-event)."
     best_practices: "-"
   - name: "Value property (API Property: `meter.valueProperty`)"
-    description: "Defining event property is necessary for all aggregations except `COUNT`. This is the value in the data object that will be aggregated over time. OpenMeter uses JSONPath to extract this value from the data; this is useful if you report a nested object."
+    description: "Defining the value property is necessary for all aggregations except `count`. This is the value in the data object that will be aggregated over time. OpenMeter uses JSONPath to extract this value from the data; this is useful if you report a nested object."
     best_practices: |
       **Do**:
       - Use valid JSONPath like `$.tokens_total`
