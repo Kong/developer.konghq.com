@@ -113,6 +113,109 @@ When using plugins scoped to Consumer Groups:
 2. The client defines the required Consumer Groups in {{site.konnect_short_name}}, and then applies the desired plugin at the Consumer Group scope.
 3. The client assigns each Consumer to the appropriate Consumer Group. Once assigned, the plugin configuration at the group level automatically applies to the Consumer.
 
+## Claim configuration
+
+You can [configure each claim](#configure-kong-identity) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. 
+Including the claim can be useful to validate the token offline, however, the data in the claim can be viewed by anyone who has the token.
+You can configure a claim in two ways:
+
+- In the {{site.konnect_short_name}} UI.
+- Using the Konnect API.
+
+When configuring a claim, you can choose from the following options:
+
+{% table %}
+columns:
+  - title: UI setting
+    key: ui
+  - title: Description
+    key: description
+  - title: Example
+    key: example
+rows:
+  - ui: _Always include_
+    description: The claim is always included in the token, regardless of which scopes the client requests.
+    example: A claim named "role" with the value "employee". It appears in the token whether the client requests specific scopes or not. An API could check this claim to make sure only employees can access internal endpoints.
+  - ui: _Only include when specific scopes are requested_
+    description: The claim is only included in the token when the client explicitly requests one of the associated scopes.
+    example: A "read" claim that only shows up when the client asks for a specific "read" scope, but not for other scopes.
+  - ui: _Only include when no scopes are requested_
+    description: The claim is included in the token only when the client does not request any specific scope.
+    example: A "default-access" claim that grants minimal baseline permissions when a client authenticates without specifying what it needs.
+  - ui: _Never include_
+    description: The claim exists in the auth server for internal reference but is never embedded in tokens.
+    example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
+{% endtable %}
+
+### API parameters
+
+Configure the claim by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
+
+{% navtabs "deploy-a-license" %}
+{% navtab "Always include" %}
+
+```json
+{
+  "name": "",
+  "value": "",
+  "include_in_token": true,
+  "include_in_all_scopes": true,
+  "include_in_scopes": [],
+  "enabled": true
+}
+```
+
+{% endnavtab %}
+{% navtab "Only include when specific scopes are requested" %}
+
+```json
+{
+  "name": "",
+  "value": "",
+  "include_in_token": true,
+  "include_in_all_scopes": false,
+  "include_in_scopes": [
+    "$SCOPE_UUID"
+  ],
+  "enabled": true
+}
+```
+
+{% endnavtab %}
+
+{% navtab "Only include when no scopes are requested" %}
+
+```json
+{
+  "name": "",
+  "value": "",
+  "include_in_token": true,
+  "include_in_all_scopes": false,
+  "include_in_scopes": [],
+  "enabled": true
+}
+```
+
+{% endnavtab %}
+
+{% navtab "Never include" %}
+
+```json
+{
+  "name": "",
+  "value": "",
+  "include_in_token": false,
+  "include_in_all_scopes": false,
+  "include_in_scopes": [],
+  "enabled": true
+}
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+
+
 ## Dynamic claim templates
 
 Dynamic claim templates allow you to define custom JWT claims, where the claim value is determined at the time the access token is generated. 
@@ -452,7 +555,7 @@ To configure Kong Identity, do the following:
 1. Navigate back to your authorization server.
 1. Click **New client**. 
 1. In the **Name** field, enter a name for your client.
-1. From the **Allowed scopes** dropdown menu, select an option.
+1. From the **Allowed scopes** dropdown menu, [select an option](#claim-configuration).
 1. Click **Create**.
 1. Copy and save your client ID and secret. 
 {% endnavtab %}
