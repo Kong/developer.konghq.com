@@ -275,7 +275,7 @@ rows:
 
 #### Billing cadence
 
-Rate cards include a billing cadence property that determines the billing frequency for the associated feature. For instance, when a usage-based rate card specifies a billing cadence of one month (P1M), the system generates monthly invoices reflecting that period's usage.
+Rate cards include a billing cadence property that determines the billing frequency for the associated feature. For instance, when a usage-based rate card specifies a billing cadence of one month (`P1M`), the system generates monthly invoices reflecting that period's usage.
 
 For flat fee rate cards, the billing cadence can be omitted. In this case, the specified fee is charged once per subscription phase rather than recurring at regular intervals.
 
