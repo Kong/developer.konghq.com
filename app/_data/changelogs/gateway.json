@@ -21479,7 +21479,7 @@
     ],
     "kong-ee": [
       {
-        "message": "**kafka-log**: Added support for Kafka 4.0.\n**kafka-upstream**: Added support for Kafka 4.0.\n",
+        "message": "**kafka-log, kafka-upstream**: Added support for Kafka 4.0 to fix the Confluent deprecation.\n",
         "type": "feature",
         "scope": "Plugin"
       },
