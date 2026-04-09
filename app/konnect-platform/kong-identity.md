@@ -123,25 +123,18 @@ When configuring a claim, you can choose from the following options:
 
 {% table %}
 columns:
-  - title: Option
-    key: option
+  - title: UI setting
+    key: ui
+  - title: API parameter
+     key: api
   - title: Description
     key: description
   - title: Example
     key: example
 rows:
-  - option: _Always include_
-    description: The claim is always included in the token, regardless of which scopes the client requests.
-    example: A claim named "role" with the value "employee". It appears in the token whether the client requests specific scopes or not. An API could check this claim to make sure only employees can access internal endpoints.
-  - option: _Only include when specific scopes are requested_
-    description: The claim is only included in the token when the client explicitly requests one of the associated scopes.
-    example: A "read" claim that only shows up when the client asks for the a specific "read" scope, but not for other scopes.
-  - option: _Only include when no scopes are requested_
-    description: The claim is included in the token only when the client does not request any specific scope.
-    example: A "default-access" claim that grants minimal baseline permissions when a client authenticates without specifying what it needs.
-  - option: _Never include_
-    description: The claim exists in the auth server for internal reference but is never embedded in tokens.
-    example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
+  - ui: _Always include_
+    api: |
+      
 {% endtable %}
 
 
