@@ -51,6 +51,7 @@ categories:
  - ai
 tags:
  - ai
+ - safety
 
 next_steps:
   - text: Use AI Semantic Prompt Guard plugin to govern your LLM traffic

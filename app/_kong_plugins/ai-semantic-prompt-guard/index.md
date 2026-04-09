@@ -34,6 +34,7 @@ icon: ai-semantic-prompt-guard.png
 
 categories:
   - ai
+  - safety
 
 search_aliases:
   - ai

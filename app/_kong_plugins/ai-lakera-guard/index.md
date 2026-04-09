@@ -35,6 +35,7 @@ topologies:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai-lakera-guard
