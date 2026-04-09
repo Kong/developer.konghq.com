@@ -200,6 +200,43 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where attributes for GenAI spans were incorrect according to https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed `usage.cost` for OpenAI `llm/v1/files/{file_id}/content` batch output analytics.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where metrics were missing and v2 API was unavailable in Cohere native format.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where id/created fields were missing in multiple drivers.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where gzip streaming response in OpenAI format was broken.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where content-type header, from non-200 response of streaming request, was overridden.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Added latency and cost observability to realtime API.",
