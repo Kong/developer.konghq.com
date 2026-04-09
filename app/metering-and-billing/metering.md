@@ -173,66 +173,56 @@ For a complete tutorial, see [Get started with {{site.metering_and_billing}} gen
 {% endnavtab %}
 {% endnavtabs %}
 
-## Best practices
+### Best practices
 
-This section covers best practices for defining your meters and formatting your events.
+here are some best practices for defining meters in {{site.metering_and_billing}}:
 
-{% capture rec %}
-We recommend following these best practices:
-{% endcapture %}
+<!--vale off -->
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Description
+    key: description
+  - title: Best Practices
+    key: best_practices
+rows:
+  - name: "Slug (API Property: `meter.slug`)"
+    description: "The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain small letters, numbers, and underscore characters with a maximum length of 63."
+    best_practices: |
+      Do:
+      - Use prefixes to set contexts like `http_server_` and `task_`
+      - Use suffixes to include the unit in your meter, like `_total` and `_seconds`
+      - Use SI units like `_seconds`
+      - Use plural like `requests` and `seconds`
 
-{% capture avoid %}
-We recommend avoiding the following practices:
-{% endcapture %}
+      Avoid:
+      - Adding group bys to the slug, like `http_server_requests_by_method_total`
+      - Using ambiguous suffixes like `_s` (seconds)
+      - Using numbers like `meter123`
+  - name: "Group by (API Property: `meter.groupBy`)"
+    description: "Group bys help to meter similar things, for example, token usage of multiple LLM models."
+    best_practices: |
+      - Use groups instead of creating separate meters.
+      - Avoid using dynamic groups that are difficult to manage.
+      - Instead of reporting HTTP paths like `/products/123`, report the route `/products/:id`.
+  - name: "Event type (API Property: `meter.eventType`)"
+    description: "Event types are used to filter the incoming events. Multiple meters can listen to the same event type. This is useful, for example, if you want to meter various aspects of an HTTP request, like total count, duration, network used, etc. Multiple meters can listen to the same event type. For more details, see [Moving multiple meters with one event](#moving-multiple-meters-with-one-event)."
+    best_practices: "-"
+  - name: "Value property (API Property: `meter.valueProperty`)"
+    description: "Defining event property is necessary for all aggregations except `COUNT`. This is the value in the data object that will be aggregated over time. OpenMeter uses JSONPath to extract this value from the data; this is useful if you report a nested object."
+    best_practices: |
+      Do:
+      - Use valid JSONPath like `$.tokens_total`
+      - Use suffixes to include the unit in your meter, like `_total`, `_seconds`, and `_ms`
+      - Use plurals like `requests` and `seconds`
+      - Report in the same unit as the meter; unit conversion is currently not supported
 
-### Meters
-
-#### Slug (`meter.slug`)
-
-The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain small letters, numbers, and underscore characters with a maximum length of 63.
-
-{% navtabs "bp" %}
-{% navtab "Recommended" %}
-{{rec}}
-* Using prefixes to set contexts like `http_server_` and `task_`
-* Using suffixes to include the unit in your meter, like `_total` and `_seconds`
-* Using SI units like `_seconds`
-* Using plural like `requests` and `seconds`
-
-{% endnavtab %}
-{% navtab "Avoid" %}
-{{avoid}}
-* Adding group bys to the slug, like `http_server_requests_by_method_total`
-* Using ambiguous suffixes like `_s` (seconds)
-* Using numbers like `meter123`
-
-{% endnavtab %}
-{% endnavtabs %}
-
-#### Group by (`meter.groupBy`)
-
-Group bys help to meter similar things, for example, token usage of multiple LLM models.
-
-{% navtabs "bp" %}
-{% navtab "Recommended" %}
-We recommend using groups instead of creating separate meters.
-{% endnavtab %}
-{% navtab "Avoid" %}
-Avoid using dynamic groups that are difficult to manage.
-{% endnavtab %}
-{% endnavtabs %}
-
-#### Event type
-
-#### Value property
-
-### Events
-
-#### Subject
-
-#### Source
-
-#### Data
+      Avoid:
+      - Using ambiguous suffixes like `_s` (seconds)
+      - Using numbers like `$.property123`
+{% endtable %}
+<!--vale on -->
 
 
 ## Example meter use cases
