@@ -231,6 +231,17 @@ rows:
 
 Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
 
+### 3.13.0.3
+
+Breaking changes in the 3.13.0.3 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
+
 ### 3.13.0.0
 
 Breaking changes in the 3.13.0.0 release.
