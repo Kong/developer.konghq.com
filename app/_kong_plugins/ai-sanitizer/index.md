@@ -40,6 +40,7 @@ tags:
   - ai
   - safety
   - security
+  - dlp
 
 faqs:
   - q: Can I use a custom PII anonymization service instead of Kong's AI PII Anonymizer?

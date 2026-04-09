@@ -223,6 +223,7 @@
     "zipkin",
     "zone-tokens",
     "zones",
-    "safety"
+    "safety",
+    "dlp"
   ]
 }

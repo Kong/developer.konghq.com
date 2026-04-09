@@ -35,6 +35,7 @@ icon: ai-semantic-prompt-guard.png
 categories:
   - ai
   - safety
+  - dlp
 
 search_aliases:
   - ai
