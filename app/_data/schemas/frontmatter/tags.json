@@ -222,6 +222,7 @@
     "xai",
     "zipkin",
     "zone-tokens",
-    "zones"
+    "zones",
+    "safety"
   ]
 }
