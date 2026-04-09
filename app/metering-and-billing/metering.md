@@ -173,6 +173,68 @@ For a complete tutorial, see [Get started with {{site.metering_and_billing}} gen
 {% endnavtab %}
 {% endnavtabs %}
 
+## Best practices
+
+This section covers best practices for defining your meters and formatting your events.
+
+{% capture rec %}
+We recommend following these best practices:
+{% endcapture %}
+
+{% capture avoid %}
+We recommend avoiding the following practices:
+{% endcapture %}
+
+### Meters
+
+#### Slug (`meter.slug`)
+
+The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain small letters, numbers, and underscore characters with a maximum length of 63.
+
+{% navtabs "bp" %}
+{% navtab "Recommended" %}
+{{rec}}
+* Using prefixes to set contexts like `http_server_` and `task_`
+* Using suffixes to include the unit in your meter, like `_total` and `_seconds`
+* Using SI units like `_seconds`
+* Using plural like `requests` and `seconds`
+
+{% endnavtab %}
+{% navtab "Avoid" %}
+{{avoid}}
+* Adding group bys to the slug, like `http_server_requests_by_method_total`
+* Using ambiguous suffixes like `_s` (seconds)
+* Using numbers like `meter123`
+
+{% endnavtab %}
+{% endnavtabs %}
+
+#### Group by
+
+{% navtabs "bp" %}
+{% navtab "Recommended" %}
+{{rec}}
+
+{% endnavtab %}
+{% navtab "Avoid" %}
+{{avoid}}
+
+{% endnavtab %}
+{% endnavtabs %}
+
+#### Event type
+
+#### Value property
+
+### Events
+
+#### Subject
+
+#### Source
+
+#### Data
+
+
 ## Example meter use cases
 
 The following example show how you can configure meters and usage events for common use cases.
