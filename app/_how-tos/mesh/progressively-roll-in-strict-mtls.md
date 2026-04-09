@@ -27,6 +27,31 @@ tldr:
   a: |
     Create an app in a namespace outside of the mesh, create a permissive `MeshTLS` policy to allow the Service to receive traffic during the migration, then migrate the app to the mesh and update the `MeshTLS` to use strict mode.
 
+faq:
+  - q: How do I disable unencrypted traffic after migrating? 
+    a: |
+      To disable unencrypted traffic, update the `MeshTLS` policy from permissive to strict:
+   
+      ```sh
+      echo "apiVersion: kuma.io/v1alpha1
+      kind: MeshTLS
+      metadata:
+        name: kv
+        namespace: kong-mesh-demo-migration
+        labels:
+          kuma.io/mesh: default
+      spec:
+        targetRef:
+          kind: Dataplane
+          labels:
+            app: kv
+        rules:
+        - default:
+            mode: Strict" | kubectl apply -f -
+      ```
+   
+      The Service can now only receive encrypted traffic.
+
 prereqs:
   inline:
     - title: Helm
@@ -217,25 +242,3 @@ spec:
    http.localhost_5050.rbac.allowed: 1065
    http.localhost_5050.rbac.allowed: 1737
    ```
-
-1. To disable unencrypted traffic, update the `MeshTLS` policy from permissive to strict:
-
-   ```sh
-   echo "apiVersion: kuma.io/v1alpha1
-   kind: MeshTLS
-   metadata:
-     name: kv
-     namespace: kong-mesh-demo-migration
-     labels:
-       kuma.io/mesh: default
-   spec:
-     targetRef:
-       kind: Dataplane
-       labels:
-         app: kv
-     rules:
-     - default:
-         mode: Strict" | kubectl apply -f -
-   ```
-
-   The Service can now only receive encrypted traffic.
