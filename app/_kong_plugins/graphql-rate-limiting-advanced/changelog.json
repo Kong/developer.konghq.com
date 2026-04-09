@@ -25,6 +25,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
