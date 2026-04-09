@@ -27,7 +27,7 @@ tldr:
   a: |
     Create an app in a namespace outside of the mesh, create a permissive `MeshTLS` policy to allow the Service to receive traffic during the migration, then migrate the app to the mesh and update the `MeshTLS` to use strict mode.
 
-faq:
+faqs:
   - q: How do I disable unencrypted traffic after migrating? 
     a: |
       To disable unencrypted traffic, update the `MeshTLS` policy from permissive to strict:
