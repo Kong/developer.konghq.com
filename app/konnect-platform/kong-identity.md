@@ -115,7 +115,11 @@ When using plugins scoped to Consumer Groups:
 
 ## Claim configuration
 
-You can [configure each claim](/event-gateway/kong-identity-oauth/#configure-the-auth-server-with-custom-claims) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. When configuring a claim, choose among the following options:
+You can [configure each claim](#configure-kong-identity) to be included or not in the JWT token issued by the authorization server, based on the scopes the client requests. 
+Including the claim can be useful to validate the token offline, however, the data in the claim can be viewed by anyone who has the token.
+You can configure a claim in the {{site.konnect_short_name}} UI or by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
+
+When configuring a claim, you can choose from the following options:
 
 {% table %}
 columns:
