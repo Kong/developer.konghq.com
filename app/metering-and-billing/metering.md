@@ -190,13 +190,13 @@ rows:
   - name: "Slug (API Property: `meter.slug`)"
     description: "The slug is used to identify the meter in your account uniquely. It is used to query usage and cannot be changed later. Slugs can only contain small letters, numbers, and underscore characters with a maximum length of 63."
     best_practices: |
-      Do:
+      **Do**:
       - Use prefixes to set contexts like `http_server_` and `task_`
       - Use suffixes to include the unit in your meter, like `_total` and `_seconds`
       - Use SI units like `_seconds`
       - Use plural like `requests` and `seconds`
 
-      Avoid:
+      **Avoid**:
       - Adding group bys to the slug, like `http_server_requests_by_method_total`
       - Using ambiguous suffixes like `_s` (seconds)
       - Using numbers like `meter123`
@@ -212,13 +212,13 @@ rows:
   - name: "Value property (API Property: `meter.valueProperty`)"
     description: "Defining event property is necessary for all aggregations except `COUNT`. This is the value in the data object that will be aggregated over time. OpenMeter uses JSONPath to extract this value from the data; this is useful if you report a nested object."
     best_practices: |
-      Do:
+      **Do**:
       - Use valid JSONPath like `$.tokens_total`
       - Use suffixes to include the unit in your meter, like `_total`, `_seconds`, and `_ms`
       - Use plurals like `requests` and `seconds`
       - Report in the same unit as the meter; unit conversion is currently not supported
 
-      Avoid:
+      **Avoid**:
       - Using ambiguous suffixes like `_s` (seconds)
       - Using numbers like `$.property123`
 {% endtable %}
