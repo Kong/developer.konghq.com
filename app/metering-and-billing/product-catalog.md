@@ -60,6 +60,29 @@ flowchart TB
     entitlement-premium ~~~ addon
 {% endmermaid %}
 
+{{site.metering_and_billing}}'s Product Catalog supports various packaging and pricing strategies:
+
+{% table %}
+columns:
+  - title: Use case
+    key: case
+  - title: Description
+    key: description
+rows:
+  - case: Self-service plans
+    description: Let users pick from tiered plans on your pricing page.
+  - case: Enterprise deals
+    description: Customize pricing and discounts for specific customers.
+  - case: Add-ons
+    description: Cross-sell or bundle products, like extra storage, SSO, etc.
+  - case: |
+      [Usage-based pricing](/how-to/meter-and-bill-active-users/)
+    description: Optimize revenue by billing for outcomes.
+  - case: Versioned catalogs
+    description: Maintain multiple catalog versions and migrate users as needed.
+  - case: Trial bundles
+    description: Offer limited-time free or discounted bundles to new users.
+{% endtable %}
 
 ## Features
 
