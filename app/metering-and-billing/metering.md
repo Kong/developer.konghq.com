@@ -175,7 +175,7 @@ For a complete tutorial, see [Get started with {{site.metering_and_billing}} gen
 
 ### Best practices
 
-here are some best practices for defining meters in {{site.metering_and_billing}}:
+Here are some best practices for defining meters in {{site.metering_and_billing}}:
 
 <!--vale off -->
 {% table %}
