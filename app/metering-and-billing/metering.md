@@ -209,16 +209,16 @@ The slug is used to identify the meter in your account uniquely. It is used to q
 {% endnavtab %}
 {% endnavtabs %}
 
-#### Group by
+#### Group by (`meter.groupBy`)
+
+Group bys help to meter similar things, for example, token usage of multiple LLM models.
 
 {% navtabs "bp" %}
 {% navtab "Recommended" %}
-{{rec}}
-
+We recommend using groups instead of creating separate meters.
 {% endnavtab %}
 {% navtab "Avoid" %}
-{{avoid}}
-
+Avoid using dynamic groups that are difficult to manage.
 {% endnavtab %}
 {% endnavtabs %}
 
