@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,22 +9,22 @@
   :root {
     --removed-body-scroll-bar-size: 4px;
 
-    --color-bg-primary: 247, 251, 255;
-    --color-bg-secondary: 255, 255, 255;
-    --color-bg-terciary: 7, 53, 103;
-    --color-bg-code-block: 229, 247, 255;
-    --color-bg-code-block-header: 28, 85, 146;
-    --color-bg-hover-component: 235, 244, 254;
+    --color-bg-primary: 205, 212, 203;
+    --color-bg-secondary: 215, 222, 212;
+    --color-bg-terciary: 0, 20, 8;
+    --color-bg-code-block: 220, 227, 218;
+    --color-bg-code-block-header: 0, 20, 8;
+    --color-bg-hover-component: 195, 205, 192;
 
-    --color-text-primary: 5, 47, 92;
-    --color-text-secondary: 74, 96, 120;
-    --color-text-terciary: 99, 119, 140;
+    --color-text-primary: 74, 77, 73;
+    --color-text-secondary: 74, 77, 73;
+    --color-text-terciary: 100, 104, 99;
 
-    --color-border-primary: 5, 47, 92;
-    --color-shadow-primary: 5, 47, 92, 0.04;
+    --color-border-primary: 74, 77, 73;
+    --color-shadow-primary: 74, 77, 73, 0.04;
 
-    --color-brand: 66, 140, 220;
-    --color-brand-saturated: 24, 128, 240;
+    --color-brand: 204, 255, 0;
+    --color-brand-saturated: 204, 255, 0;
 
     --color-semantic-red-primary: 214, 67, 67;
     --color-semantic-red-secondary: 255, 229, 229;
@@ -50,7 +50,7 @@
     --color-semantic-teal-primary: 64, 199, 226;
     --color-semantic-teal-secondary: 224, 250, 255;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.16;
+    --color-shadow-hover-card: 204, 255, 0, 0.20;
 
     --kui-border-width-20: 1px;
 
@@ -115,19 +115,19 @@
   }
 
   .dark {
-    --color-bg-primary: 2, 20, 40;
-    --color-bg-secondary: 4, 40, 79;
-    --color-bg-terciary: 28, 85, 146;
-    --color-bg-code-block: 7, 53, 103;
-    --color-bg-code-block-header: 4, 40, 79;
-    --color-bg-hover-component: 7, 53, 103;
+    --color-bg-primary: 0, 20, 8;
+    --color-bg-secondary: 4, 40, 12;
+    --color-bg-terciary: 20, 60, 28;
+    --color-bg-code-block: 0, 30, 10;
+    --color-bg-code-block-header: 4, 40, 12;
+    --color-bg-hover-component: 0, 30, 10;
 
-    --color-text-primary: 255, 255, 255;
-    --color-text-secondary: 191, 202, 213;
-    --color-text-terciary: 170, 185, 200;
+    --color-text-primary: 205, 212, 203;
+    --color-text-secondary: 170, 178, 168;
+    --color-text-terciary: 140, 148, 138;
 
-    --color-border-primary: 255, 255, 255;
-    --color-shadow-primary: 2, 20, 40, 0.08;
+    --color-border-primary: 205, 212, 203;
+    --color-shadow-primary: 0, 20, 8, 0.08;
 
     --color-semantic-red-primary: 214, 67, 67;
     --color-semantic-red-secondary: 44, 17, 17;
@@ -153,7 +153,7 @@
     --color-semantic-teal-primary: 64, 199, 226;
     --color-semantic-teal-secondary: 16, 61, 70;
 
-    --color-shadow-hover-card: 24, 128, 240, 0.4;
+    --color-shadow-hover-card: 204, 255, 0, 0.30;
   }
 
   *::-webkit-scrollbar {
@@ -169,7 +169,7 @@
   }
 
   html {
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: "Funnel Sans", system-ui, sans-serif;
     @apply text-secondary font-normal;
   }
 
@@ -180,7 +180,7 @@
   }
 
   code {
-    font-family: "JetBrains Mono", system-ui, sans-serif;
+    font-family: "Roboto Mono", system-ui, monospace;
     /* The font we use for codeblocks includes a ligature that renders things like
       != as ≠, this property disables all ligatures.
     */
@@ -317,7 +317,7 @@
   }
 
   .button.button--primary {
-    @apply !bg-brand !text-white !border-transparent;
+    @apply !bg-brand !text-black !border-transparent;
   }
 
   .konami .button.button--primary {
@@ -818,7 +818,7 @@
 
   syntax-highlight {
     color-scheme: inherit;
-    font-family: "JetBrains Mono", system-ui, sans-serif;
+    font-family: "Roboto Mono", system-ui, monospace;
     /* The font we use for codeblocks includes a ligature that renders things like
       != as ≠, this property disables all ligatures.
     */
