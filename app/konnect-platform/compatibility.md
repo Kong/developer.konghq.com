@@ -35,7 +35,7 @@ faqs:
     a: |
       New features will not be available for use or consumption on incompatible Data Plane nodes. You will see new features available in the {{site.konnect_short_name}} UI regardless of the Data Plane that is connected to the Control Plane in {{site.konnect_short_name}}. However, when the Control Plane pushes an update payload to an incompatible Data Plane, the Data Plane automatically rejects the update.
 
-      A version compatibility layer checks the payload before the Control Plane sends the update to the Data Plane. If the compatibility layer finds concerns with the payload, it adds metadata to the node. {{site.konnect_short_name}} uses that metadata to display incompatibility warnings or errors in the UI.
+      A version compatibility layer checks the payload before the control plane sends the update to the data plane. If the compatibility layer finds concerns with the payload, it adds metadata to the node. {{site.konnect_short_name}} uses that metadata to display incompatibility warnings or errors in the UI.
 
       For example, let's say a parameter is introduced with a new version of a plugin and is available in the {{site.konnect_short_name}} UI. The Data Plane, however, is running an older version of {{site.base_gateway}} and doesn't support the new parameter. If that parameter isn't configured, or is assigned the default value, then {{site.konnect_short_name}} adds no warning or incompatibility metadata to the node, and no warnings or errors appear.
   - q: Can I continue to use older versions of configurations as the {{site.konnect_short_name}} Control Plane auto-upgrades?
