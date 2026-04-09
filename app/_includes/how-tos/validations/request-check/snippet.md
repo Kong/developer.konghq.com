@@ -26,7 +26,7 @@ _response=$({{ curl_cmd }})
 {%- else -%}
 {{ curl_cmd }}
 {%- endif -%}
-{% if count > 1 %}; done{% endif %}
+{% if count > 1 %}; done{%- endif %}
 ```
 
 {% if capture_size > 1 %}

@@ -41,6 +41,7 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 Breaking changes in the 3.14.0.0 release.
 
+
 #### Route protocol defaults change
 
 The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`. 
@@ -207,9 +208,39 @@ To revert to the old behavior, set `tls_certificate_verify` to `off`.
 The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
 We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
 
+#### Known issues in 3.14.0.0
+
+The following is a list of known issues in 3.14.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenID Connect plugin: returns 403 for nested claims"
+    description: |
+      The [OpenID Connect plugin](/plugins/openid-connect/) returns a `403 Forbidden` for requests that use nested claims. A fix will be released in an upcoming patch release.
+    status: Not fixed
+{% endtable %}
+
 ## 3.13.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
+
+### 3.13.0.3
+
+Breaking changes in the 3.13.0.3 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
 
 ### 3.13.0.0
 
