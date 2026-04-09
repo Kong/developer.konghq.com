@@ -33,7 +33,7 @@ faqs:
     a: An old configuration may still be 100% compatible with older Data Plane nodes and therefore not show any error messages in the {{site.konnect_short_name}} UI. If {{site.konnect_short_name}} detects compatibility issues when pushing the payload to the Data Plane, the UI displays them.
   - q: Will new features be available if the {{site.konnect_short_name}} Control Plane detects incompatible Data Plane nodes?
     a: |
-      New features will not be available for use or consumption on incompatible Data Plane nodes. You will see new features available in the {{site.konnect_short_name}} UI regardless of the Data Plane that is connected to the Control Plane in {{site.konnect_short_name}}. However, when the Control Plane pushes an update payload to an incompatible Data Plane, the Data Plane automatically rejects the update.
+      New features will not be available for use or consumption on incompatible data plane nodes. You will see new features available in the {{site.konnect_short_name}} UI regardless of the data plane that is connected to the control plane in {{site.konnect_short_name}}. However, when the control plane pushes an update payload to an incompatible data plane, the data plane automatically rejects the update.
 
       A version compatibility layer checks the payload before the control plane sends the update to the data plane. If the compatibility layer finds concerns with the payload, it adds metadata to the node. {{site.konnect_short_name}} uses that metadata to display incompatibility warnings or errors in the UI.
 
