@@ -37,10 +37,13 @@ deployment methods, set of features in use, or custom plugins, for example.
 
 Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this release.
 
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.10 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.14 format so that they continue to function as before. 
+See the [how-to guide on converting 3.10 to 3.14](/gateway/convert-gateway-lts-3.10-3.14/) for more information.
+
 ### 3.14.0.0
 
 Breaking changes in the 3.14.0.0 release.
-
 
 #### Route protocol defaults change
 
@@ -408,6 +411,10 @@ rows:
 ## 3.10.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-10-0-0) for all the changes in this release.
+
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.4 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.10 format so that they continue to function as before. 
+See the [how-to guide on converting 3.4 to 3.10](/gateway/convert-gateway-lts-3.4-3.10/) for more information.
 
 ### 3.10.0.0
 
@@ -863,6 +870,12 @@ As of 3.5.0.2, the default value has been changed to `off`.
 
 
 ## 3.4.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-4-0-0) for all the changes in this release.
+
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 2.8 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.4 format so that they continue to function as before. 
+See the [how-to guide on converting 2.8 to 3.4](/gateway/convert-gateway-lts-2.8-3.4/) for more information.
 
 ### 3.4.3.5
 

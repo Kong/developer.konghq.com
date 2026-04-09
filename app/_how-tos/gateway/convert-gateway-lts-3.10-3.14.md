@@ -47,6 +47,8 @@ related_resources:
     url: /gateway/upgrade/convert-lts-28-34/
   - text: Convert Gateway entity configuration from 3.4 to 3.10
     url: /gateway/upgrade/convert-lts-34-310/
+  - text: Breaking changes, deprecations, and known issues in 3.14
+    url: /gateway/breaking-changes/#3-14-0-0
 
 faqs:
   - q: I ran `deck file convert` but there are still errors or warnings, what do I do?
