@@ -645,6 +645,33 @@ headers["X-Another"][2] -- "baz"
 
 
 
+## kong.request.get_raw_headers()
+
+Returns request headers parsed from the raw HTTP header block.
+
+ This function reads `ngx.req.raw_header(true)` and parses it into a Lua
+ table. Header names are normalized to lowercase. If a header appears
+ multiple times, the value is an array preserving the original order.
+
+ This API is only available for HTTP/1.x. For HTTP/2 or unknown versions,
+ it returns `nil` and an error message.
+
+ Unlike `kong.request.get_headers()`, this function does not provide
+ dash/underscore normalization on lookup; use lowercase header names.
+
+
+**Phases**
+
+* rewrite, access, header_filter, response, body_filter, log, admin_api
+
+**Returns**
+
+1.  `table|nil`:  Parsed request headers table, or `nil` when unavailable.
+
+1.  `nil|string`:  Error message when raw headers are unavailable.
+
+
+
 ## kong.request.get_raw_body()
 
 Returns the plain request body.
@@ -817,6 +844,5 @@ Returns the unique request ID for the current request.
 **Returns**
 
 * `string`:  The unique request ID.
-
 
 
