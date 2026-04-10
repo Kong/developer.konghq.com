@@ -453,7 +453,7 @@ variables:
     ```sh
     curl --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp \
       -H "Content-Type: application/json" \
-      -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"Realtime API","arguments":{"q":"London"}}}'
+      -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"Realtime API","arguments":{"query_q":"London"}}}'
     ```
 
     The response returns a `401` status, confirming the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) is enforcing authentication on MCP tool calls.
