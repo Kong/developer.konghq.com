@@ -1,0 +1,201 @@
+metadata:
+  title: "Agent Skills"
+  content_type: landing_page
+  description: "Extend AI agent capabilities with Kong-specific skills for managing API infrastructure, configuring plugins, and debugging performance issues."
+  products:
+    - ai-gateway
+    - gateway
+    - konnect
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+    - mcp
+
+rows:
+  - header:
+      type: h1
+      text: "Agent Skills"
+      sub_text: "Give AI agents the procedural knowledge they need to work reliably with Kong. Skills are self-contained packages of instructions, scripts, and resources that agents can discover and load on demand."
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Agent Skills are folders of instructions, scripts, and resources that agents can discover and use to work more accurately and efficiently. Agents are increasingly capable, but often lack the context needed to do real work reliably. Skills solve this by giving agents access to procedural knowledge and Kong-specific context they can load on demand.
+
+                    Agents with access to a set of skills can extend their capabilities based on the task at hand — whether that's configuring {{site.base_gateway}} plugins, managing {{site.konnect_short_name}} resources, or debugging API performance issues.
+
+  - header:
+      text: "Installing skills"
+      type: h2
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Install all Kong agent skills using the skills CLI:
+          - type: text
+            config: |
+              ```bash
+              npx skills add kong/agent-skills
+              ```
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    To install a specific skill from the repository:
+          - type: text
+            config: |
+              ```bash
+              npx skills add kong/agent-skills --skill SKILL_NAME
+              ```
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Claude Code plugin"
+              blocks:
+                - type: text
+                  text: |
+                    You can also install the skills as Claude Code plugins:
+          - type: text
+            config: |
+              ```bash
+              /plugin marketplace add kong/agent-skills
+              /plugin install kong@kong-agent-skills
+              ```
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Skills work with 18+ AI agents including Claude Code, GitHub Copilot, Cursor, Cline, and many others.
+
+  - header:
+      text: "Available skills"
+      type: h2
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The following skills are available for Kong agent workflows. Skills are in active development — check back regularly for new additions.
+
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cog.svg
+            title: "Gateway Configuration"
+            description: "Configure {{site.base_gateway}} entities including services, routes, consumers, and plugins from your development environment."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/cloud.svg
+            title: "{{site.konnect_short_name}} Management"
+            description: "Manage {{site.konnect_short_name}} control planes, organizations, and resources using natural language instructions."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/api.svg
+            title: "Plugin Configuration"
+            description: "Install, configure, and troubleshoot {{site.base_gateway}} plugins with guided instructions and schema-aware validation."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/debug.svg
+            title: "API Debugging"
+            description: "Diagnose {{site.base_gateway}} performance issues using active tracing, analytics queries, and structured debugging workflows."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/ai.svg
+            title: "Mesh Configuration"
+            description: "Configure {{site.mesh_product_name}} policies, traffic permissions, and multi-zone deployments."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/code.svg
+            title: "decK Workflows"
+            description: "Manage {{site.base_gateway}} configuration as code using decK with automated validation and diff detection."
+            ctas:
+              - text: "View skill"
+                url: "PLACEHOLDER"
+
+  - header:
+      text: "Finding more skills"
+      type: h2
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Browse the [skills.sh directory](https://skills.sh) to discover skills from the community. You can also search for skills using the CLI:
+          - type: text
+            config: |
+              ```bash
+              npx skills find QUERY
+              ```
+
+  - header:
+      text: "Learn more"
+      type: h2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/third-party/claude.svg
+            title: "{{site.konnect_short_name}} MCP Server"
+            description: "Manage API infrastructure and debug performance directly from your IDE or AI assistant using the {{site.konnect_short_name}} MCP Server."
+            ctas:
+              - text: "{{site.konnect_short_name}} MCP Server"
+                url: /konnect-platform/konnect-mcp/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/sparkle.svg
+            title: "KAi — Kong AI Assistant"
+            description: "Detect issues, suggest fixes, and accelerate {{site.konnect_short_name}} workflows with Kong's built-in AI assistant."
+            ctas:
+              - text: "KAi documentation"
+                url: /konnect-platform/kai/
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/ai.svg
+            title: "Proxy AI CLI tools"
+            description: "Route Claude Code, Codex CLI, and other AI tool traffic through {{site.ai_gateway}} for logging, cost tracking, and rate limiting."
+            ctas:
+              - text: "AI CLI tools"
+                url: /ai-gateway/ai-clis/
