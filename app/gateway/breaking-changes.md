@@ -314,7 +314,7 @@ We recommend updating your configurations, as the old field is deprecated and wi
 
 #### Lua sandboxing security fixes
 
-Starting in 3.14, the [`untrusted_lua`](/gateway/configuration/#untrusted-lua) configuration option introduces two new modes: `strict` and `lax`, in addition to the existing `sandbox` mode. The default value changes from `sandbox` to `strict`.
+Starting in 3.14, the [`untrusted_lua`](/gateway/configuration/#untrusted-lua) configuration option introduces two new modes: `strict` and `lax`, in addition to the existing `sandbox` mode. The default value has changed from `sandbox` to `strict`.
 
 {% table %}
 columns:
