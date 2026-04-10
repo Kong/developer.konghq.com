@@ -391,7 +391,7 @@ variables:
 
 1. Set the URL to `http://localhost:8000/weather/mcp`.
 
-1. Click **Open Auth Settings**.
+1. Select **Authentication** in the left sidebar.
 
 1. Enter the **Native Application** Client ID from the Okta setup (the `MCP Inspector` app, not the `Kong MCP Gateway` app). Leave **Client Secret** empty.
 
