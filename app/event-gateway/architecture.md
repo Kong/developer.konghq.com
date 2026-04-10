@@ -143,7 +143,7 @@ You must provide a TLS certificate for every host exposed on the {{site.event_ga
 This can be done through a certificate with a wildcard SAN, a single certificate with multiple SANs, or multiple certificates in the same bundle.
 
 #### Shared suffix {% new_in 1.1 %}
-Alternatively, you can set `broker_host_format` to `shared_suffix` in the listener policy, so that you can use one wildcard SAN for all virtual clusters. In this case, the mapping looks like this
+Alternatively, you can set `broker_host_format` to `type: shared_suffix` in the listener policy, so that you can use one wildcard SAN for all virtual clusters. In this case, the mapping looks like this
 
 ```
 bootstrap-my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)

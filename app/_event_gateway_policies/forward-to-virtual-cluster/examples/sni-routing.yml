@@ -14,7 +14,8 @@ config:
   type: sni
   sni_suffix: .example.mycompany.com
   advertised_port: 19095
-  broker_host_format: per_cluster_suffix
+  broker_host_format:
+    type: per_cluster_suffix
 
 tools:
   - konnect-api
