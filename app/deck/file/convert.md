@@ -77,7 +77,7 @@ rows:
       - AI Rate Limiting Advanced plugin:
         - Transform `llm_providers.window_size` from a single value to a list
   - path: |
-      `3.10` to `3.14` {% new_in 1.56.0 %}
+      `3.10` to `3.14` {% new_in 1.57.3 %}
     transforms: |
       - Routes without an explicit `protocols` field: Set `protocols` to `["http", "https"]` to preserve the 3.10 default (3.14 changes the default to `["https"]` only)
       - Services using secure protocols (`https`, `tls`, `grpcs`, `wss`) without an explicit `tls_verify` field: Set `tls_verify` to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default)
