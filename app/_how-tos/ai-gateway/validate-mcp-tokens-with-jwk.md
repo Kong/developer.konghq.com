@@ -138,7 +138,7 @@ faqs:
 
 ## Configure the AI MCP Proxy tools
 
-Configure the [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) in `conversion-only` mode on the `weather-jwk-route` Route. This instance converts the WeatherAPI REST endpoints into MCP tool definitions. The `weather-tools` tag lets the listener instance discover and aggregate these tools.
+Configure the [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) in `conversion-only` mode on the `weather-jwk-route` Route. This instance converts the WeatherAPI REST endpoints into MCP tool definitions. The `weather-jwk-tools` tag lets the listener instance discover and aggregate these tools.
 
 {% entity_examples %}
 entities:
@@ -146,7 +146,8 @@ entities:
     - name: ai-mcp-proxy
       route: weather-jwk-route
       tags:
-        - weather-tools
+        - weather-jwk-tools
+        - jwk
       config:
         mode: conversion-only
         tools:
@@ -171,17 +172,19 @@ variables:
 
 ## Configure the AI MCP Proxy listener
 
-Configure a second [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) instance in `listener` mode on the `weather-jwk` Route. This instance aggregates tools tagged `weather-tools` and serves them over the MCP protocol to connected clients.
+Configure a second [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) instance in `listener` mode on the `weather-jwk` Route. This instance aggregates tools tagged `weather-jwk-tools` and serves them over the MCP protocol to connected clients.
 
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-mcp-proxy
       route: weather-jwk
+      tags:
+        - jwk
       config:
         mode: listener
         server:
-          tag: weather-tools
+          tag: weather-jwk-tools
           timeout: 45000
         logging:
           log_statistics: true
@@ -201,6 +204,8 @@ The `metadata_endpoint` path must match one of the paths on the `weather-jwk` Ro
 entities:
   plugins:
     - name: ai-mcp-oauth2
+      tags:
+      - jwk
       route: weather-jwk
       config:
         authorization_servers:
