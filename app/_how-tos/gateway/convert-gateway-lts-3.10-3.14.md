@@ -30,10 +30,10 @@ prereqs:
     - title: "{{site.base_gateway}} {% new_in 3.10 %}"
       content: "You have {{site.base_gateway}} running on version 3.10."
     - title: |
-        decK &nbsp; {% new_in 1.56.2 %}
+        decK &nbsp; {% new_in 1.57.3 %}
       content: |
         decK is a CLI tool for managing {{site.base_gateway}} declaratively with state files.
-        To complete this tutorial, install [decK](/deck/) **version 1.56.2** or later.
+        To complete this tutorial, install [decK](/deck/) **version 1.57.3** or later.
 
         This guide uses `deck gateway apply`, which directly applies entity configuration to your Gateway instance.
         We recommend upgrading your decK installation to take advantage of this tool.
@@ -69,7 +69,7 @@ You can use `deck file convert` to automatically perform many of the changes tha
 See the [deck file convert](/deck/file/convert/) reference for a list of all the conversions that decK will perform.
 
 {:.info}
-> **Note:** Update your decK version to 1.56.2 or later before converting files.
+> **Note:** Update your decK version to 1.57.3 or later before converting files.
 
 ## Export configuration
 
