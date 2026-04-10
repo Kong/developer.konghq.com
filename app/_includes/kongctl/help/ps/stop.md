@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl ps stop <pid> [flags]
 

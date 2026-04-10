@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list api [flags]
   kongctl list api [command]

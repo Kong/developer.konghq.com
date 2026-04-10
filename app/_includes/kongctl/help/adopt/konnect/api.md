@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt konnect api <api-id|api-name> [flags]
 

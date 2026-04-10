@@ -8,6 +8,7 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 tags:
     - performance
@@ -116,6 +117,8 @@ If the response headers from the upstream exceed `nginx_http_proxy_buffer_size`,
 
 ```
 upstream sent too big header while reading response header from upstream
+```
+{:.no-copy-code}
 
 Increasing `nginx_http_proxy_buffer_size` resolves this error.
 
@@ -132,6 +135,8 @@ When {{site.base_gateway}} spills to disk, performance degrades for all concurre
 ```
 a client request body is buffered to a temporary file
 an upstream response is buffered to a temporary file
+```
+{:.no-copy-code}
 
 Monitor these log messages alongside disk I/O on {{site.base_gateway}} nodes. 
 When they appear consistently, either increase the relevant buffer size or disable buffering for that Route. 

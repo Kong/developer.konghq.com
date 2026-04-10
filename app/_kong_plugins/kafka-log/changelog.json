@@ -44,6 +44,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.10": [
+    {
+      "message": "Added support for Kafka 4.0 to fix the Confluent deprecation.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where certificates could not be loaded from non-default workspaces.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",

@@ -225,6 +225,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where caused IdP to report invalid redirect_uri errors when `config.redirect_uri` was not configured and the uri path contained spaces.",
@@ -549,6 +561,18 @@
     {
       "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.25": [
+    {
+      "message": "Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
+      "type": "performance",
       "scope": "Plugin"
     }
   ],

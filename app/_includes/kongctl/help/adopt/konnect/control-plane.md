@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt konnect control-plane <control-plane-id|control-plane-name> [flags]
 

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck gateway sync [flags] [kong-state-files...]
 
