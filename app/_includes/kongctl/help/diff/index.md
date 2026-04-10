@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl diff [flags]
   kongctl diff [command]

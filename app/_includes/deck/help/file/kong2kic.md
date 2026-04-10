@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck file kong2kic [flags]
 
