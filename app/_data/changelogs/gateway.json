@@ -21584,5 +21584,45 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.4.3.25": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**vault**: Fixed an issue where `kong.vault.update()` changed the secret to an empty string temporarily after changed vault config.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**OpenID-Connect**: Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed workspace navigation for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "githubs": [
+          4241
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }
