@@ -312,6 +312,31 @@ rows:
 The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
 We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
 
+#### Lua sandboxing security fixes
+
+Starting in 3.14, the [`untrusted_lua`](/gateway/configuration/#untrusted-lua) configuration option introduces two new modes: `strict` and `lax`, in addition to the existing `sandbox` mode. The default value has changed from `sandbox` to `strict`.
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: Behavior
+    key: behavior
+rows:
+  - mode: "`strict` (new default)"
+    behavior: Does not permit network operations. Cannot be extended via `untrusted_lua_sandbox_requires` or `untrusted_lua_sandbox_environment`.
+  - mode: "`lax`"
+    behavior: Permits untrusted Lua code to perform network operations. Cannot be extended via `untrusted_lua_sandbox_requires` or `untrusted_lua_sandbox_environment`.
+  - mode: "`sandbox`"
+    behavior: Previous default.
+{% endtable %}
+
+Plugins that rely on capabilities previously allowed by `sandbox` mode may fail.
+
+To revert to the old behavior, set [`untrusted_lua`](/gateway/configuration/#untrusted-lua) to `sandbox` or `on`. These options are not recommended for security reasons.
+
+For more information, see [Sandboxing](/plugins/pre-function/#sandboxing).
+
 #### Known issues in 3.14.0.0
 
 The following is a list of known issues in 3.14.0.0 that may be fixed in a future release.
