@@ -1,5 +1,5 @@
 ---
-title: Configure OpenID Connect with token exchange
+title: Configure OpenID Connect with token exchange using Keycloak
 permalink: /how-to/configure-oidc-with-token-exchange/
 content_type: how_to
 description: Learn how to configure OpenID Connect with token exchange in Keycloak.
@@ -53,7 +53,7 @@ search_aliases:
   - oidc
 
 tldr:
-  q: How do I configure {{site.base_gateway}} to automatically exchange an incoming bearer token for one scoped to a different client?
+  q: How do I configure {{site.base_gateway}} to automatically exchange an incoming bearer token for one scoped to a different client using Keycloak?
   a: |
     Configure the OpenID Connect plugin with `token_exchange` settings, using `subject_token_issuers` to define which incoming tokens are eligible for exchange. {{site.base_gateway}} will perform an [OAuth 2.0 token exchange (RFC 8693)](https://www.rfc-editor.org/rfc/rfc8693) with your IdP, replacing the incoming token with a new one issued to a different client before forwarding it upstream.
 
@@ -111,7 +111,7 @@ variables:
 
 Auth configuration:
 * `issuer`, `client ID`, and `client secret`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `using_pseudo_issuer`: Disables OIDC discovery from the `issuer` URL. This is required here because {{site.base_gateway}} runs inside Docker and cannot reach `localhost:8080` directly. The `issuer` value is still used to validate the `iss` claim in incoming tokens.
+* `using_pseudo_issuer`: Disables OIDC discovery from the `issuer` URL. This is required here because {{site.base_gateway}} runs inside Docker and can't reach `localhost:8080` directly. The `issuer` value is still used to validate the `iss` claim in incoming tokens.
 * `jwks_endpoint` and `token_endpoint`: Explicit endpoint URLs that {{site.base_gateway}} uses to fetch signing keys and perform the token exchange. These use the `keycloak` container name, which is reachable from {{site.base_gateway}} over the shared Docker network.
 * `auth_methods`: Specifies that the plugin should use bearer auth.
 
@@ -119,7 +119,8 @@ In this example, we are also using the following `token_exchange` settings:
 * `subject_token_issuers`: Defines which incoming tokens are eligible for exchange. The `issuer` field restricts exchange to tokens from the same IdP, and `conditions.has_audience` further limits it to tokens that carry `client-2` in their `aud` claim, which is the audience we explicitly added via the scope mapper in the [Keycloak setup](#set-up-keycloak-with-token-exchange).
 * `request.scopes`: The scopes that the exchanged token should be restricted to. In this case, the exchanged token's scope is narrowed to `profile` (Keycloak also includes `email` by default).
 
-This tells {{site.base_gateway}} to trigger a token exchange whenever an incoming bearer token was issued by the same IdP and has `client-2` in its `aud` claim, which is the audience we explicitly added via the scope mapper. The exchange requests a new token issued to `client-2` with a narrowed scope.
+This configuration tells {{site.base_gateway}} to trigger a token exchange whenever an incoming bearer token was issued by the same IdP and has `client-2` in its `aud` claim, which is the audience we explicitly added via the scope mapper. 
+The exchange requests a new token issued to `client-2` with a narrowed scope.
 
 ## Validate the flow
 

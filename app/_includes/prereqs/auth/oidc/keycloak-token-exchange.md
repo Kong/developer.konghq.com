@@ -9,7 +9,7 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
 
     For example, you can use the Keycloak Docker image. The following command attaches Keycloak to the same network as {{site.base_gateway}} so that the OIDC plugin can reach it:
 
-    ```
+    ```sh
     docker run -p 127.0.0.1:8080:8080 \
       --name keycloak \
       --network kong-quickstart-net \
@@ -18,6 +18,9 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
       -e KC_HOSTNAME=http://localhost:8080 \
       quay.io/keycloak/keycloak start-dev --features=token-exchange
     ```
+    
+    The parameter `KC_HOSTNAME=http://localhost:8080` ensures Keycloak always uses `localhost:8080` as its token issuer regardless of which URL it's accessed through. 
+    This is required because {{site.base_gateway}} performs token exchange via `keycloak:8080`, and Keycloak must recognize the subject token's `iss` claim (`localhost:8080`) as its own issuer.
 
 1. Export your issuer URL, Keycloak host, and endpoint URLs to environment variables. For example, using Docker and the default `master` realm:
 
@@ -31,7 +34,6 @@ For this tutorial, you will need two clients. We'll create both in Keycloak.
    Because we're using Docker for this demo, we have to configure a few networking parameters:
    * `DECK_ISSUER` and `KEYCLOAK_HOST` use `localhost` because that's how you access Keycloak from your machine. 
    * `DECK_JWKS_ENDPOINT` and `DECK_TOKEN_ENDPOINT` use the container name `keycloak` because {{site.base_gateway}} runs inside Docker and reaches Keycloak over the shared `kong-quickstart-net` network.
-   * `KC_HOSTNAME=http://localhost:8080` ensures Keycloak always uses `localhost:8080` as its token issuer regardless of which URL it's accessed through. This is required because {{site.base_gateway}} performs token exchange via `keycloak:8080`, and Keycloak must recognize the subject token's `iss` claim (`localhost:8080`) as its own issuer.
 
    In your own setup, especially running outside of a container, you may not need `DECK_JWKS_ENDPOINT` and `DECK_TOKEN_ENDPOINT`.
 
@@ -75,7 +77,7 @@ Find the credentials for the first client:
 1. Copy the **Client Secret**.
 1. Export the client ID and secret to environment variables:
 
-   ```
+   ```sh
    export DECK_CLIENT_ID_1='client-1'
    export DECK_CLIENT_SECRET_1='YOUR-CLIENT-SECRET'
    ```
@@ -116,7 +118,7 @@ Find the credentials for the second client:
 1. Copy the **Client Secret**.
 1. Export the client ID and secret to environment variables:
 
-   ```
+   ```sh
    export DECK_CLIENT_ID_2='client-2'
    export DECK_CLIENT_SECRET_2='YOUR-CLIENT-SECRET'
    ```
@@ -155,7 +157,13 @@ rows:
 
 #### Set up user
 
-1. Switch to the Users menu and add a user.
-1. Open the user's **Credentials** tab and add a password. Be sure to disable **Temporary Password**.
+1. Switch to the Users menu and add a user. 
+   
+   In this guide, we're going to use an example user named `alex`.
 
-   In this guide, we're going to use an example user named `alex` with the password `doe`.
+1. Open the user's **Credentials** tab and add a password. 
+
+   In this guide, we're going to use the example password `doe`.
+
+1. Disable **Temporary Password**.
+1. Save the credential.
