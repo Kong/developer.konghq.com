@@ -380,9 +380,10 @@ variables:
 ## Connect with MCP Inspector
 
 1. Start MCP Inspector:
-```sh
+
+    ```sh
     npx @modelcontextprotocol/inspector@latest --mcp-url http://localhost:8000/weather/mcp
-```
+    ```
 
 1. Open the MCP Inspector UI in your browser at the URL shown in the terminal output.
 
