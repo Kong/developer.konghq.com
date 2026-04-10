@@ -524,9 +524,19 @@ rows:
 
 Review the [changelog](/gateway/changelog/#3-10-0-0) for all the changes in this release.
 
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
 This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.4 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
 This utility converts a set of predefined entity configuration changes into 3.10 format so that they continue to function as before. 
 See the [how-to guide on converting 3.4 to 3.10](/gateway/upgrade/convert-lts-34-310/) for more information.
+
+### 3.10.0.10
+
+Breaking changes in the 3.10.0.10 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
 
 ### 3.10.0.0
 
