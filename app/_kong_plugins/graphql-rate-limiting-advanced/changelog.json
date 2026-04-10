@@ -70,6 +70,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.25": [
+    {
+      "message": "Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.1.0": [
     {
       "message": "Fix a bug in the schema validation which prevents from using redis in cluster mode",
