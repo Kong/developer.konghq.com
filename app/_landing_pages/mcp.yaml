@@ -108,8 +108,8 @@ rows:
             title: Secure and govern your MCP traffic
             description: Apply security, governance, and observability to MCP servers that route LLM requests through AI Proxy plugins.
             ctas:
-              - text: Secure MCP servers with the AI MCP OAuth2 plugin
-                url: "/plugins/ai-mcp-oauth2/"
+              - text: Secure MCP servers with the AI MCP OAuth2 plugin and Okta
+                url: "/mcp/secure-mcp-tools-with-oauth2-and-okta/"
               - text: Monitor MCP traffic metrics
                 url: "/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics"
               - text: Review AI MCP audit logs
