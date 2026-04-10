@@ -21468,5 +21468,161 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.10.0.10": {
+    "kong": [
+      {
+        "message": "Optimized `GET /kong` endpoint to use `SELECT DISTINCT` for populating `enabled_in_cluster` instead of iterating all plugin rows.",
+        "type": "performance",
+        "scope": "Admin API"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**kafka-log, kafka-upstream**: Added support for Kafka 4.0 to fix the Confluent deprecation.\n",
+        "type": "feature",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**core**: Resolved an issue where HTTPS was incorrectly detected if multiple `X-Forwarded-Proto` values were provided.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the Active Tracing would report incorrect `latencies.client` values due to not capturing the access end time properly. This fix ensures that the access end timestamp is always recorded regardless of Active Tracing being active or not.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-consume, confluent-consume**: Increased the minimum API version of FetchRequest from 0 to 4 for Kafka 3.x. For Kafka 4.0 it is already using version 4.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where certificates could not be loaded from non-default workspaces.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka**: Fix issue where Kafka plugin produced records with incorrect `offsetDelta` in the record package.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the postinstall script changed the ownership of `/etc/kong/kong.logrotate` to `kong:kong`, causing permission issues when executed by the root user. Ownership now resets to `root:root` after postinstall.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the postinstall script changed kong.logrotate permissions; it now resets to 644.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**vault**: Fixed an issue where `kong.vault.update()` changed the secret to an empty string temporarily after changed vault config.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**kafka**: Fixed an issue where the kafka/confluent consume plugin cannot consume the correct message when the consuming offset of the topic was not 0.\n**kafka**: Fixed an issue of parsing ListOffset Response version 0.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**core**: Improved performance of Kong core by using ngx.var.http_* instead of kong.tools.http.get_header.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed workspace navigation for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "githubs": [
+          4242
+        ],
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.4.3.25": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**vault**: Fixed an issue where `kong.vault.update()` changed the secret to an empty string temporarily after changed vault config.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**OpenID-Connect**: Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
+        "type": "performance",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed workspace navigation for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "githubs": [
+          4241
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }
