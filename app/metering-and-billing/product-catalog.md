@@ -60,6 +60,29 @@ flowchart TB
     entitlement-premium ~~~ addon
 {% endmermaid %}
 
+{{site.metering_and_billing}}'s Product Catalog supports various packaging and pricing strategies:
+
+{% table %}
+columns:
+  - title: Use case
+    key: case
+  - title: Description
+    key: description
+rows:
+  - case: Self-service plans
+    description: Let users pick from tiered plans on your pricing page.
+  - case: Enterprise deals
+    description: Customize pricing and discounts for specific customers.
+  - case: Add-ons
+    description: Cross-sell or bundle products, like extra storage, SSO, etc.
+  - case: |
+      [Usage-based pricing](/how-to/meter-and-bill-active-users/)
+    description: Optimize revenue by billing for outcomes.
+  - case: Versioned catalogs
+    description: Maintain multiple catalog versions and migrate users as needed.
+  - case: Trial bundles
+    description: Offer limited-time free or discounted bundles to new users.
+{% endtable %}
 
 ## Features
 
@@ -273,6 +296,30 @@ rows:
       In cases where you don't need to set up usage limits or configure customer level settings you can use boolean entitlements. These are simple true or false access grants to a feature. 
 {% endtable %}
 
+#### Billing cadence
+
+Rate cards include a billing cadence property that determines the billing frequency for the associated feature. For instance, when a usage-based rate card specifies a billing cadence of one month (`P1M`), the system generates monthly invoices reflecting that period's usage.
+
+For flat fee rate cards, the billing cadence can be omitted. In this case, the specified fee is charged once per subscription phase rather than recurring at regular intervals.
+
+#### Price
+
+The price property defines the price the feature is sold at. See the [Pricing models section](#pricing-models) for more details.
+
+Free items can be implemented using three distinct approaches:
+
+* Omitting the price setting
+* Setting an explicit price of $0
+* Applying a 100% discount to the standard price
+
+Each approach has different implications:
+
+When no price is set across all rate cards, subscriptions can be initiated without payment method information, making it suitable for free plans.
+
+If any rate card has an explicit $0 price, payment method information is still required during subscription setup.
+
+Using a 100% discount on the standard price provides transparency to users by displaying the original value of the feature before the discount.
+
 ### Plan versions
 
 Plans are versioned to allow you to make changes without affecting running subscriptions. Each plan can have one published and one draft version. Editing already published plans will create a new draft version. Once you are ready, you can publish the draft version.
@@ -295,3 +342,4 @@ Example for reverse trials with plan phases:
 ## Subscriptions
 
 {{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
+
