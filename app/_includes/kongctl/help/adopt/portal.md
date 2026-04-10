@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt portal <portal-id|portal-name> [flags]
 

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl tail audit-logs [flags]
 

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck file lint [flags] ruleset-file
 

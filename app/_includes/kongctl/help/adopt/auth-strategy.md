@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt auth-strategy <auth-strategy-id|auth-strategy-name> [flags]
 

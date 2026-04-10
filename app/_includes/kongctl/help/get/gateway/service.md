@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get gateway service [flags]
 

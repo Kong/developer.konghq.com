@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get portal team-roles [flags]
 
