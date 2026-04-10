@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 
         const help = extractCommandSpecificHelp(stdout);
         const escapedHelp = help.replace(/\$\{\{[^}]*\}\}/g, '{% raw %}$&{% endraw %}');
-        const content = "```bash\n" + escapedHelp + "\n```";
+        const content = "```ansi\n" + escapedHelp + "\n```";
 
         const filePath = path.join(outputDir, `${subCommand}.md`);
         fs.writeFileSync(filePath, content, 'utf8');
