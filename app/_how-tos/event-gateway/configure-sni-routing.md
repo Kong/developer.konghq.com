@@ -138,7 +138,7 @@ Generate the certificates we'll need to enable TLS:
 
    We're setting the subject in the certificate signing request to `*.127-0-0-1.sslip.io`:
    * `*` is a wildcard that covers all broker and bootstrap hostnames across every virtual cluster on this listener.
-   * `.127-0-0-1.sslip.io` is the SNI suffix, which we'll use in the TLS listener policy configuration. In this example, we're using [sslip.io](https://sslip.io/) to resolve `127-0-0-1.sslip.io` to `127.0.0.1`.
+   * `.127-0-0-1.sslip.io` is the SNI suffix, which we'll use later in the Forward to Virtual Cluster policy configuration for SNI routing. In this example, we're using [sslip.io](https://sslip.io/) to resolve `127-0-0-1.sslip.io` to `127.0.0.1`.
 
 1. To explicitly set the subject alternative names for the certificate, create an OpenSSL extension file:
 
@@ -198,9 +198,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a TLS server listener policy
+## Create a TLS Server listener policy
 
-Create a TLS server policy:
+Create a TLS Server policy on the listener:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -217,9 +217,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a Forward to virtual cluster policy
+## Create a Forward to Virtual Cluster policy
 
-Create a Forward to virtual cluster policy that configures SNI and defines a suffix to expose on the listener:
+Create a Forward to Virtual Cluster policy that configures SNI routing and defines a suffix to expose on the listener:
 
 <!--vale off-->
 {% konnect_api_request %}
