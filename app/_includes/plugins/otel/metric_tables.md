@@ -1,7 +1,7 @@
 {%- assign metrics = site.data.plugins.otel-metrics.metrics -%}
 {%- assign attributes = site.data.plugins.otel-metrics.attributes -%}
 {% for metric in metrics %}
-#### {{metric.name}} {% if metric.min_version %}{% new_in metric.min_version %}{% endif %}
+#### {{metric.name}}{% if metric.min_version %} {% new_in metric.min_version %}{% endif %}
 
 {{metric.description}}
 
