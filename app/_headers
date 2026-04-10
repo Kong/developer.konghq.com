@@ -5,6 +5,6 @@
 
 /mesh/latest_version
     Access-Control-Allow-Origin: *
-    Access-Control-Allow-Method: GET
+    Access-Control-Allow-Methods: GET
     Access-Control-Allow-Headers: Content-Type
     Content-Type: text/plain
