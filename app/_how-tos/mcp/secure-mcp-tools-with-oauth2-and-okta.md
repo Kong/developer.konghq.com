@@ -341,9 +341,9 @@ entities:
 
 ## Configure the AI MCP OAuth2 plugin
 
-Configure the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) on the `weather-mcp` Route. This Plugin validates OAuth2 access tokens issued by Okta before allowing MCP clients to call the weather tools.
+Configure the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) on the `weather-mcp` Route. This plugin validates OAuth2 access tokens issued by Okta before allowing MCP clients to call the weather tools.
 
-The `resource` field identifies this MCP server to the authorization server. The `metadata_endpoint` path must match one of the paths on the `weather-mcp` Route so the Plugin can serve the OAuth Protected Resource Metadata that MCP clients need to discover the authorization server.
+The `resource` field identifies this MCP server to the authorization server. The `metadata_endpoint` path must match one of the paths on the `weather-mcp` Route so the plugin can serve the OAuth Protected Resource Metadata that MCP clients need to discover the authorization server.
 
 `insecure_relaxed_audience_validation` is set to `true` because Okta does not yet include the resource URL in the audience (`aud`) claim as defined in [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707).
 
@@ -426,7 +426,7 @@ variables:
     ```
     {:.no-copy-code}
 
-1. Select the **Realtime API** tool, enter `London` for the `q` parameter, and click **Run Tool**. You should receive a JSON response with current weather data:
+1. Select the **Realtime API** tool, enter `London` for the `query_q` parameter, and click **Run Tool**. You should receive a JSON response with current weather data:
 
     ```json
     {
