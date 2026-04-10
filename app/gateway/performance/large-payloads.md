@@ -8,6 +8,7 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 tags:
     - performance
