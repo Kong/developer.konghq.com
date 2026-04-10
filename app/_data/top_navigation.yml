@@ -118,23 +118,6 @@ how_tos:
       url: /how-to/?products=catalog
       product: catalog
 
-plugins:
-  event_gateway:
-    links:
-      - text: Produce Phase
-        url: /event-gateway/policies/?phase=produce
-      - text: Consume Phase
-        url: /event-gateway/policies/?phase=consume
-      - text: Cluster Phase
-        url: /event-gateway/policies/?phase=cluster
-      - text: Virtual Cluster
-        url: /event-gateway/policies/?policy-target=virtual_cluster
-      - text: Listener
-        url: /event-gateway/policies/?policy-target=listener
-    view_all: /event-gateway/policies/
-  mesh:
-    view_all: /mesh/policies/
-
 support:
   - text: Community
     url: 'https://konghq.com/community'

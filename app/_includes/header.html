@@ -234,20 +234,20 @@
                     <div class="flex flex-col gap-5 text-sm">
                       <span class="font-semibold">Event Gateway</span>
                       <div class="grid lg:grid-cols-2 gap-4">
-                        {% for link in site.data.top_navigation.plugins.event_gateway.links %}
-                          <a class="flex gap-2 items-center w-full py-2 lg:py-0 text-base lg:text-sm text-primary" href="{{link.url}}">
-                            <span class="navbar-item__icon">{% include_svg '/assets/icons/services.svg' width="20" height="20" %}</span>
-                            <span>{{link.text}}</span>
+                        {% for category in site.data.event_gateway_policy_categories %}
+                          <a class="flex gap-2 items-center w-full py-2 lg:py-0" href="/event-gateway/policies/?category={{category.slug}}">
+                            <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
+                            <span class="text-base lg:text-sm text-primary">{{category.text}}</span>
                           </a>
                         {% endfor %}
                       </div>
-                      <a class="text-base lg:text-sm text-brand w-full" href="{{site.data.top_navigation.plugins.event_gateway.view_all}}">View all &rarr;</a>
+                      <a class="text-base lg:text-sm text-brand w-full" href="/event-gateway/policies/">View all &rarr;</a>
                     </div>
                     <div class="flex border-t border-primary/5 w-full"></div>
 
                     <div class="flex flex-col gap-5 text-sm">
                       <span class="font-semibold">Service Mesh</span>
-                      <a class="text-base lg:text-sm text-brand w-full" href="{{site.data.top_navigation.plugins.mesh.view_all}}">View all &rarr;</a>
+                      <a class="text-base lg:text-sm text-brand w-full" href="/mesh/policies/">View all &rarr;</a>
                     </div>
 
                   </div>
