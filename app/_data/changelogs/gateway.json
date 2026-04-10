@@ -21624,5 +21624,16 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.14.0.1": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "**openid-connect**: Fixed an issue where nested claim paths were not resolved correctly.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
