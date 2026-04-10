@@ -31,6 +31,9 @@ related_resources:
 
 policy_target: listener
 
+categories:
+  - traffic-control
+
 icon: graph.svg
 ---
 
