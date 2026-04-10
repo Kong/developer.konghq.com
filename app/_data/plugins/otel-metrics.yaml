@@ -137,6 +137,7 @@ metrics:
     unit: "{error}"
     type: Sum
   - name: kong.websocket.server.total_connections
+    min_version: "3.14"
     description: Total number of incoming WebSocket connections, including active and previously closed connections.
     unit: "{request}"
     type: Sum
@@ -146,6 +147,7 @@ metrics:
       - kong.workspace.name
       - kong.auth.consumer.name
   - name: kong.websocket.server.active_connections
+    min_version: "3.14"
     description: Number of currently active WebSocket connections.
     unit: "{request}"
     type: Gauge
@@ -155,6 +157,7 @@ metrics:
       - kong.workspace.name
       - kong.auth.consumer.name
   - name: kong.websocket.server.received.message.size
+    min_version: "3.14"
     description: Size of incoming WebSocket message bodies in bytes, from the client.
     unit: "By"
     type: Histogram
@@ -164,6 +167,7 @@ metrics:
       - kong.workspace.name
       - kong.auth.consumer.name
   - name: kong.websocket.server.sent.message.size
+    min_version: "3.14"
     description: Size of WebSocket messages sent back to the client in bytes.
     unit: "By"
     type: Histogram
@@ -173,12 +177,14 @@ metrics:
       - kong.workspace.name
       - kong.auth.consumer.name
   - name: kong.websocket.handshake.error.count
+    min_version: "3.14"
     description: Number of errors seen during the WebSocket handshake.
     unit: "{error}"
     type: Sum
     attributes:
       - error.type
   - name: kong.websocket.connection.duration
+    min_version: "3.14"
     description: Duration of successfully established WebSocket connections in seconds.
     unit: "s"
     type: Histogram
