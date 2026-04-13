@@ -834,6 +834,12 @@
     pre {
       @apply whitespace-pre overflow-auto !bg-code-block;
     }
+
+    &[data-ask-kai="true"] {
+      pre {
+        @apply whitespace-pre-wrap break-normal;
+      }
+    }
   }
 
   clipboard-copy {

@@ -17,13 +17,15 @@ module Kramdown
         id = SecureRandom.uuid
 
         snippet = CodeHighlighter.new.highlight(code, language, id)
+
         Liquid::Template.parse(template, { line_numbers: true }).render(
           {
             'codeblock' => {
               'copy' => copy,
               'css_classes' => el.attr['class'],
               'collapsible' => el.attr.fetch('class', '').include?('collapsible'),
-              'render_header' => !data['data-file'].nil?,
+              'ask_kai' => ask_kai(data, code),
+              'render_header' => !data['data-file'].nil? || !ask_kai(data, code).nil?,
               'id' => id,
               'data' => data,
               'snippet' => snippet
@@ -53,6 +55,12 @@ module Kramdown
         @data_attributes = attr.each_with_object({}) do |(key, value), data|
           data[key] = value if key.start_with?('data-')
         end
+      end
+
+      def ask_kai(data, code)
+        return nil if data['data-ask-kai'].nil?
+
+        "https://cloud.konghq.com/?agent=true&agent-prompt=#{URI.encode_www_form_component(code)}"
       end
     end
   end
