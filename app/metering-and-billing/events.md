@@ -14,8 +14,6 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
-  - text: "Subjects"
-    url: /metering-and-billing/subjects/
   - text: "Meters"
     url: /metering-and-billing/metering/
   - text: "Collectors"
