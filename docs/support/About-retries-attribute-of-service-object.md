@@ -28,9 +28,7 @@ tldr:
 
 ---
 
-Please install Kong on Docker by following the official guide: Kong Docker Installation .
-
-## 1. How to check the behavior of the retries attribute?
+Please install Kong on Docker by following the official guide: Kong Docker Installation.
 
 **Step 1**: Set KONG_LOG_LEVEL=debug and reload Kong.
 
