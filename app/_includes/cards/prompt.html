@@ -1,0 +1,22 @@
+{% assign prompt = include.prompt %}
+<div
+  class="card card__bordered min-h-[200px]"
+  data-card="plugin"
+  data-products="{{ prompt.products | join: ',' }}"
+>
+  <a href="{{ prompt.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+    <div class="flex flex-col gap-3 flex-grow">
+      <h4>{{ prompt.title | liquify }}</h4>
+
+      <p class="text-sm line-clamp-3">
+        {{ prompt.description | liquify }}
+      </p>
+
+      <div class="flex flex-wrap gap-2 mt-auto pt-2">
+        {% for product in prompt.products %}
+            {% include_cached product_icon.html product=product %}
+        {% endfor %}
+      </div>
+    </div>
+  </a>
+</div>

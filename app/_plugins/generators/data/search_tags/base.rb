@@ -13,7 +13,8 @@ module Jekyll
           'plugin_example' => 'PluginExample',
           'reference' => 'Reference',
           'policy' => 'Policy',
-          'support' => 'Support'
+          'support' => 'Support',
+          'prompt' => 'Prompt'
         }.freeze
 
         def self.make_for(site:, page:)

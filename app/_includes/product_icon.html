@@ -1,0 +1,6 @@
+{% assign icon = site.data.products[include.product].icon %}
+<span
+class="product-icon product-icon--background {% if include.product == 'kic' or include.product == 'operator' %} product-icon--bordered {% endif %}"
+style="background-color: rgb(var(--color-{{include.product}}-background));">
+{% include_svg icon height="12" width="12" %}
+</span>

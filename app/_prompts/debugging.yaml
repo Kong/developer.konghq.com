@@ -1,0 +1,11 @@
+title: Debugging with KAi
+description: Help diagnose and fix issues in your Kong configuration with KAi's debugging capabilities.
+extended_description: Help diagnose and fix issues in your Kong configuration with KAi's debugging capabilities. Learn how to use KAi to identify and resolve common problems effectively.
+products:
+ - gateway
+
+prompts:
+  - Why is my `/api/checkout` endpoint slow? Create a debugging session, focusing on high-latency requests, and summarize where time is being spent.
+  - Help me initiate a debugging session to troubleshoot the recent latency spikes and give me an analysis of the results with recommendations.
+  - Help me diagnose intermittent 502s on my [ROUTE_NAME] Route.
+  - I'm seeing 429 errors on my API Gateway route. Walk me through diagnosing a rate limiting issue, including how to check plugin config, consumer credentials, and request headers.
