@@ -183,6 +183,32 @@ rows:
     description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
 {% endtable %}
 
+### Using features
+
+Features have a system generated ID and a user-defined key. They key should be an easy to understand string that can be used to reference the feature in your codebase, `gpt_4_tokens` for example.
+
+If you want to track usage for a feature, you can associate a meter with it. The associated meter will be used to track usage in metered entitlements of the feature, and it must have either `SUM` or `COUNT` as its aggregation type. You can also filter the usage tracked by the meter using the **Meter Group Filters** property. This is useful if you want to share the same meter across different features, but want to track and enforce usage separately based on a differentiating property. In this case, the meter must have the same group by keys defined.
+
+
+The following fields are available for feature configuration:
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "Name"
+    description: A human-readable display name for the feature.
+  - property: "Key"
+    description: A unique lookup key to help access features in API or web.
+  - property: "Meter"
+    description: Optional. The meter to use to track usage of the feature.
+  - property: "Meter Group Filters"
+    description: Optional. The filter for a subset of usage in the meter.
+{% endtable %}
+
 ## Plans
 
 Plans are a core component of the Product Catalog. Plans define the pricing and entitlements your customers receive in {{site.konnect_short_name}} {{site.metering_and_billing}}. They act as reusable templates that describe what a customer gets and how they are charged. Each plan can include multiple phases, prices, and entitlements, and can be versioned. 
