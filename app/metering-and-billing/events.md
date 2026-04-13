@@ -102,21 +102,25 @@ rows:
 
 ## Event processing
 
-{{site.metering_and_billing}} continuously processes usage events, allowing you to update meters in real-time. Once an event is ingested, {{site.metering_and_billing}} aggregates the data based on your defined meters. For example, you can define meters called "Parallel jobs", and {{site.metering_and_billing}} will aggregate the maximum number of jobs by each customer over a given time period.
+{{site.metering_and_billing}} continuously processes usage events, allowing you to update meters in real-time. Once an event is ingested, {{site.metering_and_billing}} aggregates the data based on your defined [meters](/metering-and-billing/metering/). For example, you can define meters called "Parallel jobs", and {{site.metering_and_billing}} will aggregate the maximum number of jobs by each customer over a given time period.
 
 Let's say you want to track serverless execution duration by endpoint and you defined the following meter:
 
-```yaml
-meters:
-  - slug: api_requests_total
-    description: API Requests
-    eventType: request
-    valueProperty: $.duration_seconds
-    aggregation: SUM
-    groupBy:
-      method: $.method
-      route: $.route
-```
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+method: POST
+headers:
+  - 'Accept: application/json, application/problem+json'
+body:
+  slug: api_requests_total
+  description: API Requests
+  eventType: request
+  valueProperty: $.duration_seconds
+  aggregation: SUM
+  groupBy:
+    method: $.method
+    route: $.route
+{% endkonnect_api_request %}
 
 {:.info}
 > `$.duration_seconds` is a JSONPath expression to access the `data.duration_seconds` property, providing powerful capabilities to extract values from nested data properties.
@@ -125,21 +129,25 @@ The meter config above tells {{site.metering_and_billing}} to expect CloudEvents
 
 For example, when sending the following event:
 
-```json
-{
-  "specversion": "1.0",
-  "type": "request",
-  "id": "00001",
-  "time": "2024-01-01T00:00:00.001Z",
-  "source": "service-0",
-  "subject": "customer-1",
-  "data": {
-    "duration_seconds": "10",
-    "method": "GET",
-    "route": "/hello"
-  }
-}
-```
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/openmeter/events
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/cloudevents+json'
+body:
+  specversion: "1.0"
+  type: "request"
+  id: "00001"
+  source: "service-0"
+  time: "2023-01-01T00:00:00.001Z"
+  subject: "customer-1"
+  data:
+    method: "GET"
+    route: "/hello"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 {{site.metering_and_billing}} will track the usage value for the time window and customer as:
 ```
@@ -149,24 +157,28 @@ subject       = "customer-1"
 duration_seconds   = 10
 method        = "GET"
 route         = "/hello"
-```
 
 When sending a second event (with a different `id` and `duration_seconds` value):
-```json
-{
-  "specversion": "1.0",
-  "type": "request",
-  "id": "00002",
-  "time": "2024-01-01T00:00:00.001Z",
-  "source": "service-0",
-  "subject": "customer-1",
-  "data": {
-    "duration_seconds": "20",
-    "method": "GET",
-    "route": "/hello"
-  }
-}
-```
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/openmeter/events
+status_code: 200
+method: POST
+headers:
+  - 'Content-Type: application/cloudevents+json'
+body:
+  specversion: "1.0"
+  type: "request"
+  id: "00002"
+  source: "service-0"
+  time: "2024-01-01T00:00:00.001Z"
+  subject: "customer-1"
+  data:
+    duration_seconds: 20
+    method: "GET"
+    route: "/hello"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 {{site.metering_and_billing}} will increase sum of the duration for the two events for the same time window (`windowstart`, `windowend`), `method`, `route` and `subject`:
 ```
@@ -176,7 +188,6 @@ subject       = "customer-1"
 duration_seconds      = 30
 method        = "GET"
 route         = "/hello"
-```
 
 ## Event deduplication
 
@@ -184,13 +195,13 @@ CloudEvents are unique by `id` and `source`. For more information, see [CloudEve
 
 {:.warning}
 > Producers **must** ensure that the `source` and `id` combination is unique for each distinct event.
-> If a duplicate event is re-sent (e.g. due to a network error) it may have the same `id`.
+> If a duplicate event is re-sent (for example, due to a network error) it may have the same `id`.
 > Consumers may assume that events with identical `source` and `id` are duplicates.
 
-{{site.metering_and_billing}} deduplicates events by `id` and `source`. This ensures that if multiple events with the same `id` and `source` are sent, they will be processed only once. This is useful when you want to retry or replay events in your infrastructure.
+{{site.metering_and_billing}} deduplicates events by `id` and `source`. This ensures that if multiple events with the same `id` and `source` are sent, they are only processed once. This is useful when you want to retry or replay events in your infrastructure.
 
 ## Event enrichment
 
-You may need to pre-process events before they are ingested into {{site.metering_and_billing}}, to normalize data, enrich events, or calculate derived fields like cost for example.
+You may need to pre-process events before they are ingested into {{site.metering_and_billing}} to normalize data, enrich events, or calculate derived fields like cost for example.
 
 To pre-process events, use [Collectors](/metering-and-billing/collectors/), which support [Bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang) mapping for transformations.
