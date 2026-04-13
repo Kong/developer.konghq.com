@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@406198fddf2fe112c517f320f607e16a976c0ac1
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/406198fddf2fe112c517f320f607e16a976c0ac1'
+  x-oas-source: kong/platform-api@43cda3f695b1e0eeba0d82add0e9f0a65755e895
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/43cda3f695b1e0eeba0d82add0e9f0a65755e895'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -2450,42 +2450,7 @@ paths:
         - GraphQL Cost Decorations
     parameters:
       - $ref: '#/components/parameters/controlPlaneId'
-    post:
-      operationId: create-graphql-rate-limiting-advanced-cost
-      summary: Create a new GraphQL Cost Decoration
-      description: Create a new GraphQL Cost Decoration
-      requestBody:
-        description: Description of the new GraphQL Cost Decoration for creation
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GraphQLCostDecoration'
-      responses:
-        '201':
-          description: Successfully created GraphQL Cost Decoration
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GraphQLCostDecoration'
-        '401':
-          $ref: '#/components/responses/HTTP401Error'
-      tags:
-        - GraphQL Cost Decorations
   '/control-planes/{controlPlaneId}/core-entities/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}':
-    delete:
-      operationId: delete-graphql-rate-limiting-advanced-cost
-      summary: Delete a GraphQL Cost Decoration
-      description: Delete a GraphQL Cost Decoration
-      parameters:
-        - $ref: '#/components/parameters/GraphQLCostDecorationId'
-      responses:
-        '204':
-          description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
-        '401':
-          $ref: '#/components/responses/HTTP401Error'
-      tags:
-        - GraphQL Cost Decorations
     get:
       operationId: get-graphql-rate-limiting-advanced-cost
       summary: Get a GraphQL Cost Decoration
@@ -2506,28 +2471,6 @@ paths:
     parameters:
       - $ref: '#/components/parameters/GraphQLCostDecorationId'
       - $ref: '#/components/parameters/controlPlaneId'
-    put:
-      operationId: upsert-graphql-rate-limiting-advanced-cost
-      summary: Upsert a GraphQL Cost Decoration
-      description: Create or Update GraphQL Cost Decoration using ID.
-      requestBody:
-        description: Description of the GraphQL Cost Decoration
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GraphQLCostDecoration'
-      responses:
-        '200':
-          description: Successfully upserted GraphQL Cost Decoration
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GraphQLCostDecoration'
-        '401':
-          $ref: '#/components/responses/HTTP401Error'
-      tags:
-        - GraphQL Cost Decorations
   '/control-planes/{controlPlaneId}/core-entities/hmac-auths':
     get:
       operationId: list-hmac-auth
@@ -3863,6 +3806,44 @@ paths:
       responses:
         '201':
           description: Successfully created GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+      tags:
+        - GraphQL Cost Decorations
+  '/control-planes/{controlPlaneId}/core-entities/services/{ServiceId}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}':
+    delete:
+      operationId: delete-graphql-rate-limiting-advanced-cost-with-service
+      summary: Delete a a GraphQL Cost Decoration associated with a Service
+      description: Delete a a GraphQL Cost Decoration associated with a Service using ID.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+      responses:
+        '204':
+          description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+      tags:
+        - GraphQL Cost Decorations
+    parameters:
+      - $ref: '#/components/parameters/controlPlaneId'
+    put:
+      operationId: upsert-graphql-rate-limiting-advanced-cost-with-service
+      summary: Upsert a GraphQL Cost Decoration associated with a Service
+      description: Create or Update a GraphQL Cost Decoration associated with a Service using ID.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+      requestBody:
+        description: Description of the GraphQL Cost Decoration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationWithoutParents'
+      responses:
+        '200':
+          description: Successfully upserted GraphQL Cost Decoration
           content:
             application/json:
               schema:
