@@ -268,28 +268,27 @@ prereqs:
            ```
         {% endnavtab %}
         {% endnavtabs %}
+
+overview: |
+  {:.info}
+  > **Deploy this recipe automatically with an AI assistant.**
+  > Set `KONNECT_TOKEN` in your terminal, create a new directory for this recipe, then copy this link and provide it to your AI coding agent:
+  > `https://developer.konghq.com/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/claude-code-sso/`
+  > Read through this page while the agent sets things up — it explains how the configuration works and what to expect.
+
+  This recipe connects Claude Code to your organization's Okta identity layer through Kong AI
+  Gateway. By the end of this tutorial, every Claude Code request from your engineering team will
+  be authenticated via Okta SSO, routed to a model tier based on the developer's Okta group
+  membership, and subject to per-tier token rate limits — all without any LLM provider credentials
+  on developer machines.
+
+  The recipe uses three Kong plugins working together: [openid-connect](/plugins/openid-connect/)
+  for Okta JWT validation, [ai-proxy-advanced](/plugins/ai-proxy-advanced/) for consumer-scoped
+  model routing, and [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) for per-tier
+  token budgets.
 ---
 
-{:.info}
-> **Deploy this recipe automatically with an AI assistant.**<br>
-> Set `KONNECT_TOKEN` in your terminal, create a new directory for this recipe, then copy this link and provide it to your AI coding agent:<br>
-> `https://developer.konghq.com/kong-cookbooks/agent-setup/?recipe=/kong-cookbooks/claude-code-sso/`<br>
-> Read through this page while the agent sets things up — it explains how the configuration works and what to expect.
-
-## Overview
-
-This recipe connects Claude Code to your organization's Okta identity layer through Kong AI
-Gateway. By the end of this tutorial, every Claude Code request from your engineering team will
-be authenticated via Okta SSO, routed to a model tier based on the developer's Okta group
-membership, and subject to per-tier token rate limits — all without any LLM provider credentials
-on developer machines.
-
-The recipe uses three Kong plugins working together: [openid-connect](/plugins/openid-connect/)
-for Okta JWT validation, [ai-proxy-advanced](/plugins/ai-proxy-advanced/) for consumer-scoped
-model routing, and [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) for per-tier
-token budgets.
-
-### The problem
+## The problem
 
 Claude Code supports two authentication modes, and both create organizational blind spots at scale:
 
@@ -323,7 +322,7 @@ a static key or a locally cached token. There is no server-side enforcement poin
 your organization's identity policies, revoke access instantly, or route requests based on who is
 asking.
 
-### The solution
+## The solution
 
 This recipe moves the enforcement point to a Kong Gateway that your organization controls, with
 Okta as the single source of truth for identity:
@@ -377,7 +376,7 @@ Claude Code
 | Kong — [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) | Per-consumer token rate limits with sliding windows |
 | LLM Provider | Model inference |
 
-{:.note}
+{:.info}
 > **Provider compatibility:** Claude Code sends requests in Anthropic's native format.
 > This recipe uses `llm_format: anthropic` in the ai-proxy-advanced plugin, which passes
 > Anthropic-format requests through without translation. Only providers with
