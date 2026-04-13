@@ -80,7 +80,6 @@ prereqs:
         1. In the sidebar, open **Clients**, then click **Create client**.
         1. **General settings**: Client type: **OpenID Connect**, Client ID: `mcp-gateway`.
         1. **Capability config**: Toggle **Client authentication** to **on**. Check **Service accounts roles** (this enables the `client_credentials` grant).
-        1. **Login settings**: Set **Valid redirect URIs** to `http://localhost:8000/*`.
         1. Click **Save**.
         1. Open the **Credentials** tab, copy the **Client Secret**, and export it:
 
@@ -122,9 +121,7 @@ faqs:
       Use JWK validation when your authorization server publishes a JWKS endpoint and issues JWTs. JWK validation avoids per-request round-trips to the authorization server, since Kong validates tokens locally after fetching and caching the public keys.
 
       Use token introspection when the authorization server issues opaque tokens (not JWTs), or when you need real-time token revocation checks on every request. Introspection requires `client_id`, `client_secret`, and `introspection_endpoint`.
-  - q: What happens when the authorization server rotates its keys?
-    a: |
-      Kong caches the JWK Set for the duration specified in `jwks_cache_ttl` (in seconds). If an incoming token's `kid` (key ID) does not match any key in the cache, the plugin automatically invalidates the cache, re-fetches the JWKS, and retries validation once. If the key is still not found after the refresh, Kong returns `401`. This means routine key rotations are handled transparently without waiting for the TTL to expire.
+
   - q: Do I still need client_id and client_secret in the plugin config with JWK validation?
     a: |
       No. The `client_id` and `client_secret` fields in the AI MCP OAuth2 plugin config are used for token introspection, where Kong calls the authorization server's introspection endpoint as a confidential client. With JWK validation, Kong validates tokens locally and does not need these credentials.
@@ -196,10 +193,6 @@ entities:
 
 Configure the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) on the `weather-jwk` Route with `jwks_endpoint` pointing at Keycloak's certificate endpoint. Kong fetches the public keys, caches them for the duration set in `jwks_cache_ttl`, and validates each incoming JWT locally.
 
-The `resource` field identifies this MCP server. Because we configured a [client scope mapper](#configure-the-audience-claim) in Keycloak to include this URL in the `aud` claim, Kong can validate the audience with `insecure_relaxed_audience_validation` set to `false` (the default).
-
-The `metadata_endpoint` path must match one of the paths on the `weather-jwk` Route so the plugin can serve the OAuth Protected Resource Metadata that MCP clients need to discover the authorization server.
-
 {% entity_examples %}
 entities:
   plugins:
@@ -242,32 +235,25 @@ MCP_TOKEN=$(curl -s -X POST \
   -d "client_secret=$DECK_MCP_CLIENT_SECRET" | jq -r .access_token) && echo $MCP_TOKEN
 ```
 
-You can decode the token to confirm the claims. The `aud` claim should include `http://localhost:8000/weather/mcp` (from the scope mapper) and the `iss` claim should match `DECK_KEYCLOAK_ISSUER`:
-
-```sh
-echo $MCP_TOKEN | cut -d. -f2 | base64 -d 2>/dev/null | jq .
-```
-
-```json
-{
-  "iss": "http://localhost:8080/realms/master",
-  "aud": "http://localhost:8000/weather/mcp",
-  "azp": "mcp-gateway",
-  "exp": 1775253107,
-  "iat": 1775253047
-}
-```
-{:.no-copy-code}
-
 ### Confirm unauthenticated requests are rejected
 
 Send a request without a token:
 
-```sh
-curl -i --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /weather/mcp
+status_code: 401
+method: POST
+headers:
+  - 'Content-Type: application/json'
+body:
+  jsonrpc: "2.0"
+  id: 1
+  method: tools/list
+  params: {}
+message: 401 Invalid or inactive token
+{% endvalidation %}
+<!--vale on-->
 
 The response returns a `401` status, confirming the plugin is enforcing authentication.
 
@@ -275,26 +261,47 @@ The response returns a `401` status, confirming the plugin is enforcing authenti
 
 Send a request with the JWT:
 
-```sh
-curl --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $MCP_TOKEN" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
-```
+<!--vale off-->
+{% validation request-check %}
+url: /weather/mcp
+status_code: 200
+method: POST
+headers:
+  - 'Accept: application/json, text/event-stream'
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $MCP_TOKEN'
+body:
+  jsonrpc: "2.0"
+  id: 1
+  method: tools/list
+  params: {}
+{% endvalidation %}
+<!--vale on-->
 
-A successful response returns the list of available MCP tools, confirming that Kong validated the token's signature against the cached JWK Set and verified the `iss`, `exp`, and `aud` claims.
+A successful response returns the list of available MCP tools:
+
+```json
+{"jsonrpc":"2.0","result":{"tools":[{"id":"4b3117c8-5894-4f4c-b6e7-c321911caf18","description":"Returns current weather data as a JSON object for a given location.","inputSchema":{"properties":{"query_q":{"description":"Pass US Zipcode, UK Postcode, Canada Postalcode, IP address, Latitude/Longitude (decimal degree) or city name.","type":"string"}},"required":["query_q"],"type":"object","additionalProperties":false},"name":"realtime-api","annotations":{"title":"Realtime API"}}]},"id":1}
+```
+{:.no-copy-code}
 
 ### Confirm tampered tokens are rejected
 
 Modify one character in the token and send the request again:
 
-```sh
-curl -i --no-progress-meter --fail-with-body http://localhost:8000/weather/mcp \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer ${MCP_TOKEN}x" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
-```
-
-The response returns `401`, confirming that Kong rejects tokens with invalid signatures.
-
+<!--vale off-->
+{% validation request-check %}
+url: /weather/mcp
+status_code: 401
+method: POST
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer ${MCP_TOKEN}x'
+body:
+  jsonrpc: "2.0"
+  id: 1
+  method: tools/list
+  params: {}
+message: 401 Invalid or inactive token
+{% endvalidation %}
 <!--vale on-->
