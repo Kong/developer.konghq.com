@@ -173,7 +173,7 @@ When sending a second event (with a different `id` and `duration_seconds` value)
 windowstart   = "2024-01-01T00:00"
 windowend     = "2024-01-01T00:01"
 subject       = "customer-1"
-duration      = 30
+duration_seconds      = 30
 method        = "GET"
 route         = "/hello"
 ```
