@@ -117,10 +117,10 @@ DATE [debug] ... balancer(): setting address (try 2): xxx.xxx.xxx.xxx:xxx
 ...
 ```
 faqs:
--q: Does the service object only retry when an upstream object is set?
- a: No, the service object can retry requests even if an upstream object has not been set.
+    -q: Does the service object only retry when an upstream object is set?
+     a: No, the service object can retry requests even if an upstream object has not been set.
 
--q: Does the service object retry on HTTP 4xx/5xx responses?
- a:No, retries happen only for TCP connection errors. However, Kong can perform HTTP and TCP health checks using the upstream object. For more details, see the Health Checks and  Circuit Breakers documentation .
+    -q: Does the service object retry on HTTP 4xx/5xx responses?
+     a:No, retries happen only for TCP connection errors. However, Kong can perform HTTP and TCP health checks using the upstream object. For more details, see the Health Checks and  Circuit Breakers documentation .
 
 
