@@ -16,6 +16,12 @@ related_resources:
     url: /metering-and-billing/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
+  - text: "Meters"
+    url: /metering-and-billing/metering/
+  - text: "Collectors"
+    url: /metering-and-billing/collectors/
+  - text: "Get started with metering and billing"
+    url: /how-to/get-started-with-metering-and-billing/
 faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |
@@ -45,34 +51,6 @@ flowchart LR
     E --> F
 {% endmermaid %}
 
-### Scaling through partitions
-
-Given that Kafka scales via partitions (with a single topic backed by multiple partitions), we adopted a similar strategy for our consumer workers. This approach is relatively simple to implement, thanks to the inherent rebalancing logic in Kafka clients. When clients subscribe to Kafka topics, they subscribe to specific partitions of a topic, where the Kafka broker determines the allocation. While various rebalancing strategies exist, we currently employ the default `RangeAssignor`, which assigns consumer partitions in a lexicographic sequence. Check out this [detailed article](https://medium.com/streamthoughts/understanding-kafka-partition-assignment-strategies-and-how-to-write-your-own-custom-assignor-ebeda1fc06f3) to learn about Kafka partition assignments and strategies.
-
-{% mermaid %}
-flowchart TB
-    subgraph TopicA["Topic A"]
-        A_P0[P0]
-        A_P1[P1]
-    end
-
-    subgraph TopicB["Topic B"]
-        B_P0[P0]
-        B_P1[P1]
-    end
-
-    subgraph ConsumerGroup["Consumer Group"]
-        C1[Consumer 1]
-        C2[Consumer 2]
-        C3[Consumer 3]
-    end
-
-    A_P0 --> C1
-    A_P1 --> C2
-    B_P0 --> C2
-    B_P1 --> C3
-{% endmermaid %}
-
 ## Sending events
 
 {{site.metering_and_billing}} leverages the [CloudEvents](https://cloudevents.io/) specification, which offers a standardized and flexible way to describe event data, making it easier to connect your services and tools seamlessly.
@@ -99,13 +77,29 @@ body:
 <!--vale on-->
 
 An event contains the following properties:
-* `specversion`: The CloudEvents spec version (currently 1.0).
-* `type`: The event type. This is used to match the event to a meter.
-* `id`: The event's unique ID.
-* `time`: The event's timestamp in RFC3339 format. Defaults to the time the event was received.
-* `source`: The event's source (e.g. the service name).
-* `subject`: The event's subject (e.g. the customer ID). Meter values are aggregated by subjects.
-* `data`: The event's payload. This property can contain any valid JSON object, and when configuring meters using [JSONPath](https://github.com/json-path/JsonPath), individual values can be extracted.
+
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`specversion`"
+    description: "CloudEvents spec version (currently `1.0`)."
+  - property: "`type`"
+    description: "Event type, used to match the event to a meter."
+  - property: "`id`"
+    description: "Unique event ID. Combined with `source` for deduplication."
+  - property: "`time`"
+    description: "Timestamp in RFC3339 format. Defaults to the time the event was received."
+  - property: "`source`"
+    description: "Origin of the event (e.g. service name)."
+  - property: "`subject`"
+    description: "The entity being metered (e.g. customer ID). See [Subjects](/metering-and-billing/subjects/)."
+  - property: "`data`"
+    description: "JSON payload. Individual values can be extracted using [JSONPath](https://github.com/json-path/JsonPath)."
+{% endtable %}
 
 ## Event processing
 
@@ -201,42 +195,7 @@ CloudEvents are unique by `id` and `source`. For more information, see [CloudEve
 
 You may need to pre-process events before they are ingested into {{site.metering_and_billing}}, to normalize data, enrich events, or calculate derived fields like cost for example.
 
-{{site.metering_and_billing}} supports this through the [Collectors](/metering-and-billing/collectors/) and [Bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang).
-
-To calculate the cost of the container, you can use the following Bloblang mapping:
-
-```yaml
-pipeline:
-  processors:
-    - mapping: |
-        root = this
-        # initialize cost
-        let cost = 0
-        # 1 cent per MB memory cost
-        let cost = $cost + this.data.mem_mb.int64() * 0.001
-        # CPU core cost depends on the CPU family
-        let cost = $cost + this.data.cpu_cores.int64() * match this.data.cpu_family {
-          "intel" => 1.0,
-          "graviton" => 1.5,
-          _ => 0, # Default case for unmatched CPU family: could be some default price
-        }
-        # Volume discount for CPU count
-        let cost = $cost + this.data.gpu_count.int64() * match this.data.gpu_count {
-          this > 5 => 0.5,
-          this > 2 => 0.8,
-          _ => 1,
-        } * match this.data.gpu {
-          "A100-40" => 1.0,
-          "A100-60" => 1.5,
-          _ => 0, # Default case for unmatched GPU type: could be some default price
-        }
-        root.data.cost = $cost
-        # For advanced mapping logic, consider writing unit tests:
-        # https://docs.redpanda.com/redpanda-connect/guides/bloblang/walkthrough/#unit-testing
-output:
-  stdout:
-    codec: lines
-```
+To pre-process events, use [Collectors](/metering-and-billing/collectors/), which support [Bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang) mapping for transformations.
 
 ## Monitoring event ingestion
 
