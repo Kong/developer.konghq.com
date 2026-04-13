@@ -110,10 +110,6 @@ rows:
       - blocks:
         - type: plugin
           config:
-            slug: ai-semantic-prompt-guard
-      - blocks:
-        - type: plugin
-          config:
             slug: ai-azure-content-safety
       - blocks:
         - type: plugin

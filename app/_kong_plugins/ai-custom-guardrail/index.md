@@ -32,6 +32,7 @@ topologies:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai
@@ -46,7 +47,6 @@ icon: ai-custom-guardrail.png
 
 categories:
    - ai
-   - safety
 
 related_resources:
   - text: Use the AI Custom Guardrail plugin with the Mistral AI Moderation API

@@ -72,6 +72,7 @@
     "design-apis",
     "dev-portal-customization",
     "dev-portal-documentation",
+    "dlp",
     "docker",
     "dynamic-client-registration",
     "dynatrace",
@@ -174,6 +175,7 @@
     "restore",
     "reuse",
     "routing",
+    "safety",
     "saml",
     "sbom",
     "schema-registry",
@@ -222,8 +224,6 @@
     "xai",
     "zipkin",
     "zone-tokens",
-    "zones",
-    "safety",
-    "dlp"
+    "zones"
   ]
 }
