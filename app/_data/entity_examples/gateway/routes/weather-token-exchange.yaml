@@ -1,0 +1,9 @@
+name: weather-token-exchange
+paths:
+  - /weather/mcp-exchange
+  - /.well-known/oauth-protected-resource/weather/mcp-exchange
+service:
+  name: weather-token-exchange-service
+protocols:
+  - http
+  - https
