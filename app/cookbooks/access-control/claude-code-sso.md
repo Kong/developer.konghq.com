@@ -816,7 +816,7 @@ control_planes:
 
 rm -f kong-recipe.yaml
 ```
-{: data-test-step="block" }
+{: data-test-step="block" .collapsible }
 
 {% endtab %}
 {% tab AWS Bedrock %}
@@ -970,7 +970,7 @@ control_planes:
 
 rm -f kong-recipe.yaml
 ```
-{: data-test-step="block" }
+{: data-test-step="block" .collapsible }
 
 {% endtab %}
 {% tab Azure AI Services %}
@@ -1127,7 +1127,7 @@ control_planes:
 
 rm -f kong-recipe.yaml
 ```
-{: data-test-step="block" }
+{: data-test-step="block" .collapsible }
 
 {% endtab %}
 {% endnavtabs %}
