@@ -53,7 +53,7 @@ flowchart LR
 
 {{site.metering_and_billing}} leverages the [CloudEvents](https://cloudevents.io/) specification, which offers a standardized and flexible way to describe event data, making it easier to connect your services and tools seamlessly.
 
-To ingest events into {{site.metering_and_billing}}, you need to send them to the {{site.konnect_short_name}} API:
+To ingest events into {{site.metering_and_billing}}, send them to the {{site.konnect_short_name}} API:
 
 <!-- vale off -->
 {% konnect_api_request %}
@@ -85,26 +85,26 @@ columns:
     key: description
 rows:
   - property: "`specversion`"
-    description: "CloudEvents spec version (currently `1.0`)."
+    description: "The CloudEvents spec version (currently `1.0`)."
   - property: "`type`"
-    description: "Event type, used to match the event to a meter."
+    description: "The event type, used to match the event to a meter."
   - property: "`id`"
-    description: "Unique event ID. Combined with `source` for deduplication."
+    description: "A unique event ID. Combined with `source` for deduplication."
   - property: "`time`"
-    description: "Timestamp in RFC3339 format. Defaults to the time the event was received."
+    description: "The timestamp in RFC3339 format. Defaults to the time the event was received."
   - property: "`source`"
-    description: "Origin of the event (e.g. service name)."
+    description: "The origin of the event (e.g. service name)."
   - property: "`subject`"
     description: "The entity being metered (e.g. customer ID)."
   - property: "`data`"
-    description: "JSON payload. Individual values can be extracted using [JSONPath](https://github.com/json-path/JsonPath)."
+    description: "The JSON payload. Individual values can be extracted using [JSONPath](https://github.com/json-path/JsonPath)."
 {% endtable %}
 
 ## Event processing
 
 {{site.metering_and_billing}} continuously processes usage events, allowing you to update meters in real-time. Once an event is ingested, {{site.metering_and_billing}} aggregates the data based on your defined meters. For example, you can define meters called "Parallel jobs", and {{site.metering_and_billing}} will aggregate the maximum number of jobs by each customer over a given time period.
 
-Using an example, let’s dive into how {{site.metering_and_billing}}’s event processing works. Imagine you want to track serverless execution duration by endpoint and you defined the following meter:
+Let's say you want to track serverless execution duration by endpoint and you defined the following meter:
 
 ```yaml
 meters:
@@ -118,11 +118,10 @@ meters:
       route: $.route
 ```
 
-For more information, see [Create a meter](/metering-and-billing/metering/#create-a-meter).
+{:.info}
+> `$.duration_seconds` is a JSONPath expression to access the `data.duration_seconds` property, providing powerful capabilities to extract values from nested data properties.
 
-The meter config above tells {{site.metering_and_billing}} that expect CloudEvents with `type=request` where the usage value is stored in the `data.duration_seconds` and we need to sum them by `data.route`. {{site.metering_and_billing}} will track the usage value for every time window when least one event was reported and tracks it for every `subject` and `groupBy` permutation.
-
-Note that `$.duration_seconds` is a JSONPath expression to access the `data.duration_seconds` property, providing powerful capabilities to extract values from nested data properties.
+The meter config above tells {{site.metering_and_billing}} to expect CloudEvents with `type=request` where the usage value is stored in the `data.duration_seconds`, and we need to sum them up by `data.route`. {{site.metering_and_billing}} will track the usage value for every time window when at least one event was reported and tracks it for every `subject` and `groupBy` permutation.
 
 For example, when sending the following event:
 
@@ -188,7 +187,7 @@ CloudEvents are unique by `id` and `source`. For more information, see [CloudEve
 > If a duplicate event is re-sent (e.g. due to a network error) it may have the same `id`.
 > Consumers may assume that events with identical `source` and `id` are duplicates.
 
-{{site.metering_and_billing}} deduplicates events by id and source. This ensures that if multiple events with the same id and source are sent, they will be processed only once. This is useful when you want to retry or replay events in your infrastructure.
+{{site.metering_and_billing}} deduplicates events by `id` and `source`. This ensures that if multiple events with the same `id` and `source` are sent, they will be processed only once. This is useful when you want to retry or replay events in your infrastructure.
 
 ## Event enrichment
 
