@@ -57,6 +57,7 @@ flowchart LR
 
 To ingest events into {{site.metering_and_billing}}, you need to send them to the {{site.konnect_short_name}} API:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/events
 status_code: 200
