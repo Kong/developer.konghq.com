@@ -106,6 +106,7 @@ rows:
 
 Let's say you want to track serverless execution duration by endpoint and you defined the following meter:
 
+<!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/meters
 method: POST
@@ -121,6 +122,7 @@ body:
     method: $.method
     route: $.route
 {% endkonnect_api_request %}
+<!--vale on-->
 
 {:.info}
 > `$.duration_seconds` is a JSONPath expression to access the `data.duration_seconds` property, providing powerful capabilities to extract values from nested data properties.
@@ -157,8 +159,10 @@ subject       = "customer-1"
 duration_seconds   = 10
 method        = "GET"
 route         = "/hello"
+```
 
 When sending a second event (with a different `id` and `duration_seconds` value):
+
 <!-- vale off -->
 {% konnect_api_request %}
 url: /v3/openmeter/events
@@ -188,6 +192,7 @@ subject       = "customer-1"
 duration_seconds      = 30
 method        = "GET"
 route         = "/hello"
+```
 
 ## Event deduplication
 
