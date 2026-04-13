@@ -1,13 +1,10 @@
 ---
 # REQUIRED: The title that appears at the top of the page
-title: About retries attribute of service object
+title: How do I check the behavior of the retries attribute?
 
 # REQUIRED: Must be set to "support" for support articles
 content_type: support
 
-# OPTIONAL: A brief description of what this support article covers
-# This appears in search results and meta tags
-description: About retries attribute of service object.
 
 # OPTIONAL: Which Kong products this article applies to
 # Common values: gateway, konnect, mesh, insomnia, deck
@@ -21,24 +18,15 @@ works_on:
   - konnect
 
 
-# OPTIONAL: Related resources that provide additional context
-# Each entry should have a text label and a url
-related_resources:
-  - text: Link text for related documentation
-    url: /path/to/related/page/
-  - text: Another related resource
-    url: /path/to/another/page/
 
 # OPTIONAL: TL;DR section that appears at the top of the article
 # Provides a quick question and answer summary
 tldr:
-  q: retries attribute of service object
+  q: How do I check the behavior of the retries attribute?
   a: |
-    The articles describe the end-to-end steps of working with service object
+    When an upstream is unreachable, Kong retries the connection up to the configured number of times. You can observe this in debug logs.
 
 ---
-
-Below is an example of installing Kong on Docker.
 
 Please install Kong on Docker by following the official guide: Kong Docker Installation .
 
@@ -128,13 +116,11 @@ DATE [debug] ... balancer(): setting address (try 2): xxx.xxx.xxx.xxx:xxx
 ...
 ...
 ```
+faqs:
+-q: Does the service object only retry when an upstream object is set?
+ a: No, the service object can retry requests even if an upstream object has not been set.
 
-## 2. Does the service object only retry when an upstream object is set?
-
-No, the service object can retry requests even if an upstream object has not been set.
-
-## 3. Does the service object retry on HTTP 4xx/5xx responses?
-
-No, retries happen only for TCP connection errors. However, Kong can perform HTTP and TCP health checks using the upstream object. For more details, see the Health Checks and Circuit Breakers documentation .
+-q: Does the service object retry on HTTP 4xx/5xx responses?
+ a:No, retries happen only for TCP connection errors. However, Kong can perform HTTP and TCP health checks using the upstream object. For more details, see the Health Checks and  Circuit Breakers documentation .
 
 
