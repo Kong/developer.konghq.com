@@ -114,11 +114,11 @@ headers:
   - 'Accept: application/json, application/problem+json'
 body:
   name: Total API requests
-  key: api-requests-total
+  key: api_requests_total
   description: API Requests
   event_type: request
   value_property: $.duration_seconds
-  aggregation: SUM
+  aggregation: sum
   dimensions:
     method: $.method
     route: $.route
