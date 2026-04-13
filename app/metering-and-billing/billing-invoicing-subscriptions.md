@@ -32,6 +32,31 @@ A billing profile is linked to a specific App. This association is established d
 
 Billing profiles can be managed from the [**Billing Profiles**](https://cloud.konghq.com/metering-billing/billing-profiles) tab in **{{site.metering_and_billing}} > Settings** in the {{site.konnect_short_name}} UI.
 
+### Use cases
+
+{{site.metering_and_billing}} can help implement various pricing strategies:
+
+{% table %}
+columns:
+  - title: Use Case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: [Recurring billing](#subscriptions)
+    description: Monthly, weekly, or annual subscriptions.
+  - usecase: [Usage-based pricing]
+    description: Metered pay-as-you-go, tiered, and volume-based pricing.
+  - usecase: [Custom deals](#customer-billing-profile-overrides)
+    description: Custom pricing and discounts for specific customers.
+  - usecase: [Commitments](#discounts-and-commitments)
+    description: Pre-purchase commitments, minimum spends, and much more.
+  - usecase: [Discounts](#discounts-and-commitments)
+    description: Plan-specific or customer-specific discounts.
+  - usecase: [Trials and ramp-ups](/metering-and-billing/product-catalog/#plan-phases)
+    description: Time-based phases with different pricing and limits.
+{% endtable %}
+
 ### Invoicing settings
 
 The invoicing settings define the invoice creation process and lifecycle management parameters, including:
@@ -64,7 +89,9 @@ Invoice due after/Payment due after specifies the duration allowed for invoice p
 
 ### Customer billing profile overrides
 
-Customer overrides allows you to assign a different billing profile to customers other than the default. By default customers are pinned to the default billing profile. This is useful when you have different billing needs for different customers. For example, you might want some customers to be billed via Stripe and others via bank transfer.
+By default, customers are pinned to the default billing profile. Customer overrides allow you to assign different billing profiles to specific customers or customer groups.
+This is useful when you have different billing needs for different customers. 
+For example, you might want some customers to be billed via Stripe and others via bank transfer.
 
 Customer overrides can be useful for the following use cases:
 * **Enterprise billing**: Set up one billing profile for SaaS customers and another for Enterprise customers (with send invoice for bank transfer selected).
@@ -145,6 +172,8 @@ Given an invoice is always single currency, if the customer was migrated between
 
 {:.warning}
 > **Important:** For systematic changes that need to persist across billing cycles, we recommend modifying the subscription directly rather than editing gathering invoices. This ensures consistent billing behavior aligned with the intended subscription terms.
+
+## Discounts and commitments
 
 {% include_cached /konnect/metering-and-billing/discounts.md %}
 

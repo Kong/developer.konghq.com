@@ -17,10 +17,11 @@ related_resources:
   - text: "Subjects"
     url: /metering-and-billing/subjects/
 
+toc_depth: 4
 ---
 
 
-{{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place. 
+{{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering, so you can manage pricing, entitlements, and packaging in one place. 
 
 Each Product Catalog plan consists of:
 * [Features](#features) that you want to price or govern. Can be metered or static.
@@ -336,6 +337,7 @@ Example for reverse trials with plan phases:
 * Phase 2 (Free): limited to 1,000 tokens
 
 
+## Discounts and commitments
 {% include_cached /konnect/metering-and-billing/discounts.md %}
 
 
