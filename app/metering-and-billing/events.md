@@ -36,7 +36,7 @@ An event can be anything you need to track accurately over time for billing or a
 
 First, the {{site.metering_and_billing}} API accepts events in the [CloudEvents](https://cloudevents.io/) format and publishes them to Kafka topics before further processing them. This allows {{site.metering_and_billing}} to process events in batches and handle traffic spikes efficiently.
 
-The events are then processed by a custom [Kafka Consumer](https://github.com/openmeterio/openmeter/tree/main/cmd/sink-worker) written in Go, which, validates events and ensures consistent deduplication and exactly-once inserts into ClickHouse. The Kafka Consumer scales horizontally by Kafka partitions, allowing for parallel processing of events and ensuring high availability.
+The events are then processed by a custom [Kafka Consumer](https://github.com/openmeterio/openmeter/tree/main/cmd/sink-worker) written in Go, which validates events and ensures consistent deduplication and exactly-once inserts into ClickHouse. The Kafka Consumer scales horizontally by Kafka partitions, allowing for parallel processing of events and ensuring high availability.
 
 {% mermaid %}
 flowchart LR
@@ -44,7 +44,7 @@ flowchart LR
     B --> C[Go worker]
     B --> D[Go worker]
     B --> E[Go worker]
-    C --> F[Clickhouse]
+    C --> F[ClickHouse]
     D --> F
     E --> F
 {% endmermaid %}
@@ -180,7 +180,7 @@ route         = "/hello"
 
 ## Event deduplication
 
-CloudEvents are unique by `id` and `source`. For more information, see [CloudEvent's specification](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md).
+CloudEvents are unique by `id` and `source`. For more information, see [CloudEvents specification](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md).
 
 {:.warning}
 > Producers **must** ensure that the `source` and `id` combination is unique for each distinct event.
