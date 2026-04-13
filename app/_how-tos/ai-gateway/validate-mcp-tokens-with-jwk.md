@@ -125,12 +125,7 @@ faqs:
   - q: Do I still need client_id and client_secret in the plugin config with JWK validation?
     a: |
       No. The `client_id` and `client_secret` fields in the AI MCP OAuth2 plugin config are used for token introspection, where Kong calls the authorization server's introspection endpoint as a confidential client. With JWK validation, Kong validates tokens locally and does not need these credentials.
-  - q: What claims does Kong validate with JWK verification?
-    a: |
-      Kong validates the token signature against the cached public keys, checks the `exp` and `nbf` claims to confirm the token is not expired and not used before its valid time, and verifies the issuer (`iss`) against the configured `authorization_servers`. If `insecure_relaxed_audience_validation` is `false` (the default), Kong also validates the audience (`aud`) claim against the `resource` value. You can use `jwt_claims_leeway` to allow a small tolerance (in seconds) for clock skew between Kong and the authorization server.
-  - q: What happens if Kong can't reach the JWKS endpoint?
-    a: |
-      If Kong cannot fetch the JWKS (network failure, authorization server outage), it returns `503`. As long as the cached keys have not expired, Kong continues to validate tokens using the cached JWKS without contacting the authorization server.
+
 ---
 
 ## Configure the AI MCP Proxy tools
