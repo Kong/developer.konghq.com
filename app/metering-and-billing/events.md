@@ -95,7 +95,7 @@ rows:
   - property: "`source`"
     description: "Origin of the event (e.g. service name)."
   - property: "`subject`"
-    description: "The entity being metered (e.g. customer ID). See [Subjects](/metering-and-billing/subjects/)."
+    description: "The entity being metered (e.g. customer ID)."
   - property: "`data`"
     description: "JSON payload. Individual values can be extracted using [JSONPath](https://github.com/json-path/JsonPath)."
 {% endtable %}
