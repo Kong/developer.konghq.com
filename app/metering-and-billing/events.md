@@ -195,39 +195,3 @@ CloudEvents are unique by `id` and `source`. For more information, see [CloudEve
 You may need to pre-process events before they are ingested into {{site.metering_and_billing}}, to normalize data, enrich events, or calculate derived fields like cost for example.
 
 To pre-process events, use [Collectors](/metering-and-billing/collectors/), which support [Bloblang](https://docs.redpanda.com/redpanda-connect/guides/bloblang) mapping for transformations.
-
-## Monitoring event ingestion
-
-{{site.metering_and_billing}} provides a way to monitor the event ingestion pipeline in your infrastructure. Event ingestion monitoring can be useful for debugging, monitoring data quality, and ensuring that events are sent to {{site.metering_and_billing}} correctly.
-
-Monitoring the event ingestion pipeline can help you notice when:
-
-* Your system stopped sending events to {{site.metering_and_billing}}.
-* Ingested events are incorrect or missing fields.
-* {{site.metering_and_billing}} is having trouble processing events.
-
-The **TODO** API endpoint provides metrics in Prometheus format. You can use a Prometheus server or any other monitoring system that supports the [Prometheus format](https://prometheus.io/docs/instrumenting/exposition_formats/) to collect these metrics.
-
-### Counter resets
-
-The metrics counters reset at midnight UTC. The Prometheus query language offers functions like `increase` and `rate` to handle counter resets correctly.
-
-For example:
-* `increase(openmeter_events_total[24h])` returns the number of events for the last 24 hours
-* `rate(openmeter_events_total[1h])` returns the average per-second event read rate for the last hour
-
-### Available metrics
-
-The **TODO** API provides the `openmeter_events_total` metric, which counts the number of ingested events for each subject. Monitoring the number of ingested events can help you ensure that events are sent and processed correctly.
-
-Here's an example of the response for the `openmeter_events_total` counter metric:
-
-```
-# HELP openmeter_events Number of ingested events
-# TYPE openmeter_events counter
-openmeter_events_total{subject="customer-1"} 12345.0
-openmeter_events_total{subject="customer-2"} 67890.0
-```
-
-We recommend setting up an alert when the number of ingested events is significantly lower than expected. The correct threshold for the number of ingested events depends on your use case.
-
