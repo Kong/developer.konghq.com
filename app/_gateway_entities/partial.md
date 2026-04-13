@@ -229,6 +229,13 @@ variables:
   pgvector_password:
     value: $PGVECTOR_PASSWORD
     description: The password for your pgvector database.
+
+formats:
+  - admin-api
+  - kic
+  - deck
+  - terraform
+  - konnect-api
 {% endentity_example %}
 
 #### Embeddings Partial (OpenAI)
@@ -252,6 +259,13 @@ variables:
   openai_api_key:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key.
+
+formats:
+  - admin-api
+  - kic
+  - deck
+  - terraform
+  - konnect-api
 {% endentity_example %}
 
 #### Model Partial (OpenAI GPT-4o)
@@ -276,6 +290,13 @@ variables:
   openai_api_key:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key.
+
+formats:
+  - admin-api
+  - kic
+  - deck
+  - terraform
+  - konnect-api
 {% endentity_example %}
 
 ### Link AI Partials to plugins
