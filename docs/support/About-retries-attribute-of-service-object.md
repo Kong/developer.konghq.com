@@ -42,53 +42,23 @@ Below is an example of installing Kong on Docker.
 
 Please install Kong on Docker by following the official guide: Kong Docker Installation .
 
-## 1. How to check the behavior of the
+## 1. How to check the behavior of the retries attribute?
 
-```
-retries
-```
+**Step 1**: Set KONG_LOG_LEVEL=debug and reload Kong.
 
-attribute?
-
-Step 1: Set
-
-```
-KONG_LOG_LEVEL=debug
-```
-
-and reload Kong.
-
-In your container, set
-
-```
-KONG_LOG_LEVEL
-```
-
-to
-
-```
-debug
-```
-
-:
+In your container, set KONG_LOG_LEVEL to **debug**
 
 ```bash
 $ echo "KONG_LOG_LEVEL=debug kong reload exit" | docker exec -i kong-ee /bin/sh
 ```
 
-Step 2: Run the httpbin container.
+**Step 2**: Run the httpbin container.
 
 ```bash
 $ docker run -d --name httpbin --network=kong-ee-net -p 80:80 kennethreitz/httpbin
 ```
 
-Step 3: Create a service object linked to the httpbin container, setting
-
-```
-retries
-```
-
-(e.g., 5):
+**Step 3**: Create a service object linked to the httpbin container, setting retries
 
 ```bash
 $ curl -i -X POST http://localhost:8001/services \
@@ -97,7 +67,7 @@ $ curl -i -X POST http://localhost:8001/services \
   --data retries=5
 ```
 
-Step 4: Create a route object for the above service:
+**Step 4**: Create a route object for the above service:
 
 ```bash
 $ curl -i -X POST http://localhost:8001/services/example_service/routes \
@@ -105,7 +75,7 @@ $ curl -i -X POST http://localhost:8001/services/example_service/routes \
   --data name=mocking
 ```
 
-Step 5: Access the route successfully, receiving a 200 response:
+**Step 5**: Access the route successfully, receiving a 200 response:
 
 ```bash
 $ curl localhost:8000/mock -i
@@ -124,7 +94,7 @@ Via: kong/2.3.3.0-enterprise-edition
 ...
 ```
 
-Step 6: Stop the httpbin container, then access the route again:
+**Step 6**: Stop the httpbin container, then access the route again:
 
 ```bash
 $ docker stop httpbin
