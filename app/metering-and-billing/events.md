@@ -113,12 +113,13 @@ method: POST
 headers:
   - 'Accept: application/json, application/problem+json'
 body:
-  slug: api_requests_total
+  name: Total API requests
+  key: api-requests-total
   description: API Requests
-  eventType: request
-  valueProperty: $.duration_seconds
+  event_type: request
+  value_property: $.duration_seconds
   aggregation: SUM
-  groupBy:
+  dimensions:
     method: $.method
     route: $.route
 {% endkonnect_api_request %}
