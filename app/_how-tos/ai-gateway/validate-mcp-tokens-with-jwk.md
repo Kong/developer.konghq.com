@@ -122,7 +122,7 @@ faqs:
 
       Use token introspection when the authorization server issues opaque tokens (not JWTs), or when you need real-time token revocation checks on every request. Introspection requires `client_id`, `client_secret`, and `introspection_endpoint`.
 
-  - q: Do I still need client_id and client_secret in the plugin config with JWK validation?
+  - q: Do I still need `client_id` and `client_secret` in the plugin config with JWK validation?
     a: |
       No. The `client_id` and `client_secret` fields in the AI MCP OAuth2 plugin config are used for token introspection, where Kong calls the authorization server's introspection endpoint as a confidential client. With JWK validation, Kong validates tokens locally and does not need these credentials.
 
