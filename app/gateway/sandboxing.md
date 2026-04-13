@@ -218,6 +218,7 @@ kong.request.get_port
 kong.request.get_query
 kong.request.get_query_arg
 kong.request.get_raw_body
+kong.request.get_raw_headers
 kong.request.get_raw_path
 kong.request.get_raw_query
 kong.request.get_scheme
