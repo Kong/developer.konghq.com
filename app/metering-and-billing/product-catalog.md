@@ -183,29 +183,31 @@ rows:
     description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
 {% endtable %}
 
-### Using features
+### Feature configuration
 
-Features have a system generated ID and a user-defined key. They key should be an easy to understand string that can be used to reference the feature in your codebase, `gpt_4_tokens` for example.
+Features have a system generated ID and a user-defined key. The key should be an easy to understand string that can be used to reference the feature in your codebase, `gpt_4_tokens` for example.
 
-If you want to track usage for a feature, you can associate a meter with it. The associated meter will be used to track usage in metered entitlements of the feature, and it must have either `SUM` or `COUNT` as its aggregation type. You can also filter the usage tracked by the meter using the **Meter Group Filters** property. This is useful if you want to share the same meter across different features, but want to track and enforce usage separately based on a differentiating property. In this case, the meter must have the same group by keys defined.
+If you want to track usage for a feature, you can associate a [meter](/metering-and-billing/metering/) with it. The associated meter will be used to track usage in metered entitlements of the feature. You can also filter the usage tracked by the meter using the **Meter Group Filters** field. This is useful if you want to share the same meter across different features, but want to track and enforce usage separately based on a differentiating property. For example, if one meter tracks all model token usage, you can set a filter on `model=gpt-4` to track and enforce GPT-4 tokens separately from other models. In this case, the meter must have the same group by keys defined.
 
+{:.info}
+> The associated meter must use `SUM` or `COUNT` as its aggregation type.
 
 The following fields are available for feature configuration:
 
 {% table %}
 columns:
-  - title: Property
-    key: property
+  - title: Field
+    key: field
   - title: Description
     key: description
 rows:
-  - property: "Name"
+  - field: "Name"
     description: A human-readable display name for the feature.
-  - property: "Key"
+  - field: "Key"
     description: A unique lookup key to help access features in API or web.
-  - property: "Meter"
+  - field: "Meter"
     description: Optional. The meter to use to track usage of the feature.
-  - property: "Meter Group Filters"
+  - field: "Meter Group Filters"
     description: Optional. The filter for a subset of usage in the meter.
 {% endtable %}
 
