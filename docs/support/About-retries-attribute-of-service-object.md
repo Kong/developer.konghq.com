@@ -1,6 +1,6 @@
 ---
 # REQUIRED: The title that appears at the top of the page
-title: How do I check the behavior of the retries attribute?
+title: How to check the behavior of the retries attribute?
 
 # REQUIRED: Must be set to "support" for support articles
 content_type: support
