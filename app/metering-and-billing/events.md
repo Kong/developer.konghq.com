@@ -36,7 +36,7 @@ An event can be anything you need to track accurately over time for billing or a
 
 First, the {{site.metering_and_billing}} API accepts events in the [CloudEvents](https://cloudevents.io/) format and publishes them to Kafka topics before further processing them. This allows {{site.metering_and_billing}} to process events in batches and handle traffic spikes efficiently.
 
-The events are then processed by a custom [Kafka Consumer](https://github.com/openmeterio/openmeter/tree/main/cmd/sink-worker) written in Go, which validates events and ensures consistent deduplication and exactly-once inserts into ClickHouse. The Kafka Consumer scales horizontally by Kafka partitions, allowing for parallel processing of events and ensuring high availability.
+The events are then processed by a custom Kafka Consumer written in Go, which validates events and ensures consistent deduplication and exactly-once inserts into ClickHouse. The Kafka Consumer scales horizontally by Kafka partitions, allowing for parallel processing of events and ensuring high availability.
 
 {% mermaid %}
 flowchart LR
@@ -91,18 +91,18 @@ rows:
   - property: "`id`"
     description: "A unique event ID. Combined with `source` for deduplication."
   - property: "`time`"
-    description: "The timestamp in RFC3339 format. Defaults to the time the event was received."
+    description: "The timestamp in [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) format. Defaults to the time the event was received."
   - property: "`source`"
-    description: "The origin of the event (e.g. service name)."
+    description: "The origin of the event (for example, the Service name)."
   - property: "`subject`"
-    description: "The entity being metered (e.g. customer ID)."
+    description: "The entity being metered (for example, the customer ID)."
   - property: "`data`"
     description: "The JSON payload. Individual values can be extracted using [JSONPath](https://github.com/json-path/JsonPath)."
 {% endtable %}
 
 ## Event processing
 
-{{site.metering_and_billing}} continuously processes usage events, allowing you to update meters in real-time. Once an event is ingested, {{site.metering_and_billing}} aggregates the data based on your defined [meters](/metering-and-billing/metering/). For example, you can define meters called "Parallel jobs", and {{site.metering_and_billing}} will aggregate the maximum number of jobs by each customer over a given time period.
+{{site.metering_and_billing}} continuously processes usage events, allowing you to update meters in real time. Once an event is ingested, {{site.metering_and_billing}} aggregates the data based on your defined [meters](/metering-and-billing/metering/). For example, you can define meters called "Parallel jobs", and {{site.metering_and_billing}} will aggregate the maximum number of jobs by each customer over a given time period.
 
 Let's say you want to track serverless execution duration by endpoint and you defined the following meter:
 
@@ -128,7 +128,7 @@ body:
 {:.info}
 > `$.duration_seconds` is a JSONPath expression to access the `data.duration_seconds` property, providing powerful capabilities to extract values from nested data properties.
 
-The meter config above tells {{site.metering_and_billing}} to expect CloudEvents with `type=request` where the usage value is stored in the `data.duration_seconds`, and we need to sum them up by `data.route`. {{site.metering_and_billing}} will track the usage value for every time window when at least one event was reported and tracks it for every `subject` and `groupBy` permutation.
+The meter config above tells {{site.metering_and_billing}} to expect CloudEvents with `type=request` where the usage value is stored in the `data.duration_seconds`, and to sum them up by `data.route`. {{site.metering_and_billing}} will track the usage value for every time window when at least one event was reported, and for every `subject` and `groupBy` permutation.
 
 For example, when sending the following event:
 
@@ -185,7 +185,7 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-{{site.metering_and_billing}} will increase sum of the duration for the two events for the same time window (`windowstart`, `windowend`), `method`, `route` and `subject`:
+{{site.metering_and_billing}} will increase sum of the duration for the two events for the same time window (`windowstart`, `windowend`), `method`, `route`, and `subject`:
 ```
 windowstart   = "2024-01-01T00:00"
 windowend     = "2024-01-01T00:01"
