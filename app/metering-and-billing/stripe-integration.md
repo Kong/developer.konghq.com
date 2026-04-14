@@ -99,7 +99,7 @@ You can enable automatic tax calculation for your invoices using Stripe as a pay
 Stripe calculates tax based on:
 * Vendor location
 * Customer location
-* Product tax code (global default or per [rate card](/metering-and-billing/plans/#rate-cards))
+* Product tax code (global default or per [rate card](/metering-and-billing/product-catalog/#rate-cards))
 
   {:.info}
   > **Defining tax codes:** To define tax codes for rate cards, you can set default tax codes in the [billing settings in {{site.konnect_short_name}}](https://cloud.konghq.com/us/metering-billing/billing-profiles). You can also specify tax codes per rate card by editing the product catalog when creating a plan.

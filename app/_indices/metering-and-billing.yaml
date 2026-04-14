@@ -7,8 +7,6 @@ sections:
       - path: /metering-and-billing/overview/
       - path: /metering-and-billing/metering/
       - path: /metering-and-billing/product-catalog/
-      - path: /metering-and-billing/features/
-      - path: /metering-and-billing/plans/
       - path: /metering-and-billing/customer/
       - path: /metering-and-billing/billing-invoicing-subscriptions/
       - path: /metering-and-billing/events/
@@ -34,16 +32,16 @@ sections:
         url: /metering-and-billing/collectors/
       - title: Features
         description: Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice.
-        url: /metering-and-billing/features/
+        url: /metering-and-billing/product-catalog/#features
       - title: Plans
         description: Plans are a collection of rate cards that can be assigned to customers by starting a subscription.
-        url: /metering-and-billing/plans/
+        url: /metering-and-billing/product-catalog/#plans
       - title: Pricing models
         description: Pricing models describe how to price a feature, for example, free, flat fee, usage-based, or tiered.
-        url: /metering-and-billing/plans/#pricing-models
+        url: /metering-and-billing/product-catalog/#pricing-models
       - title: Entitlements
         description: Entitlements describe customer access, usage-limits, and configuration to features.
-        url: /metering-and-billing/plans/#entitlements
+        url: /metering-and-billing/product-catalog/#entitlements
   - title: Collectors
     items:
       - path: /metering-and-billing/collectors/**/*
