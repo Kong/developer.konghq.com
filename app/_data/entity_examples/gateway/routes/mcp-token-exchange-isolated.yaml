@@ -1,0 +1,9 @@
+name: mcp-token-exchange-isolated
+paths:
+  - /mcp-exchange
+  - /.well-known/oauth-protected-resource/mcp-exchange
+service:
+  name: mcp-token-exchange-isolated-service
+protocols:
+  - http
+  - https
