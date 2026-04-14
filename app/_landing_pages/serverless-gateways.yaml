@@ -26,7 +26,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+                    Serverless Gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless Gateways are ideal for lightweight production workloads, as well as development and testing.
 
                     Serverless Gateways offer the following benefits:
                     * {{site.konnect_short_name}} manages provisioning and placement.

@@ -1,9 +1,9 @@
 ---
-title: "Migrating a V0 Serverless Gateway to a V1"
+title: "Migrating a V0 Serverless Gateway to V1"
 content_type: reference
 layout: reference
 description: | 
-   Migrate a V0 Serverless Gateway to a V1.
+   Migrate a V0 Serverless Gateway to V1.
 
 beta: true
 
@@ -93,7 +93,8 @@ rows:
     If you prefer to use the API to create control planes and data planes, see the [Serverless Gateway reference](/serverless-gateways/reference/#konnect-apis).
 
 1. Import the control plane configuration to your new Serverless V1 gateway, making sure to target the new control plane.
-First, check the configuration diff:
+
+   First, check the configuration diff:
     
    ```sh
    deck gateway diff ./kong.yaml \
@@ -104,7 +105,7 @@ First, check the configuration diff:
 1. If you're satisfied with the update, run a sync to update your control plane:
     
    ```sh
-   deck gateway sync ./kong.yml \
+   deck gateway sync ./kong.yaml \
     --konnect-token "$KONNECT_TOKEN" \
     --konnect-control-plane-name "MY_NEW_SERVERLESS_V1_CP"
    ```
