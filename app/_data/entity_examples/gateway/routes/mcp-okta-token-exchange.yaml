@@ -1,9 +1,0 @@
-name: mcp-okta-token-exchange
-paths:
-  - /mcp/okta
-  - /.well-known/oauth-protected-resource/mcp/okta
-service:
-  name: mcp-okta-token-exchange-service
-protocols:
-  - http
-  - https
