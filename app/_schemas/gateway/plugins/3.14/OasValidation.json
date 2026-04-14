@@ -98,16 +98,12 @@
     },
     "protocols": {
       "default": [
-        "grpc",
-        "grpcs",
         "http",
         "https"
       ],
       "description": "A set of strings representing HTTP protocols.",
       "items": {
         "enum": [
-          "grpc",
-          "grpcs",
           "http",
           "https"
         ],
