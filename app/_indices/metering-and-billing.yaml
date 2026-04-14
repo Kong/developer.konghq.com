@@ -31,7 +31,7 @@ sections:
         description: Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
         url: /metering-and-billing/collectors/
       - title: Features
-        description: Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice.
+        description: Features are what you want to price or govern. Features are customer-facing, and when priced, they show up on the invoice. 
         url: /metering-and-billing/product-catalog/#features
       - title: Plans
         description: Plans are a collection of rate cards that can be assigned to customers by starting a subscription.
