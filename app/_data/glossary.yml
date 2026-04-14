@@ -228,9 +228,6 @@ metering_and_billing:
       - term: Payment terms
         description: |
           The conditions and timeframes under which a customer must pay for products or services.
-      - term: Progressive billing
-        description: |
-          A billing approach where invoicing thresholds are set in advance and a customer is charged automatically when their usage or spend reaches those limits.
       - term: Proration
         description: |
           The calculation of partial charges when subscription changes occur mid-billing cycle.
