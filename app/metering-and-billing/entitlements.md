@@ -99,7 +99,7 @@ The start of each period is marked by a reset: at reset, a new marker is set fro
 {{site.metering_and_billing}} automatically executes the reset when a new usage period starts, based on the entitlement configuration.
 
 If you want to maintain a continuous running balance where overage carries forward rather than being forgiven at the end of each period, set the **Preserve Overage** field on the entitlement.
-When toggled **on**, overage accumulated in the previous period is deducted from the starting balance of the new period.
+When this is enabled, overage accumulated in the previous period is deducted from the starting balance of the new period.
 
 ### Static entitlements
 

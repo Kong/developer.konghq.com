@@ -165,7 +165,7 @@ rows:
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#entitlements
+                url: /metering-and-billing/entitlements/
 
   - header:
       type: h2
