@@ -131,6 +131,13 @@
           ],
           "type": "string"
         },
+        "max_uri_args": {
+          "default": 100,
+          "description": "The maximum number of query string parameters to parse from the request URI. Nginx's default limit is 100.",
+          "maximum": 10000,
+          "minimum": 1,
+          "type": "integer"
+        },
         "port": {
           "default": 443,
           "description": "An integer representing a port number between 0 and 65535, inclusive.",
@@ -145,6 +152,11 @@
         "qualifier": {
           "description": "The qualifier to use when invoking the function.",
           "type": "string"
+        },
+        "reject_if_max_uri_args_exceeded": {
+          "default": false,
+          "description": "If enabled, the plugin returns a 414 URI Too Long response when the number of query string parameters exceeds `max_uri_args`, instead of forwarding the request to Lambda with truncated parameters.",
+          "type": "boolean"
         },
         "skip_large_bodies": {
           "default": true,
