@@ -4,13 +4,13 @@ This setup is intentionally separate from the JWK validation guide. It uses a de
 
 #### Install and run Keycloak
 
-1. Make sure the Docker network used by Kong Gateway exists:
+1. Make sure the Docker network used by {{site.ai_gateway}} exists:
 
     ```sh
     docker network create kong-quickstart-net
     ```
 
-1. Run Keycloak using Docker on the same network as Kong Gateway:
+1. Run Keycloak using Docker on the same network as {{site.ai_gateway}}:
 
     ```sh
     docker run -p 127.0.0.1:8080:8080 \
