@@ -134,15 +134,15 @@ rows:
 
 ### Grants
 
-Grants determine how much usage a customer is allowed to consume, for example, the `issueAfterReset` property of metered entitlements also creates a grant in the background. The ability to directly interact with grants gives you immense flexibility in configuring and managing your metered entitlements. A grant is a singular record of you granting some amount of usage to a specific customer via a metered entitlement.
+A grant is a record of usage allowance issued to a specific customer via a metered entitlement. Grants determine how much of a feature a customer is allowed to consume. You can interact with grants directly for precise control over how usage allowances are issued and managed.
 
-A metered entitlement works by running a balance calculation in which the feature usage is burnt down (deducted) from the grants issued for that entitlement. When issuing a grant you can define multiple behaviors for the grant that will affect how it behaves during that balance calculation.
+A metered entitlement tracks a running balance. When usage is reported, it is burnt down (deducted) from the grants issued for that entitlement. When issuing a grant, you can configure multiple behaviors that affect how it participates in this balance calculation.
 
-To automatically issue grants after the reset, set the issueAfterReset property in the entitlement.
+To automatically issue grants after each reset, set the `issueAfterReset` property on the entitlement.
 
-#### EffectiveAt and Expiration
+#### Effective date and expiration
 
-You can issue grants to be active in the past, present, or future (with the limit that it has to be later than the last reset time of the entitlement). The effectiveAt property of the grant determines when the grant becomes active, after that point the grants balance can be burnt down by the feature usage. You must define an expiration setting for the grant from which an expiresAt is calculated, after which no more usage can be burnt down from that grant. If a grant expires, any remaining balance it might have is lost.
+You can issue grants to be active in the past, present, or future (with the limit that it has to be later than the last reset time of the entitlement). The `effectiveAt` property of the grant determines when the grant becomes active; after that point the grant's balance can be burnt down by feature usage. You must define an expiration setting for the grant from which an `expiresAt` is calculated, after which no more usage can be burnt down from that grant. If a grant expires, any remaining balance it might have is lost.
 
 {% mermaid %}
 sequenceDiagram
@@ -162,15 +162,19 @@ sequenceDiagram
     Note over E,G1: Balance 50
 {% endmermaid %}
 
+#### Voiding
+
+Grants can be voided, which has the same effect as if their `expiresAt` has been reached. Voiding a grant will immediately stop any further usage from being burnt down from that grant. The remaining balance of the grant is lost.
+
 #### Priority
 
-Grants are burnt down in a deterministic order during balance calculation. Only grants that have a remaining balance can be burnt down, once a grant is fully consumed it is no longer considered for balance calculation. This order is reflected in burnDownHistory, a history segment ends either when the burn down order changes (grant fully consumed, or becoming active / inactive) or when the entitlement is reset. The burn down order is determined as follows:
+Grants are burnt down in a deterministic order during balance calculation. Only grants that have a remaining balance can be burnt down; once a grant is fully consumed it is no longer considered for balance calculation. This order is reflected in `burnDownHistory`: a history segment ends either when the burn-down order changes (grant fully consumed, or becoming active/inactive) or when the entitlement is reset. The burn-down order is determined as follows:
 
 1. First, grants with higher priority are burnt down before grants with lower priority.
 1. In case of grants with the same priority, the grant that is closest to its expiration date is burnt down first.
 1. In case of grants with the same priority and expiration, the grant that was created first is burnt down first.
 
-A lower number indicates a higher priority! Priority is a single byte integer, so the range is from 0 to 255 with 0 being the highest priority.
+A lower number indicates a higher priority. Priority is a single byte integer, so the range is from 0 to 255 with 0 being the highest priority.
 
 {% mermaid %}
 sequenceDiagram
@@ -192,43 +196,41 @@ sequenceDiagram
     end
 {% endmermaid %}
 
-#### Voiding Grants
-
-Grants can be voided which has the same effect as if their expiresAt has been reached. Voiding a grant will immediately stop any further usage from being burnt down from that grant. The remaining balance of the grant is lost.
-
 #### Rollover
 
-Rollover is a special behavior determining what happens to grants at a reset. You have two properties to control rollover: minRolloverAmount and maxRolloverAmount. At a reset the grant's balance is updated using the following calculation:
+Rollover is a special behavior determining what happens to grants at a reset. You have two properties to control rollover: `minRolloverAmount` and `maxRolloverAmount`. At a reset the grant's balance is updated using the following calculation:
 
 ```
 Balance After Reset = MIN(Max Rollover Amount, MAX(Balance Before Reset, Min Rollover Amount))
 ```
 
-Rollover lets you define how grant balance behaves accross resets, which provides two sets of capabilities: first, it lets you grant usage than can roll over accross resets, and second, you can issue grants that "top up" the balance after each reset. For example, if you wanted to issue additional 1000 usage from a one time purchase that can be used for a year, you can issue a grant with amount and maxRolloverAmount set to 1000 and expiration set to 1 year. Alternatively, if you wanted to set up a starting balance of 5000 based on the usage period, you could create a grant with amount, minRolloverAmount and maxRolloverAmount set to 5000, so after each reset the balance is topped up to 5000.
+The balance is floored at `minRolloverAmount` and capped at `maxRolloverAmount`.
+
+Rollover lets you define how grant balance behaves across resets, which provides two sets of capabilities: first, it lets you grant usage that can roll over across resets, and second, you can issue grants that "top up" the balance after each reset. For example, if you wanted to issue additional 1000 usage from a one-time purchase that can be used for a year, you can issue a grant with `amount` and `maxRolloverAmount` set to 1000 and expiration set to 1 year. Alternatively, if you wanted to set up a starting balance of 5000 based on the usage period, you could create a grant with `amount`, `minRolloverAmount`, and `maxRolloverAmount` set to 5000, so after each reset the balance is topped up to 5000.
 
 #### Recurrence
 
-Recurrence is a special behavior that lets you define grants that top up their balance at a regular interval. The way this is different from configuring minRolloverAmount in the above example is that its independent of the usage period and resets. For example, if you've already set up the starting balance of 5000 in the above example, but want to grant an additional 300 usage each day, you can create a grant with amount set to 300 and recurrence set to 1 day.
+Recurrence is a special behavior that lets you define grants that top up their balance at a regular interval. The way this is different from configuring `minRolloverAmount` in the above example is that it's independent of the usage period and resets. For example, if you've already set up the starting balance of 5000 in the above example, but want to grant an additional 300 usage each day, you can create a grant with `amount` set to 300 and recurrence set to 1 day.
 
 #### Example
 
-If a system is metered by token on usage, then as part of their subscription each customer gets 10.000 tokens/month. Certian users require more tokens than this, so we are granting them an additional 100.000 tokens/year for extra fees.
+If a system is metered by token on usage, then as part of their subscription each customer gets 10,000 tokens/month. Certain users require more tokens than this, so we are granting them an additional 100,000 tokens/year for extra fees.
 
-We would want the customer to first use their available balance from the 10.000 tokens/month allowed balance, and if they have used all of that, then they should start using the 100.000 tokens/year balance.
+We would want the customer to first use their available balance from the 10,000 tokens/month allowed balance, and if they have used all of that, then they should start using the 100,000 tokens/year balance.
 
 This can be achieved by creating two grants:
 
-1. Grant 1: 10.000 tokens that rolls over each month with the usage period, priority=5
-1. Grant 2: 100.000 tokens recurring each year, priority=10
+1. Grant 1: 10,000 tokens that rolls over each month with the usage period, `priority=5`
+1. Grant 2: 100,000 tokens recurring each year, `priority=10`
 
-#### Caveats
+#### Timestamp precision
 
-The entitlement engine stores historical usage data pre-aggregated in minute sized chunks. Due to this, events changing the entitlement balance (issuing grants, grants recurring, executing a reset...) cannot have sub-minute precision. This is achieved by simply flooring the relevant timestamps when executing the actions, so they can be then stored in history. This means that if you issue a grant with an effectiveAt of 2024-01-01T00:00:13Z, it will be rounded to 2024-01-01T00:00:00Z and the grant will be active from that point onwards. The same applies to expiration and recurrence settings, as well as reset effectiveAt.
+The entitlement engine stores historical usage data pre-aggregated in minute-sized chunks. Due to this, events changing the entitlement balance (issuing grants, grants recurring, executing a reset...) cannot have sub-minute precision. This is achieved by flooring the relevant timestamps when executing the actions, so they can be stored in history. This means that if you issue a grant with an `effectiveAt` of `2024-01-01T00:00:13Z`, it will be rounded to `2024-01-01T00:00:00Z` and the grant will be active from that point onwards. The same applies to expiration and recurrence settings, as well as reset `effectiveAt`.
 
 This has some potentially unexpected consequences when using entitlements, here are some examples:
 
 1. You do a reset on an entitlement, some usage is registered, and then you want to do another reset all in the same minute. The second reset will return an error, as due to truncation it would register at the same time as the first one, which is not allowed (you can only reset after the last reset took place).
-1. You issue a grant with effectiveAt now and then do a reset with effectiveAt now, within the same minute. The reset and the grant register for the same time, so even though the grant was created before reset was called, the reset won't operate on that grant as it will be part of the next usage period, not the previous one.
+1. You issue a grant with `effectiveAt` now and then do a reset with `effectiveAt` now, within the same minute. The reset and the grant register for the same time, so even though the grant was created before reset was called, the reset won't operate on that grant as it will be part of the next usage period, not the previous one.
 
 ### Billing cadence
 
