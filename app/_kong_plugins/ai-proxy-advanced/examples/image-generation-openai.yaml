@@ -1,5 +1,5 @@
 title: 'Image generation route'
-description: 'Configure an image generation route using OpenAI’s DALL·E 3 model.'
+description: 'Configure an image generation route using OpenAI’s GPT Image 1.5 model.'
 
 weight: 900
 

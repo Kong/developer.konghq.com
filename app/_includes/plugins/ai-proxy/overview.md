@@ -254,7 +254,7 @@ columns:
 
 features:
   - title: "[OpenAI](/ai-gateway/ai-providers/openai/)"
-    description: GPT-5, GPT-4, GPT-4o, GPT-3.5, DALL-E, Whisper, Sora, and text embedding models.
+    description: GPT-5, GPT-4, GPT-4o, GPT-3.5, GPT-Image, Whisper, Sora, and text embedding models.
 
   - title: "[Azure OpenAI](/ai-gateway/ai-providers/azure/)"
     description: Microsoft-hosted OpenAI models with Azure enterprise integration.

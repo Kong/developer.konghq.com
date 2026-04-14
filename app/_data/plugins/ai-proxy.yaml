@@ -726,7 +726,7 @@ providers:
         streaming: false
         upstream_path: '`/v1/images/edits`'
         route_type: 'image/v1/images/edits'
-        model_example: 'dall-e-2'
+        model_example: 'gpt-image-1.5'
         min_version: '3.11'
     realtime:
       supported: true
