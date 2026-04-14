@@ -39,21 +39,21 @@ Billing profiles can be managed from the [**Billing Profiles**](https://cloud.ko
 {% table %}
 columns:
   - title: Use Case
-    key: usecase
+    key: case
   - title: Description
     key: description
 rows:
-  - usecase: "[Recurring billing](#subscriptions)"
+  - case: "[Recurring billing](#subscriptions)"
     description: Monthly, weekly, or annual subscriptions.
-  - usecase: "[Usage-based pricing](#subscriptions)"
+  - case: "[Usage-based pricing](#subscriptions)"
     description: Metered pay-as-you-go, tiered, and volume-based pricing.
-  - usecase: "[Custom deals](#customer-billing-profile-overrides)"
+  - case: "[Custom deals](#customer-billing-profile-overrides)"
     description: Custom pricing and discounts for specific customers.
-  - usecase: "[Commitments](#discounts-and-commitments)"
+  - case: "[Commitments](#discounts-and-commitments)"
     description: Pre-purchase commitments, minimum spends, and much more.
-  - usecase: "[Discounts](#discounts-and-commitments)"
+  - case: "[Discounts](#discounts-and-commitments)"
     description: Plan-specific or customer-specific discounts.
-  - usecase: "[Trials and ramp-ups](/metering-and-billing/product-catalog/#plan-phases)"
+  - case: "[Trials and ramp-ups](/metering-and-billing/product-catalog/#plan-phases)"
     description: Time-based phases with different pricing and limits.
 {% endtable %}
 
@@ -100,14 +100,14 @@ Customer overrides can be useful for the following use cases:
 {% table %}
 columns:
   - title: Use Case
-    key: usecase
+    key: case
   - title: Description
     key: description
 rows:
-  - usecase: "Enterprise billing"
+  - case: "Enterprise billing"
     description: |
       Set up one billing profile for SaaS customers and another for Enterprise customers (with send invoice for bank transfer selected).
-  - usecase: "Migrating customers' billing"
+  - case: "Migrating customers' billing"
     description: |
       Create a new billing profile that you want to migrate customers to and then assign them to the new profile with a customer override. 
       <br><br>
@@ -119,9 +119,9 @@ rows:
       1. Finally, migrate existing customers one by one from the old billing profile to the new one, allowing you to monitor and control the migration process while maintaining service continuity.
       <br><br>
       
-      If you want to migrate a customer to an existing billing profile instead of creating a new one, make sure that the customer has a valid payment method in the that profile.
+      If you want to migrate a customer to an existing billing profile instead of creating a new one, make sure that the customer has a valid payment method in that profile.
 
-  - usecase: "Migrate customers to Stripe billing"
+  - case: "Migrate customers to Stripe billing"
     description: |
       Migrate customers to a Stripe billing profile using the [Stripe integration](/metering-and-billing/stripe-integration/).
 {% endtable %}

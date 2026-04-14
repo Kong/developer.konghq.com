@@ -20,7 +20,7 @@ related_resources:
 
 ---
 
-Entitlements let you control customer access to features defined on a [rate card](/metering-and-billing/product-catalog/#rate-cards) making it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
+Entitlements let you control customer access to features defined on a [rate card](/metering-and-billing/product-catalog/#rate-cards), making it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
 
 Entitlements are an attribute of rate cards. You must configure entitlements when configuring a rate card.
 
@@ -31,19 +31,19 @@ Entitlements are an attribute of rate cards. You must configure entitlements whe
 {% table %}
 columns:
   - title: Use Case
-    key: usecase
+    key: case
   - title: Description
     key: description
 rows:
-  - usecase: Usage limits
+  - case: Usage limits
     description: Enforce usage limits like monthly token allowances.
-  - usecase: Plan variance
+  - case: Plan variance
     description: Offer tiered plans with different feature sets.
-  - usecase: Custom quotes
+  - case: Custom quotes
     description: Offer custom quotes and per-customer pricing.
-  - usecase: Prepaid billing
+  - case: Prepaid billing
     description: Adopt prepaid billing and handle top-ups.
-  - usecase: Commitments
+  - case: Commitments
     description: Define and track pre-purchase commitments.
 {% endtable %}
 
@@ -63,7 +63,7 @@ rows:
       Allow customers to consume features up to a certain usage limit. For example, 10 million monthly tokens.
       <br><br>
       This is useful when the underlying resources are expensive, as is the case for most AI products. 
-      Metered entitlements leverage the usage information collected by {{site.metering_and_billing}} and give you the ability to do real time usage enforcement, as well as historical queries and access checks.
+      Metered entitlements leverage the usage information collected by {{site.metering_and_billing}} and give you the ability to do real-time usage enforcement, as well as historical queries and access checks.
       <br><br>
       When configuring a metered entitlement, you can set the following:
 
@@ -81,7 +81,7 @@ rows:
     description: |
       Describe access to specific features, like SAML SSO, without needing configuration or metering.
       <br><br>
-      In cases where you don't need to set up usage limits or configure customer level settings,
+      In cases where you don't need to set up usage limits or configure customer-level settings,
       you can use boolean entitlements. 
       These are simple `true` or `false` access grants to a feature.
 {% endtable %}
@@ -104,9 +104,9 @@ When toggled **on**, overage accumulated in the previous period is deducted from
 ### Static entitlements
 
 Static entitlements let you define customer- or plan-specific configuration for a given feature as a JSON value. 
-For example, you could give freemium users access to only a subset of AI models by specifying which models are available based on their tier.
+For example, you could give free trial users access to only a subset of AI models by specifying which models are available based on their tier.
 
-The configuration you pass has to be a JSON parsable string in object format. 
+The configuration you pass has to be a JSON-parsable string in object format. 
 For example:
 
 ```json
