@@ -248,11 +248,11 @@ This is supported by the following IdPs:
 * [Okta](/how-to/okta-dcr/)
 * [Custom HTTP DCR bridge](#configure-a-custom-idp-for-dynamic-client-registration)
   
-  {:.warning}
-  > **HTTP DCR bridge credential rotation:**
-  > To make sure that their developers have access to the credential API endpoints, {{site.dev_portal}} admins must ensure that the HTTP DCR bridge supports credential rotation based on the provided API spec.
-  > The number of active credentials supported per application is determined by the identity provider configured in the HTTP DCR bridge.
-  
+{:.warning}
+> **HTTP DCR bridge credential rotation:**
+> To make sure that their developers have access to the credential API endpoints, {{site.dev_portal}} admins must ensure that the HTTP DCR bridge supports credential rotation based on the provided API spec.
+> The number of active credentials supported per application is determined by the identity provider configured in the HTTP DCR bridge.
+
 
 {{site.dev_portal}} admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and {{site.dev_portal}} admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
 
