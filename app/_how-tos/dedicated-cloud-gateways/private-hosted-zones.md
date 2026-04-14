@@ -24,6 +24,12 @@ related_resources:
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
   - text: Amazon VPC Documentation
     url: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:

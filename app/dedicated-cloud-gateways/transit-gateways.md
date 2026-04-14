@@ -36,6 +36,12 @@ related_resources:
     url: /how-to/create-transit-gateway-with-operator-and-aws/
   - text: Use AWS workload identities
     url: /dedicated-cloud-gateways/reference/#aws-workload-identities
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/

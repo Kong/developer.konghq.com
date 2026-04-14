@@ -61,6 +61,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+availability_zones
 Avalara
 Avro
 aws
@@ -118,6 +119,7 @@ chatbot
 chatbots
 chatwise
 cidr
+cidr_block
 cidrs
 cleartext
 cli
@@ -132,6 +134,7 @@ CloudFormation
 CloudFormation
 Cloudformation
 Cloudformation
+cloud_gateway_provider_account_id
 Cloudsmith
 cmd
 cncf
