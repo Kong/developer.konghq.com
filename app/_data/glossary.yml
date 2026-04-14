@@ -146,3 +146,197 @@ definitions:
       When running Kong Gateway in Konnect, entity and user segmentation is handled through Control Planes and Control Plane Groups.
     url: |
       [Workspace entity](/gateway/entities/workspace/)
+
+metering_and_billing:
+  - category: Metering
+    definitions:
+      - term: Metering
+        description: |
+          Real-time event-based usage metering to aggregate consumption over time precisely.
+        url: "N/A"
+      - term: Usage
+        description: |
+          The consumption of a product or service measured through events and aggregated over time.
+        url: "N/A"
+      - term: Billable Event
+        description: |
+          The smallest unit of work that can be billed.
+        url: "N/A"
+  - category: Pricing
+    definitions:
+      - term: Packaging
+        description: |
+          The process of bundling products and services together.
+        url: "N/A"
+      - term: Recurring Pricing
+        description: |
+          A pricing model where customers pay for products or services on a recurring basis.
+        url: "N/A"
+      - term: Seat-Based Pricing
+        description: |
+          A pricing model where a customer pays for a product or service based on the number of seats.
+        url: "N/A"
+      - term: Usage-Based Pricing
+        description: |
+          A pricing model where a customer pays for a product or service based on their usage.
+        url: "N/A"
+      - term: Credit-Based Pricing
+        description: |
+          A pricing model where a customer pays for a product or service based on the number of credits.
+        url: "N/A"
+      - term: Outcome-Based Pricing
+        description: |
+          A pricing model where a customer pays for a product or service based on the outcome.
+        url: "N/A"
+      - term: Hybrid Pricing
+        description: |
+          Hybrid pricing models have recurring and usage-based components.
+        url: "N/A"
+      - term: Value Metric
+        description: |
+          The unit of measurement that determines how a product or service is priced based on customer value received.
+        url: "N/A"
+  - category: Pricing Models
+    definitions:
+      - term: Per-Unit Pricing
+        description: |
+          A pricing model where a customer pays for a product or service based on the amount of units consumed.
+        url: "N/A"
+      - term: Overage Pricing
+        description: |
+          Overage pricing is paid by the customer when they exceed their pre-defined usage limit.
+        url: "N/A"
+      - term: Tiered Pricing
+        description: |
+          Tiered Pricing is a model where fees vary between usage levels.
+        url: "N/A"
+      - term: Graduated Pricing
+        description: |
+          A pricing model where a product or service is priced differently based on the quantity purchased.
+        url: "N/A"
+      - term: Volume Pricing
+        description: |
+          Volume pricing is a model where you charge customers based on the highest achieved tier.
+        url: "N/A"
+  - category: Billing
+    definitions:
+      - term: Add-On
+        description: |
+          An add-on is a product or service that is added to a subscription.
+        url: "N/A"
+      - term: Billing Anchor
+        description: |
+          The specific day of the month or time period that determines when a customer's billing cycle starts and ends.
+        url: "N/A"
+      - term: Commitments
+        description: |
+          Commitments can be used to cover vendor upfront costs and create a more predictable revenue stream.
+        url: "N/A"
+      - term: Entitlements
+        description: |
+          Entitlements are the rules that determine what a customer is entitled to.
+        url: "N/A"
+      - term: Grandfathering
+        description: |
+          Grandfathering means to keep existing customers on the old pricing model while applying new pricing to new customers.
+        url: "N/A"
+      - term: Paid In Advance
+        description: |
+          Paid in advance is a billing model where a customer pays for a product or service in advance.
+        url: "N/A"
+      - term: Paid In Arrears
+        description: |
+          Paid in arrears is a billing model where a customer pays for a product or service after it has been used.
+        url: "N/A"
+      - term: Payment Terms
+        description: |
+          The conditions and timeframes under which a customer must pay for products or services.
+        url: "N/A"
+      - term: Paywall
+        description: |
+          A digital barrier that restricts access to content or features until users pay or subscribe.
+        url: "N/A"
+      - term: Progressive Billing
+        description: |
+          With progressive billing, vendors set invoicing thresholds, and customers are billed when limits are reached.
+        url: "N/A"
+      - term: Proration
+        description: |
+          The calculation of partial charges when changes occur mid-billing cycle.
+        url: "N/A"
+      - term: Reverse Trial
+        description: |
+          A reverse trial is a trial period where the customer has access to premium features before the trial period ends.
+        url: "N/A"
+      - term: Utilization
+        description: |
+          The measure of how much a customer uses a product, feature or service compared to their purchased capacity or limits.
+        url: "N/A"
+  - category: Payment
+    definitions:
+      - term: Dunning
+        description: |
+          Dunning is the process of sending a reminder to a customer to pay for a product or service.
+        url: "N/A"
+      - term: Grace Period
+        description: |
+          Grace period is a period of time after a customer has missed a payment.
+        url: "N/A"
+      - term: Payment Gateway
+        description: |
+          A technology service that processes credit card payments for online and in-person transactions.
+        url: "N/A"
+      - term: Payment Processing Fee
+        description: |
+          Charges imposed by payment processors and financial institutions for handling payment transactions.
+        url: "N/A"
+      - term: Payment Schedule
+        description: |
+          A predetermined timeline specifying when payments are due for products or services.
+        url: "N/A"
+      - term: Revenue Leakage
+        description: |
+          Revenue leakage occurs when a business fails to collect all potential revenue due to billing errors or inefficient operations.
+        url: "N/A"
+      - term: Revenue Recognition
+        description: |
+          Revenue recognition is the process of recognizing revenue when it is earned.
+        url: "N/A"
+      - term: Invoice Aging
+        description: |
+          A report that categorizes unpaid customer invoices based on the length of time they have been outstanding.
+        url: "N/A"
+      - term: Invoice Due Date
+        description: |
+          The date on which a customer is expected to pay an invoice.
+        url: "N/A"
+      - term: Invoice Reconciliation
+        description: |
+          The process of matching invoices with payments received and ensuring billing records are accurate and consistent.
+        url: "N/A"
+  - category: SaaS
+    definitions:
+      - term: Churn
+        description: |
+          Churn is the rate at which customers cancel their subscriptions.
+        url: "N/A"
+      - term: Customer Acquisition Cost
+        description: |
+          The total cost of acquiring a new customer, including marketing and sales expenses.
+        url: "N/A"
+      - term: Net Revenue Retention
+        description: |
+          Net Revenue Retention is a metric that measures the percentage of revenue that a company retains from its existing customers.
+        url: "N/A"
+      - term: Expansion
+        description: |
+          Expansion is the process of upselling or cross-selling additional products or services to existing customers.
+        url: "N/A"
+      - term: ARR
+        description: |
+          Annual Recurring Revenue is the amount of money a company expects to generate from recurring customers.
+        url: "N/A"
+      - term: MRR
+        description: |
+          Monthly Recurring Revenue is the amount of money a company expects to generate from recurring customers.
+        url: "N/A"
