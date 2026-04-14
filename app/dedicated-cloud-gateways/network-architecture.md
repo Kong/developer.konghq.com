@@ -28,12 +28,13 @@ In a Dedicated Cloud Gateway, Kong manages the gateway infrastructure (compute, 
 A complete Dedicated Cloud Gateway deployment consists of this Kong-managed network infrastructure and the cloud infrastructure with the upstream services you manage.
 
 The following diagram shows how traffic flows in a Dedicated Cloud Gateway:
-
+<!--vale off-->
 {% mermaid %}
 flowchart LR
     A(API consumers) --> |inbound edge| B(Kong data planes)
     B --> |upstream path| C(Your services)
 {% endmermaid %}
+<!--vale on-->
 
 The networking decisions you make govern both hops independently.
 
@@ -51,7 +52,7 @@ The Kong-managed gateway infrastructure consists of data plane nodes that run on
 The Kong-managed data plane nodes automatically scale with your throughput. 
 
 The following diagram shows what the Kong-managed architecture looks like if you chose AWS as your provider:
-
+<!--vale off-->
 {% mermaid %}
 flowchart LR
     subgraph kong_account["Kong-managed AWS infra"]
@@ -66,6 +67,7 @@ flowchart LR
 
     style kong_account stroke-dasharray:3,rx:10,ry:10
 {% endmermaid %}
+<!--vale on-->
 
 In a Dedicated Cloud Gateway, the Kong-managed infrastructure would communicate with your own cloud infrastructure that contains your databases, APIs, and other resources.
 Your infrastructure can run on virtual machines (VMs), managed container platforms like ECS, Kubernetes managed pods, or a combination of multiple platforms.
@@ -77,11 +79,11 @@ If the services are in Kubernetes managed pods, they can either be exposed via a
 Before you deploy a Dedicated Cloud Gateway, you'll need to determine if you should deploy a public or private gateway, or both.
 Which you deploy depends on how API consumers are reaching your gateway and how you want data planes to reach your backend services:
 
-* **[Public](/dedicated-cloud-gateway/public-network/):** Use public if:
+* **[Public](/dedicated-cloud-gateways/public-network/):** Use public if:
   * You expose services to the internet with custom access control
   * Want minimal setup and are securing at the Kong layer
   * You're proxying your own infrastructure over the public internet
-* **[Private](/dedicated-cloud-gateway/private-network/):** Use private if:
+* **[Private](/dedicated-cloud-gateways/private-network/):** Use private if:
   * Your upstream services are on one or more private network (VPC or VNET)
   * You don't expose services to the public internet
   * Require network isolation or full edge control
@@ -121,6 +123,10 @@ features:
 
 
 ## Multi-cloud architecture
+
+{% include sections/dcgw-multi-cloud-intro.md %}
+
+For more information, see [Multi-cloud Dedicated Cloud Gateway network architecture](/dedicated-cloud-gateways/multi-cloud/).
 
 ## Dedicated Cloud Gateway network CIDR range
 
@@ -179,24 +185,25 @@ region: global
    export CLOUD_PROVIDER_ID='YOUR CLOUD PROVIDER ID'
    ```
 1. Send a `POST` request to the [`/cloud-gateways/networks` endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-network) to create your Dedicated Cloud Gateway network:
-{% konnect_api_request %}
-url: /v2/cloud-gateways/networks
-method: POST
-region: global
-body:
-  name: "us-east-2 network"
-  cloud_gateway_provider_account_id: "$CLOUD_PROVIDER_ID"
-  region: "us-east-2"
-  availability_zones:
-    - "use2-az1"
-    - "use2-az2"
-    - "use2-az3"
-  cidr_block: "10.4.0.0/16"
-{% endkonnect_api_request %}
+   {% konnect_api_request %}
+   url: /v2/cloud-gateways/networks
+   method: POST
+   region: global
+   body:
+     name: "us-east-2 network"
+     cloud_gateway_provider_account_id: "$CLOUD_PROVIDER_ID"
+     region: "us-east-2"
+     availability_zones:
+       - "use2-az1"
+       - "use2-az2"
+       - "use2-az3"
+     cidr_block: "10.4.0.0/16"
+   {% endkonnect_api_request %}
 {% endnavtab %}
 {% navtab "Terraform" %}
 [Create a Dedicated Cloud Gateway network](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/cloud-gateways.tf):
 
+<!--vale off-->
 ```hcl
 echo '
 data "konnect_cloud_gateway_provider_account_list" "my_cloudgatewayprovideraccountlist" {
@@ -219,6 +226,7 @@ resource "konnect_cloud_gateway_network" "my_cloudgatewaynetwork" {
 }
 ' >> main.tf
 ```
+<!--vale on-->
 
 Apply changes:
 ```sh

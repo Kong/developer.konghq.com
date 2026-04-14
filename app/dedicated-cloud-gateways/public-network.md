@@ -46,7 +46,7 @@ Kong data planes egress to your upstream services over the public internet.
 You must allowlist these IPs at your firewall or load balancer so that only Kong proxy traffic can reach your backends.
 
 The following diagram shows how the architecture of a public Dedicated Cloud Gateway:
-
+<!--vale off-->
 {% mermaid %}
 flowchart LR
     subgraph kong_account["Cloud provider"]
@@ -79,6 +79,7 @@ flowchart LR
 
     style kong_account stroke-dasharray:3,rx:10,ry:10
 {% endmermaid %}
+<!--vale on-->
 
 ## Security controls
 
@@ -148,7 +149,7 @@ You must configure your upstream firewall, security group, or load balancer to a
 This ensures that even if a Service is publicly accessible, only your Kong data
 planes can call it.
 
-{:.note}
+{:.info}
 > Egress IPs are scoped per Dedicated Cloud Gateway network and per region. 
 > If you use multiple Dedicated Cloud Gateway networks, allowlist the egress IPs from each relevant network.
 
@@ -237,7 +238,7 @@ formats:
   - deck
 {% endentity_examples %}
 
-{:.note}
+{:.info}
 > Replace `env/KONG_SHARED_SECRET` with the path matching your configured
 > vault backend (`hcv`, `aws`, `gcp`, or `env`). See the
 > [Secrets management documentation](/gateway/secrets-management/)

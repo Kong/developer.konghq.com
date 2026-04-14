@@ -136,6 +136,7 @@ Cloudsmith
 cmd
 cncf
 cncf's
+CNAMEs
 Cohere
 cohere
 Cognito
@@ -1023,6 +1024,7 @@ vLLM
 vllm
 vms
 vnet
+VNets
 vpc
 vpcs
 VS Code
