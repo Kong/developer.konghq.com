@@ -262,8 +262,6 @@ cleanup:
 automated_tests: false
 ---
 
-This guide is intentionally isolated from the JWK validation flow. It uses a dedicated upstream MCP service, a separate MCP route, a different protected resource URL, and separate Keycloak clients and environment variables.
-
 ## Configure the AI MCP Proxy plugin in passthrough-listener mode
 
 Configure the [AI MCP Proxy plugin](/plugins/ai-mcp-proxy/) in `passthrough-listener` mode on the `mcp-token-exchange-isolated` Route. This mode proxies incoming MCP requests directly to the upstream MCP server while preserving the exchanged bearer token on the upstream request.
