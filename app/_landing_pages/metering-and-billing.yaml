@@ -144,7 +144,7 @@ rows:
               icon: /assets/icons/widgets.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#features
+                url: /metering-and-billing/features/
       - blocks:
           - type: card
             config:
@@ -154,7 +154,7 @@ rows:
               icon: /assets/icons/service-hub.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#plans
+                url: /metering-and-billing/plans/
 
       - blocks:
           - type: card
@@ -165,7 +165,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#pricing-models
+                url: /metering-and-billing/plans/#pricing-models
       - blocks:
           - type: card
             config:
@@ -175,7 +175,7 @@ rows:
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#entitlements
+                url: /metering-and-billing/plans/#entitlements
 
   - header:
       type: h2

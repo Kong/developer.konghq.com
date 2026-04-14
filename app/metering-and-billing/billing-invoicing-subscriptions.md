@@ -78,7 +78,7 @@ Configure customer overrides by navigating to **{{site.metering_and_billing}}** 
 
 ## Invoicing 
 
-Invoices are created when a subscription starts and are kept up-to-date with the subscription state. The subscription [Rate Card](/metering-and-billing/product-catalog/#rate-cards) governs the price and the invoicing frequency for the specified feature. For example, a subscription with a single in-advance flat fee billed monthly will generate one invoice per month.
+Invoices are created when a subscription starts and are kept up-to-date with the subscription state. The subscription [Rate Card](/metering-and-billing/plans/#rate-cards) governs the price and the invoicing frequency for the specified feature. For example, a subscription with a single in-advance flat fee billed monthly will generate one invoice per month.
 
 {{site.metering_and_billing}} invoices follow a well-defined lifecycle that aligns directly with their associated subscription periods. Each invoice serves as an immutable record of billing information, which ensures complete data integrity and audit compliance throughout the billing process.
 

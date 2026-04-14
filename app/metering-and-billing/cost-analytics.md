@@ -140,7 +140,7 @@ To view and manage existing overrides, click the **Show Overrides** on the LLM C
 ## Cost analytics queries
 
 Cost analytics lets you query and visualize the computed cost of feature usage over time. 
-It is available for any feature that has a [unit cost](/metering-and-billing/product-catalog/#unit-cost) configured.
+It is available for any feature that has a [unit cost](/metering-and-billing/features/#unit-cost) configured.
 {{site.metering_and_billing}} computes the total cost by multiplying usage by the per-unit price.
 
 You can group cost data by customer, subject, or custom dimensions (using the group by dimension, such as model, provider, or region). Each entry shows the metered usage value for the period, the computed cost in the configured currency, and the group by dimensions values. 

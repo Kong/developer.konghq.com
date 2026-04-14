@@ -105,7 +105,7 @@ rows:
 
 ## Create a feature
 
-Meters collect raw usage data, but [features](/metering-and-billing/product-catalog/#features) make that data billable. 
+Meters collect raw usage data, but [features](/metering-and-billing/features/) make that data billable. 
 Without a feature, usage is tracked but not invoiced. 
 Now that you're metering agent runs, you need to associate that meter with a feature.
 
@@ -122,7 +122,7 @@ Plans are the core building blocks of your [product catalog](/metering-and-billi
 They are a collection of rate cards that define the price and access of a feature. 
 Plans can be assigned to customers by starting a subscription.
 
-A [rate card](/metering-and-billing/product-catalog/#rate-cards) describes the price and usage limits or access control for a feature. 
+A [rate card](/metering-and-billing/plans/#rate-cards) describes the price and usage limits or access control for a feature. 
 Rate cards are made up of the associated feature, price, and optional entitlements.
 
 In this section, you'll create an Premium Plan plan that charges customers $1 per agent run per month:
