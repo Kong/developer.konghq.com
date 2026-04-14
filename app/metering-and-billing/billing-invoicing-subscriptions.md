@@ -43,17 +43,17 @@ columns:
   - title: Description
     key: description
 rows:
-  - usecase: [Recurring billing](#subscriptions)
+  - usecase: "[Recurring billing](#subscriptions)"
     description: Monthly, weekly, or annual subscriptions.
-  - usecase: [Usage-based pricing]
+  - usecase: "[Usage-based pricing](#subscriptions)"
     description: Metered pay-as-you-go, tiered, and volume-based pricing.
-  - usecase: [Custom deals](#customer-billing-profile-overrides)
+  - usecase: "[Custom deals](#customer-billing-profile-overrides)"
     description: Custom pricing and discounts for specific customers.
-  - usecase: [Commitments](#discounts-and-commitments)
+  - usecase: "[Commitments](#discounts-and-commitments)"
     description: Pre-purchase commitments, minimum spends, and much more.
-  - usecase: [Discounts](#discounts-and-commitments)
+  - usecase: "[Discounts](#discounts-and-commitments)"
     description: Plan-specific or customer-specific discounts.
-  - usecase: [Trials and ramp-ups](/metering-and-billing/product-catalog/#plan-phases)
+  - usecase: "[Trials and ramp-ups](/metering-and-billing/product-catalog/#plan-phases)"
     description: Time-based phases with different pricing and limits.
 {% endtable %}
 
@@ -93,11 +93,39 @@ By default, customers are pinned to the default billing profile. Customer overri
 This is useful when you have different billing needs for different customers. 
 For example, you might want some customers to be billed via Stripe and others via bank transfer.
 
-Customer overrides can be useful for the following use cases:
-* **Enterprise billing**: Set up one billing profile for SaaS customers and another for Enterprise customers (with send invoice for bank transfer selected).
-* **Migrating customers billing**: Create a new billing profile that you want to migrate customers to and then assign them to the new profile with a customer override.
-
 Configure customer overrides by navigating to **{{site.metering_and_billing}}** > [**Billing**](https://cloud.konghq.com/metering-billing/customers), click a customer, then navigate to the **Billing Profile** section of the customer settings.
+
+Customer overrides can be useful for the following use cases:
+
+{% table %}
+columns:
+  - title: Use Case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "Enterprise billing"
+    description: |
+      Set up one billing profile for SaaS customers and another for Enterprise customers (with send invoice for bank transfer selected).
+  - usecase: "Migrating customers' billing"
+    description: |
+      Create a new billing profile that you want to migrate customers to and then assign them to the new profile with a customer override. 
+      <br><br>
+      Here's how to safely migrate customers:
+      <br><br>
+      1. Create a new billing profile that will serve as the target for migration.
+      1. Ensure all existing customers are explicitly pinned to the old billing profile. This prevents any disruption during the migration process.
+      1. Set the new billing profile as the default, which means any new customers will automatically use it.
+      1. Finally, migrate existing customers one by one from the old billing profile to the new one, allowing you to monitor and control the migration process while maintaining service continuity.
+      <br><br>
+      
+      If you want to migrate a customer to an existing billing profile instead of creating a new one, make sure that the customer has a valid payment method in the that profile.
+
+  - usecase: "Migrate customers to Stripe billing"
+    description: |
+      Migrate customers to a Stripe billing profile using the [Stripe integration](/metering-and-billing/stripe-integration/).
+{% endtable %}
+
 
 ## Tax calculations
 
