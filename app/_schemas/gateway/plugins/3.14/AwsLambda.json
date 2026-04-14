@@ -134,7 +134,7 @@
         "max_uri_args": {
           "default": 100,
           "description": "The maximum number of query string parameters to parse from the request URI. Nginx's default limit is 100.",
-          "maximum": 10000,
+          "maximum": 1000,
           "minimum": 1,
           "type": "integer"
         },
