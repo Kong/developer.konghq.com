@@ -1,8 +1,0 @@
-name: weather-token-exchange-route
-paths:
-  - /api/weather-exchange
-service:
-  name: weather-token-exchange-service
-protocols:
-  - http
-  - https

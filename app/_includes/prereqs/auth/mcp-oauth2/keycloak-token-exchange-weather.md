@@ -27,14 +27,14 @@ This setup is intentionally separate from the JWK validation guide. It uses a de
 #### Create the isolated realm
 
 1. In the top-left realm menu, click **Create realm**.
-1. Set the realm name to `weather-exchange`.
+1. Set the realm name to `token-exchange`.
 1. Click **Create**.
 
 #### Create the MCP client
 
 This client represents the application or agent that requests access to the MCP server.
 
-1. In the `weather-exchange` realm sidebar, open **Clients**, then click **Create client**.
+1. In the `token-exchange` realm sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 
 <!--vale off-->
@@ -48,7 +48,7 @@ rows:
   - section: "**General settings**"
     settings: |
       * Client type: **OpenID Connect**
-      * Client ID: `weather-exchange-client`
+      * Client ID: `token-exchange-client`
   - section: "**Capability config**"
     settings: |
       * Toggle **Client authentication** to **on**
@@ -60,7 +60,7 @@ rows:
 
 This client represents {{site.base_gateway}}. It performs token introspection and token exchange.
 
-1. In the `weather-exchange` realm sidebar, open **Clients**, then click **Create client**.
+1. In the `token-exchange` realm sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 
 <!--vale off-->
@@ -74,7 +74,7 @@ rows:
   - section: "**General settings**"
     settings: |
       * Client type: **OpenID Connect**
-      * Client ID: `weather-exchange-gateway`
+      * Client ID: `token-exchange-gateway`
   - section: "**Capability config**"
     settings: |
       * Toggle **Client authentication** to **on**
@@ -82,13 +82,14 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Add an audience mapper to the MCP client
+#### Create an optional audience scope for token exchange
 
-Add a protocol mapper to `weather-exchange-client` so that tokens it obtains include `weather-exchange-gateway` in the `aud` claim. Keycloak requires the exchanging client to be present in the subject token's audience. Without this mapper, the token exchange request fails with "Client is not within the token audience".
+Create an optional client scope that adds `token-exchange-gateway` to the `aud` claim. Keycloak requires the exchanging client to be present in the subject token's audience. Without this mapper, the token exchange request fails with "Client is not within the token audience".
 
-1. In the sidebar, open **Clients** and select `weather-exchange-client`.
-1. Open the **Client scopes** tab.
-1. Click the `weather-exchange-client-dedicated` scope.
+1. In the sidebar, open **Client scopes**, then click **Create client scope**.
+1. Set the name to `add-token-exchange-gateway-audience`.
+1. Click **Save**.
+1. Open the **Mappers** tab.
 1. Click **Configure a new mapper** and select **Audience**.
 1. Configure the mapper:
 
@@ -101,13 +102,18 @@ columns:
     key: value
 rows:
   - field: "**Name**"
-    value: "`add-weather-exchange-gateway-audience`"
+    value: "`add-token-exchange-gateway-audience`"
   - field: "**Included Client Audience**"
-    value: "`weather-exchange-gateway`"
+    value: "`token-exchange-gateway`"
   - field: "**Add to access token**"
     value: "**on**"
 {% endtable %}
 <!--vale on-->
+
+1. In the sidebar, open **Clients** and select `token-exchange-client`.
+1. Open the **Client scopes** tab.
+1. Click **Add client scope**.
+1. Check `add-token-exchange-gateway-audience`, click **Add**, and set it as **Optional**.
 
 #### Create a test user
 
@@ -119,22 +125,22 @@ rows:
 
 #### Export environment variables
 
-1. In the sidebar, open **Clients** and select `weather-exchange-client`. Open the **Credentials** tab and copy the client secret.
+1. In the sidebar, open **Clients** and select `token-exchange-client`. Open the **Credentials** tab and copy the client secret.
 1. Export the following environment variables:
 
    ```sh
-   export DECK_WEATHER_EXCHANGE_CLIENT_ID='weather-exchange-client'
-   export DECK_WEATHER_EXCHANGE_CLIENT_SECRET='<weather-exchange-client secret from Keycloak>'
+   export DECK_TOKEN_EXCHANGE_CLIENT_ID='token-exchange-client'
+   export DECK_TOKEN_EXCHANGE_CLIENT_SECRET='<token-exchange-client secret from Keycloak>'
    ```
 
-1. In the sidebar, open **Clients** and select `weather-exchange-gateway`. Open the **Credentials** tab and copy the client secret.
+1. In the sidebar, open **Clients** and select `token-exchange-gateway`. Open the **Credentials** tab and copy the client secret.
 1. Export the following environment variables:
 
    ```sh
-   export DECK_WEATHER_EXCHANGE_GATEWAY_CLIENT_ID='weather-exchange-gateway'
-   export DECK_WEATHER_EXCHANGE_GATEWAY_CLIENT_SECRET='<weather-exchange-gateway secret from Keycloak>'
-   export DECK_WEATHER_EXCHANGE_KEYCLOAK_ISSUER='http://localhost:8080/realms/weather-exchange'
-   export DECK_WEATHER_EXCHANGE_KEYCLOAK_INTROSPECTION_URL='http://keycloak:8080/realms/weather-exchange/protocol/openid-connect/token/introspect'
-   export DECK_WEATHER_EXCHANGE_KEYCLOAK_TOKEN_URL='http://keycloak:8080/realms/weather-exchange/protocol/openid-connect/token'
+   export DECK_TOKEN_EXCHANGE_GATEWAY_CLIENT_ID='token-exchange-gateway'
+   export DECK_TOKEN_EXCHANGE_GATEWAY_CLIENT_SECRET='<token-exchange-gateway secret from Keycloak>'
+   export DECK_TOKEN_EXCHANGE_KEYCLOAK_ISSUER='http://localhost:8080/realms/token-exchange'
+   export DECK_TOKEN_EXCHANGE_KEYCLOAK_INTROSPECTION_URL='http://keycloak:8080/realms/token-exchange/protocol/openid-connect/token/introspect'
+   export DECK_TOKEN_EXCHANGE_KEYCLOAK_TOKEN_URL='http://keycloak:8080/realms/token-exchange/protocol/openid-connect/token'
    export KEYCLOAK_HOST='localhost'
    ```
