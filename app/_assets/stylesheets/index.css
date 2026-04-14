@@ -212,7 +212,7 @@
     @apply font-bold text-base tracking-[-.01em];
   }
 
-  main h4:not(.card h4) {
+  main h4:not(.card h4, .cookbook h4) {
     @apply pt-3;
   }
 
@@ -681,7 +681,8 @@
     @apply border-[0.28px] border-primary/[.08];
   }
 
-  .how-to {
+  .how-to,
+  .cookbook {
     counter-reset: steps-counter;
   }
 
