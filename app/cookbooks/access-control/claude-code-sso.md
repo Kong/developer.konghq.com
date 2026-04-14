@@ -386,14 +386,51 @@ Claude Code
 
 ## How it works
 
-The recipe creates a Kong service and route, two Kong consumers (`claude-standard-users` and
-`claude-power-users`), and four plugin instances: one [openid-connect](/plugins/openid-connect/)
-plugin on the route for JWT validation, two consumer-scoped
-[ai-proxy-advanced](/plugins/ai-proxy-advanced/) instances for model routing, and two
-consumer-scoped [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) instances for per-tier
-token limits.
+When a developer runs Claude Code, every API request flows through Kong before reaching the
+LLM provider. Here is the complete request lifecycle:
+
+1. **Token acquisition** — Claude Code invokes the `apiKeyHelper` script
+   (`okta-claude-auth.sh`) before each API call. The script checks its local token cache for a
+   valid access token. If the token has expired but a refresh token exists, it silently exchanges
+   for a new access token via Okta's token endpoint. If no valid tokens exist, it opens a browser
+   to Okta's authorization endpoint for a full PKCE authentication flow, captures the
+   authorization code via a local callback server, and exchanges it for tokens. The resulting
+   JWT is returned to Claude Code.
+
+2. **Request to Kong** — Claude Code sends `POST /claude-code-sso/v1/messages` with
+   `Authorization: Bearer <jwt>` to Kong Gateway. The request body is in Anthropic's native
+   message format.
+
+3. **JWT validation and consumer mapping** — The [openid-connect](/plugins/openid-connect/)
+   plugin validates the JWT signature against Okta's cached JWKS keys, checks that the token
+   has not expired, and verifies the `aud` claim matches the expected audience. It then reads
+   the `groups` array from the JWT and matches it against Kong consumer usernames — a developer
+   in the `claude-power-users` Okta group is resolved to the `claude-power-users` Kong consumer.
+
+4. **Credential injection and model routing** — The consumer-scoped
+   [ai-proxy-advanced](/plugins/ai-proxy-advanced/) plugin for that consumer injects the
+   LLM provider API key (which the developer never sees) and routes the request to the model
+   configured for that tier.
+
+5. **Token rate limiting** — The consumer-scoped
+   [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) plugin counts prompt and
+   completion tokens against the consumer's per-tier budget. Rate limit headers
+   (`X-AI-RateLimit-Remaining`) are added to the response.
+
+6. **Response** — The LLM provider's response flows back through Kong to Claude Code.
+   Subsequent requests reuse the cached Okta token silently — no browser flow unless the
+   refresh token has expired.
+
 
 ### OpenID Connect — JWT validation and consumer mapping
+
+The [openid-connect](/plugins/openid-connect/) plugin is the authentication layer. It validates
+every incoming JWT against Okta's JWKS keys, rejects tokens that have expired or were issued for
+a different audience, and maps the developer's Okta group membership to a Kong consumer. This
+consumer mapping is the bridge between your identity provider and Kong's consumer-scoped
+plugins — it determines which model tier and rate limit apply to each request.
+
+#### Configuration details
 
 ```yaml
 plugins:
@@ -459,7 +496,12 @@ decoding the JWT.
 ### AI Proxy Advanced — model routing and credential injection
 
 Each consumer tier gets its own [ai-proxy-advanced](/plugins/ai-proxy-advanced/) plugin instance,
-scoped to that consumer. This is how different Okta groups get different model access:
+scoped to that consumer. This is how different Okta groups get different model access — the
+openid-connect plugin resolves which consumer the request belongs to, and the matching
+ai-proxy-advanced instance handles credential injection and model selection. Developers never
+hold the provider API key; Kong injects it server-side after validating their Okta identity.
+
+#### Configuration details
 
 ```yaml
 plugins:
@@ -522,17 +564,21 @@ logging plugins are configured to send to).
 
 **Alternative configurations:**
 
-- **`route_type: preserve`** — Forwards requests to a custom `upstream_path` without body
-  transformation. Useful when calling provider-specific endpoints that aren't covered by the
-  standard chat completions path.
+- **Native format (`llm_format`)** — Set `llm_format` to a provider's native format
+  (`anthropic`, `bedrock`, `gemini`, etc.) to pass requests through without transformation.
+  Useful when you need provider-specific capabilities or already use a provider's native SDK.
 - **Multiple targets** — A single plugin instance can have multiple targets for different route
   types (e.g. `llm/v1/chat` and `llm/v1/embeddings`), each with their own model and auth.
 
 ### AI Rate Limiting Advanced — per-consumer token limits
 
-Each consumer tier also gets its own [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/)
-instance. Unlike request-count rate limiting, this plugin counts tokens (prompt + completion),
-which is the correct unit for LLM cost control:
+Each consumer tier gets its own [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/)
+instance with different token budgets. Unlike request-count rate limiting, this plugin counts
+tokens (prompt + completion), which is the correct unit for LLM cost control. Standard users
+get a smaller token budget per window while power users get a larger one. When a consumer
+exhausts their budget, Kong returns `429 Too Many Requests` until the window resets.
+
+#### Configuration details
 
 ```yaml
 plugins:
@@ -553,19 +599,26 @@ plugins:
 ```
 {:.no-copy-code}
 
-**`llm_providers`** — An array of provider-specific rate limit configurations. Each entry
-specifies the provider `name`, a `limit` (in tokens), and a `window_size` (in seconds). Standard
-users get 5,000 total tokens per 60-second window; power users get 25,000. These are paired
-arrays — add multiple entries for multiple windows (e.g. per-minute and per-hour token budgets).
+**`policies`** — An array of rate limiting policies (replaces the deprecated `llm_providers`
+field). Each policy contains a `limits` array of limit/window pairs and an optional `match`
+array for targeting specific consumers, providers, models, or other dimensions. A policy without
+`match` conditions acts as a fallback that applies to all requests — which is what this recipe
+uses, since each plugin instance is already consumer-scoped. Standard users get 5,000 total
+tokens per 60-second window; power users get 25,000. Add multiple entries in the `limits` array
+for multiple windows (e.g. per-minute and per-hour token budgets):
+`limits: [{limit: 5000, window_size: 60}, {limit: 500000, window_size: 86400}]`.
+
+**`window_type: sliding`** — Set per-policy. Uses a sliding window algorithm for smoother rate
+limiting compared to fixed windows. The `fixed` alternative uses strict time windows.
 
 **`tokens_count_strategy: total_tokens`** — Counts both prompt (input) and completion (output)
-tokens against the limit. You can also use `prompt_tokens` (count only input) or
-`completion_tokens` (count only output) if you want to control one direction specifically. The
-`cost` strategy calculates based on input/output cost per 1M tokens if you've set those in the
-ai-proxy-advanced target config.
+tokens against the limit. Can also be set per-limit within a policy. Alternatives: `prompt_tokens`
+(count only input), `completion_tokens` (count only output), or `cost` (calculates based on
+input/output cost per 1M tokens if you've set those in the ai-proxy-advanced target config).
 
 **`identifier: consumer`** — Tracks token usage per Kong consumer. Since each consumer maps to an
-Okta group, this effectively sets token budgets per organizational tier.
+Okta group, this effectively sets token budgets per organizational tier. For more flexible
+multi-dimensional scoping, use `policies[].match` conditions with `partition_by: true` instead.
 
 **`strategy: local`** — Uses in-memory counters on each Kong node. For single-node or
 development deployments this is sufficient. For multi-node production clusters, switch to
@@ -573,9 +626,6 @@ development deployments this is sufficient. For multi-node production clusters, 
 
 **`llm_format: anthropic`** — Must match the `llm_format` in the ai-proxy-advanced plugin so the
 rate limiting plugin can correctly parse token counts from the response.
-
-**`window_type: sliding`** — Uses a sliding window algorithm for smoother rate limiting compared
-to fixed windows.
 
 Kong returns token rate limit headers with every response:
 
@@ -588,26 +638,6 @@ Kong returns token rate limit headers with every response:
 When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After`
 header.
 
-### Auth flow
-
-The complete authentication flow for a Claude Code request:
-
-1. Claude Code invokes `apiKeyHelper` (`okta-claude-auth.sh`) before making an API call.
-1. The script checks the local token cache. If a valid (non-expired) access token exists, it
-   returns it immediately.
-1. If the access token is expired but a refresh token exists, the script silently exchanges it
-   for a new access token via Okta's token endpoint.
-1. If no valid tokens exist, the script opens a browser to Okta's authorization endpoint for
-   a full PKCE flow. The user authenticates (with MFA if configured), and the script captures
-   the authorization code via a local callback server.
-1. Claude Code sends the request to Kong with `Authorization: Bearer <jwt>`.
-1. Kong's openid-connect plugin validates the JWT signature, expiry, and audience claim, then
-   maps the `groups` claim to a Kong consumer.
-1. The consumer-scoped ai-proxy-advanced plugin injects the provider API key and forwards the
-   request to the LLM provider.
-1. The consumer-scoped ai-rate-limiting-advanced plugin tracks the request's tokens against the
-   consumer's token budget.
-
 ### Production considerations
 
 This recipe uses decK environment variables ({%raw%}`${{ env "..." }}`{%endraw%}) to inject
@@ -618,46 +648,6 @@ Secrets Manager, GCP Secret Manager, and the Konnect Config Store — that resol
 Kong runtime using `{vault://backend/key}` references rather than embedding credentials in
 config files. The environment variable vault (`{vault://env/MY_SECRET}`) is the simplest
 starting point.
-
-### Example request and response
-
-Request (sent by Claude Code to Kong in Anthropic format):
-
-```json
-POST http://localhost:8000/claude-code-sso/v1/messages
-Authorization: Bearer eyJhbG...
-
-{
-  "model": "claude-sonnet-4-6",
-  "max_tokens": 1024,
-  "messages": [
-    { "role": "user", "content": "What is the capital of France?" }
-  ]
-}
-```
-{:.no-copy-code}
-
-Response (Anthropic format, passed through or translated from provider):
-
-```json
-{
-  "id": "msg_abc123",
-  "type": "message",
-  "role": "assistant",
-  "model": "claude-sonnet-4-6",
-  "content": [
-    {
-      "type": "text",
-      "text": "The capital of France is Paris."
-    }
-  ],
-  "usage": {
-    "input_tokens": 14,
-    "output_tokens": 9
-  }
-}
-```
-{:.no-copy-code}
 
 ## Apply the Kong configuration
 
@@ -1182,6 +1172,53 @@ model.
 
 Subsequent invocations reuse the cached token silently — no browser flow unless the refresh token
 has expired.
+
+### Example request and response
+
+Claude Code sends requests to Kong in Anthropic's native message format. Here is what a typical
+request and response look like:
+
+Request:
+
+```json
+POST http://localhost:8000/claude-code-sso/v1/messages
+Authorization: Bearer eyJhbG...
+
+{
+  "model": "claude-sonnet-4-6",
+  "max_tokens": 1024,
+  "messages": [
+    { "role": "user", "content": "What is the capital of France?" }
+  ]
+}
+```
+{:.no-copy-code}
+
+Response (Anthropic format, passed through or translated from the provider):
+
+```json
+{
+  "id": "msg_abc123",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-sonnet-4-6",
+  "content": [
+    {
+      "type": "text",
+      "text": "The capital of France is Paris."
+    }
+  ],
+  "usage": {
+    "input_tokens": 14,
+    "output_tokens": 9
+  }
+}
+```
+{:.no-copy-code}
+
+The `Authorization: Bearer` header carries the Okta JWT — Kong validates it and replaces it with
+the provider API key before forwarding upstream. The `usage` object in the response is what the
+ai-rate-limiting-advanced plugin reads to track token consumption.
 
 ### What happened
 
