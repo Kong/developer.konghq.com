@@ -274,9 +274,9 @@ metering_and_billing:
       - term: Expansion
         description: |
           Revenue growth generated from an existing customer through higher-tier plans, additional features, or expanded usage.
-      - term: ARR
+      - term: Annual Recurring Revenue (ARR)
         description: |
-          Annual Recurring Revenue (ARR) is the annualized value of recurring revenue a company expects to generate from active subscriptions.
-      - term: MRR
+           The annualized value of recurring revenue a company expects to generate from active subscriptions.
+      - term: Monthly Recurring Revenue (MRR)
         description: |
-          Monthly Recurring Revenue (MRR) is the total predictable revenue a company expects to generate from active subscriptions in a given month.
+           The total predictable revenue a company expects to generate from active subscriptions in a given month.
