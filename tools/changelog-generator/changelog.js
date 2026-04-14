@@ -1,7 +1,7 @@
 import fs from "fs";
 import yaml from "js-yaml";
 import path from "path";
-import fastGlob from "fast-glob";
+import { globSync } from "tinyglobby";
 import mergeWith from "lodash.mergewith";
 import { compareVersions } from "./compare-versions.js";
 
@@ -19,9 +19,9 @@ function generateChangelog() {
       changelog = JSON.parse(fs.readFileSync(changelogFilePath, "utf-8"));
     }
 
-    let changelogByVersion = fastGlob.globSync(`./tmp/*`);
+    let changelogByVersion = globSync(`./tmp/*`);
     changelogByVersion = changelogByVersion.concat(
-      fastGlob.globSync(`./missing_changelogs/*`)
+      globSync(`./missing_changelogs/*`)
     );
     const orderedFiles = changelogByVersion.sort(compareVersions).reverse();
 

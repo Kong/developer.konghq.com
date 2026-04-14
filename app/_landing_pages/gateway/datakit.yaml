@@ -189,6 +189,9 @@ rows:
                     - [`static`](/plugins/datakit/#static-node): Define static input values  
                     - [`json_to_xml`](/plugins/datakit/#json-to-xml-node): Convert JSON data into XML format
                     - [`xml_to_json`](/plugins/datakit/#xml-to-json-node): Convert XML data into JSON format
+                    - [`jwt_decode`](/plugins/datakit/#jwt-decode-node): Decode a JWT token without verifying its signature
+                    - [`jwt_sign`](/plugins/datakit/#jwt-sign-node): Create and sign a JWT
+                    - [`jwt_verify`](/plugins/datakit/#jwt-verify-node): Verify a JWT's signature and validate its claims
                     
                     Datakit also supports [implicit nodes](/plugins/datakit/#implicit-nodes) such as `request`, `response`, `vault`, and `service_request`, which represent gateway lifecycle events.
       - blocks:

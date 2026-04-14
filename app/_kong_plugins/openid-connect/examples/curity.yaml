@@ -8,8 +8,11 @@ extended_description: |
 
   The OpenID Connect plugin introspects an incoming opaque access token and receives a JWT in the introspection response from the Curity Identity Server. 
   As part of the introspection, the OpenID Connect plugin validates that required scopes are available in the introspected token. 
+  * This example uses [`config.upstream_headers`](/plugins/openid-connect/reference/#schema--config-upstream-headers) to map claims using a path array. 
+  This lets you access claims at any depth in the token payload.
   * If the correct scopes are missing, access to the requested upstream service is denied.
   * If access is granted, the JWT from the introspection response is added to a header and forwarded to the upstream service where it can be consumed.
+
 
 weight: 797
 
@@ -27,10 +30,10 @@ config:
     - openid
   hide_credentials: true
   upstream_access_token_header: nil
-  upstream_headers_claims:
-    - phantom_token
-  upstream_headers_names: 
-    - phantom_token
+  upstream_headers:
+    - header: x-phantom-token
+      path:
+        - phantom_token
   auth_methods:
     - introspection
 
@@ -58,3 +61,6 @@ search_aliases:
   - curity identity server
 
 group: providers
+
+min_version:
+  gateway: '3.14'

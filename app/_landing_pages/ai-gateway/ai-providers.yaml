@@ -125,6 +125,34 @@ rows:
             icon: /assets/icons/cerebras.svg
             cta:
               url: /ai-gateway/ai-providers/cerebras/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Ollama
+            icon: /assets/icons/ollama.svg
+            cta:
+              url: /ai-gateway/ai-providers/ollama/
+      - blocks:
+        - type: icon_card
+          config:
+            title: Databricks
+            icon: /assets/icons/databricks.svg
+            cta:
+              url: /ai-gateway/ai-providers/databricks/
+      - blocks:
+        - type: icon_card
+          config:
+            title: DeepSeek
+            icon: /assets/icons/deepseek.svg
+            cta:
+              url: /ai-gateway/ai-providers/deepseek/
+      - blocks:
+        - type: icon_card
+          config:
+            title: vLLM
+            icon: /assets/icons/vllm.svg
+            cta:
+              url: /ai-gateway/ai-providers/vllm/
   - columns:
       - blocks:
           - type: structured_text

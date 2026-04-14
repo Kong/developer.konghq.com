@@ -1,0 +1,31 @@
+description: Block invalid requests with the JSON Threat Protection plugin and let non-JSON requests pass through.
+
+extended_description: |
+  Configure the JSON Threat Protection plugin with `allow_non_json_requests` set to `true`. 
+  This setting allows non-JSON requests to bypass any configured rules, while still blocking requests that contain invalid JSON.
+
+title: 'Allow non-JSON requests'
+
+weight: 880
+
+config:
+  max_body_size: 1024
+  max_container_depth: 2
+  max_object_entry_count: 4
+  max_object_entry_name_length: 7
+  max_array_element_count: 2
+  max_string_value_length: 6
+  enforcement_mode: block
+  error_message: "Incorrect request format"
+  allow_duplicate_object_entry_name: false
+  allow_non_json_requests: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

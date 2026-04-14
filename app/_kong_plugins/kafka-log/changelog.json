@@ -1,8 +1,22 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "The options `security.ssl_verify` which control SSL certificate\nverification for Kafka endpoints, are now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added new config option `ssl_verify` to support verifying server certificates.\nAdded support for the `tls_certificate_verify` global option. When this option is enabled, the\nplugin's `ssl_verify` setting cannot be disabled.",
       "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where cached producers could cause memory leaks.\n",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],
@@ -24,6 +38,18 @@
     }
   ],
   "3.11.0.7": [
+    {
+      "message": "Fixed an issue where certificates could not be loaded from non-default workspaces.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.10": [
+    {
+      "message": "Added support for Kafka 4.0 to fix the Confluent deprecation.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
     {
       "message": "Fixed an issue where certificates could not be loaded from non-default workspaces.",
       "type": "bugfix",

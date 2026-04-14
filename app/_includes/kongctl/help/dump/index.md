@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl dump [flags]
   kongctl dump [command]

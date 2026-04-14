@@ -1,4 +1,46 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added Token Exchange support to swap JWT tokens before accessing MCP Server.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for mapping claim to authenticated credential.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Made the client_id field not required when client_auth is set\n  to something other than client_secret_basic or client_secret_post\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added `upstream_headers` field for mapping token claims to upstream headers using path-based access. Mutually exclusive with `claim_to_header`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for passing tokens upstream.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support for multiple token validation methods.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Added support mapping claims in token to `consumer` and `consumer_groups`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we didn't clear header for absent claim.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Fixed an issue where MCP-like request was not authenticated.\n",

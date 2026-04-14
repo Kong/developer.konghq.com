@@ -1,0 +1,9 @@
+name: weather-mcp
+paths:
+  - /weather/mcp
+  - /.well-known/oauth-protected-resource/weather/mcp
+service:
+  name: weather-api-service
+protocols:
+  - http
+  - https

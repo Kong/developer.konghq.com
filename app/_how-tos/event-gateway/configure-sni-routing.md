@@ -28,6 +28,8 @@ tldr:
     1. Create a TLS server listener policy using your certificate and key.
     1. Create a Forward to virtual cluster policy with the port ans SNI suffix.
 
+min_version:
+  event-gateway: '1.1.0'
 
 tools:
     - konnect-api
@@ -76,14 +78,14 @@ contexts:
       - localhost:9094
   analytics:
     brokers:
-      - bootstrap.analytics.127-0-0-1.sslip.io:19092
+      - bootstrap-analytics.127-0-0-1.sslip.io:19092
     tls:
       enabled: true
       ca: ./rootCA.crt
       insecure: true
   payments:
     brokers:
-      - bootstrap.payments.127-0-0-1.sslip.io:19092
+      - bootstrap-payments.127-0-0-1.sslip.io:19092
     tls:
       enabled: true
       ca: ./rootCA.crt
@@ -135,8 +137,8 @@ Generate the certificates we'll need to enable TLS:
    {: data-test-step="block" }
 
    We're setting the subject in the certificate signing request to `*.127-0-0-1.sslip.io`:
-   * `*` is used for the virtual cluster prefixes, which are the `analytics` and `payments` DNS labels we configured when creating the virtual clusters.
-   * `.127-0-0-1.sslip.io` is the SNI suffix, which we'll use in the TLS listener policy configuration. In this example, we're using [sslip.io](https://sslip.io/) to resolve `127-0-0-1.sslip.io` to `127.0.0.1`.
+   * `*` is a wildcard that covers all broker and bootstrap hostnames across every virtual cluster on this listener.
+   * `.127-0-0-1.sslip.io` is the SNI suffix, which we'll use later in the Forward to Virtual Cluster policy configuration for SNI routing. In this example, we're using [sslip.io](https://sslip.io/) to resolve `127-0-0-1.sslip.io` to `127.0.0.1`.
 
 1. To explicitly set the subject alternative names for the certificate, create an OpenSSL extension file:
 
@@ -149,8 +151,7 @@ Generate the certificates we'll need to enable TLS:
    authorityKeyIdentifier = keyid,issuer
    
    [alt_names]
-   DNS.1 = *.analytics.127-0-0-1.sslip.io
-   DNS.2 = *.payments.127-0-0-1.sslip.io
+   DNS.1 = *.127-0-0-1.sslip.io
    EOF
    ```
    {: data-test-step="block" }
@@ -197,9 +198,9 @@ capture:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a TLS server listener policy
+## Create a TLS Server listener policy
 
-Create a TLS server policy:
+Create a TLS Server policy on the listener:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -216,9 +217,9 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-## Create a Forward to virtual cluster policy
+## Create a Forward to Virtual Cluster policy
 
-Create a Forward to virtual cluster policy that configures SNI and defines a suffix to expose on the listener:
+Create a Forward to Virtual Cluster policy that configures SNI routing and defines a suffix to expose on the listener:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -232,15 +233,17 @@ body:
     type: sni
     advertised_port: 19092
     sni_suffix: .127-0-0-1.sslip.io
+    broker_host_format:
+      type: shared_suffix
 {% endkonnect_api_request %}
 <!--vale on-->
 
 This policy enables routing to each virtual cluster and mapping brokers:
 
-* Bootstrap server to `bootstrap.analytics.127-0-0-1.sslip.io:19092` or `bootstrap.payments.127-0-0-1.sslip.io:19092`
-* Broker 1 to `broker-0.analytics.127-0-0-1.sslip.io:19092` or `broker-0.payments.127-0-0-1.sslip.io:19092`
-* Broker 2 to `broker-1.analytics.127-0-0-1.sslip.io:19092` or `broker-1.payments.127-0-0-1.sslip.io:19092`
-* Broker 3 to `broker-2.analytics.127-0-0-1.sslip.io:19092` or `broker-2.payments.127-0-0-1.sslip.io:19092`
+* Bootstrap server to `bootstrap-analytics.127-0-0-1.sslip.io:19092` or `bootstrap-payments.127-0-0-1.sslip.io:19092`
+* Broker 1 to `broker-0-analytics.127-0-0-1.sslip.io:19092` or `broker-0-payments.127-0-0-1.sslip.io:19092`
+* Broker 2 to `broker-1-analytics.127-0-0-1.sslip.io:19092` or `broker-1-payments.127-0-0-1.sslip.io:19092`
+* Broker 3 to `broker-2-analytics.127-0-0-1.sslip.io:19092` or `broker-2-payments.127-0-0-1.sslip.io:19092`
 
 ## Validate
 

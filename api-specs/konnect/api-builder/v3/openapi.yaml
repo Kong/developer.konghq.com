@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@6cb9649a40615364d0387167345de620a37b4fa8
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6cb9649a40615364d0387167345de620a37b4fa8'
+  x-oas-source: kong/platform-api@e3083742a0cf90baaa88cd947bcbc6e471acdab8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3083742a0cf90baaa88cd947bcbc6e471acdab8'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2152,6 +2152,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2194,6 +2200,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2223,6 +2235,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2239,6 +2257,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -5086,6 +5110,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              warnings:
+                description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+                type: array
+                items:
+                  type: string
+                readOnly: true
               created_at:
                 $ref: '#/components/schemas/CreatedAt'
               updated_at:
@@ -5147,6 +5177,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              warnings:
+                description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+                type: array
+                items:
+                  type: string
+                readOnly: true
               created_at:
                 $ref: '#/components/schemas/CreatedAt'
               updated_at:

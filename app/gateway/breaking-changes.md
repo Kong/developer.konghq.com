@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} breaking changes and known issues"
+title: "{{site.base_gateway}} breaking changes, deprecations, and known issues"
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -16,7 +16,7 @@ tags:
 
 
 
-description: "Review {{site.base_gateway}} version breaking changes before upgrading."
+description: "Review {{site.base_gateway}} version breaking changes, deprecations, and known issues before upgrading."
 
 related_resources:
   - text: Upgrading {{site.base_gateway}}
@@ -33,9 +33,344 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.14.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this release.
+
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.10 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.14 format so that they continue to function as before. 
+See the [how-to guide on converting 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/) for more information.
+
+### 3.14.0.0
+
+Breaking changes in the 3.14.0.0 release.
+
+#### Route protocol defaults change
+
+The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`. 
+This ensures that all Routes are secure by default.
+
+New Routes will have this default value, while existing Routes are unaffected. 
+If you have any automation that creates Routes, update your configuration to ensure you're setting the required protocol explicitly.
+
+#### SHA1 algorithm removal
+
+The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
+
+For the [Event Hooks entity](/gateway/entities/event-hook/), this is a breaking change. 
+Event hook calls are now signed with HMAC-SHA256 instead of HMAC-SHA1.
+
+For the following plugins, the SHA1 algorithm is still supported in existing configurations, but we strongly recommend updating your configurations whenever possible:
+* [Basic Auth plugin](/plugins/basic-auth/): Uses SHA256 by default in new configurations.
+* [HMAC Auth plugin](/plugins/hmac-auth/): HMAC-SHA1 is no longer included in the default set of algorithms.
+* [OAuth2 plugin](/plugins/oauth2/): Uses SHA256 for the access token cache key instead of SHA1.
+
+#### Hide credentials by default
+
+`hide_credentials` is now set to `true` by default in the following plugins:
+
+* [Basic Auth](/plugins/basic-auth/)
+* [HMAC Auth](/plugins/hmac-auth/)
+* [Key Auth](/plugins/key-auth/)
+* [Key Auth - Encrypted](/plugins/key-auth-enc/)
+* [LDAP Auth](/plugins/ldap-auth/)
+* [LDAP Auth Advanced](/plugins/ldap-auth-advanced/)
+* [OAuth 2.0 Authentication](/plugins/oauth2/)
+* [OAuth 2.0 Introspection](/plugins/oauth2-introspection/)
+* [OpenID Connect](/plugins/openid-connect/)
+* [Vault Auth](/plugins/vault-auth/)
+
+This mitigates the unnecessary risk of accidental credential exposure.
+
+This change doesn't affect existing plugins, but new plugins will have this setting configured by default. 
+
+#### OpenID Connect: consumer claims data types
+
+The `config.consumer_claim` field in the [OpenID Connect plugin](/plugins/openid-connect/) has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims). 
+The parameter now accepts an array of arrays instead of an array of strings. 
+
+Old format example:
+
+```yaml
+config:
+  consumer_claim:
+    - email
+```
+New format example:
+
+```yaml
+config:
+  consumer_claims:
+    - ["email"]
+```
+
+We recommend updating your configurations, as the old `config.consumer_claim` field is deprecated and will be removed in a future version.
+
+#### OpenID Connect: header claims fields
+  
+The header claims fields in the [OpenID Connect plugin](/plugins/openid-connect/) have been replaced with new fields:
+* `config.upstream_headers_claims` and `config.upstream_headers_names` -> replaced by `config.upstream_headers`
+* `config.downstream_headers_claims` and `config.downstream_headers_names` -> replaced by `config.downstream_headers`
+
+The new fields support nested claims, which lets you access claims at any depth in the token payload.
+For example:
+
+```yaml
+upstream_headers:
+  - header: X-Org-Id
+    path:
+      - org
+      - id
+```
+
+We recommend updating your configurations, as the old `config.upstream_headers_claims`, `config.upstream_headers_names`, `config.downstream_headers_claims`, and `config.downstream_headers_names` fields are deprecated and will be removed in a future version.
+
+#### TLS certificate verify by default
+
+Starting in 3.14, the {{site.base_gateway}} global configuration option [`tls_certificate_verify`](/gateway/configuration/#tls-certificate-verify) now defaults to `on`, requiring TLS/SSL certificate verification by default.
+
+Review the following table to learn how this change affects your deployments:
+{% table %}
+columns:
+  - title: Category
+    key: category
+  - title: Impact
+    key: impact
+  - title: Action
+    key: action
+rows:
+  - category: PostgreSQL database
+    impact: |
+      When the PostgreSQL configuration contains `pg_ssl_verify = off`, {{site.base_gateway}} can fail to start.
+    action:
+      For PostgreSQL configurations, add the PostgreSQL server’s certificate into {{site.base_gateway}}’s trusted certificate list at [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate), and set [`pg_ssl_verify`](/gateway/configuration/#pg-ssl-verify) to `on`.
+
+  - category: Gateway Services
+    impact: |
+      Gateway Service entities with `tls_verify = false` where the Service protocol is `https`, `tls`, `grpcs`, or `wss` are affected as follows:
+
+      - **Traditional mode:** Existing Gateway Service entities with `tls_verify = false` can still be loaded and used, but updating the Service's config with `tls_verify = false` returns an error from the Admin API.
+      - **DB-less mode:** If the declarative configuration contains a Gateway Service with `tls_verify = false`, {{site.base_gateway}} will fail to boot.
+      - **Hybrid mode (on-prem):** The data plane can boot but can't receive a valid configuration from the control plane, and errors will appear in the data plane log.
+    action: |
+      Update the schema for all affected Gateway Services (where protocol is `https`, `tls`, `grpcs`, or `wss`) by setting `tls_verify = true`.
+
+  - category: Plugins
+    impact: |
+      Any plugin configured with one of the affected certificate verification fields below is affected by this change. See the full list of plugins and fields in the following table.
+      <br><br>
+      If you have existing plugins using these values, {{site.base_gateway}}'s behavior differs based on deployment mode:
+      - **Traditional mode:** Plugins can still be loaded and used, but updating the plugin's config returns an error from the Admin API.
+      - **DB-less mode:** If the declarative configuration contains these values, {{site.base_gateway}} will fail to boot.
+      - **Hybrid mode (on-prem):** The data plane can't receive a valid configuration from the control plane, and errors will appear in the data plane log.
+    action: |
+      Update the schema for all affected plugins by setting these values to `true`.
+      <br>
+      To see your plugin's schema, find your plugin on the [Plugin Hub](/plugins/), then open the **Configuration reference** tab.
+
+  - category: HashiCorp Vault
+    impact: |
+      HashiCorp Vault will not function if [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate) is not configured with a valid certificate.
+    action: |
+      Add the HashiCorp Vault server's certificate to [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate).
+
+  - category: Custom plugins
+    impact: |
+      Custom plugins that use `https`, `tls`, `grpcs`, or `wss` may not work if their implementation does not verify the server certificate.
+    action: |
+      Manually update the custom plugin implementation to verify the server certificate.
+{% endtable %}
+
+To revert to the old behavior, set `tls_certificate_verify` to `off`.
+
+The following table lists all of the plugin fields affected by the TLS/SSL certificate verification changes in {{site.base_gateway}} 3.14:
+
+{% table %}
+columns:
+  - title: Plugin
+    key: plugin
+  - title: Affected fields
+    key: fields
+rows:
+  - plugin: "[ACE](/plugins/ace/)"
+    fields: "`rate_limiting.redis.ssl_verify`"
+  - plugin: "[ACME](/plugins/acme/)"
+    fields: "`storage_config.redis.ssl_verify`"
+  - plugin: "[AI AWS Guardrails](/plugins/ai-aws-guardrails/)"
+    fields: "`ssl_verify`"
+  - plugin: "[AI Azure Content Safety](/plugins/ai-azure-content-safety/)"
+    fields: "`ssl_verify`"
+  - plugin: "[AI Proxy Advanced](/plugins/ai-proxy-advanced/)"
+    fields: |
+      * `vectordb.pgvector.ssl_verify`
+      * `vectordb.redis.ssl_verify`
+  - plugin: "[AI RAG Injector](/plugins/ai-rag-injector/)"
+    fields: |
+      * `vectordb.pgvector.ssl_verify`
+      * `vectordb.redis.ssl_verify`
+  - plugin: "[AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[AI Semantic Cache](/plugins/ai-semantic-cache/)"
+    fields: |
+      * `vectordb.pgvector.ssl_verify`
+      * `vectordb.redis.ssl_verify`
+  - plugin: "[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)"
+    fields: |
+      * `vectordb.pgvector.ssl_verify`
+      * `vectordb.redis.ssl_verify`
+  - plugin: "[AI Semantic Response Guard](/plugins/ai-semantic-response-guard/)"
+    fields: |
+      * `vectordb.pgvector.ssl_verify`
+      * `vectordb.redis.ssl_verify`
+  - plugin: "[AWS Lambda](/plugins/aws-lambda/)"
+    fields: "`ssl_verify`"
+  - plugin: "[Azure Functions](/plugins/azure-functions/)"
+    fields: "`https_verify`"
+  - plugin: "[Basic Auth](/plugins/basic-auth/)"
+    fields: "`brute_force_protection.redis.ssl_verify`"
+  - plugin: "[Confluent](/plugins/confluent/)"
+    fields: |
+      * `security.ssl_verify`
+      * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+  - plugin: "[Confluent Consume](/plugins/confluent-consume/)"
+    fields: |
+      * `security.ssl_verify`
+      * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+      * `topics.schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+  - plugin: "[Datakit](/plugins/datakit/)"
+    fields: |
+      * `nodes[].ssl_verify` (for nodes with `type: call`)
+      * `resources.cache.redis.ssl_verify`
+  - plugin: "[Forward Proxy](/plugins/forward-proxy/)"
+    fields: "`https_verify`"
+  - plugin: "[GraphQL Proxy Cache Advanced](/plugins/graphql-proxy-cache-advanced/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[GraphQL Rate Limiting Advanced](/plugins/graphql-rate-limiting-advanced/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[Header Cert Auth](/plugins/header-cert-auth/)"
+    fields: "`ssl_verify`"
+  - plugin: "[HTTP Log](/plugins/http-log/)"
+    fields: "`ssl_verify`"
+  - plugin: "[JWT Signer](/plugins/jwt-signer/)"
+    fields: |
+      * `access_token_endpoints_ssl_verify`
+      * `channel_token_endpoints_ssl_verify`
+      * The `/rotate` endpoint now enables certificate verification by default
+  - plugin: "[Kafka Consume](/plugins/kafka-consume/)"
+    fields: |
+      * `security.ssl_verify`
+      * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+      * `topics.schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+  - plugin: "[Kafka Log](/plugins/kafka-log/)"
+    fields: |
+      * `security.ssl_verify`
+      * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+  - plugin: "[Kafka Upstream](/plugins/kafka-upstream/)"
+    fields: |
+      * `security.ssl_verify`
+      * `schema_registry.confluent.authentication.oauth2_client.ssl_verify`
+  - plugin: "[LDAP Auth](/plugins/ldap-auth/)"
+    fields: "`verify_ldap_host`"
+  - plugin: "[LDAP Auth Advanced](/plugins/ldap-auth-advanced/)"
+    fields: "`verify_ldap_host`"
+  - plugin: "[mTLS Auth](/plugins/mtls-auth/)"
+    fields: "`ssl_verify`"
+  - plugin: "[OpenID Connect](/plugins/openid-connect/)"
+    fields: |
+      * `ssl_verify`
+      * `cluster_cache_redis.ssl_verify`
+      * `redis.ssl_verify`
+      * `session_memcached_ssl_verify`
+  - plugin: "[Proxy Cache Advanced](/plugins/proxy-cache-advanced/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[Rate Limiting](/plugins/rate-limiting/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[Rate Limiting Advanced](/plugins/rate-limiting-advanced/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[Redis Partials](/gateway/entities/partial/)"
+    fields: "`ssl_verify`"
+  - plugin: "[Request Callout](/plugins/request-callout/)"
+    fields: |
+      * `cache.redis.ssl_verify`
+      * `callouts.request.http_opts.ssl_verify`
+  - plugin: "[Response Rate Limiting](/plugins/response-ratelimiting/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[SAML](/plugins/saml/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[Service Protection](/plugins/service-protection/)"
+    fields: "`redis.ssl_verify`"
+  - plugin: "[TCP Log](/plugins/tcp-log/)"
+    fields: "`ssl_verify`"
+  - plugin: "[Upstream OAuth](/plugins/upstream-oauth/)"
+    fields: |
+      * `client.ssl_verify`
+      * `cache.redis.ssl_verify`
+{% endtable %}
+
+#### OpenTelemetry: Access logs endpoint parameter
+
+The `config.access_logs_endpoint` parameter in the OpenTelemetry plugin has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
+We recommend updating your configurations, as the old field is deprecated and will be removed in a future version.
+
+#### Lua sandboxing security fixes
+
+Starting in 3.14, the [`untrusted_lua`](/gateway/configuration/#untrusted-lua) configuration option introduces two new modes: `strict` and `lax`, in addition to the existing `sandbox` mode. The default value has changed from `sandbox` to `strict`.
+
+{% table %}
+columns:
+  - title: Mode
+    key: mode
+  - title: Behavior
+    key: behavior
+rows:
+  - mode: "`strict` (new default)"
+    behavior: Does not permit network operations. Cannot be extended via `untrusted_lua_sandbox_requires` or `untrusted_lua_sandbox_environment`.
+  - mode: "`lax`"
+    behavior: Permits untrusted Lua code to perform network operations. Cannot be extended via `untrusted_lua_sandbox_requires` or `untrusted_lua_sandbox_environment`.
+  - mode: "`sandbox`"
+    behavior: Previous default.
+{% endtable %}
+
+Plugins that rely on capabilities previously allowed by `sandbox` mode may fail.
+
+To revert to the old behavior, set [`untrusted_lua`](/gateway/configuration/#untrusted-lua) to `sandbox` or `on`. These options are not recommended for security reasons.
+
+For more information, see [Sandboxing](/plugins/pre-function/#sandboxing).
+
+#### Known issues in 3.14.0.0
+
+The following is a list of known issues in 3.14.0.0 that may be fixed in a future release.
+
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: "OpenID Connect plugin: returns 403 for nested claims"
+    description: |
+      The [OpenID Connect plugin](/plugins/openid-connect/) returns a `403 Forbidden` for requests that use nested claims.
+      To fix this issue, upgrade to 3.14.0.1.
+    status: Fixed in 3.14.0.1
+{% endtable %}
+
 ## 3.13.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-13-0-0) for all the changes in this release.
+
+### 3.13.0.3
+
+Breaking changes in the 3.13.0.3 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
 
 ### 3.13.0.0
 
@@ -214,6 +549,20 @@ rows:
 ## 3.10.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3-10-0-0) for all the changes in this release.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.4 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.10 format so that they continue to function as before. 
+See the [how-to guide on converting 3.4 to 3.10](/gateway/upgrade/convert-lts-34-310/) for more information.
+
+### 3.10.0.10
+
+Breaking changes in the 3.10.0.10 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
 
 ### 3.10.0.0
 
@@ -669,6 +1018,12 @@ As of 3.5.0.2, the default value has been changed to `off`.
 
 
 ## 3.4.x breaking changes
+
+Review the [changelog](/gateway/changelog/#3-4-0-0) for all the changes in this release.
+
+This is a Long Term Support (LTS) release, so you can migrate your configurations from 2.8 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
+This utility converts a set of predefined entity configuration changes into 3.4 format so that they continue to function as before. 
+See the [how-to guide on converting 2.8 to 3.4](/gateway/upgrade/convert-lts-28-34/) for more information.
 
 ### 3.4.3.5
 

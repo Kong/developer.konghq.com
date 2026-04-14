@@ -9,6 +9,7 @@ addons
 admin_listen
 admin's
 admin's
+ai_rate_limiting_policy
 agentic
 Agno
 Agno's
@@ -63,6 +64,7 @@ autoscaling
 Avalara
 Avro
 aws
+aws_iam
 Adyen
 AZs
 Backblaze
@@ -147,6 +149,7 @@ configMaps
 configs
 configurability
 Conjur
+Coroutine
 conntrack
 consumer_group
 consumer_id
@@ -176,6 +179,8 @@ daos
 dashboarding
 DashScope
 dashscope
+Databricks
+databricks
 Datadog
 Datadog
 datadog
@@ -199,6 +204,7 @@ dedupe
 deduplicate
 deduplicates
 deduplication
+deepseek
 degraphql
 degraphql_routes
 denylist
@@ -228,6 +234,9 @@ donut
 doppelganger
 downsample
 downsampled
+downscope
+downscoping
+downscoped
 downstreams
 downtime
 downtimes
@@ -288,6 +297,8 @@ gatewayclass
 gateway_entity
 gcloud
 gcp
+gcp_gce
+gcp_iam
 generationConfig
 geo
 geos
@@ -658,6 +669,7 @@ PayPal
 pdk
 pdks
 pem
+Percona
 perf
 performant
 petstore
@@ -670,6 +682,7 @@ pipelines
 plaintext
 Pongo
 Pongo
+Pgmoon
 Postgres
 Postgres
 PostgreSQL
@@ -1001,6 +1014,8 @@ vararg
 vc
 viewport
 viewports
+vLLM
+vllm
 vms
 vnet
 vpc
@@ -1040,3 +1055,6 @@ Zipkin
 Zipkin
 zipkin
 zsh
+Subrequest
+Tablepool
+XMLua

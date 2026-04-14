@@ -3,5 +3,6 @@ paths:
   - /codex
 service:
   name: codex-service
-
-
+protocols:
+  - http
+  - https

@@ -72,7 +72,12 @@ When encoding request bodies, several things happen:
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_fields_by_lua' custom_fields_by_lua_slug='config-custom-fields-by-lua' name=page.name slug=page.slug %}
+{% include /plugins/logging/log-custom-fields-by-lua.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}
 
 ## Schema registry support {% new_in 3.11 %}
 

@@ -48,7 +48,7 @@ related_resources:
     url: /event-gateway/configure-sasl-plain-backend-cluster-auth/
 
 min_version:
-  event_gateway: '1.1.0'
+  event-gateway: '1.1.0'
 
 automated_tests: false
 ---

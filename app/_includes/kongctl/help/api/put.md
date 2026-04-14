@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl api put <endpoint> [field=value ...] [flags]
 

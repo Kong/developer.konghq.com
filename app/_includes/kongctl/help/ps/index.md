@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl ps [flags]
   kongctl ps [command]

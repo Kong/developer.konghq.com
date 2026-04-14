@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option. When this option is enabled, the plugin's `ssl_verify` setting cannot be disabled.",
