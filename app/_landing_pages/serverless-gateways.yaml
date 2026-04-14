@@ -81,11 +81,11 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Migrate to Serverless Gateway V1 (beta)
+              title: Migrate to Serverless Gateway V1
               description: |
                 Migrate your existing Serverless Gateway V0 instance to a V1 to take advantage of new features.
 
-                Available in US regions only.
+                Available in US and EU regions only.
               icon: /assets/icons/code.svg
               cta:
                 text: Migrate

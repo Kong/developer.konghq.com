@@ -5,8 +5,6 @@ layout: reference
 description: | 
    Migrate a V0 Serverless Gateway to V1.
 
-beta: true
-
 breadcrumbs:
   - /serverless-gateways/
 tags:
@@ -34,7 +32,7 @@ related_resources:
 ---
 
 {:.warning}
-> **Note**: Serverless Gateways V1 are currently available for {{site.konnect_short_name}} organizations running in US regions only.
+> **Note**: Serverless Gateways V1 are currently available for {{site.konnect_short_name}} organizations running in US and EU regions only.
 
 Serverless Gateways V1 bring updates to the API, increased data plane provisioning speeds, and Terraform support.
 

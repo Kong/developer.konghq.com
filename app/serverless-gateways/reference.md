@@ -93,7 +93,7 @@ You can use the {{site.konnect_short_name}} APIs to provision control planes and
 Make sure that you have a [Konnect token](/konnect-api/#konnect-api-authentication) set in your environment.
 
 {% navtabs 'provision-serverless' %}
-{% navtab "Serverless V1 beta (US region only)" %}
+{% navtab "Serverless V1 (US and EU regions only)" %}
 
 {:.info}
 > **Note**: If you want to migrate an existing V0 control plane to V1, see the [migration guide](/serverless-gateways/migration/).
@@ -279,6 +279,17 @@ body:
         - 'Authorization:Bearer $SECRET_TOKEN_VALUE'
 {% endcontrol_plane_request %}
 <!--vale on-->
+
+### Egress IPs
+
+If you're using Serverless Gateways V1 (US and EU regions only), you can use egress IPs to filter IP addresses for your upstream Serverless Gateway applications.
+
+The Serverless V1 egress IPs are:
+* 18.207.85.202
+* 54.224.105.45
+* 52.202.189.172
+* 3.214.24.226
+* 3.228.135.57
 
 ## Limits
 Serverless Gateways have the following limits:
