@@ -221,6 +221,7 @@ prereqs:
                 httpd.serve_forever()
             EOF
             ```
+            {:.collapsible}
 
         1. Start the server in a separate terminal:
 
