@@ -36,9 +36,9 @@ rows:
 {% endfor %}
 {% endtable %}
 
-## Metering & Billing
+## {{site.metering_and_billing}}
 
-Common terms used in metering and billing.
+Common terms used in [{{site.metering_and_billing}}](/metering-and-billing/).
 
 {% for category in site.data.glossary.metering_and_billing %}
 

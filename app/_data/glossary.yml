@@ -228,9 +228,6 @@ metering_and_billing:
       - term: Payment terms
         description: |
           The conditions and timeframes under which a customer must pay for products or services.
-      - term: Paywall
-        description: |
-          A digital barrier that restricts access to content or features until a user pays or subscribes.
       - term: Progressive billing
         description: |
           A billing approach where invoicing thresholds are set in advance and a customer is charged automatically when their usage or spend reaches those limits.
@@ -251,15 +248,6 @@ metering_and_billing:
       - term: Grace period
         description: |
           A defined window of time after a missed payment during which a customer can pay without service interruption or penalty.
-      - term: Payment gateway
-        description: |
-          A technology service that processes credit card payments for online and in-person transactions.
-      - term: Payment processing fee
-        description: |
-          Charges imposed by payment processors and financial institutions for handling payment transactions.
-      - term: Payment schedule
-        description: |
-          A predetermined timeline specifying when payments are due for products or services.
       - term: Revenue leakage
         description: |
           The failure to collect all potential revenue due to billing errors, gaps in metering, or inefficient operations.
@@ -269,9 +257,6 @@ metering_and_billing:
       - term: Invoice aging
         description: |
           A report that categorizes unpaid customer invoices based on the length of time they have been outstanding.
-      - term: Invoice due date
-        description: |
-          The date on which a customer is expected to pay an invoice.
       - term: Invoice reconciliation
         description: |
           The process of matching invoices with payments received and ensuring billing records are accurate and consistent.
