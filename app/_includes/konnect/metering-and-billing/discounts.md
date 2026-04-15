@@ -1,6 +1,4 @@
-## Discounts and commitments
-
-Rate Cards discounts and commitments allow you to adjust the price of a feature in a plan. 
+Rate card discounts and commitments allow you to adjust the price of a feature in a plan. 
 
 The following table describes the discounts and commitment types:
 
