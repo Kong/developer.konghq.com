@@ -227,7 +227,7 @@ When {{site.metering_and_billing}} converts a gathering invoice into a draft inv
 * Customer information and metadata
 * Usage-based pricing quantities
 
-Because this data is snapshotted at creation time, changes to customer information or billing workflow configurations after an invoice is created don't automatically update existing invoices. To reflect such changes on a draft invoice, edit it directly before it advances.
+Because this data is cloned at creation time, changes to customer information or billing workflow configurations after an invoice is created don't automatically update existing invoices. To reflect such changes on a draft invoice, edit it directly before it advances.
 
 #### Invoice totals
 
