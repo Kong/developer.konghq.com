@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get konnect gateway [command]
 

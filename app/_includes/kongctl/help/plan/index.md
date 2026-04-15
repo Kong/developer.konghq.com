@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl plan [flags]
   kongctl plan [command]

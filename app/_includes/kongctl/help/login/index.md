@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl login [flags]
   kongctl login [command]

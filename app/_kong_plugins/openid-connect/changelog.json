@@ -56,6 +56,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.1": [
+    {
+      "message": "Fixed an issue where nested claim paths were not resolved correctly.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support to the `tls_certificate_verify`\nglobal option. When this option is enabled the plugin's flags\n`ssl_verify`, `tls_client_auth_ssl_verify`, and `session_memcached_ssl_verify`\ncannot be disabled.\n",
@@ -89,6 +96,23 @@
     },
     {
       "message": "Fixed an issue where TLS client certificate loading failed in non-default workspaces. The certificate lookup now explicitly specifies the plugin's workspace when querying the database during configuration initialization.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the `username` and `password` were used for Redis Sentinel and no authentication supported for Redis, causing `NOAUTH Authentication Required` errors.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -204,6 +228,18 @@
   "3.10.0.8": [
     {
       "message": "Fixed an issue where the `username` and `password` were used for Redis Sentinel and no authentication supported for Redis, causing `NOAUTH Authentication Required` errors.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -532,6 +568,18 @@
     {
       "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
       "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.25": [
+    {
+      "message": "Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Removed issuer discovery from schema to improve performance upon plugin initialization or updating. The issuer discovery will only be triggerd by client requests.",
+      "type": "performance",
       "scope": "Plugin"
     }
   ],

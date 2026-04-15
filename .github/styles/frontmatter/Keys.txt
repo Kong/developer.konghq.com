@@ -52,4 +52,4 @@ plugin_schema
 no_edit_link
 how_to_list
 toc_depth
-event_gateway
+event-gateway

@@ -12,6 +12,8 @@ For example, don't say "Change this variable.", instead, create a comment with a
 - Only comment when you have HIGH CONFIDENCE (>80%) that an issue exists
 - Be concise: one sentence per comment when possible
 - If you're uncertain whether something is an issue, don't comment. False positives create noise and reduce trust in the review process.
+- In how-tos, do not flag variable-name mismatches between prerequisite exports and `entity_examples` blocks when `variables` entries such as `value: $FOO` render with an automatically appended `DECK_` prefix. This is expected behavior.
+- Do not suggest adding duplicate environment variable exports just to align source variables with rendered example output.
 
 ## Key Guidelines
 - We write three types of docs: reference, landing page (written in yaml), and how-tos
@@ -19,3 +21,15 @@ For example, don't say "Change this variable.", instead, create a comment with a
 - When writing or editing UI steps, use the formats listed in docs/ui-steps-standards.md
 - When adding tags to the frontmatter, follow the instructions here: docs/update-tag-schema.md
 - For anything that is added to the frontmatter of a doc, use docs/front-matter-reference.md for a reference
+
+## Content to ignore
+Our repository contains some files that are generated from other sources.
+These files are not meant to be edited or reviewed, and should be ignored when making changes to the repository.
+This includes, but is not limited to:
+- Files in the `app/_references` directory
+- Files in the `app/_data/changelogs` directory
+- Files that follow the pattern `app/_kong_plugins/*/changelog.json`
+- Files that follow the pattern `app/_kong_plugins/*/schema.json`
+- Files in the `app/_schemas/gateway/plugins` directory
+- Files in the `app/_includes/deck/help` directory
+- Files in the `app/_includes/kongctl/help` directory

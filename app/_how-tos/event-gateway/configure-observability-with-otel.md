@@ -57,7 +57,7 @@ related_resources:
 automated_tests: false
 
 min_version:
-  event_gateway: '1.1.0'
+  event-gateway: '1.1.0'
 ---
 
 In this guide, you’ll configure the [Grafana LGTM stack](https://github.com/grafana/docker-otel-lgtm) to receive and visualize observability data from {{site.event_gateway_short}}. The LGTM stack bundles Grafana, [Loki](https://grafana.com/oss/loki/) (logs), [Tempo](https://grafana.com/oss/tempo/) (traces), [Prometheus](https://prometheus.io/) (metrics), and a built-in [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) in a single container.
