@@ -122,7 +122,7 @@ Features can be archived, after which no new entitlements can be created for the
 You can attach a per-unit cost to a feature to calculate the total cost of usage. This is useful for tracking infrastructure costs, understanding margins, and analyzing spending across customers. Once configured, you can query and visualize costs in [Cost Analytics](/metering-and-billing/cost-analytics/).
 
 {:.warning}
-> **Unit Cost is your internal cost:** To invoice customers and collect revenue use [rate cards](#rate-card).
+> **Unit Cost is your internal cost:** To invoice customers and collect revenue use [rate cards](#rate-cards).
 
 
 There are two types of unit costs: manual and LLM.
@@ -304,6 +304,10 @@ Entitlements can help you implement various monetization strategies:
 
 Entitlements are available in three types: metered, static, and boolean. See the [Entitlements reference](/metering-and-billing/entitlements/) to learn more.
 
+#### Grants
+
+A grant is a record of usage allowance issued to a specific customer via a metered entitlement. Grants determine how much of a feature a customer is allowed to consume. A metered entitlement tracks a running balance. When usage is reported, it is deducted from the grants issued for that entitlement.
+
 #### Billing cadence
 
 Rate cards include a billing cadence property that determines the billing frequency for the associated feature. For instance, when a usage-based rate card specifies a billing cadence of one month (`P1M`), the system generates monthly invoices reflecting that period's usage.
@@ -351,4 +355,3 @@ Example for reverse trials with plan phases:
 ## Subscriptions
 
 {{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
-
