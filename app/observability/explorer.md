@@ -279,7 +279,9 @@ With agentic usage reporting, you can:
 * See which tools are returning errors
 * View the latency for tools
 
-The following table shows which platform usage metrics you can view:
+Agentic usage reports the same metrics as [API usage](/observability/explorer/?tab=api-usage#metrics) for your A2A traffic as well as some agentic usage-specific metrics.
+
+The following table shows which agentic usage-specific metrics you can view:
 <!--vale off-->
 {% table %}
 columns:
@@ -290,29 +292,14 @@ columns:
   - title: "Description"
     key: "description"
 rows:
-  - metric: "A2A Context ID"
-    category: "UUID"
-    description: |
-  - metric: "A2A Error"
+  - metric: "A2A latency"
     category: "Latency"
     description: |
-  - metric: "A2A Method"
-    category: "Count"
+  - metric: "MCP Response Size"
+    category: "Size"
     description: |
-  - metric: "A2A Task ID"
-    category: "UUID"
-    description: |
-  - metric: "MCP Error"
-    category: "Latency"
-    description: |
-  - metric: "MCP Method"
-    category: "Count"
-    description: |
-  - metric: "MCP Session ID"
-    category: "UUID"
-    description: |
-  - metric: "MCP Tool Name"
-    category: "Count"
+  - metric: "A2A Response Size"
+    category: "Size"
     description: |
 {% endtable %}
 <!--vale on-->
