@@ -203,21 +203,17 @@ Given an invoice is always single currency, if the customer was migrated between
 
 ### Invoice structure
 
-{{site.metering_and_billing}} creates invoices by gathering invoices into draft invoices based on billing profile configurations. During this process, several key pieces of data are cloned to ensure invoice immutability:
+When {{site.metering_and_billing}} converts a gathering invoice into a draft invoice, it clones the following data to preserve the billing state at the time of creation:
 
-* The effective billing profile at the time of creation
+* The effective billing profile
 * Customer information and metadata
 * Usage-based pricing quantities
 
-This cloning mechanism ensures that invoices remain immutable once created, preserving the integrity of billing records even if the underlying data changes. The immutability is critical for maintaining accurate financial records and audit trails.
+Because this data is snapshotted at creation time, changes to customer information or billing workflow configurations after an invoice is created don't automatically update existing invoices. To reflect such changes on a draft invoice, edit it directly before it advances.
 
-#### Invoice contents
+#### Invoice totals
 
-While this cloning behavior ensures invoice immutability, any subsequent changes to workflow configurations or customer information must be made directly on the invoice if it's expected to affect the invoice. This includes modifications to customer names, billing workflows, and other invoice-specific details. This approach maintains data consistency.
-
-In addition to the cloned information, an invoice contains essential financial data including the currency and comprehensive totals information.
-
-The invoice totals comprise the following monetary values, with all totals automatically rounded according to the currency's precision:
+Each invoice includes a currency and the following monetary totals, all rounded to the currency's precision:
 
 {% table %}
 columns:
@@ -227,14 +223,14 @@ columns:
     key: contents
 rows:
   - name: "Flat fee"
-    contents: The the flat fee charged
+    contents: The flat fee charged
   - name: "Minimum spend"
     contents: The minimum spend amount defined in the subscription
   - name: "Usage in period"
     contents: The amount charged for usage-based pricing
   - name: "Discount percentage"
     contents: The amount of discounts applied
-  - name: "`Taxes inclusive"
+  - name: "Taxes inclusive"
     contents: The total amount of taxes included in the subtotal
   - name: "Taxes exclusive"
     contents: The total amount of taxes on top of the subtotal
@@ -246,15 +242,16 @@ rows:
     contents: The total amount after taxes and discounts charged to the customer
 {% endtable %}
 
+#### Invoice lines
 
-#### Invoice line
-
-The invoice also contains 0 or more lines. We allow empty invoices to signify that there's no outstanding liabilities against the customer.
+An invoice contains zero or more lines. {{site.metering_and_billing}} supports empty invoices to signify that there are no outstanding liabilities for the customer.
 
 The invoice can include two kinds of lines:
 
-* Flat fee: Represents a single line item.
-* Usage-based line: Represent charges that are calculated based on actual usage measured by meters. Each usage-based line is associated with a meter defined by the feature reference, which tracks usage data. The pricing structure for these charges is defined in the Rate Card, which specifies the unit price, any tiered pricing rules, volume discounts, and minimum or maximum charge constraints that should be applied to the measured usage.
+* Flat fee: A one-time or recurring fixed charge representing a single line item.
+* Usage-based line: Represents charges calculated from actual usage measured by meters. Each usage-based line is linked to:
+  * A meter (defined by the feature reference) that tracks usage data
+  * A Rate Card that defines the unit price, tiered pricing rules, volume discounts, and any minimum or maximum charge constraints
 
 ## Discounts and commitments
 
