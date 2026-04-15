@@ -144,7 +144,7 @@ rows:
   - metric: "Error Rate"
     category: "Percentage"
     description: |
-      The percentage of failed API requests. Includes 4xx and 5xx.
+      The percentage of failed API requests. This includes requests that return HTTP 4xx and 5xx status codes.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
