@@ -193,7 +193,7 @@ entities:
   plugins:
     - name: ai-mcp-oauth2
       tags:
-      - jwk
+        - jwk
       route: weather-jwk
       config:
         authorization_servers:
