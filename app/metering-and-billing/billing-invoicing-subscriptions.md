@@ -201,6 +201,24 @@ Given an invoice is always single currency, if the customer was migrated between
 {:.warning}
 > **Important:** For systematic changes that need to persist across billing cycles, we recommend modifying the subscription directly rather than editing gathering invoices. This ensures consistent billing behavior aligned with the intended subscription terms.
 
+Gathering invoices are useful for the following use cases:
+
+{% table %}
+columns:
+  - title: Use case
+    key: case
+  - title: Description
+    key: description
+rows:
+  - case: Checking upcoming charges
+    description: Gathering invoices contain the real-time status of existing charges. Use them to monitor current amounts and lines to be billed before the final invoice is issued.
+  - case: Proactive corrections
+    description: |
+      Modifications to gathering invoices are reflected in the next generated invoice, enabling proactive adjustments to pricing and discounts for upcoming line items.
+      <br><br>
+      These modifications do not alter the underlying subscription. The subscription continues to generate future line items according to its original configuration.
+{% endtable %}
+
 ### Invoice structure
 
 When {{site.metering_and_billing}} converts a gathering invoice into a draft invoice, it clones the following data to preserve the billing state at the time of creation:
