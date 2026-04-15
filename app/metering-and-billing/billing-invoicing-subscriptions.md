@@ -161,6 +161,10 @@ Subscriptions automate the billing lifecycle by:
 
 Subscriptions can be created from predefined plans or fully customized at creation time to accommodate unique customer requirements. This flexibility supports everything from self-serve sign-ups to enterprise contract negotiations.
 
+All subscriptions follow a monthly billing cycle anchored to one of the following:
+* The subscription start date, either the creation date or a specified future date.
+* The first day of the month, with usage prorated for the partial initial period.
+
 To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
 
 ## Plan migration
