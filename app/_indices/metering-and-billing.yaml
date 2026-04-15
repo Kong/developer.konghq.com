@@ -41,7 +41,7 @@ sections:
         url: /metering-and-billing/product-catalog/#pricing-models
       - title: Entitlements
         description: Entitlements describe customer access, usage-limits, and configuration to features.
-        url: /metering-and-billing/product-catalog/#entitlements
+        url: /metering-and-billing/entitlements/
   - title: Collectors
     items:
       - path: /metering-and-billing/collectors/**/*
