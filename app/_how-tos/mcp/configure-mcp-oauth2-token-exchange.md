@@ -423,4 +423,9 @@ body:
 {% endvalidation %}
 <!--vale on-->
 
-A successful response confirms that {{site.ai_gateway}} validated the original token, exchanged it at the Keycloak token endpoint, and forwarded the exchanged token to the upstream MCP server. The upstream accepts the request only because it receives a token whose `azp` claim is `token-exchange-gateway`.
+A successful response confirms that {{site.ai_gateway}} validated the original token, exchanged it at the Keycloak token endpoint, and forwarded the exchanged token to the upstream MCP server. The upstream accepts the request only because it receives a token whose `azp` claim is `token-exchange-gateway`:
+
+```json
+{"jsonrpc": "2.0", "id": 2, "result": {"content": [{"type": "text", "text": "{\n  \"iss\": \"http://localhost:8080/realms/token-exchange\",\n  \"azp\": \"token-exchange-gateway\",\n  \"aud\": [\n    \"account\"\n  ],\n  \"sub\": \"3f61670f-5e6b-4344-a5a0-a41fd48f3e39\"\n}"}], "structuredContent": {"iss": "http://localhost:8080/realms/token-exchange", "azp": "token-exchange-gateway", "aud": ["account"], "sub": "3f61670f-5e6b-4344-a5a0-a41fd48f3e39"}}}%
+```
+{:.no-copy-code}
