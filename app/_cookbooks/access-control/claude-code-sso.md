@@ -1,6 +1,5 @@
 ---
 featured: true
-time_estimate: "20 min"
 content_type: cookbook
 products:
     - ai-gateway
