@@ -667,6 +667,10 @@
 
   .filter-results-field__input {
     @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
+
+    &::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
   }
 
   .searchbox-results-container {

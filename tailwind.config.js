@@ -9,7 +9,9 @@ module.exports = {
     "app/_how-tos/**/*.md",
     "app/_plugins/**/*.rb",
     "app/_assets/javascripts/**",
+    "app/_assets/entrypoints/**",
     "app/gateway/**",
+    "app/cookbooks/**/*.html",
   ],
   darkMode: "selector",
   safelist: [
