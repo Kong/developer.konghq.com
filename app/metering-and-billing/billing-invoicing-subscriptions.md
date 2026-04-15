@@ -201,6 +201,61 @@ Given an invoice is always single currency, if the customer was migrated between
 {:.warning}
 > **Important:** For systematic changes that need to persist across billing cycles, we recommend modifying the subscription directly rather than editing gathering invoices. This ensures consistent billing behavior aligned with the intended subscription terms.
 
+### Invoice structure
+
+{{site.metering_and_billing}} creates invoices by gathering invoices into draft invoices based on billing profile configurations. During this process, several key pieces of data are cloned to ensure invoice immutability:
+
+* The effective billing profile at the time of creation
+* Customer information and metadata
+* Usage-based pricing quantities
+
+This cloning mechanism ensures that invoices remain immutable once created, preserving the integrity of billing records even if the underlying data changes. The immutability is critical for maintaining accurate financial records and audit trails.
+
+#### Invoice contents
+
+While this cloning behavior ensures invoice immutability, any subsequent changes to workflow configurations or customer information must be made directly on the invoice if it's expected to affect the invoice. This includes modifications to customer names, billing workflows, and other invoice-specific details. This approach maintains data consistency.
+
+In addition to the cloned information, an invoice contains essential financial data including the currency and comprehensive totals information.
+
+The invoice totals comprise the following monetary values, with all totals automatically rounded according to the currency's precision:
+
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Contents
+    key: contents
+rows:
+  - name: "Flat fee"
+    contents: The the flat fee charged
+  - name: "Minimum spend"
+    contents: The minimum spend amount defined in the subscription
+  - name: "Usage in period"
+    contents: The amount charged for usage-based pricing
+  - name: "Discount percentage"
+    contents: The amount of discounts applied
+  - name: "`Taxes inclusive"
+    contents: The total amount of taxes included in the subtotal
+  - name: "Taxes exclusive"
+    contents: The total amount of taxes on top of the subtotal
+  - name: "Taxes"
+    contents: Sum of inclusive and exclusive taxes
+  - name: "Subtotal"
+    contents: The total amount of a line before discounts and taxes
+  - name: "Total"
+    contents: The total amount after taxes and discounts charged to the customer
+{% endtable %}
+
+
+#### Invoice line
+
+The invoice also contains 0 or more lines. We allow empty invoices to signify that there's no outstanding liabilities against the customer.
+
+The invoice can include two kinds of lines:
+
+* Flat fee: Represents a single line item.
+* Usage-based line: Represent charges that are calculated based on actual usage measured by meters. Each usage-based line is associated with a meter defined by the feature reference, which tracks usage data. The pricing structure for these charges is defined in the Rate Card, which specifies the unit price, any tiered pricing rules, volume discounts, and minimum or maximum charge constraints that should be applied to the measured usage.
+
 ## Discounts and commitments
 
 {% include_cached /konnect/metering-and-billing/discounts.md %}
