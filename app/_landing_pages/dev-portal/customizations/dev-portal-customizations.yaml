@@ -300,4 +300,6 @@ rows:
                 1. Enter your from name and email.
                    Reply-to email is optional.
                 
-                Alternatively, you can send a POST request to the [`/portals/{portalId}/custom-domain` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-custom-domain) and a POST request to the [`/portals/{portalId}/email-config` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-email-config).
+                Alternatively, you can use the {{site.dev_portal}} API:
+                1. Send a POST request to the [`/portals/{portalId}/custom-domain` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-custom-domain)
+                2. Send a POST request to the [`/portals/{portalId}/email-config` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-email-config).
