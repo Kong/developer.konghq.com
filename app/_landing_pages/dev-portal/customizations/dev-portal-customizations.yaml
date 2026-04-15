@@ -4,6 +4,8 @@ metadata:
   description: Customize the look, structure, and access of your {{site.dev_portal}} with flexible page controls and branding options
   products:
     - dev-portal
+  works_on:
+    - konnect
 breadcrumbs:
   - /dev-portal/
 rows:
@@ -293,13 +295,4 @@ rows:
           config:
             - q: How do I customize the reply-to and from for {{site.dev_portal}} emails?
               a: |
-                To customize the reply-to and from, do the following in the {{site.konnect_short_name}} UI:
-                1. Set up a [custom domain](/dev-portal/custom-domains/) in {{site.dev_portal}}.
-                1. In the Portal Editor, navigate to the email settings.
-                1. Click **Email notification settings**.
-                1. Enter your from name and email.
-                   Reply-to email is optional.
-                
-                Alternatively, you can use the {{site.dev_portal}} API:
-                1. Send a POST request to the [`/portals/{portalId}/custom-domain` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-custom-domain)
-                2. Send a POST request to the [`/portals/{portalId}/email-config` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-email-config).
+                {% include faqs/portal-email.md %}
