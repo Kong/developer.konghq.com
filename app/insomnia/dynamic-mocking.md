@@ -54,7 +54,7 @@ rows:
   - option: Apply conditional logic
     description: |
       Use simple Liquid conditions to vary the response based on the request.  
-      Only a limited set of Liquid tags is supported for safety.
+      Only a limited subset of Liquid tags is supported for safety.
   - option: Generate fake data
     description: |
       Insert random but realistic data, such as names, emails, or timestamps using faker variables.
