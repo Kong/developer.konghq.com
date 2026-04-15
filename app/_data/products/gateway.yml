@@ -1433,7 +1433,7 @@ releases:
   - release: "3.14"
     latest: true
     lts: true
-    ee-version: "3.14.0.0"
+    ee-version: "3.14.0.1"
     eol: 2029-04-07
     distributions:
       - amazonlinux2:
@@ -1631,6 +1631,7 @@ marketplaces:
   - Google Cloud Marketplace
 
 release_dates:
+  '3.14.0.1': 2026/04/10
   '3.4.3.25': 2026/04/09
   '3.10.0.10': 2026/04/09
   '3.13.0.3': 2026/04/08

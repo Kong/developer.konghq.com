@@ -352,8 +352,9 @@ columns:
 rows:
   - issue: "OpenID Connect plugin: returns 403 for nested claims"
     description: |
-      The [OpenID Connect plugin](/plugins/openid-connect/) returns a `403 Forbidden` for requests that use nested claims. A fix will be released in an upcoming patch release.
-    status: Not fixed
+      The [OpenID Connect plugin](/plugins/openid-connect/) returns a `403 Forbidden` for requests that use nested claims.
+      To fix this issue, upgrade to 3.14.0.1.
+    status: Fixed in 3.14.0.1
 {% endtable %}
 
 ## 3.13.x breaking changes
