@@ -543,13 +543,18 @@ rows:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
+        - type: plugin
+          config:
+            slug: ai-custom-guardrail
+            icon: ai-custom-guardrail.png
+      - blocks:
         - type: card
           config:
             title: Amazon Bedrock guardrails
             description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#input-formats
+              url: /plugins/ai-proxy/#supported-native-llm-formats
               align: end
 
   - header:
