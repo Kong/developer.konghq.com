@@ -204,3 +204,12 @@ See the following pages for the CLI flag and configuration options:
 
 - [Inso CLI overview](/inso-cli/)
 - [Inso CLI configuration](/inso-cli/configuration/)
+
+### Troubleshooting
+
+If you encounter request timeouts errors (400) only in Insomnia, the `Content-Lenght` parameter might be forcing the server to validate the content length against the body, and failing in case it mutates.
+
+To resolve the error, try the following:
+
+1. From your request's **Mock Header** tab, remove or deactivate the `Content-Lenght` parameter.
+2. Click **Test** to see if the issue is resolved.
