@@ -253,7 +253,7 @@ rows:
   - name: "Taxes exclusive"
     contents: The total amount of taxes on top of the subtotal
   - name: "Taxes"
-    contents: Sum of inclusive and exclusive taxes
+    contents: The sum of inclusive and exclusive taxes
   - name: "Subtotal"
     contents: The total amount of a line before discounts and taxes
   - name: "Total"
