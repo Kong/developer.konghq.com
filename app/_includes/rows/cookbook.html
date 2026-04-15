@@ -20,13 +20,6 @@
     <div class="flex items-center gap-4 flex-shrink-0">
       {% if cat %}{% include badge.html text=cat.text %}{% endif %}
 
-      {% if cb.time_estimate %}
-      <span class="flex items-center gap-1 text-xs text-terciary whitespace-nowrap">
-        {% include_svg '/assets/icons/clock.svg' width="14" height="14" %}
-        {{ cb.time_estimate }}
-      </span>
-      {% endif %}
-
       <span class="text-sm text-primary whitespace-nowrap">View recipe &rarr;</span>
     </div>
   </a>
