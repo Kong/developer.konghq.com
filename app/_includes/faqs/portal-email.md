@@ -1,6 +1,6 @@
 To customize the reply-to and from, do the following in the {{site.konnect_short_name}} UI:
 1. Set up a [custom domain](/dev-portal/custom-domains/) in {{site.dev_portal}}.
-1. In the Portal Editor, navigate to the email settings ![Email icon](/assets/icons/email.svg){:.inline .no-image-expand}.
+1. In the Portal Editor, navigate to the email settings.
 1. Click **Email notification settings**.
 1. Enter your from name and email.
     Reply-to email is optional.
