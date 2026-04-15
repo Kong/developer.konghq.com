@@ -161,7 +161,7 @@ Subscriptions automate the billing lifecycle by:
 
 Subscriptions can be created from predefined plans or fully customized at creation time to accommodate unique customer requirements. This flexibility supports everything from self-serve sign-ups to enterprise contract negotiations.
 
-All subscriptions follow a monthly billing cycle anchored to one of the following:
+Subscriptions follow a billing cycle determined by their related [rate card](/metering-and-billing/product-catalog/#rate-cards), anchored to one of the following:
 * The subscription start date, either the creation date or a specified future date.
 * The first day of the month, with usage prorated for the partial initial period.
 
