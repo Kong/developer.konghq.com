@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: "Events"
+    url: /metering-and-billing/events/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
 faqs:
@@ -94,7 +96,7 @@ rows:
 
 ## Event ingestion
 
-{{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion.
+{{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion. For more information, see [Events](/metering-and-billing/events/).
 
 As CloudEvents is generic, here are some best practices for defining events in {{site.metering_and_billing}}:
 <!--vale off -->
