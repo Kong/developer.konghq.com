@@ -34,6 +34,8 @@ include:
 
 # Collections
 collections:
+  ai_gateway_entities:
+    output: true
   gateway_entities:
     output: true
   how-tos:
@@ -52,6 +54,16 @@ defaults:
       permalink: "/how-to/:path/"
       breadcrumbs:
         - "/how-to/"
+  - scope:
+      path: "_ai_gateway_entities"
+      type: "ai_gateway_entities"
+    values:
+      layout: "gateway_entity"
+      permalink: "/ai-gateway/entities/:path/"
+      products:
+        - ai-gateway
+      breadcrumbs:
+        - "/ai-gateway/"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
