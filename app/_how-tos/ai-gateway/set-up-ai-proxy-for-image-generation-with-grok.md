@@ -77,7 +77,7 @@ entities:
           header_value: Bearer ${xai_api_key}
         model:
           provider: xai
-          name: grok-2-image
+          name: grok-imagine-image
 variables:
   xai_api_key:
     value: $XAI_API_KEY
