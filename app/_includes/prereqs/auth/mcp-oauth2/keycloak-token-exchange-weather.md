@@ -19,7 +19,7 @@ This setup is intentionally separate from the JWK validation guide. It uses a de
       -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
       -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
       -e KC_HOSTNAME=http://localhost:8080 \
-      quay.io/keycloak/keycloak start-dev
+      quay.io/keycloak/keycloak start-dev --features=token-exchange
     ```
 
 1. Open the admin console at `http://localhost:8080/admin/master/console/`.
