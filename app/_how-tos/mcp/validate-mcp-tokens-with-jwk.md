@@ -17,7 +17,7 @@ entities:
   - service
   - route
   - plugin
-permalink: /how-to/validate-mcp-tokens-with-jwk/
+permalink: /mcp/validate-mcp-tokens-with-jwk/
 tags:
   - ai
   - mcp
