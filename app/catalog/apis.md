@@ -241,7 +241,7 @@ Based on this data, you get the following generated URLs:
 ## API image
 
 You can upload an image for your API. 
-The image is displayed as an icon for your API in Dev Portals it's published to.
+The image is displayed as an icon for your API in any [Dev Portal](/dev-portal/) where the API is published.
 The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 350 × 350 pixels.
 
 To upload an API image, navigate to **Catalog > [APIs](https://cloud.konghq.com/apis)**. Edit an existing API and upload an image.
