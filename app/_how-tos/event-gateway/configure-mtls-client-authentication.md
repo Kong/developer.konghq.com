@@ -54,7 +54,7 @@ related_resources:
     url: /api/konnect/event-gateway/
 
 min_version:
-  event_gateway: '1.1.0'
+  event-gateway: '1.1.0'
 ---
 
 ## Overview

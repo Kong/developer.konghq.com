@@ -17,10 +17,11 @@ related_resources:
   - text: "Subjects"
     url: /metering-and-billing/subjects/
 
+toc_depth: 4
 ---
 
 
-{{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering—so you can manage pricing, entitlements, and packaging in one place. 
+{{site.konnect_short_name}} {{site.metering_and_billing}}'s Product Catalog lets you centrally define the different plans and plan features that make up your offering, so you can manage pricing, entitlements, and packaging in one place. 
 
 Each Product Catalog plan consists of:
 * [Features](#features) that you want to price or govern. Can be metered or static.
@@ -60,6 +61,29 @@ flowchart TB
     entitlement-premium ~~~ addon
 {% endmermaid %}
 
+{{site.metering_and_billing}}'s Product Catalog supports various packaging and pricing strategies:
+
+{% table %}
+columns:
+  - title: Use case
+    key: case
+  - title: Description
+    key: description
+rows:
+  - case: Self-service plans
+    description: Let users pick from tiered plans on your pricing page.
+  - case: Enterprise deals
+    description: Customize pricing and discounts for specific customers.
+  - case: Add-ons
+    description: Cross-sell or bundle products, like extra storage, SSO, etc.
+  - case: |
+      [Usage-based pricing](/how-to/meter-and-bill-active-users/)
+    description: Optimize revenue by billing for outcomes.
+  - case: Versioned catalogs
+    description: Maintain multiple catalog versions and migrate users as needed.
+  - case: Trial bundles
+    description: Offer limited-time free or discounted bundles to new users.
+{% endtable %}
 
 ## Features
 
@@ -160,6 +184,34 @@ rows:
     description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
 {% endtable %}
 
+### Feature configuration
+
+Features have a system-generated ID and a user-defined key. The key should be an easy-to-understand string that can be used to reference the feature in your codebase, `gpt_4_tokens` for example.
+
+If you want to track usage for a feature, you can associate a [meter](/metering-and-billing/metering/) with it. The associated meter will be used to track usage in metered entitlements of the feature. You can also filter the usage tracked by the meter using the **Meter Group Filters** field. This is useful if you want to share the same meter across different features, but want to track and enforce usage separately based on a differentiating property. For example, if one meter tracks all model token usage, you can set a filter on `model=gpt-4` to track and enforce GPT-4 tokens separately from other models. In this case, the meter must have the same group-by keys defined.
+
+{:.info}
+> The associated meter must use `SUM` or `COUNT` as its aggregation type.
+
+The following fields are available for feature configuration:
+
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+rows:
+  - field: "Name"
+    description: A human-readable display name for the feature.
+  - field: "Key"
+    description: A unique lookup key to help access features in API or web.
+  - field: "Meter"
+    description: Optional. The meter to use to track usage of the feature.
+  - field: "Meter Group Filters"
+    description: Optional. The filter for a subset of usage in the meter.
+{% endtable %}
+
 ## Plans
 
 Plans are a core component of the Product Catalog. Plans define the pricing and entitlements your customers receive in {{site.konnect_short_name}} {{site.metering_and_billing}}. They act as reusable templates that describe what a customer gets and how they are charged. Each plan can include multiple phases, prices, and entitlements, and can be versioned. 
@@ -237,41 +289,44 @@ Besides the **Free** pricing model, other models require configuration that you 
 {% include_cached /konnect/metering-and-billing/tax.md %}
 
 #### Entitlements
+  
+Entitlements are used to control access to different features.
 
-Entitlements are used to control access to different features, they make it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
+They make it possible to implement complex pricing scenarios such as monthly quotas, prepaid billing, and per-customer pricing.
 
 Entitlements can help you implement various monetization strategies:
+
 * Enforce usage limits, like monthly token allowances.
 * Sell plans with various feature sets.
 * Offer custom quotes and per-customer pricing.
 * Adopt prepaid billing and grant usage, and handle top-ups.
 * Define and track pre-purchase commitments.
 
-There are three different types of entitlements:
+Entitlements are available in three types: metered, static, and boolean. See the [Entitlements reference](/metering-and-billing/entitlements/) to learn more.
 
-{% table %}
-columns:
-  - title: Type
-    key: type
-  - title: Description
-    key: description
-rows:
-  - type: Metered
-    description: |
-      Allow customers to consume features up to a certain usage limit, e.g., 10 million monthly tokens.
+#### Billing cadence
 
-      This is useful for example when the underlying resources are expensive, as is the case for most AI products. Metered entitlements leverage the usage information collected by {{site.metering_and_billing}} and give you the ability to do real time usage enforcement as well as historical queries and access checks.
-  - type: Static
-    description: |
-      Define customer-specific configurations as a JSON value. e.g. `{ "enabledModels": ["gpt-3", "gpt-4"] }`
+Rate cards include a billing cadence property that determines the billing frequency for the associated feature. For instance, when a usage-based rate card specifies a billing cadence of one month (`P1M`), the system generates monthly invoices reflecting that period's usage.
 
-      For example, you may only give free users access to a subset of AI models. With static entitlements, you can specify which models the customer can use based on their tier.
-  - type: Boolean
-    description: |
-      Describe access to specific features, like SAML SSO, without needing configuration or metering.
+For flat fee rate cards, the billing cadence can be omitted. In this case, the specified fee is charged once per subscription phase rather than recurring at regular intervals.
 
-      In cases where you don't need to set up usage limits or configure customer level settings you can use boolean entitlements. These are simple true or false access grants to a feature. 
-{% endtable %}
+#### Price
+
+The price property defines the price the feature is sold at. See the [Pricing models section](#pricing-models) for more details.
+
+Free items can be implemented using three distinct approaches:
+
+* Omitting the price setting
+* Setting an explicit price of $0
+* Applying a 100% discount to the standard price
+
+Each approach has different implications:
+
+When no price is set across all rate cards, subscriptions can be initiated without payment method information, making it suitable for free plans.
+
+If any rate card has an explicit $0 price, payment method information is still required during subscription setup.
+
+Using a 100% discount on the standard price provides transparency to users by displaying the original value of the feature before the discount.
 
 ### Plan versions
 
@@ -289,9 +344,11 @@ Example for reverse trials with plan phases:
 * Phase 2 (Free): limited to 1,000 tokens
 
 
+## Discounts and commitments
 {% include_cached /konnect/metering-and-billing/discounts.md %}
 
 
 ## Subscriptions
 
 {{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
+

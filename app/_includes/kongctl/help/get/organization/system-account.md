@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get organization system-account [flags]
 

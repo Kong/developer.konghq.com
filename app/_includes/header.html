@@ -213,21 +213,46 @@
                 </span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="navbar-item__menu gap-6" role="menu">
-                {% for category in site.data.plugin_categories %}
-                  <li class="flex">
-                    <a class="flex gap-2 w-full" href="/plugins/?category={{category.slug}}">
-                      <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
-                      <div class="flex flex-col">
-                        <span class="text-base lg:text-sm text-primary">{{category.text}}</span>
+              <div class="navbar-item__menu [grid-template-columns:max-content] lg:bg-primary !p-0" role="menu">
+                <div class="flex lg:py-6 lg:px-6">
+                  <div class="flex flex-col gap-6 w-full">
+
+                    <div class="flex flex-col gap-5 text-sm">
+                      <span class="font-semibold">API Gateway Plugins</span>
+                      <div class="grid lg:grid-cols-2 gap-4">
+                        {% for category in site.data.plugin_categories %}
+                          <a class="flex gap-2 items-center w-full py-2 lg:py-0" href="/plugins/?category={{category.slug}}">
+                            <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
+                            <span class="text-base lg:text-sm text-primary">{{category.text}}</span>
+                          </a>
+                        {% endfor %}
                       </div>
-                    </a>
-                  </li>
-                {% endfor %}
-                <li class="flex gap-4">
-                  <a class="text-base lg:text-sm text-brand w-full" href="/plugins">View all &rarr;</a>
-                </li>
-              </ul>
+                      <a class="text-base lg:text-sm text-brand w-full" href="/plugins/">View all &rarr;</a>
+                    </div>
+                    <div class="flex border-t border-primary/5 w-full"></div>
+
+                    <div class="flex flex-col gap-5 text-sm">
+                      <span class="font-semibold">Event Gateway Policies</span>
+                      <div class="grid lg:grid-cols-2 gap-4">
+                        {% for category in site.data.event_gateway_policy_categories %}
+                          <a class="flex gap-2 items-center w-full py-2 lg:py-0" href="/event-gateway/policies/?category={{category.slug}}">
+                            <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
+                            <span class="text-base lg:text-sm text-primary">{{category.text}}</span>
+                          </a>
+                        {% endfor %}
+                      </div>
+                      <a class="text-base lg:text-sm text-brand w-full" href="/event-gateway/policies/">View all &rarr;</a>
+                    </div>
+                    <div class="flex border-t border-primary/5 w-full"></div>
+
+                    <div class="flex flex-col gap-5 text-sm">
+                      <span class="font-semibold">Service Mesh Policies</span>
+                      <a class="text-base lg:text-sm text-brand w-full" href="/mesh/policies/">View all &rarr;</a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
             </li>
             <li class="navbar-item group" role="menuitem">
               <a class="navbar-item__trigger" tabindex="0" href="/api/">

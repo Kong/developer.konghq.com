@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl logout [flags]
   kongctl logout [command]

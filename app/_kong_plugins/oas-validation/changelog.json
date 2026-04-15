@@ -197,6 +197,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.1.2": [
     {
       "message": "Fixed an issue where the plugin throws an error for responses without a Content-Type header.",

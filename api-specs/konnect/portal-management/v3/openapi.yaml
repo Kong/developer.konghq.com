@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.4.0
+  version: 3.4.1
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3'
+  x-oas-source: kong/platform-api@b86de17dd121406f9a94d62b1ca4bd412d216992
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b86de17dd121406f9a94d62b1ca4bd412d216992'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -514,7 +514,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: Returns the tree view of custom pages that have been created for this portal.
+      description: Returns the tree view of custom pages that have been created for this portal. The full tree is returned in one response; this endpoint is not paginated.
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/PortalId'
@@ -537,8 +537,6 @@ paths:
               examples:
                 ListPortalPagesBadRequestExample1:
                   $ref: '#/components/examples/ListPortalPagesBadRequestExample1'
-                ListPortalPagesBadRequestExample2:
-                  $ref: '#/components/examples/ListPortalPagesBadRequestExample2'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -3174,7 +3172,7 @@ components:
         - parent_page_id
       title: PortalPageResponse
     ListPortalPagesResponse:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal. Not paginated.
       type: object
       properties:
         data:
@@ -3198,7 +3196,7 @@ components:
         - data
       title: ListPortalPagesResponse
     PortalSnippetResponse:
-      description: Details about a page in a portal.
+      description: Details about a snippet in a portal.
       type: object
       properties:
         id:
@@ -3230,7 +3228,7 @@ components:
         - updated_at
       title: PortalSnippetResponse
     ListPortalSnippetsResponse:
-      description: A paginated list of custom pages in a portal.
+      description: A paginated list of custom snippets in a portal.
       type: object
       properties:
         data:
@@ -3258,7 +3256,7 @@ components:
       required:
         - data
         - meta
-      title: ListPortalPagesResponse
+      title: ListPortalSnippetsResponse
     UpdatePortalSnippetRequest:
       description: Update a snippet in a portal.
       type: object
@@ -6793,11 +6791,6 @@ components:
           - guides-sidebar-toc
     ListPortalPagesExample1:
       value:
-        meta:
-          page:
-            number: 1
-            size: 10
-            total: 1
         data:
           - id: 8f9fd312-a987-4628-b4c5-bb4f4fddd5f7
             slug: /
@@ -6810,17 +6803,6 @@ components:
             parent_page_id: null
             children: []
     ListPortalPagesBadRequestExample1:
-      value:
-        status: 400
-        title: Invalid Request
-        instance: 'kong:trace:1433447772874964729'
-        detail: Invalid Parameters
-        invalid_parameters:
-          - field: 'page[size]'
-            rule: is_number
-            reason: '"page[size]" must be a number'
-            source: query
-    ListPortalPagesBadRequestExample2:
       value:
         status: 400
         title: Invalid Request
@@ -9113,7 +9095,7 @@ components:
             Example 1:
               $ref: '#/components/examples/PortalPageExample1'
     ListPortalPages:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal (nested `children`). Not paginated.
       content:
         application/json:
           schema:

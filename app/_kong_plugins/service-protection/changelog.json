@@ -18,6 +18,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.9.0.0": [
     {
       "message": "Implemented a new plugin to protect services with request rate limiting.",

@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8f51814a808a50184f0263e1c635fb7e5f3def83
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f51814a808a50184f0263e1c635fb7e5f3def83'
+  x-oas-source: kong/platform-api@5626fc77fa2ff9bafa5efe4bd13f94840cb4130a
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5626fc77fa2ff9bafa5efe4bd13f94840cb4130a'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -3676,11 +3676,9 @@ components:
           modify_headers: '#/components/schemas/EventGatewayModifyHeadersPolicy'
           schema_validation: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
           encrypt: '#/components/schemas/EventGatewayEncryptPolicy'
-          skip_record: '#/components/schemas/EventGatewaySkipRecordPolicy'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicy'
-        - $ref: '#/components/schemas/EventGatewaySkipRecordPolicy'
         - $ref: '#/components/schemas/EventGatewayEncryptPolicy'
     EventGatewayClusterPolicyModify:
       description: The typed schema of the cluster policy to modify it.

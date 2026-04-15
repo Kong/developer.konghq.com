@@ -62,7 +62,7 @@ rows:
           - type: card
             config:
               icon: /assets/icons/ai.svg
-              title: Proxy A2A traffic
+              title: Proxy and observe A2A traffic
               description: |
                 Export A2A metrics and traces with the AI A2A Proxy plugin and OpenTelemetry.
               ctas:
@@ -70,8 +70,6 @@ rows:
                   url: "/plugins/ai-a2a-proxy/"
                 - text: Proxy A2A agents through AI Gateway
                   url: "/how-to/proxy-a2a-agents/"
-                - text: Set up Jaeger with Gen AI OpenTelemetry
-                  url: "/how-to/set-up-jaeger-with-gen-ai-otel/"
       - blocks:
           - type: card
             config:
@@ -79,10 +77,8 @@ rows:
               title: Secure A2A endpoints
               description: Apply authentication to A2A routes using standard gateway plugins.
               ctas:
-                - text: Key Authentication plugin
-                  url: "/plugins/key-auth/"
-                - text: OpenID Connect plugin
-                  url: "/plugins/openid-connect/"
+                - text: Secure A2A endpoints with OpenID Connect and Okta
+                  url: "/how-to/secure-a2a-endpoints-with-oidc/"
                 - text: Secure A2A endpoints with Key Authentication
                   url: "/how-to/secure-a2a-endpoints/"
 
@@ -100,12 +96,13 @@ rows:
                     - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
                     - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
                     - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
-  - column_count: 4
+  - column_count: 2
     columns:
       - blocks:
         - type: card
           config:
             title: A2A audit logs
+            icon: /assets/icons/monitor.svg
             description: Review AI A2A Proxy log output fields, task states, and payload capture.
             cta:
               url: /ai-gateway/ai-audit-log-reference/#ai-a2a-proxy-logs
@@ -113,26 +110,29 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Logging plugins
+            description: Send A2A traffic data to File Log, HTTP Log, TCP Log, and other destinations.
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /plugins/?category=logging
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: A2A OpenTelemetry spans
             description: Inspect A2A-specific span attributes in distributed traces.
+            icon: /assets/icons/opentelemetry.svg
             cta:
               url: /ai-gateway/llm-open-telemetry/#a2a-agent-traffic
               align: end
       - blocks:
         - type: card
           config:
-            title: OpenTelemetry plugin
-            description: Export traces to Jaeger, Zipkin, or any OTLP-compatible backend.
+            title: A2A OpenTelemetry metrics
+            description: Monitor A2A-specific OTLP metrics and telemetry signals.
+            icon: /assets/icons/opentelemetry.svg
             cta:
-              url: /plugins/opentelemetry/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Logging plugins
-            description: Send A2A traffic data to File Log, HTTP Log, TCP Log, and other destinations.
-            cta:
-              url: /plugins/?category=logging
+              url: /ai-gateway/ai-otel-metrics/#a2a-metrics
               align: end
 
   - header:

@@ -34,6 +34,9 @@ phases:
 
 policy_target: virtual_cluster
 
+categories:
+  - security
+
 icon: graph.svg
 ---
 
