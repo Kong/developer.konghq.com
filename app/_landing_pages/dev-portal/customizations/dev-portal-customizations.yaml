@@ -291,11 +291,11 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: How do I customize the reply to and from for {{site.dev_portal}} emails?
+            - q: How do I customize the reply-to and from for {{site.dev_portal}} emails?
               a: |
-                To customize the reply to and from, do the following:
+                To customize the reply-to and from, do the following:
                 1. Set up a [custom domain](/dev-portal/custom-domains/) in {{site.dev_portal}}.
-                1. In the {{site.dev_portal}} Editor, navigate to the email settings.
+                1. In the Portal Editor, navigate to the email settings.
                 1. Click **Email notification settings**.
-                1. Enter your reply from name and email. 
-                   Reply to email is optional.
+                1. Enter your from name and email.
+                   Reply-to email is optional.
