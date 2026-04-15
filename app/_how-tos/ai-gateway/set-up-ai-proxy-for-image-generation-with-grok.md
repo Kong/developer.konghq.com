@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up AI Proxy to use the `image/v1/images/generations` route type and the xAI [Grok Imagine Image](https://docs.x.ai/developers/models/grok-imagine-image-pro?cluster=eu-west-1) model:
+Set up AI Proxy to use the `image/v1/images/generations` route type and the xAI [Grok Imagine Image](https://docs.x.ai/developers/models/grok-imagine-image?cluster=eu-west-1) model:
 
 {% entity_examples %}
 entities:
