@@ -268,6 +268,55 @@ rows:
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
+{% navtab "Agentic usage" %}
+
+Agentic usage tracks analytics data for agent to agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
+You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics will display in {{site.konnect_short_name}} Explorer.
+
+With agentic usage reporting, you can:
+* See how many times a tool was called
+* View the most called tools
+* See which tools are returning errors
+* View the latency for tools
+
+The following table shows which platform usage metrics you can view:
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "A2A Context ID"
+    category: "UUID"
+    description: |
+  - metric: "A2A Error"
+    category: "Latency"
+    description: |
+  - metric: "A2A Method"
+    category: "Count"
+    description: |
+  - metric: "A2A Task ID"
+    category: "UUID"
+    description: |
+  - metric: "MCP Error"
+    category: "Latency"
+    description: |
+  - metric: "MCP Method"
+    category: "Count"
+    description: |
+  - metric: "MCP Session ID"
+    category: "UUID"
+    description: |
+  - metric: "MCP Tool Name"
+    category: "Count"
+    description: |
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
 {% endnavtabs %}
 
 ## Time intervals

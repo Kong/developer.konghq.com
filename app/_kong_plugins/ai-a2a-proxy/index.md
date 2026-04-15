@@ -216,6 +216,8 @@ unlimited capture for request detection.
 {:.warning}
 > Payload logging may expose sensitive data. Enable with care in production environments.
 
+You can view AI A2A Proxy analytics in {{site.konnect_short_name}} Explorer and Dashboards using the [agentic usage analytics](/observability/explorer/?tab=agentic-usage#metrics).
+
 ### Log output fields
 
 {% include /plugins/ai-a2a-proxy/log-output-fields.md %}
