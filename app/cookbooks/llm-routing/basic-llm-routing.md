@@ -1,4 +1,6 @@
 ---
+popular: true
+time_estimate: "15 min"
 title: Basic LLM Routing
 description: Route requests to any supported LLM provider through Kong AI Gateway.
 content_type: cookbook
