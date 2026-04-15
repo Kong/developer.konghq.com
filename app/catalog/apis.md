@@ -244,7 +244,12 @@ You can upload an image for your API.
 The image is displayed as an icon for your API in any [Dev Portal](/dev-portal/) where the API is published.
 The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 350 × 350 pixels.
 
-To upload an API image, navigate to **Catalog > [APIs](https://cloud.konghq.com/apis)**. Edit an existing API and upload an image.
+To upload an API image, do the following:
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
+1. In the {{site.konnect_catalog}} sidebar, click **[APIs](https://cloud.konghq.com/apis)**. 
+1. Click the API you want to add the image to.
+1. From the action menu, select "Edit".
+1. Click **Upload image** and upload an image.
 
 ## Allow developers to consume your API
 
