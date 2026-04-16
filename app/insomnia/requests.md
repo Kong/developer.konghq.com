@@ -211,5 +211,5 @@ If you encounter request timeouts errors (400) only in Insomnia, the `Content-Le
 
 To resolve the error, try the following:
 
-1. From your request's **Mock Header** tab, remove or deactivate the `Content-Lenght` parameter.
+1. From your request's **Mock Header** tab, remove or deactivate the `Content-Length` parameter.
 2. Click **Test** to see if the issue is resolved.
