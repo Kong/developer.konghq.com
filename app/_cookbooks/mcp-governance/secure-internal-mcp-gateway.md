@@ -7,6 +7,8 @@ tools:
     - kongctl
 works_on:
     - konnect
+categories:
+  - mcp-governance
 layout: reference
 title: Secure Internal MCP Gateway
 description: Aggregate multiple internal APIs into a single MCP server with OAuth 2.1 authentication and tool-level access control via consumer-group ACLs.

@@ -52,7 +52,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
     <h2 class="font-bold text-2xl">Featured</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for cb in featured_cookbooks limit:3 %}
-        {% assign cat_slug = cb.url | split: '/' | slice: 2, 1 | first %}
+        {% assign cat_slug = cb.categories | first %}
         {% assign cat = categories | where: "slug", cat_slug | first %}
         {% include cards/cookbook.html cookbook=cb category=cat %}
       {% endfor %}
@@ -66,7 +66,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
     <h2 class="font-bold text-2xl">Popular</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for cb in popular_cookbooks limit:3 %}
-        {% assign cat_slug = cb.url | split: '/' | slice: 2, 1 | first %}
+        {% assign cat_slug = cb.categories | first %}
         {% assign cat = categories | where: "slug", cat_slug | first %}
         {% include cards/cookbook.html cookbook=cb category=cat %}
       {% endfor %}
@@ -108,7 +108,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
 
       <div class="flex flex-col bg-secondary shadow-primary rounded-b-md" id="cookbook-list">
         {% for cb in all_cookbooks %}
-          {% assign cat_slug = cb.url | split: '/' | slice: 2, 1 | first %}
+          {% assign cat_slug = cb.categories | first %}
           {% assign cat = categories | where: "slug", cat_slug | first %}
           {% include rows/cookbook.html cookbook=cb category=cat last=forloop.last %}
         {% endfor %}

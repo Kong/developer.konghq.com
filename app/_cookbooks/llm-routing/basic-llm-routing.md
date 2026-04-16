@@ -5,6 +5,8 @@ description: Route requests to any supported LLM provider through Kong AI Gatewa
 content_type: cookbook
 products:
   - ai-gateway
+categories:
+  - llm-routing
 tools:
   - deck
 canonical: true

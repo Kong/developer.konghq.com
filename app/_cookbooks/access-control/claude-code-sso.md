@@ -3,6 +3,8 @@ featured: true
 content_type: cookbook
 products:
     - ai-gateway
+categories:
+  - access-control
 tools:
     - deck
 works_on:
@@ -235,16 +237,16 @@ prereqs:
         This tutorial uses Anthropic:
 
         1. [Create an Anthropic account](https://console.anthropic.com/).
-        1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create a decK variable with the API key:
+        2. [Get an API key](https://console.anthropic.com/settings/keys).
+        3. Create a decK variable with the API key:
 
           ```sh
           export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
           ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
-        1. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
-        1. Create decK variables with your AWS credentials:
+        4. Ensure you have an AWS account with [Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled.
+        5. Create decK variables with your AWS credentials:
 
         ```sh
         export DECK_AWS_ACCESS_KEY_ID='your-access-key'
@@ -257,9 +259,9 @@ prereqs:
         do not support Anthropic-format requests — you need an Azure AI Services resource with a
         Claude model deployment:
 
-        1. [Create an Azure AI Services resource](https://learn.microsoft.com/en-us/azure/ai-services/model-catalog/how-to/deploy-models-serverless) with a Claude model deployment.
-        1. Note your instance name, deployment ID, and API version.
-        1. Create decK variables:
+        6. [Create an Azure AI Services resource](https://learn.microsoft.com/en-us/azure/ai-services/model-catalog/how-to/deploy-models-serverless) with a Claude model deployment.
+        7. Note your instance name, deployment ID, and API version.
+        8. Create decK variables:
 
            ```sh
            export DECK_AZURE_API_KEY='your-azure-api-key'
