@@ -11,7 +11,7 @@ This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The
       -p 8200:8200 \
       -e SKIP_SETCAP=1 \
       -e VAULT_DEV_ROOT_TOKEN_ID=root \
-   hashicorp/vault
+      hashicorp/vault
    ```
 2. Export the `VAULT_ADDR` and `VAULT_TOKEN`:
 
