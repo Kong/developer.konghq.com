@@ -53,154 +53,143 @@ prereqs:
       content: |
         This guide uses a small MCP debug server that rejects the original client token and only accepts the exchanged token forwarded by {{site.ai_gateway}}. This makes the token exchange observable during validation.
 
-        1. Create the server:
+        Create the server:
 
-            ```sh
-            cat > token-exchange-mcp-server.py <<'EOF'
-            #!/usr/bin/env python3
-            import base64
-            import json
-            import os
-            from http.server import BaseHTTPRequestHandler, HTTPServer
-
-
-            HOST = os.environ.get("TOKEN_EXCHANGE_MCP_HOST", "0.0.0.0")
-            PORT = int(os.environ.get("TOKEN_EXCHANGE_MCP_PORT", "3002"))
-            EXPECTED_AZP = os.environ.get("TOKEN_EXCHANGE_EXPECTED_AZP", "token-exchange-gateway")
-
-            USERS = [
-                {"id": "a1b2c3d4", "fullName": "Alice Johnson"},
-                {"id": "e5f6g7h8", "fullName": "Bob Smith"},
-            ]
+        ```sh
+        cat > token-exchange-mcp-server.py <<'EOF'
+        #!/usr/bin/env python3
+        import base64
+        import json
+        import os
+        from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
-            def _json_response(handler, status, payload):
-                body = json.dumps(payload).encode("utf-8")
-                handler.send_response(status)
-                handler.send_header("Content-Type", "application/json")
-                handler.send_header("Content-Length", str(len(body)))
-                handler.end_headers()
-                handler.wfile.write(body)
+        HOST = os.environ.get("TOKEN_EXCHANGE_MCP_HOST", "0.0.0.0")
+        PORT = int(os.environ.get("TOKEN_EXCHANGE_MCP_PORT", "3002"))
+        EXPECTED_AZP = os.environ.get("TOKEN_EXCHANGE_EXPECTED_AZP", "token-exchange-gateway")
+
+        USERS = [
+            {"id": "a1b2c3d4", "fullName": "Alice Johnson"},
+            {"id": "e5f6g7h8", "fullName": "Bob Smith"},
+        ]
 
 
-            def _decode_jwt_payload(token):
-                parts = token.split(".")
-                if len(parts) != 3:
-                    raise ValueError("invalid JWT format")
-
-                payload = parts[1]
-                payload += "=" * (-len(payload) % 4)
-                decoded = base64.urlsafe_b64decode(payload.encode("ascii"))
-                return json.loads(decoded.decode("utf-8"))
+        def _json_response(handler, status, payload):
+            body = json.dumps(payload).encode("utf-8")
+            handler.send_response(status)
+            handler.send_header("Content-Type", "application/json")
+            handler.send_header("Content-Length", str(len(body)))
+            handler.end_headers()
+            handler.wfile.write(body)
 
 
-            def _extract_claims(handler):
-                authorization = handler.headers.get("Authorization", "")
-                if not authorization.startswith("Bearer "):
-                    raise PermissionError("missing bearer token")
+        def _decode_jwt_payload(token):
+            parts = token.split(".")
+            if len(parts) != 3:
+                raise ValueError("invalid JWT format")
 
-                token = authorization.split(" ", 1)[1].strip()
-                claims = _decode_jwt_payload(token)
-                if claims.get("azp") != EXPECTED_AZP:
-                    raise PermissionError(
-                        f"unexpected azp '{claims.get('azp')}', expected '{EXPECTED_AZP}'"
-                    )
-                return claims
+            payload = parts[1]
+            payload += "=" * (-len(payload) % 4)
+            decoded = base64.urlsafe_b64decode(payload.encode("ascii"))
+            return json.loads(decoded.decode("utf-8"))
 
 
-            def _mcp_result(request_id, structured_content):
-                return {
-                    "jsonrpc": "2.0",
-                    "id": request_id,
-                    "result": {
-                        "content": [{"type": "text", "text": json.dumps(structured_content, indent=2)}],
-                        "structuredContent": structured_content,
-                    },
-                }
+        def _extract_claims(handler):
+            authorization = handler.headers.get("Authorization", "")
+            if not authorization.startswith("Bearer "):
+                raise PermissionError("missing bearer token")
+
+            token = authorization.split(" ", 1)[1].strip()
+            claims = _decode_jwt_payload(token)
+            if claims.get("azp") != EXPECTED_AZP:
+                raise PermissionError(
+                    f"unexpected azp '{claims.get('azp')}', expected '{EXPECTED_AZP}'"
+                )
+            return claims
 
 
-            class Handler(BaseHTTPRequestHandler):
-                server_version = "token-exchange-mcp/1.0"
+        def _mcp_result(request_id, structured_content):
+            return {
+                "jsonrpc": "2.0",
+                "id": request_id,
+                "result": {
+                    "content": [{"type": "text", "text": json.dumps(structured_content, indent=2)}],
+                    "structuredContent": structured_content,
+                },
+            }
 
-                def do_POST(self):
-                    if self.path != "/mcp":
-                        _json_response(self, 404, {"error": "not found"})
-                        return
 
-                    length = int(self.headers.get("Content-Length", "0"))
-                    raw_body = self.rfile.read(length)
+        class Handler(BaseHTTPRequestHandler):
+            server_version = "token-exchange-mcp/1.0"
 
-                    try:
-                        claims = _extract_claims(self)
-                        request = json.loads(raw_body.decode("utf-8"))
-                    except PermissionError as exc:
-                        _json_response(self, 403, {"error": str(exc)})
-                        return
-                    except Exception as exc:
-                        _json_response(self, 400, {"error": str(exc)})
-                        return
+            def do_POST(self):
+                if self.path != "/mcp":
+                    _json_response(self, 404, {"error": "not found"})
+                    return
 
-                    method = request.get("method")
-                    request_id = request.get("id")
-                    params = request.get("params") or {}
+                length = int(self.headers.get("Content-Length", "0"))
+                raw_body = self.rfile.read(length)
 
-                    if method == "tools/list":
-                        _json_response(
-                            self,
-                            200,
-                            {
-                                "jsonrpc": "2.0",
-                                "id": request_id,
-                                "result": {
-                                    "tools": [
-                                        {
-                                            "name": "list_users",
-                                            "description": "List sample users.",
-                                            "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
-                                        },
-                                        {
-                                            "name": "show_auth_context",
-                                            "description": "Return selected claims from the upstream bearer token.",
-                                            "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
-                                        },
-                                    ]
-                                },
-                            },
-                        )
-                        return
+                try:
+                    claims = _extract_claims(self)
+                    request = json.loads(raw_body.decode("utf-8"))
+                except PermissionError as exc:
+                    _json_response(self, 403, {"error": str(exc)})
+                    return
+                except Exception as exc:
+                    _json_response(self, 400, {"error": str(exc)})
+                    return
 
-                    if method == "tools/call":
-                        tool_name = params.get("name")
-                        if tool_name == "list_users":
-                            _json_response(self, 200, _mcp_result(request_id, {"users": USERS}))
-                            return
-                        if tool_name == "show_auth_context":
-                            aud = claims.get("aud")
-                            if isinstance(aud, str):
-                                aud = [aud]
-                            _json_response(
-                                self,
-                                200,
-                                _mcp_result(
-                                    request_id,
+                method = request.get("method")
+                request_id = request.get("id")
+                params = request.get("params") or {}
+
+                if method == "tools/list":
+                    _json_response(
+                        self,
+                        200,
+                        {
+                            "jsonrpc": "2.0",
+                            "id": request_id,
+                            "result": {
+                                "tools": [
                                     {
-                                        "iss": claims.get("iss"),
-                                        "azp": claims.get("azp"),
-                                        "aud": aud or [],
-                                        "sub": claims.get("sub"),
+                                        "name": "list_users",
+                                        "description": "List sample users.",
+                                        "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
                                     },
-                                ),
-                            )
-                            return
+                                    {
+                                        "name": "show_auth_context",
+                                        "description": "Return selected claims from the upstream bearer token.",
+                                        "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False},
+                                    },
+                                ]
+                            },
+                        },
+                    )
+                    return
 
+                if method == "tools/call":
+                    tool_name = params.get("name")
+                    if tool_name == "list_users":
+                        _json_response(self, 200, _mcp_result(request_id, {"users": USERS}))
+                        return
+                    if tool_name == "show_auth_context":
+                        aud = claims.get("aud")
+                        if isinstance(aud, str):
+                            aud = [aud]
                         _json_response(
                             self,
                             200,
-                            {
-                                "jsonrpc": "2.0",
-                                "id": request_id,
-                                "error": {"code": -32601, "message": f"unknown tool '{tool_name}'"},
-                            },
+                            _mcp_result(
+                                request_id,
+                                {
+                                    "iss": claims.get("iss"),
+                                    "azp": claims.get("azp"),
+                                    "aud": aud or [],
+                                    "sub": claims.get("sub"),
+                                },
+                            ),
                         )
                         return
 
@@ -210,29 +199,39 @@ prereqs:
                         {
                             "jsonrpc": "2.0",
                             "id": request_id,
-                            "error": {"code": -32601, "message": f"unsupported method '{method}'"},
+                            "error": {"code": -32601, "message": f"unknown tool '{tool_name}'"},
                         },
                     )
-
-                def log_message(self, format, *args):
                     return
 
+                _json_response(
+                    self,
+                    200,
+                    {
+                        "jsonrpc": "2.0",
+                        "id": request_id,
+                        "error": {"code": -32601, "message": f"unsupported method '{method}'"},
+                    },
+                )
 
-            if __name__ == "__main__":
-                httpd = HTTPServer((HOST, PORT), Handler)
-                print(f"Token-exchange MCP server listening at http://{HOST}:{PORT}/mcp")
-                httpd.serve_forever()
-            EOF
-            ```
-            {:.collapsible}
+            def log_message(self, format, *args):
+                return
 
-        1. Start the server in a separate terminal:
 
-            ```sh
-            python3 token-exchange-mcp-server.py
-            ```
+        if __name__ == "__main__":
+            httpd = HTTPServer((HOST, PORT), Handler)
+            print(f"Token-exchange MCP server listening at http://{HOST}:{PORT}/mcp")
+            httpd.serve_forever()
+        EOF
+        ```
 
-        1. Verify the server is running at `http://localhost:3002/mcp`.
+        Start the server in a separate terminal:
+
+        ```sh
+        python3 token-exchange-mcp-server.py
+        ```
+
+        Verify the server is running at `http://localhost:3002/mcp`.
   entities:
     services:
       - mcp-token-exchange-isolated-service
