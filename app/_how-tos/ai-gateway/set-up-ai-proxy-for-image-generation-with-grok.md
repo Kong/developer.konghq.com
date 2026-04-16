@@ -63,7 +63,7 @@ cleanup:
 
 ## Configure the plugin
 
-Set up AI Proxy to use the `image/v1/images/generations` route type and the xAI [Grok 2 Image Gen](https://docs.x.ai/docs/models/grok-2-image) model:
+Set up AI Proxy to use the `image/v1/images/generations` route type and the xAI [Grok Imagine Image](https://docs.x.ai/developers/models/grok-imagine-image?cluster=eu-west-1) model:
 
 {% entity_examples %}
 entities:
@@ -77,7 +77,7 @@ entities:
           header_value: Bearer ${xai_api_key}
         model:
           provider: xai
-          name: grok-2-image
+          name: grok-imagine-image
 variables:
   xai_api_key:
     value: $XAI_API_KEY
