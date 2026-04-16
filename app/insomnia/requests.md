@@ -207,7 +207,7 @@ See the following pages for the CLI flag and configuration options:
 
 ### Troubleshooting
 
-If you encounter request timeouts errors (400) only in Insomnia, the `Content-Lenght` parameter might be forcing the server to validate the content length against the body, and failing in case it mutates.
+If you get a `400` request timeouts error in Insomnia, but the same request works with cURL, it may be due to the `Content-Length` header. Insomnia might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match.
 
 To resolve the error, try the following:
 
