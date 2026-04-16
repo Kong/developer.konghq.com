@@ -3,6 +3,8 @@ title: "Gen AI OpenTelemetry spans attributes reference"
 content_type: reference
 layout: reference
 
+toc_depth: 4
+
 products:
   - ai-gateway
   - gateway
@@ -50,7 +52,7 @@ works_on:
   - konnect
 ---
 
-{% new_in 3.13 %} {{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions. {% new_in 3.14 %} [A2A agent traffic](#a2a-agent-traffic) is also instrumented via the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
+{% new_in 3.13 %} {{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions. {% new_in 3.14 %} [A2A agent traffic](#a2a-span-attributes) is also instrumented via the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
 
 You can export these attributes via a supported backend such as [Jaeger](/how-to/set-up-jaeger-with-otel/) configured through Kong's [OpenTelemetry plugin](/plugins/opentelemetry) or the [Zipkin plugin](/plugins/zipkin) to:
 
@@ -68,216 +70,15 @@ The span data is sent to the configured OTEL endpoint through the existing traci
 
 {% include plugins/otel/collecting-otel-data.md  %}
 
-### Provider & Operation
-
-These attributes identify the Gen AI provider and the type of operation requested (such as chat completion or embeddings generation).
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value Type
-    key: type
-  - title: Description
-    key: desc
-rows:
-  - key: |
-        `gen_ai.operation.name`
-    type: "string"
-    desc: "Operation requested from the provider, such as chat or embeddings."
-  - key: |
-        `gen_ai.provider.name`
-    type: "string"
-    desc: "Name of the Generative AI provider handling the request."
-{% endtable %}
-<!-- vale on -->
-
-### Request details
-
-These attributes capture model configuration parameters sent with the request. They control generation behavior such as randomness, token limits, and sampling strategies.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value Type
-    key: type
-  - title: Description
-    key: desc
-rows:
-  - key: |
-        `gen_ai.request.choice.count`
-    type: "int"
-    desc: "Number of result candidates requested in a response."
-  - key: |
-        `gen_ai.request.encoding_formats`
-    type: "string[]"
-    desc: "Requested encoding formats for embeddings results."
-  - key: |
-        `gen_ai.request.frequency_penalty`
-    type: "double"
-    desc: "Penalty that reduces repetition of frequent tokens."
-  - key: |
-        `gen_ai.request.max_tokens`
-    type: "int"
-    desc: "Maximum number of tokens the model may generate."
-  - key: |
-        `gen_ai.request.model`
-    type: "string"
-    desc: "Model name targeted by the request."
-  - key: |
-        `gen_ai.request.presence_penalty`
-    type: "double"
-    desc: "Penalty that reduces repetition of new tokens."
-  - key: |
-        `gen_ai.request.seed`
-    type: "int"
-    desc: "Seed value that increases response reproducibility."
-  - key: |
-        `gen_ai.request.stop_sequences`
-    type: "string[]"
-    desc: "Token sequences that stop further generation."
-  - key: |
-        `gen_ai.request.temperature`
-    type: "double"
-    desc: "Randomness factor for generated results."
-  - key: |
-        `gen_ai.request.top_k`
-    type: "double"
-    desc: "Top-k sampling configuration limiting candidate tokens."
-  - key: |
-        `gen_ai.request.top_p`
-    type: "double"
-    desc: "Probability threshold applied during nucleus sampling."
-{% endtable %}
-<!-- vale on -->
-
-### Payloads and types
-
-These attributes contain the actual input and output messages exchanged with the model, along with output format specifications and system-level instructions. Payload attributes are only emitted when payload logging is enabled.
-
 {:.warning}
-> The `gen_ai.input.messages` and `gen_ai.output.messages` attributes log full request and response payloads. These may contain personally identifiable information (PII), credentials, or other sensitive data.
->
-> Make sure your tracing backend has appropriate access controls and retention policies before enabling payload logging.
+> Some Gen AI span attributes can include sensitive request or response payload data. In particular, `gen_ai.input.messages` and `gen_ai.output.messages` may contain prompts, model outputs, PII, secrets, or credentials. Review your tracing, retention, access-control, and redaction requirements before enabling or exporting payload-related tracing data.
 
-Attributes with the `any` type contain JSON-serialized objects. The structure follows the message format of the underlying provider API (for example, OpenAI's chat completion message schema).
+## Span attributes
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value Type
-    key: type
-  - title: Description
-    key: desc
-rows:
-  - key: |
-        `gen_ai.input.messages`
-    type: "any"
-    desc: "Structured messages sent as input when payload logging is enabled."
-  - key: |
-        `gen_ai.output.messages`
-    type: "any"
-    desc: "Structured messages returned by the model when payload logging is enabled."
-  - key: |
-        `gen_ai.output.type`
-    type: "string"
-    desc: "Requested output format, such as text or JSON."
-  - key: |
-        `gen_ai.system_instructions`
-    type: "string"
-    desc: "System-level instructions provided to steer model behavior."
-{% endtable %}
-<!-- vale on -->
+### Span attribute reference
 
-### Response and usage
+{% include plugins/otel/span_attribute_tables.md %}
 
-These attributes capture metadata from the model's response, including token consumption metrics used for cost analysis and performance monitoring.
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value Type
-    key: type
-  - title: Description
-    key: desc
-rows:
-  - key: |
-        `gen_ai.response.finish_reasons`
-    type: "string[]"
-    desc: "Reasons returned for why token generation stopped."
-  - key: |
-        `gen_ai.response.id`
-    type: "string"
-    desc: "Unique identifier assigned to the completion by the provider."
-  - key: |
-        `gen_ai.response.model`
-    type: "string"
-    desc: "Model name reported by the provider in the response."
-  - key: |
-        `gen_ai.usage.input_tokens`
-    type: "int"
-    desc: "Number of tokens processed as input to the model."
-  - key: |
-        `gen_ai.usage.output_tokens`
-    type: "int"
-    desc: "Number of tokens generated by the model in the response."
-{% endtable %}
-<!-- vale on -->
 
-### A2A agent traffic {% new_in 3.14 %}
 
-When the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/) is enabled with `config.logging.log_statistics: true`, it creates a `kong.a2a` child span on each A2A request. The following attributes are emitted on that span:
-
-{% include /plugins/ai-a2a-proxy/otel-span-attributes.md %}
-
-### Specific Features (Tools, Agents, Data Sources)
-
-These attributes provide context for advanced Gen AI features such as tool calling, agent-based architectures, and data source grounding.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Key
-    key: key
-  - title: Value Type
-    key: type
-  - title: Description
-    key: desc
-rows:
-  - key: |
-        `gen_ai.agent.description`
-    type: "string"
-    desc: "Description of the agent's purpose or role."
-  - key: |
-        `gen_ai.agent.id`
-    type: "string"
-    desc: "Identifier representing the application-defined agent."
-  - key: |
-        `gen_ai.token.type`
-    type: "string"
-    desc: "Token counting strategy used for the request."
-  - key: |
-        `gen_ai.tool.call.id`
-    type: "string"
-    desc: "Unique identifier assigned to a tool call from the model."
-  - key: |
-        `gen_ai.tool.description`
-    type: "string"
-    desc: "Description of the tool being invoked."
-  - key: |
-        `gen_ai.tool.name`
-    type: "string"
-    desc: "Name of the tool invoked by the model."
-  - key: |
-        `gen_ai.tool.type`
-    type: "string"
-    desc: "Type of tool invoked, such as function."
-{% endtable %}
-<!-- vale on -->
