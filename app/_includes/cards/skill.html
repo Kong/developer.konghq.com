@@ -1,0 +1,40 @@
+{% assign skill = include.skill %}
+{% capture quick_install %}{% include skills/quick_install.md slug=skill.slug %}{% endcapture %}
+<div
+  class="card card__bordered min-h-[220px]"
+  data-card="skill"
+  data-title="{{ skill.title | downcase }}"
+  data-description="{{ skill.description | downcase | truncate: 200 }}"
+>
+  <a href="{{ skill.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+    <div class="flex items-center justify-between">
+      <h3 class="font-mono">/{{ skill.title }}</h3>
+      {% if skill.version %}<span class="badge w-fit text-xs">{{ skill.version }}</span>{% endif %}
+    </div>
+
+    <div class="flex flex-col gap-3 flex-grow">
+      <p class="text-sm line-clamp-3">{{ skill.description }}</p>
+    </div>
+
+    {% if skill.scripts or skill.references or skill.assets %}
+    <div class="flex flex-col gap-3 flex-grow text-brand">
+      {% if skill.scripts %}
+        {% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}
+      {% endif %}
+
+      {% if skill.references %}
+        {% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}
+      {% endif %}
+
+      {% if skill.assets %}
+        {% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col border-t border-primary/5 pt-4">
+    {{ quick_install | liquify | markdownify }}
+    </div>
+  </a>
+</div>

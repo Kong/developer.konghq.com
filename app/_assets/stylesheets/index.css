@@ -844,6 +844,28 @@
     }
   }
 
+  #skills-grid {
+    .custom-code-block, .highlight {
+      pre {
+        @apply overflow-hidden text-ellipsis;
+      }
+    }
+  }
+
+  .skill #description ~ .content {
+    @apply bg-code-block rounded-md p-4;
+  }
+
+
+  .skill .heading-section h2 {
+    @apply border-b border-primary/5 pb-2;
+  }
+
+  .skill table {
+    @apply block overflow-x-auto;
+  }
+
+
  .custom-code-block.collapsible {
     [data-code-snippet] {
       @apply overflow-hidden relative max-h-80;
@@ -1006,7 +1028,6 @@
 .card:target {
   @apply border-brand-saturated border-2;
 }
-
 
 /* Spec Renderer */
 .call-button {

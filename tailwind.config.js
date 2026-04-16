@@ -10,6 +10,7 @@ module.exports = {
     "app/_plugins/**/*.rb",
     "app/_assets/javascripts/**",
     "app/gateway/**",
+    "app/skills/**/*.html",
   ],
   darkMode: "selector",
   safelist: [
