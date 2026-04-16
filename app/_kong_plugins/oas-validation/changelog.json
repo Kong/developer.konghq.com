@@ -103,6 +103,23 @@
       "scope": "Plugin"
     }
   ],
+  "3.12.0.5": [
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Added support for validating `multipart/form-data` requests.",
