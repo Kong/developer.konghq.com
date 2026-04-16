@@ -270,8 +270,8 @@ rows:
 {% endnavtab %}
 {% navtab "Agentic usage" %}
 
-Agentic usage tracks analytics data for agent to agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
-You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics will display in {{site.konnect_short_name}} Explorer.
+Agentic usage tracks analytics data for agent-to-agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
+You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics display in {{site.konnect_short_name}} Explorer.
 
 With agentic usage reporting, you can:
 * See how many times a tool was called
@@ -279,9 +279,8 @@ With agentic usage reporting, you can:
 * See which tools are returning errors
 * View the latency for tools
 
-Agentic usage reports the same metrics as [API usage](/observability/explorer/?tab=api-usage#metrics) for your A2A traffic as well as some agentic usage-specific metrics.
 
-The following table shows which agentic usage-specific metrics you can view:
+The following table shows the agentic usage-specific metrics you can view:
 <!--vale off-->
 {% table %}
 columns:
@@ -295,7 +294,7 @@ rows:
   - metric: "A2A latency"
     category: "Latency"
     description: |
-      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the agents response. Users can select average (avg).
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the agent's response. Users can select average (avg).
   - metric: "MCP Response Size"
     category: "Size"
     description: |

@@ -138,7 +138,7 @@ rows:
         - type: card
           config:
             title: Agentic usage analytics in {{site.konnect_short_name}}
-            description: View A2A-specific metrics and analytics in {{site.konnect_short_name}}
+            description: View A2A-specific metrics and analytics in {{site.konnect_short_name}}.
             icon: /assets/icons/KogoBlue.svg
             cta:
               url: /observability/explorer/?tab=agentic-usage#metrics
