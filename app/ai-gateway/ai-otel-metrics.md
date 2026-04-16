@@ -104,6 +104,7 @@ Some metrics have additional requirements:
 
 These metrics follow the [OpenTelemetry Gen AI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/). They capture request duration, upstream latency, token usage, and streaming performance.
 
+### Metric reference
 {% include plugins/otel/metric_tables.md metric_prefixes="gen_ai." %}
 
 ## Kong Gen AI metrics
