@@ -295,6 +295,7 @@ rows:
   - metric: "A2A latency"
     category: "Latency"
     description: |
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the agents response. Users can select average (avg).
   - metric: "MCP Response Size"
     category: "Size"
     description: |
