@@ -12,7 +12,7 @@
 {% endfor %}
 {% unless show_span %}{% continue %}{% endunless %}
 {% endif %}
-#### {{ span.title | default: span.name }}{% if span.min_version %} {% new_in span.min_version %}{% endif %}
+#### {{ span.title | default: span.name }}{% if span.title and span.title != span.name %} (`{{ span.name }}`){% endif %}{% if span.min_version %} {% new_in span.min_version %}{% endif %}
 
 {{ span.description }}
 
