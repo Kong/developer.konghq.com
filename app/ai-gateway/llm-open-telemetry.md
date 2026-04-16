@@ -52,7 +52,9 @@ works_on:
   - konnect
 ---
 
-{% new_in 3.13 %} {{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions. {% new_in 3.14 %} [A2A agent traffic](#a2a-span-attributes) is also instrumented via the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
+{% new_in 3.13 %} {{site.ai_gateway}} supports [OpenTelemetry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes) instrumentation for generative AI traffic. When the OpenTelemetry (OTEL) plugin is enabled in {{site.ai_gateway}}, a set of **Gen AI-specific attributes** are emitted on tracing spans. These attributes complement the core tracing instrumentations described in the [{{site.base_gateway}} tracing guide](/gateway/tracing), giving insight into the Gen AI request lifecycle (inputs, model, and outputs), usage, and tool/agent interactions. 
+
+{% new_in 3.14 %} [A2A agent traffic](#a2a-span-attributes) is also instrumented via the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
 
 You can export these attributes via a supported backend such as [Jaeger](/how-to/set-up-jaeger-with-otel/) configured through Kong's [OpenTelemetry plugin](/plugins/opentelemetry) or the [Zipkin plugin](/plugins/zipkin) to:
 
@@ -73,9 +75,7 @@ The span data is sent to the configured OTEL endpoint through the existing traci
 {:.warning}
 > Some Gen AI span attributes can include sensitive request or response payload data. In particular, `gen_ai.input.messages` and `gen_ai.output.messages` may contain prompts, model outputs, PII, secrets, or credentials. Review your tracing, retention, access-control, and redaction requirements before enabling or exporting payload-related tracing data.
 
-## Span attributes
-
-### Span attribute reference
+## Span attribute reference
 
 {% include plugins/otel/span_attribute_tables.md %}
 

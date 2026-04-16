@@ -42,6 +42,8 @@ related_resources:
     url: /plugins/?category=ai
   - text: OpenTelemetry plugin
     url: /plugins/opentelemetry/
+  - text: Full OpenTelemetry metrics reference
+    url: /gateway/otel-metrics/
   - text: "{{site.base_gateway}} tracing guide"
     url: /gateway/tracing/
 

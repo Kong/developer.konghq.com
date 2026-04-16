@@ -48,6 +48,12 @@ related_resources:
     url: /plugins/zipkin/
   - text: "{{site.base_gateway}} monitoring and metrics"
     url: /gateway/monitoring/
+  - text: "Gen AI OpenTelemetry metrics reference"
+    url: /ai-gateway/ai-otel-metrics/
+  - text: "Gen AI OpenTelemetry span attributes"
+    url: /ai-gateway/llm-open-telemetry/
+  - text: "OpenTelemetry tutorials"
+    url: /how-to/?products=gateway&products=ai-gateway&kong_plugins=opentelemetry
 
 faqs:
   - q: Why am I not getting traces for my request when it results in a cache hit?
@@ -123,11 +129,9 @@ You can add or override resource attributes by configuring the [`config.resource
 
 In {{site.base_gateway}}, metrics are natively supported by the OpenTelemetry plugin. You can send metrics using the parameters under [`config.metrics`](./reference/#schema--config-metrics).
 
-### Available metrics
-
-The following metrics are exposed:
-
-{% include plugins/otel/metric_tables.md %}
+* For all available metrics, see the [OpenTelemetry metrics reference](/gateway/otel-metrics/).
+* For AI metrics and required setup prerequisites, see the [Gen AI OpenTelemetry metrics reference](/ai-gateway/ai-otel-metrics/).
+* For a step-by-step setup using an OpenTelemetry Collector, see [Collect metrics, logs, and traces with the OpenTelemetry plugin](/how-to/collect-metrics-logs-and-traces-with-opentelemetry/).
 
 ### Metrics with {{site.base_gateway}} 3.12 or earlier
 
