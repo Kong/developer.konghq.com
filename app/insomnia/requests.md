@@ -63,6 +63,14 @@ faqs:
       {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
       ```  
       For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
+  - q: Why does my request return an error in Insomnia but succeed with other tools?
+    a: |
+      It may be due to the `Content-Length` header. Insomnia might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match. To resolve the error:
+      
+      1. Go to your request's **Mock Header** tab.
+      2. Remove or deactivate the `Content-Length` header.
+      3. Click **Test** to see if the issue is resolved.
+
 ---
 
 ## How do I create requests in Insomnia?
@@ -204,12 +212,3 @@ See the following pages for the CLI flag and configuration options:
 
 - [Inso CLI overview](/inso-cli/)
 - [Inso CLI configuration](/inso-cli/configuration/)
-
-### Troubleshooting
-
-If you get a `400` request timeouts error in Insomnia, but the same request works with cURL, it may be due to the `Content-Length` header. Insomnia might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match.
-
-To resolve the error, try the following:
-
-1. From your request's **Mock Header** tab, remove or deactivate the `Content-Length` parameter.
-2. Click **Test** to see if the issue is resolved.
