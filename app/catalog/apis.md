@@ -165,7 +165,7 @@ All API specification files are validated during upload, although invalid specif
 {{site.konnect_short_name}} looks for the following during spec validation:
 
 * Specs must be valid JSON or YAML.
-* Spec should be valid according to the [OpenAPI 2.x or 3.x specification](https://spec.openapis.org/) or the [AsyncAPI 2.x or 3.0.0 specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0).
+* Spec should be valid according to the [OpenAPI 2.0, 3.0.x, or 3.1.x specification](https://spec.openapis.org/) or the [AsyncAPI 2.x or 3.0.0 specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0).
     * OAS validation is performed using [Spectral](https://github.com/stoplightio/spectral).
     * To replicate validation in your own CI/CD pipeline, run `spectral lint [spec.yaml] .spectral.yaml`, where `.spectral.yaml` should contain the following: 
         * OpenAPI `spectral.yaml`: Should contain `extends: "spectral:oas"`.
