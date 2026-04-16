@@ -44,3 +44,4 @@ vertex
 anthropic
 xai
 bedrock
+avro

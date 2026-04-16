@@ -27,6 +27,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} control plane resource limits"
     url: /gateway/control-plane-resource-limits/
+  - text: Meter API requests by Consumer with {{site.metering_and_billing}}
+    url: /how-to/meter-api-requests-by-consumer/
 
 faqs:
   - q: What are credentials, and why do I need them?

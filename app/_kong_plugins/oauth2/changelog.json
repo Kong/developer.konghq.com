@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "The authenticated token is now stored in the request context via `kong.client.set_token`.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Uses SHA256 for access token cache key instead of SHA1.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Improved the error message which occurred when an anonymous consumer was configured but did not exist.",

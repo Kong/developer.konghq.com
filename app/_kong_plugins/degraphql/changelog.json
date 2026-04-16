@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed an issue where the plugin failed to parse GraphQL variables with nested array types like `[String]!`. The error `attempt to index field 'name' (a nil value)` occurred because the type parser did not correctly handle deeply nested type structures such as `nonNullType(listType(namedType))`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.11.0.0": [
     {
       "message": "Fixed an issue where the degraphql handle type Boolean was not being assigned correctly in the degraphql router.",

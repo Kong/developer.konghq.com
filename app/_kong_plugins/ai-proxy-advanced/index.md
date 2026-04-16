@@ -75,7 +75,9 @@ examples_groups:
 faqs:
   - q: Can I override `config.model.name` by specifying a different model name in the request?
     a: |
-      No. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+      By default, no. The model name must match the one configured in `config.model.name`. If a different model is specified in the request, the plugin returns a 400 error.
+
+      However, if you set [`model_alias`](./reference/#schema--config-targets-model-model_alias) on a target, clients can send the alias value in the `model` field instead of the actual provider model name. The plugin matches the request to the target with the corresponding alias. See [Route requests to different models using model aliases](/how-to/route-requests-by-model-alias/) for an example.
   - q: |
       Can I override `temperature`, `top_p`, and `top_k` from the request?
     a: |
@@ -166,6 +168,29 @@ The [AI load balancer](/ai-gateway/load-balancing/) supports circuit breakers to
 ## Vector databases
 
 {% include_cached /plugins/ai-vector-db.md name=page.name %}
+
+## Partials {% new_in 3.13 %}
+
+This plugin supports all three AI [Partial](/gateway/entities/partial/) types, which let you define shared configuration once and reuse it across multiple [{{site.ai_gateway}}](/ai-gateway/) plugins.
+
+{% table %}
+columns:
+  - title: Partial type
+    key: type
+  - title: Fields covered
+    key: fields
+rows:
+  - type: "`vectordb`"
+    fields: "`config.vectordb`"
+  - type: "`embeddings`"
+    fields: "`config.embeddings`"
+  - type: "`model`"
+    fields: "Each element of `config.targets[]`"
+{% endtable %}
+
+A `model` Partial applies to each entry in the `config.targets` array, so you can share one provider configuration across multiple targets.
+
+For setup instructions, see [AI plugin Partials](/gateway/entities/partial/#ai-plugin-partials).
 
 ### Using cloud authentication with Redis {% new_in 3.13 %}
 

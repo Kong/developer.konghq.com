@@ -1,0 +1,1 @@
+{% include /prereqs/ollama-template.md model="qwen3" %}

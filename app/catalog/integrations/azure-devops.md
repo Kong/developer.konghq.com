@@ -85,8 +85,9 @@ body:
 extract_body:
     - name: 'id'
       variable: AZUREDEVOPS_INTEGRATION_ID
-capture: AZUREDEVOPS_INTEGRATION_ID
-jq: ".id"
+capture:
+  - variable: AZUREDEVOPS_INTEGRATION_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

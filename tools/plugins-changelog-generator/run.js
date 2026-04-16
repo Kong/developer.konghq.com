@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import { existsSync, writeFileSync } from "fs";
-import fg from "fast-glob";
+import { glob } from "tinyglobby";
 import matter from "gray-matter";
 import path from "path";
 import yaml from "js-yaml";
@@ -144,7 +144,7 @@ async function generateChangelogData(plugins, pluginEntriesByVersion) {
 }
 
 async function kongPlugins() {
-  const files = await fg("../../app/_kong_plugins/*/index.md");
+  const files = await glob("../../app/_kong_plugins/*/index.md");
 
   const plugins = [];
 

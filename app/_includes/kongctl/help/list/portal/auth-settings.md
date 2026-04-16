@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list portal auth-settings [flags]
 

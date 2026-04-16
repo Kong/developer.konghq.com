@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/upgrade/convert-lts-28-34/
   - text: Convert Gateway entity config from 3.4 LTS to 3.10 LTS
     url: /gateway/upgrade/convert-lts-34-310/
+  - text: Convert Gateway entity config from 3.10 LTS to 3.14 LTS
+    url: /gateway/upgrade/convert-lts-310-314/
 tags:
   - declarative-config
 ---
@@ -74,6 +76,14 @@ rows:
         - Transform `model.options.upstream_path` into `model.options.upstream_url`
       - AI Rate Limiting Advanced plugin:
         - Transform `llm_providers.window_size` from a single value to a list
+  - path: |
+      `3.10` to `3.14` {% new_in 1.57.3 %}
+    transforms: |
+      - Routes without an explicit `protocols` field: Set `protocols` to `["http", "https"]` to preserve the 3.10 default (3.14 changes the default to `["https"]` only)
+      - Services using secure protocols (`https`, `tls`, `grpcs`, `wss`) without an explicit `tls_verify` field: Set `tls_verify` to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default)
+      - Key Auth, Key Auth Encrypted, Basic Auth, HMAC Auth, LDAP Auth, OAuth2, OAuth2 Introspection, Vault Auth, and LDAP Auth Advanced plugins without an explicit `hide_credentials` field: Set `hide_credentials` to `false` to preserve the 3.10 default (3.14 changes the default to `true`)
+      - Plugins that connect to external services over TLS (such as OpenID Connect, AI plugins, Kafka, and others) without an explicit TLS verification field (for example `ssl_verify`, `tls_verify`, or `https_verify`): Set that field to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default). See [Gateway breaking changes in 3.14](/gateway/breaking-changes/#tls-certificate-verify-by-default) for the full list of plugins and changed fields.
+
 {% endtable %}
 
 ## Command usage

@@ -1,0 +1,12 @@
+- text: Security
+  slug: security
+  icon: /assets/icons/security.svg
+- text: Traffic Control
+  slug: traffic-control
+  icon: /assets/icons/services.svg
+- text: Transformations
+  slug: transformations
+  icon: /assets/icons/refresh.svg
+- text: Data Quality
+  slug: data-quality
+  icon: /assets/icons/service-document.svg

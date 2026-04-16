@@ -71,7 +71,7 @@ module Jekyll
         end
 
         def key
-          @key ||= @doc.url.split('/').reject(&:empty?).take_while { |s| s != 'reference' }
+          @key ||= @doc.url.split('/').reject(&:empty?).take_while { |s| s != 'reference' && !s.match?(/\d+\.\d+/) }
         end
 
         def release_info

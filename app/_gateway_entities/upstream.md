@@ -115,7 +115,7 @@ rows:
       Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response.
   - use_case: "[Circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers)"
     description: |
-      Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. **This feature is not supported in {{site.konnect_short_name}} or hybrid mode.**
+      Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests.
 {% endtable %}
 <!--vale on -->
 ## Load balancing algorithms

@@ -27,7 +27,8 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "terraform",
           "nginx",
           "html",
-          "ruby"
+          "ruby",
+          "ansi"
         ],
       });
     JS

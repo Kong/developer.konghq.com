@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck file validate [flags] [kong-state-files...]
 

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get konnect organization [flags]
   kongctl get konnect organization [command]

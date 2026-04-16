@@ -219,3 +219,4 @@
        labels:
          app: kv" | kubectl apply -f -
    ```
+   {:.collapsible}

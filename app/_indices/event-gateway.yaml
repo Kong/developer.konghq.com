@@ -7,6 +7,11 @@ sections:
       - path: /event-gateway/architecture/
       - path: /event-gateway/policies/
       - path: /event-gateway/version-support-policy/
+  - title: Installation and Upgrade
+    items:
+      - path: /event-gateway/#install-event-gateway
+      - path: /event-gateway/upgrade/
+      - path: /event-gateway/breaking-changes/
     auto_exclude: true
   - title: Getting started
     items:
@@ -23,6 +28,7 @@ sections:
       - path: /event-gateway/entities/policy/
       - path: /event-gateway/entities/schema-registry/
       - path: /event-gateway/entities/static-key/
+      - path: /event-gateway/entities/tls-trust-bundle/
   - title: "Event Gateway Policies"
     items:
       - path: /event-gateway/policies/*/**
@@ -34,6 +40,10 @@ sections:
       - path: /event-gateway/configure-sni-routing/
       - path: /event-gateway/kong-identity-oauth/
       - path: /event-gateway/filter-records-by-classification/
+      - path: /event-gateway/configure-mtls-client-authentication/
+      - path: /event-gateway/configure-sasl-plain-backend-cluster-auth/
+      - path: /event-gateway/configure-mtls-backend-cluster-auth/
+      - path: /event-gateway/validate-avro-messages-with-schema-registry/
   - title: "References"
     items:
       - title: Event Gateway OpenAPI specification

@@ -1,4 +1,16 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `ssl_verify` option to validate TLS certificate\nwhen connecting to the bedrock service is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Allowed streaming of responses when `guarding_mode` was set to `INPUT` with `allow_masking` enabled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Enabled at-rest keyring encryption for sensitive fields in AI AWS Guardrails plugin.",
@@ -22,6 +34,13 @@
     },
     {
       "message": "Fixed an issue where the ai-aws-guardrails metrics could not be recorded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.13.0.3": [
+    {
+      "message": "Allowed streaming of responses when `guarding_mode` was set to `INPUT` with `allow_masking` enabled.\n",
       "type": "bugfix",
       "scope": "Plugin"
     }

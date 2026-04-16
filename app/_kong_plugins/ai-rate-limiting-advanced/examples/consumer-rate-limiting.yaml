@@ -1,0 +1,43 @@
+description: Protect your LLM services with Consumer rate limiting.
+extended_description: |
+  Protect your LLM services with Consumer rate limiting. 
+  The AI Rate Limiting Advanced plugin will analyze query costs and token response 
+  to provide an enterprise-grade rate limiting strategy.
+
+  In this example, we're rate limiting a specific Consumer using its ID. You can also target a Consumer using its username or custom ID by changing the [`config.policies.match.key`](/plugins/ai-rate-limiting-advanced/reference/#schema--config-policies-match-key) value.
+
+title: 'Enable Consumer rate limiting'
+
+requirements:
+  - "[AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+  - An existing [Consumer](/gateway/entities/consumer/)
+
+weight: 900
+
+config:
+  policies:
+  - match:
+    - type: consumer
+      key: id
+      values:
+      - ${consumer_id}
+    limits:
+      - limit: 100
+        window_size: 60
+      - limit: 1000
+        window_size: 3600
+
+variables:
+  consumer_id:
+    value: $CONSUMER_ID
+    description: The ID of the Consumer to rate limit.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+min_version:
+  gateway: '3.14'

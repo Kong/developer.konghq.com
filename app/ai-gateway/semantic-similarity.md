@@ -95,6 +95,7 @@ Currently, {{site.ai_gateway}} supports the following vector backends:
 * Using `redis` as the VectorDB strategy:
   * **[Redis](https://redis.io/docs/latest/stack/search/reference/vectors/)** with Vector Similarity Search (VSS)
   * **[AWS MemoryDB for Redis](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search-overview.html)** {% new_in 3.12 %}
+  * **[Valkey](https://valkey.io/topics/search/)** {% new_in 3.14 %}: When you configure `vectordb.strategy: redis`, {{site.base_gateway}} queries the server and checks the server name field. If it detects Valkey request, it automatically uses the Valkey-specific driver.
 * Using `pgvector` as the VectorDB strategy:
   * **[PostgreSQL with pgvector](https://github.com/pgvector/pgvector)** {% new_in 3.10 %}
 

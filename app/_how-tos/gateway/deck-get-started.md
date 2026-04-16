@@ -124,6 +124,9 @@ entities:
         name: example-service
       paths:
         - "/"
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 
 You can now make an HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:

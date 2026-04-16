@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@17b7bf53d5a96412f37263091d79f90534ce60da
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/17b7bf53d5a96412f37263091d79f90534ce60da'
+  x-oas-source: kong/platform-api@b86de17dd121406f9a94d62b1ca4bd412d216992
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b86de17dd121406f9a94d62b1ca4bd412d216992'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -949,7 +949,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
+      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. The full tree is returned in one response; this endpoint is not paginated. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/FilterByTitleEquality'
@@ -2938,7 +2938,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2949,7 +2949,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -3798,6 +3798,43 @@ components:
         - data
         - meta
       title: ListDeveloperTeamDevelopersResponse
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     PortalContext:
       description: Describes the portal execution context
       type: object
@@ -3995,7 +4032,7 @@ components:
       example: my-snippet
       title: SnippetName
     ListPortalPages:
-      description: A paginated list of pages for the portal
+      description: Tree of pages for the portal (nested `children`). Not paginated.
       type: object
       properties:
         data:
@@ -4003,6 +4040,8 @@ components:
           items:
             $ref: '#/components/schemas/PortalPageInfo'
       additionalProperties: false
+      required:
+        - data
       title: ListPortalPages
     ListPortalSnippets:
       description: A paginated list of snippets for the portal
@@ -4627,43 +4666,6 @@ components:
     PortalSearchQueryParameters:
       type: string
       title: SearchQueryParameters
-    CursorMetaPage:
-      type: object
-      properties:
-        first:
-          description: URI to the first page
-          type: string
-          format: path
-        last:
-          description: URI to the last page
-          type: string
-          format: path
-        next:
-          description: URI to the next page
-          type: string
-          format: path
-          nullable: true
-        previous:
-          description: URI to the previous page
-          type: string
-          format: path
-          nullable: true
-        size:
-          description: Requested page size
-          type: number
-          example: 10
-      required:
-        - size
-        - next
-        - previous
-    CursorMeta:
-      description: Pagination metadata.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/CursorMetaPage'
-      required:
-        - page
   examples:
     ResponseExampleWithMetricAndDimension:
       value:
@@ -5573,7 +5575,7 @@ components:
           schema:
             $ref: '#/components/schemas/ListDeveloperTeamDevelopersResponse'
     ListPortalPagesResponse:
-      description: Paginated list of portal pages
+      description: Tree of portal pages for the portal
       content:
         application/json:
           schema:

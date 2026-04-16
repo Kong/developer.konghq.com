@@ -86,6 +86,9 @@ entities:
         - /anything
       service: 
         name: example-service
+      protocols:
+        - http
+        - https
 {% endentity_examples %}
 <!--vale on -->
 

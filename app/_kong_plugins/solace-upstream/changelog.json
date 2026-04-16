@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Added `content_type` / `content_encoding` (with request-header fallback) and `forward_body_raw_only` for raw payload passthrough; headers can be forwarded into Solace user properties.\n",
+      "scope": "Plugin",
+      "type": "feature"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "allowed basic auth credentials to be passed from downstream clients.\n",

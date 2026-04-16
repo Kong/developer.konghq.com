@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list portal email-domains [flags]
 

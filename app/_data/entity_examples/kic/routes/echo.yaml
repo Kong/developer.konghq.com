@@ -2,3 +2,6 @@ name: echo
 path: /echo
 service: echo
 port: 1027
+protocols:
+  - http
+  - https

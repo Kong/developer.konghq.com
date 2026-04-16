@@ -40,8 +40,9 @@ body:
 extract_body:
   - name: id
     variable: {{cluster | upcase}}_VC_ID
-capture: {{cluster | upcase}}_VC_ID
-jq: ".id"
+capture:
+  - variable: {{cluster | upcase}}_VC_ID
+    jq: ".id"
 {% endkonnect_api_request %}
 <!--vale on-->
 

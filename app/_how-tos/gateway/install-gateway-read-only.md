@@ -71,6 +71,9 @@ services:
   - name: example-route
     paths:
     - /anything
+    protocols:
+    - http
+    - https
 EOF
 ```
 

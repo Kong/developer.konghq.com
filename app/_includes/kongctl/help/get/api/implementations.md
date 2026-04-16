@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get api implementations [flags]
 

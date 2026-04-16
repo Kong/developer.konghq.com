@@ -68,36 +68,42 @@ The following diagram shows how {{site.konnect_short_name}} {{site.metering_and_
 
 Getting from a usage event to a charged credit card involves many steps. {{site.konnect_short_name}} {{site.metering_and_billing}} covers the core of that pipeline while integrating with specialized vendors for tax, payments, and invoice delivery.
 
-{{site.metering_and_billing}} covers the following:
-* [**Usage metering**](/metering-and-billing/metering/) (ingest, dedupe, real-time usage)
-* [**Product catalog**](/metering-and-billing/product-catalog/) (prices, plans, discounts)
-* [**Subscription management**](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) (start, cancel, billing periods)
-* [**Entitlement management**](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) (feature access and usage limits)
-* [**Rating**](/metering-and-billing/billing-invoicing-subscriptions/#discounts-and-commitments) (unit × price, discounts, etc.)
-* [**Invoice generation**](/metering-and-billing/billing-invoicing-subscriptions/#invoicing) (billing periods, lines)
-
-
-{{site.metering_and_billing}} integrates with specialized vendors to complete your revenue infrastructure:
+The following table describes which features {{site.metering_and_billing}} handles and which rely on third-party integrations to complete your revenue pipeline:
 <!--vale off-->
 {% table %}
 columns:
   - title: Capability
     key: capability
-  - title: Solutions
-    key: vendors
+  - title: "Supported by"
+    key: support
 rows:
+  - capability: "[**Usage metering** (ingest, dedupe, real-time usage)](/metering-and-billing/metering/)"
+    support: "{{site.metering_and_billing}}"
+  - capability: "[**Product catalog** (prices, plans, discounts)](/metering-and-billing/product-catalog/)"
+    support: "{{site.metering_and_billing}}"
+  - capability: "[**Subscription management** (start, cancel, billing periods)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
+    support: "{{site.metering_and_billing}}"
+  - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
+    support: "{{site.metering_and_billing}}"
+  - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing-subscriptions/#discounts-and-commitments)"
+    support: "{{site.metering_and_billing}}"
+  - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing-subscriptions/#invoicing)"
+    support: "{{site.metering_and_billing}}"
   - capability: "**Sales tax calculations** (based on geo and tax code)"
-    vendors: |
+    support: |
+      Third-party integrations:
       * [Stripe Tax](/metering-and-billing/stripe-integration/#optional-automatic-tax-calculation)
       * Avalara
       * Anrok
   - capability: "**Invoice delivery** (email, dunning, compliance)"
-    vendors: |
+    support: |
+      Third-party integrations:
       * [Stripe Invoicing](/metering-and-billing/stripe-integration/#invoicing)
       * NetSuite
       * Invopop
   - capability: "**Credit card payment** (storing credit cards, payment rails)"
-    vendors: |
+    support: |
+      Third-party integrations:
       * [Stripe Payments](/metering-and-billing/stripe-integration/#invoicing)
       * Adyen
       * PayPal

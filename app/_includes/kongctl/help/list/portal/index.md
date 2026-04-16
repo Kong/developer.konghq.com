@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list portal [flags]
   kongctl list portal [command]

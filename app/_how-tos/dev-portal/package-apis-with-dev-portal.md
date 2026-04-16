@@ -76,6 +76,9 @@ prereqs:
                - DELETE
                service:
                  name: example-service
+               protocols:
+               - http
+               - https
            ' | deck gateway apply -
            ```
 

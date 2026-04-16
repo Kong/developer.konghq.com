@@ -35,7 +35,7 @@ const schema = computed(() => {
 
 watch(schema, (node) => {
   if (node) {
-    annotateReferenceable(toRaw(node.data))
+    annotateNode(toRaw(node.data))
   }
 }, { once: true })
 
@@ -53,15 +53,19 @@ watch((specText), async (newSpecText, oldSpecText) => {
   })
 })
 
-function annotateReferenceable(obj) {
+function annotateNode(obj) {
   if (Array.isArray(obj)) {
-    obj.forEach(annotateReferenceable)
+    obj.forEach(annotateNode)
   } else if (obj && typeof obj === 'object') {
     if (obj['x-referenceable'] === true) {
       const note = 'This field is [referenceable](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).'
       obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
     }
-    Object.values(obj).forEach(annotateReferenceable)
+    if (obj['x-min-runtime-version']) {
+      const note = `Min runtime version: \`${obj['x-min-runtime-version']}\``;
+      obj.description = obj.description ? `${obj.description.trimEnd()}\n${note}` : note
+    }
+    Object.values(obj).forEach(annotateNode)
   }
 }
 

@@ -1,0 +1,41 @@
+description: 'Identify the billable subject from a request header instead of a Consumer.'
+extended_description: |
+  Use this configuration when your application passes a customer or tenant identifier in a request header and you want to bill against that identifier instead of a Consumer. 
+  This is common for SaaS platforms that manage their own customer identity outside of {{site.base_gateway}}.
+
+  If the configured header is absent on a request, the event is dropped. 
+  To prevent unidentified traffic from generating events, use the plugin's `instance_name` execution condition to filter those requests out.
+
+  To aggregate usage and generate invoices, you need either [{{site.konnect_short_name}} Metering & Billing](/metering-and-billing/) or a self-hosted [OpenMeter](https://openmeter.io/) instance.
+
+title: 'Meter API requests by subject header'
+
+weight: 997
+
+requirements:
+  - 'Your API clients must pass the subject header on every request you want to meter.'
+  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
+
+config:
+  ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+  api_token: ${auth-token}
+  meter_api_requests: true
+  meter_ai_token_usage: false
+  subject:
+    look_up_value_in: header
+    field: ${subject-header}
+
+variables:
+  auth-token:
+    value: $AUTH_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) or OpenMeter API key.
+  subject-header:
+    value: $SUBJECT_HEADER
+    description: The name of the request header that contains the tenant or customer identifier, for example `x-tenant-id` or `x-customer-id`.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
