@@ -70,6 +70,8 @@ The span data is sent to the configured OTEL endpoint through the existing traci
 
 {% include plugins/otel/collecting-otel-data.md  %}
 
+{:.warning}
+> Some Gen AI span attributes can include sensitive request or response payload data. In particular, `gen_ai.input.messages` and `gen_ai.output.messages` may contain prompts, model outputs, PII, secrets, or credentials. Review your tracing, retention, access-control, and redaction requirements before enabling or exporting payload-related tracing data.
 
 {% include plugins/otel/span_attribute_tables.md %}
 
