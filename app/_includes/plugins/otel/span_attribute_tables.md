@@ -14,8 +14,10 @@
 {% endif %}
 #### {{ span.title | default: span.name }}{% if span.title and span.title != span.name %} (`{{ span.name }}`){% endif %}{% if span.min_version %} {% new_in span.min_version %}{% endif %}
 
+
 {{ span.description }}
 
+<!-- vale off -->
 {% if span.attributes %}- **Attributes**:
 {% capture attrs_table %}
 {% table %}
@@ -37,3 +39,4 @@ rows:
 {{attrs_table | indent: 2}}
 {% else %}- **No attributes**{% endif %}
 {% endfor %}
+<!-- vale on -->
