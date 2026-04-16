@@ -9,6 +9,8 @@ metadata:
     - authentication
   breadcrumbs:
     - /dev-portal/
+  works_on: 
+    - konnect
 
 rows:
 
@@ -191,6 +193,26 @@ rows:
 
                   Applications and API keys are specific to a [geographic region](/konnect-platform/geos/). 
                   When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Automate developer creation"
+            blocks:
+              - type: text
+                text: |
+                  {% include dev-portal/create-dev-api.md %}  
+                  
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Automate app creation"
+            blocks:
+              - type: text
+                text: |
+                  {% include dev-portal/create-app-api.md %}
   - header:
       type: h3
       text: "Share applications with a team"
