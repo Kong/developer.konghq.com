@@ -32,6 +32,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.9": [
+    {
+      "message": "Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.10": [
     {
       "message": "Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",

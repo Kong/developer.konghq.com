@@ -166,6 +166,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.9": [
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for the `discriminator` keyword in OpenAPI specs.",
