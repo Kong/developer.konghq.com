@@ -298,9 +298,11 @@ rows:
   - metric: "MCP Response Size"
     category: "Size"
     description: |
+      The size of the response payload returned to {{site.base_gateway}} from the MCP server, in bytes. Users can select the total sum.
   - metric: "A2A Response Size"
     category: "Size"
     description: |
+      The size of the response payload returned to {{site.base_gateway}} from an agent, in bytes. Users can select the total sum.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
