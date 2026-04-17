@@ -1,7 +1,7 @@
 ---
 title: Resolving the "LLM route only supports llm chat type requests" error
 content_type: support
-description: How to fix the "LLM route only supports llm chat type requests" error by sending the correct Content-Type header to Kong Gateway.
+description: How to fix the "LLM route only supports llm chat type requests" error by sending the correct Content-Type header to {{site.base_gateway}}.
 products:
   - gateway
 works_on:
