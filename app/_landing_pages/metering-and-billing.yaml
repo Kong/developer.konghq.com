@@ -222,6 +222,16 @@ rows:
               cta:
                 text: Learn more
                 url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+      - blocks:
+          - type: card
+            config:
+              title: Notifications
+              description: |
+                Configure webhook alerts for usage thresholds and billing events. Use notifications to enforce entitlement limits in your infrastructure.
+              icon: /assets/icons/event.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/notifications/
 
   - header:
       type: h2

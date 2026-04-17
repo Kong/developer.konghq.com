@@ -10,6 +10,7 @@ sections:
       - path: /metering-and-billing/customer/
       - path: /metering-and-billing/billing-invoicing-subscriptions/
       - path: /metering-and-billing/events/
+      - path: /metering-and-billing/notifications/
   - title: Usage metering
     items:
       - title: API gateway metering
