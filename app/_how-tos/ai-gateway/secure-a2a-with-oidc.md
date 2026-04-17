@@ -111,7 +111,6 @@ Configure the [OpenID Connect plugin](/plugins/openid-connect/) on the A2A Route
 entities:
   plugins:
     - name: openid-connect
-      route: a2a-route
       config:
         issuer: ${okta_issuer}
         client_id:
