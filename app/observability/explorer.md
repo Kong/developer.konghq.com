@@ -141,6 +141,10 @@ rows:
     category: "Size"
     description: |
       The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+  - metric: "Error Rate"
+    category: "Percentage"
+    description: |
+      The percentage of failed API requests. This includes requests that return HTTP 4xx and 5xx status codes.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
