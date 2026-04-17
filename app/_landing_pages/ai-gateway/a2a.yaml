@@ -96,7 +96,7 @@ rows:
                     - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
                     - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
                     - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
-  - column_count: 2
+  - column_count: 3
     columns:
       - blocks:
         - type: card
@@ -133,6 +133,15 @@ rows:
             icon: /assets/icons/opentelemetry.svg
             cta:
               url: /ai-gateway/ai-otel-metrics/#a2a-metrics
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Agentic usage analytics in {{site.konnect_short_name}}
+            description: View A2A-specific metrics and analytics in {{site.konnect_short_name}}.
+            icon: /assets/icons/KogoBlue.svg
+            cta:
+              url: /observability/explorer/?tab=agentic-usage#metrics
               align: end
 
   - header:
