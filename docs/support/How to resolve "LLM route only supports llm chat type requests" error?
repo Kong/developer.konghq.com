@@ -1,0 +1,43 @@
+---
+# REQUIRED: The title that appears at the top of the page
+title: How to resolve "LLM route only supports llm chat type requests" error?
+
+# REQUIRED: Must be set to "support" for support articles
+content_type: support
+
+
+# OPTIONAL: Which Kong products this article applies to
+# Common values: gateway, konnect, mesh, insomnia, deck
+products:
+  - gateway
+
+
+# OPTIONAL: TL;DR section that appears at the top of the article
+# Provides a quick question and answer summary
+tldr:
+  q: How to resolve "LLM route only supports llm chat type requests" error?
+
+  a: |
+    This error can be addressed by adding the missing required header Content-type: application/json header so that the {{site.base}} can correctly interpret the payload format.
+
+---
+
+## Article content starts here
+
+This can occur when sending an incorrect content-type header to the Gateway. Some utilities, such as curl, default to using Content-type:application/x-www-form-urlencoded. To address the issue ensure you are sending the Content-type:application/json
+
+
+
+### Include code examples
+
+```
+curl -XPOST -d '{
+        "messages": [
+                {
+                        "role": "user",
+                        "content": "Why is the sky blue?"
+                }
+        ]
+}' -H "Content-type:application/json" https://mygateway/api/v1
+
+```
