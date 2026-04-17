@@ -248,9 +248,8 @@ This output confirms that Claude Code routed the request through {{site.ai_gatew
 
 ## Troubleshooting
 
-When using Claude Code with AWS Bedrock models you may encounter connection errors.
-
-The following sections provide workarounds for common errors.
+When using Claude Code with AWS Bedrock models, you may encounter connection errors.
+See the following sections for common error workarounds.
 
 ### API Error 400: `context_management`: Extra inputs are not permitted
 
