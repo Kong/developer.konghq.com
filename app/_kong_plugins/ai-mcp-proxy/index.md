@@ -87,9 +87,9 @@ faqs:
       Versions from 2024 are not supported.
   - q: "Can I apply the AI MCP Proxy plugin to a Gateway Service instead of a Route?"
     a: |
-      The AI MCP Proxy plugin relies on Route information to perform MCP tool conversion. Although Kong lets you associate plugins with a Service, for this plugin you should scope the configuration to a Route.
+      It depends on the mode. In `conversion-only` and `conversion-listener` modes, the plugin requires Route information for tool conversion. Tool indexing skips plugins that are not attached to a Route. If no Route is present, the plugin skips conversion and logs a warning. Always scope the plugin to a Route when using these modes.
 
-      Always scope the plugin to a Route.
+      `passthrough-listener` mode does not require Route scoping because it proxies MCP traffic directly to an upstream server without performing tool conversion.
 
   - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests?"
     a: |
@@ -189,7 +189,7 @@ sequenceDiagram
 
 {:.warning}
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
-> - **The plugin must be scoped to a Route.** MCP tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. The plugin can't be associated with Consumer or Consumer Group entities.
+> - **In `conversion-only` and `conversion-listener` modes, the plugin must be scoped to a Route.** Tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. `passthrough-listener` mode does not require Route scoping. Consumer and Consumer Group scoping is not supported.
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
 > - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
