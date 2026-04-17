@@ -245,3 +245,14 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 {:.no-copy-code}
 
 This output confirms that Claude Code routed the request through {{site.ai_gateway}} using AWS Bedrock with the `us.anthropic.claude-haiku-4-5-20251001-v1:0` model.
+
+## Troubleshooting
+
+When using Claude Code with AWS Bedrock models you may encounter connection errors.
+
+The following sections provide workarounds for common errors.
+
+### API Error 400: context_management: Extra inputs are not permitted
+
+
+### API Error 400: max_tokens must be greater than thinking.budget_tokens
