@@ -113,7 +113,7 @@ rows:
     description: Triggers when an invoice changes state.
 {% endtable %}
 
-{:.note}
+{:.info}
 > Notifications for [gathering invoices](/metering-and-billing/billing-invoicing/) are not currently supported.
 
 ### Entitlement balance threshold rules
