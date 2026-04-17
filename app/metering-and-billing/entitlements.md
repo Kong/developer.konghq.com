@@ -138,7 +138,7 @@ method: GET
 
 ## Entitlement enforcement
 
-{{site.metering_and_billing}} tracks entitlement balances in real time, but does not automatically enforce limits at the Kong Gateway level.
+{{site.metering_and_billing}} tracks entitlement balances in real time, but does not automatically enforce limits at the {{site.base_gateway}} level.
 
 {:.info}
-> **Kong Gateway enforcement is not yet available.** Automatic entitlement enforcement via a Kong Gateway plugin is planned for a future release. Until then, use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) to receive a webhook when a customer reaches their entitlement threshold, and enforce access restrictions manually in your own infrastructure (for example, by removing a consumer from a consumer group or returning a `403` response from your application).
+> **{{site.base_gateway}} enforcement is not yet available.** Automatic entitlement enforcement via a {{site.base_gateway}} plugin is planned for a future release. Until then, use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) to receive a webhook when a customer reaches their entitlement threshold, and enforce access restrictions manually in your own infrastructure (for example, by removing a consumer from a consumer group or returning a `403` response from your application).

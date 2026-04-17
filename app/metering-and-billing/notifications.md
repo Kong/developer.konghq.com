@@ -225,14 +225,14 @@ You can view past notification events in {{site.konnect_short_name}} by navigati
 {{site.metering_and_billing}} tracks entitlement balances and fires notification events when thresholds are crossed, but it does not automatically block API traffic when a customer's entitlement is exhausted.
 
 {:.info}
-> **Kong Gateway enforcement:** Automatic entitlement enforcement at the Kong Gateway level is planned for a future release. Until then, use the webhook-based approach described here to enforce limits in your own infrastructure.
+> **{{site.base_gateway}} enforcement:** Automatic entitlement enforcement at the {{site.base_gateway}} level is planned for a future release. Until then, use the webhook-based approach described here to enforce limits in your own infrastructure.
 
 To enforce entitlement limits today, configure a webhook notification rule and handle the incoming event in your own system:
 
 1. [Create a webhook channel](#create-a-channel) pointing to an endpoint you control.
 1. [Create an entitlement balance threshold rule](#entitlement-balance-threshold-rules) with a threshold at 100% for the feature you want to enforce.
 1. In your webhook handler, take action when the event is received. For example:
-   * Remove the consumer from a Kong Gateway consumer group that has access to the API.
+   * Remove the consumer from a {{site.base_gateway}} consumer group that has access to the API.
    * Return a `403 Forbidden` response from your application layer.
    * Update a feature flag in your system to disable access for the customer.
 1. Optionally, add a second threshold at 80% to send a warning to the customer before access is cut off.
