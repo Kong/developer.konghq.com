@@ -1,4 +1,31 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where parameter validation errors caused a runtime crash when `collect_all_errors` was enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the validator cache did not account for the `collect_all_errors` setting.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for collecting all validation errors when `collect_all_errors` is set to `true` in the plugin configuration. Note: Enabling this option with OpenAPI 3.0 will affect performance.\n",
@@ -33,6 +60,28 @@
       "scope": "Plugin"
     }
   ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where parameter validation errors caused a runtime crash when `collect_all_errors` was enabled.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the validator cache did not account for the `collect_all_errors` setting.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed an issue where certain query strings in URLs that did not conform to the configured OpenAPI specification could cause the plugin to throw an unexpected runtime error and respond with an HTTP 500 error.\n",
@@ -50,6 +99,23 @@
   "3.12.0.3": [
     {
       "message": "Fixed an issue where response body buffering was not properly disabled when `validate_response_body` was set to `false`.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.12.0.5": [
+    {
+      "message": "Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
       "type": "bugfix",
       "scope": "Plugin"
     }
@@ -100,6 +166,18 @@
       "scope": "Plugin"
     }
   ],
+  "3.11.0.9": [
+    {
+      "message": "Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Added support for the `discriminator` keyword in OpenAPI specs.",
@@ -145,6 +223,13 @@
     {
       "message": "Improved performance for OpenAPI 3.1.",
       "type": "performance",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+      "type": "bugfix",
       "scope": "Plugin"
     }
   ],

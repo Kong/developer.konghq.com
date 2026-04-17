@@ -63,10 +63,14 @@ specify some options to actually make the plugin work:
 ## Manage key signing
 
 If you specify [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) or [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset) with either an
-`http://` or `https://` prefix, it means that token signing keys are externally managed by you.
+`http://` or `https://` prefix, it means that token signing keys are externally managed by you in a JWKS document.
+
 In that case, the plugin loads the keys just like it does for [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri)
 and [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri). If the prefix is not `http://` or `https://`
 (such as `"my-company"` or `"kong"`), {{site.base_gateway}} autogenerates JWKS for supported algorithms.
+
+{:.info}
+> When this plugin is used in Konnect, key sets are not currently supported. The token signing keys MUST be specified as a URI to a JWKS document. In addition, JWKS of public keys are not auto-generated.
 
 External JWKS specified with [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) or
 [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset) should also contain private keys with supported `alg`,

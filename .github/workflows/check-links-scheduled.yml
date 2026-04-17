@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        uses: step-security/harden-runner@6c3c2f2c1c457b00c10c4848d6f5491db3b629df # v2.18.0
         with:
           egress-policy: audit
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -29,7 +29,7 @@ jobs:
         with:
           ruby-version: .ruby-version
       - name: Ruby gem cache
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
         with:
           path: ${{ github.workspace }}/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: "24"
       - name: Cache node modules
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
         env:
           cache-name: cache-node-modules
         with:
@@ -73,3 +73,10 @@ jobs:
           node full.js --host http://localhost:8888
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Notify Slack
+        if: ${{ !cancelled() }}
+        uses: './.github/reusable-steps/notify-slack'
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}

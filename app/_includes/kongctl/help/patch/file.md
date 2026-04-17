@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl patch file <input-file> [patch-files...] [flags]
 

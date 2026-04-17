@@ -1,10 +1,10 @@
 ---
-title: Dev Portal Dynamic Client Registration
+title: "{{site.dev_portal}} Dynamic Client Registration"
 content_type: reference
 layout: reference
 
 products:
-    - dev-portal
+  - dev-portal
 
 breadcrumbs: 
   - /dev-portal/
@@ -29,35 +29,39 @@ related_resources:
   - text: Configure Dynamic Client Registration with Auth0
     url: /how-to/auth0-dcr/
   - text: Configure Dynamic Client Registration with Azure
-    url: /how-to/azure-dcr/
+    url: /how-to/azure-ad-dcr/
   - text: Configure Dynamic Client Registration with Kong Identity
     url: /how-to/kong-identity-dcr/
   - text: About OIDC Dynamic Client Registration
     url: https://openid.net/specs/openid-connect-registration-1_0.html
-  - text: About Dev Portal OIDC authentication
+  - text: About {{site.dev_portal}} OIDC authentication
     url: /dev-portal/auth-strategies/#dev-portal-oidc-authentication
   - text: Application authentication strategies
     url: /dev-portal/auth-strategies/
-  - text: Dev Portal developer sign-up
+  - text: "{{site.dev_portal}} developer sign-up"
     url: /dev-portal/developer-signup/
   - text: Link static clients with self-managed OIDC
     url: /dev-portal/auth-strategies/#link-static-clients-with-self-managed-oidc
 faqs:
   - q: What should I do if my IdP is not natively supported for the DCR flow?
     a: "{{site.konnect_short_name}} supports a custom HTTP DCR bridge that you can use with any third-party IdP that isn't natively supported."
-  - q: What connections and protocols are involved between Dev Portal and our organization when DCR is enabled?
+  - q: What connections and protocols are involved between {{site.dev_portal}} and our organization when DCR is enabled?
     a: "{{site.konnect_short_name}} will make HTTP requests to the IdP for DCR. The details of the request are IdP-specific."
   - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
     a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
+  - q: Does revoking a credential immediately invalidate it, or can it still be used for some time after revocation?
+    a: |
+      By default, credentials are cached and can be used for a short time period even after they have been revoked. 
+      If you want credentials to be revoked immediately, edit the auth strategy to set `cache_tokens` to `false` in the advanced configuration.
 ---
-Dynamic Client Registration (DCR) in {{site.konnect_short_name}} Dev Portal allows an application in the Dev Portal to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. Dev Portal DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
+Dynamic Client Registration (DCR) in {{site.konnect_short_name}} {{site.dev_portal}} allows an application in the {{site.dev_portal}} to register as a client with an Identity Provider (IdP). This outsources the issuer and management of application credentials to a third party, as the IdP returns a client identifier and the registered client metadata. This enables OpenID Connect (OIDC) features that the IdP supports. {{site.dev_portal}} DCR adheres to [RFC 7591](https://datatracker.ietf.org/doc/html/rfc7591).
 
-In Dev Portal, you can create and use multiple DCR configurations. You can configure DCR by doing the following:
+In {{site.dev_portal}}, you can create and use multiple DCR configurations. You can configure DCR by doing the following:
 
 {% navtabs "configure-dcr" %}
 {% navtab "UI" %}
-1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
-1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
+1. In the {{site.konnect_short_name}} sidebar, click [**{{site.dev_portal}}**](https://cloud.konghq.com/portals/).
+1. In the {{site.dev_portal}} sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
 1. Click the **DCR provider** tab.
 1. Click **New provider**.
 1. In the **Name** field, enter the name for your DCR provider.
@@ -134,9 +138,9 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-## How does DCR work in Dev Portal?
+## How does DCR work in {{site.dev_portal}}?
 
-After you publish an API that's linked to a Gateway Service with a DCR application authentication strategy applied, developers can register an application with your API in Dev Portal. Dev Portal registers that application as a client in the IdP through DCR and displays the returned credentials to the developer. Requests to your API succeed only when the client presents valid credentials and the application holds a registration for the linked Service.
+After you publish an API that's linked to a Gateway Service with a DCR application authentication strategy applied, developers can register an application with your API in {{site.dev_portal}}. {{site.dev_portal}} registers that application as a client in the IdP through DCR and displays the returned credentials to the developer. Requests to your API succeed only when the client presents valid credentials and the application holds a registration for the linked Service.
 
 The following diagram shows how this DCR flow works:
 
@@ -144,11 +148,11 @@ The following diagram shows how this DCR flow works:
 {% mermaid %}
 sequenceDiagram
     actor Developer
-    Developer->> +Dev Portal: Creates an application
-    Dev Portal->>+IdP: Creates an application
-    IdP->>-Dev Portal: Returns client metadata, Client ID, and secrets
-    Dev Portal->>Dev Portal: Saves application record in database with ONLY Client ID mapping
-    Dev Portal->>-Developer: Returns application creation success with client ID and secret
+    Developer->> +{{site.dev_portal}}: Creates an application
+    {{site.dev_portal}}->>+IdP: Creates an application
+    IdP->>-{{site.dev_portal}}: Returns client metadata, Client ID, and secrets
+    {{site.dev_portal}}->>{{site.dev_portal}}: Saves application record in database with ONLY Client ID mapping
+    {{site.dev_portal}}->>-Developer: Returns application creation success with client ID and secret
 {% endmermaid %}
 
 
@@ -211,7 +215,7 @@ After successfully authenticating using either client credentials or a bearer ac
 
 ## Configure a custom IdP for Dynamic Client Registration
 
-If your third-party IdP isn't natively supported, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the Dev Portal. When a developer creates a DCR application in the Dev Portal, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP, and add additional functionality such as making API calls to other systems as part of the DCR flow.
+If your third-party IdP isn't natively supported, you can still use your IdP with {{site.konnect_short_name}} by using a custom HTTP DCR bridge. This HTTP DCR bridge acts as a proxy and translation layer between your IdP and DCR applications in the {{site.dev_portal}}. When a developer creates a DCR application in the {{site.dev_portal}}, {{site.konnect_short_name}} calls your HTTP DCR bridge which can translate the application data into a suitable format for your third-party IdP, and add additional functionality such as making API calls to other systems as part of the DCR flow.
 
 {% mermaid %}
 sequenceDiagram
@@ -227,10 +231,49 @@ sequenceDiagram
     Konnect Dev Portal->>Developer: Show credentials
 {% endmermaid %}
 
-> _**Figure 1:** This diagram illustrates how an HTTP DCR bridge creates an application in an IdP when a developer submits an application in the {{site.konnect_short_name}} Dev Portal. First, the developer creates an application in the Dev Portal, which triggers the portal to send the application details to the HTTP DCR bridge. The bridge then sends a `POST create application` request to the IdP. If the IdP successfully processes the request, it returns a `200` status code along with the credentials for the developer’s application. These credentials are then displayed to the developer in the Dev Portal._
+> _**Figure 1:** This diagram illustrates how an HTTP DCR bridge creates an application in an IdP when a developer submits an application in the {{site.konnect_short_name}} {{site.dev_portal}}. First, the developer creates an application in the {{site.dev_portal}}, which triggers the portal to send the application details to the HTTP DCR bridge. The bridge then sends a `POST create application` request to the IdP. If the IdP successfully processes the request, it returns a `200` status code along with the credentials for the developer’s application. These credentials are then displayed to the developer in the {{site.dev_portal}}._
 
-### Configure custom DCR using the {{site.konnect_short_name}} Dev Portal DCR Handler
+### Configure custom DCR using the {{site.konnect_short_name}} {{site.dev_portal}} DCR Handler
 
-To use an unsupported IdP with DCR, you must implement an API that conforms to the [{{site.konnect_short_name}} Dev Portal DCR Handler spec](https://github.com/Kong/konnect-portal-dcr-handler/blob/main/openapi/openapi.yaml). Kong provides an example reference implementation in the [{{site.konnect_short_name}} Dev Portal DCR Handler repository](https://github.com/Kong/konnect-portal-dcr-handler). This is an example HTTP DCR bridge implementation and is not meant to be deployed in production. We encourage you to use this implementation as a guide to create your own implementation.
+To use an unsupported IdP with DCR, you must implement an API that conforms to the [{{site.konnect_short_name}} {{site.dev_portal}} DCR Handler spec](https://github.com/Kong/konnect-portal-dcr-handler/blob/main/openapi/openapi.yaml). Kong provides an example reference implementation in the [{{site.konnect_short_name}} {{site.dev_portal}} DCR Handler repository](https://github.com/Kong/konnect-portal-dcr-handler). This is an example HTTP DCR bridge implementation and is not meant to be deployed in production. We encourage you to use this implementation as a guide to create your own implementation.
 
-Any request that does not return a `2xx` status code is considered a failure and will halt the application creation process in your {{site.konnect_short_name}} Dev Portal.
+Any request that does not return a `2xx` status code is considered a failure and will halt the application creation process in your {{site.konnect_short_name}} {{site.dev_portal}}.
+
+## Managing credentials
+
+{{site.dev_portal}} developers can manage their application credentials through their applications page without needing a {{site.dev_portal}} admin's assistance. 
+Developers can maintain multiple active credentials, allowing them to assign different credentials to each service consuming their application and revoke credentials as needed. 
+This is supported by the following IdPs:
+* [Entra](/how-to/azure-ad-dcr/)
+* [Okta](/how-to/okta-dcr/)
+* [Custom HTTP DCR bridge](#configure-a-custom-idp-for-dynamic-client-registration)
+  
+{:.warning}
+> **HTTP DCR bridge credential rotation:**
+> To make sure that their developers have access to the credential API endpoints, {{site.dev_portal}} admins must ensure that the HTTP DCR bridge supports credential rotation based on the provided API spec.
+> The number of active credentials supported per application is determined by the identity provider configured in the HTTP DCR bridge.
+
+
+{{site.dev_portal}} admins can view credential IDs by opening an application in {{site.konnect_short_name}} and checking its **Credentials** tab. Application credential values are not visible from {{site.konnect_short_name}}, and {{site.dev_portal}} admins cannot add or revoke credentials directly from {{site.konnect_short_name}}.
+
+Developers can view credential IDs by opening an application in their {{site.dev_portal}}, and checking its **Credentials** tab. Application credential values are not visible after creation. Developers can revoke credentials directly from the **Credentials** tab.
+
+### Rotate a credential
+
+When developers need to replace a credential with a new one, they can rotate the credential manually through an application's configuration page in their {{site.dev_portal}}:
+
+1. In your {{site.dev_portal}}, click your profile and select **My applications**.
+1. Open an application.
+1. Click the **Credentials** tab.
+1. Click **New Credential**.
+1. Copy and save the secret somewhere safe. You won't see this key again.
+1. Click **Copy and close** to save.
+1. Test the new credential by using it in the same workflow as the old one.
+1. When you're ready, delete the old credential:
+   1. Click the **Credentials** tab.
+   1. Click the action menu for the old credential.
+   1. Select **Revoke**.
+   1. Enter `revoke`.
+   1. Click **Revoke**.
+
+Developers can also manage their application credentials using the [Portal API](/api/konnect/portal-management/v3/).

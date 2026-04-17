@@ -35,7 +35,7 @@ search_aliases:
   - file-log
 
 notes: | 
-   <b>Dedicated Cloud Gateways</b>: This plugin is not supported in Dedicated or 
+   **Dedicated Cloud Gateways**: This plugin is not supported in Dedicated or 
    Serverless Cloud Gateways because it depends on a local agent, and there are no 
    local nodes in Dedicated or Serverless Cloud Gateways.
   
@@ -67,4 +67,9 @@ to physical files on slow (spinning) disks.
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log-custom-fields-by-lua.md custom_fields_by_lua='config.custom_fields_by_lua' custom_fields_by_lua_slug='config-custom-fields-by-lua' name=page.name slug=page.slug %}
+{% include /plugins/logging/log-custom-fields-by-lua.md 
+custom_fields_by_lua='config.custom_fields_by_lua' 
+custom_fields_by_lua_slug='config-custom-fields-by-lua' 
+custom_fields_by_lua_name='custom_fields_by_lua' 
+name=page.name 
+slug=page.slug %}

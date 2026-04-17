@@ -7,8 +7,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9d894504533aac3107094b10429cc9c1f044f46a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d894504533aac3107094b10429cc9c1f044f46a'
+  x-oas-source: kong/platform-api@6c6ca05ee13458aa410a1f7c7846a6576b53c575
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6c6ca05ee13458aa410a1f7c7846a6576b53c575'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -365,6 +365,78 @@ components:
       additionalProperties: false
       required:
         - datasource
+    AgenticQuery:
+      description: A query targeting the agentic usage analytics datasource.
+      type: object
+      properties:
+        datasource:
+          type: string
+          enum:
+            - agentic_usage
+        metrics:
+          $ref: '#/components/schemas/AgenticMetrics'
+        dimensions:
+          description: List of attributes or entity types to group by.
+          type: array
+          items:
+            type: string
+            enum:
+              - a2a_context_id
+              - a2a_error
+              - a2a_method
+              - a2a_task_id
+              - api
+              - api_package
+              - api_product
+              - api_product_version
+              - application
+              - consumer
+              - control_plane
+              - control_plane_group
+              - country_code
+              - data_plane_node
+              - data_plane_node_version
+              - gateway_service
+              - mcp_error
+              - mcp_method
+              - mcp_session_id
+              - mcp_tool_name
+              - portal
+              - realm
+              - response_source
+              - route
+              - status_code
+              - status_code_grouped
+              - time
+              - upstream_status_code
+              - upstream_status_code_grouped
+          maxItems: 2
+        filters:
+          $ref: '#/components/schemas/AgenticFilters'
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        time_range:
+          $ref: '#/components/schemas/TimeRange'
+      example:
+        datasource: agentic_usage
+        time_range:
+          type: relative
+          time_range: 24h
+          tz: EST
+        dimensions:
+          - time
+          - mcp_tool_name
+        filters:
+          - operator: in
+            field: control_plane
+            value:
+              - d5ac5d88-efed-4e10-9dfe-0b0a6646c219
+        granularity: hourly
+        metrics:
+          - request_count
+      additionalProperties: false
+      required:
+        - datasource
     Tile:
       discriminator:
         propertyName: type
@@ -446,9 +518,11 @@ components:
                 mapping:
                   api_usage: '#/components/schemas/AdvancedQuery'
                   llm_usage: '#/components/schemas/LLMQuery'
+                  agentic_usage: '#/components/schemas/AgenticQuery'
               oneOf:
                 - $ref: '#/components/schemas/AdvancedQuery'
                 - $ref: '#/components/schemas/LLMQuery'
+                - $ref: '#/components/schemas/AgenticQuery'
             chart:
               $ref: '#/components/schemas/Chart'
           required:
@@ -715,7 +789,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -726,7 +800,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2013,6 +2087,394 @@ components:
           - $ref: '#/components/schemas/MetricsRouteFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
           - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+    AgenticMetrics:
+      description: List of aggregated metrics to collect across the requested time span.
+      type: array
+      items:
+        type: string
+        enum:
+          - a2a_latency_average
+          - a2a_response_size_sum
+          - error_rate
+          - kong_latency_average
+          - kong_latency_p50
+          - kong_latency_p95
+          - kong_latency_p99
+          - mcp_response_body_size_sum
+          - request_count
+          - request_per_minute
+          - request_size_average
+          - request_size_p50
+          - request_size_p95
+          - request_size_p99
+          - request_size_sum
+          - response_latency_average
+          - response_latency_p50
+          - response_latency_p95
+          - response_latency_p99
+          - response_size_average
+          - response_size_p50
+          - response_size_p95
+          - response_size_p99
+          - response_size_sum
+          - upstream_latency_average
+          - upstream_latency_p50
+          - upstream_latency_p95
+          - upstream_latency_p99
+      default:
+        - request_count
+    MetricsA2aContextIdFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_context_id
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_context_id
+          required:
+            - operator
+            - field
+      title: Filter by a2a_context_id
+    MetricsA2aErrorFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_error
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_error
+          required:
+            - operator
+            - field
+      title: Filter by a2a_error
+    MetricsA2aMethodFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_method
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_method
+          required:
+            - operator
+            - field
+      title: Filter by a2a_method
+    MetricsA2aTaskIdFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_task_id
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_task_id
+          required:
+            - operator
+            - field
+      title: Filter by a2a_task_id
+    MetricsMcpErrorFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_error
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_error
+          required:
+            - operator
+            - field
+      title: Filter by mcp_error
+    MetricsMcpMethodFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_method
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_method
+          required:
+            - operator
+            - field
+      title: Filter by mcp_method
+    MetricsMcpSessionIdFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_session_id
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_session_id
+          required:
+            - operator
+            - field
+      title: Filter by mcp_session_id
+    MetricsMcpToolNameFilterByField:
+      oneOf:
+        - title: Multiselect filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterType'
+            value:
+              description: |
+                The values to include in the results.
+              type: array
+              items:
+                type: string
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_tool_name
+          required:
+            - operator
+            - value
+            - field
+        - title: Empty filters
+          type: object
+          properties:
+            operator:
+              $ref: '#/components/schemas/RequestsFilterTypeEmpty'
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_tool_name
+          required:
+            - operator
+            - field
+      title: Filter by mcp_tool_name
+    AgenticFilters:
+      description: A list of filters to apply to the query.
+      type: array
+      items:
+        discriminator:
+          propertyName: field
+          mapping:
+            a2a_context_id: '#/components/schemas/MetricsA2aContextIdFilterByField'
+            a2a_error: '#/components/schemas/MetricsA2aErrorFilterByField'
+            a2a_method: '#/components/schemas/MetricsA2aMethodFilterByField'
+            a2a_task_id: '#/components/schemas/MetricsA2aTaskIdFilterByField'
+            api: '#/components/schemas/MetricsApiFilterByField'
+            api_package: '#/components/schemas/MetricsApiPackageFilterByField'
+            api_product: '#/components/schemas/MetricsApiProductFilterByField'
+            api_product_version: '#/components/schemas/MetricsApiProductVersionFilterByField'
+            application: '#/components/schemas/MetricsApplicationFilterByField'
+            consumer: '#/components/schemas/MetricsConsumerFilterByField'
+            control_plane: '#/components/schemas/MetricsControlPlaneFilterByField'
+            control_plane_group: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+            country_code: '#/components/schemas/MetricsCountryCodeFilterByField'
+            data_plane_node: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+            data_plane_node_version: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+            gateway_service: '#/components/schemas/MetricsGatewayServiceFilterByField'
+            mcp_error: '#/components/schemas/MetricsMcpErrorFilterByField'
+            mcp_method: '#/components/schemas/MetricsMcpMethodFilterByField'
+            mcp_session_id: '#/components/schemas/MetricsMcpSessionIdFilterByField'
+            mcp_tool_name: '#/components/schemas/MetricsMcpToolNameFilterByField'
+            portal: '#/components/schemas/MetricsPortalFilterByField'
+            realm: '#/components/schemas/MetricsRealmFilterByField'
+            response_source: '#/components/schemas/MetricsResponseSourceFilterByField'
+            route: '#/components/schemas/MetricsRouteFilterByField'
+            status_code: '#/components/schemas/MetricsStatusCodeFilterByField'
+            status_code_grouped: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+            upstream_status_code: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+            upstream_status_code_grouped: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
+        oneOf:
+          - $ref: '#/components/schemas/MetricsA2aContextIdFilterByField'
+          - $ref: '#/components/schemas/MetricsA2aErrorFilterByField'
+          - $ref: '#/components/schemas/MetricsA2aMethodFilterByField'
+          - $ref: '#/components/schemas/MetricsA2aTaskIdFilterByField'
+          - $ref: '#/components/schemas/MetricsApiFilterByField'
+          - $ref: '#/components/schemas/MetricsApiPackageFilterByField'
+          - $ref: '#/components/schemas/MetricsApiProductFilterByField'
+          - $ref: '#/components/schemas/MetricsApiProductVersionFilterByField'
+          - $ref: '#/components/schemas/MetricsApplicationFilterByField'
+          - $ref: '#/components/schemas/MetricsConsumerFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneFilterByField'
+          - $ref: '#/components/schemas/MetricsControlPlaneGroupFilterByField'
+          - $ref: '#/components/schemas/MetricsCountryCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneNodeFilterByField'
+          - $ref: '#/components/schemas/MetricsDataPlaneNodeVersionFilterByField'
+          - $ref: '#/components/schemas/MetricsGatewayServiceFilterByField'
+          - $ref: '#/components/schemas/MetricsMcpErrorFilterByField'
+          - $ref: '#/components/schemas/MetricsMcpMethodFilterByField'
+          - $ref: '#/components/schemas/MetricsMcpSessionIdFilterByField'
+          - $ref: '#/components/schemas/MetricsMcpToolNameFilterByField'
+          - $ref: '#/components/schemas/MetricsPortalFilterByField'
+          - $ref: '#/components/schemas/MetricsRealmFilterByField'
+          - $ref: '#/components/schemas/MetricsResponseSourceFilterByField'
+          - $ref: '#/components/schemas/MetricsRouteFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsStatusCodeGroupedFilterByField'
+          - $ref: '#/components/schemas/MetricsUpstreamStatusCodeFilterByField'
+          - $ref: '#/components/schemas/MetricsUpstreamStatusCodeGroupedFilterByField'
     DonutChart:
       description: |
         A chart that can display one-dimensional data in a hollow, segmented circle.  To use this chart, ensure that

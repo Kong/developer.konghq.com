@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../monkey_patch'
 
 module Jekyll
   class VersionCompatibilityTable < Liquid::Block
@@ -16,9 +17,11 @@ module Jekyll
       config = convert_version_compat_to_feature_table(config)
 
       context.stack do
+        context['heading_level'] = Jekyll::ClosestHeading.new(@page, @line_number, context).level
         context['include'] =
-          { 'columns' => config['columns'], 'rows' => config['features'], 'item_title' => config['item_title'] }
-        Liquid::Template.parse(template).render(context)
+          { 'columns' => config['columns'], 'rows' => config['features'], 'item_title' => config['item_title'],
+            'compatibility_table' => true }
+        Liquid::Template.parse(template, { line_numbers: true }).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
@@ -48,7 +51,11 @@ module Jekyll
     end
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/feature_table.html'))
+      if @page['output_format'] == 'markdown'
+        File.read(File.expand_path('app/_includes/components/feature_table.md'))
+      else
+        File.read(File.expand_path('app/_includes/components/feature_table.html'))
+      end
     end
   end
 end

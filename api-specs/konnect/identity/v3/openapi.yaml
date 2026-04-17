@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@da4167d67de6f8881284da915b708556e37d8a99
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/da4167d67de6f8881284da915b708556e37d8a99'
+  x-oas-source: kong/platform-api@5c86310ccc2211b7511ad22a7b9e0a2807a21708
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5c86310ccc2211b7511ad22a7b9e0a2807a21708'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -608,6 +608,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-team-role
+      summary: Get Team Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: teams-remove-role
       summary: Remove Team Role
@@ -818,6 +835,23 @@ paths:
           type: string
           format: uuid
           example: 8350205f-a305-4e39-abe9-bc082a80091a
+    get:
+      operationId: get-user-role
+      summary: Get User Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Roles
     delete:
       operationId: users-remove-role
       summary: Remove Role
@@ -1133,6 +1167,23 @@ paths:
         required: true
         schema:
           type: string
+    get:
+      operationId: get-system-account-role
+      summary: Get System Account Role
+      description: Returns the assigned role for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/AssignedRoleSingle'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - System Accounts - Roles
     delete:
       operationId: delete-system-accounts-accountId-assigned-roles-roleId
       summary: Delete Assigned Role from System Account
@@ -1995,6 +2046,37 @@ components:
       maxLength: 256
       minLength: 1
       pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.'']*[\p{L}\p{N}]$'
+    PersonalAccessTokenCreateRequestWithExpiresAt:
+      description: '**Deprecated:** Use `ttl_seconds` instead of `expires_at` to specify token expiration. Using a time-to-live value avoids clock skew issues when setting token expiration.'
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PATName'
+        expires_at:
+          description: An ISO-8601 timestamp representation of entity expiration date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: false
+      additionalProperties: false
+      deprecated: true
+      required:
+        - name
+        - expires_at
+    PersonalAccessTokenCreateRequestWithTTL:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/PATName'
+        ttl_seconds:
+          description: The time to live in seconds for the personal access token.
+          type: integer
+          maximum: 31536000
+          minimum: 86400
+      additionalProperties: false
+      required:
+        - name
+        - ttl_seconds
     PersonalAccessTokenCreateResponse:
       description: Details of the created personal access token.
       type: object
@@ -3036,6 +3118,10 @@ components:
       value:
         name: Token
         expires_at: '2024-01-01T00:00:00.000Z'
+    CreatePersonalAccessTokenRequestWithTTL:
+      value:
+        name: Token
+        ttl_seconds: 2592000
     UnauthorizedExample:
       value:
         status: 401
@@ -3240,6 +3326,7 @@ components:
                   - Consumer Admin
                   - Connector
                   - Creator
+                  - Debug Session Creator
                   - Deployer
                   - Discovery Admin
                   - Discovery Viewer
@@ -3520,22 +3607,14 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              name:
-                $ref: '#/components/schemas/PATName'
-              expires_at:
-                description: An ISO-8601 timestamp representation of entity expiration date.
-                type: string
-                format: date-time
-                example: '2022-11-04T20:10:06.927Z'
-                readOnly: false
-            required:
-              - name
-              - expires_at
+            oneOf:
+              - $ref: '#/components/schemas/PersonalAccessTokenCreateRequestWithExpiresAt'
+              - $ref: '#/components/schemas/PersonalAccessTokenCreateRequestWithTTL'
           examples:
-            Example Request Body:
+            With expires_at:
               $ref: '#/components/examples/CreatePersonalAccessTokenRequest'
+            With ttl_seconds:
+              $ref: '#/components/examples/CreatePersonalAccessTokenRequestWithTTL'
     PersonalAccessTokenUpdateRequest:
       description: Request body schema for updating personal access tokens.
       content:

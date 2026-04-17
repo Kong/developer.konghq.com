@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "Fixed an issue where the `add.headers` operation lowercased the header name, causing the configured letter case to be lost when adding new headers to the request.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "improved performance of the request-transformer plugin.\n",

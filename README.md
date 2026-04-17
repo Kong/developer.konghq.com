@@ -1,11 +1,15 @@
 # developer.konghq.com
+
 🦍 Source code for developer.konghq.com website.
 
+## Prerequisites
+
+- [mise](https://mise.jdx.dev/getting-started.html).
+    - Optionally configure your shell to [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise) automatically.
+    - You may need to run `mise trust` when first opening a new repository.
+- [libyaml](https://github.com/yaml/libyaml).
+
 ## Run Locally
-
-Make sure you have [mise](https://mise.jdx.dev/getting-started.html)
-
-If you want to make sure you will always use the right version of tools, [activate mise](https://mise.jdx.dev/getting-started.html#activate-mise).
 
 ```bash
 # Install dependencies

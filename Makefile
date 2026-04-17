@@ -10,11 +10,12 @@ ifndef RUBY_MATCH
 	$(error ruby $(RUBY_VERSION_REQUIRED) is required. Found $(RUBY_VERSION). $(newline)Run 'mise activate' or prefix you make command with 'mise x --' see README.md for more information)$(newline)
 endif
 
-# Installs npm packages and gems.
+# Installs yarn packages and gems.
 install:
 	mise install
 	git submodule update --init
-	npm ci
+	corepack enable
+	yarn install --frozen-lockfile
 	bundle install
 	cd tools/frontmatter-validator && npm ci
 

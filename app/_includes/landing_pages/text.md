@@ -1,1 +1,1 @@
-{{ include.config | liquify | markdownify }}
+{% if page.output_format == 'markdown' %}{{ include.config | liquify }}{% else %}{{ include.config | liquify | markdownify }}{% endif%}

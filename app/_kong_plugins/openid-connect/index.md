@@ -562,6 +562,67 @@ To enable DPoP for OpenID Connect:
 
 See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
 
+## Token exchange {% new_in 3.14 %}
+
+The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
+The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server. 
+This is particularly useful in complex environments like microservices or cross-domain federations. 
+
+{:.info}
+> **Note**: The OpenID Connect plugin only supports exchanging access tokens.
+
+### Why use token exchange?
+
+Token exchange can be used in several critical use cases:
+
+* **Downscoping**: A service receives a powerful token but only needs a subset of those permissions to call an upstream service. 
+It exchanges the powerful token for one with fewer scopes to maintain the Principle of Least Privilege.
+* **Internal vs. external tokens**: Converting an external opaque token or a third-party token (like a SAML assertion) into an internal JWT that the microservices understand.
+* **Impersonation and delegation**: Allowing a service to act on behalf of a user. 
+For example, a frontend service needs to trade its token for a new token with specific scopes to call a backend service.
+* **Privacy**: Removing sensitive user information from a token before passing it to an upstream service.
+
+{:.info}
+> Because token exchange allows for the creation of new tokens, trust models are vital. 
+The trust model must strictly define which clients are allowed to exchange tokens and which scopes they are permitted to elevate or downgrade to prevent security flaws like privilege escalations.
+
+### How token exchange works
+
+In a typical [OAuth flow](#kong-oauth-token-authentication-flow), a token is obtained to access a resource. 
+However, in a token exchange, a client already has a token (the "subject token"). 
+{{site.base_gateway}} acts as the gatekeeper that decides which incoming tokens are eligible for exchange and facilitates the token exchange using its own client credentials. 
+The subject token is presented to the authorization server to get a different token (the "requested token") that is better suited for accessing the resource.
+
+{% include_cached /plugins/oidc/diagrams/token-exchange.md %}
+
+The OpenID Connect plugin performs the following checks on the incoming token before triggering the exchange:
+1. Checks the incoming subject token meets the following criteria:
+  * The issuer (`iss` claim) matches a configured trusted issuer (`subject_token_issuers`).
+  * The token is not expired (`exp` claim).
+  * The token is not used before its time (`nbf` claim).
+1. If the `subject_token_issuer` and `target_issuer` are different, token exchange is triggered. 
+1. If the `subject_token_issuer`and `target_issuer` are the same, then the configured conditions are evaluated to determine token exchange.
+1. {{site.base_gateway}} uses its client credentials to trigger the exchange.
+
+Afterwards, the rest of the OpenID Connect plugin flow continues on the exchanged token.
+
+Depending on the use case, {{site.base_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
+
+Set up token exchange:
+* [Example: Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
+* [Example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+* [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
+
+#### Key terms
+
+The token exchange flow uses the following terms:
+
+* **Subject token**: The input token representing the identity/authorization being exchanged.
+* **Subject token issuer**: The authorization server that issued the initial token (subject token).
+* **Target issuer**: The authorization server protecting the resources (APIs/services).
+* **Conditions**: Conditions under which to trigger token exchange. 
+Conditions look for the presence or absence of two claims: `scopes` and `audience`. 
+
 ## Multiple clients
 
 You can configure the OIDC plugin with multiple client IDs ([`config.client_id`](./reference/#schema--config-client-id)) and 
@@ -601,6 +662,12 @@ curl -X GET "http://localhost:8000?client_id=2"
 {:.info}
 > **Note:** Configuring multiple clients is not possible with the client credentials grant, as the plugin always uses the client ID passed directly from the client.
 
+## Using cloud authentication with Redis {% new_in 3.13 %}
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier=page.tier %}
+
+{% include_cached /plugins/redis/enterprise.md name=page.name heading_level=2 %}
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
@@ -626,8 +693,6 @@ You can filter the log with the keyword `openid-connect`.
 If one of these other applications is causing issues, looking into using the following:
   * [Port maps](/gateway/configuration/#port-maps)
   * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
-
-{% include plugins/redis-cloud-auth.md %}
 
 ## Supported identity providers
 

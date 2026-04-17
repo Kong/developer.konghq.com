@@ -244,6 +244,15 @@ rows:
       - blocks:
         - type: card
           config:
+            title: A2A traffic gateway
+            description: Secure, govern, and observe agent-to-agent (A2A) traffic with {{site.ai_gateway}}'s A2A protocol support
+            icon: /assets/icons/plugins/ai-a2a-proxy.png
+            cta:
+              url: /ai-gateway/a2a/
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Automated RAG injection
             description: Automatically embed RAG logic into your workflows
             icon: /assets/icons/plugins/ai-rag-injector.png
@@ -311,7 +320,7 @@ rows:
             description: Visualize LLM metrics in {{site.konnect_short_name}}.
             icon: /assets/icons/analytics.svg
             cta:
-              url: /observability/llm-reporting/
+              url: /observability/explorer/
               align: end
       - blocks:
         - type: card
@@ -456,6 +465,8 @@ rows:
                 - type: text
                   text: |
                       {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+
+                      For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
   - columns:
       - blocks:
         - type: plugin
@@ -532,13 +543,18 @@ rows:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
+        - type: plugin
+          config:
+            slug: ai-custom-guardrail
+            icon: ai-custom-guardrail.png
+      - blocks:
         - type: card
           config:
             title: Amazon Bedrock guardrails
             description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#input-formats
+              url: /plugins/ai-proxy/#supported-native-llm-formats
               align: end
 
   - header:
@@ -664,7 +680,8 @@ rows:
                     {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations. Track token usage, latency, and costs through audit logs and metrics exporters. Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
 
 
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
         - type: card
           config:
@@ -695,11 +712,20 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Gen AI OpenTelemetry
-            description: Expose and visualize LLM metrics.
+            title: Gen AI OTLP span attributes
+            description: Per-request OpenTelemetry span attributes for AI traffic.
             icon: /assets/icons/opentelemetry.svg
             cta:
               url: /ai-gateway/llm-open-telemetry/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Gen AI OTLP metrics
+            description: Aggregated OpenTelemetry metrics for AI, MCP, and A2A traffic.
+            icon: /assets/icons/opentelemetry.svg
+            cta:
+              url: /ai-gateway/ai-otel-metrics/
               align: end
 
   - header:

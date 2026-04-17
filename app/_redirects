@@ -179,8 +179,10 @@
 
 
 ## Insomnia
+/insomnia/version-control/ /insomnia/storage/
 /insomnia/concepts/ /insomnia/terminology/
 /insomnia/install/ /insomnia/#install-insomnia
+/insomnia/end-to-end-encryption/ /insomnia/data-security/
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 
 ## Indices
@@ -219,11 +221,12 @@
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
 /dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/reference/#managed-cache-for-redis 301
 
-# Observability rename
+# Observability
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301
 /index/advanced-analytics/  /index/observability/  301
 /advanced-analytics/custom-dashboards/    /custom-dashboards/ 301
+/observability/llm-reporting/   /observability/explorer/    301
 
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/

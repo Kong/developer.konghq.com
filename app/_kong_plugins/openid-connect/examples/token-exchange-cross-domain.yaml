@@ -1,0 +1,71 @@
+title: Token exchange for cross-domain security
+description: |
+   Use the OpenID Connect plugin to exchange tokens between different authorization servers.
+
+extended_description: |
+  Use the OpenID Connect plugin to exchange tokens between different authorization servers or identity providers (IdPs). 
+  This is useful when you have APIs protected by different authorization servers, but you want to allow clients to access all of them with a single token.
+
+  In this scenario:
+  1. The client is issued a token from AuthZ Server A.
+  1. APIs are protected by AuthZ Server B.
+  1. The OIDC plugin is configured to exchange tokens from Server A with Server B.
+
+  Here's how token exchange works with the OIDC plugin:
+
+  {% include_cached /plugins/oidc/diagrams/token-exchange.md %}
+
+weight: 701
+
+requirements:
+  - Two configured identity providers (IdPs) that support token exchange. This can be two separate IdPs, such as Okta and Keycloak, or two AuthZ servers (Server A, Server B) in the same IdP.
+
+config:
+  issuer: ${request-issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - bearer
+  token_exchange:
+    subject_token_issuers:
+      - issuer: ${subject-token-issuer}
+        conditions:
+          missing_audience: null
+          has_audience: null
+          missing_scopes: null
+          has_scopes: null
+    request:
+      empty_audience: false
+      scopes: null
+      empty_scopes: false
+      audience: null
+
+variables:
+  request-issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for the authorization server that issued the token in the incoming request.
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`.
+  subject-token-issuer:
+    value: $SUBJECT_TOKEN_ISSUER
+    description: |
+      The issuer authentication URL for the authorization server that you want to exchange tokens with.
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP (in this case, Server A).
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP (in this case, Server A).
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - konnect
+  - terraform
+
+group: other

@@ -35,10 +35,10 @@ categories:
 related_resources:
   - text: Dev Portal API packaging
     url: /dev-portal/api-catalog-and-packaging/
----
 
-{:.warning}
-> **Important:** The Access Control Enforcement plugin can only be used with APIs that are linked to a control plane, which is a private beta feature. Contact your account manager for access.
+search_aliases:
+  - ace
+---
 
 {% include /plugins/ace/ace-overview.md %}
 

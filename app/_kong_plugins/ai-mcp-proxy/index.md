@@ -85,6 +85,18 @@ faqs:
       * 2025-11-25
 
       Versions from 2024 are not supported.
+  - q: "Can I apply the AI MCP Proxy plugin to a Gateway Service instead of a Route?"
+    a: |
+      The plugin can be applied to a Service or a Route, except in `conversion-only` and `conversion-listener` modes where the plugin requires Route information for tool conversion. Tool indexing skips plugins that are not attached to a Route. If no Route is present, the plugin skips conversion and logs a warning. Always scope the plugin to a Route when using these modes.
+
+      `passthrough-listener` mode does not require Route scoping because it proxies MCP traffic directly to an upstream server without performing tool conversion.
+
+      Consumer and Consumer Group scoping is not supported in any mode.
+
+  - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests?"
+    a: |
+      Prior to {{site.ai_gateway}} 3.14, requests that matched an MCP ACL deny rule or failed to match an allow list returned the JSON-RPC error code `INVALID_PARAMS -32602`.
+      This has now changed to match the [MCP 2025-11-25 authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization#error-handling) and returns `HTTP 403 Forbidden`.
 
 next_steps:
   - text: Learn about Kong MCP traffic gateway
@@ -179,6 +191,8 @@ sequenceDiagram
 
 {:.warning}
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
+> - **In `conversion-only` and `conversion-listener` modes, the plugin must be scoped to a Route.** Tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. `passthrough-listener` mode does not require Route scoping.
+> - **Consumer and Consumer Group scoping is not supported** in any mode.
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
 > - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
@@ -300,8 +314,8 @@ rows:
 
 Both default and per-tool ACLs use `allow` and `deny` lists. Evaluation follows this order:
 
-1. **Deny list configuration**: If a `deny` list exists and the subject matches any `deny` entry, the request is rejected (`INVALID_PARAMS -32602`).
-2. **Allow list configuration**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`INVALID_PARAMS -32602`).
+1. **Deny list configuration**: If a `deny` list exists and the subject matches any `deny` entry, the request is rejected (`HTTP 403 Forbidden`).
+2. **Allow list configuration**: If an `allow` list exists, the subject must match at least one entry; otherwise, the request is denied (`HTTP 403 Forbidden`).
 3. **No allow list configuration**: If no `allow` list exists and the subject is not in `deny`, the request is allowed.
 4. **No ACL configuration**: If neither list exists, the request is allowed.
 
@@ -320,10 +334,10 @@ columns:
 rows:
   - condition: "Subject matches any `deny` rule"
     proxy: No
-    response: INVALID_PARAMS -32602
+    response: HTTP 403 Forbidden
   - condition: "`allow` list exists and subject is not in it"
     proxy: No
-    response: INVALID_PARAMS -32602
+    response: HTTP 403 Forbidden
   - condition: "Only `deny` list exists and subject is not in it"
     proxy: Yes
     response: 200
@@ -350,7 +364,7 @@ The AI MCP Proxy plugin evaluates ACLs for both tool discovery and tool invocati
 3. AI MCP Proxy loads the Consumer's group memberships
 4. Plugin evaluates the tool-specific ACL if it exists, or the default ACL otherwise
 5. Plugin logs the access attempt (allowed or denied)
-6. Plugin returns `INVALID_PARAMS -32602` if denied, or forwards the request to the upstream MCP server if allowed
+6. Plugin returns `HTTP 403 Forbidden` if denied, or forwards the request to the upstream MCP server if allowed
 
 <!-- vale off -->
 {% mermaid %}
@@ -373,7 +387,7 @@ sequenceDiagram
     alt If allowed
       Kong-->>Client: Filtered tool list
     else If denied
-      Kong-->>Client: INVALID_PARAMS -32602
+      Kong-->>Client: HTTP 403 Forbidden
     end
   end
 
@@ -390,7 +404,7 @@ sequenceDiagram
       Up-->>Kong: Response
       Kong-->>Client: Response
     else If denied
-      Kong-->>Client: INVALID_PARAMS -32602
+      Kong-->>Client: HTTP 403 Forbidden
     end
   end
 {% endmermaid %}

@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@408ea0ec3518b52070809011e4600c17c9199642
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/408ea0ec3518b52070809011e4600c17c9199642'
+  x-oas-source: kong/platform-api@eaa4b06a60ffa41480a66fa5899617b0de2d4543
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eaa4b06a60ffa41480a66fa5899617b0de2d4543'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -4999,7 +4999,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -5010,7 +5010,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time

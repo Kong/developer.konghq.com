@@ -9,7 +9,8 @@ content_type: plugin
 publisher: kong-inc
 description: 'Inspect and enforce Lakera Guard safety policies on LLM requests and responses before they reach upstream models.'
 
-category: AI
+categories:
+  - ai
 
 products:
     - gateway
@@ -34,14 +35,12 @@ topologies:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai-lakera-guard
 
 icon: ai-lakera.png
-
-categories:
-  - ai
 
 related_resources:
   - text: Use the AI Lakera Guard plugin
@@ -111,7 +110,7 @@ rows:
 
 ## Logging
 
-You can use the [logging capabilities](/ai-gateway/ai-audit-log-reference/) of the AI Lakera Guard plugin to monitor the inspection process and understand the detected violations.
+You can use the [logging capabilities](/ai-gateway/ai-audit-log-reference/) of the AI Lakera Guard plugin to monitor the inspection process and understand the detected violations. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-lakera-guard-logs).
 
 The plugin provides detailed logging and controls over how violations are reported:
 * **SaaS platform logging**: All inspected requests, responses, and chats are made available on the Lakera SaaS platform.
@@ -122,6 +121,8 @@ The plugin provides detailed logging and controls over how violations are report
 By default, the plugin doesn't tell clients why their request was blocked. However, this information is always logged to {{site.ai_gateway}} logs for administrators.
 
 To change this behavior, use `reveal_failure_categories: true`. If activated, you'll receive a JSON response including a breakdown array that details the specific `detector_type` that caused the failure.
+
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/plugins/ai-lakera-guard/reference/#schema--config-log-blocked-content). {% new_in 3.14 %} When enabled, the blocked prompt or response body appears under `ai.proxy.lakera-guard.input_faulty_prompt` and `ai.proxy.lakera-guard.output_faulty_response` in the log entry.
 
 ### Standard logging subsystem example
 
@@ -142,7 +143,7 @@ When a request passes all guardrails, the log includes processing latency and th
 
 ### Violations log example
 
-When a request is blocked, the log captures the violation reason and detector details:
+When a request is blocked, the log captures the violation reason, detector details, and — in 3.14 — the blocking plugin name, consumer ID, and a running trigger counter:
 
 ```json
 "ai": {
@@ -162,6 +163,9 @@ When a request is blocked, the log captures the violation reason and detector de
       ],
       "input_request_uuid": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
       "input_block_reason": "moderated_content/hate",
+      "input_block_source": "ai-lakera-guard",
+      "input_block_consumer_id": "consumer-uuid-1234",
+      "guards_triggered_count": 1,
       "lakera_project_id": "project-1234567890"
     }
   }

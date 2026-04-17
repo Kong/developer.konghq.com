@@ -24,6 +24,10 @@ products:
 
 breadcrumbs:
   - /event-gateway/
+
+tools:
+  - konnect-api
+  - terraform
 ---
 
 {{site.event_gateway}} is a Kafka proxy that uses the Kafka protocol. 
@@ -97,34 +101,59 @@ rows:
 When a Kafka client connects to the {{site.event_gateway_short}} proxy, the proxy acts as the Kafka bootstrap server. 
 The bootstrap server informs the Kafka client about all the brokers in the cluster, and the client then handles balancing requests to all brokers.
 
-To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do this: port mapping, or using TLS with SNI. You configure both options on a [listener](/event-gateway/entities/listener/).
+To proxy the backend cluster, {{site.event_gateway_short}} receives the hostname metadata from the backend cluster and maps each hostname from the cluster to a hostname that it serves. There are two ways to do this: port mapping, or using TLS with SNI. You configure both options on a listener policy.
 
 For example, let's say that there are three brokers in the cluster: `kafka1`, `kafka2`, and `kafka3`.
 Each broker exposes port `9092`, and the proxy is listening on the IP `10.0.0.1`.
-The proxy exposes three different servers for each host in the cluster.
-Depending on your use requirements, you can expose the brokers to the proxy in the following ways:
+The proxy exposes a different server for each host in the cluster.
+Depending on your use requirements, you can expose the brokers to the proxy in one of the following ways: with [port mapping](#port-mapping) or with [SNI mapping](#sni-mapping).
 
-* **Port mapping**: The proxy exposes exactly three configurable ports:
+### Port mapping
 
-  ```
-  10.0.0.1:9092 → kafka1:9092
-  10.0.0.1:9093 → kafka2:9092
-  10.0.0.1:9094 → kafka3:9092
-  ```
+Let's use an example where the proxy exposes the following ports:
 
-  Mapping ports is easier for getting started, but we don't recommend using this method in production because it's less flexible.
+```
+10.0.0.1:9092 → kafka1:9092 (bootstrap port)
+10.0.0.1:9093 → kafka1:9092
+10.0.0.1:9094 → kafka2:9092
+10.0.0.1:9095 → kafka3:9092
+```
 
-* **SNI mapping**: The proxy exposes three different hostnames using SNI.
-This lets you expose multiple servers on the same port. In this case, the mapping looks like this:
+Kafka clients are meant to be configured only with a bootstrap port.
+Mapping ports is easier for getting started, but we don't recommend using this method in production because it's less flexible.
+
+For an example configuration, see [Forward via port mapping](/event-gateway/policies/forward-to-virtual-cluster/examples/port-mapping/).
+
+### SNI mapping
+
+The proxy exposes multiple hostnames using SNI.
+This lets you expose multiple servers on the same port. Using our example ports, the mapping looks like this:
   
-  ```
-  broker-1.my-event-gateway:9092 → kafka1:9092
-  broker-2.my-event-gateway:9092 → kafka2:9092
-  broker-3.my-event-gateway:9092 → kafka3:9092
-  ```
+```
+bootstrap.my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)
+broker-1.my-event-gateway.acme:9092 → kafka1:9092
+broker-2.my-event-gateway.acme:9092 → kafka2:9092
+broker-3.my-event-gateway.acme:9092 → kafka3:9092
+```
 
-  We recommend this method for production.
+Kafka clients are meant to be configured only with a bootstrap hostname.
+We recommend this method for production.
 
-  You must provide a TLS certificate for every host exposed on the {{site.event_gateway_short}}. 
-  This can be done through a certificate with a wildcard SAN, a single certificate with multiple SANs, or multiple certificates in the same bundle. 
-  The client must also be able to resolve the hostnames to the IP address of the gateway.
+You must provide a TLS certificate for every host exposed on the {{site.event_gateway_short}}. 
+This can be done through a certificate with a wildcard SAN, a single certificate with multiple SANs, or multiple certificates in the same bundle.
+
+#### Shared suffix {% new_in 1.1 %}
+Alternatively, you can set `broker_host_format.type` to `shared_suffix` in the listener policy, so that you can use one wildcard SAN for all virtual clusters. In this case, the mapping looks like this
+
+```
+bootstrap-my-event-gateway.acme:9092 → kafka1:9092 (bootstrap hostname)
+broker-1-my-event-gateway.acme:9092 → kafka1:9092
+broker-2-my-event-gateway.acme:9092 → kafka2:9092
+broker-3-my-event-gateway.acme:9092 → kafka3:9092
+```
+
+In all cases, the client must also be able to resolve the hostnames to the IP address of the gateway.
+
+For example configurations, see:
+* [Forward via SNI routing](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing/)
+* [Forward via SNI routing with shared suffix](/event-gateway/policies/forward-to-virtual-cluster/examples/sni-routing-shared-suffix/)

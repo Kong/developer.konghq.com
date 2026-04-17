@@ -3,3 +3,5 @@ paths:
   - /weather
 service:
   name: weather-service
+protocols:
+  - https

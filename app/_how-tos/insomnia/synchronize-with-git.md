@@ -64,9 +64,9 @@ faqs:
 related_resources:
   - text: Storage options in Insomnia
     url: /insomnia/storage/
-  - text: Version control in Insomnia
-    url: /insomnia/version-control/
-  
+  - text: Git Sync
+    url: /insomnia/git-sync/
+
 ---
 
 ## Create a project

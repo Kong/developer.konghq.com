@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list portal application-registrations [flags]
 

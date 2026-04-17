@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get portal developers [flags]
   kongctl get portal developers [command]

@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/azure-pg-authentication-with-azure-app-service-principal/
   - text: "{{site.base_gateway}} Google Cloud Postgres database authentication with GCP IAM and Workload Identity"
     url: /gateway/gcp-postgres-authentication/
+  - text: "Cloud provider integration support for {{site.ee_product_name}}"
+    url: /gateway/cloud-provider-support-matrix/
 
 works_on:
   - on-prem

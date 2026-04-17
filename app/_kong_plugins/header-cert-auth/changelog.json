@@ -1,4 +1,11 @@
 {
+  "3.14.0.0": [
+    {
+      "message": "the `ssl_verify` option to switch verification of the\ncertificate presented by the server of the OCSP responder's URL and by the\nserver of the CRL Distribution Point is now enabled by default.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "added support for the `tls_certificate_verify` global option.\nWhen this option is enabled, the plugin's `ssl_verify` flag\ncannot be disabled.\n",

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
-  title: Konnect API Builder
-  version: 3.1.0
-  description: The management API for building APIs for Konnect Dev Portals.
+  title: Konnect API Catalog
+  version: 3.1.1
+  description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@d338ece9c89e865190819ddc20d925392fc59705
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/d338ece9c89e865190819ddc20d925392fc59705'
+  x-oas-source: kong/platform-api@e3083742a0cf90baaa88cd947bcbc6e471acdab8
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3083742a0cf90baaa88cd947bcbc6e471acdab8'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2152,6 +2152,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2194,6 +2200,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationVisibility'
         auth_strategy_ids:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2223,6 +2235,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2239,6 +2257,12 @@ components:
           $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
         visibility:
           $ref: '#/components/schemas/ApiPublicationVisibility'
+        warnings:
+          description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+          type: array
+          items:
+            type: string
+          readOnly: true
         created_at:
           $ref: '#/components/schemas/CreatedAt'
         updated_at:
@@ -2979,7 +3003,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -2990,7 +3014,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -5086,6 +5110,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              warnings:
+                description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+                type: array
+                items:
+                  type: string
+                readOnly: true
               created_at:
                 $ref: '#/components/schemas/CreatedAt'
               updated_at:
@@ -5147,6 +5177,12 @@ components:
                 $ref: '#/components/schemas/ApiPublicationAuthStrategyIds'
               visibility:
                 $ref: '#/components/schemas/ApiPublicationVisibility'
+              warnings:
+                description: Informational warnings (e.g. incompatible fields stripped for ACE). Empty if none.
+                type: array
+                items:
+                  type: string
+                readOnly: true
               created_at:
                 $ref: '#/components/schemas/CreatedAt'
               updated_at:

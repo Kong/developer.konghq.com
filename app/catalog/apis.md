@@ -49,6 +49,10 @@ faqs:
       [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
   - q: My team has a Dev Portal, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
+  - q: |
+      {% include faqs/portal-markdown.md section='question' %}
+    a: |
+      {% include faqs/portal-markdown.md section='answer' %}
 ---
 
 {:.success}
@@ -165,7 +169,7 @@ All API specification files are validated during upload, although invalid specif
 {{site.konnect_short_name}} looks for the following during spec validation:
 
 * Specs must be valid JSON or YAML.
-* Spec should be valid according to the [OpenAPI 2.x or 3.x specification](https://spec.openapis.org/) or the [AsyncAPI 2.x or 3.0.0 specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0).
+* Spec should be valid according to the [OpenAPI 2.0, 3.0.x, or 3.1.x specification](https://spec.openapis.org/) or the [AsyncAPI 2.x or 3.0.0 specification](https://www.asyncapi.com/docs/reference/specification/v3.0.0).
     * OAS validation is performed using [Spectral](https://github.com/stoplightio/spectral).
     * To replicate validation in your own CI/CD pipeline, run `spectral lint [spec.yaml] .spectral.yaml`, where `.spectral.yaml` should contain the following: 
         * OpenAPI `spectral.yaml`: Should contain `extends: "spectral:oas"`.

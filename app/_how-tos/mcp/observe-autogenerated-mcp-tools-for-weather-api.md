@@ -64,7 +64,7 @@ automated_tests: false
 
 ## Reconfigure the AI MCP Proxy plugin
 
-To observe traffic for MCP tools, you first must **enable logging and statistics** on the AI MCP Proxy plugin. Apply the below configuration for the AI MCP Proxy plugin with enabled logging capabilities:
+To observe traffic for MCP tools, you first must **enable logging and statistics** on the AI MCP Proxy plugin. Apply the below configuration to reconfigure the plugin while preserving the WeatherAPI key in `tools[].query`:
 
 {% entity_examples %}
 entities:
@@ -80,6 +80,9 @@ entities:
         - description: Get current weather for a location
           method: GET
           path: "/weather"
+          query:
+            key:
+              - ${key}
           parameters:
           - name: q
             in: query
@@ -90,6 +93,9 @@ entities:
               IP address, latitude/longitude, or city name.
         server:
           timeout: 60000
+variables:
+  key:
+    value: $WEATHERAPI_API_KEY
 {% endentity_examples %}
 
 

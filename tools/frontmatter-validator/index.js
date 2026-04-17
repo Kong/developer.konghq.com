@@ -1,27 +1,30 @@
-const fs = require("fs").promises;
-const fg = require("fast-glob");
-const matter = require("gray-matter");
-const path = require("path");
-const YAML = require("yaml");
+import fs from "fs/promises";
+import { readFileSync } from "fs";
+import { glob } from "tinyglobby";
+import matter from "gray-matter";
+import path from "path";
+import YAML from "yaml";
+import { fileURLToPath } from "url";
 
-const Ajv = require("ajv");
-const addFormats = require("ajv-formats");
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 
 async function validateFrontmatters() {
-  const schemas = await fg("../../app/_data/schemas/frontmatter/*.json");
+  const schemas = await glob("../../app/_data/schemas/frontmatter/*.json");
   for (const schemaFile of schemas) {
-    const schema = require(schemaFile);
+    const schema = JSON.parse(readFileSync(schemaFile, "utf-8"));
     ajv.addSchema(schema);
   }
 
   // Ignore plugins pages for now.
-  const files = await fg(
+  const files = await glob(
     ["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"],
     {
       ignore: [
+        "app/_layouts/**",
         "app/_includes/**",
         "app/_kong_plugins/**/changelog.md",
         "app/_kong_plugins/**/reference.md",
@@ -68,7 +71,7 @@ async function validateFrontmatters() {
   console.log("No invalid frontmatters detected.");
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     validateFrontmatters();
   } catch (e) {
@@ -76,4 +79,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = validateFrontmatters;
+export default validateFrontmatters;
