@@ -30,3 +30,7 @@
   slug: logging
   desc: Log request and response data using the best transport for your infrastructure
   icon: /assets/icons/service-document.svg
+- text: Monetization
+  slug: monetization
+  desc: Monetize your APIs with rate limiting, quotas, and billing capabilities
+  icon: /assets/icons/money.svg
