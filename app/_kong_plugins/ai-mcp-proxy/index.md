@@ -87,9 +87,11 @@ faqs:
       Versions from 2024 are not supported.
   - q: "Can I apply the AI MCP Proxy plugin to a Gateway Service instead of a Route?"
     a: |
-      It depends on the mode. In `conversion-only` and `conversion-listener` modes, the plugin requires Route information for tool conversion. Tool indexing skips plugins that are not attached to a Route. If no Route is present, the plugin skips conversion and logs a warning. Always scope the plugin to a Route when using these modes.
+      The plugin can be applied to a Service or a Route, except in `conversion-only` and `conversion-listener` modes where the plugin requires Route information for tool conversion. Tool indexing skips plugins that are not attached to a Route. If no Route is present, the plugin skips conversion and logs a warning. Always scope the plugin to a Route when using these modes.
 
       `passthrough-listener` mode does not require Route scoping because it proxies MCP traffic directly to an upstream server without performing tool conversion.
+
+      Consumer and Consumer Group scoping is not supported in any mode.
 
   - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests?"
     a: |
@@ -189,7 +191,8 @@ sequenceDiagram
 
 {:.warning}
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
-> - **In `conversion-only` and `conversion-listener` modes, the plugin must be scoped to a Route.** Tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. `passthrough-listener` mode does not require Route scoping. Consumer and Consumer Group scoping is not supported.
+> - **In `conversion-only` and `conversion-listener` modes, the plugin must be scoped to a Route.** Tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. `passthrough-listener` mode does not require Route scoping.
+> - **Consumer and Consumer Group scoping is not supported** in any mode.
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
 > - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
