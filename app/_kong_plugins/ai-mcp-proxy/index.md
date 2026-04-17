@@ -85,6 +85,12 @@ faqs:
       * 2025-11-25
 
       Versions from 2024 are not supported.
+  - q: "Can I apply the AI MCP Proxy plugin to a Gateway Service instead of a Route?"
+    a: |
+      The AI MCP Proxy plugin requires Route information to perform MCP tool conversion. While the plugin can be configured on a Service, it won't process MCP requests unless it is also associated with a Route. If no Route is present, the plugin skips conversion and logs a warning.
+
+      Always scope the plugin to a Route.
+
   - q: "Why do I see the error code `INVALID_PARAMS -32602` on failed requests?"
     a: |
       Prior to {{site.ai_gateway}} 3.14, requests that matched an MCP ACL deny rule or failed to match an allow list returned the JSON-RPC error code `INVALID_PARAMS -32602`.
@@ -183,6 +189,7 @@ sequenceDiagram
 
 {:.warning}
 > Before using the AI MCP Proxy plugin, ensure your setup meets these requirements:
+> - **The plugin must be scoped to a Route.** MCP tool conversion requires Route information. If you apply the plugin to a Service without a Route, the plugin skips conversion and logs a warning. Consumer and Consumer Group scoping is not supported.
 > - The upstream Service exposes a valid OpenAPI schema.
 > - That Service is configured and accessible in Kong.
 > - An MCP-compatible client (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) is available to connect to Kong.
