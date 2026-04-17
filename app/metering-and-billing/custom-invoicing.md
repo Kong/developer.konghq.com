@@ -26,6 +26,24 @@ You can integrate any external invoicing or payment provider with {{site.konnect
 * Perform custom validation before invoices are issued or sent to customers
 * Map invoice line items to your external system's data model
 
+{% mermaid %}
+flowchart TB
+    IN["Invoice notifications"]
+    CIA["Custom Invoicing app"]
+    IC["Invoice changes"]
+    IU["Invoice updates"]
+    INT["Integration"]
+    INV["3rd party invoicing solution"]
+    PG["3rd party payment gateway"]
+
+    IN -->|Invoice changes| IC
+    CIA -->|Invoice updates| IU
+    IC --> INT
+    IU --> INT
+    INT <--> INV
+    INT <--> PG
+{% endmermaid %}
+
 ## Revenue lifecycle
 
 The following lists show which parts of the revenue lifecycle are managed by {{site.konnect_short_name}} {{site.metering_and_billing}} and which are delegated to your external provider:
