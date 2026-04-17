@@ -64,22 +64,7 @@ To configure CMEK, you need:
 1. Provision a new multi-region symmetric key in your AWS account using "Key Managed Service (KMS)". They key should be in the AWS region you intend to use in {{site.konnect_short_name}}. A multi-region key is recommended to replicate the key in multiple regions, which can be used for disaster recovery or compliance purposes. 
 
 1. Add the following access policy statement to your key policy to allow the `cc-konnect` role ({{site.konnect_short_name}}) to use your key:
-```json
-{
-  "Effect": "Allow",
-  "Principal": {
-    "AWS": "arn:aws:iam::333402130851:role/cc-konnect"
-  },
-  "Action": [
-    "kms:Encrypt",
-    "kms:Decrypt",
-    "kms:ReEncrypt*",
-    "kms:GetKeyRotationStatus",
-    "kms:GenerateDataKey*",
-    "kms:DescribeKey"
-  ],
-  "Resource": "*"
-}
+
    ```json
    {
    "Effect": "Allow",
@@ -98,7 +83,7 @@ To configure CMEK, you need:
    }
    ```
 
-3. Ensure the multi-region key is replicated to all AWS regions that make up a [{{site.konnect_short_name}} region](/konnect-platform/geos/).
+1. Ensure the multi-region key is replicated to all AWS regions that make up a [{{site.konnect_short_name}} region](/konnect-platform/geos/).
 {% include_cached /konnect/cmek-region-mapping.md %}
 
 ### Configure CMEK in {{site.konnect_short_name}}
