@@ -1,0 +1,46 @@
+---
+# REQUIRED: The title that appears at the top of the page
+title: Retrieving the value of a key-value pair from Kong's Vault for Request Transformer Advanced plugin
+
+# REQUIRED: Must be set to "support" for support articles
+content_type: support
+
+
+# OPTIONAL: Which Kong products this article applies to
+# Common values: gateway, konnect, mesh, insomnia, deck
+products:
+  - gateway
+
+# REQUIRED for Gateway support articles (when products includes "gateway"); OPTIONAL otherwise
+# accepted values: on-prem, konnect
+works_on:
+  - on-prem
+  - konnect
+
+
+# OPTIONAL: TL;DR section that appears at the top of the article
+# Provides a quick question and answer summary
+tldr:
+  q: How to retrieve the value of a key-value pair from Kong's Secret Management within the Request Transformer Advanced plugin? 
+  a: |
+    Yes, by enabling `KONG_UNTRUSTED_LUA="on"` and adding a dynamic Lua function call within the config.add_headers field to retrieve the value via kong.vault.get
+
+---
+
+## Article content starts here
+
+Below configuration dynamically retrieves a token from Kong's Vault and appends it to the Authorization header as a Bearer token.
+
+## Use headers to organize sections
+
+1. Enable `KONG_UNTRUSTED_LUA="on"` in your {{site.base_gateway}} configuration.
+
+2. Add the following under config.add_headers under Request Transformer Advanced plugin configuration: 
+
+```
+    Authorization:$((function() local value, err =
+        kong.vault.get("{vault://env/add-your-vault-name-here}") if value then return "Bearer "
+        .. value end end)())
+```
+
+
