@@ -107,7 +107,7 @@ rows:
 > Dedicated Cloud Gateway data plane private IP addresses are static. 
 > You can retrieve them from the {{site.konnect_short_name}} UI or API to use as targets in your ALB target group or firewall rules.
 
-## Network peering
+### Network peering
 
 Network peering establishes a direct, private connection between the {{site.konnect_short_name}}-managed network and a single VPC or VNet in your cloud account. 
 Traffic routes over the cloud provider's internal network without traversing the public internet. 
@@ -164,7 +164,7 @@ After you've configured network peering in {{site.konnect_short_name}}, do the f
 - Configure security groups or network security group rules to allow inbound traffic from the {{site.base_gateway}} data plane private IPs on your service ports.
 - Configure private DNS so {{site.base_gateway}} can resolve your service hostnames to private IPs.
 
-## Hub-and-spoke network
+### Hub-and-spoke network
 
 A hub-and-spoke network uses a centrally managed hub that all networks connect to once. 
 The hub handles routing between all attached networks, so a single connection from the {{site.konnect_short_name}}-managed network can reach services across multiple VPCs or VNets without requiring individual peering connections to each one. 
@@ -182,7 +182,7 @@ After you've configured the hub-and-spoke network in {{site.konnect_short_name}}
 - Configure security groups or network security group rules to allow inbound traffic from {{site.base_gateway}} data plane private IPs on your service ports.
 - Configure private DNS so {{site.base_gateway}} can resolve your service hostnames to private IPs.
 
-## Private endpoints
+### Private endpoints
 
 Private endpoints provide one-way private connectivity from the {{site.konnect_short_name}}-managed network to resources in your AWS account using AWS VPC Lattice resource configurations. 
 There's no VPC-level network access, only what you explicitly expose via a resource configuration is reachable from the {{site.konnect_short_name}}-managed network. 
@@ -244,3 +244,5 @@ There are two DNS options for private Dedicated Cloud Gateways depending on wher
 - **Outbound DNS resolver:** Use this when your DNS records live on an on-premises or self-managed DNS server outside your cloud provider. 
   DNS traffic travels through your VPC peering or Transit Gateway connection. 
   See [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/).
+
+## WAF

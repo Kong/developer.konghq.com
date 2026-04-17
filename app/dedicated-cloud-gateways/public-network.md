@@ -142,6 +142,38 @@ We recommend creating and securing your public Dedicated Cloud Gateway in the fo
 3. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Kong NLB directly, they get rejected before any Route matching happens.
 4. Configure your Routes and Services pointing to real upstreams.
 
+### WAF
+
+<!--vale off -->
+{% mermaid %}
+sequenceDiagram
+    Client->>+CloudFront/WAF: Sends request, TLS terminated
+    CloudFront/WAF->>CloudFront/WAF: WAF evaluates
+
+    alt WAF blocks request
+        CloudFront/WAF-->>Client: 403 Forbidden
+    else WAF passes request
+        CloudFront/WAF->>CloudFront/WAF: CloudFront injects origin header
+        CloudFront/WAF->>Kong NLB: Forwards request with origin header
+        Kong NLB->>Kong DP node: Forwards request
+        Kong DP node->>Kong DP node: Validates header
+
+        alt Header missing or invalid
+            Kong DP node-->>Client: 403 Forbidden
+        else Header valid
+            Kong DP node->>Kong DP node: Matches route
+            Kong DP node->>Your upstream in AWS: Applies plugins, proxies request
+            Your upstream in AWS-->>Kong DP node: Response
+            Kong DP node-->>Kong NLB: Response
+            Kong NLB-->>CloudFront/WAF: Response
+            CloudFront/WAF-->>Client: Response
+        end
+    end
+{% endmermaid %}
+<!--vale on -->
+
+
+
 ### Egress IP allowlisting
 
 {{site.konnect_short_name}} exposes the static egress IP addresses for your Dedicated Cloud Gateway network in the {{site.konnect_short_name}} UI. 

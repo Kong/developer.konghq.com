@@ -128,6 +128,10 @@ features:
 
 For more information, see [Multi-cloud Dedicated Cloud Gateway network architecture](/dedicated-cloud-gateways/multi-cloud/).
 
+## WAF
+
+
+
 ## Dedicated Cloud Gateway network CIDR range
 
 Before you create a Dedicated Cloud Gateway network, determine which CIDR range you want to use for your network.
