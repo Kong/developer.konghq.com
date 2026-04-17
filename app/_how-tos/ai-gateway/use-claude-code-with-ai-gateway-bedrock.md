@@ -262,7 +262,7 @@ To resolve this issue:
 ```sh
 export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 ```
-2. Configure the [Route Transformer](/plugins/route-transformer-advanced/) plugin to remove beta information:
+2. Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin to remove beta information and the `model` field:
 {% entity_examples %}
 entities:
   plugins:
