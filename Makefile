@@ -14,6 +14,7 @@ endif
 install:
 	mise install
 	git submodule update --init
+	corepack enable
 	yarn install --frozen-lockfile
 	bundle install
 	cd tools/frontmatter-validator && npm ci
