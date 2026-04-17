@@ -70,7 +70,7 @@ For each request, the plugin:
 3. Attaches any configured custom attributes from request headers or query parameters, such as department, project, or priority tier.
 4. Buffers the event locally and delivers it in batches to the configured ingest endpoint, with automatic retries on failure:
    * [{{site.konnect_short_name}} {{site.metering_and_billing}} ingest endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events): `https://us.api.konghq.com/v3/openmeter/events`
-   * [OpenMeter self-hosted ingest endpoint](https://openmeter.io/docs/api/open-source#tag/events/POST/api/v1/events): `https://127.0.0.1/api/v1/events`
+   * [OpenMeter self-hosted ingest endpoint](https://openmeter.io/docs/api/v3#tag/metering-events/POST/openmeter/events): `https://127.0.0.1/api/v3/openmeter/events`
 
 ### Events and subjects
 
