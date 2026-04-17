@@ -26,7 +26,7 @@ The currency for all pricing models is set based on the related plan.
 
 ## Free
 
-The free pricing model doesn't require configuring card details and doesn't generate invoices.
+The free pricing model doesn't require configuring rate card details and doesn't generate invoices.
 
 If you want your plan to generate invoices, use a different pricing type and apply a 100% discount.
 
@@ -58,7 +58,7 @@ rows:
   - parameter: Percentage discount
     description: Reduces price by a fixed percent across all usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
@@ -143,7 +143,7 @@ rows:
 In this example, a customer with 6,000 units would be charged as:
 
 ```
-(1000 * $0.3) + (4000 * $0.2) + (1000 * $0.1) = $300 + $800 + $100 = $1,200
+(1000 × $0.3) + (4000 × $0.2) + (1000 × $0.1) = $300 + $800 + $100 = $1,200
 ```
 
 The following table breaks down the options for configuring a graduated pricing model:
@@ -412,7 +412,6 @@ Dynamic pricing is a model where USD prices are created dynamically from meter v
 
 With the dynamic pricing model, meters track cost rather than usage. 
 The price is calculated based on the underlying meter's value, optionally with a markup rate applied. 
-The currency used is the customer's currency.
 
 This model is useful when the price per unit varies request by request.
 Since modeling this complexity at the product catalog level is not feasible, the price calculation is deferred to the event reporting stack: the meter value is expected to represent the cost of each request.
@@ -421,7 +420,7 @@ Dynamic pricing is particularly effective for:
 
 * Cost-plus pricing models where you want to add a markup to your costs.
 * Services where prices fluctuate based on market conditions (for example, SMS or MMS).
-* Multi-currency scenarios where you want to maintain relative pricing.
+* Customer-specific pricing scenarios where the meter value already reflects the cost in the customer's configured currency.
 * Services that need to pass through variable costs with a markup.
 
 The following table breaks down the options for configuring a dynamic pricing model:
@@ -456,7 +455,7 @@ rows:
 With dynamic pricing, meters track cost instead of usage. 
 Meters are designed to track usage by default, so keep the following in mind:
 
-* There is no exchange rate.All customers and meter costs must be in the same currency.
+* There is no exchange rate. All customers and meter costs must be in the same currency.
 * Cost-tracking meters look the same as usage-tracking meters. Use naming conventions to distinguish them.
 
 ### Markup rate
