@@ -263,6 +263,7 @@ To resolve this issue, do the following:
 export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 ```
 2. Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin to remove beta information and the `model` field:
+{% capture fix_claude_beta %}
 {% entity_examples %}
 entities:
   plugins:
@@ -302,6 +303,8 @@ variables:
   aws_region:
     value: $AWS_REGION
 {% endentity_examples %}
+{% endcapture %}
+{{ fix_claude_beta | indent: 3 }}
 
 ### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
 
