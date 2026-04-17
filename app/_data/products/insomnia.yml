@@ -41,4 +41,6 @@ releases:
     version: "12.4.0"
   - release: "12.5"
     version: "12.5.0"
+  - release: "12.6"
+    version: "12.6.0"
     latest: true
