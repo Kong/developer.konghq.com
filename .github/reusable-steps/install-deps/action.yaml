@@ -31,6 +31,9 @@ runs:
         node-version: "24"
         cache: 'yarn'
 
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
     - name: Install node packages
       shell: bash
       run: yarn install --frozen-lockfile
