@@ -305,4 +305,4 @@ variables:
 
 ### API Error 400: max_tokens must be greater than thinking.budget_tokens
 
-If you `max_tokens` limit is too small you may encounter an error, you can resolve this by setting a larger value. The maximum value is `200000`.
+If your `max_tokens` limit is too small you may encounter an error, you can resolve this by setting a larger value. The maximum value is `200000`.
