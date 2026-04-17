@@ -256,7 +256,7 @@ See the following sections for common error workarounds.
 Some beta features aren't compatible with AWS Bedrock.
 This error displays because Claude beta features are enabled.
 
-To resolve this issue:
+To resolve this issue, do the following:
 
 1. Disable betas and experiments:
 ```sh
