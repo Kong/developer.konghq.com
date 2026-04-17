@@ -35,6 +35,9 @@ categories:
 related_resources:
   - text: Dev Portal API packaging
     url: /dev-portal/api-catalog-and-packaging/
+
+search_aliases:
+  - ace
 ---
 
 {% include /plugins/ace/ace-overview.md %}

@@ -34,6 +34,7 @@ categories:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai

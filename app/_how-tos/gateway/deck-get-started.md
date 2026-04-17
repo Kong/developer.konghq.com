@@ -60,7 +60,7 @@ You can use decK to configure a Service by providing a `name` and a `url`. Any r
 {% entity_examples %}
 entities:
   services:
-  - name: my-example-service
+  - name: example-service
     url: http://httpbin.konghq.com
 
 {% endentity_examples %}
