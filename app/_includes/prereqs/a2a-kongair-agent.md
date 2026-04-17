@@ -12,7 +12,7 @@ services:
       - OPENAI_API_KEY=${DECK_OPENAI_API_KEY}
       - OPENAI_MODEL=gpt-5-mini
       - KONGAIR_BASE_URL=https://api.kong-air.com
-      - PUBLIC_AGENT_URL=http://a2a-agent:10000
+      - PUBLIC_AGENT_URL=http://localhost:10000
     ports:
       - "10000:10000"
 EOF
