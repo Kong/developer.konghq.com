@@ -14,8 +14,8 @@ related_resources:
     url: /metering-and-billing/
   - text: Entitlements
     url: /metering-and-billing/entitlements/
-  - text: "Billing, invoicing, and subscriptions"
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: "Billing and invoicing"
+    url: /metering-and-billing/billing-invoicing/
 ---
 
 {{site.metering_and_billing}} Notifications let you configure automated webhook alerts that trigger when specific usage thresholds or billing events occur. Instead of polling for usage data, you define rules that trigger notification events to a channel of your choice when conditions are met.
@@ -114,7 +114,7 @@ rows:
 {% endtable %}
 
 {:.note}
-> Notifications for [gathering invoices](/metering-and-billing/billing-invoicing-subscriptions/) are not currently supported.
+> Notifications for [gathering invoices](/metering-and-billing/billing-invoicing/) are not currently supported.
 
 ### Entitlement balance threshold rules
 

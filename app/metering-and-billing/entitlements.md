@@ -17,6 +17,8 @@ related_resources:
     url: /metering-and-billing/
   - text: "Rate cards"
     url: /metering-and-billing/product-catalog/#rate-cards
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: Notifications
     url: /metering-and-billing/notifications/
 

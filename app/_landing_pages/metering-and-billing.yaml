@@ -201,7 +201,7 @@ rows:
               icon: /assets/icons/document.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+                url: /metering-and-billing/subscriptions/
       - blocks:
           - type: card
             config:
@@ -211,7 +211,7 @@ rows:
               icon: /assets/icons/organization.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+                url: /metering-and-billing/billing-invoicing/#billing-profiles
       - blocks:
           - type: card
             config:
@@ -221,7 +221,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+                url: /metering-and-billing/billing-invoicing/#invoicing
       - blocks:
           - type: card
             config:
