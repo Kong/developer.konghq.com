@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list konnect event-gateway [flags]
   kongctl list konnect event-gateway [command]

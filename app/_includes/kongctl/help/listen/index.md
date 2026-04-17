@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl listen [flags]
   kongctl listen [command]

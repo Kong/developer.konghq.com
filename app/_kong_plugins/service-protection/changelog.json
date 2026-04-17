@@ -1,4 +1,11 @@
 {
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.10.0.0": [
     {
       "message": "Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
@@ -7,6 +14,13 @@
     },
     {
       "message": "Enhanced robustness for user misconfigurations. The following use cases are now handled:\n  - RLA and service-protection are configured on the same service.\n  - There is no service but the service-protection plugin is enabled with global scope.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.10.0.10": [
+    {
+      "message": "Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
       "type": "bugfix",
       "scope": "Plugin"
     }

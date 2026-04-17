@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b59652ecce8462f83e953c8709c94bb31ed11ca5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b59652ecce8462f83e953c8709c94bb31ed11ca5'
+  x-oas-source: kong/platform-api@fa20faf46b3f4b3885898052fe449335e3186c2f
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fa20faf46b3f4b3885898052fe449335e3186c2f'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3870,78 +3870,60 @@ components:
       additionalProperties: false
       title: ProviderAccountsFilterParameters
     CloudGatewaysStringFieldFilterOverride:
-      oneOf:
-        - $ref: '#/components/schemas/CloudGatewaysStringFieldEqualsFilterOverride'
-        - $ref: '#/components/schemas/StringFieldContainsFilter'
-        - $ref: '#/components/schemas/StringFieldNEQFilter'
-        - $ref: '#/components/schemas/StringFieldOEQFilter'
-        - $ref: '#/components/schemas/StringFieldOContainsFilter'
-      title: CloudGatewaysStringFieldFilterOverride
-    CloudGatewaysStringFieldEqualsFilterOverride:
-      description: Filters on the given string field value by exact match.
-      oneOf:
-        - type: string
-        - type: object
-          title: StringFieldEqualsComparison
-          additionalProperties: false
-          properties:
-            eq:
-              type: string
-          required:
-            - eq
-      title: StringFieldEqualsFilter
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+      type: object
+      properties:
+        eq:
+          description: The field exactly matches the provided value.
+          type: string
+          example: '?filter[field_name_here][eq]=foo'
+        contains:
+          description: The field contains the provided value.
+          type: string
+          example: '?filter[field_name_here][contains]=foo'
+        neq:
+          description: The field does not match the provided value.
+          type: string
+          example: '?filter[field_name_here][neq]=bar'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
+        ocontains:
+          description: The field contains any of the provided values.
+          type: string
+          example: '?filter[field_name_here][ocontains]=foo,bar'
+      additionalProperties: false
       x-examples:
-        example-1: equals-some-value
+        example-1:
+          contains: some-value
+          neq: not-this-value
+          oeq: 'some-value,some-other-value'
+          ocontains: 'this-value,or-that-value'
         example-2:
           eq: some-value
     NetworkStateFieldFilter:
-      oneOf:
-        - $ref: '#/components/schemas/NetworkStateFieldEqualsFilter'
-        - $ref: '#/components/schemas/NetworkStateFieldNotEqualsFilter'
-        - $ref: '#/components/schemas/NetworkStateFieldOrEqualityFilter'
-      title: NetworkStateFieldFilter
-    NetworkStateFieldEqualsFilter:
-      description: Filter a network state by exact match.
-      oneOf:
-        - $ref: '#/components/schemas/NetworkState'
-        - type: object
-          title: NetworkStateFieldEqualsComparison
-          properties:
-            eq:
-              $ref: '#/components/schemas/NetworkState'
-          required:
-            - eq
-      title: NetworkStateFieldEqualsFilter
-      x-examples:
-        example-1: ready
-        example-2:
-          eq: ready
-    NetworkStateFieldNotEqualsFilter:
-      description: Filter a network state by inequality match.
+      description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
       properties:
-        neq:
+        eq:
+          description: The field exactly matches the provided value.
+          example: '?filter[field_name_here][eq]=foo'
           $ref: '#/components/schemas/NetworkState'
-      required:
-        - neq
-      title: NetworkStateFieldNotEqualsFilter
+        neq:
+          description: The field does not match the provided value.
+          example: '?filter[field_name_here][neq]=bar'
+          $ref: '#/components/schemas/NetworkState'
+        oeq:
+          description: The field matches any of the provided values.
+          type: string
+          example: '?filter[field_name_here][oeq]=foo,bar'
       x-examples:
         example-1:
           neq: ready
-    NetworkStateFieldOrEqualityFilter:
-      description: |
-        Filter a network state by determining if the value is equal to any in a set of values, where the set is a
-        comma-delimited list.
-      type: object
-      properties:
-        oeq:
-          type: string
-      required:
-        - oeq
-      title: NetworkStateFieldOrEqualityFilter
-      x-examples:
-        example-1:
           oeq: 'ready,initializing'
+        example-2:
+          eq: ready
     CustomDomainStateFieldFilter:
       oneOf:
         - $ref: '#/components/schemas/CustomDomainStateFieldEqualsFilter'
@@ -4330,32 +4312,6 @@ components:
       enum:
         - managed-cache.v0
       title: Add-On Config Kind
-    StringFieldNEQFilter:
-      description: Filters on the given string field value by exact match inequality.
-      type: object
-      properties:
-        neq:
-          type: string
-      additionalProperties: false
-      required:
-        - neq
-      title: StringFieldNEQFilter
-      x-examples:
-        example-1:
-          neq: not-this-value
-    StringFieldOEQFilter:
-      description: Returns entities that exact match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        oeq:
-          type: string
-      additionalProperties: false
-      required:
-        - oeq
-      title: StringFieldOEQFilter
-      x-examples:
-        example-1:
-          oeq: 'some-value,some-other-value'
     PageMeta:
       description: Contains pagination query parameters and the total number of objects returned.
       type: object
@@ -4689,32 +4645,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
-    StringFieldContainsFilter:
-      description: Filters on the given string field value by fuzzy match.
-      type: object
-      properties:
-        contains:
-          type: string
-      additionalProperties: false
-      required:
-        - contains
-      title: StringFieldContainsFilter
-      x-examples:
-        example-1:
-          contains: some-value
-    StringFieldOContainsFilter:
-      description: Returns entities that fuzzy-match any of the comma-delimited phrases in the filter string.
-      type: object
-      properties:
-        ocontains:
-          type: string
-      additionalProperties: false
-      required:
-        - ocontains
-      title: StringFieldOContainsFilter
-      x-examples:
-        example-1:
-          ocontains: 'this-value,or-that-value'
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object

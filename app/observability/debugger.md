@@ -90,6 +90,16 @@ The logs view gives you a drill-down view of all the logs generated during speci
 Use the logs view to quickly troubleshoot and pinpoint issues:
 ![Debugger Logs view](/assets/images/konnect/debugger-trace-logs-view.png)
 
+### Analyze with KAi
+
+When viewing a trace, you can click **Analyze with KAi** to send the trace to [KAi](/konnect-platform/kai/). The trace summary, spans, and logs are automatically applied as context. KAi can help identify errors, determine their probable root cause, and answer questions about the request, such as:
+
+* Why is my API returning 5xx errors?
+* Why is the OIDC plugin execution failing?
+* Why is the `/flights` API slow?
+* What is the plugin execution order for this route?
+* Why does my hybrid gateway have connectivity issues with the upstream?
+
 ## Payload capture
 
 In critical scenarios, having access to payload details can help identify and pinpoint failures. With payload capture feature, a debug session can be configured to capture header and/or body for requests and response. However due to the nature of this telemetry, this feature requires customers to explicitly opt-in with a prior agreement called the Advanced Features Addendum. Once the agreement is in place, the feature is enabled in debugger.
@@ -112,7 +122,7 @@ In critical scenarios, having access to payload details can help identify and pi
 ```
 
 ### Payload collection and sanitization
-When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching a sampling criteria. Candidates are then validated using the log sanitizer, and sensitive data such as credit card numbers will be redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
+When a debug session is initiated with payload capture, the debugger captures request/response headers and/or body for all requests matching sampling criteria. Sampling filters and sanitization occur on the data plane before any data is transmitted to {{site.konnect_short_name}}. Transactions are scrubbed using the log sanitizer, and sensitive data such as credit card numbers are redacted from the payload. Authentication and identity headers (for example, `Authorization`, API key header values, and consumer ID header fields) are also masked by default.
 
 {% new_in 3.14 %} Gzip-encoded bodies (`Content-Encoding: gzip` or `x-gzip`) are automatically decompressed before capture, so they appear as readable text in the debugger.
 

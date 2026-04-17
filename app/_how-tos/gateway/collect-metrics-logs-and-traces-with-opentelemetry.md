@@ -980,4 +980,4 @@ StartTimestamp: 2025-12-12 10:39:30.785728512 +0000 UTC
 Timestamp: 2025-12-12 10:47:51.154936576 +0000 UTC
 Value: 1000461175230928640
 ```
-{:.no-copy-code}
+{:.no-copy-code .collapsible}

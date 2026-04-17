@@ -224,6 +224,8 @@ dict
 dicts
 digitalocean
 discovery_support
+dlp
+DLP
 DN
 DN
 DNs
@@ -663,6 +665,7 @@ pagerduty
 palo
 param
 params
+parsable
 passthrough
 PayPal
 PayPal

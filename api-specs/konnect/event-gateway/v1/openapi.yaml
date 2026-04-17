@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8f51814a808a50184f0263e1c635fb7e5f3def83
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8f51814a808a50184f0263e1c635fb7e5f3def83'
+  x-oas-source: kong/platform-api@50aa6fab9d9bf5e362eca279608c3bad33571fa5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/50aa6fab9d9bf5e362eca279608c3bad33571fa5'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1696,7 +1696,10 @@ paths:
     get:
       operationId: list-event-gateway-tls-trust-bundles
       summary: List TLS Trust Bundles
-      description: Returns a list of TLS trust bundles associated with the specified Event Gateway.
+      description: |-
+        Returns a list of TLS trust bundles associated with the specified Event Gateway.
+
+        **Requires a minimum runtime version of `1.1`**.
       parameters:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageAfter'
@@ -1714,7 +1717,10 @@ paths:
     post:
       operationId: create-event-gateway-tls-trust-bundle
       summary: Create TLS Trust Bundle
-      description: Creates a new TLS trust bundle containing trusted CA certificates for client certificate verification.
+      description: |-
+        Creates a new TLS trust bundle containing trusted CA certificates for client certificate verification.
+
+        **Requires a minimum runtime version of `1.1`**.
       requestBody:
         $ref: '#/components/requestBodies/CreateTLSTrustBundleRequest'
       responses:
@@ -1746,7 +1752,10 @@ paths:
     get:
       operationId: get-event-gateway-tls-trust-bundle
       summary: Get a TLS Trust Bundle
-      description: Returns information about a specific TLS trust bundle.
+      description: |-
+        Returns information about a specific TLS trust bundle.
+
+        **Requires a minimum runtime version of `1.1`**.
       responses:
         '200':
           description: A single TLS trust bundle object.
@@ -1766,7 +1775,10 @@ paths:
     put:
       operationId: update-event-gateway-tls-trust-bundle
       summary: Update TLS Trust Bundle
-      description: Updates an existing TLS trust bundle.
+      description: |-
+        Updates an existing TLS trust bundle.
+
+        **Requires a minimum runtime version of `1.1`**.
       requestBody:
         $ref: '#/components/requestBodies/UpdateTLSTrustBundleRequest'
       responses:
@@ -1788,7 +1800,10 @@ paths:
     delete:
       operationId: delete-event-gateway-tls-trust-bundle
       summary: Delete TLS Trust Bundle
-      description: Deletes a specific TLS trust bundle associated with the Event Gateway.
+      description: |-
+        Deletes a specific TLS trust bundle associated with the Event Gateway.
+
+        **Requires a minimum runtime version of `1.1`**.
       responses:
         '204':
           description: No Content
@@ -2183,7 +2198,10 @@ components:
       required:
         - type
     VirtualClusterAuthenticationClientCertificate:
-      description: Client certificate (mTLS) authentication scheme for the virtual cluster.
+      description: |-
+        Client certificate (mTLS) authentication scheme for the virtual cluster.
+
+        **Requires a minimum runtime version of `1.1`**.
       type: object
       properties:
         type:
@@ -2198,10 +2216,12 @@ components:
         - type
       x-min-runtime-version: '1.1'
     TLSTrustBundle:
-      description: |
+      description: |-
         A TLS trust bundle defines a set of trusted certificate authorities (CAs) used for client certificate
         verification during mutual TLS (mTLS). Trust bundles are referenced by TLS listener policies to
         determine which client certificates are accepted.
+
+        **Requires a minimum runtime version of `1.1`**.
       type: object
       properties:
         id:
@@ -2608,7 +2628,10 @@ components:
             - tls12
             - tls13
         client_identity:
-          description: Client mTLS configuration.
+          description: |-
+            Client mTLS configuration.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             certificate:
@@ -3199,9 +3222,11 @@ components:
           type: boolean
           default: false
         client_authentication:
-          description: |
+          description: |-
             Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
             requests or requires clients to present a certificate during the TLS handshake.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             mode:
@@ -3222,9 +3247,11 @@ components:
                 $ref: '#/components/schemas/TLSTrustBundleReference'
               minItems: 1
             principal_mapping:
-              description: |
+              description: |-
                 An expression that extracts a principal identifier from a verified client certificate.
                 This expression must evaluate to a string.
+
+                **Requires a minimum runtime version of `1.1`**.
               type: string
               example: '${context.certificate.subject[''CN''] ? context.certificate.subject[''CN''] : context.certificate.sans.uri[0]}'
               x-expression:
@@ -3287,9 +3314,11 @@ components:
           type: boolean
           default: false
         client_authentication:
-          description: |
+          description: |-
             Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
             requests or requires clients to present a certificate during the TLS handshake.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             mode:
@@ -3310,9 +3339,11 @@ components:
                 $ref: '#/components/schemas/TLSTrustBundleReference'
               minItems: 1
             principal_mapping:
-              description: |
+              description: |-
                 An expression that extracts a principal identifier from a verified client certificate.
                 This expression must evaluate to a string.
+
+                **Requires a minimum runtime version of `1.1`**.
               type: string
               example: '${context.certificate.subject[''CN''] ? context.certificate.subject[''CN''] : context.certificate.sans.uri[0]}'
               x-expression:
@@ -3609,11 +3640,13 @@ components:
           maximum: 65535
           minimum: 1
         broker_host_format:
-          description: |
+          description: |-
             Configures DNS names assigned to brokers in virtual clusters.
 
             - `per_cluster_suffix` is the default and allocates one level in the hierarchy for virtual clusters: `broker-{node_id}.{virtual_cluster}.{sni_suffix}`
             - `shared_suffix` puts all brokers from every virtual clusters into the same level: `broker-{node_id}-{virtual_cluster}.{sni_suffix}`. This makes it easier to manage certificates for this listener.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             type:
@@ -3676,11 +3709,9 @@ components:
           modify_headers: '#/components/schemas/EventGatewayModifyHeadersPolicy'
           schema_validation: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
           encrypt: '#/components/schemas/EventGatewayEncryptPolicy'
-          skip_record: '#/components/schemas/EventGatewaySkipRecordPolicy'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicy'
-        - $ref: '#/components/schemas/EventGatewaySkipRecordPolicy'
         - $ref: '#/components/schemas/EventGatewayEncryptPolicy'
     EventGatewayClusterPolicyModify:
       description: The typed schema of the cluster policy to modify it.
@@ -4479,9 +4510,11 @@ components:
         - match: payments-*
       maxItems: 50
     EventGatewayACLRuleResourceNamesDynamicArray:
-      description: |
+      description: |-
         This expression should evaluate to an array of glob patterns,
         equivalent to the `match` values in the static array form of `resource_names`.
+
+        **Requires a minimum runtime version of `1.1`**.
       type: string
       example: 'context.auth.token.claims["topics"]'
       x-expression:

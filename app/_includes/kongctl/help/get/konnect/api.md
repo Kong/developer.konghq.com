@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl get konnect api [flags]
   kongctl get konnect api [command]

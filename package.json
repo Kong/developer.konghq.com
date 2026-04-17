@@ -3,6 +3,7 @@
     "dev": "bundle exec foreman start"
   },
   "type": "module",
+  "packageManager": "yarn@1.22.22",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.19",
@@ -30,15 +31,10 @@
     "instantsearch.css": "^8.5.1",
     "mermaid": "^11.6.0",
     "node-fetch": "^3.3.2",
-    "shiki": "^4.0.0",
+    "shiki": "^4.0.2",
     "snowflake-sdk": "2.3.4",
     "uuid": "^13.0.0",
     "vue": "^3.4.38",
     "vue-instantsearch": "^4.20.4"
-  },
-  "overrides": {
-    "vite": {
-      "rollup": "npm:@rollup/wasm-node"
-    }
   }
 }

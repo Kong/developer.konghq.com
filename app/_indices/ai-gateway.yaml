@@ -12,7 +12,6 @@ sections:
       - title: "{{site.ai_gateway}} Capabilities"
         description: Learn about the core capabilities of {{site.ai_gateway}}.
         url: /ai-gateway/#ai-gateway-capabilities
-
       - title: AI providers
         description: Learn about the various providers supported by {{site.ai_gateway}}.
         url: /ai-gateway/ai-providers/
@@ -22,6 +21,9 @@ sections:
       - title: Data Governance
         description: Explore how {{site.ai_gateway}} helps enforce data governance policies.
         url: /ai-gateway/#data-governance
+      - title: "{{site.ai_gateway}} Data Governance."
+        description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
+        url: /ai-gateway/ai-data-gov/
       - title: Prompt Engineering
         description: Best practices and tools for designing effective prompts.
         url: /ai-gateway/#prompt-engineering

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl sync [flags]
   kongctl sync [command]

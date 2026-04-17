@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list gateway control-plane [flags]
 

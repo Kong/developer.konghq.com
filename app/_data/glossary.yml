@@ -146,3 +146,134 @@ definitions:
       When running Kong Gateway in Konnect, entity and user segmentation is handled through Control Planes and Control Plane Groups.
     url: |
       [Workspace entity](/gateway/entities/workspace/)
+
+metering_and_billing:
+  - category: Metering
+    definitions:
+      - term: Metering
+        description: |
+          A method of tracking and aggregating product or service consumption in real time based on usage events.
+      - term: Usage
+        description: |
+          The consumption of a product or service measured through events and aggregated over time.
+      - term: Billable event
+        description: |
+          The smallest unit of work that can be billed.
+  - category: Pricing
+    definitions:
+      - term: Packaging
+        description: |
+          The process of bundling products and services into a unified offering.
+      - term: Recurring pricing
+        description: |
+          A pricing model where a customer is charged on a regular schedule, such as monthly or annually.
+      - term: Seat-based pricing
+        description: |
+          A pricing model where a customer is charged based on the number of individual users or licenses provisioned.
+      - term: Usage-based pricing
+        description: |
+          A pricing model where a customer is charged based on how much they consume, rather than a flat rate.
+      - term: Credit-based pricing
+        description: |
+          A pricing model where a customer purchases credits in advance and spends them to access products or services.
+      - term: Outcome-based pricing
+        description: |
+          A pricing model where a customer is charged based on the results or value delivered.
+      - term: Hybrid pricing
+        description: |
+          A pricing model that combines recurring charges with usage-based components.
+      - term: Value metric
+        description: |
+          The unit of measurement that determines how a product or service is priced based on the value delivered to the customer.
+  - category: Pricing models
+    definitions:
+      - term: Per-unit pricing
+        description: |
+          A pricing model where a customer is charged based on the number of units consumed.
+      - term: Overage pricing
+        description: |
+          A charge applied when a customer exceeds their pre-defined usage limit.
+      - term: Tiered pricing
+        description: |
+          A pricing model where fees vary depending on the customer's usage level.
+      - term: Graduated pricing
+        description: |
+          A pricing model where each unit is priced according to the tier in which it falls, regardless of total volume.
+      - term: Volume pricing
+        description: |
+          A pricing model where the price per unit is determined by the customer's total usage volume, with higher volumes unlocking lower rates.
+  - category: Billing
+    definitions:
+      - term: Add-on
+        description: |
+          An optional product or service that can be purchased in addition to a base subscription.
+      - term: Billing anchor
+        description: |
+          The specific day of the month or time period that determines when a customer's billing cycle starts and ends.
+      - term: Commitments
+        description: |
+          Pre-negotiated agreements where a customer commits to a minimum spend or usage volume in exchange for discounted rates or guaranteed capacity.
+      - term: Entitlements
+        description: |
+          Rules that define what features, usage limits, or resources a customer is allowed to access based on their subscription or plan.
+      - term: Grandfathering
+        description: |
+          The practice of keeping a customer on a legacy pricing plan when new pricing is introduced.
+      - term: Paid in advance
+        description: |
+          A billing model where a customer pays for a product or service before it is consumed.
+      - term: Paid in arrears
+        description: |
+          A billing model where a customer is charged after a product or service has been consumed.
+      - term: Payment terms
+        description: |
+          The conditions and timeframes under which a customer must pay for products or services.
+      - term: Proration
+        description: |
+          The calculation of partial charges when subscription changes occur mid-billing cycle.
+      - term: Reverse trial
+        description: |
+          A trial model where a customer starts with full access to premium features and is downgraded to a free tier when the trial period ends.
+      - term: Utilization
+        description: |
+          The measure of how much a customer uses a product, feature, or service compared to their purchased capacity or limits.
+  - category: Payment
+    definitions:
+      - term: Dunning
+        description: |
+          The process of sending payment reminders or notifications to a customer with overdue invoices or failed payments.
+      - term: Grace period
+        description: |
+          A defined window of time after a missed payment during which a customer can pay without service interruption or penalty.
+      - term: Revenue leakage
+        description: |
+          The failure to collect all potential revenue due to billing errors, gaps in metering, or inefficient operations.
+      - term: Revenue recognition
+        description: |
+          The accounting process of recording revenue in the period it is earned.
+      - term: Invoice aging
+        description: |
+          A report that categorizes unpaid customer invoices based on the length of time they have been outstanding.
+      - term: Invoice reconciliation
+        description: |
+          The process of matching invoices with payments received and ensuring billing records are accurate and consistent.
+  - category: SaaS
+    definitions:
+      - term: Churn
+        description: |
+          The rate at which a customer cancels their subscription or stops using a service over a given time period.
+      - term: Customer acquisition cost
+        description: |
+          The total cost of acquiring a new customer, including marketing and sales expenses.
+      - term: Net revenue retention
+        description: |
+          A metric that measures the percentage of recurring revenue retained from the existing customer base over a period, accounting for expansion, contraction, and churn.
+      - term: Expansion
+        description: |
+          Revenue growth generated from an existing customer through higher-tier plans, additional features, or expanded usage.
+      - term: Annual Recurring Revenue (ARR)
+        description: |
+           The annualized value of recurring revenue a company expects to generate from active subscriptions.
+      - term: Monthly Recurring Revenue (MRR)
+        description: |
+           The total predictable revenue a company expects to generate from active subscriptions in a given month.

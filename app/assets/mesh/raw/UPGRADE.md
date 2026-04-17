@@ -10,6 +10,42 @@ with `x.y.z` being the version you are planning to upgrade to.
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
+### CPU limits removed from `kuma-init` and `kuma-sidecar` containers
+
+The default CPU limit for injected `kuma-init`, `kuma-sidecar` and `kuma-validation` containers has been removed (set to `0`, meaning no limit). Previously the defaults were `100m` and `1000m` respectively.
+
+**Why:** 
+
+CPU limits cause throttling even when CPU is available, which increases latency under load. Removing the limit allows the containers to burst during startup and high-traffic periods.
+
+**Action required:** 
+
+None for most users. If your cluster enforces CPU limits, either relax those policies or set explicit limits:
+
+**Kubernetes (Helm)**
+```yaml
+dataPlane:
+  initContainer:
+    resources:
+      limits:
+        cpu: 100m
+  sidecarContainer:
+    resources:
+      limits:
+        cpu: 1000m
+  validationContainer:
+    resources:
+      limits:
+        cpu: 100m
+```
+
+**Control plane environment variables**
+```sh
+KUMA_INJECTOR_INIT_CONTAINER_RESOURCES_LIMITS_CPU=100m
+KUMA_INJECTOR_SIDECAR_CONTAINER_RESOURCES_LIMITS_CPU=1000m
+KUMA_INJECTOR_VALIDATION_CONTAINER_RESOURCES_LIMITS_CPU=100m
+```
+
 ### Envoy admin API now uses Unix domain socket by default
 
 The Envoy admin API (`localhost:9901`) now binds to a Unix domain socket instead of TCP by default. This eliminates the shared-network-namespace attack vector where a compromised app container could reach the admin API to kill the sidecar, dump config, or modify runtime behavior.
@@ -38,6 +74,27 @@ experimental:
 ```sh
 KUMA_BOOTSTRAP_SERVER_PARAMS_ENVOY_ADMIN_UNIX_SOCKET=false kuma-cp run
 ```
+
+### Observability: CP metrics OTLP push enabled by default
+
+When `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the control plane now automatically pushes all CP Prometheus metrics to the configured OTLP collector. This is enabled by default.
+
+**What changed:**
+- A new config field `metrics.openTelemetry.enabled` (default `true`) gates CP metrics OTLP push.
+- If you already set `OTEL_EXPORTER_OTLP_ENDPOINT` for tracing, metrics will now also be pushed to that endpoint.
+
+**Action required:**
+
+If you use `OTEL_EXPORTER_OTLP_ENDPOINT` for tracing only and do not want CP metrics pushed via OTLP, disable it:
+
+```yaml
+# kuma-cp config
+metrics:
+  openTelemetry:
+    enabled: false
+```
+
+Or via environment variable: `KUMA_METRICS_OPENTELEMETRY_ENABLED=false`
 
 ### Observability: Prometheus metrics migration from Summary to Histogram
 

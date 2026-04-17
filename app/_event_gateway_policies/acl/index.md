@@ -24,6 +24,9 @@ icon: graph.svg
 
 policy_target: virtual_cluster
 
+categories:
+  - security
+
 related_resources:
   - text: Virtual clusters
     url: /event-gateway/entities/virtual-cluster/

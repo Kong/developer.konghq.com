@@ -32,6 +32,7 @@ topologies:
 tags:
   - ai
   - mcp
+  - security
 
 search_aliases:
   - ai-mcp-oauth2

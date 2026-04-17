@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl install [flags]
   kongctl install [command]

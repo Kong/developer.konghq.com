@@ -13,6 +13,13 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.3": [
+    {
+      "message": "Fixed an issue where a vectorDB error occurred during initialization or config reload.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "Fixed the deletion of guard instances and improved error handling.\n",

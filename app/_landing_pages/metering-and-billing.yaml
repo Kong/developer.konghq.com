@@ -113,6 +113,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Events
+              description: |
+                Learn how usage events are ingested, processed, deduplicated, and enriched in {{site.metering_and_billing}}.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/events/
+      - blocks:
+          - type: card
+            config:
               title: Collectors
               description: |
                 Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
@@ -165,7 +175,7 @@ rows:
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#entitlements
+                url: /metering-and-billing/entitlements/
 
   - header:
       type: h2

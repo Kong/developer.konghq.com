@@ -30,6 +30,9 @@ api_specs:
 
 policy_target: listener
 
+categories:
+  - traffic-control
+
 icon: graph.svg
 ---
 

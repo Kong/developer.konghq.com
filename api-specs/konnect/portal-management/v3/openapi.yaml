@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.4.0
+  version: 3.4.1
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3'
+  x-oas-source: kong/platform-api@7abdc7bdf99050f49c0793832fc3d9932102c3bd
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7abdc7bdf99050f49c0793832fc3d9932102c3bd'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -514,7 +514,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: Returns the tree view of custom pages that have been created for this portal.
+      description: Returns the tree view of custom pages that have been created for this portal. The full tree is returned in one response; this endpoint is not paginated.
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/PortalId'
@@ -537,8 +537,6 @@ paths:
               examples:
                 ListPortalPagesBadRequestExample1:
                   $ref: '#/components/examples/ListPortalPagesBadRequestExample1'
-                ListPortalPagesBadRequestExample2:
-                  $ref: '#/components/examples/ListPortalPagesBadRequestExample2'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -1183,11 +1181,7 @@ paths:
     get:
       operationId: get-portal-authentication-settings
       summary: Get Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.
+      description: 'Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.'
       responses:
         '200':
           $ref: '#/components/responses/PortalAuthenticationSettings'
@@ -1198,11 +1192,7 @@ paths:
     patch:
       operationId: update-portal-authentication-settings
       summary: Update Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
+      description: Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -1740,10 +1730,7 @@ paths:
     get:
       operationId: get-portal-identity-providers
       summary: List Identity Providers
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the identity providers available within the portal. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
@@ -1769,10 +1756,7 @@ paths:
     post:
       operationId: create-portal-identity-provider
       summary: Create Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
@@ -1797,10 +1781,7 @@ paths:
     get:
       operationId: get-portal-identity-provider
       summary: Get Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
@@ -1819,10 +1800,7 @@ paths:
     patch:
       operationId: update-portal-identity-provider
       summary: Update Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
@@ -1845,10 +1823,7 @@ paths:
     delete:
       operationId: delete-portal-identity-provider
       summary: Delete Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the portal.
       responses:
@@ -3174,7 +3149,7 @@ components:
         - parent_page_id
       title: PortalPageResponse
     ListPortalPagesResponse:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal. Not paginated.
       type: object
       properties:
         data:
@@ -3198,7 +3173,7 @@ components:
         - data
       title: ListPortalPagesResponse
     PortalSnippetResponse:
-      description: Details about a page in a portal.
+      description: Details about a snippet in a portal.
       type: object
       properties:
         id:
@@ -3230,7 +3205,7 @@ components:
         - updated_at
       title: PortalSnippetResponse
     ListPortalSnippetsResponse:
-      description: A paginated list of custom pages in a portal.
+      description: A paginated list of custom snippets in a portal.
       type: object
       properties:
         data:
@@ -3258,7 +3233,7 @@ components:
       required:
         - data
         - meta
-      title: ListPortalPagesResponse
+      title: ListPortalSnippetsResponse
     UpdatePortalSnippetRequest:
       description: Update a snippet in a portal.
       type: object
@@ -6793,11 +6768,6 @@ components:
           - guides-sidebar-toc
     ListPortalPagesExample1:
       value:
-        meta:
-          page:
-            number: 1
-            size: 10
-            total: 1
         data:
           - id: 8f9fd312-a987-4628-b4c5-bb4f4fddd5f7
             slug: /
@@ -6810,17 +6780,6 @@ components:
             parent_page_id: null
             children: []
     ListPortalPagesBadRequestExample1:
-      value:
-        status: 400
-        title: Invalid Request
-        instance: 'kong:trace:1433447772874964729'
-        detail: Invalid Parameters
-        invalid_parameters:
-          - field: 'page[size]'
-            rule: is_number
-            reason: '"page[size]" must be a number'
-            source: query
-    ListPortalPagesBadRequestExample2:
       value:
         status: 400
         title: Invalid Request
@@ -9113,7 +9072,7 @@ components:
             Example 1:
               $ref: '#/components/examples/PortalPageExample1'
     ListPortalPages:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal (nested `children`). Not paginated.
       content:
         application/json:
           schema:

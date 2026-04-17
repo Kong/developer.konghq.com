@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl patch [flags]
   kongctl patch [command]

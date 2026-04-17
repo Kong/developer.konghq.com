@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl apply [flags]
   kongctl apply [command]

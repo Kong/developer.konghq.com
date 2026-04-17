@@ -9,6 +9,7 @@ sections:
       - path: /metering-and-billing/product-catalog/
       - path: /metering-and-billing/customer/
       - path: /metering-and-billing/billing-invoicing-subscriptions/
+      - path: /metering-and-billing/events/
   - title: Usage metering
     items:
       - title: API gateway metering
@@ -23,6 +24,9 @@ sections:
       - title: Common metering examples
         description: Examples to meter AI, API, compute, GPUs, and storage usage.
         url: /metering-and-billing/metering/#example-meter-use-cases
+      - title: Events
+        description: Learn how usage events are ingested, processed, deduplicated, and enriched in {{site.metering_and_billing}}.
+        url: /metering-and-billing/events/
       - title: Collectors
         description: Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
         url: /metering-and-billing/collectors/
@@ -37,7 +41,7 @@ sections:
         url: /metering-and-billing/product-catalog/#pricing-models
       - title: Entitlements
         description: Entitlements describe customer access, usage-limits, and configuration to features.
-        url: /metering-and-billing/product-catalog/#entitlements
+        url: /metering-and-billing/entitlements/
   - title: Collectors
     items:
       - path: /metering-and-billing/collectors/**/*

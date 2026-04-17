@@ -35,6 +35,11 @@ icon: ai-semantic-prompt-guard.png
 categories:
   - ai
 
+tags:
+  - ai
+  - safety
+  - dlp
+
 search_aliases:
   - ai
   - llm

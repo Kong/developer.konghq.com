@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.2
+  version: 3.3.3
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@eaa4b06a60ffa41480a66fa5899617b0de2d4543
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/eaa4b06a60ffa41480a66fa5899617b0de2d4543'
+  x-oas-source: kong/platform-api@1f49f503deacae7f5c273d918393c1bcb44df6f2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1f49f503deacae7f5c273d918393c1bcb44df6f2'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -332,6 +332,10 @@ paths:
         - $ref: '#/components/parameters/FilterByNameContains'
         - $ref: '#/components/parameters/FilterByAuthStrategyEquality'
         - $ref: '#/components/parameters/FilterByAuthStrategyEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdEquality'
+        - $ref: '#/components/parameters/FilterByTeamIdEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdNotEquals'
+        - $ref: '#/components/parameters/FilterByTeamIdOneOf'
       responses:
         '200':
           $ref: '#/components/responses/ListApplications'
@@ -949,7 +953,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
+      description: 'Returns a tree view of pages for the portal. Each page has a slug, title, and content. The full tree is returned in one response; this endpoint is not paginated. Public pages will be returned for non-authenticated users, while both private and public pages will be returned for authenticated users.'
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/FilterByTitleEquality'
@@ -1332,6 +1336,48 @@ components:
           - pending
           - rejected
           - revoked
+    FilterByTeamIdEquality:
+      name: 'filter[team_id][eq]'
+      description: |
+        Filter by the team that owns the application. Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id][eq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdEqualityShort:
+      name: 'filter[team_id]'
+      description: |
+        Filter by the team that owns the application (short-hand). Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdNotEquals:
+      name: 'filter[team_id][neq]'
+      description: |
+        Filter by excluding a team. Use the literal string `null` to get only team-owned apps (excludes individually owned) (e.g. `filter[team_id][neq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: null
+        nullable: true
+    FilterByTeamIdOneOf:
+      name: 'filter[team_id][oeq]'
+      description: |
+        Filter by apps owned by any of the given teams (comma-separated UUIDs).
+      in: query
+      required: false
+      schema:
+        type: string
+        example: '5be86298-147b-45ab-bfaf-a1bff97dce39,7ce96398-247b-45ab-bfaf-b2c008e8f6e4'
     FilterByTitleContains:
       name: 'filter[title][contains]'
       description: Filter by contains comparison of the title property with a supplied substring
@@ -3798,6 +3844,43 @@ components:
         - data
         - meta
       title: ListDeveloperTeamDevelopersResponse
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     PortalContext:
       description: Describes the portal execution context
       type: object
@@ -3995,7 +4078,7 @@ components:
       example: my-snippet
       title: SnippetName
     ListPortalPages:
-      description: A paginated list of pages for the portal
+      description: Tree of pages for the portal (nested `children`). Not paginated.
       type: object
       properties:
         data:
@@ -4003,6 +4086,8 @@ components:
           items:
             $ref: '#/components/schemas/PortalPageInfo'
       additionalProperties: false
+      required:
+        - data
       title: ListPortalPages
     ListPortalSnippets:
       description: A paginated list of snippets for the portal
@@ -4627,43 +4712,6 @@ components:
     PortalSearchQueryParameters:
       type: string
       title: SearchQueryParameters
-    CursorMetaPage:
-      type: object
-      properties:
-        first:
-          description: URI to the first page
-          type: string
-          format: path
-        last:
-          description: URI to the last page
-          type: string
-          format: path
-        next:
-          description: URI to the next page
-          type: string
-          format: path
-          nullable: true
-        previous:
-          description: URI to the previous page
-          type: string
-          format: path
-          nullable: true
-        size:
-          description: Requested page size
-          type: number
-          example: 10
-      required:
-        - size
-        - next
-        - previous
-    CursorMeta:
-      description: Pagination metadata.
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/CursorMetaPage'
-      required:
-        - page
   examples:
     ResponseExampleWithMetricAndDimension:
       value:
@@ -5573,7 +5621,7 @@ components:
           schema:
             $ref: '#/components/schemas/ListDeveloperTeamDevelopersResponse'
     ListPortalPagesResponse:
-      description: Paginated list of portal pages
+      description: Tree of portal pages for the portal
       content:
         application/json:
           schema:

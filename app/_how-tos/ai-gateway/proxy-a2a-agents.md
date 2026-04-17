@@ -43,6 +43,8 @@ related_resources:
     url: https://a2a-protocol.org/latest/
   - text: Set up Jaeger with Gen AI OpenTelemetry
     url: /how-to/set-up-jaeger-with-gen-ai-otel/
+  - text: Agentic usage analytics in {{site.konnect_short_name}}
+    url: /observability/explorer/?tab=agentic-usage#metrics
 
 prereqs:
   entities:

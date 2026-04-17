@@ -564,7 +564,7 @@ See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for
 
 ## Token exchange {% new_in 3.14 %}
 
-The [OAuth 2.0 Token Exchange](https://curity.io/resources/learn/token-exchange-flow/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
+The [OAuth 2.0 Token Exchange](https://oauth.net/2/token-exchange/) (RFC 8693) is an extension to the OAuth 2.0 framework that allows exchanging an existing security token for a new one. 
 The RFC defines a protocol approach to support scenarios where a client can exchange a token for a new token by interacting with the authorization server. 
 This is particularly useful in complex environments like microservices or cross-domain federations. 
 
@@ -609,8 +609,9 @@ Afterwards, the rest of the OpenID Connect plugin flow continues on the exchange
 Depending on the use case, {{site.base_gateway}} can exchange the token either with the same authorization server that issued the initial subject token, or exchange tokens between different authorization servers.
 
 Set up token exchange:
-* [Cross-domain token exchange example](/plugins/openid-connect/examples/token-exchange-cross-domain/)
-* [Token transformation example](/plugins/openid-connect/examples/token-exchange-transformation/)
+* [Example: Cross-domain token exchange](/plugins/openid-connect/examples/token-exchange-cross-domain/)
+* [Example: Token transformation](/plugins/openid-connect/examples/token-exchange-transformation/)
+* [How-to: Configure OIDC with token exchange](/how-to/configure-oidc-with-token-exchange/)
 
 #### Key terms
 

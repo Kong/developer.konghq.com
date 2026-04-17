@@ -465,6 +465,8 @@ rows:
                 - type: text
                   text: |
                       {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+
+                      For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
   - columns:
       - blocks:
         - type: plugin
@@ -541,13 +543,18 @@ rows:
             slug: ai-lakera-guard
             icon: ai-lakera.png
       - blocks:
+        - type: plugin
+          config:
+            slug: ai-custom-guardrail
+            icon: ai-custom-guardrail.png
+      - blocks:
         - type: card
           config:
             title: Amazon Bedrock guardrails
             description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
             icon: /assets/icons/bedrock.svg
             cta:
-              url: /plugins/ai-proxy/#input-formats
+              url: /plugins/ai-proxy/#supported-native-llm-formats
               align: end
 
   - header:
