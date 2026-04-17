@@ -252,7 +252,7 @@ When using Claude Code with AWS Bedrock models you may encounter connection erro
 
 The following sections provide workarounds for common errors.
 
-### API Error 400: context_management: Extra inputs are not permitted
+### API Error 400: `context_management`: Extra inputs are not permitted
 
 Some beta features are not compatible with AWS Bedrock.
 
@@ -303,6 +303,6 @@ variables:
     value: $AWS_REGION
 {% endentity_examples %}
 
-### API Error 400: max_tokens must be greater than thinking.budget_tokens
+### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
 
 If your `max_tokens` limit is too small you may encounter an error, you can resolve this by setting a larger value. The maximum value is `200000`.
