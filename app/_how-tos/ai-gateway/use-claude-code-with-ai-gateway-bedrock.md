@@ -305,4 +305,7 @@ variables:
 
 ### API Error 400: `max_tokens` must be greater than `thinking.budget_tokens`
 
-If your `max_tokens` limit is too small you may encounter an error, you can resolve this by setting a larger value. The maximum value is `200000`.
+If your `max_tokens` limit is too small, you may encounter this error.
+You can resolve this by setting `max_tokens` to a value greater than `budget_tokens`. The maximum value is `200000`.
+
+For more information about the default `budget_tokens` value, see [Building with extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#max-tokens-and-context-window-size) in Claude's API docs.
