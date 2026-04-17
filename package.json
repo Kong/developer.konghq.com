@@ -35,10 +35,5 @@
     "uuid": "^13.0.0",
     "vue": "^3.4.38",
     "vue-instantsearch": "^4.20.4"
-  },
-  "overrides": {
-    "vite": {
-      "rollup": "npm:@rollup/wasm-node"
-    }
   }
 }
