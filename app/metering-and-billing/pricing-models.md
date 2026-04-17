@@ -115,6 +115,7 @@ Graduated pricing is a model where you charge each unit according to the tier it
 
 For example:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: First Unit
@@ -139,6 +140,7 @@ rows:
     unit_price: $0.1
     flat_price: $0
 {% endtable %}
+<!--vale on-->
 
 In this example, a customer with 6,000 units would be charged as:
 
@@ -184,6 +186,7 @@ Volume pricing is a model where you charge customers based on the highest achiev
 
 For example:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: First Unit
@@ -208,6 +211,7 @@ rows:
     unit_price: $0.1
     flat_price: $0
 {% endtable %}
+<!--vale on-->
 
 Based on this table, a customer with 6,000 units would reach the unit price tier of $0.1, so they would be charged:
 
@@ -254,6 +258,7 @@ For example, you could charge $500 for the first tier and $0.1 per unit for the 
 
 This is useful to define overage charges or to bill a flat fee regardless of usage.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: First Unit
@@ -274,6 +279,7 @@ rows:
     unit_price: $0.1
     flat_price: $0
 {% endtable %}
+<!--vale on-->
 
 Based on this table, a customer that uses 2,000 units would be charged as:
 
@@ -286,6 +292,7 @@ For example, if you have a flat fee of $500 in the first tier, the total amount 
 
 To bill $0 when there's no usage, set the unit price for the first tier and omit the flat price. Let's use the previous example, but this time set a $500 flat fee for the first tier and $0.1 per unit for the rest:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: First Unit
@@ -310,6 +317,7 @@ rows:
     unit_price: $0.1
     flat_price: $0
 {% endtable %}
+<!--vale on-->
 
 In this example, if a customer uses 2,000 units, they will be charged as:
 
@@ -345,6 +353,7 @@ Package pricing is particularly effective for:
 
 Let's look at examples with a package size of 20 units and a price of $10 per package:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Usage
@@ -373,6 +382,7 @@ rows:
     total_price: $50
     explanation: Usage requires 5 full packages
 {% endtable %}
+<!--vale on-->
 
 Any usage of a positive value will be rounded up to the next closest package, while zero usage won't generate any charge. 
 If you want zero usage to charge customers, combine package pricing with minimum commitments.
@@ -465,6 +475,7 @@ The default markup rate is 1.
 
 Let's look at examples with a base price of $100, and what happens at each rate:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Markup Rate
@@ -497,6 +508,7 @@ rows:
     final_price: $200
     explanation: A rate of 2 doubles the price
 {% endtable %}
+<!--vale on-->
 
 ## Overage fees
 
