@@ -18,13 +18,13 @@ tldr:
   q: How to resolve "LLM route only supports llm chat type requests" error?
 
   a: |
-    This error can be addressed by adding the missing required header Content-type: application/json header so that the {{site.base}} can correctly interpret the payload format.
+    This error can be addressed by adding the missing required header Content-type: application/json header so that the {{site.base_gateway}} can correctly interpret the payload format.
 
 ---
 
 ## Article content starts here
 
-This can occur when sending an incorrect content-type header to the Gateway. Some utilities, such as curl, default to using Content-type:application/x-www-form-urlencoded. To address the issue ensure you are sending the Content-type:application/json
+This can occur when sending an incorrect content-type header to the {{site.base_gateway}}. Some utilities, such as curl, default to using Content-type:application/x-www-form-urlencoded. To address the issue ensure you are sending the Content-type:application/json
 
 
 
