@@ -254,5 +254,55 @@ The following sections provide workarounds for common errors.
 
 ### API Error 400: context_management: Extra inputs are not permitted
 
+Some beta features are not compatible with AWS Bedrock.
+
+To resolve this issue:
+
+1. Disable betas and experiments:
+```sh
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+```
+2. Configure the [Route Transformer](/plugins/route-transformer-advanced/) plugin to remove beta information:
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        llm_format: anthropic
+        route_type: llm/v1/chat
+        logging:
+          log_statistics: true
+          log_payloads: false
+        auth:
+          allow_override: false
+          aws_access_key_id: ${aws_access_key_id}
+          aws_secret_access_key: ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+          options:
+            anthropic_version: bedrock-2023-05-31
+            bedrock:
+              aws_region: ${aws_region}
+            max_tokens: 8192
+    - name: request-transformer-advanced
+      config:
+        remove:
+          headers:
+            - anthropic-beta
+          querystring:
+            - beta
+          body:
+            - model
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+  aws_region:
+    value: $AWS_REGION
+{% endentity_examples %}
 
 ### API Error 400: max_tokens must be greater than thinking.budget_tokens
+
+If you `max_tokens` limit is too small you may encounter an error, you can resolve this by setting a larger value. The maximum value is `200000`.
