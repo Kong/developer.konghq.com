@@ -15,7 +15,7 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
-  - text: "Rate Cards"
+  - text: "Rate cards"
     url: /metering-and-billing/product-catalog/#rate-cards
 
 ---

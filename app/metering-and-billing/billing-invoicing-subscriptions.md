@@ -220,6 +220,8 @@ Subscriptions can be created from predefined plans or fully customized at creati
 
 To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
 
+Active customer subscriptions can be enhanced with [add-ons](/metering-and-billing/add-ons/), which allow you to make changes to a customer's entitlements without changing the plan directly.
+
 ## Plan migration
 
 Plans in {{site.metering_and_billing}} are versioned. When you update a plan, existing subscriptions remain on their current version. This is known as "grandfathering". Customers keep their existing pricing until they're explicitly migrated.
