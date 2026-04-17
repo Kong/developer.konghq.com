@@ -49,14 +49,14 @@ When assigning an add-on to a plan, you choose how many instances are allowed pe
 * Any rate cards present in both the add-on and the plan must meet extendability rules.
 
 {:.warning}
-> Once a plan version is published, the add-ons attributed to that plan **cannot** be changed.
+> Once a plan version is published, the add-ons assigned to that plan **cannot** be changed.
 If you need to add add-ons to a published plan, create a new version of that plan.
 
 ### Apply an add-on to a plan
 
 To create a new add-on, go to **Metering & Billing** > **Product Catalog** > **Add-ons** tab.
 
-To apply an existing add-on to a plan, use the go to **Metering & Billing** > **Product Catalog** > **Plans** tab, and choose a plan that's in draft status.
+To apply an existing add-on to a plan, go to **{{site.metering_and_billing}}** > **Product Catalog** > **Plans** tab, and choose a plan that's in draft status.
 
 ## Purchasing add-ons
 
@@ -76,9 +76,9 @@ If you need to change the subscription, cancel the subscription and create a new
 
 ### Apply an add-on to a subscription
 
-If a customer is a on a plan with add-ons available, you can apply add-ons to that customer's subscription.
+If a customer is on a plan with add-ons available, you can apply add-ons to that customer's subscription.
 
-To apply an add-on to an active subscription, go to **Metering and Billing** > **Billing** > **Customers** > select a customer > **Subscriptions** tab > **Apply Add-on**.
+To apply an add-on to an active subscription, go to **{{site.metering_and_billing}}** > **Billing** > **Customers** > select a customer > **Subscriptions** tab > **Apply Add-on**.
 
 ## Extendability
 
