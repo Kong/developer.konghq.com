@@ -34,14 +34,14 @@ flowchart TB
     IU["Invoice updates"]
     INT["Integration"]
     INV["3rd party invoicing solution"]
-    PG["3rd party payment gateway"]
+    PGW["3rd party payment gateway"]
 
     IN -->|Invoice changes| IC
     CIA -->|Invoice updates| IU
     IC --> INT
     IU --> INT
     INT <--> INV
-    INT <--> PG
+    INT <--> PGW
 {% endmermaid %}
 
 ## Revenue lifecycle
