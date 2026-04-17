@@ -253,7 +253,8 @@ See the following sections for common error workarounds.
 
 ### API Error 400: `context_management`: Extra inputs are not permitted
 
-Some beta features are not compatible with AWS Bedrock.
+Some beta features aren't compatible with AWS Bedrock.
+This error displays because Claude beta features are enabled.
 
 To resolve this issue:
 
