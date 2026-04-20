@@ -14,9 +14,6 @@ tags:
   - security
   - tls
   - certificates
-related_resources:
-  - text: MeshTLS Policy
-    url: /mesh/policies/meshtls/
 min_version:
   mesh: '2.9'
 ---
