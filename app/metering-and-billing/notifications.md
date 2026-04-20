@@ -83,7 +83,7 @@ To create a webhook channel in {{site.konnect_short_name}}:
 1. Click **Create Channel**.
 1. In the **Name** field, enter a name for the channel.
 1. In the **URL** field, enter the webhook URL to deliver notifications to.
-1. Optionally, add custom HTTP headers if your endpoint requires authentication.
+1. (Optional) Add custom HTTP headers if your endpoint requires authentication.
 1. Click **Save**.
 
 ### Verify webhook requests

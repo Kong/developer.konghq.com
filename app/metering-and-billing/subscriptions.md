@@ -50,55 +50,14 @@ To change a customer's plan:
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to change.
 1. Click the **Subscriptions** tab.
-1. Click the subscription you want to change.
-1. Click **Change Plan**.
+1. Click **Manage**.
 1. Select the new plan.
-1. Choose the timing: **Immediately** or **Next billing cycle**.
-1. Click **Save**.
+1. Click **Next**.
+1. Choose when the plan change should be effective: **At the end of the billing period** or **Immediately**.
+1. Click **Save Changes**.
 
-Choose **Next billing cycle** for downgrades to avoid disrupting the customer's current service period. Choose **Immediately** for upgrades so the customer gets access to the new plan right away.
+Choose **At the end of the billing period** for downgrades to avoid disrupting the customer's current service period. Choose **Immediately** for upgrades so the customer gets access to the new plan right away.
 
-## Customize a subscription
-
-You can add or remove individual rate card items from an active subscription without changing the underlying plan. This is useful for adding one-off features or removing items that a customer no longer needs.
-
-{:.info}
-> You cannot modify rate card items that are already deactivated (past phases).
-
-To add or remove a rate card item:
-
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
-1. Click the customer whose subscription you want to edit.
-1. Click the **Subscriptions** tab.
-1. Click the subscription you want to edit.
-1. Click **Edit Subscription**.
-1. Add or remove rate card items as needed.
-1. Choose the timing: **Immediately** or **Next billing cycle**.
-1. Click **Save**.
-
-## Modification timing
-
-When modifying a subscription, the timing determines when the change takes effect:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Timing
-    key: timing
-  - title: Best for
-    key: best_for
-  - title: Behavior
-    key: behavior
-rows:
-  - timing: Immediate
-    best_for: Upgrades
-    behavior: The change takes effect right away. Only the modified rate cards are updated; the billing cycle continues unchanged.
-  - timing: Next billing cycle
-    best_for: Downgrades
-    behavior: The change takes effect at the end of the current billing period, avoiding any need for refunds or proration.
-{% endtable %}
-<!--vale on-->
 
 ## Cancel a subscription
 
@@ -110,14 +69,13 @@ To cancel a subscription:
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to cancel.
 1. Click the **Subscriptions** tab.
-1. Click the subscription you want to cancel.
 1. Click **Cancel Subscription**.
-1. Choose the timing: **Immediately** or **Next billing cycle**.
-1. Click **Confirm**.
+1. Choose when the cancellation should be effective: **At the end of the billing period** or **Immediately**.
+1. Click **Cancel Subscription**.
 
 ## Plan migration
 
-Plans in {{site.metering_and_billing}} are versioned. When you publish a new version of a plan, existing subscriptions remain on the previous version until explicitly migrated. This is known as grandfathering — customers keep their existing pricing until you choose to migrate them.
+Plans in {{site.metering_and_billing}} are versioned. When you publish a new version of a plan, existing subscriptions remain on the previous version until explicitly migrated. This is known as grandfathering, customers keep their existing pricing until you choose to migrate them.
 
 Migrating a subscription to a new plan version allows you to:
 
@@ -126,7 +84,7 @@ Migrating a subscription to a new plan version allows you to:
 * Deprecate old plan versions
 * Standardize customers on current offerings
 
-You can migrate customers selectively — for example, migrating enterprise customers first and rolling out changes to self-serve customers later.
+You can migrate customers selectively, migrating enterprise customers first and rolling out changes to self-serve customers later, for example.
 
 To migrate a subscription to a new plan version:
 
@@ -134,8 +92,8 @@ To migrate a subscription to a new plan version:
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to migrate.
 1. Click the **Subscriptions** tab.
-1. Click the subscription you want to migrate.
+1. Click **Manage**.
 1. Click **Migrate**.
-1. Select the target plan version, or leave it empty to migrate to the latest published version.
-1. Choose the timing: **Immediately** or **Next billing cycle**.
+1. Click **Next**.
+1. Choose when the migration should be effective: **At the end of the billing period** or **Immediately**.
 1. Click **Save**.
