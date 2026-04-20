@@ -14,7 +14,7 @@ weight: 997
 
 requirements:
   - 'Your API clients must pass the subject header on every request you want to meter.'
-  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
+  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `api_token`.'
 
 config:
   ingest_endpoint: ${ingest-endpoint}

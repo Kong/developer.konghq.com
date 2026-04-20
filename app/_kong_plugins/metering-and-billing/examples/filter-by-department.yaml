@@ -15,7 +15,7 @@ weight: 996
 requirements:
   - 'Your API clients must pass `x-department` and `x-project` headers on requests you want to track by dimension.'
   - 'An [authentication plugin](/plugins/?category=authentication) (for example, [Key Auth](/plugins/key-auth/) or [JWT](/plugins/jwt/)) is configured on the same Gateway Service or Route so that a Consumer is present on each request.'
-  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `auth_token`.'
+  - 'A [{{site.konnect_short_name}} system account token](/konnect-api/#system-accounts-and-access-tokens) (`spat_`) or OpenMeter API key to use as the `api_token`.'
 
 config:
   ingest_endpoint: ${ingest-endpoint}
