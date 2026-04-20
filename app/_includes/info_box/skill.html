@@ -44,7 +44,7 @@
   <div class="flex gap-1.5 flex-wrap">
     {% assign tools = page.allowed_tools | split: ' ' %}
     {% for tool in tools %}
-      {% include badge.html text=tool %}
+      <span>{{ tool }}</span>
     {% endfor %}
   </div>
 </div>
