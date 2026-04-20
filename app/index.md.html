@@ -1,0 +1,30 @@
+---
+title: Kong Developer
+layout: none
+permalink: /index.md
+llm: false
+---
+
+# {{ site.data.homepage.title }}
+
+{{ site.data.homepage.description }}
+{% for section in site.data.homepage.sections %}
+
+## {{ section.title }}
+{% for item in section.items %}
+
+### {{ item.title }}
+{{ item.description }}
+{% for link in item.links %}- [{{ link.text }}]({{ link.url }})
+{% endfor %}
+{%- endfor %}
+{%- endfor %}
+
+## APIs
+
+- [Kong API catalog](/api/)
+
+## Additional Resources
+
+- [All Kong documentation sitemap](/sitemap/)
+- [LLM-optimized documentation index](/llms.txt)
