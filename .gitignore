@@ -23,6 +23,9 @@ node_modules
 # Local Netlify folder
 .netlify
 
+# Yarn
+.yarn/install-state.gz
+
 
 # vscode
 .vscode/*
