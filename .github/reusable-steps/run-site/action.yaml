@@ -15,4 +15,4 @@ runs:
     - name: Serve site
       shell: bash
       run: |
-        npx netlify dev --dir dist --offline --internal-disable-edge-functions --functions /tmp/no-functions & npx wait-on http://localhost:8888
+        yarn netlify dev --dir dist --offline --internal-disable-edge-functions --functions /tmp/no-functions & npx wait-on http://localhost:8888
