@@ -25,7 +25,7 @@ Use them to:
 
 ## How add-ons work
 
-An add-on is made up of one or more rate cards, each defining a specific feature, its pricing, billing cadence, and entitlements.
+An add-on is made up of one or more [rate cards](/metering-and-billing/product-catalog/#rate-cards), each defining a specific feature, its pricing, billing cadence, and entitlements.
 
 This modular structure lets you mix and match features and capacities independently of your base plans.
 
