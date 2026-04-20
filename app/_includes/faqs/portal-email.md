@@ -21,7 +21,7 @@ body:
 {% endcapture %}
 {{ create_custom_domain | indent: 3 }}
 
-2. Send a POST request to the [`/portals/{portalId}/email-config` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-email-config).
+2. Send a POST request to the [`/portals/{portalId}/email-config` endpoint](/api/konnect/portal-management/v3/#/operations/create-portal-email-config):
 {% capture create_email_config %}
 <!--vale off-->
 {% konnect_api_request %}
