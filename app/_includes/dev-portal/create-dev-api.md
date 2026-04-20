@@ -42,4 +42,4 @@ body:
 >  After they log in, they will automatically approved.
 > * **Basic auth:** If a developer is created in a {{site.dev_portal}} with basic auth configured, they must be able to set their password. This can be done one of two ways:
 >   * `send_notification_email: true`: Developers can use the link in the email to set their password.
->   * `send_notification_email: true`: Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password. 
+>   * Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password, regardless of whether `send_notification_email` is `true` or `false`, 
