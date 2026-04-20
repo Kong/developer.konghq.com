@@ -11,9 +11,9 @@ works_on:
 
 related_resources:
   - text: Kong Gateway configuration reference - pg_max_concurrent_queries
-    url: /gateway/configuration/#postgres-settings
+    url: /gateway/configuration/#pg_max_concurrent_queries
   - text: Kong Gateway configuration reference - nginx_worker_processes
-    url: /gateway/configuration/#nginx-worker-processes
+    url: /gateway/configuration/#nginx_worker_processes
 
 tldr:
   q: Why does my PostgreSQL connection count exceed the limit I set with pg_max_concurrent_queries?
