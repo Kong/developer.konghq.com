@@ -185,27 +185,19 @@ columns:
     key: description
 rows:
   - field: "`checksum`"
-    description: A checksum of the report contents.
+    description: SHA-256 digest of the full report contents.
   - field: "`timestamp`"
     description: Unix timestamp of when the report was generated.
   - field: "`kong_version`"
     description: The version of {{site.base_gateway}} running on this node.
   - field: "`db_version`"
     description: The database engine and version in use.
-  - field: "`license.license_key`"
-    description: The unique key identifying this license.
-  - field: "`license.license_expiration_date`"
-    description: The date on which the license expires.
-  - field: "`deployment_info.type`"
-    description: "The deployment topology: `traditional`, `hybrid`, or `dbless`."
-  - field: "`deployment_info.connected_dp_count`"
-    description: Number of data planes currently connected to the control plane. Only present when `deployment_info.type` is `hybrid`.
-  - field: "`system_info.hostname`"
-    description: The hostname of the node generating the report.
-  - field: "`system_info.cores`"
-    description: The number of CPU cores available to the node.
-  - field: "`system_info.uname`"
-    description: The operating system and architecture of the node.
+  - field: "`license`"
+    description: "Details about the active license: `license_key` and `license_expiration_date`."
+  - field: "`deployment_info`"
+    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`). In hybrid mode, also includes `connected_dp_count`: the number of data planes currently connected to the control plane."
+  - field: "`system_info`"
+    description: "Information about the node: `hostname`, `cores` (number of online processors), and `uname` (OS and architecture)."
   - field: "`services_count`"
     description: Total number of services configured in this deployment.
   - field: "`routes_count`"
@@ -216,16 +208,10 @@ rows:
     description: Total number of workspaces in this deployment.
   - field: "`rbac_users`"
     description: Total number of RBAC users configured.
-  - field: "`plugins_count.unique_route_kafkas`"
-    description: Number of unique Kafka broker addresses (host:port) across Kafka plugins configured on service-less routes.
-  - field: "`plugins_count.unique_route_lambdas`"
-    description: Number of unique AWS Lambda function names across aws-lambda plugins configured on service-less routes.
-  - field: "`plugins_count.tiers`"
-    description: "Breakdown of active plugins by tier: `free`, `enterprise`, and `custom`."
-  - field: "`counters.total_requests`"
-    description: Total number of requests processed across all time periods.
-  - field: "`counters.buckets`"
-    description: "Monthly breakdown of request counts. Each entry has a `bucket` field (year-month format, for example `2025-01`) and a `request_count` field. A `bucket` value of `UNKNOWN` means requests were processed before {{site.base_gateway}} 2.7.0.1."
+  - field: "`plugins_count`"
+    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`), `unique_route_kafkas` (unique Kafka broker addresses on service-less routes), and `unique_route_lambdas` (unique Lambda function names on service-less routes)."
+  - field: "`counters`"
+    description: "Request counts as `total_requests` and a `buckets` array. Each bucket has a `bucket` field (year-month format, for example `2026-04`) and a `request_count`. A `bucket` value of `UNKNOWN` means requests were processed before {{site.base_gateway}} 2.7.0.1."
 {% endtable %}
 <!--vale on-->
 
