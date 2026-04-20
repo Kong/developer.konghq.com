@@ -38,7 +38,7 @@ sections:
         url: /metering-and-billing/product-catalog/#plans
       - title: Pricing models
         description: Pricing models describe how to price a feature, for example, free, flat fee, usage-based, or tiered.
-        url: /metering-and-billing/product-catalog/#pricing-models
+        url: /metering-and-billing/pricing-models/
       - title: Entitlements
         description: Entitlements describe customer access, usage-limits, and configuration to features.
         url: /metering-and-billing/entitlements/
