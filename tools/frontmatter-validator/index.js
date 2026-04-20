@@ -32,7 +32,6 @@ async function validateFrontmatters() {
         "app/_references/**/*.md",
         "app/assets/**",
         "app/mesh/latest_version.md",
-        "app/index.md",
       ],
       cwd: "../../",
     },
