@@ -1,4 +1,4 @@
-You can pre-create applications and application registrations on behalf of a developer or team using the {{site.konnect_short_name}} API.
+You can automate applications and application registrations on behalf of a developer or team using the {{site.konnect_short_name}} API.
 
 1. Create a developer application by sending a `POST` request to the `/portals/{portalId}/applications` endpoint:
 {% capture create-application %}
@@ -18,6 +18,8 @@ body:
 <!--vale on-->
 {% endcapture %}
 {{create-application | indent: 3}}
+   
+   If the application is for a team, configure `type: team`.
 
 1. Copy and export the application ID:
   ```sh
@@ -41,4 +43,6 @@ body:
    
    {:.warning}
    > **DCR applications:**
-   > If the application will be using a DCR provider with the given auth strategy, the request must specify `dcr_client_id`.
+   > If the application will be using a DCR provider with the given auth strategy, your configuration depends on your use case:
+   > * You want to create a new DCR application, where the IdP client will be created in the identity provider and assigned a `client_id`. This will be set as the `client_id` of the application and can't be changed moving forward. **Do not** specify `dcr_client_id` or `client_id` in this case. `client_id` will be present in the response.
+   > * You want to create an application that is linked to an existing IdP client, but treated as if it was created via the DCR app creation process. This allows you to import existing IdP clients when onboarding your applications into {{site.konnect_short_name}}. In this case, you must specify `dcr_client_id` and `client_id` will be present in the response.
