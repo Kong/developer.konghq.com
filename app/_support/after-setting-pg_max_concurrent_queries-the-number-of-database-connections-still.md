@@ -49,7 +49,7 @@ pg_max_concurrent_queries × nginx_worker_processes × number of Kong nodes
 ```
 
 The `nginx_worker_processes` parameter defaults to `auto`, which sets the number of
-worker processes equal to the number of available vCPUs. In a Kubernetes environment
+worker processes equal to the number of available vCPUs. In a Kubernetes environment,
 the calculation is based on the **host** vCPUs (not the container's CPU limit), which
 can result in significantly more workers — and therefore more database connections —
 than expected.
