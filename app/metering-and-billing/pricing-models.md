@@ -58,14 +58,21 @@ rows:
   - parameter: Percentage discount
     description: Reduces price by a fixed percent across all usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
 
 ## Usage based
 
-Usage-based pricing is a model where you charge customers based on the number of units they use, as reported by the meter.
+Usage-based pricing is a model where you charge customers based on the number of units they use, as reported by the [meter](/metering-and-billing/metering/).
 
 For example, you could charge customers $0.01 per AI token used. 
 If a customer uses 10,000 tokens, they would be charged:
@@ -96,7 +103,14 @@ rows:
   - parameter: Maximum commitment
     description: The maximum amount the customer is charged per billing period, regardless of usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
@@ -175,7 +189,14 @@ rows:
   - parameter: Maximum commitment
     description: The maximum amount the customer is charged per billing period, regardless of usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
@@ -245,18 +266,26 @@ rows:
   - parameter: Maximum commitment
     description: The maximum amount the customer is charged per billing period, regardless of usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
 
 ### Flat prices in tiers
 
-With tiered pricing, you can define per unit or flat fees in each tier. 
+With tiered pricing, you can define flat fees for each tier in addition to unit pricing.
 
 For example, you could charge $500 for the first tier and $0.1 per unit for the rest. 
 
 This is useful to define overage charges or to bill a flat fee regardless of usage.
+For example:
 
 <!--vale off-->
 {% table %}
@@ -368,19 +397,19 @@ rows:
   - usage: 0 units
     calculation: 0 packages × $10
     total_price: $0
-    explanation: No packages needed as there's no usage
+    explanation: No packages needed as there's no usage.
   - usage: 20 units
     calculation: 1 package × $10
     total_price: $10
-    explanation: Usage fits exactly in one package
+    explanation: Usage fits exactly in one package.
   - usage: 20.1 units
     calculation: 2 packages × $10
     total_price: $20
-    explanation: Additional 0.1 units requires a new package
+    explanation: Adding 0.1 units requires a new package.
   - usage: 98 units
     calculation: 5 packages × $10
     total_price: $50
-    explanation: Usage requires 5 full packages
+    explanation: Usage requires 5 full packages.
 {% endtable %}
 <!--vale on-->
 
@@ -411,7 +440,14 @@ rows:
   - parameter: Maximum commitment
     description: The maximum amount the customer is charged per billing period, regardless of usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
@@ -455,7 +491,14 @@ rows:
   - parameter: Maximum commitment
     description: The maximum amount the customer is charged per billing period, regardless of usage.
   - parameter: Tax behavior
-    description: Select from inclusive, where the listed price already includes tax, or exclusive, where the tax is added on top of the listed price. See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
+    description: |
+      Select from one of the following behaviors:
+      <br><br>
+      * Inclusive: The listed price already includes tax.
+      * Exclusive: The tax is added on top of the listed price.
+      <br><br>
+
+      See [Tax calculations](/metering-and-billing/product-catalog/#tax-calculations) for details.
   - parameter: Stripe Tax Code
     description: Select a [Stripe product tax code](https://docs.stripe.com/tax/tax-codes).
 {% endtable %}
@@ -538,16 +581,27 @@ For simple usage-based pricing, you can achieve the same result by creating a ti
 
 ## Set up a pricing model
 
+Set up a pricing model for a rate card through the {{site.konnect_short_name}} UI.
+
+### Prerequisites 
 To set up a pricing model, you must have:
 * [A feature](/metering-and-billing/product-catalog/#features)
 * [A plan](/metering-and-billing/product-catalog/#plans)
 
+### Steps
 To set up a pricing model on a rate card:
 1. Navigate to **Metering and Billing** > **Product Catalog**.
 1. Click the **Plans** tab. 
 1. Select a plan and click **Add Rate Card**.
 1. Select a feature.
-1. Select and configure the pricing model.
-1. Set the entitlement.
+1. Select and configure the pricing model. Refer to the parameter reference for your model to fill out the form:
+   * [Flat fee](#flat-fee)
+   * [Usage based](#usage-based)
+   * [Tiered](#tiered)
+   * [Package](#package)
+   * [Dynamic](#dynamic)
+
+   Free pricing models have no settings to configure.
+1. Set the [entitlement](/metering-and-billing/entitlements/).
 1. Click **Save Rate Card**.
 1. Click **Publish Plan**.
