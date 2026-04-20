@@ -197,7 +197,7 @@ rows:
   - field: "`license`"
     description: "Details about the active license: `license_key` and `license_expiration_date`."
   - field: "`deployment_info`"
-    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`). In hybrid mode, this also includes `connected_dp_count`, the number of data planes currently connected to the control plane."
+    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`)."
   - field: "`system_info`"
     description: "Information about the node: `hostname`, `cores` (number of online processors), and `uname` (OS and architecture)."
   - field: "`services_count`"
@@ -211,9 +211,9 @@ rows:
   - field: "`rbac_users`"
     description: Total number of configured RBAC users.
   - field: "`plugins_count`"
-    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`), `unique_route_kafkas` (unique Kafka broker addresses on Service-less Routes), and `unique_route_lambdas` (unique Lambda function names on Service-less Routes)."
+    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`)"
   - field: "`counters`"
-    description: "Request counts as `total_requests` and a `buckets` array. Each bucket has a `bucket` field (year-month format, for example `2026-04`) and a `request_count`. A `bucket` value of `UNKNOWN` means requests were processed before {{site.base_gateway}} 2.7.0.1."
+    description: "Request counts as `total_requests` and a `buckets` array."
 {% endtable %}
 <!--vale on-->
 
