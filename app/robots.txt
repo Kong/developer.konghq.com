@@ -20,3 +20,12 @@ User-agent: *
 Disallow: /search/
 
 Sitemap: {{ site.links.web }}/sitemap.xml
+
+# Content-Signal is a conditional permission for web scraping uses.
+# If a content-signal = yes, you may collect content for the corresponding use.
+# If a content-signal = no, you may not collect content for the corresponding use.
+#
+# search: indexing and displaying in search results
+# ai-input: providing as context to AI features (e.g., RAG, summarization)
+# ai-train: training AI/ML models
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
