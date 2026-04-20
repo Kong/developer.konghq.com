@@ -51,7 +51,7 @@ Do NOT add anything to the `/mesh/policies/` folder. For example, `/mesh/policie
 
 If the URL changes as a result, add a redirect in `app/_redirects` under "Mesh redirects", for example:
 ```
-/mesh/policies/meshtls/ /mesh/meshtls/
+/mesh/policies/mutual-tls/ /mesh/mutual-tls/
 ```
 
 ---
