@@ -11,7 +11,7 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 
 ## Repositories
 
-- **Kuma source root**: `../kuma-website/` — docs live in `app/_src/`
+- **Kuma source root**: https://github.com/kumahq/kuma-website/tree/master/app/_src
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
 - **Kong Mesh how-to target root**: `/developer.konghq.com/app/mesh/`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
