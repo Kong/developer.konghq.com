@@ -270,8 +270,8 @@ When using an arbitrary certificate and key for a `provided` backend, we must ma
 
 1. It MUST have basic constraint `CA` set to `true` (see [X509-SVID: 4.1. Basic Constraints](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#41-basic-constraints))
 2. It MUST have key usage extension `keyCertSign` set (see [X509-SVID: 4.3. Key Usage](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#43-key-usage))
-3. It MUST NOT have key usage extension 'keyAgreement' set (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
-4. It SHOULD NOT set key usage extension 'digitalSignature' and 'keyEncipherment' to be SPIFFE compliant (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
+3. It MUST NOT have key usage extension `keyAgreement` set (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
+4. It SHOULD NOT set key usage extension `digitalSignature` and 'keyEncipherment' to be SPIFFE compliant (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
 
 {:.warning}
 > Do not use the following example in production, instead generate valid and compliant certificates. This example is intended for usage in a development environment.
@@ -408,11 +408,11 @@ mtls:
 
 ## Certificate Rotation
 
-Once a CA backend has been configured, {{site.mesh_product_name}} will utilize the CA root certificate and key to automatically provision a certificate for every data plane proxy that it connects to `kuma-cp`.
+Once a CA backend has been configured, {{site.mesh_product_name}} will use the CA root certificate and key to automatically provision a certificate for every data plane proxy that it connects to `kuma-cp`.
 
 Unlike the CA certificate, the data plane proxy certificates are not permanently stored anywhere but they only reside in memory. These certificates are designed to be short-lived and rotated often by {{site.mesh_product_name}}.
 
-By default, the expiration time of a data plane proxy certificate is `30` days. {{site.mesh_product_name}} rotates these certificates automatically after 4/5 of the certificate validity time (ie: for the default `30` days expiration, that would be every `24` days).
+By default, the expiration time of a data plane proxy certificate is `30` days. {{site.mesh_product_name}} rotates these certificates automatically after 4/5 of the certificate validity time (for example: for the default `30` days expiration, that would be every `24` days).
 
 You can update the duration of the data plane proxy certificates by updating the `dpCert` property on every available mTLS backend.
 
