@@ -1,6 +1,6 @@
-import type { Config, Context} from "@netlify/edge-functions";
+import type { Config } from "@netlify/edge-functions";
 
-export default async (request: Request, context: Context) => {
+export default async (request: Request) => {
   const acceptHeader = request.headers.get("Accept") || "";
 
   if (!acceptHeader.includes("text/markdown")) {
@@ -8,25 +8,28 @@ export default async (request: Request, context: Context) => {
   }
 
   const url = new URL(request.url);
+  const { pathname } = url;
 
-  if (url.pathname === "/") {
-    url.pathname = "/index.md";
-    return context.rewrite(url);
+  if (pathname.endsWith(".md")) {
+    return;
   }
 
-  const mdPath = url.pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
-  url.pathname = mdPath;
+  if (pathname === "/") {
+    url.pathname = `${pathname}index.md`;
+  } else {
+    url.pathname = pathname.replace(/\.html$/, "") + ".md";
+  }
 
-  return context.rewrite(url);
+  return url;
 };
 
 export const config: Config = {
   path: "/*",
   excludedPath: [
-    "/*.css", "/*.js", "/*.png", "/*.jpg", "/*.jpeg",
-    "/*.gif", "/*.svg", "/*.ico", "/*.webp",
-    "/*.woff", "/*.woff2", "/*.ttf", "/*.eot",
-    "/*.json", "/*.xml", "/*.map",
+    "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg",
+    "/**/*.gif", "/**/*.svg", "/**/*.ico", "/**/*.webp",
+    "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.eot",
+    "/**/*.json", "/**/*.xml", "/**/*.map",
   ],
   onError: "bypass",
 };
