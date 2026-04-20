@@ -1,19 +1,19 @@
 ---
 name: kuma-to-mesh
 description: Convert a Kuma documentation page from the kuma-website repo into a Kong Mesh documentation page for developer.konghq.com. Use when converting, migrating, or porting a Kuma doc to Kong Mesh.
-argument-hint: <path-to-kuma-source-file>
+argument-hint: <path-to-kuma-source-file> <github-issue-number>
 allowed-tools: Read Write Edit Bash
 ---
 
-The arguments are: `<path-to-kuma-source-file>`. Parse it as the first space-separated token of `$ARGUMENTS`.
+The arguments are: `<path-to-kuma-source-file> <github-issue-number>`. Parse them as the first and second space-separated tokens of `$ARGUMENTS`.
 
 Convert the Kuma documentation file into a Kong Mesh documentation page.
 
 ## Repositories
 
-- **Kuma source root**: https://github.com/kumahq/kuma-website/tree/master/app/_src
+- **Kuma source root**: `../kuma-website/` — docs live in `app/_src/`
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
-- **Kong Mesh how-to target root**: `/developer.konghq.com/app/_how-tos/mesh`
+- **Kong Mesh how-to target root**: `/developer.konghq.com/app/mesh/`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
 
 ---
@@ -59,17 +59,11 @@ Read the Kuma source file. Note its existing frontmatter fields (`title`, `descr
 - If a config entry exists: derive the filename from its `url` field.
   - Example: `url: '/mesh/architecture/'` → target file is `architecture.md`
 - Otherwise: use the source file's basename.
-- If the page is a reference: write it to `developer.konghq.com/app/mesh/<filename>.md`
-- If the page is a how-to: write it to `developer.konghq.com/app/_how-tos/mesh/<filename>.md`
+- Full target path: `developer.konghq.com/app/mesh/<filename>.md`
 
 Check whether the target file already exists. If it does, show the user the existing content and ask whether to overwrite before proceeding.
 
-Do NOT add anything to the `/mesh/policies/` folder. For example, `/mesh/policies/mutual-tls.md` should be migrated to `/mesh/mutual-tls.md`.
-
-If the URL changes as a result, add a redirect in `app/_redirects` under "Mesh redirects", for example:
-```
-/mesh/policies/mutual-tls/ /mesh/mutual-tls/
-```
+Don't add anything to the /mesh/policies/ folder.
 
 ---
 
@@ -91,7 +85,6 @@ breadcrumbs:
 ```yaml
 content_type: reference
 layout: reference
-permalink: <config url when the desired URL does not match the default URL from app/mesh/<filename>.md>
 ```
 
 **Include if the page is a how-to guide:**
@@ -103,7 +96,7 @@ permalink: <based on the original url>
 **Include if available:**
 ```yaml
 tags:
-  - <converted from source `keywords:` field, plus any tags from config entry, and remove any tags not present in app/_data/schemas/frontmatter/tags.json>
+  - <converted from source `keywords:` field, plus any tags from config entry>
 
 related_resources:
   - text: ...
@@ -113,7 +106,7 @@ min_version:
   mesh: 'X.Y'   # from config entry only
 ```
 
-**Do NOT carry over:** `keywords`, `category`, the original `content_type`, or any Kuma build-system fields.
+**Do NOT carry over:** `keywords` (replaced by `tags`), `category`, the original `content_type`, or any Kuma build-system fields.
 
 **Title/description "Kuma" replacement rules:**
 - Replace standalone `Kuma` (the product) with `{{site.mesh_product_name}}`
@@ -149,7 +142,7 @@ In body text (not inside code blocks, YAML examples, or annotations):
 ### 5e. Version-gated content (`{% if_version %}` blocks)
 
 - If an `{% if_version %}` block only applies to versions older than the `min_version`, (for example, `{% if_version lte:2.5.x %}` when `min_version` is `2.9`), remove the content.
-- If an `{% if_version %}` block applies to the `min_version` and later versions, (for example, `{% if_version gte:2.6.x %}` when `min_version` is `2.9`), keep the content and remove the version gating.
+- If an `{% if_version %}` block applies to the `min_version` and later versions, (for example, `{% if_version gte:2.6.x %}` when `min_version` is `2.9`), keep the content are remove the version gating.
 
 In other cases, do NOT attempt to automatically resolve version gates. Instead:
 - Leave the `{% if_version %}` / `{% endif_version %}` tags in place
@@ -168,7 +161,6 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
   ```
   {:.info}
   > If you want to configure version, ciphers or per service permissive / strict mode check out [`MeshTLS`](/mesh/policies/meshtls)
-  ```
 
 - Replace {% tabs %} with {% navtabs %} and {% tab %} with {% navtab %}
   - {% navtabs %} should have a title in quotes, for example: {% navtabs "environment" %}
@@ -181,10 +173,10 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
      - title: Name
        key: name
      - title: Description
-       key: description
-   rows:
-     - name: Field name
-       description: Field description
+      key: description
+    rows:
+      - name: Field name
+        description: Field description
    {% endtable %}
    ```
 
@@ -203,25 +195,17 @@ Write the fully transformed content to the target file path.
 
 ---
 
-## Step 7 — Review text quality
-
-Read the written file and suggest prose improvements. Do not apply them automatically — list them for the user to review. Use `.github/copilot-instructions.md` for reference.
-
-Present the suggestions as a numbered list with the original text and proposed replacement.
-
----
-
-## Step 8 — Update the conversion config
+## Step 7 — Update the conversion config
 
 Remove the entry for the converted file from the conversion config.
 
 ---
 
-## Step 9 — Report to the user
+## Step 8 — Report to the user
 
 Show a summary with:
 1. **Source** → **Target** file paths
-2. Front matter fields added/changed
+2. Frontmatter fields added/changed
 3. Content substitutions applied (counts are fine: "12 `Kuma` → `{{site.mesh_product_name}}` replacements")
 4. **Manual review needed** — list any:
    - `{% if_version %}` blocks that were left in place
@@ -229,3 +213,21 @@ Show a summary with:
    - Missing `related_resources` (if config had none and source had none)
    - Whether a `min_version` was set or needs to be determined
 
+---
+
+## Step 9 — Create a pull request
+
+Stage the new file and the updated config, commit, push the branch, then open a PR:
+
+```bash
+git add <target-file> app/_data/kuma_to_mesh/config.yaml
+git commit -m "feat(mesh): add <basename> doc"
+git push -u origin feat/<basename>
+gh pr create \
+  --title "Feat(Mesh): <page-title>" \
+  --body "Fixes #<github-issue-number>"
+```
+
+- `<page-title>` is the `title` value from the front matter written in Step 4 (with `{{site.mesh_product_name}}` kept as-is).
+- `<github-issue-number>` is the second argument passed to the skill.
+- If no issue number was provided, omit the `--body` flag and leave the PR description empty.
