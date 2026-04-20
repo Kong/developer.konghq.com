@@ -11,4 +11,4 @@ runs:
         LANG: C.UTF-8
         NODE_OPTIONS: "--max_old_space_size=8192"
       run: |
-        npx netlify dev --skip-wait-port --internal-disable-edge-functions & npx wait-on http://localhost:8888
+        npx netlify dev --skip-wait-port --internal-disable-edge-functions --functions /tmp/no-functions & npx wait-on http://localhost:8888
