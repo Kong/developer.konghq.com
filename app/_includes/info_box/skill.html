@@ -3,7 +3,7 @@
   {% assign repo_parts = site.repos.skills | split: 'github.com/' %}
   <div class="flex gap-1.5 items-center">
     {% include_svg '/assets/icons/github.svg' width="16" height="16" %}
-    <a href="{{ site.repos.skills }}">{{ repo_parts[1] }}</a>
+    <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}">{{ repo_parts[1] }}</a>
   </div>
 </div>
 
