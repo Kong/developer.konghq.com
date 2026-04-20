@@ -32,7 +32,7 @@ variables:
   subject-header:
     value: $SUBJECT_HEADER
     description: The name of the request header that contains the tenant or customer identifier, for example `x-tenant-id` or `x-customer-id`.
-  ingest-endpoint: 
+  ingest-endpoint:
     value: $INGEST_ENDPOINT
     description: "Either the [{{site.konnect_short_name}} {{site.metering_and_billing}} ingest endpoint](/api/konnect/metering-and-billing/v3/#/operations/ingest-metering-events) (`https://us.api.konghq.com/v3/openmeter/events`) or the [OpenMeter self-hosted ingest endpoint](https://openmeter.io/docs/api/v3#tag/metering-events/POST/openmeter/events) (`https://127.0.0.1/api/v3/openmeter/events`)"
 
