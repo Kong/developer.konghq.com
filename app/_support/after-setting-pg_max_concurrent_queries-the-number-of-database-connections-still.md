@@ -1,5 +1,5 @@
 ---
-title: After setting pg_max_concurrent_queries the number of database connections still exceeds the maximum allowed
+title: After setting pg_max_concurrent_queries, the number of database connections still exceeds the maximum allowed
 content_type: support
 description: How to limit the total number of PostgreSQL database connections when running Kong Gateway on multiple nodes in Kubernetes.
 products:
