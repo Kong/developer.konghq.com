@@ -179,17 +179,25 @@ Write the fully transformed content to the target file path.
 
 ---
 
-## Step 7 — Update the conversion config
+## Step 7 — Review text quality
+
+Read the written file and suggest prose improvements. Do not apply them automatically — list them for the user to review. Use `.github/copilot-instructions.md` for reference.
+
+Present the suggestions as a numbered list with the original text and proposed replacement.
+
+---
+
+## Step 8 — Update the conversion config
 
 Remove the entry for the converted file from the conversion config.
 
 ---
 
-## Step 8 — Report to the user
+## Step 9 — Report to the user
 
 Show a summary with:
 1. **Source** → **Target** file paths
-2. Frontmatter fields added/changed
+2. Front matter fields added/changed
 3. Content substitutions applied (counts are fine: "12 `Kuma` → `{{site.mesh_product_name}}` replacements")
 4. **Manual review needed** — list any:
    - `{% if_version %}` blocks that were left in place
