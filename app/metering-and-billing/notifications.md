@@ -86,10 +86,11 @@ To create a webhook channel in {{site.konnect_short_name}}:
 1. Optionally, add custom HTTP headers if your endpoint requires authentication.
 1. Click **Save**.
 
-### Verify webhook signatures
+### Verify webhook requests
 
-{{site.metering_and_billing}} signs each webhook delivery so you can verify that requests are authentic and were not sent by a third party. Each request includes a signature in the headers. Verify the signature in your webhook handler before processing the payload, and return a `400` response if verification fails.
+When exposing a webhook endpoint, make sure the sender is authenticated before you process the payload. {{site.metering_and_billing}} lets you add custom HTTP headers when you create the channel. A common pattern is to configure a shared secret in a custom header, for example `Authorization: Bearer <secret>` or `X-Webhook-Secret: <secret>`, and validate that value in your webhook handler for every delivery.
 
+Reject requests with a missing or invalid authentication header by returning a `400` or `401` response, and only process the notification after the header value matches the secret you configured on the channel.
 ## Rules
 
 A rule defines the condition that triggers a notification. When the condition is met, {{site.metering_and_billing}} delivers a notification event to the channels specified in the rule.
@@ -185,7 +186,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-You can view past notification events in {{site.konnect_short_name}} by navigating to **{{site.metering_and_billing}}** > **Settings** > **Notifications** and clicking name of the rule.
+You can view past notification events in {{site.konnect_short_name}} by navigating to **{{site.metering_and_billing}}** > **Settings** > **Notifications** and clicking the name of the rule.
 
 ## Enforcing entitlement limits
 

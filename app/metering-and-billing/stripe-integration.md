@@ -69,7 +69,7 @@ When you configure the Stripe app in {{site.metering_and_billing}}, {{site.konne
 
 You can use one or both methods by setting up one or more billing profiles. This is useful if you have different payment collection methods for different customers. For example, you can have a billing profile for self-service customers with automatic payment collection and a billing profile for enterprise customers with email invoicing. You can set the self-service billing profile as the default and link enterprise customers to the enterprise billing profile. This way your self-service customers are charged automatically and your enterprise clients will receive an email invoice.
 
-When the Stripe app is installed and set as a [billing profile](/metering-and-billing/billing-invoicing/#billing-profiles), {{site.metering_and_billing}} will automatically synchronize invoices to Stripe Invoicing. {{site.metering_and_billing}} will create a Stripe Invoice for each {{site.metering_and_billing}} invoice and mark invoices as finalized to kick of the payment collection in Stripe.
+When the Stripe app is installed and set as a [billing profile](/metering-and-billing/billing-invoicing/#billing-profiles), {{site.metering_and_billing}} will automatically synchronize invoices to Stripe Invoicing. {{site.metering_and_billing}} will create a Stripe Invoice for each {{site.metering_and_billing}} invoice and mark invoices as finalized to kick off the payment collection in Stripe.
 
 When a paid subscription is created, {{site.metering_and_billing}} will enforce that a customer linked with Stripe has either a default payment method or an email address depending on the collection method settings.
 
