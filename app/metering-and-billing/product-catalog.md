@@ -255,7 +255,10 @@ Rate cards can be configured with or without a feature:
 
 #### Add-ons
 
-Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. Add-ons allow you to sell extra features, overage packs, or services without changing the core plan.
+Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. 
+They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. 
+
+See the [Add-ons reference](/metering-and-billing/add-ons/) to learn more.
 
 #### Pricing models
 
