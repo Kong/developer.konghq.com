@@ -15,7 +15,8 @@ metadata:
     - routing
 
 steps:
-  - title: "Step 1: Services and Routes"
+  - title: "Services and Routes"
+    description: "Set up Kong Gateway in DB-less mode, define services and routes, and proxy your first API."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-1/
     prereqs:
       inline:
@@ -28,7 +29,8 @@ steps:
       title: "Practice: Proxy your first API"
       include: learning-paths/gateway/intro-step-1-practice
 
-  - title: "Step 2: Plugins"
+  - title: "Plugins"
+    description: "Extend your Gateway with Rate Limiting and Key Authentication plugins."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-2/
     prereqs:
       inline:
