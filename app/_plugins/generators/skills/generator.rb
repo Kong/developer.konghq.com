@@ -67,7 +67,7 @@ module Jekyll
           processed = processed.gsub(%r{\]\(\.\.\/\.\.\/(.*?)\)}, "](#{repo_url}/blob/main/\\1)")
         end
 
-        { 'title' => title.strip, 'slug' => slug, 'content' => processed }
+        { 'title' => title.strip, 'slug' => slug, 'icon' => "/assets/icons/ai-tools/#{slug}.svg", 'content' => processed }
       end
 
       def generate_overview_page(skill)
