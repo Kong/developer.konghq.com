@@ -1,3 +1,4 @@
+
 {:.danger}
 > **Event duplication:** 
 > Do **not** use both the Metering & Billing plugin and the {{site.konnect_short_name}} built-in event ingestion in {{site.konnect_short_name}} at the same time.
