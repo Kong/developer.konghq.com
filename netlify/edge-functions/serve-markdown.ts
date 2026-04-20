@@ -8,6 +8,12 @@ export default async (request: Request, context: Context) => {
   }
 
   const url = new URL(request.url);
+
+  if (url.pathname === "/") {
+    url.pathname = "/index.md";
+    return context.rewrite(url);
+  }
+
   const mdPath = url.pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
   url.pathname = mdPath;
 
