@@ -231,9 +231,9 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 {:.info}
 > **Note:** To publish API products to a classic Dev Portal, you need at least a `Viewer` role for Dev Portal in addition to the `API Products Publisher` role.
 
-#### Add ons
+#### Add-ons
 
-The following table describes the predefined roles for Dedicated Cloud Gateway add ons, like [managed cache](/dedicated-cloud-gateways/reference/#managed-cache-for-redis):
+The following table describes the predefined roles for Dedicated Cloud Gateway add-ons, like [managed cache](/dedicated-cloud-gateways/reference/#managed-cache-for-redis):
 
 <!--vale off-->
 {% table %}
@@ -246,13 +246,13 @@ columns:
     key: permissions
 rows:
   - role: "`Add On Admin`"
-    description: Access to all read and write permissions related to add ons.
+    description: Access to all read and write permissions related to add-ons.
     permissions: |
-      * Create, read, delete, list, edit add ons
+      * Create, read, delete, list, edit add-ons
   - role: "`Add On Viewer`"
-    description: Access to read-only permissions for add ons.
+    description: Access to read-only permissions for add-ons.
     permissions: |
-      * Read and list add ons
+      * Read and list add-ons
 {% endtable %}
 <!--vale on-->
 
