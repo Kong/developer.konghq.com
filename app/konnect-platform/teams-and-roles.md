@@ -248,11 +248,11 @@ rows:
   - role: "`Add On Admin`"
     description: Access to all read and write permissions related to add ons.
     permissions: |
-      * ?
+      * Create, read, delete, list, edit add ons
   - role: "`Add On Viewer`"
     description: Access to read-only permissions for add ons.
     permissions: |
-      * ?
+      * Read and list add ons
 {% endtable %}
 <!--vale on-->
 
