@@ -27,7 +27,7 @@ run: ruby-version-check validate-frontmatters
 	NODE_OPTIONS="--max_old_space_size=8192" yarn netlify dev --offline --skip-wait-port --internal-disable-edge-functions
 
 run-debug: ruby-version-check
-	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' netlify dev --skip-wait-port --internal-disable-edge-functions
+	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' yarn netlify dev --skip-wait-port --internal-disable-edge-functions
 
 build: ruby-version-check
 	exe/build
