@@ -1,11 +1,11 @@
 ---
 name: kuma-to-mesh
 description: Convert a Kuma documentation page from the kuma-website repo into a Kong Mesh documentation page for developer.konghq.com. Use when converting, migrating, or porting a Kuma doc to Kong Mesh.
-argument-hint: <path-to-kuma-source-file> <github-issue-number>
+argument-hint: <path-to-kuma-source-file>
 allowed-tools: Read Write Edit Bash
 ---
 
-The arguments are: `<path-to-kuma-source-file> <github-issue-number>`. Parse them as the first and second space-separated tokens of `$ARGUMENTS`.
+The arguments are: `<path-to-kuma-source-file>`. Parse them as the first and second space-separated tokens of `$ARGUMENTS`.
 
 Convert the Kuma documentation file into a Kong Mesh documentation page.
 
@@ -15,22 +15,6 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
 - **Kong Mesh how-to target root**: `/developer.konghq.com/app/mesh/`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
-
----
-
-## Step 0 — Create a new branch
-
-Derive the branch name from the source file's basename (no extension), then run:
-
-```bash
-git checkout -b feat/<basename>
-```
-
-For example, if the source file is `app/_src/policies/mutual-tls.md`, run:
-
-```bash
-git checkout -b feat/mutual-tls
-```
 
 ---
 
@@ -213,21 +197,3 @@ Show a summary with:
    - Missing `related_resources` (if config had none and source had none)
    - Whether a `min_version` was set or needs to be determined
 
----
-
-## Step 9 — Create a pull request
-
-Stage the new file and the updated config, commit, push the branch, then open a PR:
-
-```bash
-git add <target-file> app/_data/kuma_to_mesh/config.yaml
-git commit -m "feat(mesh): add <basename> doc"
-git push -u origin feat/<basename>
-gh pr create \
-  --title "Feat(Mesh): <page-title>" \
-  --body "Fixes #<github-issue-number>"
-```
-
-- `<page-title>` is the `title` value from the front matter written in Step 4 (with `{{site.mesh_product_name}}` kept as-is).
-- `<github-issue-number>` is the second argument passed to the skill.
-- If no issue number was provided, omit the `--body` flag and leave the PR description empty.
