@@ -69,6 +69,11 @@ Configuring {{site.metering_and_billing}} with a custom invoicing provider invol
 1. Configure a billing profile or customer overrides.
 1. Implement the integration using notifications as a data source and the Custom Invoicing API to advance invoice state.
 
+### Create a notification channel
+
+Before you install the Custom Invoicing app, create a notification channel so {{site.metering_and_billing}} can send invoice events to your integration.
+
+For steps to create and manage notification channels, see the [Notifications documentation](/metering-and-billing/notifications/).
 ## Implementation
 
 The Custom Invoicing app pauses invoice processing at key states and waits for your integration to signal completion before the invoice progresses through its [lifecycle](/metering-and-billing/billing-invoicing-subscriptions/#invoice-lifecycle).
@@ -144,13 +149,13 @@ During issuing synchronization, your integration can:
    * To pause processing before issuance, enable **Issuing Sync Hook**.
 1. Click **Install App**.
 1. Enable **Setup Invoice Notifications**.
-1. In the **channels** dropdown menu, select your notification channels.
+1. From the **Channels** dropdown menu, select your notification channels.
 1. Click **Setup Notifications**.
 1. Select a billing profile preset:
-  * **Auto Collection** to charge the customer automatically.
-  * **Send Invoice** to send an invoice and allow the customer to choose their payment method.
+   * **Auto Collection** to charge the customer automatically.
+   * **Send Invoice** to send an invoice and allow the customer to choose their payment method.
 1. (Optional) Expand **Advanced Customize Billing Profile** to modify the default billing profile parameters.
-1. Click **Create Billing Profile**
+1. Click **Create Billing Profile**.
 1. Do one of the following:
    * To set this as the default billing profile, click **Set as Default Profile**.
    * To limit the app to specific customers, disable **Set this as the new default billing profile**, click **Keep Current Default Profile**, and then configure [customer overrides](/metering-and-billing/billing-invoicing-subscriptions/#customer-billing-profile-overrides).
