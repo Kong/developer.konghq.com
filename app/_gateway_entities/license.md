@@ -164,7 +164,7 @@ You can update your License with a `PUT` request to the [`/license/{license-id}`
 
 ## License reports
 
-A license report contains information about your {{site.base_gateway}} database-backed deployment, including license usage and deployment information. You can't automatically generate a license report, and the report doesn't send data to Kong servers. License reports aren't supported in a DB-less deployment.
+A license report contains information about your {{site.base_gateway}} deployment, including license usage and deployment information. Reports are generated manually on demand with the Admin API and aren't generated automatically or on a schedule. The report doesn't send data to Kong servers.
 
 You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best license and deployment plan for your needs.
 
