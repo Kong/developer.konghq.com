@@ -11,9 +11,9 @@ edit_and_issue_links: false
         <div class="flex flex-col gap-8 pt-24">
             <div class="flex flex-col gap-2">
                 <h1 class="font-extrabold text-[40px] leading-[60px] [contain:layout:style]">
-                {{ site.data.homepage.title }}
+                {{ site.data.homepage.title | liquify }}
                 </h1>
-                <span class="leading-7">{{ site.data.homepage.description }}</span>
+                <span class="leading-7">{{ site.data.homepage.description | liquify }}</span>
             </div>
             <div class="flex flex-col gap-2">
                 <div class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-4 items-center lg:w-3/5 cursor-pointer ask-ai-button">
@@ -75,18 +75,18 @@ edit_and_issue_links: false
 {%- for section in site.data.homepage.sections %}
 
     <div class="flex flex-col gap-3 flex-grow">
-        <h2>{{ section.title }}</h2>
+        <h2>{{ section.title | liquify }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {%- for item in section.items %}
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="{{ item.icon }}" class="w-8 h-8" alt="{{ item.icon_alt }}"/>
                 <div class="flex flex-col gap-3 flex-grow">
-                    <h3>{{ item.title }}</h3>
-                    <p class="text-sm text-secondary">{{ item.description }}</p>
+                    <h3>{{ item.title | liquify }}</h3>
+                    <p class="text-sm text-secondary">{{ item.description | liquify }}</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                 {%- for link in item.links %}
-                    <a class="flex justify-between py-3{% unless forloop.last %} border-b border-primary/5{% endunless %}  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ link.url }}">{{ link.text }}<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3{% unless forloop.last %} border-b border-primary/5{% endunless %}  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ link.url }}">{{ link.text | liquify }}<span class="text-terciary">&rarr;</span></a>
                 {%- endfor %}
                 </div>
             </div>

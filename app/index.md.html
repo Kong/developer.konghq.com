@@ -5,17 +5,17 @@ permalink: /index.md
 llm: false
 ---
 
-# {{ site.data.homepage.title }}
+# {{ site.data.homepage.title | liquify }}
 
-{{ site.data.homepage.description }}
+{{ site.data.homepage.description | liquify }}
 {% for section in site.data.homepage.sections %}
 
-## {{ section.title }}
+## {{ section.title | liquify}}
 {% for item in section.items %}
 
 ### {{ item.title }}
-{{ item.description }}
-{% for link in item.links %}- [{{ link.text }}]({{ link.url }})
+{{ item.description | liquify }}
+{% for link in item.links %}- [{{ link.text | liquify }}]({{ link.url }})
 {% endfor %}
 {%- endfor %}
 {%- endfor %}
