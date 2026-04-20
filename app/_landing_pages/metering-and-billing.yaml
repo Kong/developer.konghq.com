@@ -165,7 +165,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#pricing-models
+                url: /metering-and-billing/pricing-models/
       - blocks:
           - type: card
             config:

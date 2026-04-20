@@ -16,6 +16,8 @@ related_resources:
     url: /metering-and-billing/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
+  - text: "Pricing models"
+    url: /metering-and-billing/pricing-models/
 
 toc_depth: 4
 ---
@@ -271,21 +273,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - model: "Free"
+  - model: "[Free](/metering-and-billing/pricing-models/#free)"
     description: "Free pricing"
-  - model: "Flat fee"
+  - model: "[Flat fee](/metering-and-billing/pricing-models/#flat-fee)"
     description: "A one-time or recurring fee"
-  - model: "Usage based"
+  - model: "[Usage based](/metering-and-billing/pricing-models/#usage-based)"
     description: "Linear pricing based on metered usage"
-  - model: "Tiered"
+  - model: "[Tiered](/metering-and-billing/pricing-models/#tiered)"
     description: "Tiered pricing based on metered usage"
-  - model: "Package"
+  - model: "[Package](/metering-and-billing/pricing-models/#package)"
     description: "Pricing based on fixed-sized usage packages"
-  - model: "Dynamic"
+  - model: "[Dynamic](/metering-and-billing/pricing-models/#dynamic)"
     description: "USD prices created dynamically from meter values"
 {% endtable %}
 
 Besides the **Free** pricing model, other models require configuration that you can see from the {{site.konnect_short_name}} UI. 
+
+See the [pricing models reference](/metering-and-billing/pricing-models/) for details.
 
 #### Tax calculations
 
@@ -319,7 +323,7 @@ For flat fee rate cards, the billing cadence can be omitted. In this case, the s
 
 #### Price
 
-The price property defines the price the feature is sold at. See the [Pricing models section](#pricing-models) for more details.
+The price property defines the price the feature is sold at. See the [Pricing models reference](/metering-and-billing/pricing-models/) for more details.
 
 Free items can be implemented using three distinct approaches:
 
