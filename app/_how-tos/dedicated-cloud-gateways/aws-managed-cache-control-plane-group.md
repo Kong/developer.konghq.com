@@ -35,6 +35,8 @@ next_steps:
     url: /dedicated-cloud-gateways/production-readiness/
 ---
 
+{% include /gateway/dcgw-cpg-note.md %}
+
 {% include_cached /sections/managed-cache-intro.md %}
 
 ## Set up an AWS managed cache on a control plane group
