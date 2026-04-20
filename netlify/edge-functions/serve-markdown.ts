@@ -15,9 +15,9 @@ export default async (request: Request) => {
   }
 
   if (pathname === "/") {
-    url.pathname = `${pathname}index.md`;
+    url.pathname = "/index.md";
   } else {
-    url.pathname = pathname.replace(/\.html$/, "") + ".md";
+    url.pathname = pathname.replace(/\/?$/, ".md").replace(/\.html\.md$/, ".md");
   }
 
   return url;
