@@ -17,19 +17,24 @@
     </div>
 
     {% if skill.scripts or skill.references or skill.assets %}
-    <div class="flex flex-col gap-3 flex-grow text-brand">
+    <div class="flex gap-3 flex-grow text-brand items-center">
       {% if skill.scripts %}
-        {% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}
+        <span class="inline-flex" data-tooltip="Contains scripts">
+          {% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}
+        </span>
       {% endif %}
 
       {% if skill.references %}
-        {% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}
+        <span class="inline-flex" data-tooltip="Contains references">
+          {% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}
+        </span>
       {% endif %}
 
       {% if skill.assets %}
-        {% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}
+        <span class="inline-flex" data-tooltip="Contains assets">
+          {% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}
+        </span>
       {% endif %}
-
     </div>
     {% endif %}
 
