@@ -9,5 +9,6 @@ runs:
         ENABLE_ALGOLIA: 0
         LC_CTYPE: en_US.UTF-8
         LANG: C.UTF-8
+        NODE_OPTIONS: "--max_old_space_size=8192"
       run: |
         npx netlify dev --skip-wait-port --internal-disable-edge-functions & npx wait-on http://localhost:8888

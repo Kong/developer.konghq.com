@@ -63,6 +63,8 @@ jobs:
           exe/build
 
       - name: Run site
+        env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
         run: |
           npx netlify dev --context test --skip-wait-port --internal-disable-edge-functions & npx wait-on http://localhost:8888
 
