@@ -18,6 +18,22 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 
 ---
 
+## Step 0 — Create a new branch
+
+Derive the branch name from the source file's basename (no extension), then run:
+
+```bash
+git checkout -b feat/<basename>
+```
+
+For example, if the source file is `app/_src/policies/mutual-tls.md`, run:
+
+```bash
+git checkout -b feat/mutual-tls
+```
+
+---
+
 ## Step 1 — Check config for an existing entry
 
 Read the conversion config. Search the `pages:` list for an entry whose `path` matches the source file (relative to the kuma-website root, e.g. `app/_src/introduction/architecture.md`).
