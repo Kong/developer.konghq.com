@@ -164,7 +164,9 @@ You can update your License with a `PUT` request to the [`/license/{license-id}`
 
 ## License reports
 
-A license report contains information about your {{site.base_gateway}} deployment, including license usage and deployment information. Reports are generated manually on demand with the Admin API and aren't generated automatically or on a schedule. The report doesn't send data to Kong servers.
+A license report contains information about your {{site.base_gateway}} deployment, including license usage and deployment information. 
+Reports are generated manually on demand with the Admin API, you can't generate them automatically or on a schedule. 
+The report doesn't send data to Kong servers.
 
 You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best license and deployment plan for your needs.
 
@@ -195,21 +197,21 @@ rows:
   - field: "`license`"
     description: "Details about the active license: `license_key` and `license_expiration_date`."
   - field: "`deployment_info`"
-    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`). In hybrid mode, also includes `connected_dp_count`: the number of data planes currently connected to the control plane."
+    description: "The deployment topology type (`traditional`, `hybrid`, or `dbless`). In hybrid mode, this also includes `connected_dp_count`, the number of data planes currently connected to the control plane."
   - field: "`system_info`"
     description: "Information about the node: `hostname`, `cores` (number of online processors), and `uname` (OS and architecture)."
   - field: "`services_count`"
-    description: Total number of services configured in this deployment.
+    description: Total number of Services configured in this deployment.
   - field: "`routes_count`"
-    description: Total number of routes configured in this deployment.
+    description: Total number of Routes configured in this deployment.
   - field: "`consumers_count`"
-    description: Total number of consumers configured in this deployment.
+    description: Total number of Consumers configured in this deployment.
   - field: "`workspaces_count`"
-    description: Total number of workspaces in this deployment.
+    description: Total number of Workspaces in this deployment.
   - field: "`rbac_users`"
-    description: Total number of RBAC users configured.
+    description: Total number of configured RBAC users.
   - field: "`plugins_count`"
-    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`), `unique_route_kafkas` (unique Kafka broker addresses on service-less routes), and `unique_route_lambdas` (unique Lambda function names on service-less routes)."
+    description: "Plugin usage broken down into `tiers` (`free`, `enterprise`, `custom`), `unique_route_kafkas` (unique Kafka broker addresses on Service-less Routes), and `unique_route_lambdas` (unique Lambda function names on Service-less Routes)."
   - field: "`counters`"
     description: "Request counts as `total_requests` and a `buckets` array. Each bucket has a `bucket` field (year-month format, for example `2026-04`) and a `request_count`. A `bucket` value of `UNKNOWN` means requests were processed before {{site.base_gateway}} 2.7.0.1."
 {% endtable %}
