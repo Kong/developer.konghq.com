@@ -545,6 +545,9 @@ After the managed cache is ready, {{site.konnect_short_name}} automatically crea
 You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
 {% endnavtab %}
 {% navtab "Control plane group" %}
+
+{% include /gateway/dcgw-cpg-note.md %}
+
 1. Create a managed cache using the Cloud Gateways add-ons API:
 
    {% capture create_addon %}

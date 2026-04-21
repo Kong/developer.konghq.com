@@ -33,6 +33,10 @@ rows:
 
                     {:.success}
                     > {{site.konnect_product_name}} MCP server is in active development. Expect continuous updates and new tools to be added regularly.
+          - type: button
+            config:
+              text: "Get started with {{site.konnect_product_name}} MCP &rarr;"
+              url: "/konnect-platform/konnect-mcp/installation/"
       - blocks:
           - type: image
             config:

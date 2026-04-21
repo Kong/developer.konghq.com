@@ -8,8 +8,9 @@ sections:
       - path: /metering-and-billing/metering/
       - path: /metering-and-billing/product-catalog/
       - path: /metering-and-billing/customer/
-      - path: /metering-and-billing/billing-invoicing-subscriptions/
+      - path: /metering-and-billing/billing-invoicing/
       - path: /metering-and-billing/events/
+      - path: /metering-and-billing/notifications/
   - title: Usage metering
     items:
       - title: API gateway metering
@@ -52,13 +53,13 @@ sections:
         url: /metering-and-billing/customer/
       - title: Subscriptions
         description: Subscriptions are a collection of active rate cards that can be assigned to customers.
-        url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+        url: /metering-and-billing/subscriptions/
       - title: Billing profiles
         description: Billing profiles handle invoicing, payment, and tax settings for a customer.
-        url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+        url: /metering-and-billing/billing-invoicing/#billing-profiles
       - title: Invoicing
         description: Learn how to set up invoicing in {{site.konnect_short_name}} {{site.metering_and_billing}}.
-        url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+        url: /metering-and-billing/billing-invoicing/#invoicing
       - path: /metering-and-billing/stripe-integration/
   - title: How tos 
     items:

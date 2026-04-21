@@ -14,8 +14,10 @@ related_resources:
     url: /metering-and-billing/
   - text: Metering
     url: /metering-and-billing/metering/
-  - text: "Billing, invoicing, and subscriptions"
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: "Billing and invoicing"
+    url: /metering-and-billing/billing-invoicing/
+  - text: "Subscriptions"
+    url: /metering-and-billing/subscriptions/
 
 next_steps:
   - text: Get started with {{site.metering_and_billing}}
@@ -81,13 +83,13 @@ rows:
     support: "{{site.metering_and_billing}}"
   - capability: "[**Product catalog** (prices, plans, discounts)](/metering-and-billing/product-catalog/)"
     support: "{{site.metering_and_billing}}"
-  - capability: "[**Subscription management** (start, cancel, billing periods)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
+  - capability: "[**Subscription management** (start, cancel, billing periods)](/metering-and-billing/subscriptions/)"
     support: "{{site.metering_and_billing}}"
-  - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions)"
+  - capability: "[**Entitlement management** (feature access and usage limits)](/metering-and-billing/entitlements/)"
     support: "{{site.metering_and_billing}}"
-  - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing-subscriptions/#discounts-and-commitments)"
+  - capability: "[**Rating** (unit × price, discounts, etc.)](/metering-and-billing/billing-invoicing/#discounts-and-commitments)"
     support: "{{site.metering_and_billing}}"
-  - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing-subscriptions/#invoicing)"
+  - capability: "[**Invoice generation** (billing periods, lines)](/metering-and-billing/billing-invoicing/#invoicing)"
     support: "{{site.metering_and_billing}}"
   - capability: "**Sales tax calculations** (based on geo and tax code)"
     support: |
@@ -114,4 +116,4 @@ rows:
 
 {{site.konnect_short_name}} {{site.metering_and_billing}} doesn't handle sales tax, payment processing, or invoice delivery directly. Instead, it integrates with vendors that specialize in these areas so you can choose the best fit for your business.
 
-Combining multiple vendors is common. A startup might pair {{site.metering_and_billing}} with Stripe Payments for credit card processing, while a telecommunications company might use Avalara for tax because their industry's tax law is more complex than what general-purpose tools support. You connect these vendors through [apps and integrations](/metering-and-billing/#integrations). [Billing profiles](/metering-and-billing/billing-invoicing-subscriptions/#billing-profiles) in {{site.metering_and_billing}} let you use different vendors for different segments of your customers.
+Combining multiple vendors is common. A startup might pair {{site.metering_and_billing}} with Stripe Payments for credit card processing, while a telecommunications company might use Avalara for tax because their industry's tax law is more complex than what general-purpose tools support. You connect these vendors through [apps and integrations](/metering-and-billing/#integrations). [Billing profiles](/metering-and-billing/billing-invoicing/#billing-profiles) in {{site.metering_and_billing}} let you use different vendors for different segments of your customers.

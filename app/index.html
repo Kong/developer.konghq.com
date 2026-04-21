@@ -7,7 +7,7 @@ edit_and_issue_links: false
 ---
 
 <div class="flex flex-col gap-12 w-full pb-36">
-    <div class="flex justify-between gap-[60px]">
+    <div class="flex justify-between gap-[60px] flex-col md:flex-row">
         <div class="flex flex-col gap-8 pt-24">
             <div class="flex flex-col gap-2">
                 <h1 class="font-extrabold text-[40px] leading-[60px] [contain:layout:style]">
@@ -25,17 +25,30 @@ edit_and_issue_links: false
                 <span class="text-brand text-sm"><a href="/sitemap/">View all Kong documentation</a></span>
             </div>
         </div>
-        <div class="hidden lg:flex pt-[70px] pr-[68px] relative">
-            <div class="hidden lg:flex shadow-primary absolute border rounded-md border-transparent background-gradient h-fit bottom-0 right-11 w-full max-w-80 z-10">
-                <a href="https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=homepage" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
-                    <div class="flex flex-col gap-1">
-                        <span class="text-sm text-primary font-semibold">Get hands-on with Konnect</span>
-                        <span class="text-sm text-secondary">One platform to secure, manage, and share your APIs.</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary">&rarr;</span>
-                    </div>
-                </a>
+        <div class="flex md:pt-[70px] md:pr-[68px] relative justify-center md:justify-normal">
+            <div class="absolute bottom-0 md:right-11 flex flex-col gap-3 w-full md:max-w-80 z-10">
+                <div class="shadow-primary border rounded-md border-transparent background-gradient h-fit">
+                    <a href="/konnect-platform/konnect-mcp/" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-primary font-semibold">Konnect MCP</span>
+                            <span class="text-sm text-secondary">Connect AI agents to your Konnect APIs.</span>
+                        </div>
+                        <div>
+                            <span class="text-secondary">&rarr;</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="shadow-primary border rounded-md border-transparent background-gradient h-fit">
+                    <a href="https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs&utm_content=homepage" class="flex gap-5 px-6 py-5 rounded-md bg-primary hover:no-underline no-icon">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm text-primary font-semibold">Get hands-on with Konnect</span>
+                            <span class="text-sm text-secondary">One platform to secure, manage, and share your APIs.</span>
+                        </div>
+                        <div>
+                            <span class="text-secondary">&rarr;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <svg class="hidden dark:inline" height="240" viewBox="0 0 321 286" fill="none" xmlns="http://www.w3.org/2000/svg">
