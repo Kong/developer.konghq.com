@@ -144,6 +144,25 @@ We recommend creating and securing your public Dedicated Cloud Gateway in the fo
 
 ### WAF
 
+{% include /sections/dcgw-waf-intro.md %}
+
+Kong strongly recommends configuring a WAF for public Dedicated Cloud Gateways. 
+WAF configuration differs for [public](/dedicated-cloud-gateways/public-network/) deployments.
+
+Public Dedicated Cloud Gateways are exposed via a Kong-managed NLB with a public FQDN.
+Most WAF services can't attach directly to a network-layer load balancer (NLB) because NLBs operate at Layer 4 and don't terminate HTTP. 
+WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP-aware layer, like a CDN distribution, an Application Load Balancer, or a cloud edge service.
+
+Additionally, because the Kong-managed NLB exposes a DNS hostname instead of an IP address, you can't chain another public load balancer in front of it (most ALB and cloud LB target groups don't support DNS-based targets).
+Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
+
+Examples of CDN or edge services that support this pattern:
+- Amazon CloudFront with AWS WAF
+- Azure Front Door with Azure WAF
+- Cloudflare (WAF built in)
+- Fastly with Next-Gen WAF
+
+The following diagram shows how traffic flows through a public Dedicated Cloud Gateway with an AWS WAF:
 <!--vale off -->
 {% mermaid %}
 sequenceDiagram
@@ -172,7 +191,42 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on -->
 
+In this model:
+* CloudFront acts as the public edge entry point.
+* AWS WAF is attached to the CloudFront distribution.
+* The CloudFront origin is the Dedicated Cloud Gateway public DNS edge (public FQDN).
+* The Kong-managed NLB receives traffic from CloudFront and forwards it to the gateway data planes.
 
+This is the standard AWS-native pattern for protecting publicly accessible services behind an NLB.
+
+The sections in this guide describe how to configure a WAF in AWS, but they can be adapted for Azure and GCP.
+
+### Configure AWS WAF
+
+When a Dedicated Cloud Gateway is deployed in public mode, it exposes a public FQDN backed by a Kong-managed Network Load Balancer. 
+Without additional controls, clients could attempt to access this public endpoint directly and bypass CloudFront and AWS WAF protections.
+
+To ensure all traffic passes through CloudFront, configure origin validation between CloudFront and Kong:
+1. Configure CloudFront to inject a [custom origin header](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/add-origin-custom-headers.html). For example: `X-Origin-Verify: <shared-secret-value>`.
+1. Configure your Dedicated Cloud Gateway to require the header. You can do this in two different ways:
+   * Route-level header matching. For example:
+     
+     ```yaml
+     routes:
+      - name: my-route
+        paths:
+          - /anything
+        headers:
+          x-origin-verify:
+            - your-secret-value
+     ```
+   * Use a plugin, like [Pre-Function](/plugins/pre-function/) or [Request Termination](/plugins/request-termination/)
+1. Reject requests that don't include the expected header value.
+1. Store the shared header value securely, like in a [Vault](/gateway/entities/vault/), and rotate the shared secret periodically.
+1. If your CDN publishes static egress IP ranges, configure the [IP Restriction](/plugins/ip-restriction/examples/allow/) plugin globally (allowlisting your CDN's egress IPs). 
+   Requests arriving from IPs outside the CDN's published ranges are rejected at the Kong layer before any route matching occurs. 
+   Some CDNs that publish static egress IP ranges include CloudFront, Cloudflare, Azure Front Door, and Fastly.
+1. Combine origin validation with [AWS WAF managed rules](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups.html) and [rate limiting](https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based-request-limiting.html) for layered protection.
 
 ### Egress IP allowlisting
 

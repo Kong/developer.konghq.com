@@ -74,6 +74,13 @@ Your infrastructure can run on virtual machines (VMs), managed container platfor
 If the services are backed VMs or managed container platforms, Kong mostly expects you to expose them via load balancer. 
 If the services are in Kubernetes managed pods, they can either be exposed via a shared ingress or if only a small set of services need to be exposed, they can be directly exposed by a load balancer service. 
 
+## Load balancing
+
+{{site.konnect_short_name}} uses cross-availability zone load balancing to distribute traffic evenly across data plane nodes in all availability zones where your Dedicated Cloud Gateway is deployed. 
+Load balancing happens at the connection level, not per request.
+Multiple requests sent over the same TCP connection go to the same data plane node. 
+Different connections distribute across nodes.
+
 ## Public and private network connectivity
 
 Before you deploy a Dedicated Cloud Gateway, you'll need to determine if you should deploy a public or private gateway, or both.
@@ -130,7 +137,10 @@ For more information, see [Multi-cloud Dedicated Cloud Gateway network architect
 
 ## WAF
 
+{% include /sections/dcgw-waf-intro.md %}
 
+Kong strongly recommends configuring a WAF for public and private Dedicated Cloud Gateways. 
+WAF configuration differs for [public](/dedicated-cloud-gateways/public-network/) and [private](/dedicated-cloud-gateways/private-network/) deployments.
 
 ## Dedicated Cloud Gateway network CIDR range
 

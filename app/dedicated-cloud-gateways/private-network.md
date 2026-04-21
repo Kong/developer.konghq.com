@@ -246,3 +246,49 @@ There are two DNS options for private Dedicated Cloud Gateways depending on wher
   See [Outbound DNS resolver](/dedicated-cloud-gateways/outbound-dns-resolver/).
 
 ## WAF
+
+{% include /sections/dcgw-waf-intro.md %}
+
+Kong strongly recommends configuring a WAF for private Dedicated Cloud Gateways.
+
+### AWS WAF
+
+In a private deployment, your Application Load Balancer (ALB) is the internet-facing entry point. 
+AWS WAF attaches directly to the ALB and inspects all inbound HTTP(S) traffic before it reaches your Dedicated Cloud Gateway.
+Traffic flows from the ALB to the Dedicated Cloud Gateway's static private IP addresses over your private network connection (VPC peering or Transit Gateway).
+
+To configure AWS WAF for a private Dedicated Cloud Gateway:
+
+1. [Create an internet-facing ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-application-load-balancer.html) in your AWS account.
+1. [Create an AWS WAF Web ACL](https://docs.aws.amazon.com/waf/latest/developerguide/web-acl-creating.html) and associate it with the ALB.
+   Configure [AWS managed rule groups](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups.html) and any custom rules you need, such as IP blocklists or rate limiting.
+1. [Create a target group](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-target-group.html) with the following settings:
+   * **Target type:** IP
+   * **Targets:** The static private IP addresses of your Dedicated Cloud Gateway data plane nodes. 
+     You can find these by sending a GET request to the [`/cloud-gateways/configurations` endpoint](/api/konnect/cloud-gateways/v2/#/operations/list-configurations). 
+1. Configure ALB listener rules based on host headers and path patterns to route traffic to the correct target group.
+1. [Enable HTTPS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html) on your ALB listener using AWS Certificate Manager (ACM).
+1. Ensure your [VPC peering](/dedicated-cloud-gateways/aws-vpc-peering/) or [Transit Gateway](/dedicated-cloud-gateways/transit-gateways/) route tables are updated to direct ALB traffic to the Dedicated Cloud Gateway private IP addresses.
+1. Validate connectivity by sending a test request to the ALB DNS name and confirming it routes through WAF, the ALB, and the Dedicated Cloud Gateway to your upstream API.
+
+Optionally, enable [AWS Shield Advanced](https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html) on the ALB for DDoS mitigation.
+
+### Azure WAF
+
+In a private deployment, Azure Front Door Premium acts as the internet-facing entry point with a built-in WAF policy.
+Traffic flows from Azure Front Door to an Internal Load Balancer (ILB) in your Azure VNet over Private Link, then reaches the Dedicated Cloud Gateway over VNet peering.
+
+To configure Azure WAF for a private Dedicated Cloud Gateway:
+
+1. [Deploy Azure Front Door Premium](https://learn.microsoft.com/en-us/azure/frontdoor/create-front-door-portal) with a custom domain for your APIs.
+1. Configure a [WAF policy](https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-create-portal) on the Front Door profile.
+   Include managed rulesets such as OWASP 3.2 and any custom rules for IP allow/deny, rate limiting, or bot control.
+   Set the mode to **Prevention** for production or **Detection** when testing rules.
+1. [Create an Internal Load Balancer](https://learn.microsoft.com/en-us/azure/load-balancer/quickstart-load-balancer-standard-internal-portal) in your Azure VNet.
+   Add the static private IP addresses of your Dedicated Cloud Gateway data plane nodes as backend targets.
+   You can find these by sending a GET request to the [`/cloud-gateways/configurations` endpoint](/api/konnect/cloud-gateways/v2/#/operations/list-configurations).
+1. [Enable Private Link](https://learn.microsoft.com/en-us/azure/frontdoor/private-link) for the Front Door origin configuration.
+   Azure Front Door creates a managed private endpoint that connects to the ILB over Microsoft's private backbone network.
+1. Ensure your [VNet peering](/dedicated-cloud-gateways/azure-peering/) or [Virtual WAN](/dedicated-cloud-gateways/azure-virtual-wan/) connection is configured between your VNet and the {{site.konnect_short_name}}-managed VNet.
+   Update your Network Security Group (NSG) rules and route tables to allow inbound traffic from the ILB subnet to the Dedicated Cloud Gateway private IP addresses.
+1. Validate connectivity by making test API calls from Azure Front Door through to your upstream API and confirming end-to-end request flow.
