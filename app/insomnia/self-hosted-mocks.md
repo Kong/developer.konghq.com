@@ -84,8 +84,15 @@ These will pull the latest image. You can see all available versions in the [sel
 
 For more information about how to verify the container signature and provenance, see the [Insomnia mockbin README](https://github.com/Kong/insomnia-mockbin/tree/self-hosted).
 
+## Create a local self-hosted mock server
+
+To run a self-hosted mock server locally, use:
+- [NodeJS](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node) (your mock url is `http://localhost:8080`).
+- [Docker](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-docker-compose).
+- Kubernetes.
+
 {:.info}
-> To run a self-hosted mock server locally, use [NodeJS](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node), [Docker](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-docker-compose), or Kubernetes.
+> Insomnia's proxy can interfere with local traffic, so deactivate it before testing your local mock server: go to **Preferences > Proxy** and toggle off **Enable proxy**.
 
 ## Create a self-hosted mock server with Kubernetes
 
