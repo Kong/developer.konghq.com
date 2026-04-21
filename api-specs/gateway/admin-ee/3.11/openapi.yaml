@@ -7155,7 +7155,7 @@ paths:
     /{workspace}/ca_certificates:
         get:
             description: List all CA Certificates in a workspace
-            operationId: list-ca_certificate-in-workspace-in-workspace
+            operationId: list-ca_certificate-in-workspace
             parameters:
                 - $ref: '#/components/parameters/PaginationSize'
                 - $ref: '#/components/parameters/PaginationOffset'
@@ -7184,7 +7184,7 @@ paths:
                 - CA Certificates
         post:
             description: Create a new CA Certificate in a workspace
-            operationId: create-ca_certificate-in-workspace-in-workspace
+            operationId: create-ca_certificate-in-workspace
             parameters:
                 - $ref: '#/components/parameters/Workspace'
             requestBody:
