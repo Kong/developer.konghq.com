@@ -142,7 +142,7 @@ rows:
               - q: Can administrators restrict available storage types?
                 a: |
                   Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.
-              - q: Can I change the project structure (create folders, move files)?
+              - q: Can I change the project structure (for example, create folders or move files)?
                 a: |
                   Yes, but only through your Git provider or local Git tooling. Insomnia doesn't provide a way to change the project structure from its UI.
                   If you modify the project structure externally, Insomnia will still present the files as expected.
