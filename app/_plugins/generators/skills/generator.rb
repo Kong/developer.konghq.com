@@ -26,6 +26,8 @@ module Jekyll
       end
 
       def run
+        return if site.config.dig('skip', 'skills')
+
         base_dir = File.expand_path('..', site.source)
         @repo_path = Jekyll::SkillPages.skills_repo_path(site)
         load_install_tabs(base_dir)
@@ -52,9 +54,9 @@ module Jekyll
         return unless Dir.exist?(install_path)
 
         site.data['skill_install_tabs'] = Dir.glob(File.join(install_path, '*.md'))
-          .reject { |f| INSTALL_EXCLUDES.include?(File.basename(f)) }
-          .map { |f| parse_install_file(f) }
-          .sort_by { |tab| tab['title'] }
+                                             .reject { |f| INSTALL_EXCLUDES.include?(File.basename(f)) }
+                                             .map { |f| parse_install_file(f) }
+                                             .sort_by { |tab| tab['title'] }
       end
 
       def parse_install_file(file)
@@ -66,11 +68,10 @@ module Jekyll
         processed = Jekyll::SkillPages.demote_headings(raw)
 
         repo_url = site.config.dig('repos', 'skills')
-        if repo_url
-          processed = processed.gsub(%r{\]\(\.\.\/\.\.\/(.*?)\)}, "](#{repo_url}/blob/main/\\1)")
-        end
+        processed = processed.gsub(%r{\]\(\.\./\.\./(.*?)\)}, "](#{repo_url}/blob/main/\\1)") if repo_url
 
-        { 'title' => title.strip, 'slug' => slug, 'icon' => "/assets/icons/ai-tools/#{slug}.svg", 'content' => processed }
+        { 'title' => title.strip, 'slug' => slug, 'icon' => "/assets/icons/ai-tools/#{slug}.svg",
+          'content' => processed }
       end
 
       def generate_overview_page(skill)
