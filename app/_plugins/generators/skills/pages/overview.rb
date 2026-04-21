@@ -60,7 +60,7 @@ module Jekyll
 
         def relative_path
           @relative_path ||= File.join(
-            SKILLS_REPO, 'skills', @skill.slug, 'SKILL.md'
+            Jekyll::SkillPages.skills_repo_path(site), 'skills', @skill.slug, 'SKILL.md'
           )
         end
       end

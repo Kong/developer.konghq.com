@@ -1,5 +1,6 @@
 source: app
 destination: dist
+skills_repo_path: app/.repos/skills
 permalink: pretty
 timezone: America/San_Francisco
 markdown: kramdown
