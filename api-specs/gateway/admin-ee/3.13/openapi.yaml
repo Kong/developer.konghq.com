@@ -8135,6 +8135,146 @@ paths:
             summary: Upsert a Basic-auth credential in a workspace
             tags:
                 - Basic-auth credentials
+    /{workspace}/ca_certificates:
+        get:
+            description: List all CA Certificates in a workspace
+            operationId: list-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/CACertificate'
+                                        type: array
+                                    next:
+                                        $ref: '#/components/schemas/PaginationNextResponse'
+                                    offset:
+                                        $ref: '#/components/schemas/PaginationOffsetResponse'
+                                type: object
+                    description: A successful response listing CA Certificates
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all CA Certificates in a workspace
+            tags:
+                - CA Certificates
+        post:
+            description: Create a new CA Certificate in a workspace
+            operationId: create-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CACertificate'
+                description: Description of the new CA Certificate for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CACertificate'
+                    description: Successfully created CA Certificate
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new CA Certificate in a workspace
+            tags:
+                - CA Certificates
+    /{workspace}/ca_certificates/{CACertificateId}:
+        delete:
+            description: Delete a CA Certificate in a workspace
+            operationId: delete-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/CACertificateId'
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "204":
+                    description: Successfully deleted CA Certificate or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a CA Certificate in a workspace
+            tags:
+                - CA Certificates
+        get:
+            description: Get a CA Certificate using ID in a workspace.
+            operationId: get-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CACertificate'
+                    description: Successfully fetched CA Certificate
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Get a CA Certificate in a workspace
+            tags:
+                - CA Certificates
+        parameters:
+            - $ref: '#/components/parameters/CACertificateId'
+        patch:
+            description: Update a CA Certificate in a workspace
+            operationId: update-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CACertificate'
+                description: Fields of the CA Certificate that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CACertificate'
+                    description: Successfully updated CA Certificate
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a CA Certificate in a workspace
+            tags:
+                - CA Certificates
+        put:
+            description: Create or Update CA Certificate using ID in a workspace.
+            operationId: upsert-ca_certificate-in-workspace-in-workspace
+            parameters:
+                - $ref: '#/components/parameters/Workspace'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CACertificate'
+                description: Description of the CA Certificate
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CACertificate'
+                    description: Successfully upserted CA Certificate
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a CA Certificate in a workspace
+            tags:
+                - CA Certificates
     /{workspace}/certificates:
         get:
             description: List all Certificates in a workspace
@@ -10333,7 +10473,7 @@ paths:
             summary: Upsert a Degraphql_route in a workspace
             tags:
                 - Degraphql_routes
-    /{workspace}/graphql-rate-limiting-advanced-costs:
+    /{workspace}/graphql-rate-limiting-advanced/costs:
         get:
             description: List all GraphQL Cost Decorations in a workspace
             operationId: list-graphql-rate-limiting-advanced-cost-in-workspace
@@ -10387,7 +10527,7 @@ paths:
             summary: Create a new GraphQL Cost Decoration in a workspace
             tags:
                 - GraphQL Cost Decorations
-    /{workspace}/graphql-rate-limiting-advanced-costs/{GraphQLCostDecorationId}:
+    /{workspace}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
         delete:
             description: Delete a GraphQL Cost Decoration in a workspace
             operationId: delete-graphql-rate-limiting-advanced-cost-in-workspace
@@ -16470,7 +16610,7 @@ paths:
             summary: Get FIPS Mode Status
             tags:
                 - Information
-    /graphql-rate-limiting-advanced-costs:
+    /graphql-rate-limiting-advanced/costs:
         get:
             description: List all GraphQL Cost Decorations
             operationId: list-graphql-rate-limiting-advanced-cost
@@ -16521,7 +16661,7 @@ paths:
             summary: Create a new GraphQL Cost Decoration
             tags:
                 - GraphQL Cost Decorations
-    /graphql-rate-limiting-advanced-costs/{GraphQLCostDecorationId}:
+    /graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
         delete:
             description: Delete a GraphQL Cost Decoration
             operationId: delete-graphql-rate-limiting-advanced-cost
