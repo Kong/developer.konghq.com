@@ -85,7 +85,7 @@ permalink: <based on the original url>
 **Include if available:**
 ```yaml
 tags:
-  - <converted from source `keywords:` field, plus any tags from config entry>
+  - <converted from source `keywords:` field, plus any tags from config entry, and remove any tags not present in app/_data/schemas/frontmatter/tags.json>
 
 related_resources:
   - text: ...
@@ -95,7 +95,7 @@ min_version:
   mesh: 'X.Y'   # from config entry only
 ```
 
-**Do NOT carry over:** `keywords` (replaced by `tags`), `category`, the original `content_type`, or any Kuma build-system fields.
+**Do NOT carry over:** `keywords`, `category`, the original `content_type`, or any Kuma build-system fields.
 
 **Title/description "Kuma" replacement rules:**
 - Replace standalone `Kuma` (the product) with `{{site.mesh_product_name}}`
