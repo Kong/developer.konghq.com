@@ -286,8 +286,8 @@ rows:
                 Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom_invoicing"
+                text: Configure the Custom Invoicing app
+                url: "/metering-and-billing/custom-invoicing/"
 
       - blocks:
           - type: card
