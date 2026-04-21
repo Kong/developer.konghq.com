@@ -279,5 +279,7 @@ The invoice can include two kinds of lines:
 
 ## Subscriptions
 
+Billing and subscriptions in {{site.metering_and_billing}} create relationships between customers and their [pricing model](/metering-and-billing/pricing-models/). This serves as the bridge between your customers, their usage data, and how that usage translates into billable amounts.
+
 For information on subscriptions, including how to change plans, customize, cancel, and migrate subscriptions, see [Subscriptions](/metering-and-billing/subscriptions/).
 

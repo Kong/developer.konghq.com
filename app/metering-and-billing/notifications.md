@@ -22,6 +22,7 @@ related_resources:
 
 ## Use cases
 
+The following table describes the use cases for notifications:
 <!--vale off-->
 {% table %}
 columns:
@@ -58,9 +59,9 @@ flowchart LR
     Event --> Channel
 {% endmermaid %}
 
-1. **Channel**: Defines where to send notifications. Currently, {{site.metering_and_billing}} supports webhook channels. A single channel can be referenced by multiple rules.
 2. **Rule**: Defines the condition that triggers a notification. When the condition is met, {{site.metering_and_billing}} sends a notification event to all channels attached to the rule.
 3. **Event**: The notification payload delivered to your channel when a rule triggers. Events include details about the customer, entitlement, and the threshold that was crossed.
+1. **Channel**: Defines where to send notifications. Currently, {{site.metering_and_billing}} supports webhook channels. A single channel can be referenced by multiple rules.
 
 ## Channels
 
@@ -128,10 +129,10 @@ To create an entitlement balance threshold rule:
 1. Click the **Notifications** tab.
 1. Click **Create Rule**.
 1. In the **Name** field, enter a name for the rule.
-1. From the **Type** dropdown menu, select **Entitlement balance threshold**.
-1. Under **Channels**, select one or more channels to deliver the notification to.
-1. (Optional) In the **Features** dropdown menu, select features to scope the rule to specific features.
-1. Under **Thresholds**, add one or more thresholds. Each threshold triggers a separate notification event.
+1. From the **Type** dropdown menu, select "Entitlement balance threshold".
+1. From the **Channels** dropdown menu, select one or more channels to deliver the notification to.
+1. (Optional) From the **Features** dropdown menu, select features to scope the rule to.
+1. From the **Thresholds** settings, add one or more thresholds. Each threshold triggers a separate notification event.
 1. Click **Save**.
 
 ## Notification events
@@ -176,13 +177,13 @@ columns:
     key: description
 rows:
   - state: "`PENDING`"
-    description: The event has been created but sending has not started.
+    description: The event was created but sending hasn't started.
   - state: "`SENDING`"
     description: The event is actively being transmitted to the channel.
   - state: "`SUCCESS`"
     description: The event was delivered successfully.
   - state: "`FAILED`"
-    description: The event could not be delivered.
+    description: The event couldn't be delivered.
 {% endtable %}
 <!--vale on-->
 
@@ -197,7 +198,7 @@ To enforce entitlement limits today, configure a webhook notification rule and h
 1. [Create a webhook channel](#create-a-channel) pointing to an endpoint you control.
 1. [Create an entitlement balance threshold rule](#entitlement-balance-threshold-rules) with a threshold at 100% for the feature you want to enforce.
 1. In your webhook handler, take action when the event is received. For example:
-   * Remove the consumer from a {{site.base_gateway}} consumer group that has access to the API.
+   * Remove the Consumer from a {{site.base_gateway}} Consumer Group that has access to the API.
    * Return a `403 Forbidden` response from your application layer.
    * Update a feature flag in your system to disable access for the customer.
 1. (Optional) Add a second threshold at 80% to send a warning to the customer before access is cut off.

@@ -51,14 +51,16 @@ To change a customer's plan:
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
 1. Click the customer whose subscription you want to change.
-1. Click the **Subscriptions** tab.
+1. Click the **Subscription** tab.
 1. Click **Manage**.
 1. Select the new plan.
 1. Click **Next**.
-1. Choose when the plan change should be effective: **At the end of the billing period** or **Immediately**.
+1. Select when the plan change should be effective **At the end of the billing period** or **Immediately**.
+   * **At the end of the billing period**: Select for downgrades to avoid disrupting the customer's current service period. 
+   * **Immediately**: Select for upgrades so the customer gets access to the new plan right away.
+  
 1. Click **Save Changes**.
 
-Choose **At the end of the billing period** for downgrades to avoid disrupting the customer's current service period. Choose **Immediately** for upgrades so the customer gets access to the new plan right away.
 
 
 ## Cancel a subscription
@@ -72,8 +74,10 @@ To cancel a subscription:
 1. Click the customer whose subscription you want to cancel.
 1. Click the **Subscriptions** tab.
 1. Click **Cancel Subscription**.
-1. Choose when the cancellation should be effective: **At the end of the billing period** or **Immediately**.
-1. Click **Cancel Subscription**.
+1. Select when the plan change should be effective **At the end of the billing period** or **Immediately**.
+   * **At the end of the billing period**: Select for downgrades to avoid disrupting the customer's current service period. 
+   * **Immediately**: Select for upgrades so the customer gets access to the new plan right away.
+1. Click **Save Changes**.
 
 ## Plan migration
 
