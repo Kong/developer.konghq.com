@@ -164,6 +164,8 @@ body:
 
 ## How do I segment the Dedicated Cloud Gateway by teams?
 
+{% include /gateway/dcgw-cpg-note.md %}
+
 To isolate the Gateway configuration by team while still sharing a Dedicated Cloud Gateway cluster, you can use a Dedicated Cloud [control plane group](/gateway/control-plane-groups/). A Dedicated Cloud control plane group consists of hybrid control planes (typically segmented to teams) and Dedicated Cloud Gateway data plane nodes assigned to the control plane group. This allows you to segment your Dedicated Cloud Gateway like the following:
 
 <!--vale off-->
@@ -722,3 +724,7 @@ Once uploaded, you can manage custom plugins using any of the following methods:
 * [decK](/deck/)
 * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
 * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
+
+## Dedicated Cloud Gateway upgrades
+
+{% include /sections/dcgw-upgrades.md %}
