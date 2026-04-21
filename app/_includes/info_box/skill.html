@@ -53,7 +53,7 @@
 {% if page.scripts or page.references or page.assets %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">Contains</div>
-  <div class="flex gap-1.5 flex-wrap">
+  <div class="flex flex-col gap-1.5 flex-wrap">
       {% if page.scripts %}
         <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}/scripts" class="flex items-center gap-2 hover:no-underline">
           <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}</div>
