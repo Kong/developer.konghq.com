@@ -64,7 +64,7 @@ rows:
 
 #### TLS certificate changes
 
-The following configurations are affected by the `tls_certificate_verification` default change:
+The following configurations are affected by the `tls_certificate_verify` default change:
 
 {% table %}
 columns:
