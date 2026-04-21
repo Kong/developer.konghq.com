@@ -2,7 +2,9 @@
 
 module Jekyll
   module SkillPages
-    SKILLS_REPO = ENV.fetch('SKILLS_REPO', 'kong-skills')
+    def self.skills_repo_path(site)
+      ENV['SKILLS_REPO'] || site.config['skills_repo_path'] || 'kong-skills'
+    end
 
     def self.demote_headings(text)
       text.lines.filter_map do |line|
@@ -25,9 +27,10 @@ module Jekyll
 
       def run
         base_dir = File.expand_path('..', site.source)
+        @repo_path = Jekyll::SkillPages.skills_repo_path(site)
         load_install_tabs(base_dir)
 
-        skills_path = File.join(base_dir, SKILLS_REPO, 'skills')
+        skills_path = File.join(base_dir, @repo_path, 'skills')
         return unless Dir.exist?(skills_path)
 
         Dir.glob(File.join(skills_path, '*/')).each do |folder|
@@ -45,7 +48,7 @@ module Jekyll
       INSTALL_EXCLUDES = %w[README.md].freeze
 
       def load_install_tabs(base_dir)
-        install_path = File.join(base_dir, SKILLS_REPO, 'docs', 'install')
+        install_path = File.join(base_dir, @repo_path, 'docs', 'install')
         return unless Dir.exist?(install_path)
 
         site.data['skill_install_tabs'] = Dir.glob(File.join(install_path, '*.md'))
