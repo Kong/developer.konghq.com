@@ -17,15 +17,15 @@ To make sure your upgrade is successful, carefully review all the steps in this 
 
 {:.warning}
 > **Caution**: The migration pattern described in this document can only happen between two LTS versions, {{site.ee_product_name}} {{ lts_version_from }} LTS and {{site.ee_product_name}} {{ lts_version_to }} LTS. If you apply this document to other release intervals, database modifications may be run in the wrong sequence and leave the database schema in a broken state.
-{%- unless include.lts_version_from == "3.10" %}
-* To migrate between 3.10 and 3.14 LTS versions, see the [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
-{%- endunless %}
-{%- unless include.lts_version_from == "3.4" %}
+> {%- unless include.lts_version_from == "3.10" %}
+> * To migrate between 3.10 and 3.14 LTS versions, see the [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
+> {%- endunless %}
+> {%- unless include.lts_version_from == "3.4" %}
 > * To migrate between 3.4 and 3.10 LTS versions, see the [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
-{%- endunless %}
-{%- unless include.lts_version_from == "2.8" %}
+> {%- endunless %}
+> {%- unless include.lts_version_from == "2.8" %}
 > * To migrate between 2.8 and 3.4 LTS versions, see the [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
-{%- endunless %}
+> {%- endunless %}
 > * To migrate between other versions, see the [general upgrade guide](/gateway/upgrade/).
 
 ## Prerequisites
