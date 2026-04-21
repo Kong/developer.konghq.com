@@ -1,3 +1,16 @@
+- release: "3.14"
+  konnect: true
+  lts: true
+  beginning: "3.14.0.0"
+  release_date: "2026-04-07"
+  eol: "2029-04-07"
+  sunset: "2029-04-07"
+- release: "3.13"
+  konnect: true
+  beginning: "3.13.0.0"
+  release_date: "2025-12-18"
+  eol: "2026-12-18"
+  sunset: "2027-12-18"
 - release: "3.12"
   konnect: true
   beginning: "3.12.0.0"
