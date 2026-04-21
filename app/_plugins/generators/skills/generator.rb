@@ -23,31 +23,39 @@ module Jekyll
 
       def initialize(site)
         @site = site
+        @skills = []
+        @repo_path = Jekyll::SkillPages.skills_repo_path(site)
       end
 
       def run
         return if site.config.dig('skip', 'skills')
 
-        base_dir = File.expand_path('..', site.source)
-        @repo_path = Jekyll::SkillPages.skills_repo_path(site)
         load_install_tabs(base_dir)
-
-        skills_path = File.join(base_dir, @repo_path, 'skills')
         return unless Dir.exist?(skills_path)
 
         Dir.glob(File.join(skills_path, '*/')).each do |folder|
-          slug = File.basename(folder)
-          skill = Jekyll::SkillPages::Skill.new(folder:, slug:)
+          skill = Jekyll::SkillPages::Skill.new(folder:, slug: File.basename(folder))
           skill.metadata # force read to fail fast
+          @skills << skill
           generate_overview_page(skill)
         rescue Errno::ENOENT
           next
         end
+
+        Jekyll::SkillPages::Discovery.generate(site, @skills)
       end
 
       private
 
       INSTALL_EXCLUDES = %w[README.md].freeze
+
+      def base_dir
+        @base_dir ||= File.expand_path('..', site.source)
+      end
+
+      def skills_path
+        @skills_path ||= File.join(base_dir, @repo_path, 'skills')
+      end
 
       def load_install_tabs(base_dir)
         install_path = File.join(base_dir, @repo_path, 'docs', 'install')

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 module Jekyll
   module SkillPages
     class Skill
@@ -56,6 +58,17 @@ module Jekyll
         Dir.exist?(File.join(@folder, 'assets'))
       end
 
+      def all_files
+        @all_files ||= Dir.glob(File.join(@folder, '**', '*'))
+                          .select { |f| File.file?(f) }
+                          .map { |f| f.sub(@folder, '') }
+                          .sort
+      end
+
+      def raw_content
+        @raw_content ||= File.read(File.join(@folder, 'SKILL.md'))
+      end
+
       def content
         @content ||= parser.content
       end
@@ -71,9 +84,7 @@ module Jekyll
       private
 
       def parser
-        @parser ||= Jekyll::Utils::MarkdownParser.new(
-          File.read(File.join(@folder, 'SKILL.md'))
-        )
+        @parser ||= Jekyll::Utils::MarkdownParser.new(raw_content)
       end
     end
   end
