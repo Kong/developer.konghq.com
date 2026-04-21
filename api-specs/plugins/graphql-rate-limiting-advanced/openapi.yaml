@@ -416,7 +416,7 @@ paths:
   /{workspace}/services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
     delete:
       description: >-
-        Delete a a GraphQL Cost Decoration associated with a Service using ID in
+        Delete a GraphQL Cost Decoration associated with a Service using ID in
         a workspace.
       operationId: delete-graphql-rate-limiting-advanced-cost-with-service-in-workspace
       parameters:
@@ -429,7 +429,7 @@ paths:
             Successfully deleted GraphQL Cost Decoration or the resource didn't
             exist
       summary: >-
-        Delete a a GraphQL Cost Decoration associated with a Service in a
+        Delete a GraphQL Cost Decoration associated with a Service in a
         workspace
       tags:
         - GraphQL Cost Decorations
@@ -456,7 +456,7 @@ paths:
         - GraphQL Cost Decorations
     patch:
       description: >-
-        Update a a GraphQL Cost Decoration associated with a Service using ID in
+        Update a GraphQL Cost Decoration associated with a Service using ID in
         a workspace.
       operationId: update-graphql-rate-limiting-advanced-cost-with-service-in-workspace
       parameters:
@@ -480,7 +480,7 @@ paths:
         '404':
           description: Resource does not exist
       summary: >-
-        Update a a GraphQL Cost Decoration associated with a Service in a
+        Update a GraphQL Cost Decoration associated with a Service in a
         workspace
       tags:
         - GraphQL Cost Decorations
@@ -696,7 +696,7 @@ paths:
         - GraphQL Cost Decorations
   /services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs/{GraphQLCostDecorationId}:
     delete:
-      description: Delete a a GraphQL Cost Decoration associated with a Service using ID.
+      description: Delete a GraphQL Cost Decoration associated with a Service using ID.
       operationId: delete-graphql-rate-limiting-advanced-cost-with-service
       parameters:
         - $ref: '#/components/parameters/ServiceIdOrName'
@@ -706,7 +706,7 @@ paths:
           description: >-
             Successfully deleted GraphQL Cost Decoration or the resource didn't
             exist
-      summary: Delete a a GraphQL Cost Decoration associated with a Service
+      summary: Delete a GraphQL Cost Decoration associated with a Service
       tags:
         - GraphQL Cost Decorations
     get:
@@ -728,7 +728,7 @@ paths:
       tags:
         - GraphQL Cost Decorations
     patch:
-      description: Update a a GraphQL Cost Decoration associated with a Service using ID.
+      description: Update a GraphQL Cost Decoration associated with a Service using ID.
       operationId: update-graphql-rate-limiting-advanced-cost-with-service
       parameters:
         - $ref: '#/components/parameters/ServiceIdOrName'
@@ -749,7 +749,7 @@ paths:
           description: Successfully updated GraphQL Cost Decoration
         '404':
           description: Resource does not exist
-      summary: Update a a GraphQL Cost Decoration associated with a Service
+      summary: Update a GraphQL Cost Decoration associated with a Service
       tags:
         - GraphQL Cost Decorations
     put:
