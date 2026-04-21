@@ -13,7 +13,7 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 
 - **Kuma source root**: https://github.com/kumahq/kuma-website/tree/master/app/_src
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
-- **Kong Mesh how-to target root**: `/developer.konghq.com/app/_how-tos/mesh/`
+- **Kong Mesh how-to target root**: `/developer.konghq.com/app/_how-tos/mesh`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
 
 ---
@@ -152,6 +152,7 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
   ```
   {:.info}
   > If you want to configure version, ciphers or per service permissive / strict mode check out [`MeshTLS`](/mesh/policies/meshtls)
+  ```
 
 - Replace {% tabs %} with {% navtabs %} and {% tab %} with {% navtab %}
   - {% navtabs %} should have a title in quotes, for example: {% navtabs "environment" %}
