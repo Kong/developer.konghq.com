@@ -87,7 +87,7 @@ For more information about how to verify the container signature and provenance,
 ## Create a local self-hosted mock server
 
 To run a self-hosted mock server locally, use:
-- [NodeJS](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node) (your mock url is `http://localhost:8080`).
+- [Node.js](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-node) (your mock URL is `http://localhost:8080`).
 - [Docker](https://github.com/Kong/insomnia-mockbin/tree/self-hosted?tab=readme-ov-file#running-with-docker-compose).
 - Kubernetes.
 
