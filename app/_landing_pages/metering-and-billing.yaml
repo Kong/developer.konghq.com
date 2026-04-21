@@ -165,7 +165,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#pricing-models
+                url: /metering-and-billing/pricing-models/
       - blocks:
           - type: card
             config:
@@ -201,7 +201,7 @@ rows:
               icon: /assets/icons/document.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+                url: /metering-and-billing/subscriptions/
       - blocks:
           - type: card
             config:
@@ -211,7 +211,7 @@ rows:
               icon: /assets/icons/organization.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+                url: /metering-and-billing/billing-invoicing/#billing-profiles
       - blocks:
           - type: card
             config:
@@ -221,7 +221,17 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+                url: /metering-and-billing/billing-invoicing/#invoicing
+      - blocks:
+          - type: card
+            config:
+              title: Notifications
+              description: |
+                Configure webhook alerts for usage thresholds and billing events. Use notifications to enforce entitlement limits in your infrastructure.
+              icon: /assets/icons/event.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/notifications/
 
   - header:
       type: h2
@@ -276,8 +286,8 @@ rows:
                 Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom_invoicing"
+                text: Configure the Custom Invoicing app
+                url: "/metering-and-billing/custom-invoicing/"
 
       - blocks:
           - type: card
