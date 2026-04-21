@@ -43,7 +43,7 @@ module Jekyll
             'slug' => @skill.slug,
             'layout' => 'skill',
             'breadcrumbs' => ['/skills/'],
-            'edit_and_issue_links' => false,
+            'no_edit_link' => true,
             'content_type' => 'skill',
             'license' => @skill.license,
             'license_is_file' => @skill.license_file?,
