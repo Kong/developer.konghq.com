@@ -32,6 +32,8 @@ related_resources:
     url: /gateway/upgrade/rolling/
   - text: "{{site.base_gateway}} upgrade"
     url: /gateway/upgrade/
+  - text: "{{site.base_gateway}} 3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "{{site.base_gateway}} 2.8 to 3.4 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-28-34/
 

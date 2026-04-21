@@ -17,11 +17,15 @@ To make sure your upgrade is successful, carefully review all the steps in this 
 
 {:.warning}
 > **Caution**: The migration pattern described in this document can only happen between two LTS versions, {{site.ee_product_name}} {{ lts_version_from }} LTS and {{site.ee_product_name}} {{ lts_version_to }} LTS. If you apply this document to other release intervals, database modifications may be run in the wrong sequence and leave the database schema in a broken state.
-{%- if include.lts_version_from == "2.8" %}
+{%- unless include.lts_version_from == "3.10" %}
+* To migrate between 3.10 and 3.14 LTS versions, see the [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
+{%- endunless %}
+{%- unless include.lts_version_from == "3.4" %}
 > * To migrate between 3.4 and 3.10 LTS versions, see the [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
-{%- elsif include.lts_version_from == "3.4" %}
+{%- endunless %}
+{%- unless include.lts_version_from == "2.8" %}
 > * To migrate between 2.8 and 3.4 LTS versions, see the [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
-{%- endif %}
+{%- endunless %}
 > * To migrate between other versions, see the [general upgrade guide](/gateway/upgrade/).
 
 ## Prerequisites
@@ -152,6 +156,14 @@ The following tables categorize all relevant changelog entries from {{site.ee_pr
 Carefully review each entry and make changes to your configuration accordingly.
 
 {% include_cached /upgrade/lts-changes-34-310.md %}
+
+{% elsif include.lts_version_from == "3.10" %}
+
+The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 3.10.0.0 up to 3.14.0.0.
+Carefully review each entry and make changes to your configuration accordingly.
+
+{% include_cached /upgrade/lts-changes-310-314.md %}
+
 {% endif %}
 
 ## Perform upgrade
