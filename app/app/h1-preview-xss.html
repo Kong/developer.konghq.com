@@ -1,0 +1,11 @@
+---
+title: preview xss poc
+permalink: /h1-preview-xss/
+---
+
+<script>
+console.log('H1_PREVIEW_XSS_POC');
+document.documentElement.setAttribute('data-h1-preview-xss','1');
+</script>
+
+<p>preview xss poc</p>
