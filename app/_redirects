@@ -31,6 +31,7 @@
 /mesh/use-kuma/ /mesh/interact-with-control-plane/
 /mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
 /mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
+/metering-and-billing/billing-invoicing-subscriptions/  /metering-and-billing/billing-invoicing/
 
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/

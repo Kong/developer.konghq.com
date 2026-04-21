@@ -70,8 +70,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Get started with {{site.metering_and_billing}}
     url: /metering-and-billing/get-started/
   - text: Meter and bill active users
@@ -173,4 +173,4 @@ You'll see three events listed, each with `subject: alice`, one for each request
 
 You'll also see an error message like `no customer found for event subject: consumer` associated with the event.
 This is expected since we're only tracking API usage.
-If you want to meter and bill Consumer's usage, see [Metering](/metering-and-billing/metering/), [Customers and usage attribution](/metering-and-billing/customer/), and [Billing, invoicing, and subscriptions](/metering-and-billing/billing-invoicing-subscriptions/).
+If you want to meter and bill Consumers' usage, see [Metering](/metering-and-billing/metering/), [Customers and usage attribution](/metering-and-billing/customer/), and [Billing and invoicing](/metering-and-billing/billing-invoicing/).

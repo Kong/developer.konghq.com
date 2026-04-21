@@ -1,7 +1,7 @@
 ---
-title: "Billing, invoicing, and subscriptions"
+title: "Billing and invoicing"
 content_type: reference
-description: "Learn how billing, invoicing, and subscriptions work in {{site.konnect_short_name}} {{site.metering_and_billing}}."
+description: "Learn how billing and invoicing work in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:
   - metering-and-billing
@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: Integrate Stripe with {{site.metering_and_billing}}
     url: /metering-and-billing/stripe-integration/
 faqs:
@@ -279,38 +281,5 @@ The invoice can include two kinds of lines:
 
 Billing and subscriptions in {{site.metering_and_billing}} create relationships between customers and their [pricing model](/metering-and-billing/pricing-models/). This serves as the bridge between your customers, their usage data, and how that usage translates into billable amounts.
 
-Subscriptions automate the billing lifecycle by:
-
-* **Tracking usage** through meters
-* **Applying pricing logic** from plans or custom configurations
-* **Generating invoices** based on billing cadences
-* **Enforcing entitlements** to control feature access
-
-Subscriptions can be created from predefined plans or fully customized at creation time to accommodate unique customer requirements. This flexibility supports everything from self-serve sign-ups to enterprise contract negotiations.
-
-Subscriptions follow a billing cycle determined by their related [rate card](/metering-and-billing/product-catalog/#rate-cards), anchored to one of the following:
-* The subscription start date, either the creation date or a specified future date.
-* The first day of the month, with usage prorated for the partial initial period.
-
-To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
-
-Active customer subscriptions can be enhanced with [add-ons](/metering-and-billing/add-ons/), which allow you to make changes to a customer's entitlements without changing the plan directly.
-
-## Plan migration
-
-Plans in {{site.metering_and_billing}} are versioned. When you update a plan, existing subscriptions remain on their current version. This is known as "grandfathering". Customers keep their existing pricing until they're explicitly migrated.
-
-Migrating a subscription to a new plan version allows you to:
-
-* Apply new pricing to existing customers
-* Transition customers to improved plan structures
-* Deprecate old plan versions
-* Standardize customers on current offerings
-
-Migrations follow the same timing rules as other subscription changes:
-
-* **Immediate**: Migration takes effect right away
-* **Next billing cycle**: Migration occurs at the end of the current period
-
-Choose timing based on whether the migration is favorable (immediate) or potentially disruptive (next cycle) to the customer.
+For information on subscriptions, including how to change plans, customize, cancel, and migrate subscriptions, see [Subscriptions](/metering-and-billing/subscriptions/).
 

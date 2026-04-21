@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
   - text: "Pricing models"
@@ -311,6 +313,9 @@ Entitlements can help you implement various monetization strategies:
 
 Entitlements are available in three types: metered, static, and boolean. See the [Entitlements reference](/metering-and-billing/entitlements/) to learn more.
 
+{:.info}
+> **Entitlement enforcement:** {{site.base_gateway}} and the {{site.ai_gateway}} do not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
+
 #### Grants
 
 A grant is a record of usage allowance issued to a specific customer via a metered entitlement. Grants determine how much of a feature a customer is allowed to consume. A metered entitlement tracks a running balance. When usage is reported, it is deducted from the grants issued for that entitlement.
@@ -361,4 +366,4 @@ Example for reverse trials with plan phases:
 
 ## Subscriptions
 
-{{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
+{{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/subscriptions/) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
