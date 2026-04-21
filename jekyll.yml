@@ -194,3 +194,7 @@ render_banner: false
 llm_copy:
   on_prem_snippet: 'On-prem deployments'
   konnect_snippet: 'Konnect deployments'
+
+
+well-known:
+  skills: .well-known/skills
