@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@7abdc7bdf99050f49c0793832fc3d9932102c3bd
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/7abdc7bdf99050f49c0793832fc3d9932102c3bd'
+  x-oas-source: kong/platform-api@81417f59c2852b9e8f6b4cb0601771d7d0f33183
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/81417f59c2852b9e8f6b4cb0601771d7d0f33183'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -5068,11 +5068,6 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    SourceIPEnabled:
-      description: Whether ip allow list is enabled for the organization.
-      type: boolean
-      example: true
-      default: false
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -8226,7 +8221,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8317,7 +8315,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8853,7 +8854,10 @@ components:
                       type: boolean
                       default: false
                     sipr_enabled:
-                      $ref: '#/components/schemas/SourceIPEnabled'
+                      description: Whether ip allow list is enabled for the portal.
+                      type: boolean
+                      example: true
+                      default: false
                     default_api_visibility:
                       description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                       type: string
@@ -8956,7 +8960,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
