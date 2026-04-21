@@ -22,6 +22,17 @@ rows:
 
   - columns:
       - blocks:
+        - type: card
+          config:
+            title: Installation guide
+            description: |
+              Configure the {{site.konnect_product_name}} MCP Server with your preferred AI client or IDE.
+            ctas:
+              - text: Get started
+                url: "/konnect-platform/konnect-mcp/installation/"
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               blocks:
