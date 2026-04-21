@@ -1,3 +1,6 @@
 [submodule "app/.repos/kuma"]
 	path = app/.repos/kuma
 	url = https://github.com/kumahq/kuma-website.git
+[submodule "app/.repos/skills"]
+	path = app/.repos/skills
+	url = git@github.com:Kong/skills.git
