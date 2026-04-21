@@ -104,6 +104,7 @@ entities:
       config:
         llm_format: anthropic
         route_type: llm/v1/chat
+        max_request_body_size: 1048576
         logging:
           log_statistics: true
           log_payloads: false
@@ -271,6 +272,7 @@ entities:
       config:
         llm_format: anthropic
         route_type: llm/v1/chat
+        max_request_body_size: 1048576
         logging:
           log_statistics: true
           log_payloads: false
