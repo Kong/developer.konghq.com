@@ -88,7 +88,7 @@ rows:
             The access token must be passed in the `Authorization` header of all requests, for example: 
 
             ```
-            curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT'
+            curl -X GET 'https://global.api.konghq.com/v3/users/' --header 'Authorization: Bearer kpat_xgfT'
             ```
 
   - header:
