@@ -1,0 +1,38 @@
+name: Sync Skills Submodule
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  repository_dispatch:
+    types: [SKILLS_UPDATED]
+
+permissions:
+  contents: read
+
+jobs:
+  sync-skills-submodule:
+    name: Sync Skills Submodule
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@6c3c2f2c1c457b00c10c4848d6f5491db3b629df # v2.18.0
+        with:
+          egress-policy: audit
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Submodule Sync
+        uses: mheap/submodule-sync-action@a06903a4e38f042f6f52cc88d184ec1c930ee12d # v1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          path: app/.repos/skills
+          ref: main
+          pr_branch: automated-skills-update
+          base_branch: main
+          target_branch: main
