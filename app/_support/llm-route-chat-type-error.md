@@ -1,9 +1,11 @@
 ---
 title: Resolving the "LLM route only supports llm chat type requests" error
 content_type: support
+min_version: '3.6'
 description: How to fix the "LLM route only supports llm chat type requests" error by sending the correct Content-Type header to {{site.base_gateway}}.
 products:
   - gateway
+  - ai-gateway
 works_on:
   - on-prem
   - konnect
