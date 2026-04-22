@@ -99,7 +99,7 @@ mtls:
           expiration: 10y
 ```
 
-Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
+Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/interact-with-control-plane/).
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -206,7 +206,7 @@ mtls:
           secret: $SECRET_NAME
 ```
 
-Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
+Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/interact-with-control-plane/).
 {% endnavtab %}
 {% endnavtabs %}
 
