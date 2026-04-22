@@ -40,7 +40,7 @@ faqs:
     a: |
       To apply Consumer-scoped policies (like individual rate limits) while using Kong Identity, follow these steps:
 
-      1.  **Identify the Client ID**: In the Kong Identity tab of your Control Plane, note the `Client ID` or `sub` claim for your application.
+      1.  In the Kong Identity tab of your Control Plane, note the `Client ID` or `sub` claim for your application.
       2.  **Create a Matching Consumer**: Navigate to **Consumers** and create a new Consumer. Set the **Custom ID** to match the unique ID identified in Step 1.
       3.  **Configure the Mapping**: Update your OIDC plugin configuration with the following:
           * `config.consumer_claim`: Set this to `sub` (or the specific claim containing the ID from Step 1).
