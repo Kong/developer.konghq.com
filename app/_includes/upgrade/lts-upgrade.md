@@ -4,6 +4,10 @@
 {{site.base_gateway}} supports direct upgrades between long-term support (LTS) versions of {{site.ee_product_name}}.
 This guide walks you through upgrading from {{site.ee_product_name}} {{ lts_version_from }} LTS to {{site.ee_product_name}} {{ lts_version_to }} LTS.
 
+{:.info}
+> We recommend upgrading directly to the latest patch version of the LTS release for the most stability. 
+Earlier patch versions may have known issues.
+
 There are three upgrade strategies available when upgrading from an LTS version to a newer LTS version: in-place, dual-cluster, and rolling.
 This guide describes the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
 Additionally, it lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
@@ -159,7 +163,7 @@ Carefully review each entry and make changes to your configuration accordingly.
 
 {% elsif include.lts_version_from == "3.10" %}
 
-The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 3.10.0.0 up to 3.14.0.0.
+The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 3.10.0.0 up to 3.14.0.1.
 Carefully review each entry and make changes to your configuration accordingly.
 
 {% include_cached /upgrade/lts-changes-310-314.md %}
