@@ -3,8 +3,7 @@ title: 'Configuring Mutual TLS'
 description: 'Reference for configuring mutual TLS in {{site.mesh_product_name}}, including CA backends and certificate rotation.'
 products:
   - mesh
-works_on:
-  - on-prem
+
 breadcrumbs:
   - /mesh/
 content_type: reference
@@ -19,41 +18,41 @@ min_version:
 ---
 
 {:.info}
-> If you want to configure version, ciphers or per service permissive / strict mode check out [`MeshTLS`](/mesh/policies/meshtls)
+> If you want to configure version, ciphers or per-service permissive/strict mode, see [`MeshTLS`](/mesh/policies/meshtls).
 
-This policy enables automatic encrypted mTLS traffic for all the services in a [`Mesh`](/mesh/mesh-multi-tenancy/), as well as assigning an identity to every data plane proxy. {{site.mesh_product_name}} supports different types of CA backends as well as automatic certificate rotation.
+The Mutual TLS policy enables automatic encrypted mTLS traffic for all the services in a mesh, and allows you to assign an identity to every [data plane proxy](/mesh/data-plane-proxy/). {{site.mesh_product_name}} supports different types of CA backends as well as automatic certificate rotation.
 
 {{site.mesh_product_name}} ships with the following CA (Certificate Authority) supported backends:
 
-- [builtin](#usage-of-builtin-ca): it automatically generates a CA root certificate and key, which are stored as a [Secret](/mesh/secrets/).
-- [provided](#usage-of-provided-ca): the CA root certificate and key are provided by the user in the form of a [Secret](/mesh/secrets/).
+* [`builtin`](#using-a-builtin-ca): {{site.mesh_product_name}} automatically generates a CA root certificate and key, which are stored as a [Secret](/mesh/secrets/).
+* [`provided`](#using-a-provided-ca): The user provides the CA root certificate and key as a Secret.
 
-Once a CA backend has been specified, {{site.mesh_product_name}} will then automatically generate a certificate for every data plane proxy in the [`Mesh`](/mesh/mesh-multi-tenancy/). The certificates that {{site.mesh_product_name}} generates are SPIFFE compatible and are used for AuthN/Z use-cases in order to identify every workload in the system.
+Once you've specified a CA backend, {{site.mesh_product_name}} automatically generates a certificate for every data plane proxy in the mesh. The certificates that {{site.mesh_product_name}} generates are SPIFFE compatible and are used for AuthN/Z use cases in order to identify every workload in the system.
 
-{:.info}
-> The certificates that {{site.mesh_product_name}} generates have a SAN set to `spiffe://<mesh name>/<service name>`. When {{site.mesh_product_name}} enforces policies that require an identity like [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) it will extract the SAN from the client certificate and use it to match the service identity.
 
-Remember that by default mTLS **is not** enabled and needs to be explicitly enabled as described below. Also remember that by default when mTLS is enabled all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) policy is configured to explicitly allow traffic across proxies.
-
-{:.info}
-> Always make sure that a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) resource is present before enabling mTLS in a Mesh in order to avoid unexpected traffic interruptions caused by a lack of authorization between proxies.
-
-To enable mTLS, configure the `mtls` property in a [`Mesh`](/mesh/mesh-multi-tenancy/) resource. You can have as many `backends` as you want, but only one at a time can be enabled via the `enabledBackend` property.
-
-If `enabledBackend` is missing or empty, then mTLS will be disabled for the entire Mesh.
-
-## Usage of "builtin" CA
-
-This is the fastest and simplest way to enable mTLS in {{site.mesh_product_name}}.
-
-With a `builtin` CA backend type, {{site.mesh_product_name}} will dynamically generate its own CA root certificate and key that it uses to automatically provision (and rotate) certificates for every replica of every service.
-
-You can specify more than one `builtin` backend with different names, and each one is automatically provisioned with a unique certificate and key pair (they are not shared).
-
-To enable a `builtin` mTLS for the entire Mesh, apply the following configuration:
+The certificates that {{site.mesh_product_name}} generates have a SAN set to `spiffe://<mesh name>/<service name>`. When {{site.mesh_product_name}} enforces policies that require an identity, like [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission), it will extract the SAN from the client certificate and use it to match the service identity.
 
 {:.warning}
-> Starting with {{site.mesh_product_name}} version 2.6.0, we no longer create a default [`TrafficPermission`](/mesh/policies/traffic-permissions) policy that's essential for traffic to function after enabling mTLS. To prevent disruption of your traffic, it's highly recommended to add a specific or default [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission#allow-all) policy before enabling mTLS. This policy will allow communication between your applications.
+> By default mTLS **is not** enabled and needs to be explicitly enabled as described below. When mTLS is enabled all traffic is denied **unless** a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) policy is configured to explicitly allow traffic across proxies.
+> 
+> Always make sure that a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission) resource is present before enabling mTLS in a mesh in order to avoid unexpected traffic interruptions caused by a lack of authorization between proxies.
+
+To enable mTLS, configure the `mtls` property in a `Mesh` resource. You can have as many `backends` as you want, but only one at a time can be enabled via the `enabledBackend` property.
+
+If `enabledBackend` is missing or empty, then mTLS will be disabled for the entire mesh.
+
+## Using a builtin CA
+
+A `builtin` CA is the fastest and simplest way to enable mTLS in {{site.mesh_product_name}}.
+
+With a `builtin` CA backend type, {{site.mesh_product_name}} dynamically generates its own CA root certificate and key that it uses to automatically provision and rotate certificates for every replica of every service.
+
+You can specify more than one `builtin` backend with different names, and each one is automatically provisioned with a unique certificate and key pair.
+
+To enable a `builtin` mTLS for the entire mesh, apply the following configuration:
+
+{:.warning}
+> To prevent disruption of your traffic, we highly recommend adding a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission#allow-all) policy before enabling mTLS. This policy will allow communication between your applications.
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -104,19 +103,18 @@ Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh
 {% endnavtab %}
 {% endnavtabs %}
 
-Keep the following in mind:
+{:.info}
+> * The `dpCert` configuration determines how often {{site.mesh_product_name}} should automatically rotate the certificates assigned to every data plane proxy.
+> * The `caCert` configuration determines a few properties that {{site.mesh_product_name}} will use when auto-generating the CA root certificate.
 
-- The `dpCert` configuration determines how often {{site.mesh_product_name}} should automatically rotate the certificates assigned to every data plane proxy.
-- The `caCert` configuration determines a few properties that {{site.mesh_product_name}} will use when auto-generating the CA root certificate.
-
-### Storage of Secrets
+### Storing Secrets
 
 When using a `builtin` backend {{site.mesh_product_name}} automatically generates a root CA certificate and key that are stored as a {{site.mesh_product_name}} [Secret resource](/mesh/secrets/) with the following name:
 
-- `{mesh name}.ca-builtin-cert-{backend name}` for the certificate
-- `{mesh name}.ca-builtin-key-{backend name}` for the key
+* `<mesh name>.ca-builtin-cert-<backend name>` for the certificate
+* `<mesh name>.ca-builtin-key-<backend name>` for the key
 
-On Kubernetes, {{site.mesh_product_name}} secrets are stored in the `{{site.mesh_namespace}}` namespace, while on Universal they are stored in the underlying [store](/mesh/configuration#store) configured in `kuma-cp`.
+On Kubernetes, {{site.mesh_product_name}} Secrets are stored in the `{{site.mesh_namespace}}` namespace, while on Universal they are stored in the underlying [store](/mesh/configuration#store) configured in `kuma-cp`.
 
 Retrieve the secrets via `kumactl` on both Universal and Kubernetes, or via `kubectl` on Kubernetes only:
 
@@ -149,7 +147,7 @@ kubectl get secrets \
 {% endnavtab %}
 {% endnavtabs %}
 
-## Usage of "provided" CA
+## Using a provided CA
 
 If you choose to provide your own CA root certificate and key, you can use the `provided` backend. With this option, you must also manage the certificate lifecycle yourself.
 
@@ -158,6 +156,8 @@ Unlike the `builtin` backend, with `provided` you first upload the certificate a
 {{site.mesh_product_name}} then provisions data plane proxy certificates for every replica of every service from the CA root certificate and key.
 
 ### Sample configuration
+
+Here's an example of how to configure a `provided` CA:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -178,9 +178,9 @@ spec:
             expiration: 1d
         conf:
           cert:
-            secret: name-of-secret
+            secret: $SECRET_NAME
           key:
-            secret: name-of-secret
+            secret: $SECRET_NAME
 ```
 
 Apply the configuration with `kubectl apply -f [..]`.
@@ -201,89 +201,49 @@ mtls:
           expiration: 1d
       conf:
         cert:
-          secret: name-of-secret
+          secret: $SECRET_NAME
         key:
-          secret: name-of-secret
+          secret: $SECRET_NAME
 ```
 
 Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
 {% endnavtab %}
 {% endnavtabs %}
 
-Keep the following in mind:
 
-- The `dpCert` configuration determines how often {{site.mesh_product_name}} should automatically rotate the certificates assigned to every data plane proxy.
-- The Secrets must exist before referencing them in a `provided` backend.
+{:.info}
+> * The `dpCert` configuration determines how often {{site.mesh_product_name}} should automatically rotate the certificates assigned to every data plane proxy.
+> * The Secrets must exist before referencing them in a `provided` backend.
 
 ### Intermediate CA
 
-You can also work with an Intermediate CA with a `provided` backend. Generate the certificate and place it first in certificate file, before the certificate from the root CA. The certificate from the root CA should start on a new line. Then create the secret to specify in the `cert` section of the config. The secret for the `key` should contain only the private key of the certificate from the intermediate CA.
-
-You can chain certificates from multiple intermediate CAs the same way. Place the certificate from the closest CA at the top of the cert file, followed by certificates in order up the certificate chain, then generate the secret to hold the contents of the file.
-
-### Sample certificate file for a single intermediate CA
+You can also use an intermediate CA with a `provided` backend. Generate the certificate and place it first in certificate file, before the certificate from the root CA. The certificate from the root CA should start on a new line:
 
 ```text
 -----BEGIN CERTIFICATE-----
-MIIDdjCCAl6gAwIBAgICEAEwDQYJKoZIhvcNAQELBQAwRDELMAkGA1UEBhMCR0Ix
-EDAOBgNVBAgMB0VuZ2xhbmQxEjAQBgNVBAoMCUFsaWNlIEx0ZDEPMA0GA1UEAwwG
-S3VtYUNBMB4XDTIxMDUxMjEzMzU1MVoXDTMxMDUxMDEzMzU1MVowUDELMAkGA1UE
-BhMCR0IxEDAOBgNVBAgMB0VuZ2xhbmQxEjAQBgNVBAoMCUFsaWNlIEx0ZDEbMBkG
-A1UEAwwSS3VtYUludGVybWVkaWF0ZUNBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
-MIIBCgKCAQEA1VzY9vOr8+SINzqA8Rwk4bpeex32Zn9BGAUTweRgomQC7Yfzrm6/
-Vk74/T/46n3FydpdEZTdoFKCF8EsA0eqAEfWi6tu7D41GOUFUYpdRJBJEq+HE17Q
-N8SFMquy8NhCtK8th8ytSu2ThvCOq1MHT5WjtQUmRGSJMlcfWA5TsCIK0Sb3cSf3
-jadjEqcmcvJN6Xa0Y0VivcPg5eB+We7BNnp4ogqmZw0veoPjc14HVZpqxrra9Yez
-DRai6rnHqDjnkMMhe9MmSkCKD9Ldwduq0ZfuOQFIBOaX+4MKUyDN4tTMCcRRl/Nl
-A4JgrNNWCFfUQV0VmQ0Tc8+cn/+gokHAZwIDAQABo2YwZDAdBgNVHQ4EFgQUGNjz
-Te727HX4AqZDMn1L9XzkTaYwHwYDVR0jBBgwFoAUSu2E4Ue5aPzdWQCCNp36Pf3i
-YbcwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwDQYJKoZIhvcN
-AQELBQADggEBACuOczJlf4wcT9rfAIrZHuI5aCzYTKOxJllhN5e/eEhMYpsox6Zb
-4CZXS3wdJ3fVugddLWDzIAjrNE1DrOpugUPurNIpHsT6u+SHFXkRsXyHFfMA+CZJ
-0tOYEtP1r3BnqsY/nh0GJqHJxaJolEaqFaKgKTQPTinOxTKFxsHa1OHlsvkdxvot
-d2BQhPQYWes3LMPxtGhS5kwKaXaB3gzTnzjGvgGNeJ+l0AiWqXkivixpox3/6mMa
-90mwssl4sRQQLR1kLFU4hwghNm52Pk7o7HSTEXsnB+ZhHB9skpetY6R4uKWh8xap
-Xmj4PDrAA5OKZzSO7Yhdt0vXPOIrjShMxvA=
+<intermediate CA certificate content>
 -----END CERTIFICATE-----
 -----BEGIN CERTIFICATE-----
-MIIDbjCCAlagAwIBAgIJALDMMa9rXKLPMA0GCSqGSIb3DQEBCwUAMEQxCzAJBgNV
-BAYTAkdCMRAwDgYDVQQIDAdFbmdsYW5kMRIwEAYDVQQKDAlBbGljZSBMdGQxDzAN
-BgNVBAMMBkt1bWFDQTAeFw0yMTA1MTIxMzE2MjFaFw00MTA1MDcxMzE2MjFaMEQx
-CzAJBgNVBAYTAkdCMRAwDgYDVQQIDAdFbmdsYW5kMRIwEAYDVQQKDAlBbGljZSBM
-dGQxDzANBgNVBAMMBkt1bWFDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBANCJqVJjYOWFUZcdhrfBxgoCZNE+LFq9sieP2yRGrYzJsCdwphH6L7GsWds8
-VjlobfIP4nA23TJiMWlsx126r7pSRbVEq8/JoNa0vMspEmtjHZhSweIXWXX7o8V+
-FRKbCW5NyqGiHF0ScE4VpNc3uWCA2zcaU80G9SAKI83cUjnp2JzLPMqppQ+pj6Hs
-G+8322FPA2L11fsCAqdCW+gwJWpKzlfBPyeNTUOMpcP8n+Yjcah4tqcCY2PZ7nH7
-cZN1vHGhT5/Pn3VRaNHUq4y1Zn/wJnjlOcD4DbVFXYpYIlPx+yAs56FXd3a7Imfg
-56HzOLOZcDY/+Sxy7J2Pq8cipTcCAwEAAaNjMGEwHQYDVR0OBBYEFErthOFHuWj8
-3VkAgjad+j394mG3MB8GA1UdIwQYMBaAFErthOFHuWj83VkAgjad+j394mG3MA8G
-A1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4IB
-AQCBqj9F+OJZXifyUGq9bAiybpP9RYnKd0JCiByvO/S95v6Bz9RnwrvgN75mzpPd
-OM51MYKyBLFKJpvrmyQ+njcsVMnv//MH7cHE8h6WkwP9IggNg0K21J1zkS8ApfTw
-7buUemZn6NFqHgysAUnWq8WM8YxfEErubbTCm6wslTLzLdblBGLjh7qOzDGh8n0e
-BjqWgCYjbEsB4tDxjfSjLjSyldvnIMTyWrA8a/1iCNDXj0wMtHoBji307dsI5drp
-VokELweu6SS7M4ODE8/Ci3QLS/mmx++9s2kCCqq49dyA2/ZabLb2nBF96wo/RDp9
-3kIzfNvzMkC3VRwESV+SUG0x
+<root CA certificate content>
 -----END CERTIFICATE-----
 ```
+Then create the Secret to use in the `cert` section of the config. The secret for the `key` should contain only the private key for the certificate from the intermediate CA.
+
+You can chain certificates from multiple intermediate CAs the same way. Place the certificate from the closest CA at the top of the cert file, followed by certificates in order up the certificate chain, then generate the Secret to hold the contents of the file.
 
 ### CA requirements
 
 When using an arbitrary certificate and key for a `provided` backend, ensure compliance with the following requirements:
 
-1. It MUST have basic constraint `CA` set to `true` (see [X509-SVID: 4.1. Basic Constraints](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#41-basic-constraints))
-2. It MUST have key usage extension `keyCertSign` set (see [X509-SVID: 4.3. Key Usage](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#43-key-usage))
-3. It MUST NOT have key usage extension `keyAgreement` set (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
-4. It SHOULD NOT set key usage extension `digitalSignature` and `keyEncipherment` to be SPIFFE compliant (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
-
-{:.warning}
-> Do not use the following example in production, instead generate valid and compliant certificates. This example is intended for usage in a development environment.
+* It **must** have the basic constraint `CA` set to `true` (see [X509-SVID: 4.1. Basic Constraints](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#41-basic-constraints))
+* It **must** have the key usage extension `keyCertSign` set (see [X509-SVID: 4.3. Key Usage](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#43-key-usage))
+* It **must not** have the key usage extension `keyAgreement` set (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
+* It **should not** set the key usage extension `digitalSignature` and `keyEncipherment` to be SPIFFE compliant (see [X509-SVID: Appendix A. X.509 Field Reference](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md#appendix-a-x509-field-reference))
 
 The following example generates a sample CA certificate and key:
 
-{% navtabs "tool" %}
-{% navtab "openssl" %}
+{:.warning}
+> Do not use this example in production, instead generate valid and compliant certificates. This example is intended for usage in a development environment.
 
 The following command will generate a CA root certificate and key that can be uploaded to {{site.mesh_product_name}} as a Secret and then used in a `provided` mTLS backend:
 
@@ -301,24 +261,19 @@ openssl req -config <(echo "$SAMPLE_CA_CONFIG") -new -newkey rsa:2048 -nodes \
   -subj "/CN=Hello" -x509 -extensions ext -keyout key.pem -out crt.pem
 ```
 
-The command generates a certificate at `crt.pem` and the key at `key.pem`. Generate the {{site.mesh_product_name}} Secret resources by following the [Secret resource](/mesh/secrets/).
+The command generates a certificate at `crt.pem` and the key at `key.pem`. Generate the {{site.mesh_product_name}} Secret resources using the [Secret resource](/mesh/secrets/).
 
-{% endnavtab %}
-{% endnavtabs %}
-
-### Development Mode
+### Development mode
 
 In development mode, you can provide the `cert` and `key` properties of the `provided` backend using an inline value instead of a Secret resource.
 
 {:.warning}
 > Using the `inline` modes in production presents a security risk since it makes the CA root certificate and key more easily accessible to a malicious actor. Only use `inline` in development mode.
 
-{{site.mesh_product_name}} offers an alternative way to specify the CA root certificate and key:
-
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-Note the `inline` properties used instead of `secret`:
+Use the `inline` properties instead of `secret`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -333,16 +288,16 @@ spec:
         type: provided
         conf:
           cert:
-            inline: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHekNDQWdPZ0F3S... # cert in Base64
+            inline: <base64-encoded certificate>
           key:
-            inline: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHekNDQWdPZ0F3S... # key in Base64
+            inline: <base64-encoded key>
 ```
 
 {% endnavtab %}
 
 {% navtab "Universal" %}
 
-Note the `inline` properties used instead of `secret`:
+Use the `inline` properties instead of `secret`:
 
 ```yaml
 type: Mesh
@@ -354,9 +309,9 @@ mtls:
       type: provided
       conf:
         cert:
-          inline: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHekNDQWdPZ0F3S... # cert in Base64
+          inline: <base64-encoded certificate>
         key:
-          inline: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHekNDQWdPZ0F3S... # cert in Base64
+          inline: <base64-encoded key>
 ```
 
 {% endnavtab %}
@@ -364,14 +319,14 @@ mtls:
 
 ## Permissive mTLS
 
-In version 1.4.1 and later, {{site.mesh_product_name}} provides `PERMISSIVE` mTLS mode to let you migrate existing workloads with zero downtime.
+{{site.mesh_product_name}} provides a `PERMISSIVE` mTLS mode to let you migrate existing workloads with zero downtime.
 
-Permissive mTLS mode encrypts outbound connections the same way as strict mTLS mode, but inbound connections on the server-side
-accept both TLS and plaintext. This lets you migrate servers to an mTLS mesh before their clients. It also supports the case
-where the client and server already implement TLS.
+Permissive mTLS mode encrypts outbound connections the same way as strict mTLS mode, but inbound connections on the server-side accept both TLS and plaintext. 
+This lets you migrate servers to an mTLS mesh before their clients. 
+It also supports the case where the client and server already implement TLS.
 
 {:.warning}
-> PERMISSIVE mode is not secure. It's intended as a temporary utility. Make sure to set to `STRICT` mode after migration is complete.
+> `PERMISSIVE` mode is not secure. It's intended as a temporary utility. Make sure to set to `STRICT` mode after migration is complete.
 
 {% navtabs "environment" %}
 
@@ -388,7 +343,7 @@ spec:
     backends:
       - name: ca-1
         type: builtin
-        mode: PERMISSIVE # supported values: STRICT, PERMISSIVE
+        mode: PERMISSIVE
 ```
 
 {% endnavtab %}
@@ -403,24 +358,24 @@ mtls:
   backends:
     - name: ca-1
       type: builtin
-      mode: PERMISSIVE # supported values: STRICT, PERMISSIVE
+      mode: PERMISSIVE
 ```
 
 {% endnavtab %}
 
 {% endnavtabs %}
 
-## Certificate Rotation
+## Certificate rotation
 
-Once a CA backend has been configured, {{site.mesh_product_name}} will use the CA root certificate and key to automatically provision a certificate for every data plane proxy that it connects to `kuma-cp`.
+Once a CA backend has been configured, {{site.mesh_product_name}} uses the CA root certificate and key to automatically provision a certificate for every data plane proxy that it connects to `kuma-cp`.
 
-Unlike the CA certificate, data plane proxy certificates are not permanently stored — they reside only in memory. These certificates are designed to be short-lived and rotated often by {{site.mesh_product_name}}.
+Unlike the CA certificate, data plane proxy certificates are not permanently stored, they reside only in memory. These certificates are designed to be short-lived and rotated often by {{site.mesh_product_name}}.
 
-By default, the expiration time of a data plane proxy certificate is `30` days. {{site.mesh_product_name}} rotates these certificates automatically after 4/5 of the certificate validity time (for example: for the default `30` days expiration, that would be every `24` days).
+By default, the expiration time of a data plane proxy certificate is 30 days. {{site.mesh_product_name}} rotates these certificates automatically after 4/5th of the certificate validity time. For example: for the default 30-day expiration, {{site.mesh_product_name}} rotates the certificates every 24 days.
 
 You can update the duration of the data plane proxy certificates by updating the `dpCert` property on every available mTLS backend.
 
-You can inspect the certificate rotation statistics by executing the following command (supported on both Kubernetes and Universal):
+You can inspect the certificate rotation statistics by executing the following command:
 
 {% navtabs "method" %}
 {% navtab "kumactl" %}
@@ -433,12 +388,12 @@ kumactl inspect dataplanes
 # default   web-01   service=web   Online   5s                   3s                 4               0              3s                     2020-05-11 16:01:34   2
 ```
 
-Note the `CERT REGENERATED AGO`, `CERT EXPIRATION`, `CERT REGENERATIONS` columns.
+See the `CERT REGENERATED AGO`, `CERT EXPIRATION`, `CERT REGENERATIONS` columns.
 
 {% endnavtab %}
 {% navtab "HTTP API" %}
 
-Use the {{site.mesh_product_name}} HTTP API by retrieving the Dataplane Insight resource and inspecting the `dataplaneInsight` object.
+Use the `/meshes/{mesh}/dataplanes+insights/{dataplane}` endpoint of the [{{site.mesh_product_name}} HTTP API](/mesh/interact-with-control-plane/) and inspect the `dataplaneInsight` object.
 
 ```json
 ...
@@ -458,6 +413,6 @@ dataplaneInsight": {
 
 A new data plane proxy certificate is automatically generated when:
 
-- A data plane proxy is restarted.
-- The control plane is restarted.
-- The data plane proxy connects to a new control plane.
+* A data plane proxy is restarted.
+* The control plane is restarted.
+* The data plane proxy connects to a new control plane.
