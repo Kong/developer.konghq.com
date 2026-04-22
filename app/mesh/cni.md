@@ -1,5 +1,5 @@
 ---
-title: 'Configure the Kong Mesh CNI'
+title: 'Configure the {{site.mesh_product_name}} CNI'
 description: 'Install and configure {{site.mesh_product_name}} CNI to enable transparent proxying without requiring privileged init containers.'
 
 content_type: reference
@@ -23,15 +23,10 @@ related_resources:
     url: /mesh/annotations/
 ---
 
-In order for traffic to flow through the {{site.mesh_product_name}} data plane, all inbound and
-outbound traffic for a service needs to go through its data plane proxy.
+For traffic to flow through {{site.mesh_product_name}}, all inbound and outbound traffic for a service must pass through its sidecar proxy.
 The recommended way of accomplishing this is via [transparent proxying](/mesh/transparent-proxying/).
 
-On Kubernetes it's handled automatically by default with the
-`initContainer` `kuma-init`, but this container requires certain privileges.
-
-Another option is to use the {{site.mesh_product_name}} CNI. This frees every
-`Pod` in the mesh from requiring said privileges, which can make security compliance easier.
+On Kubernetes, this is handled automatically by the `kuma-init` init container, but it requires elevated privileges. The {{site.mesh_product_name}} CNI is an alternative that removes this requirement from every `Pod` in the mesh, which can make security compliance easier.
 
 {:.info}
 > The CNI `DaemonSet` itself requires elevated privileges because it
@@ -40,8 +35,7 @@ Another option is to use the {{site.mesh_product_name}} CNI. This frees every
 Install the CNI using either
 {% if_version lte:2.8.x %}[kumactl](/mesh/cli/) or [Helm](https://helm.sh/){% endif_version %}
 {% if_version gte:2.9.x %}[kumactl](/mesh/#install-kong-mesh) or [Helm](https://helm.sh/).{% endif_version %}
-The default settings are tuned for OpenShift with Multus.
-To use it in other environments, set the relevant configuration parameters.
+The default settings are optimized for OpenShift with Multus. To use {{site.mesh_product_name}} CNI in other environments, set the configuration parameters shown in the relevant section below.
 
 {:.warning}
 > {{site.mesh_product_name}} CNI applies `NetworkAttachmentDefinitions` to applications in any namespace with `kuma.io/sidecar-injection` label.
@@ -157,9 +151,7 @@ controlPlane.envVars.KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_IP_FAMIL
 
 ### Google - GKE
 
-To install {{site.mesh_product_name}} CNI on Google Kubernetes Engine, first enable network policy support and set the CNI conf name for your dataplane.
-
-You need to [enable network-policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) in your cluster (for existing clusters this redeploys the nodes).
+To install {{site.mesh_product_name}} CNI on GKE, [enable network-policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) in your cluster first (for existing clusters, this redeploys the nodes).
 
 Define the variable `CNI_CONF_NAME` by your CNI, like:
 - `export CNI_CONF_NAME=05-cilium.conflist` for Cilium
@@ -201,13 +193,11 @@ cni.enabled=true
 cni.containerSecurityContext.privileged=true
 {% endcpinstall %}
 
-### {{site.mesh_product_name}} CNI taint controller
+## {{site.mesh_product_name}} CNI taint controller
 
-To prevent a race condition described in [this issue](https://github.com/kumahq/kuma/issues/4560) a new controller was implemented.
-The controller will taint a node with `NoSchedule` taint to prevent scheduling before the CNI DaemonSet is running and ready.
-Once the CNI DaemonSet is running and ready it will remove the taint and allow other pods to be scheduled into the node.
+To prevent a race condition ([see issue](https://github.com/kumahq/kuma/issues/4560)), the taint controller taints new nodes with `NoSchedule` until the CNI DaemonSet is running and ready, then removes the taint to allow pod scheduling.
 
-To disable the taint controller use the following env variable:
+To disable the taint controller, use the following env variable:
 
 ```
 KUMA_RUNTIME_KUBERNETES_NODE_TAINT_CONTROLLER_ENABLED="false"
@@ -215,7 +205,7 @@ KUMA_RUNTIME_KUBERNETES_NODE_TAINT_CONTROLLER_ENABLED="false"
 
 ## Merbridge CNI with eBPF
 
-To install Merbridge CNI with eBPF append the following options to the command from [installation](#installation):
+To install Merbridge CNI with eBPF, append the following options to your install command:
 
 {:.warning}
 > To use Merbridge CNI with eBPF your environment has to use `Kernel >= 5.7`
@@ -231,19 +221,19 @@ To install Merbridge CNI with eBPF append the following options to the command f
 
 Logs of CNI components are available via `kubectl logs`.
 
-To enable debug level log, please set value of environment variable `CNI_LOG_LEVEL` to `debug` on the CNI DaemonSet `{{site.mesh_product_name_path}}-cni`. Please note that editing the CNI DaemonSet will shut down the current running CNI Pods, hence all mesh enabled application pods are not able to start or shut down during the restarting of the DaemonSet. Don't do it in a production environment unless approved.
+To enable debug-level logging, set the `CNI_LOG_LEVEL` environment variable to `debug` on the `{{site.mesh_product_name_path}}-cni` DaemonSet. Note that editing the DaemonSet restarts the CNI pods, during which mesh-enabled application pods cannot start or stop. Avoid this in production unless approved.
 
 {:.warning}
 > eBPF CNI currently doesn't have support for exposing its logs.
 
 ## {{site.mesh_product_name}} CNI architecture
 
-The CNI DaemonSet `{{site.mesh_product_name_path}}-cni` is formed by two components:
+The CNI DaemonSet `{{site.mesh_product_name_path}}-cni` consists of two components:
 
 1. a CNI installer
 2. a CNI binary
 
-Involved components collaborate like this:
+The components interact as follows:
 
 {% mermaid %}
 flowchart LR
