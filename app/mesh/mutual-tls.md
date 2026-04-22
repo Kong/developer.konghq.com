@@ -3,7 +3,7 @@ title: 'Configuring Mutual TLS'
 description: 'Reference for configuring mutual TLS in {{site.mesh_product_name}}, including CA backends and certificate rotation.'
 products:
   - mesh
-
+permalink: /mesh/policies/mutual-tls/
 breadcrumbs:
   - /mesh/
 content_type: reference
