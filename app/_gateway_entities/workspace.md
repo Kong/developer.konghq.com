@@ -8,6 +8,7 @@ description: Workspaces provide a way to segment {{site.base_gateway}} entities.
 
 tools:
     - admin-api
+    - konnect-api
 
 schema:
     api: gateway/admin-ee
@@ -33,10 +34,9 @@ faqs:
       The SSL handshake takes place before receiving an HTTP request when the Workspace is unknown.
       * [RBAC](/gateway/entities/rbac/) entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
       * Other Workspaces can't exist within a Workspace.
-  - q: Can I use Workspaces in Konnect?
+  - q: Can I use Workspaces in {{site.konnect_short_name}}?
     a: |
-      No. Instead, {{site.konnect_short_name}} offers the more powerful Control Planes and Control Plane Groups to manage entities within an API ecosystem.
-
+      Yes. {{site.konnect_short_name}} Workspaces are in public beta. For a complete tutorial, see [Create a Workspace in {{site.konnect_short_name}}](/how-to/create-a-konnect-workspace/).
   - q: Can a Workspace share a name with another Workspace?
     a: |
       Two Workspaces can't share the same name. However, Workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
@@ -49,10 +49,14 @@ api_specs:
 
 works_on:
   - on-prem
+  - konnect
 
 tags:
   - rbac
 ---
+
+{:.important}
+> **{{site.konnect_short_name}} Workspaces are in public beta**
 
 ## What is a Workspace?
 
@@ -119,9 +123,10 @@ config:
 
 ## Roles, groups, and permissions
 
-Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. Users will require either a Super Admin or Admin role to configure Workspaces. 
+Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. {{site.base_gateway}} users will require either a Super Admin or Admin role to configure Workspaces. 
+{{site.konnect_short_name}} users will need a [Workspace Admin role](/konnect-platform/teams-and-roles/#konnect-workspaces) to configure Workspaces. 
 
-The following table details which Workspace permissions each Admin role has:
+The following table details which {{site.base_gateway}} Workspace permissions each Admin role has:
 <!-- vale off -->
 {% feature_table %}
 columns:
