@@ -171,8 +171,8 @@ spec:
 
 ## Deploy zone-1 with mesh-scoped zone proxies
 
-This is the step that differs from the [federation guide](/mesh/federate/).
-Instead of `--set kuma.ingress.enabled=true`, we set a `kuma.meshes[]` entry that describes which mesh the zone proxies belong to.
+A `kuma.meshes[]` entry tells the chart which mesh the zone proxies belong to.
+Each entry renders its own Deployment, Service, and ServiceAccount for the ingress and egress roles.
 
 1. Start the zone-1 cluster and its tunnel:
 
@@ -181,22 +181,34 @@ Instead of `--set kuma.ingress.enabled=true`, we set a `kuma.meshes[]` entry tha
    nohup minikube tunnel -p mesh-zone-1 &
    ```
 
+1. Save the following as `zone-1-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
+
+   ```yaml
+   kuma:
+     controlPlane:
+       mode: zone
+       zone: zone-1
+       kdsGlobalAddress: grpcs://${EXTERNAL_IP}:5685
+       tls:
+         kdsZoneClient:
+           skipVerify: true
+     meshes:
+       - name: default
+         ingress:
+           enabled: true
+         egress:
+           enabled: true
+   ```
+
+   To deploy zone proxies for additional meshes, append more entries to `kuma.meshes`.
+
 1. Install the zone control plane together with the zone ingress and egress for `default`:
 
    ```sh
    helm install --kube-context mesh-zone-1 --create-namespace --namespace kong-mesh-system \
-     --set kuma.controlPlane.mode=zone \
-     --set kuma.controlPlane.zone=zone-1 \
-     --set kuma.controlPlane.kdsGlobalAddress=grpcs://${EXTERNAL_IP}:5685 \
-     --set kuma.controlPlane.tls.kdsZoneClient.skipVerify=true \
-     --set 'kuma.meshes[0].name=default' \
-     --set 'kuma.meshes[0].ingress.enabled=true' \
-     --set 'kuma.meshes[0].egress.enabled=true' \
+     -f zone-1-values.yaml \
      kong-mesh kong-mesh/kong-mesh
    ```
-
-   Each entry in `kuma.meshes[]` renders its own Deployment, Service, and ServiceAccount.
-   To deploy zone proxies for additional meshes, append more entries to the list.
 
 ## Deploy zone-2 with the same configuration
 
@@ -207,17 +219,30 @@ Instead of `--set kuma.ingress.enabled=true`, we set a `kuma.meshes[]` entry tha
    nohup minikube tunnel -p mesh-zone-2 &
    ```
 
+1. Save the following as `zone-2-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
+
+   ```yaml
+   kuma:
+     controlPlane:
+       mode: zone
+       zone: zone-2
+       kdsGlobalAddress: grpcs://${EXTERNAL_IP}:5685
+       tls:
+         kdsZoneClient:
+           skipVerify: true
+     meshes:
+       - name: default
+         ingress:
+           enabled: true
+         egress:
+           enabled: true
+   ```
+
 1. Install the zone control plane and its zone proxies:
 
    ```sh
    helm install --kube-context mesh-zone-2 --create-namespace --namespace kong-mesh-system \
-     --set kuma.controlPlane.mode=zone \
-     --set kuma.controlPlane.zone=zone-2 \
-     --set kuma.controlPlane.kdsGlobalAddress=grpcs://${EXTERNAL_IP}:5685 \
-     --set kuma.controlPlane.tls.kdsZoneClient.skipVerify=true \
-     --set 'kuma.meshes[0].name=default' \
-     --set 'kuma.meshes[0].ingress.enabled=true' \
-     --set 'kuma.meshes[0].egress.enabled=true' \
+     -f zone-2-values.yaml \
      kong-mesh kong-mesh/kong-mesh
    ```
 
