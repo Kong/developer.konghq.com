@@ -480,7 +480,8 @@ rows:
       type: h3
       text: "Guardrails and content safety"
       description: |
-        As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
+        As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. 
+        {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
     column_count: 3
     columns:
       - blocks:
@@ -570,9 +571,8 @@ rows:
       description: |
         {{site.ai_gateway}}'s load balancer routes requests across AI models to optimize for speed, cost, and reliability. 
         It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10 %}. 
-        <br><br>
+        
         The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
-
     columns:
       - blocks:
         - type: card
@@ -596,7 +596,9 @@ rows:
       type: h3
       text: "LLM cost control"
       description: |
-        The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
+        The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed. 
+        You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. 
+        For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
     columns:
       - blocks:
         - type: plugin

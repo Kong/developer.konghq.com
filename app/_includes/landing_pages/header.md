@@ -30,7 +30,7 @@
     {% endunless %}
 
     {% if include.config.description %}
-    <span>{{include.config.description | liquify | markdownify | markdown }}</span>
+    <div class="flex flex-col gap-3">{{include.config.description | liquify | markdownify }}</div>
     {% endif %}
 {% endcapture %}
 
