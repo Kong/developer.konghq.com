@@ -110,7 +110,7 @@ To apply plugins to OIDC clients, the Gateway must map the incoming token to a *
 
 * **Map the Identity**: Ensure the Consumer's `username` or `custom_id` matches a unique claim in the OIDC token. The `sub` claim is included in Kong Identity tokens by default.
 * **Link via Plugin**: Configure the following fields in the OIDC plugin:
-    * [`config.consumer_claim`](https://developer.konghq.com/plugins/openid-connect/reference/#config-consumer_claim): The token field to identify the client (e.g., `["sub"]` or `["client_id"]`).
+    * [`config.consumer_claim`](/plugins/openid-connect/reference/#schema--config-consumer-claim): The token field to identify the client (for example, `["sub"]` or `["client_id"]`).
     * [`config.consumer_by`](https://developer.konghq.com/plugins/openid-connect/reference/#config-consumer_by): The Consumer field to match against (e.g., `["username"]` or `["custom_id"]`).
 * **Apply Scoped Plugins**:
     * **Consumer-scoped**: Apply plugins directly to the individual Consumer entity.
