@@ -22,7 +22,7 @@ related_resources:
     url: /gateway/topology-hosting-options/
   - text: Incremental config sync blog
     url: https://konghq.com/blog/product-releases/incremental-config-sync-tech-preview
-  
+
 
 tags:
   - hybrid-mode
@@ -35,11 +35,11 @@ breadcrumbs:
     - /gateway/
 ---
 
-In [Hybrid mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
+In [Hybrid mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations.
 In these updates, {{site.base_gateway}} sends the entire configuration set to the Data Planes. The bigger your configuration set is, the more time it takes to send and process, and the more memory is consumed proportional to the configuration size. This can result in latency spikes and loss in throughput for high-traffic Data Planes under certain conditions.
 
-You can enable incremental configuration sync to address this issue. 
-When entity configuration changes, instead of sending the entire configuration set for each change, {{site.base_gateway}} only sends the parts of the configuration that have changed. 
+You can enable incremental configuration sync to address this issue.
+When entity configuration changes, instead of sending the entire configuration set for each change, {{site.base_gateway}} only sends the parts of the configuration that have changed.
 
 <!--vale off-->
 {% mermaid %}
@@ -80,11 +80,11 @@ style id2 stroke-dasharray:3,rx:10,ry:10
 
 {% endmermaid %}
 <!--vale on-->
-> _**Figure 1**: In an environment with 30k entities of about 30MB total, sending a `POST` request to update one entity sends the whole 30MB config to every Data Plane. 
+> _**Figure 1**: In an environment with 30k entities of about 30MB total, sending a `POST` request to update one entity sends the whole 30MB config to every Data Plane.
 With incremental config sync enabled, that same `POST` request only triggers an update of a few KB._
 
-Incremental config sync achieves significant memory savings and CPU savings. 
-This means lower total cost of ownership for {{site.base_gateway}} users, shorter config propagation delay, and less impact to proxy latency. 
+Incremental config sync achieves significant memory savings and CPU savings.
+This means lower total cost of ownership for {{site.base_gateway}} users, shorter config propagation delay, and less impact to proxy latency.
 See our [blog on incremental config sync](https://konghq.com/blog/product-releases/incremental-config-sync-tech-preview) for the performance comparisons.
 
 ## Enable incremental config sync
@@ -92,8 +92,8 @@ See our [blog on incremental config sync](https://konghq.com/blog/product-releas
 You can enable incremental config sync when installing {{site.base_gateway}} in [hybrid mode](/gateway/hybrid-mode/), or when setting up a {{site.konnect_short_name}} Data Plane.
 
 {:.warning}
-> **Caution**: There are some [limitations for custom plugins](#incremental-config-sync-with-custom-plugins) and for 
-[rate limiting plugins](#incremental-config-sync-with-rate-limiting-plugins) when using incremental config sync. 
+> **Caution**: There are some [limitations for custom plugins](#incremental-config-sync-with-custom-plugins) and for
+[rate limiting plugins](#incremental-config-sync-with-rate-limiting-plugins) when using incremental config sync.
 Review and adjust your plugin config before enabling this feature.
 
 During setup, set the following value in your [`kong.conf` files](/gateway/manage-kong-conf/) on both Control Planes and Data Planes:
@@ -121,8 +121,15 @@ Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which prot
 * You can roll out incremental config sync incrementally by toggling this variable per data plane, no additional changes are required.
 
 {:.warning}
-> Direct control plane database writes (outside the Admin API, decK, or Terraform) can cause data planes to treat themselves as up-to-date and skip pulling changes. 
-> This is especially likely when using incremental config sync. 
+> **Version mismatch silently falls back to full sync (v1)**: Incremental config sync (sync.v2) is only used when the Control Plane and Data Plane run the same {{site.base_gateway}} major and minor version.
+>
+> If the Control Plane is on a **newer** major or minor version than the Data Plane, the Control Plane does not advertise the `kong.sync.v2` capability to that Data Plane, and the Data Plane falls back to full sync (v1) — even when `KONG_INCREMENTAL_SYNC=on` is set on both sides. No error is raised on the Data Plane, so the fallback can go unnoticed.
+>
+> If the Data Plane is on a **newer** major or minor version than the Control Plane, the connection is rejected with a `kong_version_incompatible` status and the Data Plane will not receive any configuration.
+
+{:.warning}
+> Direct control plane database writes (outside the Admin API, decK, or Terraform) can cause data planes to treat themselves as up-to-date and skip pulling changes.
+> This is especially likely when using incremental config sync.
 > If this happens, new configuration won't be applied, and valid Routes will return 404 errors.
 >
 > We recommend the following best practices:
@@ -162,9 +169,9 @@ When using incremental config sync feature with plugins, you may encounter the f
 
 When incremental config sync is enabled, the behavior for cached entities changes:
 
-* With the standard full sync, the Data Plane emits a `declarative:reconfigure` event when any configuration change occurs. 
-The Data Plane flushes all cached data from `kong.cache` to ensure the router, balancer, and plugins can get the correct updated configuration. 
-* With incremental sync enabled, the Data Plane only emits a fine-grained CRUD event instead of the `declarative:reconfigure` event. 
+* With the standard full sync, the Data Plane emits a `declarative:reconfigure` event when any configuration change occurs.
+The Data Plane flushes all cached data from `kong.cache` to ensure the router, balancer, and plugins can get the correct updated configuration.
+* With incremental sync enabled, the Data Plane only emits a fine-grained CRUD event instead of the `declarative:reconfigure` event.
 This means that if you don't handle the fine grained CRUD event for entities, any custom plugins using cached data will use outdated and inconsistent configuration.
 
 If you are running {{site.base_gateway}} on {{site.konnect_short_name}} or in hybrid mode, and have [custom plugins using cache data](/custom-plugins/daos.lua/#cache-custom-entities),
@@ -215,15 +222,15 @@ end
 
 In the example above, `worker_events.register()` should contain three parameters:
 
-* The first parameter is the invalidation function, in which the plugin should call `kong.cache:invalidate()` to flush the “dirty” cache data. 
+* The first parameter is the invalidation function, in which the plugin should call `kong.cache:invalidate()` to flush the “dirty” cache data.
   With that, the plugin can identify the operation (create, update, delete) and figure out which entity is old and which is new.
   That information is then used to calculate the cache key.
 
   The `data` input parameter for the function has the following structure:
   ```lua
-  { 
-    entity = {...}, 
-    old_entity = {...}, 
+  {
+    entity = {...},
+    old_entity = {...},
     operation = "..."
   }
   ```
@@ -234,9 +241,9 @@ When the entity changes (any of create, update, or delete), the plugin gets the 
 
 #### Invalidate old cache data
 
-Determine the cache key which associates with the cached item. It should be a fixed string or a formatted string by entity. 
+Determine the cache key which associates with the cached item. It should be a fixed string or a formatted string by entity.
 
-When you have the correct cache key, you need to call `cache:invalidate(cache_key)`. 
+When you have the correct cache key, you need to call `cache:invalidate(cache_key)`.
 After this call, the item in cache will be cleared:
 
 ```lua
@@ -302,7 +309,7 @@ function _M.init_worker()
       end
 
 
-      -- invalidate the cache for new entity just in case 
+      -- invalidate the cache for new entity just in case
       local entity = data.entity
       if entity then
         if entity.custom_id and entity.custom_id ~= null and entity.custom_id ~= "" then
@@ -322,14 +329,14 @@ return _M
 
 If you update the plugin code to handle the cache data, then want to disable incremental config syn, you don't need to change the plugin code back.
 
-Looking at the [example](#complete-example) in this doc, the first two conditions can detect the on or off state of incremental config sync. 
-When incremental config sync is off, the configuration method goes back to the traditional full sync, where the Data Plane node will flush all the cache data, 
+Looking at the [example](#complete-example) in this doc, the first two conditions can detect the on or off state of incremental config sync.
+When incremental config sync is off, the configuration method goes back to the traditional full sync, where the Data Plane node will flush all the cache data,
 and the plugin doesn't need to do any specific cache handling.
 
 ### Incremental config sync with rate limiting plugins
 
 We don't recommend using the `local` strategy for [rate limiting plugins](/plugins/?terms=rate%2520limiting) with incremental config sync.
 
-When [load balancing](/gateway/load-balancing/) across multiple Data Plane nodes, rate limiting is enforced per node. 
+When [load balancing](/gateway/load-balancing/) across multiple Data Plane nodes, rate limiting is enforced per node.
 With the `local` strategy, rapid configuration updates may cause inconsistencies and potential resets in rate limiting plugins,
-impacting performance for API traffic control. 
+impacting performance for API traffic control.
