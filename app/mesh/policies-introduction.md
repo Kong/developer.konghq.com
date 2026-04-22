@@ -471,6 +471,7 @@ We can use the policy as an _outbound_ policy with:
 
 {% navtab "Builtin Gateway" %}
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`targetRef`"
@@ -483,6 +484,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`"
 {% endtable %}
+<!-- vale on -->
 
 The table above indicates that we can select builtin gateway via `Mesh`, `MeshGateway` or even specific listeners with
 `MeshGateway` using tags.
@@ -503,6 +505,7 @@ used:
 We define a total order of policy priority. The table below defines the sorting order for resources in the cluster.
 Sorting is applied sequentially by attribute, with ties broken using the next attribute in the list.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: ""
@@ -525,10 +528,12 @@ rows:
     attribute: "Display Name<br>Label `kuma.io/display-name`"
     order: "Inverted lexicographical order, i.e;<br>* `zzzzz` (less priority)<br>* `aaaaa1`<br>* `aaaaa`<br>* `aaa`"
 {% endtable %}
+<!-- vale on -->
 
 For `to` and `rules` policies we concatenate the array for each matching policies.
 For `to` policies we sort concatenated arrays again based on the `spec.to[].targetRef` field:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: ""
@@ -542,6 +547,7 @@ rows:
     attribute: "`spec.to[].targetRef`"
     order: "* `Mesh` (less priority)<br>* `MeshService`<br>* `MeshService` with `sectionName`<br>* `MeshExternalService`<br>* `MeshMultiZoneService`"
 {% endtable %}
+<!-- vale on -->
 
 We then build configuration by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
 
@@ -931,7 +937,7 @@ It's not necessary but CLI tools like [jq](https://jqlang.github.io/jq/) and [jd
     kumactl inspect dataplane ${name} --type=config --shadow
     ```
 
-3. Check the diff in [JSONPatch](https://jsonpatch.com/) format through the {{site.mesh_product_name}} API. By using HTTP API:
+3. Check the diff in [JSON Patch](https://jsonpatch.com/) format through the {{site.mesh_product_name}} API. By using HTTP API:
     ```shell
     curl http://localhost:5681/meshes/${mesh}/dataplane/${dataplane}/_config?shadow=true&include=diff
     ```
