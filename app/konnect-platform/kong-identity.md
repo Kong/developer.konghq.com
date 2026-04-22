@@ -106,7 +106,7 @@ In the authorization code flow:
 
 ## Kong Consumer Group claim authorization flow
 
-To apply plugins to OIDC clients, the Gateway must map the incoming token to a **Consumer** entity. This is handled by the [OIDC plugin](https://developer.konghq.com/plugins/openid-connect/) at request time:
+To apply plugins to OIDC clients, the Gateway must map the incoming token to a **Consumer** entity. This is handled by the [OIDC plugin](/plugins/openid-connect/) at request time:
 
 * **Map the Identity**: Ensure the Consumer's `username` or `custom_id` matches a unique claim in the OIDC token. The `sub` claim is included in Kong Identity tokens by default.
 * **Link via Plugin**: Configure the following fields in the OIDC plugin:
