@@ -49,10 +49,12 @@ To use it in other environments, set the relevant configuration parameters.
 
 ## Installation
 
-Below are the details of how to set up {{site.mesh_product_name}} CNI in different environments using both `kumactl` and `helm`.
+Select the section for your environment below.
 
-{% navtabs "installation" %}
-{% navtab "Cilium" %}
+### Cilium
+
+Use the following settings to install {{site.mesh_product_name}} CNI in a Cilium-managed cluster.
+
 {% cpinstall cilium %}
 cni.enabled=true
 cni.chained=true
@@ -68,14 +70,16 @@ cni.confName=05-cilium.conflist
 > This is necessary starting with the release of Cilium v1.14.
 
 {:.warning}
-> For installing {{site.mesh_product_name}} CNI with Cilium on GKE, you should follow the `Google - GKE` section.
+> For installing {{site.mesh_product_name}} CNI with Cilium on GKE, you should follow the [Google - GKE](#google---gke) section.
 
 {:.warning}
 > For Cilium versions < 1.14 you should use `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conf` as this has changed
 > for versions starting from [Cilium 1.14](https://docs.cilium.io/en/v1.14/operations/upgrade/#id2).
-{% endnavtab %}
 
-{% navtab "Calico" %}
+### Calico
+
+Use the following settings to install {{site.mesh_product_name}} CNI in a Calico-managed cluster.
+
 {% cpinstall calico %}
 cni.enabled=true
 cni.chained=true
@@ -85,10 +89,12 @@ cni.confName=10-calico.conflist
 {% endcpinstall %}
 
 {:.warning}
-> For installing {{site.mesh_product_name}} CNI with Calico on GKE, you should follow the `Google - GKE` section.
-{% endnavtab %}
+> For installing {{site.mesh_product_name}} CNI with Calico on GKE, you should follow the [Google - GKE](#google---gke) section.
 
-{% navtab "K3D with Flannel" %}
+### K3D with Flannel
+
+Use the following settings to install {{site.mesh_product_name}} CNI on K3D with Flannel.
+
 {% cpinstall k3d %}
 cni.enabled=true
 cni.chained=true
@@ -96,9 +102,11 @@ cni.netDir=/var/lib/rancher/k3s/agent/etc/cni/net.d
 cni.binDir=/bin
 cni.confName=10-flannel.conflist
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "Kind" %}
+### Kind
+
+Use the following settings to install {{site.mesh_product_name}} CNI on a Kind cluster.
+
 {% cpinstall kind %}
 cni.enabled=true
 cni.chained=true
@@ -106,9 +114,11 @@ cni.netDir=/etc/cni/net.d
 cni.binDir=/opt/cni/bin
 cni.confName=10-kindnet.conflist
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "Azure" %}
+### Azure
+
+Use the following settings to install {{site.mesh_product_name}} CNI on Azure Kubernetes Service (AKS).
+
 {% cpinstall azure %}
 cni.enabled=true
 cni.chained=true
@@ -116,9 +126,11 @@ cni.netDir=/etc/cni/net.d
 cni.binDir=/opt/cni/bin
 cni.confName=10-azure.conflist
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "Azure Overlay" %}
+### Azure Overlay
+
+Use the following settings to install {{site.mesh_product_name}} CNI on AKS with Azure CNI Overlay networking.
+
 {% cpinstall azure_overlay %}
 cni.enabled=true
 cni.chained=true
@@ -126,9 +138,11 @@ cni.netDir=/etc/cni/net.d
 cni.binDir=/opt/cni/bin
 cni.confName=15-azure-swift-overlay.conflist
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "AWS - EKS" %}
+### AWS - EKS
+
+Use the following settings to install {{site.mesh_product_name}} CNI on Amazon EKS.
+
 {% cpinstall aws-eks %}
 cni.enabled=true
 cni.chained=true
@@ -140,9 +154,10 @@ controlPlane.envVars.KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_IP_FAMIL
 
 {:.info}
 > Add `KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_IP_FAMILY_MODE=ipv4` as EKS has IPv6 disabled by default.
-{% endnavtab %}
 
-{% navtab "Google - GKE" %}
+### Google - GKE
+
+To install {{site.mesh_product_name}} CNI on Google Kubernetes Engine, first enable network policy support and set the CNI conf name for your dataplane.
 
 You need to [enable network-policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) in your cluster (for existing clusters this redeploys the nodes).
 
@@ -158,9 +173,10 @@ cni.netDir=/etc/cni/net.d
 cni.binDir=/home/kubernetes/bin
 cni.confName=${CNI_CONF_NAME}
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "OpenShift 3.11" %}
+### OpenShift 3.11
+
+To install {{site.mesh_product_name}} CNI on OpenShift 3.11, configure admission webhooks and grant the CNI service account the required privileges.
 
 1. Follow the instructions in [OpenShift 3.11 installation](/mesh/{% if_version gte:2.6.x inline:true %}single-zone{% endif_version %}{% if_version lte:2.5.x inline:true %}stand-alone{% endif_version %}/)
    to get the `MutatingAdmissionWebhook` and `ValidatingAdmissionWebhook` enabled (this is required for regular {{site.mesh_product_name}} installation).
@@ -175,16 +191,15 @@ oc adm policy add-scc-to-user privileged -z kuma-cni -n kube-system
 cni.enabled=true
 cni.containerSecurityContext.privileged=true
 {% endcpinstall %}
-{% endnavtab %}
 
-{% navtab "OpenShift 4" %}
+### OpenShift 4
+
+Use the following settings to install {{site.mesh_product_name}} CNI on OpenShift 4.
+
 {% cpinstall openshift-4 %}
 cni.enabled=true
 cni.containerSecurityContext.privileged=true
 {% endcpinstall %}
-{% endnavtab %}
-
-{% endnavtabs %}
 
 ### {{site.mesh_product_name}} CNI taint controller
 
@@ -200,7 +215,7 @@ KUMA_RUNTIME_KUBERNETES_NODE_TAINT_CONTROLLER_ENABLED="false"
 
 ## Merbridge CNI with eBPF
 
-To install merbridge CNI with eBPF append the following options to the command from [installation](#installation):
+To install Merbridge CNI with eBPF append the following options to the command from [installation](#installation):
 
 {:.warning}
 > To use Merbridge CNI with eBPF your environment has to use `Kernel >= 5.7`
