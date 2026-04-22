@@ -216,7 +216,8 @@ rows:
   - header:
       type: h2
       text: "More information"
-  - columns:
+  - column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -247,8 +248,6 @@ rows:
               cta:
                 text: See the API
                 url: /api/konnect/cloud-gateways/v2/
-  - column_count: 3
-    columns:
       - blocks:
           - type: card
             config:

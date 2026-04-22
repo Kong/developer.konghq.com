@@ -28,6 +28,10 @@
         </div>
     {% endif %}
     {% endunless %}
+
+    {% if include.config.description %}
+    <span>{{include.config.description | liquify | markdownify | markdown }}</span>
+    {% endif %}
 {% endcapture %}
 
 {% if include.config.sub_text %}

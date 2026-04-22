@@ -86,19 +86,12 @@ rows:
               align: end
 
   - header:
-    type: h2
-  - columns:
-    - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "{{site.ai_gateway}} providers"
-            blocks:
-              - type: text
-                text: |
-                  Kong AI Gatewy routes AI requests to various providers through a [provider-agnostic API](./#universal-api). This normalized API layer provides multiple benefits: client applications stay decoupled from provider-specific APIs, credentials are managed centrally, and request routing can be dynamic to optimize for cost, latency, or availability.
-
-  - column_count: 4
+      type: h2
+      text: "{{site.ai_gateway}} providers"
+      description: |
+        Kong AI Gateway routes AI requests to various providers through a [provider-agnostic API](./#universal-api). 
+        This normalized API layer provides multiple benefits: client applications stay decoupled from provider-specific APIs, credentials are managed centrally, and request routing can be dynamic to optimize for cost, latency, or availability.
+    column_count: 4
     columns:
       - blocks:
         - type: icon_card
@@ -185,16 +178,10 @@ rows:
   - header:
       type: h2
       text: "{{site.ai_gateway}} capabilities"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    You can enable the {{site.ai_gateway}} features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
-                    When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
-  - column_count: 3
+      description: |
+        You can enable the {{site.ai_gateway}} features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
+        When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -425,49 +412,40 @@ rows:
             slug: ai-proxy-advanced
 
   - header:
-    type: h2
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "AI Usage Governance"
-              blocks:
-                - type: text
-                  text: |
-                    As AI technologies see broader adoption, developers and organizations face new risks: the risk of sensitive data leaking to AI providers, which exposes businesses and their customers to potential breaches and security threats.
+      type: h2
+      text: "AI usage governance"
+    columns:
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: text
+              text: |
+                As AI technologies see broader adoption, developers and organizations face new risks: the risk of sensitive data leaking to AI providers, which exposes businesses and their customers to potential breaches and security threats.
 
-                    Managing how data flows to and from AI models has become critical not just for security, but also for compliance and reliability. Without the right controls in place, organizations risk losing visibility into how AI is used across their systems.
+                Managing how data flows to and from AI models has become critical not just for security, but also for compliance and reliability. Without the right controls in place, organizations risk losing visibility into how AI is used across their systems.
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: text
+              text: |
+                {{site.ai_gateway}} helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
 
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    <p/><p/>
-                    {{site.ai_gateway}} helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
-
-                    - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
-                    - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
-                    - [**Guardrails and content safety**](./#guardrails-and-content-safety): Enforce policies to prevent inappropriate, unsafe, or non-compliant responses.
-                    - [**Automated RAG injection**](./#automated-rag): Seamlessly inject relevant, vetted data into AI prompts without manual RAG implementations.
-                    - [**Load balancing**](./#load-balancing): Distribute AI traffic efficiently across multiple model endpoints to ensure performance and reliability.
-                    - [**LLM cost control**](./#llm-cost-control): Use the AI Compressor, RAG Injector, and Prompt Decorator to compress and structure prompts efficiently. Combine with AI Proxy Advanced to route requests across OpenAI models by semantic similarity—optimizing for cost and performance.
+                - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
+                - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
+                - [**Guardrails and content safety**](./#guardrails-and-content-safety): Enforce policies to prevent inappropriate, unsafe, or non-compliant responses.
+                - [**Automated RAG injection**](./#automated-rag): Seamlessly inject relevant, vetted data into AI prompts without manual RAG implementations.
+                - [**Load balancing**](./#load-balancing): Distribute AI traffic efficiently across multiple model endpoints to ensure performance and reliability.
+                - [**LLM cost control**](./#llm-cost-control): Use the AI Compressor, RAG Injector, and Prompt Decorator to compress and structure prompts efficiently. Combine with AI Proxy Advanced to route requests across OpenAI models by semantic similarity—optimizing for cost and performance.
   - header:
       type: h3
       text: "Data governance"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                      {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+      description: |
+        {{site.ai_gateway}} enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20 categories and 9 languages. Running privately and self-hosted for full control and compliance, {{site.ai_gateway}} ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
 
-                      For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
-  - columns:
+        For more information, see the full list of [Data Governance](/ai-gateway/ai-data-gov/) capabilities.
+    columns:
       - blocks:
         - type: plugin
           config:
@@ -484,17 +462,11 @@ rows:
   - header:
       type: h3
       text: "Prompt engineering"
+      description: |
+        AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
+        Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
+        {{site.ai_gateway}} supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
     columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies.
-                    Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system.
-                    {{site.ai_gateway}} supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
-  - columns:
       - blocks:
         - type: plugin
           config:
@@ -507,15 +479,9 @@ rows:
   - header:
       type: h3
       text: "Guardrails and content safety"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
-  - column_count: 3
+      description: |
+        As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. {{site.ai_gateway}} provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
+    column_count: 3
     columns:
       - blocks:
         - type: plugin
@@ -560,18 +526,12 @@ rows:
   - header:
       type: h3
       text: "Request transformations"
+      description: |
+        {{site.ai_gateway}} allows you to use AI technology to augment other API traffic.
+        One example is routing API responses through an AI language translation prompt before returning it to the client.
+        {{site.ai_gateway}} provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
+        These plugins can be configured independently of the AI Proxy plugin.
     columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.ai_gateway}} allows you to use AI technology to augment other API traffic.
-                    One example is routing API responses through an AI language translation prompt before returning it to the client.
-                    {{site.ai_gateway}} provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing.
-                    These plugins can be configured independently of the AI Proxy plugin.
-  - columns:
       - blocks:
         - type: plugin
           config:
@@ -585,18 +545,21 @@ rows:
   - header:
       type: h3
       text: "Automated RAG"
+    column_count: 1
     columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    LLMs are only as reliable as the data they can access. When faced with incomplete information, they often produce confident yet incorrect responses known as “hallucinations.” These hallucinations occur when LLMs lack the necessary domain knowledge.To address this, developers use the **Retrieval-augmented Generation (RAG)** approach, which enriches models with relevant data pulled from vector databases.
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: text
+              text: |
+                LLMs are only as reliable as the data they can access. When faced with incomplete information, they often produce confident yet incorrect responses known as “hallucinations.” 
+                These hallucinations occur when LLMs lack the necessary domain knowledge.
+                To address this, developers use the **Retrieval-augmented Generation (RAG)** approach, which enriches models with relevant data pulled from vector databases.
 
-                    While standard RAG workflows are resource-heavy, as they require teams to generate embeddings and manually curate them in vector databases, Kong’s **AI RAG Injector** plugin automates this entire process. Instead of embedding RAG logic into every application individually, platform teams can inject vetted data into prompts directly at the gateway layer without any manual interventions.
-  - columns:
-      - blocks:
+                While standard RAG workflows are resource-heavy, as they require teams to generate embeddings and manually curate them in vector databases, Kong's **AI RAG Injector** plugin automates this entire process. 
+                Instead of embedding RAG logic into every application individually, platform teams can inject vetted data into prompts directly at the gateway layer without any manual interventions.
+    - blocks:
         - type: plugin
           config:
             slug: ai-rag-injector
@@ -604,16 +567,13 @@ rows:
   - header:
       type: h3
       text: "Load balancing"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.ai_gateway}}’s load balancer routes requests across AI models to optimize for speed, cost, and reliability. It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10%}. The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
+      description: |
+        {{site.ai_gateway}}'s load balancer routes requests across AI models to optimize for speed, cost, and reliability. 
+        It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10 %}. 
+        <br><br>
+        The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
 
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -635,16 +595,9 @@ rows:
   - header:
       type: h3
       text: "LLM cost control"
+      description: |
+        The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
     columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    The {{site.ai_gateway}} helps reduce LLM usage costs by giving you control over how prompts are built and routed. You can compress and structure prompts efficiently using the AI Compressor, RAG Injector, and AI Prompt Decorator plugins. For further savings, you can use AI Proxy Advanced to route requests across OpenAI models based on semantic similarity.
-
-  - columns:
       - blocks:
         - type: plugin
           config:
@@ -670,17 +623,12 @@ rows:
   - header:
       type: h3
       text: "Observability and metrics"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations. Track token usage, latency, and costs through audit logs and metrics exporters. Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
-
-
-  - column_count: 3
+      description: |
+        {{site.ai_gateway}} provides multiple approaches to monitor LLM traffic and operations. 
+        Track token usage, latency, and costs through audit logs and metrics exporters. 
+        Instrument request flows with OpenTelemetry to trace prompts and responses across your infrastructure. 
+        Use {{site.konnect_short_name}} Advanced Analytics for pre-built dashboards, or integrate with your existing observability stack.
+    column_count: 3
     columns:
       - blocks:
         - type: card

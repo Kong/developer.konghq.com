@@ -74,7 +74,7 @@ rows:
   - header:
       type: h2
       text: 'FAQs'
-  - columns:
+    columns:
       - blocks:
           - type: faqs
             config:
