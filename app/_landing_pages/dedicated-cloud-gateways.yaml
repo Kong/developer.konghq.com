@@ -107,19 +107,14 @@ rows:
                   url: /dedicated-cloud-gateways/azure-peering/
                 - text: Virtual WAN (VWAN)
                   url: /dedicated-cloud-gateways/azure-virtual-wan/
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Name resolution"
-            blocks:
-              - type: text
-                text: |
-                  We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
-                  Use private hosted zones or private DNS if your services are in the same cloud. 
-                  Use an outbound DNS resolver if your services are in an external or on-premise DNS server. 
-  - column_count: 3
+  - header:
+      type: h2
+      text: "Name resolution"
+      description: |
+        We recommend using private name resolution for services running in the same cloud as your Dedicated Cloud Gateway. 
+        Use private hosted zones or private DNS if your services are in the same cloud. 
+        Use an outbound DNS resolver if your services are in an external or on-premise DNS server. 
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -216,7 +211,7 @@ rows:
   - header:
       type: h2
       text: "More information"
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
           - type: card

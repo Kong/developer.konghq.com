@@ -22,8 +22,6 @@ rows:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: 'Overview'
               blocks:
                 - type: text
                   text: |

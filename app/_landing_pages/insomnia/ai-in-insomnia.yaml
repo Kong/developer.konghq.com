@@ -137,20 +137,21 @@ rows:
     type: h2
     text: "AI-driven Git commits"
     description: |
-      "Insomnia's **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Git Sync**](/insomnia/git-sync/).
-    blocks:
-      - type: structured_text
-        config:
-          blocks:
-            - type: text
-              text: |
-                **To use commit suggestions:**
-                1. Open the **Git Sync** interface.  
-                1. Click **Suggest comments and grouping for Commits**.  
-                1. Review the suggested commit groups and messages.  
-                1. (Optional) To edit a message inline, double-click the message.  
-                1. Drag and drop files between commit groups, or exclude files.  
-                1. Click **Commit** or **Commit & Push**.
+      Insomnia's **Suggest comments and grouping for Commits** feature analyzes staged changes and helps maintain consistent, meaningful Git histories. For Git concepts and workflows, go to [**Git Sync**](/insomnia/git-sync/).
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **To use commit suggestions:**
+                    1. Open the **Git Sync** interface.  
+                    1. Click **Suggest comments and grouping for Commits**.  
+                    1. Review the suggested commit groups and messages.  
+                    1. (Optional) To edit a message inline, double-click the message.  
+                    1. Drag and drop files between commit groups, or exclude files.  
+                    1. Click **Commit** or **Commit & Push**.
  
   - header:
       type: h2
