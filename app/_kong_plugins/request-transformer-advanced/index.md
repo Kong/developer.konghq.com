@@ -66,3 +66,8 @@ The Response Transformer Advanced plugin provides features that aren't available
 ## Arrays and nested objects
 
 {% include plugins/request-response-transformer/arrays-nested-objects.md %}
+
+## Body transformations
+
+Body transformations are only performed for:
+* Requests in which the `Content-Type` header is set to `application/json`
