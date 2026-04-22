@@ -11,7 +11,7 @@ description: Learn how to use the AI MCP Proxy plugin to create an MCP from any 
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/autogenerate-mcp-tools/
+permalink: /mcp/map-API-to-mcp-tools/
 
 series:
   id: mcp-conversion
