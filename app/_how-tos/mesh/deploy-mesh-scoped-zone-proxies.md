@@ -6,22 +6,20 @@ permalink: /mesh/zone-proxies/
 bread-crumbs:
   - /mesh/
 related_resources:
-  - text: 'Federate a zone control plane'
-    url: /mesh/federate/
   - text: 'Multi-zone deployment'
     url: '/mesh/mesh-multizone-service-deployment/'
 
 min_version:
-  mesh: '2.12'
+  mesh: '2.14'
 
 products:
   - mesh
 
 tldr:
-  q: How do I deploy zone ingress and zone egress with the new per-mesh Helm configuration?
+  q: How do I deploy mesh-scoped zone ingress and zone egress with the new Helm configuration?
   a: |
     1. Create a `Mesh` with `spec.meshServices.mode: Exclusive` and a `MeshIdentity` on the global control plane.
-    1. Install each zone control plane with a `kuma.meshes[]` entry, setting `ingress.enabled: true` and `egress.enabled: true` for the mesh.
+    1. Install each zone control plane with a `kuma.meshes[]` entry.
     1. {{site.mesh_product_name}} renders a per-mesh Deployment and Service for each role, and generates the Dataplane listeners automatically.
 
 prereqs:
@@ -45,7 +43,9 @@ cleanup:
         ```
 ---
 
-Starting in {{site.mesh_product_name}} 2.12, zone ingress and zone egress are **mesh-scoped**. Instead of the cluster-scoped `kuma.ingress.enabled` / `kuma.egress.enabled` Helm keys, you declare a `kuma.meshes[]` list in your zone control plane's values. Each entry renders its own Deployment, Service, and Dataplane for that mesh, and zone proxies now carry per-mesh workload identity so policies can target them directly.
+Starting in {{site.mesh_product_name}} 2.14, zone ingress and zone egress are **mesh-scoped**.
+Instead of the cluster-scoped `kuma.ingress.enabled` / `kuma.egress.enabled` Helm keys, you declare a `kuma.meshes[]` list in your zone control plane's values.
+Each entry renders its own Deployment, Service, and Dataplane for that mesh, and zone proxies now carry per-mesh workload identity so policies can target them directly.
 
 This guide walks through a fresh three-cluster setup: a global control plane and two zone control planes, each deploying a zone ingress and zone egress through the new `kuma.meshes[]` configuration.
 
@@ -104,7 +104,8 @@ This guide walks through a fresh three-cluster setup: a global control plane and
 
 ## Create the mesh on the global control plane
 
-Zone proxy listeners are only generated when the mesh uses `MeshService` exclusive mode. If you skip this, the zone proxies install but produce no listeners.
+Zone proxy listeners are only generated when the mesh uses `MeshService` exclusive mode.
+If you skip this, the zone proxies install but produce no listeners.
 
 1. Create the mesh and allow all traffic:
 
@@ -136,7 +137,8 @@ Zone proxy listeners are only generated when the mesh uses `MeshService` exclusi
 
 ## Create a MeshIdentity
 
-Zone egress listeners need a workload identity to terminate mTLS for cross-zone traffic. Apply a `MeshIdentity` on the global control plane so it syncs to every zone.
+Zone egress listeners need a workload identity to terminate mTLS for cross-zone traffic.
+Apply a `MeshIdentity` on the global control plane so it syncs to every zone.
 
 ```sh
 {% raw %}echo 'apiVersion: kuma.io/v1alpha1
@@ -164,11 +166,13 @@ spec:
 ```
 
 {:.info}
-> `insecureAllowSelfSigned: true` keeps the demo simple by using the bundled CA. For production, follow the [`MeshIdentity` guide](/mesh/mesh-identity/) to integrate a SPIRE trust domain or an external CA.
+> `insecureAllowSelfSigned: true` keeps the demo simple by using the bundled CA.
+> For production, follow the [`MeshIdentity` guide](/mesh/mesh-identity/) to integrate a SPIRE trust domain or an external CA.
 
 ## Deploy zone-1 with mesh-scoped zone proxies
 
-This is the step that differs from the [federation guide](/mesh/federate/). Instead of `--set kuma.ingress.enabled=true`, we set a `kuma.meshes[]` entry that describes which mesh the zone proxies belong to.
+This is the step that differs from the [federation guide](/mesh/federate/).
+Instead of `--set kuma.ingress.enabled=true`, we set a `kuma.meshes[]` entry that describes which mesh the zone proxies belong to.
 
 1. Start the zone-1 cluster and its tunnel:
 
@@ -191,7 +195,8 @@ This is the step that differs from the [federation guide](/mesh/federate/). Inst
      kong-mesh kong-mesh/kong-mesh
    ```
 
-   Each entry in `kuma.meshes[]` renders its own Deployment, Service, and ServiceAccount. To deploy zone proxies for additional meshes, append more entries to the list.
+   Each entry in `kuma.meshes[]` renders its own Deployment, Service, and ServiceAccount.
+   To deploy zone proxies for additional meshes, append more entries to the list.
 
 ## Deploy zone-2 with the same configuration
 
@@ -224,29 +229,34 @@ This is the step that differs from the [federation guide](/mesh/federate/). Inst
    kubectl --context mesh-zone-1 -n kong-mesh-system get deploy,svc -l kuma.io/mesh=default
    ```
 
-   You'll see a `kong-mesh-default-ingress` and `kong-mesh-default-egress` Deployment, each with a matching Service. A second mesh would produce another pair named after its mesh.
+   You'll see a `kong-mesh-default-ingress` and `kong-mesh-default-egress` Deployment, each with a matching Service.
+   A second mesh would produce another pair named after its mesh.
 
-1. Confirm the Services carry the new `k8s.kuma.io/zone-proxy-type` label. The Pod controller watches this label and generates the Dataplane listeners from it:
+1. Confirm the Services carry the new `k8s.kuma.io/zone-proxy-type` label.
+   The Pod controller watches this label and generates the Dataplane listeners from it:
 
    ```sh
    kubectl --context mesh-zone-1 -n kong-mesh-system get svc \
      -l k8s.kuma.io/zone-proxy-type -L k8s.kuma.io/zone-proxy-type
    ```
 
-1. From the global control plane, look at the Dataplanes. Zone proxies are now ordinary `Dataplane` resources with `networking.listeners[]` entries instead of separate `ZoneIngress` or `ZoneEgress` resources:
+1. From the global control plane, look at the Dataplanes.
+   Zone proxies are now ordinary `Dataplane` resources with `networking.listeners[]` entries instead of separate `ZoneIngress` or `ZoneEgress` resources:
 
    ```sh
    kubectl --context mesh-global get dataplane -A
    ```
 
-1. Confirm that no legacy zone proxy resources exist. Both lists should be empty:
+1. Confirm that no legacy zone proxy resources exist.
+   Both lists should be empty:
 
    ```sh
    kubectl --context mesh-global get zoneingresses,zoneegresses -A
    ```
    {:.no-copy-code}
 
-1. Inspect the `MeshZoneAddress` resources. The `meshzoneaddress` controller in each zone generates these automatically from the zone ingress Service's external address, so remote zones can route to them:
+1. Inspect the `MeshZoneAddress` resources.
+   The `meshzoneaddress` controller in each zone generates these automatically from the zone ingress Service's external address, so remote zones can route to them:
 
    ```sh
    kubectl --context mesh-zone-1 get meshzoneaddress -A
