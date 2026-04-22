@@ -178,9 +178,9 @@ spec:
             expiration: 1d
         conf:
           cert:
-            secret: $SECRET_NAME
+            secret: $CERT_SECRET_NAME
           key:
-            secret: $SECRET_NAME
+            secret: $KEY_SECRET_NAME
 ```
 
 Apply the configuration with `kubectl apply -f [..]`.
@@ -201,9 +201,9 @@ mtls:
           expiration: 1d
       conf:
         cert:
-          secret: $SECRET_NAME
+          secret: $CERT_SECRET_NAME
         key:
-          secret: $SECRET_NAME
+          secret: $KEY_SECRET_NAME
 ```
 
 Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/interact-with-control-plane/).
@@ -397,7 +397,7 @@ Use the `/meshes/{mesh}/dataplanes+insights/{dataplane}` endpoint of the [{{site
 
 ```json
 ...
-dataplaneInsight": {
+"dataplaneInsight": {
   ...
   "mTLS": {
     "certificateExpirationTime": "2020-05-14T20:15:23Z",
