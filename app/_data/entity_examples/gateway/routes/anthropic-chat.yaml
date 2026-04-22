@@ -1,0 +1,7 @@
+name: anthropic-chat
+paths:
+  - "~/anthropic/(?<model>[^#?/]+)/chat/completions$"
+methods:
+  - POST
+service:
+  name: ai-providers-service
