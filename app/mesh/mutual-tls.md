@@ -24,7 +24,7 @@ The Mutual TLS policy enables automatic encrypted mTLS traffic for all the servi
 
 {{site.mesh_product_name}} ships with the following CA (Certificate Authority) supported backends:
 
-* [`builtin`](#using-a-builtin-ca): {{site.mesh_product_name}} automatically generates a CA root certificate and key, which are stored as a [Secret](/mesh/secrets/).
+* [`builtin`](#using-a-builtin-ca): {{site.mesh_product_name}} automatically generates a CA root certificate and key, which are stored as a [Secret](/mesh/manage-secrets/).
 * [`provided`](#using-a-provided-ca): The user provides the CA root certificate and key as a Secret.
 
 Once you've specified a CA backend, {{site.mesh_product_name}} automatically generates a certificate for every data plane proxy in the mesh. The certificates that {{site.mesh_product_name}} generates are SPIFFE compatible and are used for AuthN/Z use cases in order to identify every workload in the system.
@@ -109,7 +109,7 @@ Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh
 
 ### Storing Secrets
 
-When using a `builtin` backend {{site.mesh_product_name}} automatically generates a root CA certificate and key that are stored as a {{site.mesh_product_name}} [Secret resource](/mesh/secrets/) with the following name:
+When using a `builtin` backend {{site.mesh_product_name}} automatically generates a root CA certificate and key that are stored as a {{site.mesh_product_name}} [Secret resource](/mesh/manage-secrets/) with the following name:
 
 * `<mesh name>.ca-builtin-cert-<backend name>` for the certificate
 * `<mesh name>.ca-builtin-key-<backend name>` for the key
@@ -151,7 +151,7 @@ kubectl get secrets \
 
 If you choose to provide your own CA root certificate and key, you can use the `provided` backend. With this option, you must also manage the certificate lifecycle yourself.
 
-Unlike the `builtin` backend, with `provided` you first upload the certificate and key as [Secret resource](/mesh/secrets/), and then reference the Secrets in the mTLS configuration.
+Unlike the `builtin` backend, with `provided` you first upload the certificate and key as [Secret resource](/mesh/manage-secrets/), and then reference the Secrets in the mTLS configuration.
 
 {{site.mesh_product_name}} then provisions data plane proxy certificates for every replica of every service from the CA root certificate and key.
 
@@ -261,7 +261,7 @@ openssl req -config <(echo "$SAMPLE_CA_CONFIG") -new -newkey rsa:2048 -nodes \
   -subj "/CN=Hello" -x509 -extensions ext -keyout key.pem -out crt.pem
 ```
 
-The command generates a certificate at `crt.pem` and the key at `key.pem`. Generate the {{site.mesh_product_name}} Secret resources using the [Secret resource](/mesh/secrets/).
+The command generates a certificate at `crt.pem` and the key at `key.pem`. Generate the {{site.mesh_product_name}} Secret resources using the [Secret resource](/mesh/manage-secrets/).
 
 ### Development mode
 
