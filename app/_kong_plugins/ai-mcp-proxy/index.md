@@ -44,14 +44,14 @@ related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: Autogenerate serverless MCP
-    url: /mcp/autogenerate-mcp-tools/
+    url: /mcp/map-api-to-mcp-tools/
   - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
     url: /mcp/
     icon: /assets/icons/mcp.svg
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/autogenerate-mcp-tools/
+    url: /mcp/map-api-to-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
     url: /mcp/weather-mcp-api/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
@@ -104,9 +104,9 @@ next_steps:
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/autogenerate-mcp-tools/
+    url: /mcp/map-api-to-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
-    url: /mcp/autogenerate-mcp-tools-for-weather-api/
+    url: /mcp/map-weather-api-to-mcp-tools/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers

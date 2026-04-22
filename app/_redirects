@@ -232,4 +232,5 @@
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
 /mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
-/mcp/autogenerate-mcp-tools/    /mcp/map-API-to-mcp-tools/
+/mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
+/mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
