@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway backend-clusters
-description: "Use the `backend-clusters` command to list or retrieve backend clusters for a specific {{site.event_gateway_short}}."
+description: "Use the backend-clusters command to list or retrieve backend clusters for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

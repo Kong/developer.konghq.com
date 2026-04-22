@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway schema-registries
-description: "Use the `schema-registries` command to list or retrieve schema registries for a specific {{site.event_gateway_short}}."
+description: "Use the schema-registries command to list or retrieve schema registries for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

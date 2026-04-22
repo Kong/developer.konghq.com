@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway virtual-clusters
-description: "Use the `virtual-clusters` command to list or retrieve virtual clusters for a specific {{site.event_gateway_short}}."
+description: "Use the virtual-clusters command to list or retrieve virtual clusters for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

@@ -114,11 +114,13 @@ related_resources:
 To find the description, run `kongctl <command> --help` and use the opening paragraph — the text that appears before "Usage:". The include files in `app/_includes/kongctl/help` do not contain this paragraph; they start directly with the `Usage:` block.
 
 Before using the text, apply these formatting rules:
-- Wrap verb names (such as `get`, `list`, `adopt`) in backticks when referenced inline
-- Wrap subcommand names (such as `dcr-provider`, `event-gateway`) in backticks
 - Replace "Konnect" with `{{site.konnect_short_name}}`
 - Replace "Event Gateway" with `{{site.event_gateway_short}}`
 - Replace "Kong Gateway" with `{{site.base_gateway}}`
+
+The backtick formatting rules below apply **only to body text**, not to the `description` frontmatter field:
+- Wrap verb names (such as `get`, `list`, `adopt`) in backticks when referenced inline
+- Wrap subcommand names (such as `dcr-provider`, `event-gateway`) in backticks
 
 If the opening paragraph is a single sentence, use it for both the `description` frontmatter field and the body text above `## Command usage`. If it is longer than one sentence, use only the first sentence for the `description` field, and the full paragraph for the body text. For example:
 
@@ -188,7 +190,7 @@ kongctl get event-gateway --help
 # → Available Commands: backend-clusters, listeners, ...
 ```
 
-Apply the same rules as Step 2: use only the first sentence for the `description` field if the opening paragraph is multi-sentence, use the full paragraph for the body text, and apply the same formatting (backticks for verbs and subcommands, template variables for product names). Use the subcommand list to populate the `{% table %}` rows.
+Apply the same rules as Step 2: use only the first sentence for the `description` field if the opening paragraph is multi-sentence, use the full paragraph for the body text, replace product names with template variables in both, and apply backtick formatting for verbs and subcommands in body text only (not in the frontmatter `description` field). Use the subcommand list to populate the `{% table %}` rows.
 
 ### Step 4: Update parent index pages
 

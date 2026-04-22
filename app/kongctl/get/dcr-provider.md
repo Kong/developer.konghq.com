@@ -1,6 +1,6 @@
 ---
 title: kongctl get dcr-provider
-description: "Use the `get` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers."
+description: "Use the get verb with the dcr-provider command to query {{site.konnect_short_name}} Dynamic Client Registration providers."
 content_type: reference
 layout: reference
 

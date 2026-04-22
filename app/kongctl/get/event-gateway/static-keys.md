@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway static-keys
-description: "Use the `static-keys` command to list or retrieve static keys for a specific {{site.event_gateway_short}}."
+description: "Use the static-keys command to list or retrieve static keys for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

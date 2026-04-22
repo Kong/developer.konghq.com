@@ -1,6 +1,6 @@
 ---
 title: kongctl list konnect dcr-provider
-description: "Use the `list` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers."
+description: "Use the list verb with the dcr-provider command to query {{site.konnect_short_name}} Dynamic Client Registration providers."
 content_type: reference
 layout: reference
 
@@ -22,7 +22,7 @@ related_resources:
     url: /kongctl/list/
 ---
 
-Use the `list` verb with the `dcr-provider` command to query {{site.konnec_short_name}} Dynamic Client Registration providers.
+Use the `list` verb with the `dcr-provider` command to query {{site.konnect_short_name}} Dynamic Client Registration providers.
 
 ## Command usage
 

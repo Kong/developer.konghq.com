@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway data-plane-certificates
-description: "Use the `data-plane-certificates` command to list or retrieve data plane certificates for a specific {{site.event_gateway_short}}."
+description: "Use the data-plane-certificates command to list or retrieve data plane certificates for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

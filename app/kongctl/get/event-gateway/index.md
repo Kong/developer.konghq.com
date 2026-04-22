@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway
-description: "Use the `get` verb with the `event-gateway` command to query {{site.konnect_short_name}} {{site.event_gateway_short}}s."
+description: "Use the get verb with the event-gateway command to query {{site.konnect_short_name}} {{site.event_gateway_short}}s."
 content_type: reference
 layout: reference
 

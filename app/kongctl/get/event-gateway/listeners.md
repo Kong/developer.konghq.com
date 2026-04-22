@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway listeners
-description: "Use the `listeners` command to list or retrieve listeners for a specific {{site.event_gateway_short}}."
+description: "Use the listeners command to list or retrieve listeners for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 

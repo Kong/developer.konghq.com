@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway listener-policies
-description: "Use the `listener-policies` command to list or retrieve listener policies for a specific {{site.event_gateway_short}} Listener."
+description: "Use the listener-policies command to list or retrieve listener policies for a specific {{site.event_gateway_short}} Listener."
 content_type: reference
 layout: reference
 

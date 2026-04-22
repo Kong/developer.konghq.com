@@ -1,6 +1,6 @@
 ---
 title: kongctl get event-gateway tls-trust-bundles
-description: "Use the `tls-trust-bundles` command to list or retrieve TLS trust bundles for a specific {{site.event_gateway_short}}."
+description: "Use the tls-trust-bundles command to list or retrieve TLS trust bundles for a specific {{site.event_gateway_short}}."
 content_type: reference
 layout: reference
 
