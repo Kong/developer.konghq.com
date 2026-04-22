@@ -112,7 +112,7 @@ To apply plugins to OIDC clients, the Gateway must map the incoming token to a *
 1. Configure the following fields in the OIDC plugin to link requests to a Consumer:
     * [`config.consumer_claim`](/plugins/openid-connect/reference/#schema--config-consumer-claim): The token field to identify the client (for example, `["sub"]` or `["client_id"]`).
     * [`config.consumer_by`](/plugins/openid-connect/reference/#schema--config-consumer-by): The Consumer field to match against (for example, `["username"]` or `["custom_id"]`).
-* **Apply Scoped Plugins**:
+* **Apply scoped plugins**:
     * **Consumer-scoped**: Apply plugins directly to the individual Consumer entity.
     * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](/gateway/entities/consumer-group/) to inherit shared policies across multiple clients.
 
