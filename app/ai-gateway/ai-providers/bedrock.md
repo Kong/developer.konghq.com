@@ -46,18 +46,22 @@ related_resources:
 
 
 faqs:
-  - q: How do I specify model IDs for Amazon Bedrock cross-region inference profiles?
+  - q: |
+      {% include faqs/bedrock-models.md section='question' %}
     a: |
-      {% include faqs/bedrock-models.md %}
-  - q: How do I set the FPS parameter for video generation for Amazon Bedrock?
+      {% include faqs/bedrock-models.md section='answer' %}
+  - q: |
+      {% include faqs/bedrock-fps.md section='question' %}
     a: |
-      {% include faqs/bedrock-fps.md %}
-  - q: How do I include guardrail configuration with Amazon Bedrock requests?
+      {% include faqs/bedrock-fps.md section='answer' %}
+  - q: |
+      {% include faqs/bedrock-guardrails.md section='question' %}
     a: |
-      {% include faqs/bedrock-guardrails.md %}
-  - q: How do I use Amazon Bedrock's Rerank API to improve RAG retrieval quality?
+      {% include faqs/bedrock-guardrails.md section='answer' %}
+  - q: |
+      {% include faqs/bedrock-rerank.md section='question' %}
     a: |
-      {% include faqs/bedrock-rerank.md %}
+      {% include faqs/bedrock-rerank.md section='answer' %}
 
 how_to_list:
   config:

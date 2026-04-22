@@ -45,18 +45,22 @@ related_resources:
     url: /ai-gateway/ai-providers/
 
 faqs:
-  - q: How can I set model generation parameters when calling Gemini?
+  - q: |
+      {% include faqs/gemini-model-params.md section='question' %}
     a: |
-      {% include faqs/gemini-model-params.md %}
-  - q: How do I use Gemini's `googleSearch` tool for real-time web searches?
+      {% include faqs/gemini-model-params.md section='answer' %}
+  - q: |
+      {% include faqs/gemini-search.md section='question' %}
     a: |
-      {% include faqs/gemini-search.md %}
-  - q: How do I control aspect ratio and resolution for Gemini image generation?
+      {% include faqs/gemini-search.md section='answer' %}
+  - q: |
+      {% include faqs/gemini-image.md section='question' %}
     a: |
-      {% include faqs/gemini-image.md %}
-  - q: How do I get reasoning traces from Gemini models?
+      {% include faqs/gemini-image.md section='answer' %}
+  - q: |
+      {% include faqs/gemini-thinking.md section='question' %}
     a: |
-      {% include faqs/gemini-thinking.md %}
+      {% include faqs/gemini-thinking.md section='answer' %}
 
 how_to_list:
   config:
