@@ -2,7 +2,7 @@
 
 ## Recrawl the site
 
-1. Log into Algolia using the credentials in 1pass
+1. Log into Algolia using team-docs (credentials in 1pass).
 
    Make sure the **kongdeveloper** application is selected.
 
