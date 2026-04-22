@@ -47,7 +47,8 @@ faqs:
           * `config.consumer_by`: Set this to `custom_id`.
       4.  **Apply the Plugin**: Apply your desired Consumer-scoped plugin (e.g., Rate Limiting) directly to the **Consumer** entity you created in Step 2.
 
-      **Note**: You do not need to create or migrate client secrets/credentials to the Consumer entity. The OIDC token issued by Kong Identity serves as the credential, and the plugin automatically "links" the request to the Consumer for policy enforcement.
+      {:.info}
+      > **Note**: You don't need to create or migrate client secrets/credentials to the Consumer entity. The OIDC token issued by Kong Identity serves as the credential, and the plugin automatically links the request to the Consumer for policy enforcement.
   - q: Can I retrieve my client’s secret again?
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
