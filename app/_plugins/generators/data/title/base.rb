@@ -9,6 +9,8 @@ module Jekyll
             APIPage.new(page:, site:)
           elsif page.url.start_with?('/plugins/')
             Plugin.new(page:, site:)
+          elsif page.url.start_with?('/prompts/')
+            Prompt.new(page:, site:)
           elsif page.url.start_with?('/mesh/policies/') || page.url.start_with?('/event-gateway/policies/')
             Policy.new(page:, site:)
           elsif page.data['content_type'] && page.data['content_type'] == 'reference'

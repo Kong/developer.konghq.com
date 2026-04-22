@@ -1,0 +1,12 @@
+
+title: Security with KAi
+description: Enhance the security of your Kong configuration with KAi's security auditing capabilities.
+extended_description: Enhance the security of your Kong configuration with KAi's security auditing capabilities. Learn how to use KAi to identify and fix common security misconfigurations effectively.
+products:
+ - gateway
+ - event-gateway
+
+prompts:
+  - "Audit my [CONTROL_PLANE] control plane for common security misconfigurations (for example: auth missing, weak TLS, or overly broad CORS). Suggest prioritized fixes."
+  - "Suggest a safe baseline policy set for a public API (rate limiting, authentication, and logging) and show how to apply it to the [SERVICE_NAME] Gateway Service."
+  - "Check if any Routes in my [CONTROL_PLANE] control plane expose endpoints without authentication, and list them."
