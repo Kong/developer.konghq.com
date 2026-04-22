@@ -45,7 +45,7 @@ faqs:
       3.  **Configure the Mapping**: Update your OIDC plugin configuration with the following:
           * `config.consumer_claim`: Set this to `sub` (or the specific claim containing the ID from Step 1).
           * `config.consumer_by`: Set this to `custom_id`.
-      4.  **Apply the Plugin**: Apply your desired Consumer-scoped plugin (e.g., Rate Limiting) directly to the **Consumer** entity you created in Step 2.
+      4.  Apply your desired Consumer-scoped plugin (for example, Rate Limiting) directly to the **Consumer** entity you created.
 
       {:.info}
       > **Note**: You don't need to create or migrate client secrets/credentials to the Consumer entity. The OIDC token issued by Kong Identity serves as the credential, and the plugin automatically links the request to the Consumer for policy enforcement.
