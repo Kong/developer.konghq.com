@@ -50,7 +50,7 @@ Check whether the target file already exists. If it does, show the user the exis
 
 Do NOT add anything to the `/mesh/policies/` folder. For example, `/mesh/policies/mutual-tls.md` should be migrated to `/mesh/mutual-tls.md`.
 
-If the URL changes as a result, set a permalink for example:
+If the URL changes as a result, set a permalink. For example:
 ```yaml
 permalink: /mesh/policies/mutual-tls/
 ```
