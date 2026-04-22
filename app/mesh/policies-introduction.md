@@ -442,6 +442,7 @@ For each type of proxy, sidecar or builtin gateway, the table indicates for each
 
 These are just examples, remember to check the docs specific to your policy.
 
+<!-- vale off -->
 {% navtabs "proxy-type" %}
 {% navtab "Sidecar" %}
 
@@ -457,6 +458,7 @@ rows:
   - targetref: "`to[].targetRef.kind`"
     allowed_kinds: "`Mesh`, `MeshService`, `MeshExternalService`, `MeshMultiZoneService`"
 {% endtable %}
+<!-- vale on -->
 
 The table above show that we can select sidecar proxies via `Mesh`, `Dataplane`, `MeshGateway`
 
