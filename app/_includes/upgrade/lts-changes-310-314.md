@@ -1,6 +1,6 @@
 ### Removed or deprecated
 
-The feature or behaviors in the following table have been permanently removed.
+The feature or behaviors in the following table have been permanently removed, or are deprecated and slated for future removal.
 By updating settings based on the table below, you can avoid any potential 
 issues that may arise from using deprecated aliases and ensure
 that your {{site.base_gateway}} instance functions correctly with the most recent changes and improvements.
@@ -17,6 +17,65 @@ columns:
   - title: Action Required
     key: action
 rows:
+  - category: Plugins 
+    description: |
+      **[AI Proxy](/plugins/ai-proxy/)** and **[AI Proxy Advanced](/plugins/ai-proxy-advanced/)**
+      <br><br>
+      The `preserve` route type in these plugins has been deprecated and will be removed in a future version.
+    action: |
+      Update your AI Proxy and AI Proxy Advanced plugin configurations to use a supported route type.
+      See the [`route_type` options for AI Proxy](/plugins/ai-proxy/reference/#schema--config-route-type) and [`route_type` options for AI Proxy Advanced](/plugins/ai-proxy-advanced/reference/#schema--config-route-type).
+  - category: Plugins
+    description: |
+      **WASM**
+      <br><br>
+      Support for the beta WASM module was removed.
+      The [Datakit plugin](/plugins/datakit/) is now bundled as a Lua plugin and no longer requires WASM to run.
+    action: |
+      Remove any WASM-related configuration from your deployment.
+  - category: Plugins
+    description: |
+      **[Datakit](/plugins/datakit/)**
+      <br><br>
+      The Datakit plugin no longer supports the `handlebars` node type.
+    action: |
+      Update any Datakit plugin configurations that use the `handlebars` node type.
+  - category: Plugins
+    description: |
+      **[Kafka Consume](/plugins/kafka-consume/)**
+      <br><br>
+      The Kafka Consume plugin can no longer be applied to a Service. 
+      This plugin doesn't proxy to a Service, so attaching it to one causes issues.
+      <br><br>
+      If you previously attached a Kafka Consume plugin to a Service, the plugin will no longer take effect:
+      <br><br>
+      * If there is an Upstream configured in the Service, requests will be proxied to the Upstream.
+      * If there is no Upstream configured in the Service, requests will not be proxied, and the plugin won't take effect.
+    action: |
+      Remove any Service scoping from your Kafka Consume plugin configurations and reattach the plugin to a [supported entity](/plugins/kafka-consume/reference/) instead.
+  - category: Admin API
+    description: |
+      Record/map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects.
+      They were previously incorrectly encoded as arrays.
+    action: |
+      If you have any automation that depends on these fields being encoded as arrays, adjust it accordingly.
+  - category: Plugins
+    description: |
+      **[Service Protection](/plugins/service-protection/)**
+      <br><br>
+      The priority of the Service Protection plugin changed from 915 to 901.
+      The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+    action: |
+      If you have custom plugins with a priority between 901 and 915 that depend on the Service Protection plugin, adjust their priorities or use dynamic plugin ordering.
+  - category: Plugins
+    description: |
+      **[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)**
+      <br><br>
+      The `config.rules.max_request_body_size` parameter has been replaced with `config.max_request_body_size`.
+      <br><br>
+      The old parameter is deprecated and will be removed in a future version.
+    action: |
+      Update your AI Semantic Prompt Guard plugin configurations to use `config.max_request_body_size`.
   - category: Security
     description: |
       The SHA1 algorithm has been deprecated or removed in several places and the default algorithm has changed to SHA256.
@@ -115,6 +174,37 @@ rows:
       **Event Hooks**: The webhook handler's `ssl_verify` setting is now `true` by default.
     action: |
       Ensure your webhook endpoints have a valid TLS certificate.
+  - category: Plugins
+    description: |
+      **[OpenTelemetry](/plugins/opentelemetry/)**
+      <br><br>
+      The `config.access_logs_endpoint` parameter has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
+      The old field is deprecated and will be removed in a future version.
+    action: |
+      Update your OpenTelemetry plugin configuration to use `config.access_logs.endpoint`.
+  - category: Plugins
+    description: |
+      **[OpenID Connect](/plugins/openid-connect/)**
+      <br><br>
+      The following header claims fields have been replaced with new fields:
+      <br><br>
+      * `config.upstream_headers_claims` and `config.upstream_headers_names` → replaced by `config.upstream_headers`
+      * `config.downstream_headers_claims` and `config.downstream_headers_names` → replaced by `config.downstream_headers`
+      <br><br>
+
+      The new fields support nested claims. The old fields are deprecated and will be removed in a future version.
+    action: |
+      Update your OpenID Connect plugin configuration to use `config.upstream_headers` and `config.downstream_headers`.
+  - category: Plugins
+    description: |
+      **[OpenID Connect](/plugins/openid-connect/)**
+      <br><br>
+      The `config.consumer_claim` field has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims).
+      The parameter now accepts an array of arrays instead of an array of strings.
+      <br><br>
+      The old `config.consumer_claim` field is deprecated and will be removed in a future version.
+    action: |
+      Update your OpenID Connect plugin configuration to use `config.consumer_claims`.
 {% endtable %}
 
 ### Compatible
@@ -132,6 +222,29 @@ columns:
   - title: Action Required
     key: action
 rows:
+  
+  - category: Plugins
+    description: |
+      **Konnect Application Auth**
+      <br><br>
+      The priority of the internal `konnect-application-auth` plugin changed from 950 to 960. 
+      This ensures that the execution order of the `konnect-application-auth` plugin and the ACL plugin is correct.
+    action: |
+      If you have custom plugins with a priority between 950 and 960 that depend on the `konnect-application-auth` plugin, adjust their priorities or use dynamic plugin ordering.
+  - category: Plugins
+    description: |
+      **[AI Semantic Cache](/plugins/ai-semantic-cache/)**, **[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)**, and **[AI Proxy Advanced](/plugins/ai-proxy-advanced/)**
+      <br><br>
+      These plugins now use a separate column to store the namespace instead of including it in the table name.
+      <br><br>
+      This change invalidates all caches previously created by these plugins.
+    action: |
+      If you are using a long cache TT for AI Semantic Cache, AI Semantic Prompt Guard, or AI Proxy Advanced, plan for cache warmup after upgrading.
+  - category: Admin API
+    description: |
+      Record and map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects. They were previously incorrectly encoded as arrays.
+    action: |
+      If you have any integrations or scripts that expect empty record or map fields to be returned as arrays, update them to expect objects.
   - category: Router
     description: |
       The default setting for [Route](/gateway/entities/route/) protocols has changed from `http,https` to `https`.
@@ -163,35 +276,4 @@ rows:
       {{site.base_gateway}} now validates the database connection configuration at startup and won't start if errors are detected.
     action: |
       Before upgrading, verify that your database connection settings in `kong.conf` are correct and that the database is reachable.
-  - category: Plugins
-    description: |
-      **OpenTelemetry**
-      <br><br>
-      The `config.access_logs_endpoint` parameter has changed to [`config.access_logs.endpoint`](/plugins/opentelemetry/reference/#schema--config-access-logs-endpoint).
-      The old field is deprecated and will be removed in a future version.
-    action: |
-      Update your OpenTelemetry plugin configuration to use `config.access_logs.endpoint`.
-  - category: Plugins
-    description: |
-      **OpenID Connect**
-      <br><br>
-      The following header claims fields have been replaced with new fields:
-      <br><br>
-      * `config.upstream_headers_claims` and `config.upstream_headers_names` → replaced by `config.upstream_headers`
-      * `config.downstream_headers_claims` and `config.downstream_headers_names` → replaced by `config.downstream_headers`
-      <br><br>
-
-      The new fields support nested claims. The old fields are deprecated and will be removed in a future version.
-    action: |
-      Update your OpenID Connect plugin configuration to use `config.upstream_headers` and `config.downstream_headers`.
-  - category: Plugins
-    description: |
-      **OpenID Connect**
-      <br><br>
-      The `config.consumer_claim` field has been converted to [`config.consumer_claims`](/plugins/openid-connect/reference/#schema--config-consumer-claims).
-      The parameter now accepts an array of arrays instead of an array of strings.
-      <br><br>
-      The old `config.consumer_claim` field is deprecated and will be removed in a future version.
-    action: |
-      Update your OpenID Connect plugin configuration to use `config.consumer_claims`.
 {% endtable %}
