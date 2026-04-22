@@ -9,9 +9,8 @@ breadcrumbs:
   - /mesh/
 
 tags:
-  - targetRef policies
-  - policy configuration
-  - policy merging
+  - policy
+  - service-mesh
 
 related_resources:
   - text: Policy hub
