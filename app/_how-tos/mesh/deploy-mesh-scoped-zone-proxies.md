@@ -61,9 +61,10 @@ This guide walks through a fresh three-cluster setup: a global control plane and
 
    {:.info}
    > Using `nohup` lets the tunnel continue running if your terminal session ends.
+   > The `--bind-address=0.0.0.0` flag exposes the tunnel to other minikube clusters via `host.minikube.internal`.
 
    ```sh
-   nohup minikube tunnel -p mesh-global &
+   nohup minikube tunnel -p mesh-global --bind-address=0.0.0.0 &
    ```
 
 ## Deploy the global control plane
@@ -178,7 +179,7 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 
    ```sh
    minikube start -p mesh-zone-1
-   nohup minikube tunnel -p mesh-zone-1 &
+   nohup minikube tunnel -p mesh-zone-1 --bind-address=0.0.0.0 &
    ```
 
 1. Save the following as `zone-1-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
@@ -216,7 +217,7 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 
    ```sh
    minikube start -p mesh-zone-2
-   nohup minikube tunnel -p mesh-zone-2 &
+   nohup minikube tunnel -p mesh-zone-2 --bind-address=0.0.0.0 &
    ```
 
 1. Save the following as `zone-2-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
@@ -234,9 +235,14 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
        - name: default
          ingress:
            enabled: true
+           service:
+             port: 10002
          egress:
            enabled: true
    ```
+
+   {:.info}
+   > Zone-2's ingress uses port `10002` so it doesn't collide with zone-1's ingress on port `10001` when both tunnels publish to the same host address.
 
 1. Install the zone control plane and its zone proxies:
 
@@ -245,6 +251,68 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
      -f zone-2-values.yaml \
      kong-mesh kong-mesh/kong-mesh
    ```
+
+## Patch the ingress Services for cross-cluster routing
+
+Minikube tunnels assign `127.0.0.1` as the external IP, which doesn't route between clusters.
+Patch each zone's ingress Service to advertise `host.minikube.internal`'s IP instead.
+
+1. Get the host IP that all minikube clusters can reach:
+
+   ```sh
+   export HOST_IP=$(minikube ssh -p mesh-zone-1 -- getent hosts host.minikube.internal | awk '{print $1}')
+   echo $HOST_IP
+   ```
+
+1. Patch the ingress Service in zone-1:
+
+   ```sh
+   kubectl --context mesh-zone-1 -n kong-mesh-system patch svc kong-mesh-default-ingress \
+     --type merge -p "{\"spec\":{\"externalIPs\":[\"$HOST_IP\"]}}"
+   ```
+
+1. Patch the ingress Service in zone-2:
+
+   ```sh
+   kubectl --context mesh-zone-2 -n kong-mesh-system patch svc kong-mesh-default-ingress \
+     --type merge -p "{\"spec\":{\"externalIPs\":[\"$HOST_IP\"]}}"
+   ```
+
+The `MeshZoneAddress` controller will pick up the new external IP and regenerate the address resources.
+
+## Propagate trust between zones
+
+Each zone generates a `MeshTrust` containing its local CA bundle.
+For cross-zone mTLS to work, each zone must trust the other zone's CA.
+Republish each zone's trust bundle to the global control plane so it syncs everywhere.
+
+1. Export zone-1's trust bundle and apply it to the global CP:
+
+   ```sh
+   kubectl --context mesh-zone-1 -n kong-mesh-system get meshtrust identity -o yaml | \
+     sed 's/name: identity/name: trust-of-zone-1/' | \
+     sed '/resourceVersion:/d' | \
+     sed '/uid:/d' | \
+     sed '/creationTimestamp:/d' | \
+     sed '/generation:/d' | \
+     sed 's/kuma.io\/origin: zone/kuma.io\/origin: global/' | \
+     kubectl --context mesh-global apply -f -
+   ```
+
+1. Export zone-2's trust bundle and apply it to the global CP:
+
+   ```sh
+   kubectl --context mesh-zone-2 -n kong-mesh-system get meshtrust identity -o yaml | \
+     sed 's/name: identity/name: trust-of-zone-2/' | \
+     sed '/resourceVersion:/d' | \
+     sed '/uid:/d' | \
+     sed '/creationTimestamp:/d' | \
+     sed '/generation:/d' | \
+     sed 's/kuma.io\/origin: zone/kuma.io\/origin: global/' | \
+     kubectl --context mesh-global apply -f -
+   ```
+
+The global control plane syncs these trust bundles to all zones, enabling cross-zone certificate validation.
 
 ## Inspect what the chart produced
 
@@ -294,9 +362,9 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 
    ```sh
    for ctx in mesh-zone-1 mesh-zone-2; do
-     kubectl --context $ctx create namespace kong-mesh-demo \
+     kubectl --context $ctx create namespace kuma-demo \
        --dry-run=client -o yaml | kubectl --context $ctx apply -f -
-     kubectl --context $ctx label namespace kong-mesh-demo \
+     kubectl --context $ctx label namespace kuma-demo \
        kuma.io/sidecar-injection=enabled --overwrite
      kubectl --context $ctx apply -f https://raw.githubusercontent.com/kumahq/kuma-counter-demo/refs/heads/master/demo.yaml
    done
@@ -305,11 +373,15 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 1. From a `demo-app` pod in zone-1, curl the `demo-app` Service in zone-2 using its cross-zone hostname:
 
    ```sh
-   kubectl --context mesh-zone-1 -n kong-mesh-demo exec deploy/demo-app -c demo-app -- \
-     curl -s http://demo-app.kong-mesh-demo.svc.zone-2.mesh.local:5050/
+   kubectl --context mesh-zone-1 -n kuma-demo exec deploy/demo-app -c demo-app -- \
+     curl -s http://demo-app.kuma-demo.svc.zone-2.mesh.local:5050/
    ```
 
    The request leaves zone-1 through the zone egress, enters zone-2 through the zone ingress, and hits the `demo-app` pod there.
+
+   {:.info}
+   > If the request times out, check that the minikube tunnels are still running.
+   > Tunnels can become unresponsive after sleep/wake cycles; restart them with `minikube tunnel -p <profile> --bind-address=0.0.0.0`.
 
 1. Confirm the traffic passed through the zone-2 zone ingress by reading its sidecar stats:
 
