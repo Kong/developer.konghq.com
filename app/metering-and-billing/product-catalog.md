@@ -14,8 +14,12 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: "Subjects"
     url: /metering-and-billing/subjects/
+  - text: "Pricing models"
+    url: /metering-and-billing/pricing-models/
 
 toc_depth: 4
 ---
@@ -255,7 +259,10 @@ Rate cards can be configured with or without a feature:
 
 #### Add-ons
 
-Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. Add-ons allow you to sell extra features, overage packs, or services without changing the core plan.
+Add-ons let you extend your plans with optional features or capacity that customers can purchase on demand. 
+They are versioned and consist of one or more rate cards defining pricing, entitlements, and billing cadence independently of the base plan. 
+
+See the [Add-ons reference](/metering-and-billing/add-ons/) to learn more.
 
 #### Pricing models
 
@@ -268,21 +275,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - model: "Free"
+  - model: "[Free](/metering-and-billing/pricing-models/#free)"
     description: "Free pricing"
-  - model: "Flat fee"
+  - model: "[Flat fee](/metering-and-billing/pricing-models/#flat-fee)"
     description: "A one-time or recurring fee"
-  - model: "Usage based"
+  - model: "[Usage based](/metering-and-billing/pricing-models/#usage-based)"
     description: "Linear pricing based on metered usage"
-  - model: "Tiered"
+  - model: "[Tiered](/metering-and-billing/pricing-models/#tiered)"
     description: "Tiered pricing based on metered usage"
-  - model: "Package"
+  - model: "[Package](/metering-and-billing/pricing-models/#package)"
     description: "Pricing based on fixed-sized usage packages"
-  - model: "Dynamic"
+  - model: "[Dynamic](/metering-and-billing/pricing-models/#dynamic)"
     description: "USD prices created dynamically from meter values"
 {% endtable %}
 
 Besides the **Free** pricing model, other models require configuration that you can see from the {{site.konnect_short_name}} UI. 
+
+See the [pricing models reference](/metering-and-billing/pricing-models/) for details.
 
 #### Tax calculations
 
@@ -304,6 +313,9 @@ Entitlements can help you implement various monetization strategies:
 
 Entitlements are available in three types: metered, static, and boolean. See the [Entitlements reference](/metering-and-billing/entitlements/) to learn more.
 
+{:.info}
+> **Entitlement enforcement:** {{site.base_gateway}} and the {{site.ai_gateway}} do not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
+
 #### Grants
 
 A grant is a record of usage allowance issued to a specific customer via a metered entitlement. Grants determine how much of a feature a customer is allowed to consume. A metered entitlement tracks a running balance. When usage is reported, it is deducted from the grants issued for that entitlement.
@@ -316,7 +328,7 @@ For flat fee rate cards, the billing cadence can be omitted. In this case, the s
 
 #### Price
 
-The price property defines the price the feature is sold at. See the [Pricing models section](#pricing-models) for more details.
+The price property defines the price the feature is sold at. See the [Pricing models reference](/metering-and-billing/pricing-models/) for more details.
 
 Free items can be implemented using three distinct approaches:
 
@@ -354,4 +366,4 @@ Example for reverse trials with plan phases:
 
 ## Subscriptions
 
-{{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).
+{{site.konnect_short_name}} {{site.metering_and_billing}} [subscriptions](/metering-and-billing/subscriptions/) link your [Customers](/metering-and-billing/customer/) to plans, and [meters](/metering-and-billing/metering/).

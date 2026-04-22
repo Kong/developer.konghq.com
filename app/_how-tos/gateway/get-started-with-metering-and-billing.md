@@ -53,8 +53,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
     url: /how-to/meter-llm-traffic/
   - text: Get started with {{site.metering_and_billing}} generic meters
@@ -246,3 +246,6 @@ This will generate six requests. Now, check the invoice that was created in {{si
 1. Click **Preview Invoice**.
 
 You'll see in Lines that `example-service` is listed and was used six times. In this guide, you're using the sandbox for invoices. To deploy your subscription in production, configure a payments integration in **{{site.metering_and_billing}}** > **Settings**.
+
+{:.info}
+> **Entitlement enforcement:** {{site.base_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.

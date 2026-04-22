@@ -15,8 +15,12 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
-  - text: "Rate Cards"
+  - text: "Rate cards"
     url: /metering-and-billing/product-catalog/#rate-cards
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
+  - text: Notifications
+    url: /metering-and-billing/notifications/
 
 ---
 
@@ -133,3 +137,10 @@ status_code: 200
 method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
+
+## Entitlement enforcement
+
+{{site.metering_and_billing}} tracks entitlement balances in real time, but does not automatically enforce limits at the {{site.base_gateway}} or {{site.ai_gateway}} level.
+
+{:.info}
+> **{{site.base_gateway}} and {{site.ai_gateway}} automatic enforcement is not available yet.** Automatic entitlement enforcement via a {{site.base_gateway}} plugin is planned for a future release. Until then, use [{{site.metering_and_billing}} Notifications](/metering-and-billing/notifications/) to receive a webhook when a customer reaches their entitlement threshold, and enforce access restrictions manually in your own infrastructure (for example, by removing a Consumer from a Consumer Group or returning a `403` response from your application).

@@ -49,8 +49,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.base_gateway}} API requests
     url: /metering-and-billing/get-started/
   - text: Get started with {{site.metering_and_billing}} generic meters
@@ -217,6 +217,9 @@ body:
 <!--vale on-->
 
 This will generate AI LLM token usage that will be captured by {{site.metering_and_billing}}.
+
+{:.info}
+> **Entitlement enforcement:** The {{site.ai_gateway}} does not automatically block traffic when a customer's entitlement is exhausted. To enforce limits, set up a webhook notification rule and cut off access in your own infrastructure. See [Enforcing entitlements](/metering-and-billing/entitlements/#entitlement-enforcement) for details.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.

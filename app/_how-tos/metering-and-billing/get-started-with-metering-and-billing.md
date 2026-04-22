@@ -44,8 +44,8 @@ related_resources:
     url: /metering-and-billing/metering/
   - text: Customers and usage attribution
     url: /metering-and-billing/customer/
-  - text: Billing, invoicing, and subscriptions
-    url: /metering-and-billing/billing-invoicing-subscriptions/
+  - text: Billing and invoicing
+    url: /metering-and-billing/billing-invoicing/
   - text: Meter and bill {{site.base_gateway}} API requests
     url: /metering-and-billing/get-started/
   - text: Meter and bill {{site.ai_gateway}} LLM tokens
@@ -151,7 +151,7 @@ In this section, you'll create an Premium Plan plan that charges customers $1 pe
 
 ## Start a subscription
 
-[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/billing-invoicing-subscriptions/#subscriptions) them to the Premium Plan plan.
+[Customers](/metering-and-billing/customer/) are the entities that pay for consumption. Here you'll create a customer and [subscribe](/metering-and-billing/subscriptions/) them to the Premium Plan plan.
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. In the {{site.metering_and_billing}} sidebar, click **Billing**.
