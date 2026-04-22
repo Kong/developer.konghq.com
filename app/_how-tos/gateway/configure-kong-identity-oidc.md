@@ -42,7 +42,7 @@ faqs:
 
       1.  In the Kong Identity tab of your Control Plane, note the `Client ID` or `sub` claim for your application.
       2.  Navigate to **Consumers** and create a  Consumer. Set the **Custom ID** to match the unique ID identified in Step 1.
-      3.  **Configure the Mapping**: Update your OIDC plugin configuration with the following:
+      3.  Update your OIDC plugin configuration with the following:
           * `config.consumer_claim`: Set this to `sub` (or the specific claim containing the ID from Step 1).
           * `config.consumer_by`: Set this to `custom_id`.
       4.  Apply your desired Consumer-scoped plugin (for example, Rate Limiting) directly to the **Consumer** entity you created.
