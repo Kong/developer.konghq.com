@@ -114,7 +114,7 @@ To apply plugins to OIDC clients, the Gateway must map the incoming token to a *
     * [`config.consumer_by`](/plugins/openid-connect/reference/#schema--config-consumer-by): The Consumer field to match against (for example, `["username"]` or `["custom_id"]`).
 * **Apply Scoped Plugins**:
     * **Consumer-scoped**: Apply plugins directly to the individual Consumer entity.
-    * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](https://docs.konghq.com/gateway/latest/admin-api/consumer-groups/reference/) to inherit shared policies across multiple clients.
+    * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](/gateway/entities/consumer-group/) to inherit shared policies across multiple clients.
 
 {:.info}
 > You do not need to migrate or create client credentials (like API keys) for these Consumers. The OIDC token serves as the authenticated credential for the mapped Consumer.
