@@ -322,6 +322,5 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 
 ## Next steps
 
-- Target individual zone proxy listeners from policies with `sectionName` - covered in a follow-up guide.
-- Add a second mesh by appending another entry to `kuma.meshes[]`.
-- Read the [`MeshIdentity`](/mesh/mesh-identity/) guide to switch the bundled CA for a production issuer.
+<!--- Target individual zone proxy listeners from policies with `sectionName` - covered in a follow-up guide.-->
+<!--- Read the [`MeshIdentity`](/mesh/mesh-identity/) guide to switch the bundled CA for a production issuer.-->
