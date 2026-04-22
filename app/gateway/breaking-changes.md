@@ -821,8 +821,8 @@ path of the `anthropic` setting for the `llm/v1/chat` Route type has changed fro
 
 #### PCRE version bump
 
-{{site.base_gateway}} 3.7 upgrades PCRE from `libpcre` 8.45 to `libpcre2` 10.43. 
-This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration. 
+{{site.base_gateway}} 3.7 upgrades PCRE from `libpcre` 8.45 to `libpcre2` 10.43.
+This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
 See the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html) for more information on how to adjust your regexes.
 
 #### Known issues in 3.7.0.0
