@@ -81,11 +81,11 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Dynamic mocking expands Insomnia’s mock servers with templates that generate context-aware and realistic responses.  
-                    Each response is rendered server-side by the mock server using  templates with a safe, restricted tag set.  
-                    Insomnia also provides **Faker template tags** for generating random names, dates, and other test data at runtime.
+                    Dynamic mocking expands Insomnia’s mock servers with the Liquid template language that generates context-aware and realistic responses.
+                    Each response is rendered server-side by the mock server using Liquid templates with a safe, restricted tag set.
+                    Insomnia also provides faker variables for generating random names, dates, and other test data at runtime.
 
-                    Dynamic mocking is supported in **self-hosted** mock servers, and powered by the Insomnia **Mockbin** service.
+                    Dynamic mocking is supported in both **cloud-hosted** and **self-hosted** mock servers, and powered by the Insomnia **Mockbin** service.
                     [Learn more about Dynamic mocking](/insomnia/dynamic-mocking/)
   - header:
       text: "Frequently asked questions"
