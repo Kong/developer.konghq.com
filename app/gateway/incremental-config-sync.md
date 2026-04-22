@@ -121,7 +121,7 @@ Each data plane uses the `KONG_INCREMENTAL_SYNC` setting to determine which prot
 * You can roll out incremental config sync incrementally by toggling this variable per data plane, no additional changes are required.
 
 {:.warning}
-> **Version mismatch silently falls back to full sync (v1)**: Incremental config sync (sync.v2) is only used when the Control Plane and Data Plane run the same {{site.base_gateway}} major and minor version.
+> **Version mismatch silently falls back to full sync (v1)**: Incremental config sync (sync.v2) is only used when the Control Plane and Data Plane run exactly the same {{site.base_gateway}} version.
 >
 > If the Control Plane is on a **newer** major or minor version than the Data Plane, the Control Plane does not advertise the `kong.sync.v2` capability to that Data Plane, and the Data Plane falls back to full sync (v1) — even when `KONG_INCREMENTAL_SYNC=on` is set on both sides. No error is raised on the Data Plane, so the fallback can go unnoticed.
 >
