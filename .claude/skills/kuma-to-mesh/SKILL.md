@@ -5,7 +5,7 @@ argument-hint: <path-to-kuma-source-file>
 allowed-tools: Read Write Edit Bash
 ---
 
-The arguments are: `<path-to-kuma-source-file>`. Parse them as the first and second space-separated tokens of `$ARGUMENTS`.
+The arguments are: `<path-to-kuma-source-file>`. Parse it as the first space-separated token of `$ARGUMENTS`.
 
 Convert the Kuma documentation file into a Kong Mesh documentation page.
 
@@ -13,7 +13,7 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 
 - **Kuma source root**: https://github.com/kumahq/kuma-website/tree/master/app/_src
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
-- **Kong Mesh how-to target root**: `/developer.konghq.com/app/mesh/`
+- **Kong Mesh how-to target root**: `/developer.konghq.com/app/_how-tos/mesh`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
 
 ---
@@ -43,7 +43,8 @@ Read the Kuma source file. Note its existing frontmatter fields (`title`, `descr
 - If a config entry exists: derive the filename from its `url` field.
   - Example: `url: '/mesh/architecture/'` → target file is `architecture.md`
 - Otherwise: use the source file's basename.
-- Full target path: `developer.konghq.com/app/mesh/<filename>.md`
+- If the page is a reference: write it to `developer.konghq.com/app/mesh/<filename>.md`
+- If the page is a how-to: write it to `developer.konghq.com/app/_how-tos/mesh/<filename>.md`
 
 Check whether the target file already exists. If it does, show the user the existing content and ask whether to overwrite before proceeding.
 
@@ -74,6 +75,7 @@ breadcrumbs:
 ```yaml
 content_type: reference
 layout: reference
+permalink: <config url when the desired URL does not match the default URL from app/mesh/<filename>.md>
 ```
 
 **Include if the page is a how-to guide:**
@@ -131,7 +133,7 @@ In body text (not inside code blocks, YAML examples, or annotations):
 ### 5e. Version-gated content (`{% if_version %}` blocks)
 
 - If an `{% if_version %}` block only applies to versions older than the `min_version`, (for example, `{% if_version lte:2.5.x %}` when `min_version` is `2.9`), remove the content.
-- If an `{% if_version %}` block applies to the `min_version` and later versions, (for example, `{% if_version gte:2.6.x %}` when `min_version` is `2.9`), keep the content are remove the version gating.
+- If an `{% if_version %}` block applies to the `min_version` and later versions, (for example, `{% if_version gte:2.6.x %}` when `min_version` is `2.9`), keep the content and remove the version gating.
 
 In other cases, do NOT attempt to automatically resolve version gates. Instead:
 - Leave the `{% if_version %}` / `{% endif_version %}` tags in place
@@ -150,6 +152,7 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
   ```
   {:.info}
   > If you want to configure version, ciphers or per service permissive / strict mode check out [`MeshTLS`](/mesh/policies/meshtls)
+  ```
 
 - Replace {% tabs %} with {% navtabs %} and {% tab %} with {% navtab %}
   - {% navtabs %} should have a title in quotes, for example: {% navtabs "environment" %}
@@ -162,10 +165,10 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
      - title: Name
        key: name
      - title: Description
-      key: description
-    rows:
-      - name: Field name
-        description: Field description
+       key: description
+   rows:
+     - name: Field name
+       description: Field description
    {% endtable %}
    ```
 
@@ -209,4 +212,3 @@ Show a summary with:
    - Links that couldn't be mapped (no `/mesh/` equivalent known)
    - Missing `related_resources` (if config had none and source had none)
    - Whether a `min_version` was set or needs to be determined
-
