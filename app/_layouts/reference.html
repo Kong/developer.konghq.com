@@ -10,7 +10,9 @@ layout: with_aside
   {% endunless %}
 {% endif %}
 
+{% if page.stepper %}<div class="stepper reference-stepper">{% endif %}
 {{ content }}
+{% if page.stepper %}</div>{% endif %}
 
 {% if page.faqs %}
 {% include sections/faq.html %}
