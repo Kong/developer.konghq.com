@@ -1,6 +1,6 @@
 ---
 title: "Policies"
-description: 'Learn how policies in Kong Mesh configure Data Plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
+description: 'Learn how policies in {{site.mesh_product_name}} configure Data Plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
 content_type: reference
 layout: reference
 products:
