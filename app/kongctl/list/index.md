@@ -37,6 +37,9 @@ rows:
       [kongctl list auth-strategy](/kongctl/list/auth-strategy/)
     description: "List authentication strategies."
   - command: |
+      [kongctl list dcr-provider](/kongctl/list/dcr-provider/)
+    description: "List DCR providers."
+  - command: |
       [kongctl list gateway](/kongctl/list/gateway/)
     description: "List gateways."
   - command: |

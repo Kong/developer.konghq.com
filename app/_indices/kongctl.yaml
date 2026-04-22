@@ -60,6 +60,9 @@ groups:
         items:
             - path: /kongctl/dump/
             - path: /kongctl/dump/*/**
+      - title: Explain Schema
+        items:
+            - path: /kongctl/explain/
       - title: Get Resources
         items:
             - path: /kongctl/get/
@@ -100,6 +103,9 @@ groups:
         items:
             - path: /kongctl/ps/
             - path: /kongctl/ps/*/**
+      - title: Scaffold Configuration
+        items:
+            - path: /kongctl/scaffold/
       - title: Sync Configuration
         items:
             - path: /kongctl/sync/

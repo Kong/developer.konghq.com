@@ -43,6 +43,12 @@ rows:
       [kongctl get catalog](/kongctl/get/catalog/)
     description: "Get {{site.catalog}} details."
   - command: |
+      [kongctl get dcr-provider](/kongctl/get/dcr-provider/)
+    description: "List or get DCR providers."
+  - command: |
+      [kongctl get event-gateway](/kongctl/get/event-gateway/)
+    description: "Get Event Gateway details."
+  - command: |
       [kongctl get gateway](/kongctl/get/gateway/)
     description: "Get gateway information."
   - command: |
