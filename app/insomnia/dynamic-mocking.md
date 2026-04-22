@@ -9,7 +9,7 @@ products:
 tags:
 - mock-servers
 
-description: Use dynamic mocking in Insomnia mock servers to return request-aware responses and realistic mock data with self-hosted mocks.
+description: Use dynamic mocking in Insomnia mock servers to return request-aware responses and realistic mock data.
 
 breadcrumbs:
   - /insomnia/
@@ -72,7 +72,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-For adding random values, Insomnia provides [**Faker template tags**](/insomnia/template-tags/) that you can insert anywhere that tags are supported.
+For adding random values, Insomnia provides faker variables that you can insert anywhere in the response body.
 
 Use dynamic mocking to:
 - **Serve request-aware responses**: When the mock reads the request and returns different content from it. For example, echoing identifiers or switching fields based on a query parameter or request body.
@@ -95,55 +95,25 @@ rows:
   - option: Apply conditional logic
     description: |
       Use simple Liquid conditions to vary the response based on the request.  
-      Only a limited set of Liquid tags are supported for safety.
+      Only a limited subset of Liquid tags is supported for safety.
   - option: Generate fake data
     description: |
-      Insert random but realistic data, such as names, emails, or timestamps.  
-      Use [**Faker template tags**](/insomnia/template-tags/) anywhere template tags are supported.  
+      Insert random but realistic data, such as names, emails, or timestamps using faker variables.
   - option: Combine request and fake data
     description: |
       Mix request data with generated values for realistic scenarios. For example, include the requester’s ID with random profile data.
 {% endtable %}
 <!-- vale on -->
 
-## Template reference examples
+## Template syntax
 
-Dynamic mocking in Insomnia supports a limited but powerful set of Liquid template tags and logic controls. These enable variable responses, conditional behavior, and safe data generation.
+Dynamic mocking uses [**Liquid**](https://liquidjs.com/tutorials/intro-to-liquid.html) as its templating language. Mock response bodies are rendered as Liquid templates at request time, with two built-in variables available:
 
-Faker usage follows Insomnia’s template tag model. You can use Faker functions anywhere template tags are supported to generate realistic mock data like names, emails, or timestamps.
+- `req` — exposes data from the incoming request, including headers, query parameters, path segments, and body.
+- `faker` — exposes a set of data generation functions that produce random but realistic values such as names, emails, and timestamps.
 
-For a complete list of available Faker properties, go to [**faker-functions.ts**](https://github.com/Kong/insomnia/blob/develop/packages/insomnia/src/templating/faker-functions.ts).
+To keep templates safe and predictable, only a limited subset of Liquid tags is supported for logic control. For filters, only the [default filter](https://liquidjs.com/filters/default.html) is supported.
 
-### Liquid logic control
-
-Logic control in dynamic mocking is based on Liquid’s templating language; it only supports a subset of built-in tags for safety and simplicity.
-
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Tag
-    key: tag
-  - title: Description
-    key: description
-  - title: Reference
-    key: ref
-rows:
-  - tag: "`assign`"
-    description: "Creates or updates a variable within the template scope."
-    ref: "[LiquidJS Assign](https://liquidjs.com/zh-cn/tags/assign.html)"
-  - tag: "`if`"
-    description: "Conditionally renders a block of content when a statement evaluates as true."
-    ref: "[LiquidJS If](https://liquidjs.com/zh-cn/tags/if.html)"
-  - tag: "`unless`"
-    description: "Renders a block when a statement evaluates as false; acts as the inverse of `if`."
-    ref: "[LiquidJS Unless](https://liquidjs.com/zh-cn/tags/unless.html)"
-  - tag: "`raw`"
-    description: "Prevents Liquid from interpreting enclosed content. Use this to escape template syntax within mock responses."
-    ref: "[LiquidJS Raw](https://liquidjs.com/zh-cn/tags/raw.html)"
-{% endtable %}
-<!-- vale on -->
-
-For additional implementation details and syntax behavior, go to the [**LiquidJS documentation**](https://liquidjs.com/zh-cn/).
 
 ### Use data from requests
 
@@ -173,7 +143,7 @@ You can access values from incoming requests and include them in your mock respo
 
 ### Generate random data
 
-Use Faker template tags to generate random but realistic data in mock responses.
+Use faker variables to generate random but realistic data in mock responses.
 
 **Format to output random data:**
 
