@@ -114,7 +114,7 @@ When using a `builtin` backend {{site.mesh_product_name}} automatically generate
 * `<mesh name>.ca-builtin-cert-<backend name>` for the certificate
 * `<mesh name>.ca-builtin-key-<backend name>` for the key
 
-On Kubernetes, {{site.mesh_product_name}} Secrets are stored in the `{{site.mesh_namespace}}` namespace, while on Universal they are stored in the underlying [store](/mesh/configuration#store) configured in `kuma-cp`.
+On Kubernetes, {{site.mesh_product_name}} Secrets are stored in the `{{site.mesh_namespace}}` namespace, while on Universal they are stored in the underlying [store](/mesh/control-plane-configuration/#store) configured in `kuma-cp`.
 
 Retrieve the secrets via `kumactl` on both Universal and Kubernetes, or via `kubectl` on Kubernetes only:
 

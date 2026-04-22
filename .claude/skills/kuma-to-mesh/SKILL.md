@@ -125,6 +125,8 @@ Apply these verbatim substitutions anywhere they appear in link targets:
 - `/policies/` → `/mesh/policies/`
 - `/features/` → `/mesh/enterprise/`
 
+When replacing relative links, check against https://developer.konghq.com/ that the URL doesn't return a 404 and that the anchor exists.
+
 ### 5d. Prose "Kuma" replacement
 In body text (not inside code blocks, YAML examples, or annotations):
 - Replace standalone `Kuma` (the product name) with `{{site.mesh_product_name}}`
