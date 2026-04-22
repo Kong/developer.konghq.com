@@ -117,7 +117,7 @@ To apply plugins to OIDC clients, the Gateway must map the incoming token to a *
     * **Consumer Group-scoped**: Assign mapped Consumers to a [Consumer Group](/gateway/entities/consumer-group/) to inherit shared policies across multiple clients.
 
 {:.info}
-> You do not need to migrate or create client credentials (like API keys) for these Consumers. The OIDC token serves as the authenticated credential for the mapped Consumer.
+> You don't need to migrate or create client credentials (like API keys) for these Consumers. The OIDC token serves as the authenticated credential for the mapped Consumer.
 
 ## Claim configuration
 
