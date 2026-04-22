@@ -112,7 +112,7 @@ flowchart LR
     gcp --> gcp_up["GCP upstreams"]
 {% endmermaid %}
 
-You can optionally use `api.name.com` (geo‑routed) for generic global access or disaster recovery.
+You can optionally use `api.example.com` (geo‑routed) for generic global access or disaster recovery.
 
 ### Geo-proximity DNS
 

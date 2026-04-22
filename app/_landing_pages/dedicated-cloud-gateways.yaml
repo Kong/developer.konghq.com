@@ -223,7 +223,7 @@ rows:
                 Learn how to deploy Dedicated Cloud Gateways across multiple cloud providers, including supported hostname strategies and their tradeoffs.
               icon: /assets/icons/cloud.svg
               cta:
-                url: /gateway/data-plane-reference/
+                url: /dedicated-cloud-gateways/multi-cloud/
   
   - header:
       type: h2

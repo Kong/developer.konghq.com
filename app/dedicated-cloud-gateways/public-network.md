@@ -138,16 +138,16 @@ We recommend creating and securing your public Dedicated Cloud Gateway in the fo
 1. *Before* creating Gateway Services and Routes, create the Dedicated Cloud Gateway network and control plane in {{site.konnect_short_name}}.
    The network will be scanned, but since there aren't any Routes, scanners get 404s or connection resets. 
 2. Configure your CDN/WAF in front of the Kong NLB before you configure any Routes or Services. 
-1. Allowlist the Dedicated Cloud Gateway network egress IPs.
-3. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Kong NLB directly, they get rejected before any Route matching happens.
-4. Configure your Routes and Services pointing to real upstreams.
+3. Allowlist the Dedicated Cloud Gateway network egress IPs.
+4. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Kong NLB directly, they get rejected before any Route matching happens.
+5. Configure your Routes and Services pointing to real upstreams.
 
 ### WAF
 
 {% include /sections/dcgw-waf-intro.md %}
 
 Kong strongly recommends configuring a WAF for public Dedicated Cloud Gateways. 
-WAF configuration differs for [public](/dedicated-cloud-gateways/public-network/) deployments.
+WAF configuration differs for public deployments.
 
 Public Dedicated Cloud Gateways are exposed via a Kong-managed NLB with a public FQDN.
 Most WAF services can't attach directly to a network-layer load balancer (NLB) because NLBs operate at Layer 4 and don't terminate HTTP. 
