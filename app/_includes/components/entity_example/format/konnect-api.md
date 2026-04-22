@@ -19,6 +19,8 @@ To create a CA Certificate, call the Konnect [control plane config API's `/ca-ce
 To create a Certificate, call the Konnect [control plane config API's `/certificates` endpoint](/api/konnect/control-planes-config/#/operations/create-certificate). 
 {% when 'vault' %}
 To create a Vault entity, call the Konnect [control plane config API's `/vaults` endpoint](/api/konnect/control-planes-config/#/operations/create-vault). 
+{% when 'workspace' %}
+To create a Workspace entity, call the Konnect [control plane config API's `/workspaces` endpoint](/api/konnect/control-planes-config/#/operations/create-workspace). 
 {% when 'key' %}
 To create a Key, call the Konnect [control plane config API's `/keys` endpoint](/api/konnect/control-planes-config/#/operations/create-key). 
 {% when 'key-set' %}
