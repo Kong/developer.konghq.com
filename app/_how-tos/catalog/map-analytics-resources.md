@@ -2,7 +2,7 @@
 title: Map {{site.observability}} reports in Catalog
 permalink: /how-to/map-analytics-resources/
 content_type: how_to
-description: Learn how to map {{site.konnect_short_name}} {{site.observability}} resources in {{site.konnect_catalog}} to visualize {{site.observability}} Reports.
+description: Learn how to map {{site.konnect_short_name}} analytics resources in {{site.konnect_catalog}} to visualize {{site.observability}} Reports.
 products:
   - catalog
 works_on:
@@ -13,7 +13,7 @@ search_aliases:
   - konnect analytics
 tldr:
   q: How do I map {{site.observability}} reports in {{site.konnect_catalog}}?
-  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.observability}} resources to visualize {{site.observability}} Reports. When listing resources with the API, the filter key is `integration.name=analytics`.
+  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.konnect_short_name}} analytics resources to visualize {{site.observability}} Reports.
 prereqs:
   inline:
     - title: "{{site.observability}} reports"
