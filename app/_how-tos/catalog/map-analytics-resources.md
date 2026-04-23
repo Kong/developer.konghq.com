@@ -1,8 +1,8 @@
 ---
-title: Map Konnect Analytics reports in Catalog
+title: Map {{site.observability}} reports in Catalog
 permalink: /how-to/map-analytics-resources/
 content_type: how_to
-description: Learn how to map {{site.konnect_short_name}} Analytics resources in {{site.konnect_catalog}} to visualize Analytics Reports.
+description: Learn how to map {{site.konnect_short_name}} {{site.observability}} resources in {{site.konnect_catalog}} to visualize {{site.observability}} Reports.
 products:
   - catalog
 works_on:
@@ -10,18 +10,19 @@ works_on:
 entities: []
 search_aliases:
   - service catalog
+  - konnect analytics
 tldr:
-  q: How do I map {{site.konnect_short_name}} Analytics reports in {{site.konnect_catalog}}?
-  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.konnect_short_name}} Analytics resources to visualize Analytics Reports.
+  q: How do I map {{site.observability}} reports in {{site.konnect_catalog}}?
+  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.konnect_short_name}} Analytics resources to visualize {{site.observability}} Reports.
 prereqs:
   inline:
-    - title: "{{site.konnect_short_name}} Analytics reports"
+    - title: "{{site.observability}} reports"
       content: |
-        You'll need a [{{site.konnect_short_name}} Analytics report](https://cloud.konghq.com/analytics/reports) to ingest in {{site.konnect_catalog}} as resources.
+        You'll need a [{{site.observability}} report](https://cloud.konghq.com/analytics/reports) to ingest in {{site.konnect_catalog}} as resources.
       icon_url: /assets/icons/analytics.svg
 related_resources:
-  - text: "{{site.konnect_short_name}} Analytics integration"
-    url: /catalog/integrations/konnect-analytics/
+  - text: "{{site.observability}} integration"
+    url: /catalog/integrations/observability/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"
@@ -30,9 +31,9 @@ related_resources:
 
 ## Create a service in {{site.konnect_catalog}}
 
-In this tutorial, you'll map Reports from {{site.konnect_short_name}} Analytics to a service in {{site.konnect_catalog}}. Because the {{site.konnect_short_name}} Analytics integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
+In this tutorial, you'll map Reports from {{site.observability}} to a service in {{site.konnect_catalog}}. Because the {{site.observability}} integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
 
-Create a service that you'll map to your {{site.konnect_short_name}} Analytics resources:
+Create a service that you'll map to your {{site.observability}} resources:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -52,9 +53,9 @@ Export the {{site.konnect_catalog}} service ID:
 export SERVICE_ID='YOUR-SERVICE-ID'
 ```
 
-## List {{site.konnect_short_name}} Analytics resources
+## List {{site.observability}} resources
 
-Before you can map a resource to {{site.konnect_catalog}}, you first need to find the resources that are pulled in from {{site.konnect_short_name}} Analytics:
+Before you can map a resource to {{site.konnect_catalog}}, you first need to find the resources that are pulled in from {{site.observability}}:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -73,7 +74,7 @@ export ANALYTICS_RESOURCE_ID='YOUR-RESOURCE-ID'
 
 ## Map resources to a {{site.konnect_catalog}} service
 
-Now, you can map the {{site.konnect_short_name}} Analytics resource to the service:
+Now, you can map the {{site.observability}} resource to the service:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -89,7 +90,7 @@ body:
 
 ## Validate the mapping
 
-To confirm that the {{site.konnect_short_name}} Analytics resource is now mapped to the intended service, list the service’s mapped resources:
+To confirm that the {{site.observability}} resource is now mapped to the intended service, list the service’s mapped resources:
 
 <!--vale off-->
 {% konnect_api_request %}
