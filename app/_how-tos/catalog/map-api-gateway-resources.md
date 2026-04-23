@@ -70,7 +70,7 @@ status_code: 200
 Export the resource ID you want to map to the service:
 
 ```sh
-export GATEWAY_MANAGER_RESOURCE_ID='YOUR-RESOURCE-ID'
+export API_GATEWAY_RESOURCE_ID='YOUR-RESOURCE-ID'
 ```
 
 ## Map resources to a {{site.konnect_catalog}} service
@@ -85,7 +85,7 @@ status_code: 201
 region: us
 body:
   service: $SERVICE_ID
-  resource: $GATEWAY_MANAGER_RESOURCE_ID
+  resource: $API_GATEWAY_RESOURCE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
 

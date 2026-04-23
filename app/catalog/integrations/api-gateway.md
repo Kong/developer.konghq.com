@@ -1,5 +1,5 @@
 ---
-title: "API Gateway integration"
+title: "API Gateway"
 content_type: reference
 layout: reference
 
@@ -34,10 +34,6 @@ This integration allows you to associate your {{site.konnect_catalog}} service t
 ## Authorize the API Gateway integration
 
 The API Gateway integration is built directly into {{site.konnect_catalog}}. No additional authorization is required. As new Gateway Services are created in API Gateway, they are automatically discovered by {{site.konnect_catalog}} and surfaced as Resources.
-
-## Authorize the API Gateway integration
-
-The API Gateway integration is built directly into Service Catalog. No additional authorization is required. As new Gateway Services are created in {{site.konnect_short_name}}, they are automatically discovered by Service Catalog and surfaced as Resources.
 
 ## Resources
 
