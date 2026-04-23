@@ -20791,7 +20791,7 @@
         "scope": "Core"
       },
       {
-        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`; deprecated `sandbox` mode. Default changed to `strict`.\n",
+        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`. The default mode changed from `sandbox` to `strict`.\n",
         "type": "feature",
         "scope": "Core"
       },
