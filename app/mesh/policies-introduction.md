@@ -37,7 +37,7 @@ Metadata identifies a policy by its `name`, `type`, and the `mesh` it belongs to
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-In Kubernetes, all our policies are implemented as [custom resource definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
+In Kubernetes, all {{ site.mesh_product_name }} policies are implemented as [custom resource definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -460,9 +460,9 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The table above shows that we can select sidecar proxies via `Mesh`, `Dataplane`, `MeshGateway`.
+The table above shows that sidecar proxies can be selected via `Mesh`, `Dataplane`, `MeshGateway`.
 
-We can use the policy as an _outbound_ policy with:
+The policy can be used as an _outbound_ policy with:
 
 * `to[].targetRef.kind: Mesh` which will apply to all traffic originating at the sidecar _to_ anywhere
 * `to[].targetRef.kind: MeshService` which will apply to all traffic _to_ specific services
@@ -488,10 +488,10 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The table above indicates that we can select builtin gateway via `Mesh`, `MeshGateway` or even specific listeners with
+The table above indicates that builtin gateway proxies can be selected via `Mesh`, `MeshGateway`, or even specific listeners with
 `MeshGateway` using tags.
 
-We can use the policy only as an _outbound_ policy with:
+The policy can only be used as an _outbound_ policy with:
 
 * `to[].targetRef.kind: Mesh` all traffic from the gateway _to_ anywhere.
 
@@ -503,7 +503,7 @@ We can use the policy only as an _outbound_ policy with:
 
 A proxy can be targeted by multiple `targetRef`s. To define how policies are merged, the following strategy is used:
 
-We define a total order of policy priority. The table below defines the sorting order for resources in the cluster.
+{{ site.mesh_product_name }} uses a total order of policy priority. The table below defines the sorting order for resources in the cluster.
 Sorting is applied sequentially by attribute, with ties broken using the next attribute in the list.
 
 <!-- vale off -->
@@ -531,8 +531,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-For `to` and `rules` policies, we concatenate the arrays from each matching policy.
-For `to` policies, we sort the concatenated arrays again based on the `spec.to[].targetRef` field:
+For `to` and `rules` policies, {{ site.mesh_product_name }} concatenates the arrays from each matching policy.
+For `to` policies, the concatenated arrays are sorted again based on the `spec.to[].targetRef` field:
 
 <!-- vale off -->
 {% table %}
@@ -550,7 +550,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-We then build configuration by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
+{{ site.mesh_product_name }} then builds the final configuration by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
 
 For example, if there are two `default` entries ordered this way:
 
@@ -588,7 +588,7 @@ It can be selectively enabled or disabled depending on the value of [meshService
 
 When using explicit services, `MeshServiceSubset` is no longer a valid kind and `MeshService` can only be used to select an actual `MeshService` resource (it can no longer select a `kuma.io/service`).
 
-In the following example we'll assume we have a `MeshService`:
+The following example assumes a `MeshService`:
 
 {% policy_yaml namespace=kuma-demo %}
 ```yaml
@@ -736,7 +736,7 @@ label are:
 
 ### Example
 
-We have 2 clients client1 and client2 they run in different namespaces respectively ns1 and ns2.
+In this example, `client1` and `client2` run in different namespaces: `ns1` and `ns2` respectively.
 
 {% mermaid %}
 flowchart LR
@@ -768,7 +768,7 @@ spec:
 ```
 
 This is a producer policy because it is defined in the same namespace as the `MeshService: server` and references that service in its `spec.to[].targetRef`.
-Both client1 and client2 receive the timeout of 20 seconds.
+Both `client1` and `client2` receive the timeout of 20 seconds.
 
 Next, create a consumer policy:
 
@@ -788,9 +788,9 @@ spec:
         idleTimeout: 30s
 ```
 
-This policy only affects client1, as client2 doesn't run in ns1. As consumer policies have a higher priority than producer policies, client1 will have an `idleTimeout: 30s`.
+This policy only affects `client1`, as `client2` doesn't run in `ns1`. As consumer policies have a higher priority than producer policies, `client1` will have an `idleTimeout: 30s`.
 
-To also configure client2, define another consumer policy:
+To also configure `client2`, define another consumer policy:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
