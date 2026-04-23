@@ -293,8 +293,7 @@ rows:
                     - outcome: |
                         Prevent malformed messages from ever reaching consumers
                       feature: |
-                        [Schema validation - produce phase](/event-gateway/policies/schema-validation-produce/)
-
+                        [Schema validation - produce phase](/event-gateway/policies/schema-validation-produce/) and 
                         [Schema validation - consume phase](/event-gateway/policies/schema-validation-consume/)
                       guide: |
                         [Ensure data quality with schema validation](/event-gateway/filter-records-by-classification/)
