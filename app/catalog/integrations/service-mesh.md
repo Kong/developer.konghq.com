@@ -50,9 +50,6 @@ rows:
     description: "A Mesh Service (Service and Global Control Plane) with the Zone dimension included"
 {% endtable %}
 
-
-
-
 ## Discovery information
 
 <!-- vale off-->
