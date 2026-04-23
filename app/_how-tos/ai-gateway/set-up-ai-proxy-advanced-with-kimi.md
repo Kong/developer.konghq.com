@@ -1,5 +1,5 @@
 ---
-title: Set up AI Proxy Advanced with kimi in {{site.base_gateway}}
+title: Set up AI Proxy Advanced with Kimi in {{site.base_gateway}}
 permalink: /how-to/set-up-ai-proxy-advanced-with-kimi/
 content_type: how_to
 related_resources:
@@ -44,8 +44,8 @@ tools:
 prereqs:
   inline:
     - title: Kimi
-      include_content: prereqs/deepseek
-      icon_url: /assets/icons/deepseek.svg
+      include_content: prereqs/kimi
+      icon_url: /assets/icons/kimi.svg
   entities:
     services:
       - example-service
@@ -64,9 +64,9 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Kimi, use the `openai` provider, specify the [model](https://api-docs.deepseek.com/quick_start/pricing) and set the appropriate authentication header and upstream URL.
+To set up AI Proxy Advanced with Kimi, use the `openai` provider, specify the [model](https://platform.kimi.ai/docs/models) and set the appropriate authentication header and upstream URL.
 
-In this example, we'll use the `deepseek-chat` model:
+In this example, we'll use the `kimi-k2.6` model:
 
 {% entity_examples %}
 entities:
@@ -80,14 +80,14 @@ entities:
               header_value: Bearer ${api_key}
             model:
               provider: openai
-              name: deepseek-chat
+              name: kimi-k2.6
               options:
-                upstream_url: https://api.deepseek.com/chat/completions
+                upstream_url: https://api.moonshot.ai/v1/chat/completions
                 max_tokens: 512
                 temperature: 1.0
 variables:
   api_key:
-    value: $DEEPSEEK_API_KEY
+    value: $MOONSHOT_API_KEY
 {% endentity_examples %}
 
 ## Validate
