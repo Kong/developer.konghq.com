@@ -27,9 +27,10 @@ Notification delivery is scoped to users with [access to the relevant entity](/k
 You can manage your notification configurations through the [bell icon next to your user menu](https://cloud.konghq.com/global/notifications/) in the {{site.konnect_short_name}} UI, or the [Notification Hub API](/api/konnect/notification-hub/). 
 
 The Notification Hub generates notifications for the following areas:
-* **Organization**: Configurable notifications about org access and audit logs.
+
+* **Dev Portal**: Developer and application registrations requests.
 * **API Gateway**: Entity notification configurations. You can have up to three regional notification configurations per entity.
-* **Billing**: Org billing notifications. These notifications are sent to organization admins, and they are mandatory - you can't opt out of billing notifications.
+* **Organization**: Configurable notifications about org access and audit logs.
 
 
 
