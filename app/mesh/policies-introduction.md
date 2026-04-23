@@ -58,7 +58,7 @@ spec:
 
 Depending on where a policy is created (in an application namespace, the system namespace, or on the global control plane)
 and how its schema is structured, {{ site.mesh_product_name }} assigns it a **policy role**.
-A policy's role determines how it is synchronized in multizone deployments and how it is prioritized when multiple policies overlap.
+A policy's role determines how it is synchronized in multi-zone deployments and how it is prioritized when multiple policies overlap.
 
 The table below introduces the policy roles and how to recognize them.
 
@@ -71,7 +71,7 @@ columns:
     key: controls
   - title: "Type by Schema"
     key: schema
-  - title: "Multizone Sync"
+  - title: "Multi-zone Sync"
     key: sync
 rows:
   - role: "Producer"
