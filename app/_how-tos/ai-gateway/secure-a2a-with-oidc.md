@@ -55,15 +55,15 @@ related_resources:
 prereqs:
   entities:
     services:
-      - a2a-currency-agent
+      - a2a-kongair-agent
     routes:
-      - a2a-route
+      - a2a-kongair-route
   inline:
     - title: OpenAI API key
       include_content: prereqs/openai
       icon_url: /assets/icons/openai.svg
     - title: A2A agent
-      include_content: prereqs/a2a-agent
+      include_content: prereqs/a2a-kongair-agent
       icon_url: /assets/icons/ai.svg
     - title: Okta
       include_content: prereqs/auth/oidc/okta-client-credentials
@@ -111,7 +111,6 @@ Configure the [OpenID Connect plugin](/plugins/openid-connect/) on the A2A Route
 entities:
   plugins:
     - name: openid-connect
-      route: a2a-route
       config:
         issuer: ${okta_issuer}
         client_id:
@@ -153,7 +152,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "What flights are available on route KA-123?"
 message: 401 Unauthorized
 {% endvalidation %}
 <!-- vale on -->
@@ -168,7 +167,7 @@ export TOKEN=$(curl -s -X POST \
   -d "grant_type=client_credentials" \
   -d "client_id=$DECK_OKTA_CLIENT_ID" \
   -d "client_secret=$DECK_OKTA_CLIENT_SECRET" \
-  -d "scope=api:access" | jq -r '.access_token')
+  | jq -r '.access_token')
 ```
 
 Send the A2A request with the token:
@@ -192,7 +191,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "What flights are available on route KA-123?"
 {% endvalidation %}
 <!-- vale on -->
 

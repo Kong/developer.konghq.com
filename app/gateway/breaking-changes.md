@@ -819,6 +819,12 @@ entity when using the AppRole authentication method.
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream
 path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
 
+#### PCRE version bump
+
+{{site.base_gateway}} 3.7 upgrades PCRE from `libpcre` 8.45 to `libpcre2` 10.43.
+This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
+See the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html) for more information on how to adjust your regexes.
+
 #### Known issues in 3.7.0.0
 
 The following is a list of known issues in 3.7.x that may be fixed in a future release.

@@ -1,5 +1,5 @@
 ---
-title: Autogenerate MCP tools for Weather API
+title: Map Weather API to MCP tools
 content_type: how_to
 related_resources:
   - text: "{{site.ai_gateway}}"
@@ -12,7 +12,7 @@ description: |
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/autogenerate-mcp-tools-for-weather-api/
+permalink: /mcp/map-weather-api-to-mcp-tools/
 
 series:
   id: mcp-weather-api
@@ -38,7 +38,7 @@ tags:
   - mcp
 
 tldr:
-  q: How do I automatically generate an MCP API for weather data?
+  q: How do I create an MCP API for weather data?
   a: |
     Use the AI MCP Proxy plugin to map WeatherAPI endpoints into MCP tools, allowing AI agents in Cursor to query current weather.
 

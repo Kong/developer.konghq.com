@@ -61,6 +61,10 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 {% include_cached support/konnect_gateway_support.md %}
 
+### Dedicated Cloud Gateway upgrades
+
+{% include /sections/dcgw-upgrades.md %}
+
 ## {{site.mesh_product_name}} compatibility
 
 To use Mesh in {{site.konnect_short_name}}, you must use a compatible version of {{site.mesh_product_name}}:

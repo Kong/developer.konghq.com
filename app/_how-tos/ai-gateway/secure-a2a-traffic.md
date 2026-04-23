@@ -50,15 +50,15 @@ related_resources:
 prereqs:
   entities:
     services:
-      - a2a-currency-agent
+      - a2a-kongair-agent
     routes:
-      - a2a-route
+      - a2a-kongair-route
   inline:
   - title: OpenAI API key
     include_content: prereqs/openai
     icon_url: /assets/icons/openai.svg
   - title: A2A agent
-    include_content: prereqs/a2a-agent
+    include_content: prereqs/a2a-kongair-agent
     icon_url: /assets/icons/ai.svg
 
 cleanup:
@@ -142,19 +142,10 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "What flights are available on route KA-123?"
+message: "401 Unauthorized: No API key found in request"
 {% endvalidation %}
 <!-- vale on -->
-
-The gateway responds with `401 Unauthorized`:
-
-```
-HTTP/2 401
-...
-{
-  "message":"No API key found in request"
-}
-```
 {:.no-copy-code}
 
 ## Validate authenticated requests succeed
@@ -180,7 +171,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "What flights are available on route KA-123?"
 {% endvalidation %}
 <!-- vale on -->
 
