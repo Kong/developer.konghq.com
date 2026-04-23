@@ -38,11 +38,17 @@ prereqs:
 faqs:
   - q: How do I use Kong Identity with Consumer-scoped plugins and OIDC auth?
     a: |
-      For Consumer-scoped plugins, do the following:
-      - Create a Consumer per client in the respective control plane.
-      - The OIDC plugin will map clients to Consumers using claims with the `consumer_claim` field.
-      - Apply the Consumer-scoped plugin to the Consumer entity in the control plane.
-      You don't need to migrate the client credential to a Consumer credential.
+      To apply Consumer-scoped policies (like individual rate limits) while using Kong Identity, follow these steps:
+
+      1.  In the Kong Identity tab of your Control Plane, note the `Client ID` or `sub` claim for your application.
+      2.  Navigate to **Consumers** and create a  Consumer. Set the **Custom ID** to match the unique ID identified in Step 1.
+      3.  Update your OIDC plugin configuration with the following:
+          * `config.consumer_claim`: Set this to `sub` (or the specific claim containing the ID from Step 1).
+          * `config.consumer_by`: Set this to `custom_id`.
+      4.  Apply your desired Consumer-scoped plugin (for example, Rate Limiting) directly to the **Consumer** entity you created.
+
+      {:.info}
+      > **Note**: You don't need to create or migrate client secrets/credentials to the Consumer entity. The OIDC token issued by Kong Identity serves as the credential, and the plugin automatically links the request to the Consumer for policy enforcement.
   - q: Can I retrieve my client’s secret again?
     a: |
       No, the secret is only shared once when the client is created. Store it securely.
