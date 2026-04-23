@@ -10,9 +10,9 @@ works_on:
   - konnect
 
 related_resources:
-  - text: "{{site.base_gateway}} configuration reference - pg_max_concurrent_queries"
+  - text: "{{site.base_gateway}} configuration reference - `pg_max_concurrent_queries`"
     url: /gateway/configuration/#pg-max-concurrent-queries
-  - text: "{{site.base_gateway}} configuration reference - nginx_worker_processes"
+  - text: "{{site.base_gateway}} configuration reference - `nginx_worker_processes`"
     url: /gateway/configuration/#nginx-worker-processes
 
 tldr:
