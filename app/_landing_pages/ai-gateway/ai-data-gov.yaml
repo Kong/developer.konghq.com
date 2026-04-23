@@ -35,15 +35,8 @@ rows:
   - header:
       type: h2
       text: "Observability"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    You can gather logs and metrics then analyze these using {{site.konnect_short_name}} or any OpenTelemetry tool.
-  - column_count: 2
+      description: "You can gather logs and metrics then analyze these using {{site.konnect_short_name}} or any OpenTelemetry tool."
+    column_count: 2
     columns:
       - blocks:
         - type: card
@@ -93,15 +86,8 @@ rows:
   - header:
       type: h2
       text: "User Safety"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.ai_gateway}} supports content safety features across providers and also includes our Prompt Guards that act on any `llm/v1/chat` or `llm/v1/completions` requests.
-  - column_count: 2
+      description: "{{site.ai_gateway}} supports content safety features across providers and also includes our Prompt Guards that act on any `llm/v1/chat` or `llm/v1/completions` requests."
+    column_count: 2
     columns:
       - blocks:
         - type: plugin
@@ -149,15 +135,8 @@ rows:
   - header:
       type: h2
       text: "Data Loss Prevention"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    You can use {{site.ai_gateway}} features to protect personally identifiable information and prevent data loss.
-  - column_count: 1
+      description: "You can use {{site.ai_gateway}} features to protect personally identifiable information and prevent data loss."
+    column_count: 1
     columns:
       - blocks:
         - type: plugin
@@ -168,15 +147,8 @@ rows:
   - header:
       type: h2
       text: "RAG Security"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    You can secure RAG pipelines by applying robust access controls.
-  - column_count: 1
+      description: "You can secure RAG pipelines by applying robust access controls."
+    column_count: 1
     columns:
       - blocks:
         - type: plugin

@@ -342,7 +342,7 @@ rows:
   - header:
       type: h2
       text: Key references
-  - column_count: 4
+    column_count: 4
     columns:
       - blocks:
         - type: card

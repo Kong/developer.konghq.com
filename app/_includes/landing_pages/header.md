@@ -28,6 +28,10 @@
         </div>
     {% endif %}
     {% endunless %}
+
+    {% if include.config.description %}
+    <div class="flex flex-col gap-3">{{include.config.description | liquify | markdownify }}</div>
+    {% endif %}
 {% endcapture %}
 
 {% if include.config.sub_text %}

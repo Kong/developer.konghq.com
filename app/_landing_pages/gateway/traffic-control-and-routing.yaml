@@ -18,17 +18,12 @@ rows:
       text: "{{site.base_gateway}} traffic control and routing"
       sub_text: "As an API gateway, one of {{site.base_gateway}}'s main roles is to listen for, route, and proxy traffic."
     
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Listeners"
-              blocks:
-                - type: text
-                  text: | 
-                    From a high-level perspective, {{site.base_gateway}} listens for L4 and L7 traffic.
-  - columns:
+  - header:
+      text: "Listeners"
+      type: h2
+      description: "From a high-level perspective, {{site.base_gateway}} listens for L4 and L7 traffic."
+    column_count: 4
+    columns:
       - blocks:
           - type: card
             config:
@@ -47,7 +42,6 @@ rows:
               cta:
                 text: Learn more about proxy_listen 
                 url: /gateway/configuration/#proxy-listen
-  - columns:
       - blocks:
           - type: card
             config:
@@ -68,18 +62,12 @@ rows:
               cta:
                 text: Learn more about stream_listen 
                 url: /gateway/configuration/#stream-listen
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Routing traffic"
-              blocks:
-                - type: text
-                  text: | 
-                    Learn how {{site.base_gateway}} searches for matching [Routes](/gateway/entities/route/).
-  
-  - columns:
+  - header:
+      type: h2
+      text: "Routing traffic"
+      description: "Learn how {{site.base_gateway}} searches for matching [Routes](/gateway/entities/route/)."
+    column_count: 4
+    columns:
       - blocks:
           - type: card
             config:
@@ -109,18 +97,12 @@ rows:
                 text: Learn more about the traditional router 
                 url: /gateway/routing/traditional/#routing-criteria
   
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Proxying"
-              blocks:
-                - type: text
-                  text: | 
-                    Once a request is matched to a Route, {{site.base_gateway}} then proxies the request.
-  
-  - columns:
+  - header:
+      type: h2
+      text: "Proxying"
+      description: "Once a request is matched to a Route, {{site.base_gateway}} then proxies the request."
+    column_count: 4
+    columns:
       - blocks:
           - type: card
             config:
@@ -139,7 +121,6 @@ rows:
               cta:
                 text: Learn more about plugin phases 
                 url: /gateway/entities/plugin/#plugin-contexts
-  - columns:
       - blocks:
           - type: card
             config:
@@ -162,7 +143,7 @@ rows:
   - header:
       type: h2
       text: "Specialized traffic control plugins"
-    column_count: 3
+    column_count: 4
     columns:
       - blocks:
           - type: plugin
