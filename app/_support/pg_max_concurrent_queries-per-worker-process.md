@@ -1,7 +1,7 @@
 ---
 title: pg_max_concurrent_queries is per worker process, not per node
 content_type: support
-description: How to limit the total number of PostgreSQL database connections when running Kong Gateway on multiple nodes in Kubernetes.
+description: "How to limit the total number of PostgreSQL database connections when running {{site.base_gateway}} on multiple nodes in Kubernetes."
 products:
   - gateway
 
