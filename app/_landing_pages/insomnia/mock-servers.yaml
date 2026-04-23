@@ -14,12 +14,11 @@ rows:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: "Mock servers in Insomnia"
               blocks:
                 - type: text
-                  text: | 
-                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design/). They can be self-hosted or hosted on the cloud.
+                  text: |
+                    A mock server (or a mock) is a tool used to simulate API endpoints. Mocks can be particularly useful while [designing an API](/insomnia/design/). They can be self-hosted or hosted on the cloud.
+    
   - columns:
       - blocks:
           - type: structured_text
@@ -30,7 +29,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    The Insomnia Cloud mock servers allow you to create a mock endpoint in a few steps. You simply need to provide an endpoint and a sample response. You get a number or free mock requests based on your plan. For more details, see the [pricing page](https://insomnia.rest/pricing).
+                    The Insomnia Cloud mock servers allow you to create a mock endpoint in a few steps. You simply need to provide an endpoint and a sample response. You get a number of free mock requests based on your plan. For more details, see the [pricing page](https://insomnia.rest/pricing).
                      
                     [Learn more about cloud-hosted mock servers &rarr;](/how-to/create-a-cloud-hosted-mock-server/)
       - blocks:
@@ -67,10 +66,11 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    * Always be sure you trust the author of a mock server before calling it, visiting it, or adding it to your code. 
-                    * Like any URL, mock servers can contain malicious content or redirects.
-                    * To enable easy use from anywhere, especially for front-end feature development, Insomnia's mock servers have a very permissive CORS configuration (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Credentials: true`). 
-                    A malicious API could be used to exfiltrate data.
+                    When using mock servers, keep the following security considerations in mind:
+                      * Always be sure you trust the author of a mock server before calling it, visiting it, or adding it to your code. 
+                      * Like any URL, mock servers can contain malicious content or redirects.
+                      * To enable easy use from anywhere, especially for front-end feature development, Insomnia's mock servers have a very permissive CORS configuration (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Credentials: true`). 
+                      A malicious API could be used to exfiltrate data.
   - columns:
       - blocks:
           - type: structured_text
@@ -81,7 +81,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Dynamic mocking expands Insomnia’s mock servers with templates that generate context-aware and realistic responses.  
+                    Dynamic mocking expands Insomnia's mock servers with templates that generate context-aware and realistic responses.  
                     Each response is rendered server-side by the mock server using  templates with a safe, restricted tag set.  
                     Insomnia also provides **Faker template tags** for generating random names, dates, and other test data at runtime.
 

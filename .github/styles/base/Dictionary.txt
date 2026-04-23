@@ -158,6 +158,7 @@ cors
 cosmiconfig
 cosocket
 CPUs
+vCPUs
 crd
 crds
 created_at
@@ -677,6 +678,7 @@ perf
 performant
 petstore
 PDFs
+pg_max_concurrent_queries
 pgdump
 pgvector
 pipeline

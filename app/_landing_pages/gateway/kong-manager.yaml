@@ -58,17 +58,11 @@ rows:
 
                   You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager/configuration/#multiple-domains).
   
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Kong Manager authentication"
-            blocks:
-              - type: text
-                text: |
-                  Kong Manager comes packaged with several authentication methods.
-  - column_count: 3
+  - header:
+      type: h2
+      text: "Kong Manager authentication"
+      description: "Kong Manager comes packaged with several authentication methods."
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -118,17 +112,12 @@ rows:
   #           cta:
   #             url: "/how-to/configure-sessions-in-kong-manager/"
   
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Access control with Roles and Workspaces"
-            blocks:
-              - type: text
-                text: |
-                  In Kong Manager, limiting permissions also restricts the visibility of the application interface and navigation. 
-  - columns:
+
+  - header:
+      type: h2
+      text: "Access control with Roles and Workspaces"
+      description: "In Kong Manager, limiting permissions also restricts the visibility of the application interface and navigation."
+    columns:
       - blocks:
         - type: card
           config:
@@ -171,7 +160,7 @@ rows:
   - header:
       type: h2
       text: "Kong Manager SMTP"
-  - columns:
+    columns:
       - blocks:
           - type: card
             config:

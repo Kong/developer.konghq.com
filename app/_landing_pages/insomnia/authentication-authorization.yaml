@@ -66,7 +66,7 @@ rows:
   - header:
       type: h3
       text: "Set up SSO"
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -100,22 +100,14 @@ rows:
                   text: |
                     Client certificates are used by some APIs as a means of authentication. Insomnia supports assigning a client certificate to a specific domain name and will automatically use them whenever a request to that domain is sent.
 
-                  
                     Insomnia supports PFX (Mac) and PEM (Windows and Linux) certificates.
   - header:
       type: h2
       text: "Authorization"
-    columns: 
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Authorization controls who can do what in Insomnia. 
-                    Authorization ensures users have the correct permissions and that you can access the Insomnia app through allowlisting domains.
-  
-  - column_count: 3
+      description: |
+        Authorization controls who can do what in Insomnia. 
+        Authorization ensures users have the correct permissions and that you can access the Insomnia app through allowlisting domains.
+    column_count: 3
     columns:
       - blocks:
         - type: card

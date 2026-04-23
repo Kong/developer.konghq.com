@@ -41,16 +41,9 @@ rows:
   - header:
       type: h2
       text: "Applications"
+      description: |
+        {{site.konnect_short_name}} provides several built-in applications that run on top of the {{site.konnect_short_name}} platform to help manage, monitor, and secure your API ecosystem, as well as provide a customizable developer experience.
     columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  {{site.konnect_short_name}} provides several built-in applications that run on top of the {{site.konnect_short_name}} platform to help manage, monitor, and secure your API ecosystem,
-                   as well as provide a customizable developer experience.
-  - columns:
       - blocks:
         - type: card
           config:
@@ -65,12 +58,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Dev Portal
+            title: "{{site.dev_portal}}"
             description: |
-              The Konnect Dev Portal is a customizable website for developers to locate, access, and consume API services.
+              The {{site.dev_portal}} is a customizable website for developers to locate, access, and consume API services.
             icon: /assets/icons/dev-portal.svg
             ctas:
-              - text: Create a Dev Portal
+              - text: Create a {{site.dev_portal}}
                 url: /dev-portal/
                 align: end
       - blocks:
@@ -100,17 +93,11 @@ rows:
   - header:
       type: h2
       text: "Connectivity"
+      description: |
+        The {{site.konnect_short_name}} platform runs in [hybrid mode](/gateway/hybrid-mode/) and provides several hosted control plane options to manage all service configurations.
+        The control plane propagates those configurations to the data plane group, which is composed of data plane nodes (and in the case of {{site.mesh_product_name}}, proxies).
+        The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
     columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  The {{site.konnect_short_name}} platform runs in [hybrid mode](/gateway/hybrid-mode/) and provides several hosted control plane options to manage all service configurations.
-                  The control plane propagates those configurations to the data plane group, which is composed of data plane nodes (and in the case of {{site.mesh_product_name}}, proxies).
-                  The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
-  - columns:
     - blocks:
           - type: card
             config:
