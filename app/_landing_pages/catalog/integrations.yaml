@@ -210,7 +210,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "{{site.konnect_short_name}} Analytics"
+              title: "{{site.observability}}"
               description: View real-time, highly contextual analytics to gain insight into API health, performance, and usage.
               icon: /assets/icons/analytics.svg
               ctas:
