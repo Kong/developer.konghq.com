@@ -48,7 +48,7 @@ Before you deploy a Dedicated Cloud Gateway, you must make some choices to deter
 
 ## Kong-managed gateway infrastructure architecture
 
-The Kong-managed gateway infrastructure consists of data plane nodes that run on a Kubernetes cluster inside of a Kong-managed network peering (VPC or VNET depending on your provider).
+The Kong-managed gateway infrastructure consists of data plane nodes that run inside of a Kong-managed network peering (VPC or VNET depending on your provider).
 The Kong-managed data plane nodes automatically scale with your throughput. 
 
 The following diagram shows what the Kong-managed architecture looks like if you chose AWS as your provider:
@@ -57,11 +57,9 @@ The following diagram shows what the Kong-managed architecture looks like if you
 flowchart LR
     subgraph kong_account["Kong-managed AWS infra"]
         subgraph kong_vpc["Kong-managed VPC"]
-            subgraph k8s["k8s cluster"]
-                dp1["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
-                dp2["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
-                dp3["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
-            end
+          dp1["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
+          dp2["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
+          dp3["<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data plane node"]
         end
     end
 
@@ -86,11 +84,11 @@ Different connections distribute across nodes.
 Before you deploy a Dedicated Cloud Gateway, you'll need to determine if you should deploy a public or private gateway, or both.
 Which you deploy depends on how API consumers are reaching your gateway and how you want data planes to reach your backend services:
 
-* **[Public](/dedicated-cloud-gateways/public-network/):** Use public if:
+* Use [public](/dedicated-cloud-gateways/public-network/) if:
   * You expose services to the internet with custom access control
   * Want minimal setup and are securing at the Kong layer
   * You're proxying your own infrastructure over the public internet
-* **[Private](/dedicated-cloud-gateways/private-network/):** Use private if:
+* Use [private](/dedicated-cloud-gateways/private-network/) if:
   * Your upstream services are on one or more private network (VPC or VNET)
   * You don't expose services to the public internet
   * Require network isolation or full edge control

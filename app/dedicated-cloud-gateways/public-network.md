@@ -38,8 +38,7 @@ Use a public deployment when:
 
 ## Public architecture and connectivity
 
-Public Dedicated Cloud Gateway endpoints are exposed via a Kong-managed Network Load Balancer (NLB)
-with a public fully-qualified domain name (FQDN) and static public IP addresses.
+Public Dedicated Cloud Gateway endpoints are exposed via a public fully-qualified domain name (FQDN) and static public IP addresses.
 
 Kong data planes egress to your upstream services over the public internet.
 {{site.konnect_short_name}} exposes **static egress IP addresses** for each public Dedicated Cloud Gateway network. 
@@ -50,16 +49,10 @@ The following diagram shows how the architecture of a public Dedicated Cloud Gat
 {% mermaid %}
 flowchart LR
     subgraph kong_account["Cloud provider"]
-      nlb["NLB"]
         subgraph kong_vpc["Kong-managed VPC"]
-            subgraph k8s["k8s cluster"]
                 dp1["Data plane node"]
                 dp2["Data plane node"]
                 dp3["Data plane node"]
-            end
-            nlb --> dp1
-            nlb --> dp2
-            nlb --> dp3
         end
     end
 
@@ -137,9 +130,9 @@ Public Dedicated Cloud Gateways are subjected to scanners when they are created,
 We recommend creating and securing your public Dedicated Cloud Gateway in the following order:
 1. *Before* creating Gateway Services and Routes, create the Dedicated Cloud Gateway network and control plane in {{site.konnect_short_name}}.
    The network will be scanned, but since there aren't any Routes, scanners get 404s or connection resets. 
-2. Configure your CDN/WAF in front of the Kong NLB before you configure any Routes or Services. 
+2. Configure your CDN/WAF in front of the Dedicated Cloud Gateway data plane before you configure any Routes or Services. 
 3. Allowlist the Dedicated Cloud Gateway network egress IPs.
-4. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Kong NLB directly, they get rejected before any Route matching happens.
+4. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Dedicated Cloud Gateway data plane directly, they get rejected before any Route matching happens.
 5. Configure your Routes and Services pointing to real upstreams.
 
 ### WAF
@@ -149,11 +142,10 @@ We recommend creating and securing your public Dedicated Cloud Gateway in the fo
 Kong strongly recommends configuring a WAF for public Dedicated Cloud Gateways. 
 WAF configuration differs for public deployments.
 
-Public Dedicated Cloud Gateways are exposed via a Kong-managed NLB with a public FQDN.
-Most WAF services can't attach directly to a network-layer load balancer (NLB) because NLBs operate at Layer 4 and don't terminate HTTP. 
+Public Dedicated Cloud Gateways are exposed via a public FQDN.
 WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP-aware layer, like a CDN distribution, an Application Load Balancer, or a cloud edge service.
 
-Additionally, because the Kong-managed NLB exposes a DNS hostname instead of an IP address, you can't chain another public load balancer in front of it (most ALB and cloud LB target groups don't support DNS-based targets).
+Additionally, because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostname instead of an IP address, you can't chain another public load balancer in front of it (most ALB and cloud load balancer target groups don't support DNS-based targets).
 Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
 
 Examples of CDN or edge services that support this pattern:
@@ -173,18 +165,16 @@ sequenceDiagram
         CloudFront/WAF-->>Client: 403 Forbidden
     else WAF passes request
         CloudFront/WAF->>CloudFront/WAF: CloudFront injects origin header
-        CloudFront/WAF->>Kong NLB: Forwards request with origin header
-        Kong NLB->>Kong DP node: Forwards request
-        Kong DP node->>Kong DP node: Validates header
+        CloudFront/WAF->>Kong DP: Forwards request
+        Kong DP->>Kong DP: Validates header
 
         alt Header missing or invalid
-            Kong DP node-->>Client: 403 Forbidden
+            Kong DP-->>Client: 403 Forbidden
         else Header valid
-            Kong DP node->>Kong DP node: Matches route
-            Kong DP node->>Your upstream in AWS: Applies plugins, proxies request
-            Your upstream in AWS-->>Kong DP node: Response
-            Kong DP node-->>Kong NLB: Response
-            Kong NLB-->>CloudFront/WAF: Response
+            Kong DP->>Kong DP: Matches route
+            Kong DP->>Your upstream in AWS: Applies plugins, proxies request
+            Your upstream in AWS-->>Kong DP: Response
+            Kong DP-->>CloudFront/WAF: Response
             CloudFront/WAF-->>Client: Response
         end
     end
@@ -195,15 +185,13 @@ In this model:
 * CloudFront acts as the public edge entry point.
 * AWS WAF is attached to the CloudFront distribution.
 * The CloudFront origin is the Dedicated Cloud Gateway public DNS edge (public FQDN).
-* The Kong-managed NLB receives traffic from CloudFront and forwards it to the gateway data planes.
-
-This is the standard AWS-native pattern for protecting publicly accessible services behind an NLB.
+* The Dedicated Cloud Gateway data plane receives traffic from CloudFront and forwards it to the gateway data planes.
 
 The sections in this guide describe how to configure a WAF in AWS, but they can be adapted for Azure and GCP.
 
 ### Configure AWS WAF
 
-When a Dedicated Cloud Gateway is deployed in public mode, it exposes a public FQDN backed by a Kong-managed Network Load Balancer. 
+When a Dedicated Cloud Gateway is deployed in public mode, it exposes a public FQDN. 
 Without additional controls, clients could attempt to access this public endpoint directly and bypass CloudFront and AWS WAF protections.
 
 To ensure all traffic passes through CloudFront, configure origin validation between CloudFront and Kong:
