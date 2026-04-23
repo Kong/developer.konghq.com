@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@81417f59c2852b9e8f6b4cb0601771d7d0f33183
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/81417f59c2852b9e8f6b4cb0601771d7d0f33183'
+  x-oas-source: kong/platform-api@e3d22e8e12a7c93ee828f034ce174f349ad83f6d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d22e8e12a7c93ee828f034ce174f349ad83f6d'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1839,6 +1839,107 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Portal Auth Settings
+  '/portals/{portalId}/identity-providers/{id}/team-group-mappings':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/IdentityProviderId'
+    get:
+      operationId: list-portal-idp-team-group-mappings
+      summary: List Team Group Mappings
+      description: |
+        Returns a paginated list of team group mappings for the specified identity provider.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PageBefore'
+        - name: filter
+          in: query
+          description: Filter mappings by team ID or group name.
+          required: false
+          schema:
+            type: object
+            properties:
+              team_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              group:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIdpTeamGroupMappingCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
+    post:
+      operationId: create-portal-idp-team-group-mapping
+      summary: Create Team Group Mapping
+      description: |
+        Creates a new team group mapping for the specified identity provider.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePortalIdpTeamGroupMapping'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalIdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Portal Auth Settings
+  '/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/IdentityProviderId'
+      - $ref: '#/components/parameters/TeamGroupMappingId'
+    get:
+      operationId: get-portal-idp-team-group-mapping
+      summary: Get Team Group Mapping
+      description: Returns the team group mapping for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
+    delete:
+      operationId: delete-portal-idp-team-group-mapping
+      summary: Delete Team Group Mapping
+      description: |
+        Deletes a team group mapping by ID.
+        Returns 204 if the mapping was deleted, or 404 if the mapping was not found.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
   '/portals/{portalId}/audit-log-replay-job':
     parameters:
       - $ref: '#/components/parameters/PortalId'
@@ -2695,6 +2796,14 @@ components:
       required: false
       schema:
         type: string
+    TeamGroupMappingId:
+      name: mappingId
+      in: path
+      required: true
+      description: ID of the team group mapping.
+      schema:
+        type: string
+        format: uuid
     TeamId:
       schema:
         type: string
@@ -2705,6 +2814,69 @@ components:
       required: true
       description: ID of the team.
   schemas:
+    CreatePortalIdpTeamGroupMappingRequest:
+      type: object
+      properties:
+        team_id:
+          description: The Konnect team ID.
+          type: string
+          format: uuid
+          example: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group:
+          description: The IdP group name.
+          type: string
+          example: API Engineers
+      required:
+        - team_id
+        - group
+    PortalIdpTeamGroupMapping:
+      type: object
+      properties:
+        id:
+          description: The mapping ID.
+          type: string
+          format: uuid
+          example: a1b2c3d4-e5f6-4a8b-9c0d-1e2f3a4b5c6d
+          readOnly: true
+        team_id:
+          description: The Konnect team ID.
+          type: string
+          format: uuid
+          example: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group:
+          description: The IdP group name.
+          type: string
+          example: API Engineers
+        created_at:
+          description: Creation timestamp.
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+          readOnly: true
+        updated_at:
+          description: Last update timestamp.
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+          readOnly: true
+      required:
+        - id
+        - team_id
+        - group
+        - created_at
+        - updated_at
+    PortalIdpTeamGroupMappingCollectionResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMapping'
+      required:
+        - meta
+        - data
     PortalImageDataUri:
       oneOf:
         - $ref: '#/components/schemas/ImagePNGDataUri'
@@ -6332,6 +6504,14 @@ components:
         - size
         - next
         - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     PortalAllowedIPs:
       description: The list of allowed ips for the portal.
       type: array
@@ -8168,6 +8348,13 @@ components:
         config:
           idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
   requestBodies:
+    CreatePortalIdpTeamGroupMapping:
+      description: Create a team group mapping for an identity provider.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePortalIdpTeamGroupMappingRequest'
     CreatePortalCustomDomain:
       description: Create a portal custom domain.
       required: true
@@ -8699,6 +8886,18 @@ components:
             Update SAML Identity Provider:
               $ref: '#/components/examples/UpdateSAMLIdentityProvider'
   responses:
+    PortalIdpTeamGroupMapping:
+      description: A team group mapping for an identity provider.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMapping'
+    PortalIdpTeamGroupMappingCollection:
+      description: A paginated collection of team group mappings.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMappingCollectionResponse'
     PortalTeamGroupMappingCollection:
       description: A paginated collection of mappings grouped by team ID.
       content:
