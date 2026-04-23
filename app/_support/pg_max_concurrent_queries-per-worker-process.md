@@ -1,5 +1,5 @@
 ---
-title: pg_max_concurrent_queries is per worker process, not per node
+title: "pg_max_concurrent_queries is per worker process, not per node"
 content_type: support
 description: "How to limit the total number of PostgreSQL database connections when running {{site.base_gateway}} on multiple nodes in Kubernetes."
 products:
@@ -10,9 +10,9 @@ works_on:
   - konnect
 
 related_resources:
-  - text: Kong Gateway configuration reference - pg_max_concurrent_queries
+  - text: {{site.base_gateway}} configuration reference - `pg_max_concurrent_queries`
     url: /gateway/configuration/#pg-max-concurrent-queries
-  - text: Kong Gateway configuration reference - nginx_worker_processes
+  - text: {{site.base_gateway}} configuration reference - `nginx_worker_processes`
     url: /gateway/configuration/#nginx-worker-processes
 
 tldr:
