@@ -1,5 +1,5 @@
 ---
-title: After setting pg_max_concurrent_queries, the number of database connections still exceeds the maximum allowed
+title: pg_max_concurrent_queries is per worker process, not per node
 content_type: support
 description: How to limit the total number of PostgreSQL database connections when running Kong Gateway on multiple nodes in Kubernetes.
 products:
@@ -11,9 +11,9 @@ works_on:
 
 related_resources:
   - text: Kong Gateway configuration reference - pg_max_concurrent_queries
-    url: /gateway/configuration/#pg_max_concurrent_queries
+    url: /gateway/configuration/#pg-max-concurrent-queries
   - text: Kong Gateway configuration reference - nginx_worker_processes
-    url: /gateway/configuration/#nginx_worker_processes
+    url: /gateway/configuration/#nginx-worker-processes
 
 tldr:
   q: Why does my PostgreSQL connection count exceed the limit I set with pg_max_concurrent_queries?
