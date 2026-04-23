@@ -71,12 +71,12 @@ data:
       header_name: Authorization
       header_value: Bearer ${key}
     model:
-      provider: deepseek
-      name: deepseek-chat
+      provider: kimi
+      name: kimi-k2.6
 
 variables:
   key:
-    value: "$DEEPSEEK_API_KEY"
+    value: "$MOONSHOT_API_KEY"
 {% endentity_example %}
 
 {:.success}
