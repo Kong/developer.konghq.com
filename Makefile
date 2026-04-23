@@ -15,7 +15,7 @@ install:
 	mise install
 	git submodule update --init
 	corepack enable
-	yarn install --frozen-lockfile
+	yarn install --immutable
 	bundle install
 	cd tools/frontmatter-validator && npm ci
 
@@ -24,10 +24,10 @@ validate-frontmatters:
 
 # Using local dependencies, starts a doc site instance on http://localhost:4000.
 run: ruby-version-check validate-frontmatters
-	npx netlify dev
+	NODE_OPTIONS="--max_old_space_size=8192" yarn netlify dev --offline --skip-wait-port --internal-disable-edge-functions
 
 run-debug: ruby-version-check
-	JEKYLL_LOG_LEVEL='debug' netlify dev
+	NODE_OPTIONS="--max_old_space_size=8192" JEKYLL_LOG_LEVEL='debug' yarn netlify dev --skip-wait-port --internal-disable-edge-functions
 
 build: ruby-version-check
 	exe/build

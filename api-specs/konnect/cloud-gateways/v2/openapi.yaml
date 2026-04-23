@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@fa20faf46b3f4b3885898052fe449335e3186c2f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/fa20faf46b3f4b3885898052fe449335e3186c2f'
+  x-oas-source: kong/platform-api@365bf1096e943ec288b5059125c9d9c549a35c55
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/365bf1096e943ec288b5059125c9d9c549a35c55'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3796,6 +3796,10 @@ components:
             - xlarge: ~12 GiB capacity
             - 2xlarge: ~25 GiB capacity
             - 4xlarge: ~52 GiB capacity
+            - 8xlarge: ~100 GiB capacity
+            - 12xlarge: ~150 GiB capacity
+            - 16xlarge: ~200 GiB capacity
+            - 24xlarge: ~300 GiB capacity
           type: string
           enum:
             - micro
@@ -3805,6 +3809,10 @@ components:
             - xlarge
             - 2xlarge
             - 4xlarge
+            - 8xlarge
+            - 12xlarge
+            - 16xlarge
+            - 24xlarge
       example:
         kind: tiered
         tier: small

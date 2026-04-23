@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal API
-  version: 3.3.2
+  version: 3.3.3
   description: Portal API
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@b86de17dd121406f9a94d62b1ca4bd412d216992
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b86de17dd121406f9a94d62b1ca4bd412d216992'
+  x-oas-source: kong/platform-api@1f49f503deacae7f5c273d918393c1bcb44df6f2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1f49f503deacae7f5c273d918393c1bcb44df6f2'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -332,6 +332,10 @@ paths:
         - $ref: '#/components/parameters/FilterByNameContains'
         - $ref: '#/components/parameters/FilterByAuthStrategyEquality'
         - $ref: '#/components/parameters/FilterByAuthStrategyEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdEquality'
+        - $ref: '#/components/parameters/FilterByTeamIdEqualityShort'
+        - $ref: '#/components/parameters/FilterByTeamIdNotEquals'
+        - $ref: '#/components/parameters/FilterByTeamIdOneOf'
       responses:
         '200':
           $ref: '#/components/responses/ListApplications'
@@ -1332,6 +1336,48 @@ components:
           - pending
           - rejected
           - revoked
+    FilterByTeamIdEquality:
+      name: 'filter[team_id][eq]'
+      description: |
+        Filter by the team that owns the application. Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id][eq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdEqualityShort:
+      name: 'filter[team_id]'
+      description: |
+        Filter by the team that owns the application (short-hand). Use a team UUID or the literal string `null` for individually owned apps (e.g. `filter[team_id]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: 5be86298-147b-45ab-bfaf-a1bff97dce39
+        nullable: true
+    FilterByTeamIdNotEquals:
+      name: 'filter[team_id][neq]'
+      description: |
+        Filter by excluding a team. Use the literal string `null` to get only team-owned apps (excludes individually owned) (e.g. `filter[team_id][neq]=null`).
+      in: query
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: null
+        nullable: true
+    FilterByTeamIdOneOf:
+      name: 'filter[team_id][oeq]'
+      description: |
+        Filter by apps owned by any of the given teams (comma-separated UUIDs).
+      in: query
+      required: false
+      schema:
+        type: string
+        example: '5be86298-147b-45ab-bfaf-a1bff97dce39,7ce96398-247b-45ab-bfaf-b2c008e8f6e4'
     FilterByTitleContains:
       name: 'filter[title][contains]'
       description: Filter by contains comparison of the title property with a supplied substring

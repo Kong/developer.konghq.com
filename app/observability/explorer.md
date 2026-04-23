@@ -141,6 +141,10 @@ rows:
     category: "Size"
     description: |
       The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+  - metric: "Error Rate"
+    category: "Percentage"
+    description: |
+      The percentage of failed API requests. This includes requests that return HTTP 4xx and 5xx status codes.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
@@ -270,7 +274,7 @@ rows:
 {% endnavtab %}
 {% navtab "Agentic usage" %}
 
-Agentic usage tracks analytics data for agent-to-agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/).
+Agentic usage tracks analytics data for agent-to-agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), such as agent tool use and agent MCP calls.
 You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics display in {{site.konnect_short_name}} Explorer.
 
 With agentic usage reporting, you can:
