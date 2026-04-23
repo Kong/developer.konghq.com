@@ -36,7 +36,7 @@ faqs:
       * Other Workspaces can't exist within a Workspace.
   - q: Can I use Workspaces in {{site.konnect_short_name}}?
     a: |
-      Yes. {{site.konnect_short_name}} Workspaces are in public beta. For a complete tutorial, see [Create a Workspace in {{site.konnect_short_name}}](/how-to/create-a-konnect-workspace/).
+      Yes. {{site.konnect_short_name}} Workspaces are in public beta.
   - q: Can a Workspace share a name with another Workspace?
     a: |
       Two Workspaces can't share the same name. However, Workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
