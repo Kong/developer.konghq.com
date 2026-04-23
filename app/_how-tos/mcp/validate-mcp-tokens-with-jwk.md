@@ -8,6 +8,7 @@ products:
 works_on:
   - on-prem
   - konnect
+automated_tests: false
 min_version:
   gateway: '3.14'
 plugins:
