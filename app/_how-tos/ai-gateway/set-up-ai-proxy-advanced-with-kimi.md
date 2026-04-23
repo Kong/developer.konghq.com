@@ -79,7 +79,7 @@ entities:
               header_name: Authorization
               header_value: Bearer ${api_key}
             model:
-              provider: openai
+              provider: kimi
               name: kimi-k2.6
               options:
                 upstream_url: https://api.moonshot.ai/v1/chat/completions
