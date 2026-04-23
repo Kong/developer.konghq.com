@@ -6,7 +6,12 @@ This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The
 1. In a terminal, start your Vault dev server with `root` as your token.
 
    ```sh
-   docker run -d --name vault -p 8200:8200 -e 'VAULT_DEV_ROOT_TOKEN_ID=root' hashicorp/vault
+   docker run -d \
+      --name vault \
+      -p 8200:8200 \
+      -e SKIP_SETCAP=1 \
+      -e VAULT_DEV_ROOT_TOKEN_ID=root \
+      hashicorp/vault
    ```
 2. Export the `VAULT_ADDR` and `VAULT_TOKEN`:
 

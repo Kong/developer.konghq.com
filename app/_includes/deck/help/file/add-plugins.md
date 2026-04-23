@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   deck file add-plugins [flags] [...plugin-files]
 

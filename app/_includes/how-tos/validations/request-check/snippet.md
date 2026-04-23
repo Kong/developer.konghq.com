@@ -5,9 +5,8 @@
 {%- if include.insecure %}{% assign is_https = true %}{% endif -%}
 {%- if include.url contains 'https://' %}{% assign is_https = false %}{% endif -%}
 
-```bash
-{% if include.capture -%}
-{{include.capture}}=$({% endif %}{% if include.sleep %}sleep {{include.sleep}} && {% endif %}{% if count > 1%}for _  in {1..{{count}}}; do
+{% assign capture_size = include.capture | size %}
+{%- capture curl_cmd %}{% if include.sleep %}sleep {{include.sleep}} && {% endif %}{% if count > 1%}for _  in {1..{{count}}}; do
 {% endif %}curl {% if include.insecure %}-k {% endif %}{% if include.display_headers %}-i {% endif %}{% if include.method %}-X {{include.method}} {% endif %}{% if include.mtls%}-k --key key.pem --cert cert.pem {% endif %}"{% if is_https %}https://{% endif %}{{ include.url }}" \
      {% if include.output %}-o {{include.output}} {% endif %}--no-progress-meter --fail-with-body {% if include.headers %} \{%- endif -%}{% for header in include.headers %}
      -H "{{header}}" {%- unless forloop.last -%} \{% endunless %}{%- endfor %}{% if include.user %} \
@@ -16,12 +15,31 @@
      --cookie {{include.cookie}}{%- endif %}{% if include.form_data %} \{% for data in include.form_data %}
      -F {{data[0]}}="{{data[1]}}" {% unless forloop.last -%} \{% endunless %}{%- endfor %}{% endif %}{% if include.body %} \
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
-     --json "{{ include.body_cmd }}"{% endif %}{% if include.jq %} | jq -r "{{ include.jq | strip }}"{% endif %}{% if include.capture -%}
-     {%- if include.inline_sleep %}
-  sleep {{include.inline_sleep}}{%- endif %}
-){% endif -%}
-{% if count > 1 %}; done{% endif %}
+     --json "{{ include.body_cmd }}"{% endif %}{% endcapture -%}
+```bash
+{% if capture_size == 1 -%}
+{{ include.capture[0].variable }}=$({{ curl_cmd }}{% if include.capture[0].jq %} | jq -r "{{ include.capture[0].jq | strip }}"{% endif %}{% if include.inline_sleep %}
+ sleep {{include.inline_sleep}}{%- endif %}
+)
+{%- elsif capture_size > 1 -%}
+_response=$({{ curl_cmd }})
+{%- else -%}
+{{ curl_cmd }}{% if count > 1 %}
+; done{% endif -%}
+{%- endif %}
 ```
+
+{% if capture_size > 1 %}
+
+Export the env variables:
+
+```bash
+{% for cap in include.capture -%}
+export {{ cap.variable }}=$(echo "$_response" | jq -r "{{ cap.jq | strip }}")
+{% endfor -%}
+```
+{% endif %}
+
 {% if include.message %}
 
 You should see the following response:

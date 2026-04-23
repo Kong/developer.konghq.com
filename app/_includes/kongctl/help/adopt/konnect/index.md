@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt konnect [command]
 
@@ -13,6 +13,8 @@ Available Commands:
   api           Adopt an existing Konnect API into namespace management
   auth-strategy Adopt an existing Konnect auth strategy into namespace management
   control-plane Adopt an existing Konnect control plane into namespace management
+  dcr-provider  Adopt an existing Konnect DCR provider into namespace management
+  event-gateway Adopt an existing Konnect Event Gateway Control Plane into namespace management
   organization  Adopt organization resources into namespace management
   portal        Adopt an existing Konnect portal into namespace management
 
@@ -23,7 +25,7 @@ Flags:
                              - Default   : [ https://us.api.konghq.com ]
       --color-theme string   Configures the CLI UI/theme (prompt, tables, TUI elements).
                              - Config path: [ color-theme ]
-                             - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                             - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                              - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string   Path to the configuration file to load.
                              - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]

@@ -38,39 +38,39 @@ You can test if the admission webhook is enabled for duplicate KongConsumers, in
 
 1. Create a KongConsumer with the username `alice`:
 
-    ```bash
-    echo '
-    apiVersion: configuration.konghq.com/v1
-    kind: KongConsumer
-    metadata:
-      name: alice
-      annotations:
-        kubernetes.io/ingress.class: kong
-    username: alice
-    ' | kubectl apply -f -
-    ```
-    The results should look like this:
-    ```
-    kongconsumer.configuration.konghq.com/alice created
-    ```
+   ```bash
+   echo '
+   apiVersion: configuration.konghq.com/v1
+   kind: KongConsumer
+   metadata:
+     name: alice
+     annotations:
+       kubernetes.io/ingress.class: kong
+   username: alice
+   ' | kubectl apply -f -
+   ```
+   The results should look like this:
+   ```
+   kongconsumer.configuration.konghq.com/alice created
+   ```
 
 1. Create another KongConsumer with the same username:
 
-    ```bash
-    echo '
-    apiVersion: configuration.konghq.com/v1
-    kind: KongConsumer
-    metadata:
-      name: alice2
-      annotations:
-        kubernetes.io/ingress.class: kong
-    username: alice
-    ' | kubectl apply -f -
-    ```
-    The results should look like this:
-    ```
-    Error from server: error when creating "STDIN": admission webhook "validations.kong.konghq.com" denied the request: consumer already exists
-    ```
+   ```bash
+   echo '
+   apiVersion: configuration.konghq.com/v1
+   kind: KongConsumer
+   metadata:
+     name: alice2
+     annotations:
+       kubernetes.io/ingress.class: kong
+   username: alice
+   ' | kubectl apply -f -
+   ```
+   The results should look like this:
+   ```
+   Error from server: error when creating "STDIN": admission webhook "validations.kong.konghq.com" denied the request: consumer already exists
+   ```
 
 The validation webhook rejected the KongConsumer resource as there already exists a Consumer in {{site.base_gateway}} with the same username.
 

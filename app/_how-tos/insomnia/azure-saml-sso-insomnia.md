@@ -28,7 +28,7 @@ tags:
 
 tldr:
     q: How do I configure SSO with SAML 2.0 and Azure in Insomnia?
-    a: Obtain the single sign-on URL from the Insomnia SSO settings and add them to a new Microsoft Entra SAML Toolkit in Azure. Copy the Login URL and signing certificate from Azure and enter those in the Insomnia SSO settings. Finally, add users or groups to the Azure app integration and invite those same users to the Insomnia app.
+    a: Obtain the single sign-on URL from the Insomnia SSO settings and configure a new custom enterprise application in Azure with those values. Copy the Login URL and signing certificate from Azure and enter those in the Insomnia SSO settings. Finally, add users or groups to the Azure app and invite those same users to Insomnia.
 
 prereqs:
   inline:
@@ -44,9 +44,12 @@ prereqs:
 
 ---
 
+{:.warning}
+> If you previously configured Azure SAML SSO for Insomnia using the Microsoft Entra SAML Toolkit from the gallery, you need to recreate the application as a custom non-gallery app to use SCIM provisioning. Your existing SSO configuration cannot be migrated. Follow this guide from the beginning to create a new custom app.
+
 ## Create the SSO connection in Insomnia
 
-Before you can configure the SSO connection in Azure, you must start configuring the SSO settings in Insomnia so you have access to the single-sign on URL and audience URI for the Azure settings.
+Start the SSO configuration in Insomnia first to get the single sign-on URL and audience URI you'll need in Azure.
 
 1. In your Insomnia account settings, click your account at the top right and select **Enterprise Controls** from the dropdown.
 1. Click **SSO** in the sidebar and then click **Create Connection**.
@@ -54,13 +57,17 @@ Before you can configure the SSO connection in Azure, you must start configuring
 
 Keep this window open while you configure the settings in Azure.
 
-## Add the Microsoft Entra SAML Toolkit and configure SSO settings
+## Create a custom enterprise application and configure SSO settings
 
-Now that you have the single-sign on URL from Insomnia, you can create a new Microsoft Entra SAML Toolkit. 
+Create a custom enterprise application in Azure and configure it with the values from Insomnia.
 
-1. In the [Microsoft Entra admin center](https://entra.microsoft.com/), create a new application and [add the Microsoft Entra SAML Toolkit from the gallery](https://learn.microsoft.com/entra/identity/saas-apps/saml-toolkit-tutorial#add-microsoft-entra-saml-toolkit-from-the-gallery).
-1. Rename the toolkit "Insomnia SAML".
-1. [Navigate to the SSO settings](https://learn.microsoft.com/entra/identity/saas-apps/saml-toolkit-tutorial#configure-microsoft-entra-sso) for the Microsoft Entra SAML toolkit you just created.
+{:.info}
+> Do not use the Insomnia app from the Azure application gallery. Gallery apps do not support SCIM provisioning. Creating a custom app is required if you need automatic user provisioning.
+
+1. In the [Microsoft Entra admin center](https://entra.microsoft.com/), go to **Microsoft Entra ID** > **Enterprise applications**.
+1. Click **New application**, then click **Create your own application**.
+1. Enter **Insomnia SAML** as the application name, select **Integrate any other application you don't find in the gallery (Non-gallery)**, and click **Create**.
+1. From the application, select **Single Sign-On** from the left sidebar, then select **SAML**.
 1. Configure the following SAML SSO settings:
    
 {% capture table1 %}
@@ -103,24 +110,24 @@ rows:
 
 {{ table2 | indent:3 }}
 
-1. In the Entra application, find and copy the **Login URL** and the base64 version of the signing certificate. These will be used in the Insomnia SSO settings.
+1. In the Entra application, find and copy the **Login URL** and the base64 version of the signing certificate.
 
 ## Enter the sign on URL and signing certificate in the SSO settings in Insomnia
 
-Now that Azure SSO is configured and you have the Login URL and certificate from Azure, you can finish configuring the SSO settings in Insomnia.
+Enter the Login URL and certificate from Azure to finish the SSO configuration in Insomnia.
 
 1. In the Insomnia SSO settings, enter the Login URL and signing certificate from Azure.
 1. To verify the connection, click **Create connection**. If the connection is successful, you will get a message that says "Your SAML connection has been successfully updated."
 
 ## Add users or groups to the application in Azure
 
-You can add users or groups to the application in Azure. They won't be allowed to log in with SSO yet though.
+Assign users or groups to the application in Azure. Users cannot log in with SSO until they are invited to Insomnia in the next step.
 
 In Azure, [assign users or groups to the app](https://learn.microsoft.com/entra/identity/enterprise-apps/assign-user-or-group-access-portal?pivots=portal#assign-users-and-groups-to-an-application-using-the-microsoft-entra-admin-center). 
 
 ## Invite users to Insomnia
 
-Now that users or groups are assigned to the app in Azure, you can start inviting users to Insomnia. Once they accept the invite, they can log in to Insomnia with SSO.
+Invite users to Insomnia. Once they accept, they can log in with SSO.
 
 1. In your Insomnia account settings, click your account at the top right and select **Your organizations**. 
 1. Click the organization you configured SSO for.

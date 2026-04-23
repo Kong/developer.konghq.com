@@ -7,20 +7,16 @@ extended_description: Allow the principal to consume messages for a specific top
 
 weight: 900
 
-name: read-only-topic
+name: acl_policy
 type: acls
 config:
-  policies:
-    - name: name
-      type: acls
-      config:
-        rules:
-          - resource_type: topic
-            action: allow
-            operations:
-              - name: read
-            resource_names:
-              - match: my_resource
+  rules:
+    - resource_type: topic
+      action: allow
+      operations:
+        - name: read
+      resource_names:
+        - match: my_resource
 
 tools:
   - konnect-api

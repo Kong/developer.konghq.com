@@ -90,7 +90,7 @@
   "route-by-header": 850,
   "route-transformer-advanced": 780,
   "saml": 1010,
-  "service-protection": 915,
+  "service-protection": 901,
   "session": 1900,
   "solace-consume": 756,
   "solace-log": 15,

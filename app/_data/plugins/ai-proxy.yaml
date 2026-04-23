@@ -626,6 +626,26 @@ providers:
       provider_specific: []
       statistics_logging: []
 
+  - name: 'Ollama'
+    formats: 'Ollama, OpenAI, and Anthropic'
+    url_patterns:
+      - '$UPSTREAM_URL'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/api/chat'
+      route_type: 'llm/v1/chat'
+      model_example: 'llama3.2:1b'
+      min_version: '3.14'
+    embeddings:
+      supported: true
+      streaming: false
+      upstream_path: '/api/embed'
+      route_type: 'llm/v1/embeddings'
+      model_example: 'qwen3-embedding:8b'
+      min_version: '3.14'
+
   - name: 'OpenAI'
     formats: 'GPT-4o, GPT-4.1, and Multi-Modal'
     url_patterns:
@@ -719,14 +739,14 @@ providers:
         streaming: false
         upstream_path: '`/v1/images/generations`'
         route_type: 'image/v1/images/generations'
-        model_example: 'dall-e-3'
+        model_example: 'gpt-image-1.5'
         min_version: '3.11'
       edits:
         supported: true
         streaming: false
         upstream_path: '`/v1/images/edits`'
         route_type: 'image/v1/images/edits'
-        model_example: 'dall-e-2'
+        model_example: 'gpt-image-1.5'
         min_version: '3.11'
     realtime:
       supported: true
@@ -749,6 +769,53 @@ providers:
       provider_specific: []
       statistics_logging:
         - 'No statistics logging for assistants, batch, or audio APIs'
+
+  - name: 'vLLM'
+    url_patterns:
+      - '$UPSTREAM_URL'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'vllm-llama-3-8b'
+      min_version: '3.14'
+    completions:
+      supported: false
+    embeddings:
+      supported: false
+    function_calling:
+      supported: false
+    files:
+      supported: false
+    batches:
+      supported: false
+    assistants:
+      supported: false
+    responses:
+      supported: false
+    audio:
+      speech:
+        supported: false
+      transcriptions:
+        supported: false
+      translations:
+        supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
+    video:
+      generations:
+        supported: false
+    realtime:
+      supported: false
+    limitations:
+      provider_specific:
+        - '`upstream_url` must be set in `model.options` — vLLM has no fixed API endpoint'
+      statistics_logging: []
 
   - name: 'xAI'
     url_patterns:
@@ -814,6 +881,40 @@ providers:
     realtime:
       supported: false
       streaming: false
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
+  - name: 'Databricks'
+    url_patterns:
+      - https://{databricks_instance}.cloud.databricks.com:443
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '/serving-endpoints/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'databricks-gpt-oss-20b'
+      min_version: '3.14'
+
+  - name: 'DeepSeek'
+    url_patterns:
+      - 'https://api.deepseek.com'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'deepseek-chat'
+      min_version: '3.14'
+    embeddings:
+      supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
     limitations:
       provider_specific: []
       statistics_logging: []

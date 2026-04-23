@@ -35,6 +35,7 @@ categories:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai
@@ -53,7 +54,7 @@ for all requests and responses handled by the [AI Proxy](/plugins/ai-proxy/) plu
 The plugin enables configurable thresholds for the different moderation categories 
 and you can specify an array set of pre-configured blocklist IDs from your Azure Content Safety instance.
 
-Audit failures can be observed and reported on using the {{Site.base_gateway}} logging plugins.
+Audit failures can be observed and reported on using the {{site.base_gateway}} logging plugins.
 
 {% include plugins/ai-plugins-note.md %}
 
@@ -99,6 +100,16 @@ sequenceDiagram
 <!--vale on-->
 
 > _Figure 1: Diagram showing the request and response flow with the AI Azure Content Safety plugin._
+
+## TLS verification {% new_in 3.14 %}
+
+[`config.ssl_verify`](/plugins/ai-azure-content-safety/reference/#schema--config-ssl-verify) is enabled by default as of 3.14. The plugin verifies the TLS certificate when connecting to the Azure Content Safety service. To disable this, set `ssl_verify: false`.
+
+## Logging
+
+The AI Azure Content Safety plugin emits structured log data for every inspected request and response. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-azure-content-safety-logs).
+
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/plugins/ai-azure-content-safety/reference/#schema--config-log-blocked-content). {% new_in 3.14 %} When enabled, the blocked prompt or response body appears under `ai.proxy.azure-content-safety.input_faulty_prompt` and `ai.proxy.azure-content-safety.output_faulty_response` in the log entry.
 
 ## Format
 

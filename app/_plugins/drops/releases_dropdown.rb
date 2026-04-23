@@ -6,13 +6,14 @@ module Jekyll
       class Option < Liquid::Drop
         attr_reader :release
 
-        def initialize(base_url:, release:)
+        def initialize(base_url:, release:, use_name: false)
           @base_url = base_url
           @release  = release
+          @use_name = use_name
         end
 
         def value
-          @value ||= @release['label'] || @release['release']
+          @value ||= (@use_name && @release['name']) || @release['label'] || @release['release']
         end
 
         def url
@@ -34,14 +35,15 @@ module Jekyll
 
       attr_reader :base_url
 
-      def initialize(base_url:, releases:)
+      def initialize(base_url:, releases:, use_name: false)
         @base_url = base_url
         @releases = releases
+        @use_name = use_name
       end
 
       def options
         @options ||= @releases.sort.reverse.map do |release|
-          Option.new(base_url:, release:)
+          Option.new(base_url:, release:, use_name: @use_name)
         end
       end
 

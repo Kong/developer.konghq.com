@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@9d894504533aac3107094b10429cc9c1f044f46a
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/9d894504533aac3107094b10429cc9c1f044f46a'
+  x-oas-source: kong/platform-api@6c6ca05ee13458aa410a1f7c7846a6576b53c575
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/6c6ca05ee13458aa410a1f7c7846a6576b53c575'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -75,6 +75,10 @@ components:
           type: array
           items:
             oneOf:
+              - $ref: '#/components/schemas/A2aContextIdFilterByField'
+              - $ref: '#/components/schemas/A2aErrorFilterByField'
+              - $ref: '#/components/schemas/A2aMethodFilterByField'
+              - $ref: '#/components/schemas/A2aTaskIdFilterByField'
               - $ref: '#/components/schemas/ApiFilterByField'
               - $ref: '#/components/schemas/ApiPackageFilterByField'
               - $ref: '#/components/schemas/ApiProductFilterByField'
@@ -95,6 +99,10 @@ components:
               - $ref: '#/components/schemas/LatenciesKongGatewayMsFilterByField'
               - $ref: '#/components/schemas/LatenciesResponseMsFilterByField'
               - $ref: '#/components/schemas/LatenciesUpstreamMsFilterByField'
+              - $ref: '#/components/schemas/McpErrorFilterByField'
+              - $ref: '#/components/schemas/McpMethodFilterByField'
+              - $ref: '#/components/schemas/McpSessionIdFilterByField'
+              - $ref: '#/components/schemas/McpToolNameFilterByField'
               - $ref: '#/components/schemas/PortalFilterByField'
               - $ref: '#/components/schemas/RealmFilterByField'
               - $ref: '#/components/schemas/ResponseBodySizeFilterByField'
@@ -297,6 +305,49 @@ components:
           request_start:
             description: The time the gateway started processing the request.
             type: string
+          a2a_info:
+            description: 'A2A protocol information associated with the request, including task call details.'
+            type: object
+            nullable: true
+            properties:
+              rpc:
+                description: Array of A2A RPC calls made during the request.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: Unique identifier for the RPC call.
+                      type: string
+                      nullable: true
+                    method:
+                      description: The A2A method called.
+                      type: string
+                      nullable: true
+                    context_id:
+                      description: Context identifier for the A2A session.
+                      type: string
+                      nullable: true
+                    task_id:
+                      description: Unique identifier for the A2A task.
+                      type: string
+                      nullable: true
+                    task_state:
+                      description: State of the A2A task.
+                      type: string
+                      nullable: true
+                    latency:
+                      description: Latency of the RPC call in milliseconds.
+                      type: integer
+                      nullable: true
+                    response_body_size:
+                      description: Size of the RPC response body in bytes.
+                      type: integer
+                      nullable: true
+                    error:
+                      description: 'Error message from the RPC call, if any.'
+                      type: string
+                      nullable: true
           api:
             description: API ID associated with the request.
             type: string
@@ -375,6 +426,44 @@ components:
             description: Upstream latency of the request in milliseconds.
             type: integer
             nullable: true
+          mcp_info:
+            description: 'MCP (Model Context Protocol) session information associated with the request, including RPC call details.'
+            type: object
+            nullable: true
+            properties:
+              mcp_session_id:
+                description: Unique session identifier for the MCP request.
+                type: string
+              rpc:
+                description: Array of RPC calls made during the MCP session.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: Unique identifier for the RPC call.
+                      type: string
+                      nullable: true
+                    method:
+                      description: The RPC method name.
+                      type: string
+                      nullable: true
+                    tool_name:
+                      description: Name of the tool invoked.
+                      type: string
+                      nullable: true
+                    latency:
+                      description: Latency of the RPC call in milliseconds.
+                      type: integer
+                      nullable: true
+                    response_body_size:
+                      description: Size of the RPC response body in bytes.
+                      type: integer
+                      nullable: true
+                    error:
+                      description: 'Error message from the RPC call, if any.'
+                      type: string
+                      nullable: true
           portal:
             description: Portal ID associated with the request.
             type: string
@@ -517,20 +606,17 @@ components:
       enum:
         - in
         - not_in
-    UnscopedUuid:
-      type: string
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
-    FilterMultiValueUUID:
+    FilterMultiValueString:
       type: object
       properties:
         operator:
           $ref: '#/components/schemas/RequestsFilterType'
         value:
           description: |
-            The IDs to include in the results.
+            The values to include in the results.
           type: array
           items:
-            $ref: '#/components/schemas/UnscopedUuid'
+            type: string
       required:
         - operator
         - value
@@ -541,16 +627,15 @@ components:
       enum:
         - '='
         - '!='
-    FilterSingleValueUUID:
+    FilterSingleValueString:
       type: object
       properties:
         operator:
           $ref: '#/components/schemas/RequestsFilterTypeEquals'
         value:
           description: |
-            The ID to include in the results.
+            The value to include in the results
           type: string
-          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
       required:
         - operator
         - value
@@ -569,6 +654,102 @@ components:
       required:
         - operator
       title: Empty filters
+    A2aContextIdFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_context_id
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by a2a_context_id
+    A2aErrorFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_error
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by a2a_error
+    A2aMethodFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_method
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by a2a_method
+    A2aTaskIdFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - a2a_task_id
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by a2a_task_id
+    UnscopedUuid:
+      type: string
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    FilterMultiValueUUID:
+      type: object
+      properties:
+        operator:
+          $ref: '#/components/schemas/RequestsFilterType'
+        value:
+          description: |
+            The IDs to include in the results.
+          type: array
+          items:
+            $ref: '#/components/schemas/UnscopedUuid'
+      required:
+        - operator
+        - value
+      title: Multiselect filters
+    FilterSingleValueUUID:
+      type: object
+      properties:
+        operator:
+          $ref: '#/components/schemas/RequestsFilterTypeEquals'
+        value:
+          description: |
+            The ID to include in the results.
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      required:
+        - operator
+        - value
+      title: Single select filters
     ApiFilterByField:
       allOf:
         - type: object
@@ -649,34 +830,6 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueUUID'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by application
-    FilterMultiValueString:
-      type: object
-      properties:
-        operator:
-          $ref: '#/components/schemas/RequestsFilterType'
-        value:
-          description: |
-            The values to include in the results.
-          type: array
-          items:
-            type: string
-      required:
-        - operator
-        - value
-      title: Multiselect filters
-    FilterSingleValueString:
-      type: object
-      properties:
-        operator:
-          $ref: '#/components/schemas/RequestsFilterTypeEquals'
-        value:
-          description: |
-            The value to include in the results
-          type: string
-      required:
-        - operator
-        - value
-      title: Single select filters
     RequestsFilterTypeWildcard:
       description: The type of filter to apply. `starts_with` filters will limit the results to those that start with the specified value. `ends_with` will limit the results to those that end with the specified value.
       type: string
@@ -1012,6 +1165,70 @@ components:
             - $ref: '#/components/schemas/FilterSingleValueNumericMilliseconds'
             - $ref: '#/components/schemas/FilterEmpty'
       title: Filter by latencies_upstream_ms
+    McpErrorFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_error
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by mcp_error
+    McpMethodFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_method
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by mcp_method
+    McpSessionIdFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_session_id
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by mcp_session_id
+    McpToolNameFilterByField:
+      allOf:
+        - type: object
+          properties:
+            field:
+              description: The field to filter.
+              type: string
+              enum:
+                - mcp_tool_name
+          required:
+            - field
+        - oneOf:
+            - $ref: '#/components/schemas/FilterMultiValueString'
+            - $ref: '#/components/schemas/FilterSingleValueString'
+            - $ref: '#/components/schemas/FilterEmpty'
+      title: Filter by mcp_tool_name
     PortalFilterByField:
       allOf:
         - type: object
@@ -1823,6 +2040,16 @@ components:
       value:
         results:
           - request_start: '2020-02-02T01:00:00.000Z'
+            a2a_info:
+              rpc:
+                - id: 58fccc27-0043-493b-b12c-7cab0205e616
+                  method: message/send
+                  context_id: cf9dd0cf-e5f9-4864-9261-14225703dc1f
+                  task_id: f7c459b2-6031-43cf-8b51-710aa6c6a1a5
+                  task_state: AI_A2A_TASK_STATE_COMPLETED
+                  latency: 32
+                  response_body_size: 239
+                  error: null
             api: null
             api_package: null
             api_product: 523468b1-2e74-4b58-b30e-6f904e99e4d0
@@ -1843,6 +2070,15 @@ components:
             latencies_kong_gateway_ms: 2
             latencies_response_ms: 117
             latencies_upstream_ms: 115
+            mcp_info:
+              mcp_session_id: mcp-sess-abc123
+              rpc:
+                - id: rpc-001
+                  method: tools/call
+                  tool_name: get_weather
+                  latency: 45
+                  response_body_size: 1024
+                  error: null
             portal: 20076d8c-2d1b-4249-b323-4baa63796f8a
             ratelimit_enabled: 1
             ratelimit_enabled_day: 0
@@ -1880,6 +2116,7 @@ components:
             upstream_status: null
             upstream_uri: /graphql
           - request_start: '2020-02-02T01:00:01.050Z'
+            a2a_info: null
             api: null
             api_package: af4d23b1-d1cd-4fc3-8939-94fbfead746e
             api_product: b866c867-60e6-4258-adb3-e136cc26388b
@@ -1900,6 +2137,7 @@ components:
             latencies_kong_gateway_ms: 2
             latencies_response_ms: 12
             latencies_upstream_ms: 10
+            mcp_info: null
             portal: null
             ratelimit_enabled: 1
             ratelimit_enabled_day: 0

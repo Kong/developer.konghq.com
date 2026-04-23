@@ -66,12 +66,12 @@
     "id": "937dcdd7-4485-47dc-af5f-b805d562552f",
     "title": "Gateway Admin - EE",
     "latestVersion": {
-      "name": "3.13.0.0",
-      "id": "2c8fc2d3-40e0-4d62-a8f1-6d706a2cc6f2"
+      "name": "3.14.0.0",
+      "id": "8ebc8730-b989-49ef-86f5-dfd2a4449909"
     },
     "description": "Kong Gateway (EE) comes with an internal RESTful API for administration purposes.",
     "documentCount": 2,
-    "versionCount": 11,
+    "versionCount": 12,
     "versions": [
       {
         "id": "be79b812-46d5-4cc1-b757-b5270bf4fa60",
@@ -158,6 +158,14 @@
         "created_at": "2025-12-03T23:13:30.719Z",
         "updated_at": "2025-12-16T15:48:10.695Z",
         "name": "3.13.0.0",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "8ebc8730-b989-49ef-86f5-dfd2a4449909",
+        "created_at": "2026-04-07T15:21:30.449Z",
+        "updated_at": "2026-04-07T15:22:12.464Z",
+        "name": "3.14.0.0",
         "deprecated": false,
         "registration_configs": []
       }
@@ -339,12 +347,12 @@
   },
   {
     "id": "830b5dd0-6914-44fc-ae5d-cc8efcf77c04",
-    "title": "Konnect API Builder",
+    "title": "Konnect API Catalog",
     "latestVersion": {
       "name": "v3",
       "id": "f1a1134c-797d-4712-bcd4-47c1b79e8099"
     },
-    "description": "Manage APIs to be published in Konnect Developer Portals (beta).",
+    "description": "The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.",
     "documentCount": 0,
     "versionCount": 1,
     "versions": [
@@ -404,18 +412,26 @@
     "id": "e46e7742-befb-49b1-9bf1-7cbe477ab818",
     "title": "Konnect Audit Logging",
     "latestVersion": {
-      "name": "v2",
-      "id": "d36126ee-ab8d-47b2-960f-5703da22cced"
+      "name": "v3",
+      "id": "6a35d4d3-f750-4473-bb5e-c5a3dfb3506c"
     },
     "description": "Audit logging enables administrators to better spot security risks and maintain compliance of their core infrastructure.",
     "documentCount": 0,
-    "versionCount": 1,
+    "versionCount": 2,
     "versions": [
       {
         "id": "d36126ee-ab8d-47b2-960f-5703da22cced",
         "created_at": "2023-01-18T22:01:21.688Z",
         "updated_at": "2024-10-17T19:10:43.647Z",
         "name": "v2",
+        "deprecated": false,
+        "registration_configs": []
+      },
+      {
+        "id": "6a35d4d3-f750-4473-bb5e-c5a3dfb3506c",
+        "created_at": "2026-04-18T00:53:16.884Z",
+        "updated_at": "2026-04-18T00:53:44.949Z",
+        "name": "v3",
         "deprecated": false,
         "registration_configs": []
       }

@@ -4,7 +4,7 @@
     "min_version": {
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z_]+$": {
+        "^[a-zA-Z_-]+$": {
           "type": "string"
         }
       },

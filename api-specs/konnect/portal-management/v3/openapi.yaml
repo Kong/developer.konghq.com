@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.3.2
+  version: 3.4.1
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@598598bb85b241381bb4cc9f7a88f7b6204b275f
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/598598bb85b241381bb4cc9f7a88f7b6204b275f'
+  x-oas-source: kong/platform-api@81417f59c2852b9e8f6b4cb0601771d7d0f33183
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/81417f59c2852b9e8f6b4cb0601771d7d0f33183'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -514,7 +514,7 @@ paths:
     get:
       operationId: list-portal-pages
       summary: List Pages
-      description: Returns the tree view of custom pages that have been created for this portal.
+      description: Returns the tree view of custom pages that have been created for this portal. The full tree is returned in one response; this endpoint is not paginated.
       parameters:
         - $ref: '#/components/parameters/SortPortalPages'
         - $ref: '#/components/parameters/PortalId'
@@ -537,8 +537,6 @@ paths:
               examples:
                 ListPortalPagesBadRequestExample1:
                   $ref: '#/components/examples/ListPortalPagesBadRequestExample1'
-                ListPortalPagesBadRequestExample2:
-                  $ref: '#/components/examples/ListPortalPagesBadRequestExample2'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -1183,11 +1181,7 @@ paths:
     get:
       operationId: get-portal-authentication-settings
       summary: Get Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.
+      description: 'Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.'
       responses:
         '200':
           $ref: '#/components/responses/PortalAuthenticationSettings'
@@ -1198,11 +1192,7 @@ paths:
     patch:
       operationId: update-portal-authentication-settings
       summary: Update Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
+      description: Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -1740,10 +1730,7 @@ paths:
     get:
       operationId: get-portal-identity-providers
       summary: List Identity Providers
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the identity providers available within the portal. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
@@ -1769,10 +1756,7 @@ paths:
     post:
       operationId: create-portal-identity-provider
       summary: Create Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
@@ -1797,10 +1781,7 @@ paths:
     get:
       operationId: get-portal-identity-provider
       summary: Get Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
@@ -1819,10 +1800,7 @@ paths:
     patch:
       operationId: update-portal-identity-provider
       summary: Update Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
@@ -1845,10 +1823,7 @@ paths:
     delete:
       operationId: delete-portal-identity-provider
       summary: Delete Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the portal.
       responses:
@@ -2382,6 +2357,113 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Portal Emails
+  '/portals/{portalId}/ip-allow-list':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+    post:
+      operationId: create-portal-ip-allow-list
+      summary: Create an IP allow list for a portal
+      description: |
+        Create an IP allow list for a portal.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePortalSourceIPRestriction'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalSourceIPRestriction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Portals IP Allow List
+    get:
+      operationId: list-portal-ip-allow-list
+      summary: List the IP allow list for portal
+      description: |
+        Lists the IP allow list configuration for a portal.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageBefore'
+        - $ref: '#/components/parameters/PageAfter'
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalSourceIPRestrictionPaginatedResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portals IP Allow List
+  '/portals/{portalId}/ip-allow-list/{id}':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - name: id
+        in: path
+        description: ID of the allow list.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      operationId: put-portal-ip-allow-list
+      summary: Replace an IP allow list for a portal
+      description: |
+        Replace an IP allow list for a portal.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePortalSourceIPRestriction'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalSourceIPRestriction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portals IP Allow List
+    patch:
+      operationId: update-portal-ip-allow-list
+      summary: Update an IP allow list for a portal
+      description: |
+        Update an IP allow list for a portal.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePortalSourceIPRestriction'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalSourceIPRestriction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portals IP Allow List
+    delete:
+      operationId: delete-portal-ip-allow-list
+      summary: Delete an IP allow list from a portal
+      description: |
+        Delete the IP allow list for a portal.
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portals IP Allow List
 components:
   parameters:
     ApplicationId:
@@ -2424,6 +2506,24 @@ components:
       in: path
       required: true
       description: ID of the identity provider.
+    PageAfter:
+      name: 'page[after]'
+      description: 'Request the next page of data, starting with the item after this parameter.'
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageBefore:
+      name: 'page[before]'
+      description: 'Request the next page of data, starting with the item before this parameter.'
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
     PageId:
       schema:
         type: string
@@ -3049,7 +3149,7 @@ components:
         - parent_page_id
       title: PortalPageResponse
     ListPortalPagesResponse:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal. Not paginated.
       type: object
       properties:
         data:
@@ -3073,7 +3173,7 @@ components:
         - data
       title: ListPortalPagesResponse
     PortalSnippetResponse:
-      description: Details about a page in a portal.
+      description: Details about a snippet in a portal.
       type: object
       properties:
         id:
@@ -3105,7 +3205,7 @@ components:
         - updated_at
       title: PortalSnippetResponse
     ListPortalSnippetsResponse:
-      description: A paginated list of custom pages in a portal.
+      description: A paginated list of custom snippets in a portal.
       type: object
       properties:
         data:
@@ -3133,7 +3233,7 @@ components:
       required:
         - data
         - meta
-      title: ListPortalPagesResponse
+      title: ListPortalSnippetsResponse
     UpdatePortalSnippetRequest:
       description: Update a snippet in a portal.
       type: object
@@ -4702,6 +4802,7 @@ components:
         - account-access-revoked
         - api-key-expiring-soon
         - api-key-expired
+        - developer-invitation
     EmailTemplateVariableName:
       description: |
         Enum for available portal email template variables.
@@ -5792,7 +5893,7 @@ components:
           title: DateTimeFieldGTFilter
           additionalProperties: false
           properties:
-            lt:
+            gt:
               description: Value is greater than the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -5803,7 +5904,7 @@ components:
           title: DateTimeFieldGTEFilter
           additionalProperties: false
           properties:
-            lte:
+            gte:
               description: Value is greater than or equal to the given RFC-3339 formatted timestamp in UTC
               type: string
               format: date-time
@@ -6202,6 +6303,77 @@ components:
             - $ref: '#/components/schemas/OIDCIdentityProviderConfig'
             - $ref: '#/components/schemas/SAMLIdentityProviderConfig'
       title: Identity Provider
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    PortalAllowedIPs:
+      description: The list of allowed ips for the portal.
+      type: array
+      items:
+        type: string
+      example:
+        - 192.168.1.1
+        - 192.168.1.0/22
+      maxItems: 25
+      minItems: 1
+      uniqueItems: true
+    IPEntry:
+      description: An entry representing a collection of allowed IP addresses or CIDR blocks.
+      type: object
+      properties:
+        id:
+          description: Contains a unique identifier used for this resource.
+          type: string
+          format: uuid
+          example: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+          readOnly: false
+        allowed_ips:
+          $ref: '#/components/schemas/PortalAllowedIPs'
+      additionalProperties: false
+      required:
+        - id
+        - allowed_ips
+    IPEntries:
+      description: The list of allowed ips for the portal.
+      type: array
+      items:
+        $ref: '#/components/schemas/IPEntry'
+      example:
+        - id: 660e8400-e29b-41d4-a716-446655440000
+          allowed_ips:
+            - 192.168.1.1
+        - id: 550e8400-e29b-41d4-a716-446655440000
+          allowed_ips:
+            - 192.168.1.0/22
+            - 192.168.1.52
+      maxItems: 1000
+      uniqueItems: true
   examples:
     400-request-format-is-invalid:
       value:
@@ -6338,6 +6510,7 @@ components:
         default_domain: 123455678abcd.us.portal.konghq.com
         authentication_enabled: false
         rbac_enabled: true
+        sipr_enabled: false
         default_api_visibility: private
         default_page_visibility: private
         default_application_auth_strategy_id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -6398,6 +6571,7 @@ components:
             description: The Portal A
             authentication_enabled: false
             rbac_enabled: true
+            sipr_enabled: false
             default_api_visibility: private
             default_page_visibility: private
             default_application_auth_strategy_id: 5f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -6589,11 +6763,6 @@ components:
           - guides-sidebar-toc
     ListPortalPagesExample1:
       value:
-        meta:
-          page:
-            number: 1
-            size: 10
-            total: 1
         data:
           - id: 8f9fd312-a987-4628-b4c5-bb4f4fddd5f7
             slug: /
@@ -6606,17 +6775,6 @@ components:
             parent_page_id: null
             children: []
     ListPortalPagesBadRequestExample1:
-      value:
-        status: 400
-        title: Invalid Request
-        instance: 'kong:trace:1433447772874964729'
-        detail: Invalid Parameters
-        invalid_parameters:
-          - field: 'page[size]'
-            rule: is_number
-            reason: '"page[size]" must be a number'
-            source: query
-    ListPortalPagesBadRequestExample2:
       value:
         status: 400
         title: Invalid Request
@@ -8062,6 +8220,11 @@ components:
                 description: 'Whether the portal resources are protected by Role Based Access Control (RBAC). If enabled, developers view or register for APIs until unless assigned to teams with access to view and consume specific APIs. Authentication must be enabled to use RBAC.'
                 type: boolean
                 default: false
+              sipr_enabled:
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8150,6 +8313,11 @@ components:
               rbac_enabled:
                 description: 'Whether the portal resources are protected by Role Based Access Control (RBAC). If enabled, developers view or register for APIs until unless assigned to teams with access to view and consume specific APIs. Authentication must be enabled to use RBAC.'
                 type: boolean
+                default: false
+              sipr_enabled:
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
                 default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
@@ -8469,6 +8637,39 @@ components:
           examples:
             Send test email:
               $ref: '#/components/examples/SendTestEmailTemplateExample'
+    CreatePortalSourceIPRestriction:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              allowed_ips:
+                $ref: '#/components/schemas/PortalAllowedIPs'
+            additionalProperties: false
+            required:
+              - allowed_ips
+          examples:
+            Example Request Body:
+              value:
+                allowed_ips:
+                  - 192.168.1.1
+                  - 192.168.1.0/22
+    UpdatePortalSourceIPRestriction:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              allowed_ips:
+                $ref: '#/components/schemas/PortalAllowedIPs'
+            additionalProperties: false
+            minProperties: 1
+          examples:
+            Example Request Body:
+              value:
+                allowed_ips:
+                  - 192.168.1.1
+                  - 192.168.1.0/22
     CreateIdentityProviderRequest:
       description: |
         An object representing the configuration for creating a new identity provider. This configuration may pertain  to either an OIDC or a SAML identity provider.
@@ -8652,6 +8853,11 @@ components:
                       description: 'Whether the portal resources are protected by Role Based Access Control (RBAC). If enabled, developers view or register for APIs until unless assigned to teams with access to view and consume specific APIs. Authentication must be enabled to use RBAC.'
                       type: boolean
                       default: false
+                    sipr_enabled:
+                      description: Whether ip allow list is enabled for the portal.
+                      type: boolean
+                      example: true
+                      default: false
                     default_api_visibility:
                       description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                       type: string
@@ -8697,6 +8903,7 @@ components:
                     - description
                     - authentication_enabled
                     - rbac_enabled
+                    - sipr_enabled
                     - default_api_visibility
                     - default_page_visibility
                     - default_application_auth_strategy_id
@@ -8752,6 +8959,11 @@ components:
                 description: 'Whether the portal resources are protected by Role Based Access Control (RBAC). If enabled, developers view or register for APIs until unless assigned to teams with access to view and consume specific APIs. Authentication must be enabled to use RBAC.'
                 type: boolean
                 default: false
+              sipr_enabled:
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8798,6 +9010,7 @@ components:
               - description
               - authentication_enabled
               - rbac_enabled
+              - sipr_enabled
               - default_api_visibility
               - default_page_visibility
               - default_application_auth_strategy_id
@@ -8866,7 +9079,7 @@ components:
             Example 1:
               $ref: '#/components/examples/PortalPageExample1'
     ListPortalPages:
-      description: A paginated list of custom pages in a portal.
+      description: Tree of custom pages in a portal (nested `children`). Not paginated.
       content:
         application/json:
           schema:
@@ -9155,6 +9368,41 @@ components:
           examples:
             Example Portal Email Config Response:
               $ref: '#/components/examples/PortalEmailConfigExample'
+    PortalSourceIPRestrictionPaginatedResponse:
+      description: The portal's IP allow list configuration.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/CursorMetaPage'
+              data:
+                $ref: '#/components/schemas/IPEntries'
+            additionalProperties: false
+            required:
+              - data
+              - meta
+          examples:
+            Example:
+              value:
+                meta:
+                  next: '/portals/{id}/ip-allow-list?page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ'
+                  previous: '/portals/{id}/ip-allow-list?page[before]=efogICJpZCI6ICJoZWysbyB3b3JsZCIKgR'
+                  size: 2
+                data:
+                  - id: 660e8400-e29b-41d4-a716-446655440000
+                    allowed_ips:
+                      - 192.168.1.1
+                  - id: 770e8400-e29b-41d4-a716-446655440000
+                    allowed_ips:
+                      - 192.168.1.0/22
+    PortalSourceIPRestriction:
+      description: The portal's IP allow list configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IPEntry'
     Unauthorized:
       description: Unauthorized
       content:
@@ -9271,6 +9519,8 @@ tags:
     description: APIs related to Konnect Developer Portal Application Registrations.
   - name: Portal Emails
     description: APIs related to Konnect Developer Portal Emails.
+  - name: Portals IP Allow List
+    description: APIs related to Konnect Portal IP Allow List.
 security:
   - personalAccessToken: []
   - systemAccountAccessToken: []

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect Application Auth Strategies
-  version: 2.0.5
+  version: 2.0.6
   description: The API for Kong Konnect Portal Application Configuration
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@a631bb11cbe67e71e09b19cff3536ec784b72ea4
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a631bb11cbe67e71e09b19cff3536ec784b72ea4'
+  x-oas-source: kong/platform-api@13b85f000e8c385052e0d65bdd3ee1a08eff8174
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/13b85f000e8c385052e0d65bdd3ee1a08eff8174'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region

@@ -136,7 +136,7 @@ When generating the token, you can choose an expiration window. Available option
 {:.warning}
 > The token is displayed only once when it is generated. Store it securely. If you lose the token, refresh it in Insomnia and update the token in your IdP. To manually refresh the SCIM token, navigate to [**SCIM**](https://app.insomnia.rest/app/enterprise/scim).
 
-### Automatic token refresh
+### SCIM token management
 
 SCIM tokens expire based on the expiration window selected when the token is generated in Insomnia.
 

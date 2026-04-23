@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl login konnect [flags]
 
@@ -19,7 +19,7 @@ Flags:
                                - (default "https://global.api.konghq.com")
       --color-theme string     Configures the CLI UI/theme (prompt, tables, TUI elements).
                                - Config path: [ color-theme ]
-                               - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                               - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                                - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string     Path to the configuration file to load.
                                - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]

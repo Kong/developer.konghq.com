@@ -88,7 +88,8 @@ status_code: 201
 method: POST
 body:
     name: demo-control-plane
-capture: CONTROL_PLANE_DETAILS
+capture:
+  - variable: CONTROL_PLANE_DETAILS
 {% endkonnect_api_request %}
 <!--vale on-->
 
@@ -140,8 +141,8 @@ env:
   cluster_mtls: pki
 
   cluster_control_plane: "'$CONTROL_PLANE_ENDPOINT'"
-  cluster_telemetry_endpoint: "'$CONTROL_PLANE_ENDPOINT':443"
-  cluster_telemetry_server_name: "'$CONTROL_PLANE_ENDPOINT'"
+  cluster_telemetry_endpoint: "'$CONTROL_PLANE_TELEMETRY':443"
+  cluster_telemetry_server_name: "'$CONTROL_PLANE_TELEMETRY'"
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
 

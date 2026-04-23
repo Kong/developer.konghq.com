@@ -23,7 +23,7 @@ config:
     redis:
       host: ${instance_address}
       username: ${instance_username}
-      port: 6379
+      port: 10000
       cloud_authentication:
         auth_provider: azure
         azure_client_id: ${azure_client_id}

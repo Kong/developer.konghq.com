@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl listen audit-logs [flags]
 
@@ -7,23 +7,23 @@ Aliases:
 
 Examples:
   # Build destination endpoint from public base URL and listener path
-  kongctl listen audit-logs --public-url https://example.ngrok.app
+  kongctl listen audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
 
   # Provide an explicit destination endpoint
-  kongctl listen audit-logs --endpoint https://example.ngrok.app/audit-logs
+  kongctl listen audit-logs --endpoint https://example.ngrok.app/audit-logs --authorization "Bearer <token>"
 
   # Explicit product form
-  kongctl listen konnect audit-logs --public-url https://example.ngrok.app
+  kongctl listen konnect audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
 
 
 Flags:
-      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this same value when provided.
+      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this value on every incoming request.
       --base-url string         Base URL for Konnect API requests.
                                 - Config path: [ konnect.base-url ]
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                                - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]

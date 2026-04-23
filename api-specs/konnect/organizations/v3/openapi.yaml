@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@cc1cf0cbab829ef3fd6fdd3470407154e5d36962
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cc1cf0cbab829ef3fd6fdd3470407154e5d36962'
+  x-oas-source: kong/platform-api@bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -618,6 +618,7 @@ components:
       description: Whether ip allow list is enabled for the organization.
       type: boolean
       example: true
+      default: false
     AllowedIPs:
       description: The list of allowed ips for the organization.
       type: array

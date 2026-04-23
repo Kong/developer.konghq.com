@@ -1,5 +1,5 @@
 ---
-title: External Service
+title: Mesh External Service
 name: ExternalService
 products:
     - mesh

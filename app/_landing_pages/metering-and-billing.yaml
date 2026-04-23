@@ -113,6 +113,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: Events
+              description: |
+                Learn how usage events are ingested, processed, deduplicated, and enriched in {{site.metering_and_billing}}.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/events/
+      - blocks:
+          - type: card
+            config:
               title: Collectors
               description: |
                 Meter external systems and data sources like Kubernetes, GPUs, and databases with the {{site.metering_and_billing}} Collector.
@@ -155,7 +165,7 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#pricing-models
+                url: /metering-and-billing/pricing-models/
       - blocks:
           - type: card
             config:
@@ -165,7 +175,7 @@ rows:
               icon: /assets/icons/document-list.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/product-catalog/#entitlements
+                url: /metering-and-billing/entitlements/
 
   - header:
       type: h2
@@ -191,7 +201,7 @@ rows:
               icon: /assets/icons/document.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#subscriptions
+                url: /metering-and-billing/subscriptions/
       - blocks:
           - type: card
             config:
@@ -201,7 +211,7 @@ rows:
               icon: /assets/icons/organization.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#billing-profiles
+                url: /metering-and-billing/billing-invoicing/#billing-profiles
       - blocks:
           - type: card
             config:
@@ -211,7 +221,44 @@ rows:
               icon: /assets/icons/money.svg
               cta:
                 text: Learn more
-                url: /metering-and-billing/billing-invoicing-subscriptions/#invoicing
+                url: /metering-and-billing/billing-invoicing/#invoicing
+      - blocks:
+          - type: card
+            config:
+              title: Notifications
+              description: |
+                Configure webhook alerts for usage thresholds and billing events. Use notifications to enforce entitlement limits in your infrastructure.
+              icon: /assets/icons/event.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/notifications/
+
+  - header:
+      type: h2
+      text: "Cost analytics"
+      sub_text: "Track and analyze the internal costs of feature usage."
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Cost analytics
+              description: |
+                Query and visualize the computed cost of feature usage over time, with filtering and dimensional breakdowns.
+              icon: /assets/icons/analytics.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#cost-analytics-queries
+      - blocks:
+          - type: card
+            config:
+              title: LLM cost database
+              description: |
+                Browse the built-in database of per-token pricing for major LLM providers and models. Create price overrides for custom rates.
+              icon: /assets/icons/llm.svg
+              cta:
+                text: Learn more
+                url: /metering-and-billing/cost-analytics/#llm-cost-database
 
   - header:
       type: h2
@@ -239,8 +286,8 @@ rows:
                 Integrate in-house invoicing, payment systems, or ERPs. Great for enterprise sales motions.
               icon: /assets/icons/third-party/custom.svg
               cta:
-                text: View integration
-                url: "https://cloud.konghq.com/us/metering-billing/apps/marketplace/custom_invoicing"
+                text: Configure the Custom Invoicing app
+                url: "/metering-and-billing/custom-invoicing/"
 
       - blocks:
           - type: card

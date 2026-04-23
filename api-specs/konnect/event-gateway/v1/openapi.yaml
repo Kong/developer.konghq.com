@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e2af1d1354ceb0b8d5cd0fc29574ede80d8d4f3b
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e2af1d1354ceb0b8d5cd0fc29574ede80d8d4f3b'
+  x-oas-source: kong/platform-api@50aa6fab9d9bf5e362eca279608c3bad33571fa5
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/50aa6fab9d9bf5e362eca279608c3bad33571fa5'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -1690,6 +1690,132 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Event Gateway Static Keys
+  '/event-gateways/{gatewayId}/tls-trust-bundles':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+    get:
+      operationId: list-event-gateway-tls-trust-bundles
+      summary: List TLS Trust Bundles
+      description: |-
+        Returns a list of TLS trust bundles associated with the specified Event Gateway.
+
+        **Requires a minimum runtime version of `1.1`**.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/EventGatewayCommonFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListTLSTrustBundlesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway TLS Trust Bundles
+      x-min-runtime-version: '1.1'
+    post:
+      operationId: create-event-gateway-tls-trust-bundle
+      summary: Create TLS Trust Bundle
+      description: |-
+        Creates a new TLS trust bundle containing trusted CA certificates for client certificate verification.
+
+        **Requires a minimum runtime version of `1.1`**.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateTLSTrustBundleRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TLSTrustBundle'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway TLS Trust Bundles
+      x-min-runtime-version: '1.1'
+  '/event-gateways/{gatewayId}/tls-trust-bundles/{tlsTrustBundleId}':
+    parameters:
+      - $ref: '#/components/parameters/gatewayId'
+      - name: tlsTrustBundleId
+        in: path
+        description: The ID of the TLS trust bundle.
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: get-event-gateway-tls-trust-bundle
+      summary: Get a TLS Trust Bundle
+      description: |-
+        Returns information about a specific TLS trust bundle.
+
+        **Requires a minimum runtime version of `1.1`**.
+      responses:
+        '200':
+          description: A single TLS trust bundle object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TLSTrustBundle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Event Gateway TLS Trust Bundles
+      x-min-runtime-version: '1.1'
+    put:
+      operationId: update-event-gateway-tls-trust-bundle
+      summary: Update TLS Trust Bundle
+      description: |-
+        Updates an existing TLS trust bundle.
+
+        **Requires a minimum runtime version of `1.1`**.
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateTLSTrustBundleRequest'
+      responses:
+        '200':
+          description: Updated TLS trust bundle object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TLSTrustBundle'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Event Gateway TLS Trust Bundles
+      x-min-runtime-version: '1.1'
+    delete:
+      operationId: delete-event-gateway-tls-trust-bundle
+      summary: Delete TLS Trust Bundle
+      description: |-
+        Deletes a specific TLS trust bundle associated with the Event Gateway.
+
+        **Requires a minimum runtime version of `1.1`**.
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Event Gateway TLS Trust Bundles
+      x-min-runtime-version: '1.1'
 components:
   parameters:
     EventGatewayCommonFilter:
@@ -2072,7 +2198,10 @@ components:
       required:
         - type
     VirtualClusterAuthenticationClientCertificate:
-      description: Client certificate (mTLS) authentication scheme for the virtual cluster.
+      description: |-
+        Client certificate (mTLS) authentication scheme for the virtual cluster.
+
+        **Requires a minimum runtime version of `1.1`**.
       type: object
       properties:
         type:
@@ -2086,12 +2215,71 @@ components:
       required:
         - type
       x-min-runtime-version: '1.1'
+    TLSTrustBundle:
+      description: |-
+        A TLS trust bundle defines a set of trusted certificate authorities (CAs) used for client certificate
+        verification during mutual TLS (mTLS). Trust bundles are referenced by TLS listener policies to
+        determine which client certificates are accepted.
+
+        **Requires a minimum runtime version of `1.1`**.
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the TLS trust bundle.
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          $ref: '#/components/schemas/TLSTrustBundleName'
+        description:
+          description: A human-readable description of the TLS trust bundle.
+          type: string
+          default: ''
+          maxLength: 512
+        config:
+          $ref: '#/components/schemas/TLSTrustBundleConfig'
+        labels:
+          $ref: '#/components/schemas/Labels'
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - config
+        - created_at
+        - updated_at
+      x-min-runtime-version: '1.1'
     TLSTrustBundleName:
       description: The unique name of the TLS trust bundle.
       type: string
       maxLength: 255
       minLength: 1
       x-unicode-pattern: '^[\p{L}\p{N}][\p{L}\p{N} _\-\.:/+'']*[\p{L}\p{N}]$'
+    TLSTrustBundleConfig:
+      type: object
+      properties:
+        trusted_ca:
+          description: |
+            PEM-encoded list of trusted CA certificates used to verify client certificates.
+            Can be a literal PEM string or a vault reference.
+          type: string
+          minLength: 1
+          x-examples:
+            reference:
+              summary: Reference to a secret
+              value: '${vault.env[''MY_ENV_VAR'']}'
+            literal:
+              summary: Literal value
+              value: my-literal-value
+          x-expression:
+            type: string
+            fields:
+              - vault
+      required:
+        - trusted_ca
     TLSTrustBundleReference:
       description: |
         A reference to a TLS trust bundle resource.
@@ -2101,6 +2289,7 @@ components:
       anyOf:
         - $ref: '#/components/schemas/TLSTrustBundleReferenceById'
         - $ref: '#/components/schemas/TLSTrustBundleReferenceByName'
+      x-terraform-preferred: '#/components/schemas/TLSTrustBundleReferenceById'
     TLSTrustBundleReferenceById:
       type: object
       properties:
@@ -2439,7 +2628,10 @@ components:
             - tls12
             - tls13
         client_identity:
-          description: Client mTLS configuration.
+          description: |-
+            Client mTLS configuration.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             certificate:
@@ -3030,9 +3222,11 @@ components:
           type: boolean
           default: false
         client_authentication:
-          description: |
+          description: |-
             Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
             requests or requires clients to present a certificate during the TLS handshake.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             mode:
@@ -3053,9 +3247,11 @@ components:
                 $ref: '#/components/schemas/TLSTrustBundleReference'
               minItems: 1
             principal_mapping:
-              description: |
+              description: |-
                 An expression that extracts a principal identifier from a verified client certificate.
                 This expression must evaluate to a string.
+
+                **Requires a minimum runtime version of `1.1`**.
               type: string
               example: '${context.certificate.subject[''CN''] ? context.certificate.subject[''CN''] : context.certificate.sans.uri[0]}'
               x-expression:
@@ -3118,9 +3314,11 @@ components:
           type: boolean
           default: false
         client_authentication:
-          description: |
+          description: |-
             Configures mutual TLS (mTLS) client certificate verification. When set, the gateway
             requests or requires clients to present a certificate during the TLS handshake.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             mode:
@@ -3141,9 +3339,11 @@ components:
                 $ref: '#/components/schemas/TLSTrustBundleReference'
               minItems: 1
             principal_mapping:
-              description: |
+              description: |-
                 An expression that extracts a principal identifier from a verified client certificate.
                 This expression must evaluate to a string.
+
+                **Requires a minimum runtime version of `1.1`**.
               type: string
               example: '${context.certificate.subject[''CN''] ? context.certificate.subject[''CN''] : context.certificate.sans.uri[0]}'
               x-expression:
@@ -3440,11 +3640,13 @@ components:
           maximum: 65535
           minimum: 1
         broker_host_format:
-          description: |
+          description: |-
             Configures DNS names assigned to brokers in virtual clusters.
 
             - `per_cluster_suffix` is the default and allocates one level in the hierarchy for virtual clusters: `broker-{node_id}.{virtual_cluster}.{sni_suffix}`
             - `shared_suffix` puts all brokers from every virtual clusters into the same level: `broker-{node_id}-{virtual_cluster}.{sni_suffix}`. This makes it easier to manage certificates for this listener.
+
+            **Requires a minimum runtime version of `1.1`**.
           type: object
           properties:
             type:
@@ -3507,11 +3709,9 @@ components:
           modify_headers: '#/components/schemas/EventGatewayModifyHeadersPolicy'
           schema_validation: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
           encrypt: '#/components/schemas/EventGatewayEncryptPolicy'
-          skip_record: '#/components/schemas/EventGatewaySkipRecordPolicy'
       oneOf:
         - $ref: '#/components/schemas/EventGatewayProduceSchemaValidationPolicy'
         - $ref: '#/components/schemas/EventGatewayModifyHeadersPolicy'
-        - $ref: '#/components/schemas/EventGatewaySkipRecordPolicy'
         - $ref: '#/components/schemas/EventGatewayEncryptPolicy'
     EventGatewayClusterPolicyModify:
       description: The typed schema of the cluster policy to modify it.
@@ -4262,31 +4462,8 @@ components:
         resource_names:
           description: 'If any of these entries match, the resource name matches for this rule. A maximum of 50 entries are allowed.'
           oneOf:
-            - type: array
-              maxItems: 50
-              items:
-                $ref: '#/components/schemas/EventGatewayACLResourceName'
-            - type: string
-              x-min-runtime-version: '1.1'
-              example: 'context.auth.token.claims["topics"]'
-              x-expression:
-                type: array
-                items:
-                  type: string
-                fields:
-                  - name: context.auth.principal.name
-                    type: string
-                    description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
-                  - name: context.auth.type
-                    type: string
-                    description: |
-                      The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
-                  - name: context.auth.token.claims
-                    type: object
-                    description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
-              description: |
-                This expression should evaluate to an array of glob patterns,
-                equivalent to the `match` values in the array form of `resource_names`.
+            - $ref: '#/components/schemas/EventGatewayACLRuleResourceNamesStaticArray'
+            - $ref: '#/components/schemas/EventGatewayACLRuleResourceNamesDynamicArray'
       required:
         - resource_type
         - action
@@ -4323,6 +4500,39 @@ components:
           format: glob
       required:
         - match
+    EventGatewayACLRuleResourceNamesStaticArray:
+      description: A static list of resource name globs to match against resources when applying an ACL policy.
+      type: array
+      items:
+        $ref: '#/components/schemas/EventGatewayACLResourceName'
+      example:
+        - match: orders-*
+        - match: payments-*
+      maxItems: 50
+    EventGatewayACLRuleResourceNamesDynamicArray:
+      description: |-
+        This expression should evaluate to an array of glob patterns,
+        equivalent to the `match` values in the static array form of `resource_names`.
+
+        **Requires a minimum runtime version of `1.1`**.
+      type: string
+      example: 'context.auth.token.claims["topics"]'
+      x-expression:
+        type: array
+        items:
+          type: string
+        fields:
+          - name: context.auth.principal.name
+            type: string
+            description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+          - name: context.auth.type
+            type: string
+            description: |
+              The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+          - name: context.auth.token.claims
+            type: object
+            description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
+      x-min-runtime-version: '1.1'
     EventGatewayKeySource:
       description: |
         A key source that describes how to find a symmetric key for encryption or decryption.
@@ -5737,6 +5947,49 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/EventGatewayStaticKeyCreate'
+    CreateTLSTrustBundleRequest:
+      description: The request schema for creating a TLS trust bundle.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/TLSTrustBundleName'
+              description:
+                description: A human-readable description of the TLS trust bundle.
+                type: string
+                default: ''
+                maxLength: 512
+              config:
+                $ref: '#/components/schemas/TLSTrustBundleConfig'
+              labels:
+                $ref: '#/components/schemas/Labels'
+            additionalProperties: false
+            required:
+              - name
+              - config
+    UpdateTLSTrustBundleRequest:
+      description: The request schema for updating a TLS trust bundle.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: '#/components/schemas/TLSTrustBundleName'
+              description:
+                description: A human-readable description of the TLS trust bundle.
+                type: string
+                default: ''
+                maxLength: 512
+              config:
+                $ref: '#/components/schemas/TLSTrustBundleConfig'
+              labels:
+                $ref: '#/components/schemas/Labels'
+            additionalProperties: false
     UpdateEventGatewayPolicyChainRequest:
       description: The request schema for updating the policy chain.
       content:
@@ -5856,6 +6109,19 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SchemaRegistry'
+    ListTLSTrustBundlesResponse:
+      description: A paginated list response for a collection of TLS trust bundles.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/CursorMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TLSTrustBundle'
     ListEventGatewayListenerPoliciesResponse:
       description: A list response for a collection of policies associated with an Event Gateway listener.
       content:
@@ -6072,6 +6338,11 @@ tags:
   - name: Event Gateway Schema Registries
     description: |
       Configure a schema registry that can be used to validate payloads when producing/consuming messages
+  - name: Event Gateway TLS Trust Bundles
+    description: |
+      A TLS trust bundle defines a set of trusted certificate authorities (CAs) used for client certificate
+      verification during mutual TLS (mTLS). Trust bundles are referenced by TLS listener policies to
+      determine which client certificates are accepted.
   - name: Event Gateway Nodes
 security:
   - personalAccessToken: []

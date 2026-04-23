@@ -36,6 +36,7 @@ categories:
 
 tags:
   - ai
+  - safety
 
 search_aliases:
   - ai
@@ -81,4 +82,14 @@ To use AWS IAM roles with the plugin, set the `config.aws_assume_role_arn`, `con
 
 {:.info}
 > **Note:** These fields can be used with or without static AWS credentials (`config.aws_access_key_id` and `config.aws_secret_access_key`).
+
+## TLS verification {% new_in 3.14 %}
+
+[`config.ssl_verify`](/plugins/ai-aws-guardrails/reference/#schema--config-ssl-verify) is enabled by default as of 3.14. The plugin verifies the TLS certificate when connecting to the AWS Bedrock service. To disable this, set `ssl_verify: false`.
+
+## Logging
+
+The AI AWS Guardrails plugin emits structured log data for every inspected request and response. For the full list of log fields, see the [{{site.ai_gateway}} audit log reference](/ai-gateway/ai-audit-log-reference/#ai-aws-guardrails-logs).
+
+To log the raw content of blocked requests and responses, enable [`config.log_blocked_content`](/plugins/ai-aws-guardrails/reference/#schema--config-log-blocked-content). {% new_in 3.14 %} When enabled, the blocked prompt or response body appears under `ai.proxy.aws-guardrails.input_faulty_prompt` and `ai.proxy.aws-guardrails.output_faulty_response` in each log entry.
 

@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl list [command]
 
@@ -12,6 +12,8 @@ Examples:
   kongctl list apis
   # Retrieve Konnect auth strategies
   kongctl list auth-strategies
+  # Retrieve Konnect DCR providers
+  kongctl list dcr-providers
   # Retrieve Konnect control planes (Konnect-first)
   kongctl list gateway control-planes
   # Retrieve Konnect control planes (explicit)
@@ -20,6 +22,7 @@ Examples:
 Available Commands:
   api           List or get Konnect APIs
   auth-strategy List or get Konnect authentication strategies
+  dcr-provider  List or get Konnect DCR providers
   gateway       Manage Konnect Kong Gateway resources
   konnect       Manage Konnect resources
   organization  Get current organization information
@@ -33,7 +36,7 @@ Flags:
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                                - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]

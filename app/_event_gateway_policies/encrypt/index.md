@@ -24,6 +24,9 @@ phases:
 
 policy_target: virtual_cluster
 
+categories:
+  - security
+
 related_resources:
   - text: Decrypt policy
     url: /event-gateway/policies/decrypt/

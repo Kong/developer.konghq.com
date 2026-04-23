@@ -1,0 +1,31 @@
+title: Allow access to topics using a claim expression
+
+description: Allow the principal full access to all topics with a prefix determined by an expression.
+
+extended_description: |
+  This ACL policy grants full access to all topics with the prefix in the `topic_prefix` claim.
+  
+  For a complete tutorial on how to configure a Kong Identity auth server and claims, and reference the claim in the ACL policy,
+  see [Set up {{site.event_gateway}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/).
+
+  For more information on expressions in {{site.event_gateway}}, see the [expressions reference](/event-gateway/expressions/).
+weight: 900
+
+name: acl_policy
+type: acls
+config:
+  rules:
+  - resource_type: topic
+    action: allow
+    operations:
+      - name: describe
+      - name: describe_configs
+      - name: read
+      - name: write
+    resource_names: '[context.auth.token.claims.topic_prefix + "*"]'
+tools:
+  - konnect-api
+  - terraform
+
+min_version:
+  event-gateway: '1.1.0'

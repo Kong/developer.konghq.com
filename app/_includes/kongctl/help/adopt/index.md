@@ -1,4 +1,4 @@
-```bash
+```ansi
 Usage:
   kongctl adopt [command]
 
@@ -7,6 +7,8 @@ Examples:
   kongctl adopt portal my-portal --namespace team-alpha
   # Adopt a control plane by ID
   kongctl adopt control-plane 22cd8a0b-72e7-4212-9099-0764f8e9c5ac --namespace platform
+  # Adopt a DCR provider by name
+  kongctl adopt dcr-provider my-dcr-provider --namespace team-alpha
   # Adopt an API explicitly via the konnect product
   kongctl adopt konnect api my-api --namespace team-alpha
 
@@ -14,6 +16,8 @@ Available Commands:
   api           Adopt an existing Konnect API into namespace management
   auth-strategy Adopt an existing Konnect auth strategy into namespace management
   control-plane Adopt an existing Konnect control plane into namespace management
+  dcr-provider  Adopt an existing Konnect DCR provider into namespace management
+  event-gateway Adopt an existing Konnect Event Gateway Control Plane into namespace management
   konnect       Manage Konnect resources
   organization  Adopt organization resources into namespace management
   portal        Adopt an existing Konnect portal into namespace management
@@ -25,7 +29,7 @@ Flags:
                              - Default   : [ https://us.api.konghq.com ]
       --color-theme string   Configures the CLI UI/theme (prompt, tables, TUI elements).
                              - Config path: [ color-theme ]
-                             - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                             - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                              - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string   Path to the configuration file to load.
                              - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
