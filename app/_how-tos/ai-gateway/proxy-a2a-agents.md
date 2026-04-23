@@ -178,7 +178,7 @@ entities:
       config:
         traces_endpoint: http://${otel-host}:4319/v1/traces
         metrics:
-          endpoint: http://${otel.host}:4319/v1/metrics
+          endpoint: http://${otel-host}:4319/v1/metrics
           enable_ai_metrics: true
         resource_attributes:
           service.name: kong-a2a
@@ -211,7 +211,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "Check booking BK-456"
+          text: "What flights are available on route KA-123?"
 {% endvalidation %}
 <!-- vale on -->
 

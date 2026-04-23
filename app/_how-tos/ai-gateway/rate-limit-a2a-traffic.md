@@ -130,6 +130,7 @@ Send an authenticated request to the agent card endpoint and inspect the respons
 <!-- vale off -->
 {% validation request-check %}
 url: /a2a/.well-known/agent-card.json
+display_headers: true
 status_code: 200
 method: GET
 headers:
