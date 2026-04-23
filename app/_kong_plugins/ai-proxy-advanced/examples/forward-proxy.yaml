@@ -1,0 +1,45 @@
+---
+
+title: 'Route inference traffic through a forward proxy'
+description: 'Configure AI Proxy Advanced to send outbound inference requests through an HTTP forward proxy for network-isolated deployments.'
+
+weight: 950
+
+group: network
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${openai_key}
+      model:
+        provider: openai
+        name: gpt-5.1
+  proxy_config:
+    http_proxy_host: proxy.internal
+    http_proxy_port: 3128
+    https_proxy_host: proxy.internal
+    https_proxy_port: 3128
+    proxy_scheme: http
+    auth_username: ${proxy_user}
+    auth_password: ${proxy_password}
+    https_verify: false
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+  proxy_user:
+    value: $FORWARD_PROXY_USER
+    description: Username for the corporate forward proxy.
+  proxy_password:
+    value: $FORWARD_PROXY_PASSWORD
+    description: Password for the corporate forward proxy.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

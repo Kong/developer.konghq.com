@@ -115,3 +115,7 @@ To log the raw content of blocked requests and responses, enable [`config.log_bl
 
 This plugin works with all of the AI Proxy plugin's `route_type` settings (excluding the `preserve` mode), and is able to
 compose an Azure Content Safety text check by compiling all chat history, or just the `'user'` content.
+
+## Forward proxy support
+
+{% include ai-gateway/forward-proxy.md %}

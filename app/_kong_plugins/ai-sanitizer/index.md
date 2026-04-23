@@ -245,3 +245,7 @@ You can use the following fields in the `anonymize` array:
 * `custom`: Anonymizes user-defined custom PII patterns using regular expressions only when custom patterns are provided.
 * `credentials`: Anonymizes the credentials, similar to `/sanitize_credentials`.
 * `all`: Includes all the fields above, including custom ones.
+
+## Forward proxy support
+
+{% include ai-gateway/forward-proxy.md %}
