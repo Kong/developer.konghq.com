@@ -29,7 +29,7 @@ related_resources:
 
 Dynamic mocking extends Insomnia’s existing mock server feature. For each request, dynamic mocking renders Liquid templates so responses can include:
 
-- Data from the request (headers, query params, path, or body).
+- Data from the request (headers, query parameters, path, or body).
 - Randomly generated fake data.
 
 ## How to use the Liquid template
@@ -43,7 +43,7 @@ Use the Liquid template language in the Insomnia app:
 
 Response headers and status codes remain configured per route, which ensures consistency while the response body updates dynamically.
 
-### Differences with traditional mocks
+### Differences from traditional mocks
 
 Traditional mocks return static, predefined payloads, while dynamic mocks generate context-aware, variable outputs:
 
@@ -151,7 +151,7 @@ Use faker variables to generate random but realistic data in mock responses.
 {% raw %}{{ faker.<variable-name> }}{% endraw %}
 ```
 
-For a complete list of available faker variables, go to [**run.js#L218**](https://github.com/Kong/insomnia-mockbin/blob/04134cf81ce29ae7ffcc7ee13e2ecbce70414a96/lib/routes/bins/run.js#L218). Use the names listed under `fakerFunctions`(such as `guid`, `randomFullName`, `randomPhoneNumber`, etc.). For example:
+For a complete list of available faker variables, go to [**run.js#L218**](https://github.com/Kong/insomnia-mockbin/blob/04134cf81ce29ae7ffcc7ee13e2ecbce70414a96/lib/routes/bins/run.js#L218). Use the names listed under `fakerFunctions` (such as `guid`, `randomFullName`, `randomPhoneNumber`, etc.). For example:
 
 
 ```liquid
