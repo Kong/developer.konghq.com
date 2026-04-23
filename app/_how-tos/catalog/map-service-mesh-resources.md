@@ -1,6 +1,6 @@
 ---
 title: Map Service Mesh services in Catalog
-permalink: /how-to/map-mesh-manager-resources/
+permalink: /how-to/map-service-mesh-resources/
 content_type: how_to
 description: Learn how to map Service Mesh resources in {{site.konnect_catalog}} to gain visibility into how the service is deployed across meshes and zones.
 products:
