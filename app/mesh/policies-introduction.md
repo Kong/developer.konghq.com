@@ -728,6 +728,7 @@ spec:
 label are:
 
 - **system**: Policies defined on global or in the zone's system namespace
+- **workload-owner**: Policies defined in a non-system namespace that do not have `spec.to` entries, or have only
   `spec.rules`
 - **consumer**: Policies defined in a non-system namespace that have `spec.to` which either do not use `name` or have a
   different `namespace`
