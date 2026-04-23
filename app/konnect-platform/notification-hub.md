@@ -31,6 +31,7 @@ The Notification Hub generates notifications for the following areas:
 * **Dev Portal**: Developer and application registrations requests.
 * **API Gateway**: Entity notification configurations. You can have up to three regional notification configurations per entity.
 * **Organization**: Configurable notifications about org access and audit logs.
+* **Billing**: Org billing notifications. These notifications are sent to organization admins, and they are mandatory - you can't opt out of billing notifications.
 
 
 
