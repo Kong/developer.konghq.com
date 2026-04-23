@@ -13,7 +13,7 @@ search_aliases:
   - konnect analytics
 tldr:
   q: How do I map {{site.observability}} reports in {{site.konnect_catalog}}?
-  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.konnect_short_name}} Analytics resources to visualize {{site.observability}} Reports.
+  a: Create a {{site.konnect_catalog}} service and associate it with your {{site.observability}} resources to visualize {{site.observability}} Reports. When listing resources with the API, the filter key is `integration.name=analytics`.
 prereqs:
   inline:
     - title: "{{site.observability}} reports"
@@ -22,7 +22,7 @@ prereqs:
       icon_url: /assets/icons/analytics.svg
 related_resources:
   - text: "{{site.observability}} integration"
-    url: /catalog/integrations/observability/
+    url: /catalog/integrations/konnect-analytics/
   - text: "{{site.konnect_catalog}}"
     url: /catalog/
   - text: "{{site.konnect_catalog}} integrations"
@@ -31,7 +31,7 @@ related_resources:
 
 ## Create a service in {{site.konnect_catalog}}
 
-In this tutorial, you'll map Reports from {{site.observability}} to a service in {{site.konnect_catalog}}. Because the {{site.observability}} integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations. 
+In this tutorial, you'll map Reports from {{site.observability}} to a service in {{site.konnect_catalog}}. Because the {{site.observability}} integration is built-in, you don't need to install or authorize it like other {{site.konnect_catalog}} integrations.
 
 Create a service that you'll map to your {{site.observability}} resources:
 
