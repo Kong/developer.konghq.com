@@ -55,7 +55,7 @@ tags:
   - rbac
 ---
 
-{:.important}
+{:.warning}
 > **{{site.konnect_short_name}} Workspaces are in public beta**
 
 ## What is a Workspace?
