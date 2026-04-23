@@ -23,21 +23,21 @@ min_version:
 ---
 ## What is a policy?
 
-A [policy](/mesh/concepts#policy) is a set of configuration used to generate [data plane proxy](/mesh/concepts#data-plane-proxy--sidecar) configuration.
+A [policy](/mesh/concepts#policy) is a set of configurations used to generate [data plane proxy](/mesh/concepts#data-plane-proxy--sidecar) configuration.
 {{ site.mesh_product_name }} combines policies with the `Dataplane` resource to generate the Envoy configuration of a data plane proxy within a [mesh](/mesh/concepts#mesh).
 
 ## What do policies look like?
 
-Like all [resources](/mesh/concepts#resource) in {{ site.mesh_product_name }}, there are two parts to a policy: the metadata and the spec.
+Like all [resources](/mesh/concepts#resource) in {{ site.mesh_product_name }}, a policy has two parts: the metadata and the spec.
 
 ### Metadata
 
-Metadata identifies the policies by its `name`, `type` and what `mesh` it's part of:
+Metadata identifies a policy by its `name`, `type`, and the `mesh` it belongs to:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-In Kubernetes all our policies are implemented as [custom resource definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
+In Kubernetes, all our policies are implemented as [custom resource definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -48,7 +48,7 @@ metadata:
 spec: ... # spec data specific to the policy kind
 ```
 
-By default the policy is created in the `default` [mesh](/mesh/concepts#mesh).
+By default, the policy is created in the `default` [mesh](/mesh/concepts#mesh).
 You can specify the [mesh](/mesh/concepts#mesh) by using the `kuma.io/mesh` label.
 
 For example:
@@ -89,7 +89,7 @@ Some policies apply to only a subset of the configuration of the proxy.
   use the `spec.from[].targetRef` field,
   which defines the subset of clients that are going to be impacted by this policy.
 - **Outbound policies** apply only to outgoing traffic. The `spec.to[].targetRef` field defines the outbounds that are
-  going to be impacted by this policy
+  going to be impacted by this policy.
 
 The actual configuration is defined under the `default` field.
 
@@ -126,8 +126,8 @@ spec:
 
 {% endpolicy_yaml %}
 
-Some policies are not directional and will not have `to` and `rules`. Some examples of such policies are [`MeshTrace`](/mesh/policies/meshtrace) or [`MeshProxyPatch`](/mesh/policies/meshproxypatch).
-For example
+Some policies are not directional and have neither `to` nor `rules`. Examples include [`MeshTrace`](/mesh/policies/meshtrace) and [`MeshProxyPatch`](/mesh/policies/meshproxypatch).
+For example:
 
 {% policy_yaml %}
 ```yaml
@@ -142,7 +142,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-All specs have a **top level `targetRef`** which identifies which proxies this policy applies to.
+All specs have a **top-level `targetRef`** which identifies which proxies this policy applies to.
 In particular, it defines which proxies have their Envoy configuration modified.
 
 {:.info}
@@ -320,7 +320,7 @@ everything inside the `Mesh`.
 
 ### Applying to specific proxy types
 
-The top level `targetRef` field can select a specific subset of data plane proxies. The field named `proxyTypes` can
+The top-level `targetRef` field can select a specific subset of data plane proxies. The field named `proxyTypes` can
 restrict policies to specific types of data plane proxies:
 
 - `Sidecar`: Targets data plane proxies acting as sidecars to applications (including [delegated gateways](/mesh/ingress-gateway-delegated/)).
@@ -434,7 +434,7 @@ Not every policy supports `to` and `rules` levels. Additionally, not every resou
 appear at every supported level. The specified top level resource can also affect which
 resources can appear in `to` or `rules`.
 
-To help users, each policy documentation includes tables indicating which `targetRef` kinds is supported at each level.
+To help users, each policy documentation includes tables indicating which `targetRef` kinds are supported at each level.
 For each type of proxy, sidecar or builtin gateway, the table indicates for each
 `targetRef` level, which kinds are supported.
 
@@ -460,7 +460,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-The table above show that we can select sidecar proxies via `Mesh`, `Dataplane`, `MeshGateway`
+The table above shows that we can select sidecar proxies via `Mesh`, `Dataplane`, `MeshGateway`.
 
 We can use the policy as an _outbound_ policy with:
 
@@ -501,8 +501,7 @@ We can use the policy only as an _outbound_ policy with:
 
 ## Merging configuration
 
-A proxy can be targeted by multiple `targetRef`'s, to define how policies are merged together the following strategy is
-used:
+A proxy can be targeted by multiple `targetRef`s. To define how policies are merged, the following strategy is used:
 
 We define a total order of policy priority. The table below defines the sorting order for resources in the cluster.
 Sorting is applied sequentially by attribute, with ties broken using the next attribute in the list.
@@ -532,8 +531,8 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-For `to` and `rules` policies we concatenate the array for each matching policies.
-For `to` policies we sort concatenated arrays again based on the `spec.to[].targetRef` field:
+For `to` and `rules` policies, we concatenate the arrays from each matching policy.
+For `to` policies, we sort the concatenated arrays again based on the `spec.to[].targetRef` field:
 
 <!-- vale off -->
 {% table %}
@@ -553,7 +552,7 @@ rows:
 
 We then build configuration by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
 
-For example if I have 2 `default` ordered this way:
+For example, if there are two `default` entries ordered this way:
 
 ```yaml
 default:
@@ -582,7 +581,7 @@ default:
     extra: 2
 ```
 
-## Using policies with `MeshService`, `MeshMultizoneService` and `MeshExternalService`.
+## Using policies with `MeshService`, `MeshMultiZoneService`, and `MeshExternalService`
 
 [`MeshService`](/mesh/meshservice) is a feature to define services explicitly in {{ site.mesh_product_name }}.
 It can be selectively enabled or disabled depending on the value of [meshServices.mode](/mesh/meshservice/#migration) on your Mesh object.
@@ -611,9 +610,9 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-There are 2 ways to select a `MeshService`:
+There are two ways to select a `MeshService`:
 
-If you are in the same namespace (or same zone in Universal) you can select one specific service by using its explicit name:
+If you are in the same namespace (or same zone in Universal), you can select one specific service by using its explicit name:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -630,7 +629,7 @@ spec:
       connectionTimeout: 10s
 ```
 
-Selecting all matching `MeshServices` by labels:
+You can also select all matching `MeshService` resources by labels:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -648,15 +647,15 @@ spec:
       connectionTimeout: 10s
 ```
 
-In this case this is equivalent to writing a specific policy for each service that matches this label (in our example for each service in this namespace in each zones).
+This is equivalent to writing a specific policy for each service that matches this label (one per matching service in each zone).
 
 {:.info}
-> When `MeshService` have multiple ports, you can use `sectionName` to restrict policy to a single port.
+> When a `MeshService` has multiple ports, you can use `sectionName` to restrict the policy to a single port.
 
 ### Global, zonal, producer and consumer policies
 
 Policies can be applied to a zone or to a namespace when using Kubernetes.
-Policies will always impact at most the scope at which they are defined.
+Policies never affect proxies beyond the scope in which they are defined.
 In other words:
 
 1. a policy applied to the global control plane will apply to all proxies in all zones.
@@ -678,7 +677,7 @@ In other words:
          kuma.io/namespace: "my-ns"
    ```
 
-There is however, one exception to this when using `MeshService` with **outbound** policies (policies with
+There is, however, one exception to this when using `MeshService` with **outbound** policies (policies with
 `spec.to[].targetRef`).
 In this case, if you define a policy in the same namespace as the `MeshService` it is defined in, that policy will be
 considered a **producer** policy.
@@ -701,9 +700,9 @@ spec:
         connectionTimeout: 10s
 ```
 
-The other type of policy is a consumer policy which most commonly use labels to match a service.
+The other type is a consumer policy, which most commonly uses labels to match a service.
 
-An example of a consumer policy which would override the previous producer policy:
+An example of a consumer policy that would override the previous producer policy:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -723,15 +722,14 @@ spec:
 
 {:.info}
 > Remember that `labels` on a `MeshService` applies to _each_ matching `MeshService`. To communicate to services
-> named the same way in different namespaces or zones with different configuration use a more specific set of labels.
+> named the same way in different namespaces or zones with different configuration, use a more specific set of labels.
 
 {{ site.mesh_product_name }} adds a label `kuma.io/policy-role` to identify the type of the policy. The values of the
 label are:
 
 - **system**: Policies defined on global or in the zone's system namespace
-- **workload-owner**: Policies defined in a non system namespaces that do not have `spec.to` entries, or have only
   `spec.rules`
-- **consumer**: Policies defined in a non system namespace that have `spec.to` which either do not use `name` or have a
+- **consumer**: Policies defined in a non-system namespace that have `spec.to` which either do not use `name` or have a
   different `namespace`
 - **producer**: Policies defined in the same namespace as the services identified in the `spec.to[].targetRef`
 
@@ -752,7 +750,7 @@ client1 --> server
 client2 --> server
 {% endmermaid %}
 
-We're going to define a producer policy first:
+First, define a producer policy:
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshTimeout
@@ -768,10 +766,10 @@ spec:
         idleTimeout: 20s
 ```
 
-We know it's a producer policy because it is defined in the same namespace as the `MeshService: server` and names this server in its `spec.to[].targetRef`.
-So both client1 and client2 will receive the timeout of 20 seconds.
+This is a producer policy because it is defined in the same namespace as the `MeshService: server` and references that service in its `spec.to[].targetRef`.
+Both client1 and client2 receive the timeout of 20 seconds.
 
-We now create a consumer policy:
+Next, create a consumer policy:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -789,9 +787,9 @@ spec:
         idleTimeout: 30s
 ```
 
-Here the policy only impacts client1 as client2 doesn't run in ns1. As consumer policies have a higher priority over producer policies, client1 will have a `idleTimeout: 30s`.
+This policy only affects client1, as client2 doesn't run in ns1. As consumer policies have a higher priority than producer policies, client1 will have an `idleTimeout: 30s`.
 
-We can define another policy to impact client2:
+To also configure client2, define another consumer policy:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -809,7 +807,7 @@ spec:
         idleTimeout: 40s
 ```
 
-Note that the only difference here is the namespace, we now define a consumer policy inside `ns2`.
+The only difference is the namespace: this policy is defined in `ns2` rather than `ns1`.
 
 {:.info}
 > Use labels for consumer policies and name for producer policies.
@@ -833,7 +831,7 @@ spec:
         key: value
 ```
 
-All traffic from any proxy (top level `targetRef`) going to any proxy (to `targetRef`) will have this policy applied with value `key=value`.
+All traffic from any proxy (top-level `targetRef`) going to any proxy (to `targetRef`) will have this policy applied with value `key=value`.
 
 #### Recommending to users
 
@@ -852,7 +850,7 @@ spec:
         key: value
 ```
 
-All traffic from any proxy (top level `targetRef`) going to the service "my-service" (to `targetRef`) will have this policy applied with value `key=value`.
+All traffic from any proxy (top-level `targetRef`) going to the service "my-service" (to `targetRef`) will have this policy applied with value `key=value`.
 
 This is useful when a service owner wants to suggest a set of configurations to its clients.
 
@@ -872,9 +870,9 @@ spec:
         key: value
 ```
 
-All traffic that's going to any proxy with the tag `team=my-team` (top level `targetRef`) will have this policy applied with value `key=value`.
+All inbound traffic to any proxy with the tag `team=my-team` (top-level `targetRef`) will have this policy applied with value `key=value`.
 
-This is a useful way to define coarse-grained rules for example.
+This is a useful way to define coarse-grained rules, for example.
 
 #### Configuring all proxies in a zone
 
@@ -891,9 +889,9 @@ spec:
     key: value
 ```
 
-All proxies in zone `east` (top level `targetRef`) will have this policy configured with `key=value`.
+All proxies in zone `east` (top-level `targetRef`) will have this policy configured with `key=value`.
 
-This can be very useful when observability stores are different for each zone for example.
+This can be very useful when observability stores are different for each zone, for example.
 
 #### Configuring all gateways in a Mesh
 
@@ -919,12 +917,11 @@ This can be very useful when timeout configurations for gateways need to differ 
 
 Shadow mode allows users to mark policies with a specific label to simulate configuration changes
 without affecting the live environment.
-It enables the observation of potential impact on Envoy proxy configurations, with a risk-free method to test,
-validate, and fine-tune settings before actual deployment.
+It lets you safely observe the potential impact on Envoy proxy configurations before committing changes.
 
 ### Recommended setup
 
-It's not necessary but CLI tools like [jq](https://jqlang.github.io/jq/) and [jd](https://github.com/josephburnett/jd) can greatly improve working with {{ site.mesh_product_name }} resources.
+It's not necessary, but CLI tools like [jq](https://jqlang.github.io/jq/) and [jd](https://github.com/josephburnett/jd) can greatly improve working with {{ site.mesh_product_name }} resources.
 
 ### How to use shadow mode
 
@@ -992,4 +989,4 @@ $ kumactl inspect dataplane frontend-dpp --type=config --include=diff --shadow |
 + "23s"
 ```
 
-The output not only identifies the exact location in Envoy where the change will occur, but also shows the current timeout value that we're planning to replace.
+The output not only identifies the exact location in Envoy where the change will occur, but also shows the current value that would be replaced.
