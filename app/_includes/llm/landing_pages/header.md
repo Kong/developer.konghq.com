@@ -3,4 +3,6 @@
 
 {% if include.config.sub_text -%}{{ include.config.sub_text | liquify }}{%- endif -%}
 
-{% if include.config.description -%} {{include.config.description | liquify | markdown }}{%- endif -%}
+{% if include.config.description -%}
+{{include.config.description | liquify }}
+{% endif %}

@@ -386,7 +386,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Kong’s {{site.ai_gateway}} Universal API, delivered through the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins, simplifies AI model integration by providing a single, standardized interface for interacting with models across multiple providers.
+                  Kong's {{site.ai_gateway}} Universal API, delivered through the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins, simplifies AI model integration by providing a single, standardized interface for interacting with models across multiple providers.
 
                     - [**Easy to use**](/plugins/ai-proxy/examples/openai-chat-route/): Configure once and access any AI model with minimal integration effort.
 

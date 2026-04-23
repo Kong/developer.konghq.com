@@ -164,7 +164,7 @@ rows:
                 a: |
                   Yes. Go to **Preferences → AI Settings** and deactivate the toggles for **Auto-generate Mock Servers** and **Suggest commit comments**.  
                   To stop using an LLM entirely, click **Deactivate** under the provider configuration.
-              - q: Why don’t I see AI features in the app?
+              - q: Why don't I see AI features in the app?
                 a: |
                   You must first configure and activate an LLM under **Preferences → AI Settings**.  
                   If AI is deactivated at the instance level, the feature toggles will remain unavailable in the UI.

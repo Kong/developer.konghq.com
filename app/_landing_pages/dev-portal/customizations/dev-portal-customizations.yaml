@@ -279,7 +279,7 @@ rows:
             title: Custom domains
             description: |
               Set up custom URLs for your {{site.dev_portal}}. 
-              Custom URLs require DNS setup and your portal’s default URL.
+              Custom URLs require DNS setup and your portal's default URL.
             icon: /assets/icons/domain.svg
             cta:
               url: /dev-portal/custom-domains/

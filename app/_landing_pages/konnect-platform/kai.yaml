@@ -184,7 +184,7 @@ rows:
                     **Questions about {{site.konnect_short_name}}:**
                     - How do I set up the plugin `PLUGIN_NAME` in {{site.konnect_short_name}} for a particular use case? Give me the exact steps and the limitations.
                     - Explain the difference between Gateway Service vs Route in {{site.konnect_short_name}}, with an example from my current control plane.
-                    - What’s the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
+                    - What's the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
                     - Search the Kong docs for best practices on rate limiting and summarize the key steps for my setup.
   - header:
       text: "Frequently asked questions"
