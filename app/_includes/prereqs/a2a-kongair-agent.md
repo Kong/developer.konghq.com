@@ -18,10 +18,9 @@ services:
 EOF
 ```
 
-Export your OpenAI API key and start the agent:
+Start the agent:
 
 ```sh
-export DECK_OPENAI_API_KEY='your-openai-key'
 docker compose up -d
 ```
 
