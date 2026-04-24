@@ -24,9 +24,9 @@ tools:
   - terraform
   - kongctl
 
-# TODO: confirm the minimum Gateway version with engineering before publishing.
-# min_version:
-#   gateway: '<version>'
+TODO: confirm the minimum Gateway version with engineering before publishing.
+min_version:
+  gateway: '2.0'
 
 plugins:
   - ai-proxy-advanced
@@ -69,24 +69,20 @@ A shared `proxy_config` record, added to every affected {{site.ai_gateway}} plug
 <!--vale off-->
 {% mermaid %}
 flowchart LR
+  Client --> AIProxy
+  Client --> Aux
   subgraph Gateway_Group[Kong AI Gateway]
     subgraph Plugins[AI Plugins]
       AIProxy[AI Proxy Advanced]
-      Semantic[Semantic plugins]
-      Transform[Compressor and sanitizer]
-      Guardrails[Guardrail plugins]
+      Aux[Auxiliary plugins]
     end
   end
-  Client --> AIProxy
-  Client --> Semantic
-  Client --> Transform
-  Client --> Guardrails
-  AIProxy -- inference ---> Proxy[Forward proxy]
-  Semantic -- embeddings ---> Proxy
-  Transform -- compression and sanitization --> Proxy
-  Guardrails -- guardrail checks --> Proxy
+  AIProxy -- inference --> Proxy[Forward proxy]
+  AIProxy -- "identity auth" --> Proxy
+  Aux -- "auxiliary calls" --> Proxy
   Proxy ---> LLM[LLM providers]
-  Proxy ---> Aux[Auxiliary services]
+  Proxy ---> CloudAPI[Cloud platform APIs]
+  Proxy ---> AuxSvc[Auxiliary services]
   style Plugins stroke-dasharray: 5 5
 {% endmermaid %}
 > _Figure 1: Outbound traffic from {{site.ai_gateway}} plugins routed through a forward proxy._
@@ -94,11 +90,9 @@ flowchart LR
 
 The three request categories are:
 
-- **Inference traffic**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/). This is the majority of {{site.ai_gateway}} traffic. It runs through the native {{site.base_gateway}} upstream path, so load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
-- **Embeddings and semantic operations**: requests from semantic plugins to the embeddings service used for cache lookups, RAG retrieval, and prompt or response guarding.
-- **Security and transformation calls**: requests from guardrail, sanitizer, and compressor plugins to their external services (AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a custom endpoint).
-
-For cloud providers that require managed identity (AWS Bedrock's SigV4 signing, Azure and GCP managed identity token acquisition), the authentication subrequests issued by the provider SDK libraries also traverse the proxy.
+- **Inference**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
+- **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
+- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor plugins to their external services (embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint).
 
 When `proxy_config` is set on a plugin, every outbound request that plugin issues goes through the configured proxy.
 
