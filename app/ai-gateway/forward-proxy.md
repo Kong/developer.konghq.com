@@ -68,20 +68,25 @@ A shared `proxy_config` record, added to every affected {{site.ai_gateway}} plug
 <!--vale off-->
 {% mermaid %}
 flowchart LR
-  Client --> Gateway[Kong AI Gateway]
-  subgraph AI Plugins
-    AIProxy[AI Proxy Advanced]
-    Semantic[Semantic plugins]
-    Guardrails[Guardrail plugins]
+  subgraph Gateway_Group[Kong AI Gateway]
+    subgraph Plugins[AI Plugins]
+      AIProxy[AI Proxy Advanced]
+      Semantic[Semantic plugins]
+      Transform[Compressor and sanitizer]
+      Guardrails[Guardrail plugins]
+    end
   end
-  Gateway --> AIProxy
-  Gateway --> Semantic
-  Gateway --> Guardrails
-  AIProxy -- inference --> Proxy[Forward proxy]
-  Semantic -- embeddings --> Proxy
+  Client --> AIProxy
+  Client --> Semantic
+  Client --> Transform
+  Client --> Guardrails
+  AIProxy -- inference ---> Proxy[Forward proxy]
+  Semantic -- embeddings ---> Proxy
+  Transform -- compression and sanitization --> Proxy
   Guardrails -- guardrail checks --> Proxy
-  Proxy --> LLM[LLM providers]
-  Proxy --> Aux[Auxiliary services]
+  Proxy ---> LLM[LLM providers]
+  Proxy ---> Aux[Auxiliary services]
+  style Plugins stroke-dasharray: 5 5
 {% endmermaid %}
 > _Figure 1: Outbound traffic from {{site.ai_gateway}} plugins routed through a forward proxy._
 <!--vale on-->
