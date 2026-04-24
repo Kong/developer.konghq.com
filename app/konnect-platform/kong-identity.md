@@ -59,15 +59,16 @@ Kong Identity implements the OAuth2.0 standard with OpenID Connect for authentic
 
 Kong Identity allows you to create auth servers, claims, scopes, and clients in {{site.konnect_short_name}} using the [{{site.konnect_short_name}} API](/api/konnect/kong-identity/v1/#/). Each of these components plays a specific role in how access is managed:
 * **Auth server:** Issue OAuth 2.0 and OpenID Connect tokens that you can use to authenticate a client (machine) with your Gateway Services. Each auth server is unique to your organization and [{{site.konnect_short_name}} region](/konnect-platform/geos/). We recommend creating different auth servers for different environments or subsidiaries.
-* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts.
+* **Clients:** Represent machines that request tokens, such as microservices, mobile apps, or automation scripts. They also configure the strategies by which those entities can autheticate to Kong Identity to retrieve access tokens (also called OAuth Grant flows).
 * **Scopes:** Define what those clients are allowed to access. 
 * **Claims:** Optional pieces of metadata, like user roles or environment tags, that can be included in tokens and forwarded to upstream services.
 
 To use Kong Identity for authentication, you must configure one of the supported plugins (OpenID Connect, OAuth2.0 Introspection, or Upstream OAuth). These plugins determine how tokens are validated, introspected, or passed along to upstream services.
 
 ## Kong Identity client credential authentication flow
+The client credentials flow is a [standard OAuth flow](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) for using pre-determined credentials (such as a client_id and secret) for authenticating a Client to Kong Identity. This is typically used in situations where the authentication context is _only the client itself_, and for this reason is often used for Machine-to-Machine (M2M) use cases - such as a microservice authetnicating to a Gateway. 
 
-The following diagram shows how authentication works with Kong Identity:
+The following diagram shows how the client crednetial flow works with Kong Identity:
 
 <!--vale off-->
 {% mermaid %}
@@ -89,9 +90,31 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
+### Specifying Client IDs and Secrets 
+
+The specific client credentials that Kong Identity supports are the `client_id` (which is determined when the Client is created on the Auth Server) and `client_secret`. If you create the client using the [POST operation](/api/konnect/kong-identity/v1/#/operations/createAuthServerClient) on the Kong Identity API then the client ID and initial secret will be generated automatically. If the [PUT operation](/api/konnect/kong-identity/v1/#/operations/replaceAuthServerClient) is used then the `client_id` and/or `client_secret` can be set explicitly.
+
+   {:.info}
+   > **Note:** For security reasons, {{site.konnect_short_name}} does not store the actual value of the secrets associated a Client. As such the actual value will only ever be presented once, at the time the secret is generated. This might be when a new client is created with an auto-generated secret as described above, or when additional Client secrets are generated as described below.
+
+### Rotating secrets
+
+Kong Identity supports up to two secrets to be active for a given Client at any one time. This allows for secrets to be rotated wihthout incurring downtime using the UI or API. 
+
+The steps for rotating a secret are:
+
+1. **Create the new secret**, either in the UI from the Client detail page or `POST /v1/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint of the API. This will add a new active secret, existing secrets will continue to work. You can either specify a secret or have it generated automatically. If the latter, be sure to securely record the value of the newly generated secret for subsequent steps.
+
+1. **Update the client application** - update the configuration of the actual application(s) to use the newly generated active secret.
+
+1. **Disable the old secret** - either in the UI from the Client detail page, or the API - identify the old secret using the Created At date. If you are using the API set `enabled: false` via the API to disable the secret.
+
+1. **Test the client application** - ensure the client application can continue to authenticate successfully with the new secret.
+
+1. **Delete the old secret** - once you have verified the current application can still authenticate using the new secret with the old secret disabled, you can delete the old secret in the API or Revoke the secret in the UI.
+
 {% comment %}
 ## Kong Identity authorization code flow
-
 In the authorization code flow:
 1. (Optional) The client application displays the user consent page and authenticates the user (this part is handled outside {{site.base_gateway}}). When the user clicks **Authorize**, the client app calls the `/authorize` endpoint created by attaching the OAuth2 plugin to a service.
 
@@ -103,6 +126,8 @@ In the authorization code flow:
 5. The client exchanges this code at the `/oauth/token` endpoint for access tokens.
 6. The client uses the access token to call protected APIs.
 {% endcomment %}
+
+
 
 ## Kong Consumer Group claim authorization flow
 When using plugins scoped to Consumer Groups:
