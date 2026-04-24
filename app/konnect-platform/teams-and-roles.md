@@ -233,19 +233,20 @@ rows:
   - persona: Platform engineer
     description: |
       A platform engineer has access to create and manage Dedicated Cloud Gateway networks and control planes.
+      They also can configure Dedicated Cloud Gateway add-ons, like managed cache.
     roles: |
       * Network Creator
       * Network Admin
       * Control Plane Creator
       * Cloud Gateway Cluster Admin
+      * Add On Viewer
+      * Add On Admin
   - persona: Network engineer
     description: |
       A network engineer has access to configure private networking, transit gateways, and DNS resolution for Dedicated Cloud Gateway networks.
-      They also can configure Dedicated Cloud Gateway add-ons, like managed cache.
     roles: |
       * Network Admin
       * Network Viewer
-      * Add On Admin
       * Cloud Gateway Cluster Admin
       * Cloud Gateway Cluster Viewer
   - persona: Serverless engineer
