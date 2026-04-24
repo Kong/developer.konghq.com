@@ -50,8 +50,6 @@ related_resources:
     url: /ai-gateway/
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
-  - text: Forward Proxy Advanced plugin
-    url: /plugins/forward-proxy/
 ---
 
 ## What is forward proxy support?
@@ -78,9 +76,9 @@ flowchart LR
   AIProxy -- inference --> Proxy[Forward proxy]
   AIProxy -- "identity auth" --> Proxy
   Aux -- "auxiliary calls" --> Proxy
-  Proxy ---> LLM[LLM providers]
-  Proxy ---> CloudAPI[Cloud platform APIs]
-  Proxy ---> AuxSvc[Auxiliary services]
+  Proxy --> LLM[LLM providers]
+  Proxy --> CloudAPI[Cloud platform APIs]
+  Proxy --> AuxSvc[Auxiliary services]
   style Plugins stroke-dasharray: 5 5
 {% endmermaid %}
 > _Figure 1: Outbound traffic from {{site.ai_gateway}} plugins routed through a forward proxy._
