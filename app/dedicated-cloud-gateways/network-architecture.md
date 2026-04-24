@@ -155,18 +155,18 @@ Keep the following CIDR requirements in mind when you're deciding your network C
   * 172.16.0.0/12
   * 192.168.0.0/16
   * 198.18.0.0/15
-  
-  {:.info}
-  > **Acceptable CIDR examples:**
-  > * 10.4.0.0/16
-  > * 100.68.0.0/20
-  > * 172.20.0.0/22
-  > * 192.168.128.0/18
-  > * 198.18.0.0/16
 * **No overlap with existing ranges:** Your CIDR block **must not** overlap with any IP ranges already in use by your organization. Overlapping ranges can prevent network peering from functioning correctly.
 * **No overlap with reserved CIDR blocks:** Your CIDR block must not overlap with these reserved ranges:
   * 10.100.0.0/16
   * 172.17.0.0/16
+
+{:.info}
+> **Acceptable CIDR examples:**
+> * 10.4.0.0/16
+> * 100.68.0.0/20
+> * 172.20.0.0/22
+> * 192.168.128.0/18
+> * 198.18.0.0/16
 
 ## Configure a Dedicated Cloud Gateway network
 
@@ -187,30 +187,36 @@ You can configure a Dedicated Cloud Gateway network using the {{site.konnect_sho
 {% endnavtab %}
 {% navtab "API" %}
 1. Send a `GET` request to the [`/cloud-gateways/provider-accounts` endpoint](/api/konnect/cloud-gateways/v2/#/operations/list-provider-accounts) to get all cloud provider IDs:
+{% capture get_csp %}
 {% konnect_api_request %}
 url: /v2/cloud-gateways/provider-accounts
 method: GET
 region: global
 {% endkonnect_api_request %}
+{% endcapture %}
+{{ get_csp | indent: 3 }}
 1. In the response, copy and export the ID for the cloud provider you want to use for your Dedicated Cloud Gateway network:
    ```sh
    export CLOUD_PROVIDER_ID='YOUR CLOUD PROVIDER ID'
    ```
 1. Send a `POST` request to the [`/cloud-gateways/networks` endpoint](/api/konnect/cloud-gateways/v2/#/operations/create-network) to create your Dedicated Cloud Gateway network:
-   {% konnect_api_request %}
-   url: /v2/cloud-gateways/networks
-   method: POST
-   region: global
-   body:
-     name: "us-east-2 network"
-     cloud_gateway_provider_account_id: "$CLOUD_PROVIDER_ID"
-     region: "us-east-2"
-     availability_zones:
-       - "use2-az1"
-       - "use2-az2"
-       - "use2-az3"
-     cidr_block: "10.4.0.0/16"
-   {% endkonnect_api_request %}
+{% capture create_network %}
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks
+method: POST
+region: global
+body:
+  name: "us-east-2 network"
+  cloud_gateway_provider_account_id: "$CLOUD_PROVIDER_ID"
+  region: "us-east-2"
+  availability_zones:
+    - "use2-az1"
+    - "use2-az2"
+    - "use2-az3"
+  cidr_block: "10.4.0.0/16"
+{% endkonnect_api_request %}
+{% endcapture %}
+{{ create_network | indent: 3 }}
 {% endnavtab %}
 {% navtab "Terraform" %}
 [Create a Dedicated Cloud Gateway network](https://github.com/Kong/terraform-provider-konnect/blob/main/examples/scenarios/cloud-gateways.tf):

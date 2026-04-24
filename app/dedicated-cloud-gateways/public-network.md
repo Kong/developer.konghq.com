@@ -80,10 +80,10 @@ When a Dedicated Cloud Gateway proxies traffic to upstream services over the pub
 These validate who can call your APIs, and ensure your upstream services can trust that requests genuinely originate from Kong.
  
 There are multiple security controls you can use to protect public Dedicated Cloud Gateways:
-* Allow Kong proxy traffic by allowlisting egress IPs
-* Validate inbound API consumers before requests reach your upstream (mTLS Auth, OIDC)
-* Authenticate Kong to your upstream service (upstream mTLS, shared secrets)
-* Secure the inbound entry point itself (CDN/WAF)
+* Allow Kong proxy traffic by allowlisting egress IPs.
+* Validate inbound API consumers before requests reach your upstream (mTLS Auth, OIDC).
+* Authenticate Kong to your upstream service (upstream mTLS, shared secrets).
+* Secure the inbound entry point itself (CDN/WAF).
 
 These security controls protect against the following:
 
@@ -112,9 +112,9 @@ rows:
 
 Public Dedicated Cloud Gateway security controls are complementary.
 A robust public internet configuration typically combines multiple layers:
-* **A minimal production configuration for sensitive services:** Egress IP
+* A minimal production configuration for sensitive services: Egress IP
 allowlisting with upstream mTLS
-* **A configuration for services that cannot do mTLS:** Egress IP allowlisting with
+* A configuration for services that cannot do mTLS: Egress IP allowlisting with
 shared secret and OIDC
 
 {:.warning}
