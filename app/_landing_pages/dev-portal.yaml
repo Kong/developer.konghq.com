@@ -9,7 +9,7 @@ rows:
 
   - header:
       type: h1
-      text: "Dev Portal"
+      text: "{{site.dev_portal}}"
       sub_text: Empower API consumers with self-service API documentation and developer tools
 
   - columns:
@@ -20,7 +20,7 @@ rows:
                 - type: text
                   text: |
                     {:.warning}
-                    > [Review domain breaking changes for Dev Portal v3](/dev-portal/breaking-changes/)
+                    > [Review domain breaking changes for {{site.dev_portal}} v3](/dev-portal/breaking-changes/)
   
   - columns:
       - blocks:
@@ -29,15 +29,15 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services.
+                    The {{site.konnect_short_name}} {{site.dev_portal}} is a customizable website for developers to locate, access, and consume API services.
                     It enables developers to browse and search API documentation, try API operations, and manage their own credentials.
                     The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation.
+                    {{site.dev_portal}} APIs allow you to publish APIs using OpenAPI or AsyncAPI specifications and Markdown documentation.
                     You can provide highly customizable content at both the site and API level to offer additional context to developers.
           - type: button
             config:
-              text: "Create a Dev Portal in {{site.konnect_short_name}}"
+              text: "Create a {{site.dev_portal}} in {{site.konnect_short_name}}"
               url: https://cloud.konghq.com/portals/create
       - blocks:
           - type: image
@@ -55,7 +55,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  <img src="/assets/icons/lock.svg" style="display:inline"/> **Internal Dev Portal**
+                  <img src="/assets/icons/lock.svg" style="display:inline"/> **Internal {{site.dev_portal}}**
 
                   Designed for internal developer enablement and productivity.
                   * Private visibility with authentication enabled
@@ -68,7 +68,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  <img src="/assets/icons/team.svg" style="display:inline"/> **Partner Dev Portal**
+                  <img src="/assets/icons/team.svg" style="display:inline"/> **Partner {{site.dev_portal}}**
 
                   Ideal for exposing APIs to trusted external developers.
                   * Private or public visibility with auth enabled
@@ -81,7 +81,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  <img src="/assets/icons/world.svg" style="display:inline"/> **Public Dev Portal**
+                  <img src="/assets/icons/world.svg" style="display:inline"/> **Public {{site.dev_portal}}**
 
                   Open your APIs to the broader developer community.
                   * Public visibility without authentication
@@ -95,25 +95,25 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Define Dev Portal teams and roles
+            title: Define {{site.dev_portal}} teams and roles
             description: |
-              Before you can start using your Dev Portal, a {{site.konnect_short_name}} or Dev Portal admin must assign users to {{site.konnect_short_name}} teams and roles. This allows {{site.konnect_short_name}} users to access their respective features in Dev Portal.
+              Before you can start using your {{site.dev_portal}}, a {{site.konnect_short_name}} or {{site.dev_portal}} admin must assign users to {{site.konnect_short_name}} teams and roles. This allows {{site.konnect_short_name}} users to access their respective features in {{site.dev_portal}}.
             icon: /assets/icons/rbac.svg
             ctas:
-              - text: Pre-defined Dev Portal teams
+              - text: Pre-defined {{site.dev_portal}} teams
                 url: "/konnect-platform/teams-and-roles/#predefined-teams"
-              - text: Dev Portal teams for common use cases
+              - text: "{{site.dev_portal}} teams for common use cases"
                 url: "/konnect-platform/teams-and-roles/#dev-portal-custom-teams"
               - text: Catalog API roles
                 url: "/konnect-platform/teams-and-roles/#catalog-apis"
-              - text: Dev Portal roles
+              - text: "{{site.dev_portal}} roles"
                 url: "/konnect-platform/teams-and-roles/#dev-portal"
       - blocks:
         - type: card
           config:
             title: Create an API catalog
             description: |
-              Create and publish APIs to Dev Portal manually or with automation. Discover and govern APIs from third-parties with {{site.konnect_catalog}}.
+              Create and publish APIs to {{site.dev_portal}} manually or with automation. Discover and govern APIs from third-parties with {{site.konnect_catalog}}.
             icon: /assets/icons/api.svg
             ctas:
               - text: With the {{site.konnect_short_name}} API
@@ -130,12 +130,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Customize Dev Portal
+            title: Customize {{site.dev_portal}}
             description: |
-              Customize Dev Portal pages, domains, and appearance.
+              Customize {{site.dev_portal}} pages, domains, and appearance.
             icon: /assets/icons/edit.svg
             ctas:
-              - text: About Dev Portal customization
+              - text: About {{site.dev_portal}} customization
                 url: /dev-portal/customizations/dev-portal-customizations/
               - text: Pages and content
                 url: "/dev-portal/pages-and-content/"
@@ -143,7 +143,7 @@ rows:
                 url: https://marketplace.visualstudio.com/items?itemName=konghq.vscode-konnect-dev-portal-toolkit
               - text: Custom domains
                 url: "/dev-portal/custom-domains/"
-              - text: Dev Portal settings
+              - text: "{{site.dev_portal}} settings"
                 url: "/dev-portal/portal-settings/"
       - blocks:
         - type: card
@@ -174,7 +174,7 @@ rows:
             config:
               title: Access and authentication settings
               description: |
-                Security settings help you configure visibility and access control for developers accessing your Dev Portal.
+                Security settings help you configure visibility and access control for developers accessing your {{site.dev_portal}}.
               cta:
                 url: "/dev-portal/security-settings/"
       - blocks:
@@ -182,7 +182,7 @@ rows:
             config:
               title: SSO
               description: |
-                Set up SSO for the {{site.konnect_short_name}} Dev Portal using OpenID Connect (OIDC) or SAML.
+                Set up SSO for the {{site.konnect_short_name}} {{site.dev_portal}} using OpenID Connect (OIDC) or SAML.
               cta:
                 url: "/dev-portal/sso/"
       - blocks:
@@ -190,7 +190,7 @@ rows:
             config:
               title: IdP team mappings
               description: |
-                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
+                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} {{site.dev_portal}}.
               cta:
                 url: "/dev-portal/team-mapping/"
       - blocks:
@@ -204,7 +204,7 @@ rows:
 
   - header:
       type: h2
-      text: "Dev Portal analytics"
+      text: "{{site.dev_portal}} analytics"
     columns:
       - blocks:
         - type: structured_text
@@ -212,12 +212,12 @@ rows:
             blocks:
               - type: text
                 text: |
-                  In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals.
+                  In {{site.dev_portal}}, you can view both analytics for developer applications as well as platform-wide analytics for all {{site.dev_portal}}s.
 
-                  For more information, see [Dev Portal analytics](/dev-portal/analytics/).
+                  For more information, see [{{site.dev_portal}} analytics](/dev-portal/analytics/).
   - header:
       type: h2
-      text: "Migrate from classic Dev Portal (v2)"
+      text: "Migrate from classic {{site.dev_portal}} (v2)"
     columns:
       - blocks:
         - type: structured_text
@@ -225,13 +225,13 @@ rows:
             blocks:
               - type: text
                 text: |
-                  With the GA release of the new Dev Portal (v3) in June 2025, you can migrate from classic Dev Portals (v2) to the new Dev Portal. 
+                  With the GA release of the new {{site.dev_portal}} (v3) in June 2025, you can migrate from classic {{site.dev_portal}}s (v2) to the new {{site.dev_portal}}. 
                   
-                  See the [migration guide](/dev-portal/v2-migration/) to learn how to migrate from the classic Dev Portal (v2) to the new Dev Portal (v3).
+                  See the [migration guide](/dev-portal/v2-migration/) to learn how to migrate from the classic {{site.dev_portal}} (v2) to the new {{site.dev_portal}} (v3).
 
   - header:
       type: h2
-      text: "Dev Portal integrations"
+      text: "{{site.dev_portal}} integrations"
     column_count: 3
     columns:
       - blocks:
@@ -239,7 +239,7 @@ rows:
             config:
               title: Google Analytics
               description: |
-                Learn how to configure Google Analytics 4 to track events on your {{site.konnect_short_name}} Dev Portal.
+                Learn how to configure Google Analytics 4 to track events on your {{site.konnect_short_name}} {{site.dev_portal}}.
               icon:  /assets/icons/third-party/google-analytics.png
               cta:
                 url: "/dev-portal/google-analytics/"
@@ -248,7 +248,7 @@ rows:
             config:
               title: Google Tag Manager
               description: |
-                Learn how to add the Google Tag Manager script to all pages of your {{site.konnect_short_name}} Dev Portal.
+                Learn how to add the Google Tag Manager script to all pages of your {{site.konnect_short_name}} {{site.dev_portal}}.
               icon:  /assets/icons/third-party/google-tag-manager.svg
               cta:
                 url: "/dev-portal/google-tag-manager/"
@@ -260,17 +260,17 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Dev Portal audit logs
+              title: "{{site.dev_portal}} audit logs"
               description: |
-                Learn about what events are logged in Dev Portal logs.
+                Learn about what events are logged in {{site.dev_portal}} logs.
               cta:
                 url: "/konnect-platform/audit-logs/"
       - blocks:
           - type: card
             config:
-              title: Dev Portal v3 breaking changes
+              title: "{{site.dev_portal}} v3 breaking changes"
               description: |
-                Review breaking changes from Dev Portal v3 beta to general release.
+                Review breaking changes from {{site.dev_portal}} v3 beta to general release.
               cta:
                 url: "/dev-portal/breaking-changes/"
 
@@ -281,5 +281,9 @@ rows:
       - blocks:
         - type: faqs
           config:
-            - q: How do I view Dev Portal documentation for {{site.base_gateway}} 3.4?
+            - q: How do I view {{site.dev_portal}} documentation for {{site.base_gateway}} 3.4?
               a: Contact your account manager for {{site.base_gateway}} 3.4 documentation.
+            - q: How many {{site.dev_portal}}s can I create?
+              a: |
+                There is a soft limit of four {{site.dev_portal}} per {{site.konnect_short_name}} org.
+                Reach out to your Kong customer success team to increase this limit.
