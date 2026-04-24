@@ -270,74 +270,105 @@ rows:
   - num: "1"
     attribute: "`spec.targetRef`"
     order: |
-      * `Mesh` (less priority)
-      * `MeshGateway`
-      * `Dataplane`
-      * `Dataplane` with `labels`
-      * `Dataplane` with `labels/sectionName`
-      * `Dataplane` with `name/namespace`
-      * `Dataplane` with `name/namespace/sectionName`
+      1. `Dataplane` with `name/namespace/sectionName` (highest priority)
+      2. `Dataplane` with `name/namespace`
+      3. `Dataplane` with `labels/sectionName`
+      4. `Dataplane` with `labels`
+      5. `Dataplane`
+      6. `MeshGateway`
+      7. `Mesh` (lowest priority)
   - num: "2"
     attribute: "`kuma.io/origin`"
     order: |
-      * `global` (less priority)
-      * `zone`
+      1. `zone` (highest priority)
+      2. `global` (lowest priority)
   - num: "3"
     attribute: "`kuma.io/policy-role`"
     order: |
-      * `system` (less priority)
-      * `producer`
-      * `consumer`
-      * `workload-owner`
+      1. `workload-owner` (highest priority)
+      2. `consumer`
+      3. `producer`
+      4. `system` (lowest priority)
   - num: "4"
     attribute: "`kuma.io/display-name`"
     order: |
       Inverted lexicographical order, that is:
-      * `zzzzz` (less priority)
-      * `aaaaa1`
-      * `aaaaa`
-      * `aaa`
+      1. `aaa` (highest priority)
+      2. `aaaaa`
+      3. `aaaaa1`
+      4. `zzzzz` (lowest priority)
 {% endtable %}
 <!-- vale on -->
 
 For policies with `to` or `rules`, matching policy arrays are concatenated.
 For `to` policies, the concatenated arrays are sorted again based on the `spec.to[].targetRef` field:
 
-* `Mesh` (less priority)
-* `MeshService`
-* `MeshService` with `sectionName`
-* `MeshExternalService`
-* `MeshMultiZoneService`
+1. `MeshMultiZoneService` (highest priority)
+2. `MeshExternalService`
+3. `MeshService` with `sectionName`
+4. `MeshService`
+5. `Mesh` (lowest priority)
 
 Configuration is then built by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
 
-For example, if you have two `default` configurations ordered this way:
+For example, a producer `MeshTimeout` in `backend-ns` sets broad timeout defaults for all callers:
 
 ```yaml
-default:
-  conf: 1
-  sub:
-    array: [ 1, 2, 3 ]
-    other: 50
-    other-array: [ 3, 4, 5 ]
----
-default:
-  sub:
-    array: [ ]
-    other-array: [ 5, 6 ]
-    extra: 2
+# Producer policy (lower priority)
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: backend-producer-timeouts
+  namespace: backend-ns
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: backend
+        namespace: backend-ns
+      default:
+        connectionTimeout: 10s
+        idleTimeout: 2m
+        http:
+          requestTimeout: 30s
+          streamIdleTimeout: 5m
 ```
 
-The merge result is:
+The `frontend` team creates a consumer policy to shorten the request timeout for their own calls and cap stream duration:
+
+```yaml
+# Consumer policy (higher priority)
+apiVersion: kuma.io/v1alpha1
+kind: MeshTimeout
+metadata:
+  name: frontend-consumer-timeouts
+  namespace: frontend-ns
+spec:
+  targetRef:
+    kind: Mesh
+  to:
+    - targetRef:
+        kind: MeshService
+        name: backend
+        namespace: backend-ns
+      default:
+        http:
+          requestTimeout: 5s
+          maxStreamDuration: 1m
+```
+
+The merged configuration applied to `frontend`'s outbound toward `backend` is:
 
 ```yaml
 default:
-  conf: 1
-  sub:
-    array: [ ]
-    other: 50
-    other-array: [ 5, 6 ]
-    extra: 2
+  connectionTimeout: 10s   # kept from producer — consumer didn't set it
+  idleTimeout: 2m          # kept from producer — consumer didn't set it
+  http:
+    requestTimeout: 5s     # overridden by consumer
+    streamIdleTimeout: 5m  # kept from producer — consumer didn't set it
+    maxStreamDuration: 1m  # added by consumer
 ```
 
 ## Metadata
