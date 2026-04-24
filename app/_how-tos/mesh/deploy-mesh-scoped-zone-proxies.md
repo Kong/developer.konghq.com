@@ -182,7 +182,14 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
    nohup minikube tunnel -p mesh-zone-1 --bind-address=0.0.0.0 &
    ```
 
-1. Save the following as `zone-1-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
+1. Get the host IP that all minikube clusters can reach:
+
+   ```sh
+   export HOST_IP=$(minikube ssh -p mesh-zone-1 -- getent hosts host.minikube.internal | awk '{print $1}')
+   echo $HOST_IP
+   ```
+
+1. Save the following as `zone-1-values.yaml`, replacing `${EXTERNAL_IP}` and `${HOST_IP}` with the values you exported:
 
    ```yaml
    kuma:
@@ -197,9 +204,16 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
        - name: default
          ingress:
            enabled: true
+           service:
+             spec:
+               externalIPs:
+                 - ${HOST_IP}
          egress:
            enabled: true
    ```
+
+   `service.spec` is merged into the ingress `Service` spec, so the ingress advertises a `MeshZoneAddress` that other zones can reach.
+   Without it, minikube's tunnel sets the external address to `127.0.0.1`, which does not route between clusters.
 
    To deploy zone proxies for additional meshes, append more entries to `kuma.meshes`.
 
@@ -220,7 +234,7 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
    nohup minikube tunnel -p mesh-zone-2 --bind-address=0.0.0.0 &
    ```
 
-1. Save the following as `zone-2-values.yaml`, replacing `${EXTERNAL_IP}` with the value you exported earlier:
+1. Save the following as `zone-2-values.yaml`, replacing `${EXTERNAL_IP}` and `${HOST_IP}` with the values you exported:
 
    ```yaml
    kuma:
@@ -237,6 +251,9 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
            enabled: true
            service:
              port: 10002
+             spec:
+               externalIPs:
+                 - ${HOST_IP}
          egress:
            enabled: true
    ```
@@ -251,34 +268,6 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
      -f zone-2-values.yaml \
      kong-mesh kong-mesh/kong-mesh
    ```
-
-## Patch the ingress Services for cross-cluster routing
-
-Minikube tunnels assign `127.0.0.1` as the external IP, which doesn't route between clusters.
-Patch each zone's ingress Service to advertise `host.minikube.internal`'s IP instead.
-
-1. Get the host IP that all minikube clusters can reach:
-
-   ```sh
-   export HOST_IP=$(minikube ssh -p mesh-zone-1 -- getent hosts host.minikube.internal | awk '{print $1}')
-   echo $HOST_IP
-   ```
-
-1. Patch the ingress Service in zone-1:
-
-   ```sh
-   kubectl --context mesh-zone-1 -n kong-mesh-system patch svc kong-mesh-default-ingress \
-     --type merge -p "{\"spec\":{\"externalIPs\":[\"$HOST_IP\"]}}"
-   ```
-
-1. Patch the ingress Service in zone-2:
-
-   ```sh
-   kubectl --context mesh-zone-2 -n kong-mesh-system patch svc kong-mesh-default-ingress \
-     --type merge -p "{\"spec\":{\"externalIPs\":[\"$HOST_IP\"]}}"
-   ```
-
-The `MeshZoneAddress` controller will pick up the new external IP and regenerate the address resources.
 
 ## Propagate trust between zones
 
@@ -374,7 +363,7 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
 
    ```sh
    kubectl --context mesh-zone-1 -n kuma-demo exec deploy/demo-app -c demo-app -- \
-     curl -s http://demo-app.kuma-demo.svc.zone-2.mesh.local:5050/
+     curl -s http://demo-app.kuma-demo.svc.zone-2.mesh.local:5000/
    ```
 
    The request leaves zone-1 through the zone egress, enters zone-2 through the zone ingress, and hits the `demo-app` pod there.
