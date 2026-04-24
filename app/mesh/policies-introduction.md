@@ -22,34 +22,33 @@ min_version:
   mesh: '2.13'
 ---
 
-Policies in {{ site.mesh_product_name }} let you **declare how traffic and workloads should behave**,
-instead of configuring each [data plane proxy](/mesh/data-plane-proxy/) by hand.
+Policies in {{ site.mesh_product_name }} let you declare how traffic and workloads should behave, instead of configuring each [data plane proxy](/mesh/data-plane-proxy/) manually.
 They're the main way to enable features like mTLS, traffic permissions, retries, rate limits, access logging, and more.
 
 Every policy follows the same pattern:
 
-* **Target** – which workloads the policy applies to (`targetRef`)
-* **Direction** – whether it controls outbounds (`to`) or inbounds (`rules`)
-* **Behaviour** – the actual configuration (`default`) applied to the traffic
+* Target: which workloads the policy applies to (`targetRef`)
+* Direction: whether it controls outbounds (`to`) or inbounds (`rules`)
+* Behavior: the actual configuration (`default`) applied to the traffic
 
-For example, a policy that configures timeouts:
+For example, this is a policy that configures timeouts:
 
 ```yaml
 type: MeshTimeout
 name: my-app-timeout
 mesh: default
 spec:
-  targetRef: # Target. Policy applies only to workloads with label `app: my-app`
+  targetRef: # Target: the policy applies only to workloads with label `app: my-app`
     kind: Dataplane
     labels:
       app: my-app
-  to: # Direction. Policy applies to outbound listener for `database` MeshService
+  to: # Direction: the policy applies to outbound listeners for the `database` MeshService
     - targetRef:
         kind: MeshService
         name: database
         namespace: database-ns
         sectionName: "443"
-      default: # Behaviour. Policy sets connection and idle timeouts
+      default: # Behavior: the policy sets connection and idle timeouts
         connectionTimeout: 10s
         idleTimeout: 30m
 ```
@@ -57,59 +56,51 @@ spec:
 ## Policy roles
 
 Depending on where a policy is created (in an application namespace, the system namespace, or on the global control plane)
-and how its schema is structured, {{ site.mesh_product_name }} assigns it a **policy role**.
-A policy's role determines how it is synchronized in multi-zone deployments and how it is prioritized when multiple policies overlap.
+and how its schema is structured, {{ site.mesh_product_name }} assigns it a policy role.
+A policy's role determines how it's synchronized in multi-zone deployments and how it's prioritized when multiple policies overlap.
 
 The table below introduces the policy roles and how to recognize them.
 
 <!-- vale off -->
 {% table %}
 columns:
-  - title: "Policy Role"
+  - title: "Policy role"
     key: role
   - title: "Controls"
     key: controls
-  - title: "Type by Schema"
+  - title: "Type by schema"
     key: schema
-  - title: "Multi-zone Sync"
+  - title: "Multi-zone sync"
     key: sync
 rows:
-  - role: "Producer"
-    controls: "Outbound behaviour of callers to my service (my clients' egress toward me)."
-    schema: "Has `spec.to`. Every `to[].targetRef.namespace`, if set, must equal `metadata.namespace`."
-    sync: "Defined in the app's namespace on a Zone CP. Synced to Global, then propagated to other zones."
-  - role: "Consumer"
-    controls: "Outbound behaviour of my service when calling others (my egress)."
+  - role: "[Producer](#producer-policies)"
+    controls: "Outbound behavior of callers to your service (your clients' egress toward you)."
+    schema: "Has `spec.to`. Every `to[].targetRef.namespace`, if set, must be equal to `metadata.namespace`."
+    sync: "Defined in the app's namespace on a zone CP. Synced to the global CP, then propagated to other zones."
+  - role: "[Consumer](#consumer-policies)"
+    controls: "Outbound behavior of your service when calling others (your egress)."
     schema: "Has `spec.to`. At least one `to[].targetRef.namespace` is different from `metadata.namespace`."
-    sync: "Defined in the app's namespace on a Zone CP. Synced to Global."
-  - role: "Workload Owner"
-    controls: "Configuration of my own proxy—inbound traffic handling and sidecar features (for example metrics, traces)."
+    sync: "Defined in the app's namespace on a zone CP. Synced to the global CP."
+  - role: "[Workload-owner](#workload-owner-policies)"
+    controls: "Configuration of your own proxy: inbound traffic handling and sidecar features (for example metrics, traces)."
     schema: "Either has `spec.rules`, or has neither `spec.rules` nor `spec.to` (only `spec.targetRef` + proxy/sidecar settings)."
-    sync: "Defined in the app's namespace on a Zone CP. Synced to Global."
-  - role: "System"
-    controls: "Mesh-wide behaviour—can govern both inbound and outbound across services (operator-managed)."
+    sync: "Defined in the app's namespace on a zone CP. Synced to the global CP."
+  - role: "[System](#system-policies)"
+    controls: "Mesh-wide behavior: can govern both inbound and outbound across services (operator-managed)."
     schema: "Resource is created in the system namespace (for example `{{ site.mesh_namespace }}`)."
-    sync: "Created in the system namespace, either on a Zone CP or on the Global CP."
+    sync: "Created in the system namespace, either on a zone CP or on the global CP."
 {% endtable %}
 <!-- vale on -->
 
-In summary:
-
-* **Producer** policies let you configure how clients call you
-* **Consumer** policies let you configure how you call others
-* **Workload-owner** policies let you configure your own proxy's inbound and sidecar features
-* **System** policies let operators set mesh-wide defaults
-
 ### Producer policies
 
-Producer policies **allow service owners to define recommended client-side behavior for calls to their service**,
-by creating the policy in their service's own namespace.
+Producer policies allow service owners to define recommended client-side behavior for calls to their service by creating the policy in their service's own namespace.
 {{ site.mesh_product_name }} then applies it automatically to the outbounds of client workloads.
 This lets backend owners publish sensible defaults (timeouts, retries, limits) for consumers,
 while individual clients can still refine those settings with their own [consumer](#consumer-policies) policies.
 
-The following policy tells {{ site.mesh_product_name }} to apply **3 retries** with a back off of `15s` to `1m`
-on **5xx errors** to any client calling `backend`:
+The following policy tells {{ site.mesh_product_name }} to apply 3 retries with a back off of `15s` to `1m`
+on 5xx errors to any client calling `backend`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -136,7 +127,7 @@ spec:
 
 ### Consumer policies
 
-Consumer policies let **service owners adjust how their workloads call other services**.
+Consumer policies let service owners adjust how their workloads call other services.
 They are created in the client's namespace and applied to that client's outbounds.
 This way, the service owner can fine-tune retries, timeouts, or other settings for the calls their workloads make.
 
@@ -160,7 +151,7 @@ spec:
 
 ### Workload-owner policies
 
-Workload-owner policies let **service owners configure their own workload's proxies**.
+Workload-owner policies let service owners configure their own workload's proxies.
 They are created in the workload's namespace and control how proxies handle inbound traffic,
 while also enabling various proxy-level features such as `MeshMetric`, `MeshProxyPatch`, and others.
 
@@ -212,10 +203,10 @@ spec:
 
 ### System policies
 
-System policies provide **mesh-wide defaults managed by platform operators**.
-Any policy can be a system policy as long as it's created in the system namespace (`{{ site.mesh_namespace }}` by default) on either a Zone Control Plane or the Global Control Plane.
+System policies provide mesh-wide defaults managed by platform operators.
+Any policy can be a system policy as long as it's created in the system namespace (`{{ site.mesh_namespace }}` by default) on either a zone control plane or the global control plane.
 
-## Referencing Dataplanes, Services, and Routes inside policies
+## Referencing data planes, services, and routes inside policies
 
 {{ site.mesh_product_name }} provides an API for cross-referencing policies and other resources called `targetRef`:
 
@@ -228,15 +219,14 @@ targetRef:
 
 `targetRef` appears in all policy definitions wherever configuration needs to be associated with resources such as `MeshService`, `MeshExternalService`, `Dataplane`, and others.
 
-The `targetRef` API follows the same principles regardless of policy type:
+The `targetRef` API follows the same principles regardless of the policy type:
 
-1. `targetRef.kind` must always refer to a resource that exists in the cluster.
-2. A resource can be referenced either by `name` and `namespace` or by `labels`.
-3. Using `name` and `namespace` creates an unambiguous reference to a single resource, while using `labels` can match multiple resources.
-4. `targetRef.namespace` is optional and defaults to the namespace of the policy.
-5. System policies must always use `targetRef.labels`.
-6. When supported by the target resource, `sectionName` may reference a specific section rather than the entire resource (for example, `MeshService`, `MeshMultiZoneService`, `Dataplane`).
-7. `sectionName` is resolved by first matching a section name, and if no match is found, by interpreting it as a numeric port value (provided the port name is unset).
+* `targetRef.kind` must always refer to a resource that exists in the cluster.
+* A resource can be referenced either by `name` and `namespace` or by `labels`. Using `name` and `namespace` creates an unambiguous reference to a single resource, while using `labels` can match multiple resources.
+* `targetRef.namespace` is optional and defaults to the namespace of the policy.
+* System policies must always use `targetRef.labels`.
+* When supported by the target resource, `sectionName` may reference a specific section rather than the entire resource (for example, `MeshService`, `MeshMultiZoneService`, `Dataplane`).
+* `sectionName` is resolved by first matching a section name, and if no match is found, by interpreting it as a numeric port value (if the port name is unset).
 
 The set of valid `targetRef.kind` values is the same across all policies:
 
@@ -249,9 +239,15 @@ columns:
     key: kinds
 rows:
   - field: "`spec.targetRef`"
-    kinds: "* `Mesh`<br>* `Dataplane`"
+    kinds: |
+      * `Mesh`
+      * `Dataplane`
   - field: "`spec.to[].targetRef`"
-    kinds: "* `MeshService`<br>* `MeshMultiZoneService`<br>* `MeshExternalService`<br>* `MeshHTTPRoute` (if the policy supports per-route configuration)"
+    kinds: |
+      * `MeshService`
+      * `MeshMultiZoneService`
+      * `MeshExternalService`
+      * `MeshHTTPRoute` (if the policy supports per-route configuration)
 {% endtable %}
 <!-- vale on -->
 
@@ -264,46 +260,54 @@ Policy priority is determined by a total ordering of attributes. The table below
 <!-- vale off -->
 {% table %}
 columns:
-  - title: ""
+  - title: "Attribute priority"
     key: num
-  - title: "Attribute"
+  - title: "Attribute name"
     key: attribute
   - title: "Order"
     key: order
 rows:
   - num: "1"
     attribute: "`spec.targetRef`"
-    order: "* `Mesh` (less priority)<br>* `MeshGateway`<br>* `Dataplane`<br>* `Dataplane` with `labels`<br>* `Dataplane` with `labels/sectionName`<br>* `Dataplane` with `name/namespace`<br>* `Dataplane` with `name/namespace/sectionName`"
+    order: |
+      * `Mesh` (less priority)
+      * `MeshGateway`
+      * `Dataplane`
+      * `Dataplane` with `labels`
+      * `Dataplane` with `labels/sectionName`
+      * `Dataplane` with `name/namespace`
+      * `Dataplane` with `name/namespace/sectionName`
   - num: "2"
-    attribute: "Origin<br>Label `kuma.io/origin`"
-    order: "* `global` (less priority)<br>* `zone`"
+    attribute: "`kuma.io/origin`"
+    order: |
+      * `global` (less priority)
+      * `zone`
   - num: "3"
-    attribute: "Policy Role<br>Label `kuma.io/policy-role`"
-    order: "* `system` (less priority)<br>* `producer`<br>* `consumer`<br>* `workload-owner`"
+    attribute: "`kuma.io/policy-role`"
+    order: |
+      * `system` (less priority)
+      * `producer`
+      * `consumer`
+      * `workload-owner`
   - num: "4"
-    attribute: "Display Name<br>Label `kuma.io/display-name`"
-    order: "Inverted lexicographical order, that is:<br>* `zzzzz` (less priority)<br>* `aaaaa1`<br>* `aaaaa`<br>* `aaa`"
+    attribute: "`kuma.io/display-name`"
+    order: |
+      Inverted lexicographical order, that is:
+      * `zzzzz` (less priority)
+      * `aaaaa1`
+      * `aaaaa`
+      * `aaa`
 {% endtable %}
 <!-- vale on -->
 
 For policies with `to` or `rules`, matching policy arrays are concatenated.
 For `to` policies, the concatenated arrays are sorted again based on the `spec.to[].targetRef` field:
 
-<!-- vale off -->
-{% table %}
-columns:
-  - title: ""
-    key: num
-  - title: "Attribute"
-    key: attribute
-  - title: "Order"
-    key: order
-rows:
-  - num: "1"
-    attribute: "`spec.to[].targetRef`"
-    order: "* `Mesh` (less priority)<br>* `MeshService`<br>* `MeshService` with `sectionName`<br>* `MeshExternalService`<br>* `MeshMultiZoneService`"
-{% endtable %}
-<!-- vale on -->
+* `Mesh` (less priority)
+* `MeshService`
+* `MeshService` with `sectionName`
+* `MeshExternalService`
+* `MeshMultiZoneService`
 
 Configuration is then built by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
 
@@ -338,12 +342,12 @@ default:
 
 ## Metadata
 
-Metadata identifies a policy by its `name`, `type`, and the `mesh` it belongs to:
+Metadata identifies a policy by its name, type/kind, and the mesh it belongs to:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-In Kubernetes, all {{ site.mesh_product_name }} policies are implemented as [custom resource definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
+In Kubernetes, all {{ site.mesh_product_name }} policies are implemented as [Custom Resource Definitions (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) in the group `kuma.io/v1alpha1`.
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -351,11 +355,11 @@ kind: ExamplePolicy
 metadata:
   name: my-policy-name
   namespace: {{ site.mesh_namespace }}
-spec: ... # spec data specific to the policy kind
+spec: ... # spec data specific to the policy
 ```
 
-By default, the policy is created in the `default` [mesh](/mesh/concepts#mesh).
-You can specify the mesh by using the `kuma.io/mesh` label:
+By default, the policy is created in the `default` mesh.
+You can specify the mesh with the `kuma.io/mesh` label:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -365,7 +369,7 @@ metadata:
   namespace: {{ site.mesh_namespace }}
   labels:
     kuma.io/mesh: "my-mesh"
-spec: ... # spec data specific to the policy kind
+spec: ... # spec data specific to the policy
 ```
 
 {% endnavtab %}
@@ -375,7 +379,7 @@ spec: ... # spec data specific to the policy kind
 type: ExamplePolicy
 name: my-policy-name
 mesh: default
-spec: ... # spec data specific to the policy kind
+spec: ... # spec data specific to the policy
 ```
 
 {% endnavtab %}
