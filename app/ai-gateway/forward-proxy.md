@@ -21,12 +21,10 @@ tools:
   - admin-api
   - konnect-api
   - kic
-  - terraform
-  - kongctl
 
 TODO: confirm the minimum Gateway version with engineering before publishing.
 min_version:
-  gateway: '2.0'
+  ai-gateway: '2.0'
 
 plugins:
   - ai-proxy-advanced
