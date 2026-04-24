@@ -217,7 +217,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-### Dedicated Cloud Gateway custom teams
+#### Dedicated Cloud Gateway custom teams
 
 You can use custom teams in {{site.konnect_short_name}} to manage access for common Dedicated Cloud Gateway personas. The following table details the roles you can assign to each custom team:
 <!--vale off-->
