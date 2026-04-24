@@ -186,6 +186,47 @@ rows:
                   url: /dedicated-cloud-gateways/azure-managed-cache-control-plane-group/
   - header:
       type: h2
+      text: "Dedicated Cloud Gateway network architecture"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Network architecture overview
+              description: |
+                Learn the architecture of Kong-managed Dedicated Cloud Gateways networks, how they communicate with your cloud infrastructure, and what you must decide before deploying a Dedicated Cloud Gateway.
+              icon: /assets/icons/gateway.svg
+              cta:
+                url: /dedicated-cloud-gateways/network-architecture/
+      - blocks:
+          - type: card
+            config:
+              title: Public network architecture
+              description: |
+                Learn about the public Dedicated Cloud Gateway network architecture and how to secure your public network.
+              icon: /assets/icons/world.svg
+              cta:
+                url: /dedicated-cloud-gateways/public-network/
+      - blocks:
+          - type: card
+            config:
+              title: Private network architecture
+              description: |
+                Learn about private Dedicated Cloud Gateway network architecture, connectivity options, and how to secure your private network.
+              icon: /assets/icons/lock.svg
+              cta:
+                url: /dedicated-cloud-gateways/private-network/
+      - blocks:
+          - type: card
+            config:
+              title: Multi-cloud architecture
+              description: |
+                Learn how to deploy Dedicated Cloud Gateways across multiple cloud providers, including supported hostname strategies and their tradeoffs.
+              icon: /assets/icons/cloud.svg
+              cta:
+                url: /dedicated-cloud-gateways/multi-cloud/
+  
+  - header:
+      type: h2
       text: "Cluster management"
     columns:
       - blocks:

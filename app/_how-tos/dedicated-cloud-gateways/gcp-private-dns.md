@@ -27,6 +27,12 @@ related_resources:
     url: https://cloud.google.com/dns/docs/zones
   - text: AWS private hosted zones
     url: /dedicated-cloud-gateways/private-hosted-zones/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   skip_product: true
   inline:
