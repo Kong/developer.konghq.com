@@ -22,6 +22,7 @@ tools:
   - konnect-api
   - kic
   - terraform
+  - kongctl
 
 # TODO: confirm the minimum Gateway version with engineering before publishing.
 # min_version:
@@ -93,9 +94,11 @@ flowchart LR
 
 The three request categories are:
 
-- **Inference traffic**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/). This is the majority of {{site.ai_gateway}} traffic. It runs through the native {{site.base_gateway}} upstream path, so load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active.
+- **Inference traffic**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/). This is the majority of {{site.ai_gateway}} traffic. It runs through the native {{site.base_gateway}} upstream path, so load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
 - **Embeddings and semantic operations**: requests from semantic plugins to the embeddings service used for cache lookups, RAG retrieval, and prompt or response guarding.
 - **Security and transformation calls**: requests from guardrail, sanitizer, and compressor plugins to their external services (AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a custom endpoint).
+
+For cloud providers that require managed identity (AWS Bedrock's SigV4 signing, Azure and GCP managed identity token acquisition), the authentication subrequests issued by the provider SDK libraries also traverse the proxy.
 
 When `proxy_config` is set on a plugin, every outbound request that plugin issues goes through the configured proxy.
 
@@ -110,20 +113,25 @@ columns:
     key: traffic
   - title: Plugins
     key: plugins
+  - title: Proxied destination
+    key: service
 rows:
   - traffic: "Inference requests to LLM providers"
     plugins: |
       - [AI Proxy Advanced](/plugins/ai-proxy-advanced/)
+    service: "LLM provider APIs"
   - traffic: "Embeddings and semantic operations"
     plugins: |
       - [AI Semantic Cache](/plugins/ai-semantic-cache/)
       - [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)
       - [AI Semantic Response Guard](/plugins/ai-semantic-response-guard/)
       - [AI RAG Injector](/plugins/ai-rag-injector/)
+    service: "The configured embeddings service"
   - traffic: "Prompt compression and sanitization"
     plugins: |
       - [AI Prompt Compressor](/plugins/ai-prompt-compressor/)
       - [AI Sanitizer](/plugins/ai-sanitizer/)
+    service: "The configured `compressor_url` or `sanitizer_url`"
   - traffic: "Guardrail services"
     plugins: |
       - [AI AWS Guardrails](/plugins/ai-aws-guardrails/)
@@ -131,8 +139,11 @@ rows:
       - [AI Lakera Guard](/plugins/ai-lakera-guard/)
       - [AI GCP Model Armor](/plugins/ai-gcp-model-armor/)
       - [AI Custom Guardrail](/plugins/ai-custom-guardrail/)
+    service: "Managed or custom guardrail service"
 {% endtable %}
 <!--vale on-->
+
+`proxy_config` is per-plugin. Setting it on AI Proxy Advanced does not apply to other {{site.ai_gateway}} plugins attached to the same Route. Configure it on every plugin whose external calls need to traverse the proxy.
 
 ## proxy_config fields
 
@@ -180,8 +191,11 @@ Two validation rules apply to the record:
 - `http_proxy_host` and `http_proxy_port` must both be set or both be absent.
 - `https_proxy_host` and `https_proxy_port` must both be set or both be absent.
 
+{:.info}
+> `https_verify` defaults to `false`. When `proxy_scheme` is `https`, set `https_verify: true` in production so the proxy's TLS certificate is validated.
+
 {:.warning}
-> When `proxy_scheme` is `https` and the global `tls_certificate_verify` flag is enabled, `https_verify` cannot be set to `false`.
+> When `proxy_scheme` is `https` and the global `tls_certificate_verify` flag is enabled, `https_verify` cannot be set to `false`. Config load fails.
 
 ## Configuration
 
@@ -230,4 +244,4 @@ variables:
 ## Limitations
 
 - Connections to vector databases (pgvector, Redis Vector, Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a proxy, handle it at the network layer.
-- The [AI Request Transformer](/plugins/ai-request-transformer/), [AI Response Transformer](/plugins/ai-response-transformer/), and [AI LLM as a Judge](/plugins/ai-llm-as-judge/) plugins keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy_config` record. Authentication to the proxy and HTTPS proxy schemes are not available on these three plugins.
+- The [AI Request Transformer](/plugins/ai-request-transformer/), [AI Response Transformer](/plugins/ai-response-transformer/), and [AI LLM as a Judge](/plugins/ai-llm-as-judge/) plugins keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy_config` record. They do not expose `auth_username`, `auth_password`, `proxy_scheme`, or `https_verify`, so proxy authentication and HTTPS-scheme proxies are unavailable for their traffic.
