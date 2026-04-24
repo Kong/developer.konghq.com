@@ -43,6 +43,7 @@ sections:
       - path: /mesh/mesh-multi-tenancy/
       - path: /mesh/single-zone/
       - path: /mesh/mesh-multizone-service-deployment/
+      - path: /mesh/zone-proxies/
       - path: /mesh/interact-with-control-plane/
       - path: /mesh/use-mesh-cli/
       - path: /mesh/annotations/
