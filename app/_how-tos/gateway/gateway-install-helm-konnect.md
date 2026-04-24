@@ -126,7 +126,7 @@ ingressController:
   
 image:
  repository: kong/kong-gateway
- tag: "{{ site.data.gateway_latest.version }}"
+ tag: "{{ site.data.gateway_latest.release }}"
   
 # Mount the secret created earlier
 secretVolumes:
@@ -141,8 +141,8 @@ env:
   cluster_mtls: pki
 
   cluster_control_plane: "'$CONTROL_PLANE_ENDPOINT'"
-  cluster_telemetry_endpoint: "'$CONTROL_PLANE_ENDPOINT':443"
-  cluster_telemetry_server_name: "'$CONTROL_PLANE_ENDPOINT'"
+  cluster_telemetry_endpoint: "'$CONTROL_PLANE_TELEMETRY':443"
+  cluster_telemetry_server_name: "'$CONTROL_PLANE_TELEMETRY'"
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
 

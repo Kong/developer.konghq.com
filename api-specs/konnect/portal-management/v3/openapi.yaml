@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@b86de17dd121406f9a94d62b1ca4bd412d216992
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/b86de17dd121406f9a94d62b1ca4bd412d216992'
+  x-oas-source: kong/platform-api@e3d22e8e12a7c93ee828f034ce174f349ad83f6d
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d22e8e12a7c93ee828f034ce174f349ad83f6d'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -1181,11 +1181,7 @@ paths:
     get:
       operationId: get-portal-authentication-settings
       summary: Get Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.
+      description: 'Returns the developer authentication configuration for a portal, which determines how developers can log in and how they are assigned to teams.'
       responses:
         '200':
           $ref: '#/components/responses/PortalAuthenticationSettings'
@@ -1196,11 +1192,7 @@ paths:
     patch:
       operationId: update-portal-authentication-settings
       summary: Update Auth Settings
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
-        Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
+      description: Updates the developer authentication configuration for a portal. Developers can be allowed to login using basic auth (email & password) or use Single-Sign-On through an Identity Provider. Developers can be automatically assigned to teams by mapping claims from their IdP account.
       requestBody:
         $ref: '#/components/requestBodies/UpdatePortalAuthenticationSettings'
       responses:
@@ -1738,10 +1730,7 @@ paths:
     get:
       operationId: get-portal-identity-providers
       summary: List Identity Providers
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the identity providers available within the portal. This operation provides information about
         various identity providers for SAML or OIDC authentication integrations.
       parameters:
@@ -1767,10 +1756,7 @@ paths:
     post:
       operationId: create-portal-identity-provider
       summary: Create Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Creates a new identity provider. This operation allows the creation of a new identity provider for
         authentication purposes.
       requestBody:
@@ -1795,10 +1781,7 @@ paths:
     get:
       operationId: get-portal-identity-provider
       summary: Get Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Retrieves the configuration of a single identity provider. This operation returns information about a
         specific identity provider's settings and authentication integration details.
       responses:
@@ -1817,10 +1800,7 @@ paths:
     patch:
       operationId: update-portal-identity-provider
       summary: Update Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Updates the configuration of an existing identity provider. This operation allows modifications to be made
         to an existing identity provider's configuration.
       requestBody:
@@ -1843,12 +1823,110 @@ paths:
     delete:
       operationId: delete-portal-identity-provider
       summary: Delete Identity Provider
-      description: |-
-        **Pre-release Endpoint**
-        This endpoint is currently in beta and is subject to change.
-
+      description: |
         Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the portal.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
+  '/portals/{portalId}/identity-providers/{id}/team-group-mappings':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/IdentityProviderId'
+    get:
+      operationId: list-portal-idp-team-group-mappings
+      summary: List Team Group Mappings
+      description: |
+        Returns a paginated list of team group mappings for the specified identity provider.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PageBefore'
+        - name: filter
+          in: query
+          description: Filter mappings by team ID or group name.
+          required: false
+          schema:
+            type: object
+            properties:
+              team_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              group:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIdpTeamGroupMappingCollection'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
+    post:
+      operationId: create-portal-idp-team-group-mapping
+      summary: Create Team Group Mapping
+      description: |
+        Creates a new team group mapping for the specified identity provider.
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePortalIdpTeamGroupMapping'
+      responses:
+        '201':
+          $ref: '#/components/responses/PortalIdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Portal Auth Settings
+  '/portals/{portalId}/identity-providers/{id}/team-group-mappings/{mappingId}':
+    parameters:
+      - $ref: '#/components/parameters/PortalId'
+      - $ref: '#/components/parameters/IdentityProviderId'
+      - $ref: '#/components/parameters/TeamGroupMappingId'
+    get:
+      operationId: get-portal-idp-team-group-mapping
+      summary: Get Team Group Mapping
+      description: Returns the team group mapping for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/PortalIdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Portal Auth Settings
+    delete:
+      operationId: delete-portal-idp-team-group-mapping
+      summary: Delete Team Group Mapping
+      description: |
+        Deletes a team group mapping by ID.
+        Returns 204 if the mapping was deleted, or 404 if the mapping was not found.
       responses:
         '204':
           description: No Content
@@ -2718,6 +2796,14 @@ components:
       required: false
       schema:
         type: string
+    TeamGroupMappingId:
+      name: mappingId
+      in: path
+      required: true
+      description: ID of the team group mapping.
+      schema:
+        type: string
+        format: uuid
     TeamId:
       schema:
         type: string
@@ -2728,6 +2814,69 @@ components:
       required: true
       description: ID of the team.
   schemas:
+    CreatePortalIdpTeamGroupMappingRequest:
+      type: object
+      properties:
+        team_id:
+          description: The Konnect team ID.
+          type: string
+          format: uuid
+          example: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group:
+          description: The IdP group name.
+          type: string
+          example: API Engineers
+      required:
+        - team_id
+        - group
+    PortalIdpTeamGroupMapping:
+      type: object
+      properties:
+        id:
+          description: The mapping ID.
+          type: string
+          format: uuid
+          example: a1b2c3d4-e5f6-4a8b-9c0d-1e2f3a4b5c6d
+          readOnly: true
+        team_id:
+          description: The Konnect team ID.
+          type: string
+          format: uuid
+          example: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group:
+          description: The IdP group name.
+          type: string
+          example: API Engineers
+        created_at:
+          description: Creation timestamp.
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+          readOnly: true
+        updated_at:
+          description: Last update timestamp.
+          type: string
+          format: date-time
+          example: '2024-01-15T10:30:00Z'
+          readOnly: true
+      required:
+        - id
+        - team_id
+        - group
+        - created_at
+        - updated_at
+    PortalIdpTeamGroupMappingCollectionResponse:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/CursorMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMapping'
+      required:
+        - meta
+        - data
     PortalImageDataUri:
       oneOf:
         - $ref: '#/components/schemas/ImagePNGDataUri'
@@ -5091,11 +5240,6 @@ components:
       format: date-time
       example: '2022-11-04T20:10:06.927Z'
       readOnly: true
-    SourceIPEnabled:
-      description: Whether ip allow list is enabled for the organization.
-      type: boolean
-      example: true
-      default: false
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -6360,6 +6504,14 @@ components:
         - size
         - next
         - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     PortalAllowedIPs:
       description: The list of allowed ips for the portal.
       type: array
@@ -8196,6 +8348,13 @@ components:
         config:
           idp_metadata_url: 'https://mocksaml.com/api/saml/metadata'
   requestBodies:
+    CreatePortalIdpTeamGroupMapping:
+      description: Create a team group mapping for an identity provider.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePortalIdpTeamGroupMappingRequest'
     CreatePortalCustomDomain:
       description: Create a portal custom domain.
       required: true
@@ -8249,7 +8408,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8340,7 +8502,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string
@@ -8721,6 +8886,18 @@ components:
             Update SAML Identity Provider:
               $ref: '#/components/examples/UpdateSAMLIdentityProvider'
   responses:
+    PortalIdpTeamGroupMapping:
+      description: A team group mapping for an identity provider.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMapping'
+    PortalIdpTeamGroupMappingCollection:
+      description: A paginated collection of team group mappings.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PortalIdpTeamGroupMappingCollectionResponse'
     PortalTeamGroupMappingCollection:
       description: A paginated collection of mappings grouped by team ID.
       content:
@@ -8876,7 +9053,10 @@ components:
                       type: boolean
                       default: false
                     sipr_enabled:
-                      $ref: '#/components/schemas/SourceIPEnabled'
+                      description: Whether ip allow list is enabled for the portal.
+                      type: boolean
+                      example: true
+                      default: false
                     default_api_visibility:
                       description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                       type: string
@@ -8979,7 +9159,10 @@ components:
                 type: boolean
                 default: false
               sipr_enabled:
-                $ref: '#/components/schemas/SourceIPEnabled'
+                description: Whether ip allow list is enabled for the portal.
+                type: boolean
+                example: true
+                default: false
               default_api_visibility:
                 description: 'The default visibility of APIs in the portal. If set to `public`, newly published APIs are visible to unauthenticated developers. If set to `private`, newly published APIs are hidden from unauthenticated developers.'
                 type: string

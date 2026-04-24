@@ -22,8 +22,6 @@ rows:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: 'Overview'
               blocks:
                 - type: text
                   text: |
@@ -74,7 +72,7 @@ rows:
   - header:
       type: h2
       text: 'FAQs'
-  - columns:
+    columns:
       - blocks:
           - type: faqs
             config:

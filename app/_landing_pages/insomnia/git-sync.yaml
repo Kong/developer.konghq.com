@@ -72,7 +72,7 @@ rows:
               - Merge branches.
               - Resolve conflicts.
 
-              All operations follow your repository’s existing rules and protections.
+              All operations follow your repository's existing rules and protections.
 
               When both you and a collaborator change the same content, Insomnia opens a merge view so you can review and resolve conflicts without leaving the app. See [3-way merge](/insomnia/three-way-merge/) for details.
       - blocks:
@@ -142,3 +142,7 @@ rows:
               - q: Can administrators restrict available storage types?
                 a: |
                   Yes. Enterprise administrators can control which storage types are available to users through **Enterprise Controls** > **Storage**.
+              - q: Can I change the project structure (for example, create folders or move files)?
+                a: |
+                  Yes, but only through your Git provider or local Git tooling. Insomnia doesn't provide a way to change the project structure from its UI.
+                  If you modify the project structure externally, Insomnia will still present the files as expected.

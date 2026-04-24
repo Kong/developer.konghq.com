@@ -276,7 +276,7 @@ rows:
                 If you are using Terraform and are happy with it, you should continue to use it. decK covers all the problems that Terraform solves and goes beyond it:
 
                 * With Terraform, you have to track and maintain Terraform files (*.tf) and the Terraform state (likely using a cloud storage solution). With decK, the entire configuration is stored in the YAML/JSON file(s) only. There is no separate state that needs to be tracked.
-                * decK can export and back up your existing {{site.base_gateway}}'s configuration, meaning, you can take an existing {{site.base_gateway}} installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in {{site.base_gateway}} into Terraform’s state.
+                * decK can export and back up your existing {{site.base_gateway}}'s configuration, meaning, you can take an existing {{site.base_gateway}} installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in {{site.base_gateway}} into Terraform's state.
                 * decK can check if a configuration file is valid or not (validate sub-command).
                 * decK can quickly [reset](/deck/gateway/reset/) your {{site.base_gateway}}'s configuration when needed.
                 * decK works out of the box with {{site.base_gateway}} features like Workspaces and RBAC.

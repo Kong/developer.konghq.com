@@ -63,6 +63,14 @@ faqs:
       {% raw %}https://api.example.com/users/{{ user_id }}{% endraw %}
       ```  
       For detailed usage examples, go to [**Pre-request scripts**](/how-to/write-pre-request-scripts/). 
+  - q: Why does my request return an error in Insomnia but succeed with other tools?
+    a: |
+      It may be due to the `Content-Length` header. Insomnia might be sending a fixed `Content-Length`, causing the server to validate it against the body, and failing if they don't match. To resolve the error:
+      
+      1. Go to your request's **Mock Header** tab.
+      2. Remove or deactivate the `Content-Length` header.
+      3. Click **Test** to see if the issue is resolved.
+
 ---
 
 ## How do I create requests in Insomnia?

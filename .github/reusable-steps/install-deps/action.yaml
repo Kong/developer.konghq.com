@@ -10,7 +10,7 @@ runs:
         ruby-version: .ruby-version
 
     - name: Ruby gem cache
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       with:
         path: ${{ github.workspace }}/vendor/bundle
         key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -26,20 +26,15 @@ runs:
       run: bundle install --jobs 4 --retry 3
 
     # Configure Node to build assets
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
     - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
       with:
         node-version: "24"
+        cache: 'yarn'
 
-    - name: Cache node modules
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-
-    - name: npm install
+    - name: Install node packages
       shell: bash
-      run: npm ci
+      run: yarn install --immutable

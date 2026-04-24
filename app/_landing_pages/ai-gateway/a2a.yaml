@@ -85,18 +85,12 @@ rows:
   - header:
       type: h2
       text: "A2A traffic observability"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.ai_gateway}} records A2A protocol traffic data so you can analyze how agent-to-agent requests are processed and resolved.
-                    - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
-                    - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
-                    - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
-  - column_count: 2
+      description: |
+        {{site.ai_gateway}} records A2A protocol traffic data so you can analyze how agent-to-agent requests are processed and resolved.
+        - Audit logs capture task IDs, JSON-RPC method calls, payloads, latencies, and errors.
+        - OpenTelemetry spans record task state, context IDs, TTFB, SSE event counts, and response sizes.
+        - Log plugins (File Log, HTTP Log, TCP Log, and others) consume the structured `ai.a2a` namespace emitted by the AI A2A Proxy plugin.
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -134,19 +128,23 @@ rows:
             cta:
               url: /ai-gateway/ai-otel-metrics/#a2a-metrics
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Agentic usage analytics in {{site.konnect_short_name}}
+            description: View A2A-specific metrics and analytics in {{site.konnect_short_name}}.
+            icon: /assets/icons/KogoBlue.svg
+            cta:
+              url: /observability/explorer/?tab=agentic-usage#metrics
+              align: end
 
   - header:
       type: h2
       text: "Govern A2A traffic"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
-  - column_count: 2
+      description: |
+        Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. 
+        Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.         
+    column_count: 2
     columns:
       - blocks:
         - type: card

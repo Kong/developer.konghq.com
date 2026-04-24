@@ -168,7 +168,7 @@ rows:
   - header:
       type: h2
       text: "Developer authentication and access"
-  - columns:
+    columns:
       - blocks:
           - type: card
             config:
@@ -232,7 +232,7 @@ rows:
   - header:
       type: h2
       text: "Dev Portal integrations"
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -256,7 +256,7 @@ rows:
   - header:
       type: h2
       text: "References"
-  - columns:
+    columns:
       - blocks:
           - type: card
             config:

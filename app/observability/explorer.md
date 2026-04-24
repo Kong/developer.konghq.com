@@ -141,6 +141,10 @@ rows:
     category: "Size"
     description: |
       The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+  - metric: "Error Rate"
+    category: "Percentage"
+    description: |
+      The percentage of failed API requests. This includes requests that return HTTP 4xx and 5xx status codes.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}
@@ -265,6 +269,44 @@ rows:
     category: "Count"
     description: |
       Number of Consumers in your realm or control plane.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Agentic usage" %}
+
+Agentic usage tracks analytics data for agent-to-agent (A2A) traffic that flows through the [AI A2A Proxy plugin](/plugins/ai-a2a-proxy/), such as agent tool use and agent MCP calls.
+You must [configure the AI A2A Proxy plugin](/how-to/proxy-a2a-agents/) before analytics display in {{site.konnect_short_name}} Explorer.
+
+With agentic usage reporting, you can:
+* See how many times a tool was called
+* View the most called tools
+* See which tools are returning errors
+* View the latency for tools
+
+
+The following table shows the agentic usage-specific metrics you can view:
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "A2A latency"
+    category: "Latency"
+    description: |
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the agent's response. Users can select average (avg).
+  - metric: "MCP Response Size"
+    category: "Size"
+    description: |
+      The size of the response payload returned to {{site.base_gateway}} from the MCP server, in bytes. Users can select the total sum.
+  - metric: "A2A Response Size"
+    category: "Size"
+    description: |
+      The size of the response payload returned to {{site.base_gateway}} from an agent, in bytes. Users can select the total sum.
 {% endtable %}
 <!--vale on-->
 {% endnavtab %}

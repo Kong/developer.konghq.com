@@ -43,13 +43,15 @@ related_resources:
     url: https://a2a-protocol.org/latest/
   - text: Set up Jaeger with Gen AI OpenTelemetry
     url: /how-to/set-up-jaeger-with-gen-ai-otel/
+  - text: Agentic usage analytics in {{site.konnect_short_name}}
+    url: /observability/explorer/?tab=agentic-usage#metrics
 
 prereqs:
   entities:
     services:
-      - a2a-currency-agent
+      - a2a-kongair-agent
     routes:
-      - a2a-route
+      - a2a-kongair-route
   gateway:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
@@ -86,7 +88,7 @@ prereqs:
       ```
     icon: assets/icons/opentelemetry.svg
   - title: A2A agent
-    include_content: prereqs/a2a-agent
+    include_content: prereqs/a2a-kongair-agent
     icon_url: /assets/icons/ai.svg
 
 cleanup:
@@ -161,7 +163,7 @@ method: GET
 You should see the following response:
 
 ```json
-{"capabilities":{"pushNotifications":true,"streaming":true},"defaultInputModes":["text","text/plain"],"defaultOutputModes":["text","text/plain"],"description":"Helps with exchange rates for currencies","name":"Currency Agent","preferredTransport":"JSONRPC","protocolVersion":"0.3.0","skills":[{"description":"Helps with exchange values between various currencies","examples":["What is exchange rate between USD and GBP?"],"id":"convert_currency","name":"Currency Exchange Rates Tool","tags":["currency conversion","currency exchange"]}],"url":"http://0.0.0.0:10000/","version":"1.0.0"}%
+{"capabilities":{"pushNotifications":false,"streaming":false},"defaultInputModes":["text","text/plain"],"defaultOutputModes":["text","text/plain"],"description":"An A2A-compatible agent powered by LangGraph and OpenAI that queries KongAir APIs for flights, routes, bookings, and loyalty info.","name":"KongAir OpenAI Agent","preferredTransport":"JSONRPC","protocolVersion":"0.3.0","skills":[{"description":"Find KongAir routes between airports.","examples":["Show me routes from SFO to JFK","Find flights from LHR to SFO"],"id":"search_routes","name":"Search KongAir routes","tags":["kongair","flights","travel","routes"]},{"description":"Get available flights for a specific route.","examples":["What flights are available on route KA-123?"],"id":"get_flights","name":"Get flights","tags":["kongair","flights"]},{"description":"Look up a booking by ID.","examples":["Check booking BK-456"],"id":"check_booking","name":"Check booking","tags":["kongair","bookings"]},{"description":"Get loyalty program information for a customer.","examples":["What's my loyalty status for customer C-789?"],"id":"loyalty_info","name":"Loyalty program info","tags":["kongair","loyalty","rewards"]}],"url":"http://a2a-agent:10000/","version":"1.0.0"}
 ```
 {:.no-copy-code}
 
@@ -176,7 +178,7 @@ entities:
       config:
         traces_endpoint: http://${otel-host}:4319/v1/traces
         metrics:
-          endpoint: http://${otel.host}:4319/v1/metrics
+          endpoint: http://${otel-host}:4319/v1/metrics
           enable_ai_metrics: true
         resource_attributes:
           service.name: kong-a2a
@@ -209,7 +211,7 @@ body:
       role: user
       parts:
         - kind: text
-          text: "How much is 100 USD in EUR?"
+          text: "What flights are available on route KA-123?"
 {% endvalidation %}
 <!-- vale on -->
 
@@ -221,24 +223,24 @@ You should see data in your OpenTelemetry Collector terminal. You can also searc
 
 ```
 ResourceSpans #0
-Resource SchemaURL: 
+Resource SchemaURL:
 Resource attributes:
      -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
      -> service.name: Str(kong-a2a)
      -> service.version: Str(3.14.0.0)
 ScopeSpans #0
-ScopeSpans SchemaURL: 
+ScopeSpans SchemaURL:
 InstrumentationScope kong-internal 0.1.0
 Span #0
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
-    Parent ID      : 
+    Parent ID      :
     ID             : 779db508077de69f
     Name           : kong
     Kind           : Server
     Start time     : 2026-04-03 06:48:41.446000128 +0000 UTC
     End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Attributes:
      -> http.flavor: Str(1.1)
      -> http.route: Str(/a2a)
@@ -259,7 +261,7 @@ Span #1
     Start time     : 2026-04-03 06:48:41.446752256 +0000 UTC
     End time       : 2026-04-03 06:48:41.44679424 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Span #2
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -269,7 +271,7 @@ Span #2
     Start time     : 2026-04-03 06:48:41.446919936 +0000 UTC
     End time       : 2026-04-03 06:48:41.447105024 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Span #3
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : de4e6ed2c16a2dd3
@@ -279,7 +281,7 @@ Span #3
     Start time     : 2026-04-03 06:48:41.44707456 +0000 UTC
     End time       : 2026-04-03 06:48:47.140356608 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Attributes:
      -> kong.a2a.protocol.version: Str(unknown)
      -> rpc.system: Str(jsonrpc)
@@ -297,7 +299,7 @@ Span #4
     Start time     : 2026-04-03 06:48:41.447129088 +0000 UTC
     End time       : 2026-04-03 06:48:41.447464448 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Span #5
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -307,11 +309,11 @@ Span #5
     Start time     : 2026-04-03 06:48:41.44754304 +0000 UTC
     End time       : 2026-04-03 06:48:41.447862272 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Attributes:
      -> dns.record.port: Double(10000)
      -> dns.record.ip: Str(172.18.0.2)
-     -> dns.record.domain: Str(a2a-currency-agent)
+     -> dns.record.domain: Str(a2a-kongair-agent)
 Span #6
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -321,7 +323,7 @@ Span #6
     Start time     : 2026-04-03 06:48:47.139697664 +0000 UTC
     End time       : 2026-04-03 06:48:47.139731712 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Span #7
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -331,7 +333,7 @@ Span #7
     Start time     : 2026-04-03 06:48:47.139753728 +0000 UTC
     End time       : 2026-04-03 06:48:47.1397632 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Span #8
     Trace ID       : 1bfc19e17dd9121769882cd9b8bf5de1
     Parent ID      : 779db508077de69f
@@ -341,13 +343,13 @@ Span #8
     Start time     : 2026-04-03 06:48:41.447897088 +0000 UTC
     End time       : 2026-04-03 06:48:47.139977728 +0000 UTC
     Status code    : Unset
-    Status message : 
+    Status message :
 Attributes:
      -> net.peer.ip: Str(172.18.0.2)
      -> net.peer.port: Double(10000)
-     -> net.peer.name: Str(a2a-currency-agent)
+     -> net.peer.name: Str(a2a-kongair-agent)
      -> try_count: Double(1)
-     -> peer.service: Str(a2a-currency-agent)
+     -> peer.service: Str(a2a-kongair-agent)
 ```
 {:.collapsible}
 
@@ -357,13 +359,13 @@ You should also see metrics data in the OpenTelemetry Collector output. Search f
 
 ```
 ResourceMetrics #0
-Resource SchemaURL: 
+Resource SchemaURL:
 Resource attributes:
      -> service.instance.id: Str(9c214152-1621-456a-8b42-6f1309dac551)
      -> service.name: Str(kong-a2a)
      -> service.version: Str(3.14.0.0)
 ScopeMetrics #0
-ScopeMetrics SchemaURL: 
+ScopeMetrics SchemaURL:
 InstrumentationScope kong-internal 0.1.0
 Metric #0
 Descriptor:
@@ -374,8 +376,8 @@ Descriptor:
      -> AggregationTemporality: Cumulative
 HistogramDataPoints #0
 Data point attributes:
-     -> kong.service.name: Str(a2a-currency-agent)
-     -> kong.route.name: Str(a2a-route)
+     -> kong.service.name: Str(a2a-kongair-agent)
+     -> kong.route.name: Str(a2a-kongair-route)
      -> kong.gen_ai.a2a.method: Str(message/send)
      -> kong.workspace.name: Str(default)
      -> kong.gen_ai.a2a.binding: Str(jsonrpc)
@@ -394,8 +396,8 @@ Descriptor:
      -> AggregationTemporality: Cumulative
 HistogramDataPoints #0
 Data point attributes:
-     -> kong.service.name: Str(a2a-currency-agent)
-     -> kong.route.name: Str(a2a-route)
+     -> kong.service.name: Str(a2a-kongair-agent)
+     -> kong.route.name: Str(a2a-kongair-route)
      -> kong.gen_ai.a2a.method: Str(message/send)
      -> kong.workspace.name: Str(default)
      -> kong.gen_ai.a2a.binding: Str(jsonrpc)
@@ -415,8 +417,8 @@ Descriptor:
      -> AggregationTemporality: Cumulative
 NumberDataPoints #0
 Data point attributes:
-     -> kong.service.name: Str(a2a-currency-agent)
-     -> kong.route.name: Str(a2a-route)
+     -> kong.service.name: Str(a2a-kongair-agent)
+     -> kong.route.name: Str(a2a-kongair-route)
      -> kong.gen_ai.a2a.method: Str(message/send)
      -> kong.workspace.name: Str(default)
      -> kong.gen_ai.a2a.binding: Str(jsonrpc)
@@ -434,8 +436,8 @@ Descriptor:
 NumberDataPoints #0
 Data point attributes:
      -> kong.workspace.name: Str(default)
-     -> kong.service.name: Str(a2a-currency-agent)
-     -> kong.route.name: Str(a2a-route)
+     -> kong.service.name: Str(a2a-kongair-agent)
+     -> kong.route.name: Str(a2a-kongair-route)
      -> kong.gen_ai.a2a.task.state: Str(completed)
 StartTimestamp: 2026-04-03 06:40:44.824023552 +0000 UTC
 Timestamp: 2026-04-03 06:48:47.141275648 +0000 UTC

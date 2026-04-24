@@ -810,6 +810,44 @@ Displays a feature table that shows if features are supported or unsupported.
 ```
 <!--vale on-->
 
+### Use case table
+
+If you want a landing page table that shows use cases mapped to multiple outcomes and examples, use the `use_case_table` block. 
+
+See the [Event Gateway landing page](/event-gateway/#use-cases-for-kong-event-gateway) for a rendered example.
+
+<!--vale off-->
+```yaml
+- blocks:
+    - type: use_case_table
+      config:
+        usecase_title: Use case # title of the use case column and the top-level list item in the LLM markdown
+        columns: # titles of the other columns, which are also nested list items under the related use case in LLM markdown
+          - title: Outcome 
+            key: outcome
+          - title: Feature
+            key: feature
+          - title: How-to guide or example
+            key: guide
+        rows:
+          - usecase: | # This will render as a table entry on the prod site, and as a heading in LLM markdown
+              **Govern Kafka** to enforce security and guidelines in an automated fashion 
+            outcomes: # These will render as table cells related to the use case, and as list items under the use case in LLM markdown
+              - outcome: |
+                  Centrally manage and instantly update access control policies without touching individual brokers
+                feature: |
+                  [ACL policy](/event-gateway/policies/acl/)
+                guide: |
+                  [Get started with {{site.event_gateway_short}} and ACLs](/event-gateway/get-started/)
+              - outcome: |
+                  Replace legacy auth methods with modern enterprise identity standards your team already uses
+                feature: |
+                  [OAuth](/kong-identity/)
+                guide: |
+                  [Set up {{site.event_gateway_short}} with Kong Identity OAuth](/event-gateway/kong-identity-oauth/)
+```
+<!--vale on-->
+
 ### Table
 
 Displays a regular table that contains text.

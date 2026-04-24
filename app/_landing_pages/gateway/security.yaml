@@ -202,17 +202,12 @@ rows:
               text: See plugins 
               url: "/plugins/?category=analytics-monitoring%2Clogging"
 
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Vulnerability management"
-            blocks:
-              - type: text
-                text: |
-                  If you suspect that you've found a security vulnerability or bug, you can report it to Kong.
-  - columns:
+  - header:
+      text: "Vulnerability management"
+      type: h2
+      description: |
+        If you suspect that you've found a security vulnerability or bug, you can report it to Kong.
+    columns:
       - blocks:
         - type: card
           config:

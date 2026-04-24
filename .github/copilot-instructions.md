@@ -33,3 +33,5 @@ This includes, but is not limited to:
 - Files in the `app/_schemas/gateway/plugins` directory
 - Files in the `app/_includes/deck/help` directory
 - Files in the `app/_includes/kongctl/help` directory
+- Files in the `app/_api` directory
+- Files in the `api-specs` directory

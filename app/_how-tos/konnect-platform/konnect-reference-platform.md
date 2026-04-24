@@ -61,7 +61,7 @@ prereqs:
         on your development machine to run the web app.
     - title: Operating system compatibility
       content: |
-        These instructions are specific to *nix style operating systems. For MS Windows, the user will need to 
+        These instructions are specific to *nix style operating systems. For MS Windows, you will need to 
         make adjustments to commands and instructions.
 
 automated_tests: false
@@ -83,7 +83,7 @@ Create (if necessary) a new {{site.konnect_short_name}} Organization and [sign i
 ## Authorize the {{site.konnect_short_name}} Orchestrator to {{site.konnect_short_name}}
 
 The {{site.konnect_short_name}} Orchestrator (aka "orchestrator" or `koctl`) provides commands you can use to 
-setup the reference platform in your own engineering environment. `koctl` is also ran within the [APIOps workflows](/konnect-reference-platform/apiops)
+setup the reference platform in your own engineering environment. `koctl` also runs within the [APIOps workflows](/konnect-reference-platform/apiops)
 and creates and manages resource configurations within your {{site.konnect_short_name}} Organization via APIs. 
 In order to authorize the tool, use the following steps to create a system account with 
 [Organization Admin](/konnect-platform/teams-and-roles/#predefined-teams) permissions:
@@ -114,7 +114,7 @@ The orchestrator requires specific access to the `platform` repository in order 
 In order to authorize the orchestrator, you need to create a GitHub access token with the proper permissions.
 
 1. From the GitHub web console, navigate to your profile menu, then _Settings -> Developer Settings -> Personal access tokens_
-1. Create a new _Fine-grained token_ and give the token a name that indicates it's relationship to the orchestrator (e.g. `platform-konnect-orchestrator`)
+1. Create a new _Fine-grained token_ and give the token a name that indicates its relationship to the orchestrator (e.g. `platform-konnect-orchestrator`)
 1. Select the GitHub organization that owns the `platform` repository you created in the previous step and set appropriate token expiration
 1. Under _Repository access_, choose _Only select repositories_ and choose the `platform` repository.
 1. Under _Repository permissions_, select all of the following permissions:
@@ -188,7 +188,7 @@ including a link directly to the PR. The PR will have the following title: `[Kon
 
 Open the PR in the GitHub web console and review the changes. Once satisfied with the changes, merge the PR into the `main` branch of the repository.
 
-You have now added your {{site.konnect_short_name}} to the `platform` repository and the APIOps workflows will initiate
+You have now added your {{site.konnect_short_name}} Organization to the `platform` repository and the APIOps workflows will initiate
 the necessary steps to prepare your {{site.konnect_short_name}} Organization for use with the reference platform.
 
 ## Create a {{site.konnect_short_name}} Orchestrator GitHub OAuth application 

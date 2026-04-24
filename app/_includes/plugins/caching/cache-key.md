@@ -1,6 +1,8 @@
 {{site.base_gateway}} keys each cache element based on:
 * The request method
-* The full client request (for example, the request path and query parameters)
+* The request query parameters
+* The request headers
+* Consumer groups
 * The UUID of either the API or Consumer associated with the request
 
 Caches are distinct between APIs and Consumers. 

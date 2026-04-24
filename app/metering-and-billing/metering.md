@@ -94,6 +94,62 @@ rows:
 {% endtable %}
 <!--vale on -->
 
+## Parsing with JSONPath
+
+CloudEvents data payloads use JSON, and {{site.metering_and_billing}} uses JSONPath to extract values for metering and grouping.
+
+### Value property parsing
+
+Value properties are converted to numbers. Strings containing numerals are parsed accordingly:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: JSON input
+    key: input
+  - title: Parsed result
+    key: result
+rows:
+  - input: '`"123"`'
+    result: "`123`"
+  - input: '`"123.45"`'
+    result: "`123.45`"
+  - input: "`123`"
+    result: "`123`"
+{% endtable %}
+<!--vale on-->
+
+For example, with `"valueProperty": "$.total_tokens"`, a value of `"123"` in the event payload is parsed as `123`.
+
+### Group by property parsing
+
+Group by properties are converted to strings. Complex structures like arrays and objects become empty strings:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: JSON input
+    key: input
+  - title: Parsed result
+    key: result
+rows:
+  - input: '`"a"`'
+    result: '`"a"`'
+  - input: "`123`"
+    result: '`"123"`'
+  - input: "`true`"
+    result: '`"true"`'
+  - input: "`null`"
+    result: '`"null"`'
+  - input: "`[1,2,3]`"
+    result: '`""`'
+  - input: '`{"b":"c"}`'
+    result: '`""`'
+{% endtable %}
+<!--vale on-->
+
+For example, with `"groupBy": { "model": "$.model" }`, a model value of `"gpt-4"` in the event payload is extracted as `"gpt-4"`.
+
 ## Event ingestion
 
 {{site.metering_and_billing}} ingests {{site.konnect_short_name}} API Gateway and LLM events automatically when they're enabled. If you want to configure generic meters, you must use the [CloudEvents](https://cloudevents.io/) format for event ingestion. For more information, see [Events](/metering-and-billing/events/).

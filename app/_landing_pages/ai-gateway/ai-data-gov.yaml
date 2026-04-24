@@ -1,0 +1,168 @@
+metadata:
+  title: "{{site.ai_gateway}} Data Governance"
+  content_type: landing_page
+  description: This page provides an overview of {{site.ai_gateway}} safety, security and compliance features.
+  products:
+    - ai-gateway
+  works_on:
+    - on-prem
+    - konnect
+  breadcrumbs:
+    - /ai-gateway/
+  tags:
+    - ai
+    - security
+    - safety
+rows:
+  - header:
+      type: h1
+      text: "{{site.ai_gateway}} Data Governance"
+
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The [{{site.ai_gateway}}](/ai-gateway/) provides a range of capabilities for inspecting and governing how models are used. This allows you to:
+
+                - type: unordered_list
+                  items:
+                    - Track model usage and API performance over time.
+                    - Apply safety and DLP policies to prevent toxic content and remove personally identifiable information. This can be an important part of best practices and compliance fulfillment.
+                    - Improve the accuracy and relevance of model responses.
+  - header:
+      type: h2
+      text: "Observability"
+      description: "You can gather logs and metrics then analyze these using {{site.konnect_short_name}} or any OpenTelemetry tool."
+    column_count: 2
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: '{{site.konnect_short_name}} {{site.observability}}'
+            description: Visualize LLM metrics in {{site.konnect_short_name}}.
+            icon: /assets/icons/analytics.svg
+            cta:
+              url: /observability/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: LLM metrics
+            description: Expose and visualize LLM metrics.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Audit log
+            description: Learn about {{site.ai_gateway}} logging capabilities.
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Gen AI OTLP span attributes
+            description: Per-request OpenTelemetry span attributes for AI traffic.
+            icon: /assets/icons/opentelemetry.svg
+            cta:
+              url: /ai-gateway/llm-open-telemetry/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Gen AI OTLP metrics
+            description: Aggregated OpenTelemetry metrics for AI, MCP, and A2A traffic.
+            icon: /assets/icons/opentelemetry.svg
+            cta:
+              url: /ai-gateway/ai-otel-metrics/
+              align: end
+  - header:
+      type: h2
+      text: "User Safety"
+      description: "{{site.ai_gateway}} supports content safety features across providers and also includes our Prompt Guards that act on any `llm/v1/chat` or `llm/v1/completions` requests."
+    column_count: 2
+    columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-prompt-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-azure-content-safety
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-aws-guardrails
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-gcp-model-armor
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-semantic-prompt-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-semantic-response-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-lakera-guard
+            icon: ai-lakera.png
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-custom-guardrail
+            icon: ai-custom-guardrail.png
+      - blocks:
+        - type: card
+          config:
+            title: Amazon Bedrock guardrails
+            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            icon: /assets/icons/bedrock.svg
+            cta:
+              url: /plugins/ai-proxy/#supported-native-llm-formats
+              align: end
+  - header:
+      type: h2
+      text: "Data Loss Prevention"
+      description: "You can use {{site.ai_gateway}} features to protect personally identifiable information and prevent data loss."
+    column_count: 1
+    columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-sanitizer
+            icon: ai-sanitizer.png
+ 
+  - header:
+      type: h2
+      text: "RAG Security"
+      description: "You can secure RAG pipelines by applying robust access controls."
+    column_count: 1
+    columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-rag-injector
+
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+        - type: reference_list
+          config:
+            pages:
+              - /how-to/use-ai-rag-injector-acls/
+              - /observability/debugger/
+              - /how-to/?tags=ai

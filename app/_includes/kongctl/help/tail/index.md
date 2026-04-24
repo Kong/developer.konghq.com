@@ -5,11 +5,11 @@ Usage:
 
 Examples:
   # Konnect-first shorthand
-  kongctl tail --public-url https://example.ngrok.app
+  kongctl tail --public-url https://example.ngrok.app --authorization "Bearer <token>"
   # Resource form
-  kongctl tail audit-logs --public-url https://example.ngrok.app
+  kongctl tail audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
   # Explicit product form
-  kongctl tail konnect audit-logs --public-url https://example.ngrok.app
+  kongctl tail konnect audit-logs --public-url https://example.ngrok.app --authorization "Bearer <token>"
 
 Available Commands:
   audit-logs  Create Konnect audit-log destination and listen for events locally
@@ -17,13 +17,13 @@ Available Commands:
 
 
 Flags:
-      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this same value when provided.
+      --authorization string    Value for the Authorization header Konnect includes when sending audit logs. The local listener validates this value on every incoming request.
       --base-url string         Base URL for Konnect API requests.
                                 - Config path: [ konnect.base-url ]
                                 - Default   : [ https://us.api.konghq.com ]
       --color-theme string      Configures the CLI UI/theme (prompt, tables, TUI elements).
                                 - Config path: [ color-theme ]
-                                - Examples   : [ 3024_day, 3024_night, adventure, adventure_time, afterglow ]
+                                - Examples   : [ 3024_day, 3024_night, aardvark_blue, abernathy, adventure ]
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]

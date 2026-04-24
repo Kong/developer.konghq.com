@@ -21,19 +21,12 @@ rows:
       text: "{{site.base_gateway}} WAF capabilities"
       sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}}"
 
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "WAF plugins"
-              blocks:
-                - type: text
-                  text: |
-                    {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
-
-
-  - column_count: 3
+  - header:
+      type: h2
+      text: "WAF plugins"
+      description: |
+        {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -71,8 +64,6 @@ rows:
                 - text: Configure Javascript injection protection
                   url: /plugins/injection-protection/examples/javascript/
 
-  - column_count: 3
-    columns:
       - blocks:
           - type: card
             config:
@@ -108,8 +99,7 @@ rows:
                   url: /plugins/xml-threat-protection/
                 - text: Configure JSON Threat Protection
                   url: /plugins/json-threat-protection/  
-  - column_count: 3
-    columns:
+
       - blocks:
           - type: card
             config:

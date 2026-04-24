@@ -34,8 +34,8 @@ rows:
                 - type: text
                   text: |
                     {{site.base_gateway}} can expose metrics using either of the following:
-                    * [**Admin API**](https://developer.konghq.com/api/gateway/admin-ee/): Available at the `/metrics` endpoint and is enabled by default for {{site.base_gateway}} on-prem. 
-                    * [**Status API**](https://developer.konghq.com/api/gateway/status/v1/#/paths/metrics/get): Available at the `/metrics` endpoint and is disabled by default. 
+                    * [**Admin API**](/api/gateway/admin-ee/): Available at the `/metrics` endpoint and is enabled by default for {{site.base_gateway}} on-prem. 
+                    * [**Status API**](/api/gateway/status/v1/#/paths/metrics/get): Available at the `/metrics` endpoint and is disabled by default. 
                       You must enable [`status_listen`](/gateway/configuration/#status-listen) to use the Status API. 
                       If you're using {{site.konnect_short_name}}, you must use the Status API.
                     
@@ -48,20 +48,30 @@ rows:
   - header:
       type: h2
       text: "How do I monitor {{site.base_gateway}} metrics?"
+      description: |
+        API gateways isolate your applications from the outside world and provide critical path
+        protection for your upstream services. Understanding the state of your API gateway system is critical to providing reliable API-based systems.
+
+        There are many monitoring and alerting systems available, and {{site.base_gateway}} integrates with 
+        multiple solutions:
+    column_count: 4
     columns:
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    API gateways isolate your applications from the outside world and provide critical path
-                    protection for your upstream services. Understanding the state of your API gateway
-                    system is critical to providing reliable API-based systems.
+        - type: card
+          config:
+            title: OpenTelemetry
+            featured: true
+            description: |
+              The OpenTelemetry plugin provides metrics, traces, and logs in the OpenTelemetry format and can be used with any OpenTelemetry compatible backend.
+            icon: /assets/icons/opentelemetry.svg
+            ctas:
+              - text: OpenTelemetry plugin
+                url: "/plugins/opentelemetry/"
+              - text: OpenTelemetry metrics reference
+                url: "/gateway/otel-metrics/"
+              - text: "OpenTelemetry tutorials"
+                url: /how-to/?products=gateway&kong_plugins=opentelemetry
 
-                    There are many monitoring and alerting systems available, and {{site.base_gateway}} integrates with 
-                    multiple solutions:
-  - columns:
       - blocks:
         - type: card
           config:
@@ -153,7 +163,7 @@ rows:
   - header:
       type: h2
       text: "Related resources"
-  - column_count: 3
+    column_count: 3
     columns:
       - blocks:
         - type: card

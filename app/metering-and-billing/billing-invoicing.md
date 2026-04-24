@@ -1,7 +1,7 @@
 ---
-title: "Billing, invoicing, and subscriptions"
+title: "Billing and invoicing"
 content_type: reference
-description: "Learn how billing, invoicing, and subscriptions work in {{site.konnect_short_name}} {{site.metering_and_billing}}."
+description: "Learn how billing and invoicing work in {{site.konnect_short_name}} {{site.metering_and_billing}}."
 layout: reference
 products:
   - metering-and-billing
@@ -14,6 +14,8 @@ breadcrumbs:
 related_resources:
   - text: "{{site.konnect_short_name}} {{site.metering_and_billing}}"
     url: /metering-and-billing/
+  - text: Subscriptions
+    url: /metering-and-billing/subscriptions/
   - text: Integrate Stripe with {{site.metering_and_billing}}
     url: /metering-and-billing/stripe-integration/
 faqs:
@@ -201,40 +203,83 @@ Given an invoice is always single currency, if the customer was migrated between
 {:.warning}
 > **Important:** For systematic changes that need to persist across billing cycles, we recommend modifying the subscription directly rather than editing gathering invoices. This ensures consistent billing behavior aligned with the intended subscription terms.
 
+Gathering invoices are useful for the following use cases:
+
+{% table %}
+columns:
+  - title: Use case
+    key: case
+  - title: Description
+    key: description
+rows:
+  - case: Checking upcoming charges
+    description: Gathering invoices contain the real-time status of existing charges. Use them to monitor current amounts and lines to be billed before the final invoice is issued.
+  - case: Proactive corrections
+    description: |
+      Modifications to gathering invoices are reflected in the next generated invoice, enabling proactive adjustments to pricing and discounts for upcoming line items.
+      <br><br>
+      These modifications do not alter the underlying subscription. The subscription continues to generate future line items according to its original configuration.
+{% endtable %}
+
+### Invoice structure
+
+When {{site.metering_and_billing}} converts a gathering invoice into a draft invoice, it clones the following data to preserve the billing state at the time of creation:
+
+* The effective billing profile
+* Customer information and metadata
+* Usage-based pricing quantities
+
+Because this data is cloned at creation time, changes to customer information or billing workflow configurations after an invoice is created don't automatically update existing invoices. To reflect such changes on a draft invoice, edit it directly before it advances.
+
+#### Invoice totals
+
+Each invoice includes a currency and the following monetary totals, all rounded to the currency's precision:
+
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Contents
+    key: contents
+rows:
+  - name: "Flat fee"
+    contents: The flat fee charged
+  - name: "Minimum spend"
+    contents: The minimum spend amount defined in the subscription
+  - name: "Usage in period"
+    contents: The amount charged for usage-based pricing
+  - name: "Discount percentage"
+    contents: The amount of discounts applied
+  - name: "Taxes inclusive"
+    contents: The total amount of taxes included in the subtotal
+  - name: "Taxes exclusive"
+    contents: The total amount of taxes on top of the subtotal
+  - name: "Taxes"
+    contents: The sum of inclusive and exclusive taxes
+  - name: "Subtotal"
+    contents: The total amount of a line before discounts and taxes
+  - name: "Total"
+    contents: The total amount after taxes and discounts charged to the customer
+{% endtable %}
+
+#### Invoice lines
+
+An invoice contains zero or more lines. {{site.metering_and_billing}} supports empty invoices to signify that there are no outstanding liabilities for the customer.
+
+The invoice can include two kinds of lines:
+
+* Flat fee: A one-time or recurring fixed charge representing a single line item.
+* Usage-based line: Represents charges calculated from actual usage measured by meters. Each usage-based line is linked to:
+  * A meter (defined by the feature reference) that tracks usage data
+  * A Rate Card that defines the unit price, tiered pricing rules, volume discounts, and any minimum or maximum charge constraints
+
 ## Discounts and commitments
 
 {% include_cached /konnect/metering-and-billing/discounts.md %}
 
 ## Subscriptions
 
-Billing and subscriptions in {{site.metering_and_billing}} create relationships between customers and their pricing model. This serves as the bridge between your customers, their usage data, and how that usage translates into billable amounts.
+Billing and subscriptions in {{site.metering_and_billing}} create relationships between customers and their [pricing model](/metering-and-billing/pricing-models/). This serves as the bridge between your customers, their usage data, and how that usage translates into billable amounts.
 
-Subscriptions automate the billing lifecycle by:
-
-* **Tracking usage** through meters
-* **Applying pricing logic** from plans or custom configurations
-* **Generating invoices** based on billing cadences
-* **Enforcing entitlements** to control feature access
-
-Subscriptions can be created from predefined plans or fully customized at creation time to accommodate unique customer requirements. This flexibility supports everything from self-serve sign-ups to enterprise contract negotiations.
-
-To add a subscription to a customer, navigate to **{{site.metering_and_billing}}** > **Billing**, click your customer, and then click the **Subscriptions** tab in the {{site.konnect_short_name}} UI.
-
-## Plan migration
-
-Plans in {{site.metering_and_billing}} are versioned. When you update a plan, existing subscriptions remain on their current version. This is known as "grandfathering". Customers keep their existing pricing until they're explicitly migrated.
-
-Migrating a subscription to a new plan version allows you to:
-
-* Apply new pricing to existing customers
-* Transition customers to improved plan structures
-* Deprecate old plan versions
-* Standardize customers on current offerings
-
-Migrations follow the same timing rules as other subscription changes:
-
-* **Immediate**: Migration takes effect right away
-* **Next billing cycle**: Migration occurs at the end of the current period
-
-Choose timing based on whether the migration is favorable (immediate) or potentially disruptive (next cycle) to the customer.
+For information on subscriptions, including how to change plans, customize, cancel, and migrate subscriptions, see [Subscriptions](/metering-and-billing/subscriptions/).
 
