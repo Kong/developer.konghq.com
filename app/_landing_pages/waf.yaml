@@ -132,6 +132,33 @@ rows:
                   url: /plugins/response-transformer/examples/add-header/
   - header:
       type: h2
+      text: "WAF for Dedicated Cloud Gateways"
+      description: |
+        {% include /sections/dcgw-waf-intro.md %}
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Public network WAF
+              description: |
+                Learn how to secure your public Dedicated Cloud Gateway with WAF.
+              icon: /assets/icons/world.svg
+              ctas:
+                - text: Configure public network WAF
+                  url: /dedicated-cloud-gateways/public-network/
+      - blocks:
+          - type: card
+            config:
+              title: Private network WAF
+              description: |
+                Learn how to secure your private Dedicated Cloud Gateway with WAF.
+              icon: /assets/icons/lock.svg
+              ctas:
+                - text: Configure private network WAF
+                  url: /dedicated-cloud-gateways/private-network/
+  - header:
+      type: h2
       text: "Other security-related resources"
     columns:
       - blocks:
