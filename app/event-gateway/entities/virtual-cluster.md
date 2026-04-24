@@ -155,7 +155,8 @@ rows:
       Set `authentication.algorithm` to `sha512`.
     credential: |
       `passthrough`
-  - auth: "mTLS (`client_certificate`) {% new_in 1.1 %}"
+  - auth: |
+      mTLS (`client_certificate`) {% new_in 1.1 %}
     description: |
       Requires clients to present a trusted TLS certificate during the TLS handshake.
       The client certificate is verified against a [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/).
