@@ -363,11 +363,11 @@ The merged configuration applied to `frontend`'s outbound toward `backend` is:
 
 ```yaml
 default:
-  connectionTimeout: 10s   # kept from producer — consumer didn't set it
-  idleTimeout: 2m          # kept from producer — consumer didn't set it
+  connectionTimeout: 10s   # kept from producer: consumer didn't set it
+  idleTimeout: 2m          # kept from producer: consumer didn't set it
   http:
     requestTimeout: 5s     # overridden by consumer
-    streamIdleTimeout: 5m  # kept from producer — consumer didn't set it
+    streamIdleTimeout: 5m  # kept from producer: consumer didn't set it
     maxStreamDuration: 1m  # added by consumer
 ```
 
