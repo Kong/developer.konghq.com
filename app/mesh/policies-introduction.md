@@ -99,7 +99,7 @@ Producer policies allow service owners to define recommended client-side behavio
 This lets backend owners publish sensible defaults (timeouts, retries, limits) for consumers,
 while individual clients can still refine those settings with their own [consumer](#consumer-policies) policies.
 
-The following policy tells {{ site.mesh_product_name }} to apply 3 retries with a back off of `15s` to `1m`
+The following policy tells {{ site.mesh_product_name }} to apply 3 retries with a backoff from `15s` to `1m`
 on 5xx errors to any client calling `backend`:
 
 ```yaml
@@ -309,7 +309,7 @@ For `to` policies, the concatenated arrays are sorted again based on the `spec.t
 4. `MeshService`
 5. `Mesh` (lowest priority)
 
-Configuration is then built by merging each level using [JSON patch merge](https://www.rfc-editor.org/rfc/rfc7386).
+Configuration is then built by merging each level using [JSON Merge Patch](https://www.rfc-editor.org/rfc/rfc7386).
 
 For example, a producer `MeshTimeout` in `backend-ns` sets broad timeout defaults for all callers:
 
