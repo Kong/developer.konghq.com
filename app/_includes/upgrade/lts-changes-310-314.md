@@ -239,7 +239,7 @@ rows:
       <br><br>
       This change invalidates all caches previously created by these plugins.
     action: |
-      If you are using a long cache TT for AI Semantic Cache, AI Semantic Prompt Guard, or AI Proxy Advanced, plan for cache warmup after upgrading.
+      If you are using a long cache TTL for AI Semantic Cache, AI Semantic Prompt Guard, or AI Proxy Advanced, plan for cache warmup after upgrading.
   - category: Admin API
     description: |
       Record and map fields with an empty object default value (`{}`) are now correctly JSON-encoded as objects. They were previously incorrectly encoded as arrays.
