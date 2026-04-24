@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8bd8ee44447c70ca66847a463aa3d37bb574d1dd
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8bd8ee44447c70ca66847a463aa3d37bb574d1dd'
+  x-oas-source: kong/platform-api@dd6768fac3d42ec145f8cdc7dd57b9a37ec46c08
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/dd6768fac3d42ec145f8cdc7dd57b9a37ec46c08'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -78,9 +78,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Planes
-  '/control-planes/{controlPlaneId}':
+  '/control-planes/{id}':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: The control plane ID
         required: true
@@ -160,9 +160,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Planes
-  '/control-planes/{controlPlaneId}/group-memberships':
+  '/control-planes/{id}/group-memberships':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: ID of a control plane group
         required: true
@@ -215,9 +215,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Plane Groups
-  '/control-planes/{controlPlaneId}/group-memberships/add':
+  '/control-planes/{id}/group-memberships/add':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: ID of a control plane group
         required: true
@@ -246,9 +246,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Plane Groups
-  '/control-planes/{controlPlaneId}/group-memberships/remove':
+  '/control-planes/{id}/group-memberships/remove':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: ID of a control plane group
         required: true
@@ -277,9 +277,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Plane Groups
-  '/control-planes/{controlPlaneId}/group-member-status':
+  '/control-planes/{id}/group-member-status':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: ID of a control plane
         required: true
@@ -306,9 +306,9 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
       tags:
         - Control Plane Groups
-  '/control-planes/{controlPlaneId}/group-status':
+  '/control-planes/{id}/group-status':
     parameters:
-      - name: controlPlaneId
+      - name: id
         in: path
         description: ID of a control plane group
         required: true

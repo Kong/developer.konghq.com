@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@de6fdfe93a7f93c8321f28259f9b2065d84b51c3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/de6fdfe93a7f93c8321f28259f9b2065d84b51c3'
+  x-oas-source: kong/platform-api@1f49f503deacae7f5c273d918393c1bcb44df6f2
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/1f49f503deacae7f5c273d918393c1bcb44df6f2'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -567,9 +567,7 @@ paths:
     post:
       operationId: regenerate-application-secret
       summary: Regenerate Client Secret
-      description: |-
-        Regenerates the client secret for a Client Credentials application. This operation succeeds only when the application has exactly one client secret credential.
-        If the application has multiple credentials, this endpoint returns a 409 Conflict. In that case, manage secrets by adding or removing credentials as needed.
+      description: Regenerates the client secret for an application.
       parameters:
         - $ref: '#/components/parameters/ApplicationId'
       responses:
@@ -581,8 +579,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflict'
       security:
         - portalAccessToken: []
       tags:
