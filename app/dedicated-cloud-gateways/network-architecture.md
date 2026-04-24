@@ -24,7 +24,7 @@ tags:
   - dedicated-cloud-gateways
 ---
 
-In a Dedicated Cloud Gateway, Kong manages the gateway infrastructure (compute, Dedicated Cloud Gateway network, and data planes) for you in a single-tenant cloud environment dedicated to your organization (AWS, GCP, Azure).
+In a Dedicated Cloud Gateway, Kong manages the Gateway infrastructure (compute, Dedicated Cloud Gateway network, and data planes) for you in a single-tenant cloud environment dedicated to your organization (AWS, GCP, Azure).
 A complete Dedicated Cloud Gateway deployment consists of this Kong-managed network infrastructure and the cloud infrastructure with the upstream services you manage.
 
 The following diagram shows how traffic flows in a Dedicated Cloud Gateway:
@@ -39,16 +39,16 @@ flowchart LR
 The networking decisions you make govern both hops independently.
 
 Before you deploy a Dedicated Cloud Gateway, you must make some choices to determine how to deploy it based on your network and upstream service configuration:
-1. Decide which cloud provider or providers (AWS, Azure, GCP) you want to use based on where your upstream service cloud infrastructure is currently deployed.
+1. Decide which cloud provider or providers you want to use based on where your upstream service cloud infrastructure is currently deployed.
 1. Decide if you want a [public or private Dedicated Cloud Gateway](#public-and-private-network-connectivity) (or both) depending on if your upstream traffic is public or private.
 1. For private Dedicated Cloud Gateways:
    * Decide how {{site.base_gateway}} will connect to your upstream services via private network peering (VPC/VNET), hub-and-spoke networking (Transit gateway, VWAN), or private endpoints (AWS resource endpoints).
-   * Decide how to resolve hostnames, either via private DNS or outbound DNS resolver (when your hostnames live on a separate DNS server).
+   * Decide how to resolve hostnames, either via private DNS or an outbound DNS resolver (when your hostnames live on a separate DNS server).
 1. Decide if you need a [multi-cloud Dedicated Cloud Gateway](#multi-cloud-architecture) for high-availability.
 
 ## Kong-managed gateway infrastructure architecture
 
-The Kong-managed gateway infrastructure consists of data plane nodes that run inside of a Kong-managed network peering (VPC or VNET depending on your provider).
+The Kong-managed Gateway infrastructure consists of data plane nodes that run inside of a Kong-managed network peering (VPC or VNET depending on your provider).
 The Kong-managed data plane nodes automatically scale with your throughput. 
 
 The following diagram shows what the Kong-managed architecture looks like if you chose AWS as your provider:
@@ -67,7 +67,7 @@ flowchart LR
 {% endmermaid %}
 <!--vale on-->
 
-In a Dedicated Cloud Gateway, the Kong-managed infrastructure would communicate with your own cloud infrastructure that contains your databases, APIs, and other resources.
+In a Dedicated Cloud Gateway, the Kong-managed infrastructure communicates with your own cloud infrastructure that contains your databases, APIs, and other resources.
 Your infrastructure can run on virtual machines (VMs), managed container platforms like ECS, Kubernetes managed pods, or a combination of multiple platforms.
 If the services are backed VMs or managed container platforms, Kong mostly expects you to expose them via load balancer. 
 If the services are in Kubernetes managed pods, they can either be exposed via a shared ingress or if only a small set of services need to be exposed, they can be directly exposed by a load balancer service. 
@@ -84,13 +84,13 @@ Different connections distribute across nodes.
 Before you deploy a Dedicated Cloud Gateway, you'll need to determine if you should deploy a public or private gateway, or both.
 Which you deploy depends on how API consumers are reaching your gateway and how you want data planes to reach your backend services:
 
-* Use [public](/dedicated-cloud-gateways/public-network/) if:
-  * You expose services to the internet with custom access control
+* Use [public](/dedicated-cloud-gateways/public-network/) if you:
+  * Expose services to the internet with custom access control
   * Want minimal setup and are securing at the Kong layer
-  * You're proxying your own infrastructure over the public internet
-* Use [private](/dedicated-cloud-gateways/private-network/) if:
-  * Your upstream services are on one or more private network (VPC or VNET)
-  * You don't expose services to the public internet
+  * Proxy your own infrastructure over the public internet
+* Use [private](/dedicated-cloud-gateways/private-network/) if you:
+  * Deploy upstream services on one or more private network (VPC or VNET)
+  * Don't expose services to the public internet
   * Require network isolation or full edge control
   * Operate under regulated security requirements
 

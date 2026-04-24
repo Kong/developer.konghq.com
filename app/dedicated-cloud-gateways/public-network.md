@@ -28,12 +28,12 @@ tags:
 ---
 
 Public Dedicated Cloud Gateways should be used when you are proxying your own infrastructure over public internet. 
-Use a public deployment when:
-- Your upstream services are already internet-facing (for example, SaaS
+Use a public deployment when your:
+- Upstream services are already internet-facing (for example, SaaS
   backends or services shared across business units without private networking)
 - Traffic volume doesn't justify the operational overhead of private network
   peering
-- Your security model relies on application-layer controls rather than
+- Security model relies on application-layer controls rather than
   network-layer isolation
 
 ## Public architecture and connectivity
@@ -135,17 +135,22 @@ We recommend creating and securing your public Dedicated Cloud Gateway in the fo
 4. Configure the IP Restriction plugin globally (allowlisting your CDN's egress IPs) so that even if someone hits the Dedicated Cloud Gateway data plane directly, they get rejected before any Route matching happens.
 5. Configure your Routes and Services pointing to real upstreams.
 
-### WAF
+### Web Application Firewall (WAF)
 
 {% include /sections/dcgw-waf-intro.md %}
 
-Kong strongly recommends configuring a WAF for public Dedicated Cloud Gateways. 
+{:.warning}
+> Kong strongly recommends configuring a WAF for public Dedicated Cloud Gateways. 
 WAF configuration differs for public deployments.
 
-Public Dedicated Cloud Gateways are exposed via a public FQDN.
-WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP-aware layer, like a CDN distribution, an Application Load Balancer, or a cloud edge service.
+A public Fully Qualified Domain Name (FQDN) exposes the Public Dedicated Cloud Gateways.
+WAF inspection requires HTTP visibility, which means the WAF must sit at an HTTP-aware layer, like:
 
-Additionally, because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostname instead of an IP address, you can't chain another public load balancer in front of it (most ALB and cloud load balancer target groups don't support DNS-based targets).
+* A CDN distribution
+* An Application Load Balancer
+* A cloud edge service
+
+Because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostname instead of an IP address, **you can't chain another public load balancer in front of it** (most load balancers' target groups don't support DNS-based targets).
 Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
 
 Examples of CDN or edge services that support this pattern:
@@ -208,7 +213,7 @@ To ensure all traffic passes through CloudFront, configure origin validation bet
           x-origin-verify:
             - your-secret-value
      ```
-   * Use a plugin, like [Pre-Function](/plugins/pre-function/) or [Request Termination](/plugins/request-termination/)
+   * Use a plugin, like [Pre-Function](/plugins/pre-function/) or [Request Termination](/plugins/request-termination/).
 1. Reject requests that don't include the expected header value.
 1. Store the shared header value securely, like in a [Vault](/gateway/entities/vault/), and rotate the shared secret periodically.
 1. If your CDN publishes static egress IP ranges, configure the [IP Restriction](/plugins/ip-restriction/examples/allow/) plugin globally (allowlisting your CDN's egress IPs). 
@@ -247,7 +252,7 @@ This provides a strong identity guarantee even if an IP allowlist is bypassed or
 
 Kong supports two mTLS modes for upstream connections: upstream mTLS and inbound mTLS.
 
-#### Upstream mTLS
+#### Upstream Mutual TLS (mTLS)
 
 Kong presents a client certificate to your upstream service when establishing
 the connection. 
@@ -333,9 +338,13 @@ For APIs where caller identity matters beyond network origin, use the
 [OpenID Connect plugin](/plugins/openid-connect/)
 to validate JWTs or opaque tokens before forwarding requests upstream.
 
-Kong validates the token at the gateway and can forward claims to your upstream
-as headers, so your backend receives a verified identity without needing to
-perform its own token validation.
+Kong does the following:
+
+1. Validates the token at the Gateway.
+2. Forwards claims to your upstream as headers.
+
+Your backend receives a verified identity without needing to perform its own token validation.
+
 
 This is particularly useful when:
 - Upstream services are shared across multiple calling systems

@@ -38,11 +38,11 @@ All inbound traffic must arrive through your own edge infrastructure over a priv
 Your CDN, WAF, or Application Load Balancer terminates public traffic and handles TLS, then forwards requests to the {{site.base_gateway}} data plane using its private IP address. 
 The data plane has no public listener and is unreachable from the internet directly.
 
-Use a private Dedicated Cloud Gateway when:
-- Your upstream services are on one or more private networks (VPC or VNet)
-- You don't expose services to the public internet
-- You require network isolation or full edge control
-- You operate under regulated security requirements
+Use a private Dedicated Cloud Gateway when you:
+- Deploy upstream services on one or more private networks (VPC or VNet)
+- Don't expose services to the public internet
+- Require network isolation or full edge control
+- Operate under regulated security requirements
 
 {:.info}
 > **Note:** The inbound path (your edge to the Dedicated Cloud Gateway) and the upstream path (the Dedicated Cloud Gateway to your backend services) are independent network hops and can use different connectivity methods. 
@@ -249,7 +249,8 @@ There are two DNS options for private Dedicated Cloud Gateways depending on wher
 
 {% include /sections/dcgw-waf-intro.md %}
 
-Kong strongly recommends configuring a WAF for private Dedicated Cloud Gateways.
+{:.warning}
+> Kong strongly recommends configuring a WAF for private Dedicated Cloud Gateways.
 
 ### AWS WAF
 
