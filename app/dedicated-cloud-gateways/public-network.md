@@ -20,6 +20,8 @@ related_resources:
     url: /dedicated-cloud-gateways/private-network/
   - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
     url: /dedicated-cloud-gateways/multi-cloud/
+  - text: "{{site.base_gateway}} WAF capabilities"
+    url: /waf/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -193,6 +195,8 @@ In this model:
 * The Dedicated Cloud Gateway data plane receives traffic from CloudFront and forwards it to the gateway data planes.
 
 The sections in this guide describe how to configure a WAF in AWS, but they can be adapted for Azure and GCP.
+
+For more information about all {{site.base_gateway}} WAF configurations and plugins, see [{{site.base_gateway}} WAF capabilities](/waf/).
 
 ### Configure AWS WAF
 

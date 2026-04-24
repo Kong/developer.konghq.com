@@ -20,6 +20,8 @@ related_resources:
     url: /dedicated-cloud-gateways/public-network/
   - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
     url: /dedicated-cloud-gateways/multi-cloud/
+  - text: "{{site.base_gateway}} WAF capabilities"
+    url: /waf/
 tags:
   - dedicated-cloud-gateways
 ---
@@ -139,6 +141,8 @@ For more information, see [Multi-cloud Dedicated Cloud Gateway network architect
 
 Kong strongly recommends configuring a WAF for public and private Dedicated Cloud Gateways. 
 WAF configuration differs for [public](/dedicated-cloud-gateways/public-network/) and [private](/dedicated-cloud-gateways/private-network/) deployments.
+
+For more information about all {{site.base_gateway}} WAF configurations and plugins, see [{{site.base_gateway}} WAF capabilities](/waf/).
 
 ## Dedicated Cloud Gateway network CIDR range
 

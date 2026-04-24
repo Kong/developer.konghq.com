@@ -24,6 +24,8 @@ related_resources:
     url: /dedicated-cloud-gateways/private-hosted-zones/
   - text: Outbound DNS resolver
     url: /dedicated-cloud-gateways/outbound-dns-resolver/
+  - text: "{{site.base_gateway}} WAF capabilities"
+    url: /waf/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -251,6 +253,8 @@ There are two DNS options for private Dedicated Cloud Gateways depending on wher
 
 {:.warning}
 > Kong strongly recommends configuring a WAF for private Dedicated Cloud Gateways.
+
+For more information about all {{site.base_gateway}} WAF configurations and plugins, see [{{site.base_gateway}} WAF capabilities](/waf/).
 
 ### AWS WAF
 
