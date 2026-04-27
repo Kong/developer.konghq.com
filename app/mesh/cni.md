@@ -42,6 +42,33 @@ The default settings are optimized for OpenShift with Multus. To use {{site.mesh
 > {{site.mesh_product_name}} CNI applies `NetworkAttachmentDefinitions` to applications in any namespace with `kuma.io/sidecar-injection` label.
 > To apply `NetworkAttachmentDefinitions` to applications not in a mesh, add the label `kuma.io/sidecar-injection` with the value `disabled` to the namespace.
 
+## CNI architecture
+
+The CNI DaemonSet `{{site.mesh_product_name_path}}-cni` consists of two components:
+
+* A CNI installer
+* A CNI binary
+
+The components interact as follows:
+
+{% mermaid %}
+flowchart LR
+ subgraph s1["conflist"]
+        n2["existing CNIs"]
+        n3["kuma-cni"]
+  end
+ subgraph s2["application pod"]
+        n4["kuma-sidecar"]
+        n5["app-container"]
+  end
+    A["installer"] -- copy binary and setup conf --> n3
+    n3 -- configure iptables --> n4
+{% endmermaid %}
+
+1. The CNI installer copies the `kuma-cni` binary to the CNI directory on the host. When chained, it also sets up chaining for `kuma-cni` in the CNI conflist file. When chaining is disabled, `kuma-cni` is invoked explicitly as per the Pod manifest.
+2. When a mesh-enabled application Pod is created, Kubernetes invokes the `kuma-cni` binary, which configures the iptables rules required by the `kuma-sidecar` container.
+3. When chained, if the CNI conflist file is unexpectedly changed and `kuma-cni` is excluded, the installer immediately detects it and restarts itself to re-run the chaining installation and restore CNI functionality.
+
 ## Installation
 
 The following sections contain CNI installation instructions for different environments.
@@ -59,9 +86,11 @@ cni.confName=05-cilium.conflist
 {% endcpinstall %}
 
 {:.warning}
-> * You need to set the Cilium config value `cni-exclusive` or the corresponding Helm chart value `cni.exclusive` to `false` in order to use Cilium and {{site.mesh_product_name}} together. This is necessary starting with the release of Cilium v1.14.
-> * For installing {{site.mesh_product_name}} CNI with Cilium on GKE, follow the [Google - GKE](#google---gke) section.
-> * For Cilium versions < 1.14, use `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conf` as this has changed for versions starting from [Cilium 1.14](https://docs.cilium.io/en/v1.14/operations/upgrade/#id2).
+> * You must set the Cilium configuration value `cni-exclusive` or the corresponding Helm chart value `cni.exclusive` to `false` in order to use Cilium and {{site.mesh_product_name}} together. This is necessary starting with the Cilium v1.14.
+> * For Cilium versions older than 1.14, use `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conf` instead of `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conflist`.
+
+{:.info}
+> * To install the {{site.mesh_product_name}} CNI with Cilium on GKE, follow the [Google - GKE](#google---gke) section.
 
 ### Calico
 
@@ -75,8 +104,8 @@ cni.binDir=/opt/cni/bin
 cni.confName=10-calico.conflist
 {% endcpinstall %}
 
-{:.warning}
-> For installing {{site.mesh_product_name}} CNI with Calico on GKE, follow the [Google - GKE](#google---gke) section.
+{:.info}
+> To install the {{site.mesh_product_name}} CNI with Calico on GKE, follow the [Google - GKE](#google---gke) section.
 
 ### K3D with Flannel
 
@@ -144,12 +173,12 @@ controlPlane.envVars.KUMA_RUNTIME_KUBERNETES_INJECTOR_SIDECAR_CONTAINER_IP_FAMIL
 
 ### Google - GKE
 
-To install {{site.mesh_product_name}} CNI on GKE, [enable network-policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) in your cluster first (for existing clusters, this redeploys the nodes).
+To install the {{site.mesh_product_name}} CNI on GKE, [enable network-policy](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policy) in your cluster first (for existing clusters, this redeploys the nodes).
 
-Define the variable `CNI_CONF_NAME` by your CNI, like:
-- `export CNI_CONF_NAME=05-cilium.conflist` for Cilium
-- `export CNI_CONF_NAME=10-calico.conflist` for GKE Dataplane V1
-- `export CNI_CONF_NAME=10-gke-ptp.conflist` for GKE Dataplane V2
+Define the variable `CNI_CONF_NAME` for your CNI, for example:
+* `export CNI_CONF_NAME=05-cilium.conflist` for Cilium
+* `export CNI_CONF_NAME=10-calico.conflist` for GKE Dataplane V1
+* `export CNI_CONF_NAME=10-gke-ptp.conflist` for GKE Dataplane V2
 
 {% cpinstall google-gke %}
 cni.enabled=true
@@ -161,24 +190,30 @@ cni.confName=${CNI_CONF_NAME}
 
 ### OpenShift 3.11
 
-To install {{site.mesh_product_name}} CNI on OpenShift 3.11, configure admission webhooks and grant the CNI service account the required privileges.
+To install the {{site.mesh_product_name}} CNI on OpenShift 3.11, configure admission webhooks and grant the CNI service account the required privileges:
 
 1. [Install OpenShift 3.11](https://docs.redhat.com/en/documentation/openshift_container_platform/3.11/html/getting_started/getting-started-install-openshift) and enable `MutatingAdmissionWebhook` and `ValidatingAdmissionWebhook`.
 
-2. Grant privileged permissions to the kuma-cni service account:
+1. Grant privileged permissions to the kuma-cni service account:
 
-```shell
-oc adm policy add-scc-to-user privileged -z kuma-cni -n kube-system
-```
+   ```sh
+   oc adm policy add-scc-to-user privileged -z kuma-cni -n kube-system
+   ```
 
+1. Install the CNI:
+
+{% capture install %}
 {% cpinstall openshift-3 %}
 cni.enabled=true
 cni.containerSecurityContext.privileged=true
 {% endcpinstall %}
+{% endcapture %}
+
+{{install | indent: 3 }}
 
 ### OpenShift 4
 
-Use the following settings to install {{site.mesh_product_name}} CNI on OpenShift 4.
+Use the following settings to install {{site.mesh_product_name}} CNI on OpenShift 4:
 
 {% cpinstall openshift-4 %}
 cni.enabled=true
@@ -187,7 +222,7 @@ cni.containerSecurityContext.privileged=true
 
 ## CNI taint controller
 
-To prevent a race condition ([see issue](https://github.com/kumahq/kuma/issues/4560)), the taint controller taints new nodes with `NoSchedule` until the CNI DaemonSet is running and ready, then removes the taint to allow pod scheduling.
+To prevent a [race condition](https://github.com/kumahq/kuma/issues/4560), the taint controller taints new nodes with `NoSchedule` until the CNI DaemonSet is running and ready, then removes the taint to allow Pod scheduling.
 
 To disable the taint controller, use the following env variable:
 
@@ -211,34 +246,7 @@ To install Merbridge CNI with eBPF, append the following options to your install
 
 CNI component logs are available via `kubectl logs`.
 
-To enable debug-level logging, set the `CNI_LOG_LEVEL` environment variable to `debug` on the `{{site.mesh_product_name_path}}-cni` DaemonSet. Note that editing the DaemonSet restarts the CNI pods, during which mesh-enabled application pods cannot start or stop. Avoid this in production unless approved.
+To enable debug-level logging, set the `CNI_LOG_LEVEL` environment variable to `debug` on the `{{site.mesh_product_name_path}}-cni` DaemonSet. Note that editing the DaemonSet restarts the CNI Pods, during which mesh-enabled application Pods can't start or stop. Avoid this in production unless approved.
 
 {:.warning}
-> eBPF CNI currently doesn't have support for exposing its logs.
-
-## CNI architecture
-
-The CNI DaemonSet `{{site.mesh_product_name_path}}-cni` consists of two components:
-
-1. a CNI installer
-2. a CNI binary
-
-The components interact as follows:
-
-{% mermaid %}
-flowchart LR
- subgraph s1["conflist"]
-        n2["existing-CNIs"]
-        n3["kuma-cni"]
-  end
- subgraph s2["application pod"]
-        n4["kuma-sidecar"]
-        n5["app-container"]
-  end
-    A["installer"] -- copy binary and setup conf --> n3
-    n3 -- configure iptables --> n4
-{% endmermaid %}
-
-The CNI installer copies the `kuma-cni` binary to the CNI directory on the host. When chained, the installer also sets up chaining for `kuma-cni` in the CNI conflist file. When chaining is disabled, the `kuma-cni` binary is invoked explicitly as per the pod manifest. When correctly installed, Kubernetes invokes the `kuma-cni` binary when a mesh-enabled application pod is created, so that iptables rules required by the `kuma-sidecar` container are properly set up.
-
-When chained, if the CNI conflist file is unexpectedly changed causing `kuma-cni` to be excluded, the installer immediately detects it and restarts itself so the chaining installation re-runs and CNI functionality is automatically restored.
+> The eBPF CNI currently doesn't support exposing its logs.
