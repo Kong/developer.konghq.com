@@ -35,8 +35,7 @@ On Kubernetes, this is handled automatically by the `kuma-init` init container, 
 > The CNI `DaemonSet` itself requires elevated privileges because it
 > writes executables to the host filesystem as `root`.
 
-Install the CNI using either
-[kumactl](/mesh/#install-kong-mesh) or [Helm](https://helm.sh/).
+Install the CNI using either [kumactl](/mesh/#install-kong-mesh) or [Helm](https://helm.sh/).
 The default settings are optimized for OpenShift with Multus. To use {{site.mesh_product_name}} CNI in other environments, set the configuration parameters shown in the relevant section below.
 
 {:.warning}
