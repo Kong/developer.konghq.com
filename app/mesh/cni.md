@@ -90,7 +90,7 @@ cni.confName=05-cilium.conflist
 > * For Cilium versions older than 1.14, use `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conf` instead of `{{site.set_flag_values_prefix}}cni.confName=05-cilium.conflist`.
 
 {:.info}
-> * To install the {{site.mesh_product_name}} CNI with Cilium on GKE, follow the [Google - GKE](#google---gke) section.
+> To install the {{site.mesh_product_name}} CNI with Cilium on GKE, follow the [Google - GKE](#google---gke) section.
 
 ### Calico
 
