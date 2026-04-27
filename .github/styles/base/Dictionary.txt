@@ -141,6 +141,7 @@ cmd
 cncf
 cncf's
 CNAMEs
+CNIs
 Cohere
 cohere
 Cognito
