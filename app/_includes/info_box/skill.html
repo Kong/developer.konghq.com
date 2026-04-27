@@ -1,0 +1,77 @@
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Source</div>
+  {% assign repo_parts = site.repos.skills | split: 'github.com/' %}
+  <div class="flex gap-1.5 items-center">
+    {% include_svg '/assets/icons/github.svg' width="16" height="16" %}
+    <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}">{{ repo_parts[1] }}</a>
+  </div>
+</div>
+
+{% if page.version %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Version</div>
+  <div class="flex gap-1.5">
+    {% include badge.html text=page.version %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.author %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Author</div>
+  <div class="flex gap-1.5">
+    <span>{{ page.author }}</span>
+  </div>
+</div>
+{% endif %}
+
+{% if page.license %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">License</div>
+  <div class="flex gap-1.5">
+    {% if page.license_is_file %}
+      <a href="{{ site.repos.skills }}/blob/main/skills/{{ page.slug }}/{{ page.license }}">{{ page.license }}</a>
+    {% else %}
+      <span>{{ page.license }}</span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.allowed_tools %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Allowed tools</div>
+  <div class="flex gap-1.5 flex-wrap">
+    {% assign tools = page.allowed_tools | split: ' ' %}
+    {% for tool in tools %}
+      <span>{{ tool }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if page.scripts or page.references or page.assets %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Contains</div>
+  <div class="flex flex-col gap-1.5 flex-wrap">
+      {% if page.scripts %}
+        <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}/scripts" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/scripts.svg' width="16" height="16" %}</div>
+          <span>Scripts</span>
+        </a>
+      {% endif %}
+      {% if page.references %}
+        <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}/references" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/references.svg' width="16" height="16" %}</div>
+          <span>References</span>
+        </a>
+      {% endif %}
+      {% if page.assets %}
+        <a href="{{ site.repos.skills }}/tree/main/skills/{{ page.slug }}/assets" class="flex items-center gap-2 hover:no-underline">
+          <div class="flex text-brand shrink-0">{% include_svg '/assets/icons/skills/assets.svg' width="16" height="16" %}</div>
+          <span>Assets</span>
+        </a>
+      {% endif %}
+  </div>
+</div>
+{% endif %}

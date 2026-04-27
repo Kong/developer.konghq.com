@@ -1,5 +1,6 @@
 source: app
 destination: dist
+skills_repo_path: app/.repos/skills
 permalink: pretty
 timezone: America/San_Francisco
 markdown: kramdown
@@ -135,6 +136,7 @@ repos:
   developer: https://github.com/Kong/developer.konghq.com
   developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
+  skills: https://github.com/Kong/skills
 
 plugin_schemas_path: app/_schemas/gateway/plugins
 
@@ -192,3 +194,7 @@ render_banner: false
 llm_copy:
   on_prem_snippet: 'On-prem deployments'
   konnect_snippet: 'Konnect deployments'
+
+
+well-known:
+  skills: .well-known/skills

@@ -116,6 +116,10 @@
       {% vite_javascript_tag hub %}
     {% endif %}
 
+    {% if page.skills_index %}
+      {% vite_javascript_tag skills %}
+    {% endif %}
+
     {% if page.search %}
       {% vite_javascript_tag search %}
     {% endif %}

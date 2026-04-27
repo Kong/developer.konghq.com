@@ -1,0 +1,5 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.925 24l10.425-6-10.425-6L1.5 18l10.425 6z" fill="rgb(var(--color-text-primary))" opacity="0.5"/>
+<path d="M22.35 18V6L11.925 0v12l10.425 6z" fill="rgb(var(--color-text-primary))" opacity="0.7"/>
+<path d="M11.925 0L1.5 6v12l10.425-6V0z" fill="rgb(var(--color-text-primary))"/>
+</svg>

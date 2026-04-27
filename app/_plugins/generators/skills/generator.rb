@@ -1,0 +1,95 @@
+# frozen_string_literal: true
+
+module Jekyll
+  module SkillPages
+    def self.skills_repo_path(site)
+      ENV['SKILLS_REPO'] || site.config['skills_repo_path'] || 'kong-skills'
+    end
+
+    def self.demote_headings(text)
+      text.lines.filter_map do |line|
+        next nil if line.match?(/^# [^#]/)
+
+        line.match?(/^##/) ? "##{line}" : line
+      end.join
+    end
+
+    class Generator
+      def self.run(site)
+        new(site).run
+      end
+
+      attr_reader :site
+
+      def initialize(site)
+        @site = site
+        @skills = []
+        @repo_path = Jekyll::SkillPages.skills_repo_path(site)
+      end
+
+      def run
+        return if site.config.dig('skip', 'skills')
+
+        load_install_tabs(base_dir)
+        return unless Dir.exist?(skills_path)
+
+        Dir.glob(File.join(skills_path, '*/')).each do |folder|
+          skill = Jekyll::SkillPages::Skill.new(folder:, slug: File.basename(folder))
+          skill.metadata # force read to fail fast
+          @skills << skill
+          generate_overview_page(skill)
+        rescue Errno::ENOENT
+          next
+        end
+
+        Jekyll::SkillPages::Discovery.generate(site, @skills)
+      end
+
+      private
+
+      INSTALL_EXCLUDES = %w[README.md].freeze
+
+      def base_dir
+        @base_dir ||= File.expand_path('..', site.source)
+      end
+
+      def skills_path
+        @skills_path ||= File.join(base_dir, @repo_path, 'skills')
+      end
+
+      def load_install_tabs(base_dir)
+        install_path = File.join(base_dir, @repo_path, 'docs', 'install')
+        return unless Dir.exist?(install_path)
+
+        site.data['skill_install_tabs'] = Dir.glob(File.join(install_path, '*.md'))
+                                             .reject { |f| INSTALL_EXCLUDES.include?(File.basename(f)) }
+                                             .map { |f| parse_install_file(f) }
+                                             .sort_by { |tab| tab['title'] }
+      end
+
+      def parse_install_file(file)
+        raw = File.read(file)
+        slug = File.basename(file, '.md')
+
+        title = raw.lines.first&.match(/^#\s+(.+)/)&.captures&.first || slug
+
+        processed = Jekyll::SkillPages.demote_headings(raw)
+
+        repo_url = site.config.dig('repos', 'skills')
+        processed = processed.gsub(%r{\]\(\.\./\.\./(.*?)\)}, "](#{repo_url}/blob/main/\\1)") if repo_url
+
+        { 'title' => title.strip, 'slug' => slug, 'icon' => "/assets/icons/ai-tools/#{slug}.svg",
+          'content' => processed }
+      end
+
+      def generate_overview_page(skill)
+        overview = Jekyll::SkillPages::Pages::Overview
+                   .new(skill:)
+                   .to_jekyll_page
+
+        site.data['skills'][skill.slug] = overview
+        site.pages << overview
+      end
+    end
+  end
+end

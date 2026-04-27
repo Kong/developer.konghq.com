@@ -28,7 +28,8 @@ class CodeHighlighter < Nodo::Core # rubocop:disable Style/Documentation
           "nginx",
           "html",
           "ruby",
-          "ansi"
+          "ansi",
+          "markdown",
         ],
       });
     JS
