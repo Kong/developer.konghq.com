@@ -329,7 +329,7 @@ pages:
     url: '/mesh/policies/meshidentity/'
     related_resources:
       - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
+        url: '/mesh/policies/meshidentity/'
       - text: Issue identity with MeshIdentity Spire provider
         url: '/mesh/meshidentity-spire/'
     tags:
