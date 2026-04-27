@@ -21862,5 +21862,51 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.10": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }
