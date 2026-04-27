@@ -114,7 +114,7 @@ You can configure a claim in two ways:
 - Using the Konnect API.
 
 When configuring a claim, you can choose from the following options:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: UI setting
@@ -137,7 +137,7 @@ rows:
     description: The claim exists in the auth server for internal reference but is never embedded in tokens.
     example: A "department" claim used to organize clients internally. It's saved in the auth server but never sent to APIs.
 {% endtable %}
-
+<!--vale on-->
 ### API parameters
 
 Configure the claim by sending a `POST` request to the [`/auth-servers/{authServerId}/claims` endpoint](/api/konnect/kong-identity/v1/#/operations/createAuthServerClaim).
