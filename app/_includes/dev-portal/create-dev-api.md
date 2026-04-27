@@ -1,6 +1,6 @@
 You can pre-create developer accounts to provision their team association and API access before they access the {{site.dev_portal}}.
 
-1. To automatically create developers and send them an email to create a password, send a `POST` request to the `/portals/{portalId}/developers` endpoint:
+1. To automatically create developers and send them an email to create a password, send a `POST` request to the [`/portals/{portalId}/developers` endpoint](/api/konnect/portal-management/v3/#/operations/create-developer):
 {% capture create-dev %}
 <!--vale off-->
 {% konnect_api_request %}

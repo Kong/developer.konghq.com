@@ -1,7 +1,7 @@
 You can automate applications and application registrations on behalf of a developer or team using the {{site.konnect_short_name}} API.
 The [authentication strategy](/dev-portal/auth-strategies/) you want to use must be enabled on your {{site.dev_portal}} and your published API.
 
-1. Create a developer application by sending a `POST` request to the `/portals/{portalId}/applications` endpoint:
+1. Create a developer application by sending a `POST` request to the [`/portals/{portalId}/applications` endpoint](/api/konnect/portal-management/v3/#/operations/create-application):
 {% capture create-application %}
 <!--vale off-->
 {% konnect_api_request %}
