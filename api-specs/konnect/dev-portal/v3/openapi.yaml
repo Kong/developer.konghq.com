@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@de6fdfe93a7f93c8321f28259f9b2065d84b51c3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/de6fdfe93a7f93c8321f28259f9b2065d84b51c3'
+  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
 servers:
   - url: 'https://custom.example.com'
     description: Production
@@ -169,6 +169,33 @@ paths:
         - {}
       tags:
         - API Docs
+  '/api/v3/apis/{apiIdOrSlug}/images/{imageType}/raw':
+    get:
+      operationId: fetch-api-image
+      summary: Get API Image
+      description: Returns the specified image from the API.
+      parameters:
+        - $ref: '#/components/parameters/ApiIdOrSlug'
+        - $ref: '#/components/parameters/ImageType'
+      responses:
+        '302':
+          description: Redirect to the image URL.
+          headers:
+            Location:
+              description: The CDN URL of the image.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - portalAccessToken: []
+        - {}
+      tags:
+        - API Images
   '/api/v3/apis/{apiIdOrSlug}/specifications':
     get:
       operationId: list-api-specs
@@ -1428,6 +1455,16 @@ components:
         enum:
           - public
           - private
+    ImageType:
+      schema:
+        type: string
+        example: icon
+        enum:
+          - icon
+      name: imageType
+      in: path
+      required: true
+      description: The Supported image type.
     PageAfter:
       name: 'page[after]'
       description: 'Request the next page of data, starting with the item after this parameter.'
