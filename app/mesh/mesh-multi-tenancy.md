@@ -21,7 +21,7 @@ related_resources:
     url: '/mesh/observability/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
-  - text: Install Kong Mesh
+  - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh
 ---
 
@@ -43,7 +43,7 @@ In addition to creating virtual service meshes, the `Mesh` resource is also used
 
 * [Mutual TLS](/mesh/policies/mutual-tls/), to secure and encrypt our service traffic and assign an identity to the data plane proxies within the Mesh.
 * [Zone Egress](/mesh/zone-egress/), to setup if `ZoneEgress` should be used for cross zone and external service communication.
-* [Non-mesh traffic](/mesh/non-mesh-traffic/), to setup if `passthrough` mode should be used for the non-mesh traffic.
+* [Non-mesh traffic](/mesh/policies/meshpassthrough/), to setup if `passthrough` mode should be used for the non-mesh traffic.
 
 To support cross-mesh communication an intermediate API Gateway must be used. See [{{site.mesh_product_name}}'s builtin gateway](/mesh/ingress/) to set this up.
 
@@ -78,7 +78,7 @@ type: Mesh
 name: default
 ```
 
-Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
+Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/interact-with-control-plane/).
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -118,7 +118,7 @@ specifies a particular `Mesh` will be part of that `Mesh`.
 
 {:.warning}
 > {% new_in 2.13 %}
-> **namespace-mesh constraint:** A single Kubernetes namespace cannot contain pods in multiple meshes. This limitation exists because [Workload](/mesh/workload/) resources are mesh-scoped and generated from the `app.kubernetes.io/name` label, which can cause resource collisions when the same workload name is used across different meshes in the same namespace.
+> **namespace-mesh constraint:** A single Kubernetes namespace cannot contain pods in multiple meshes. This limitation exists because [Workload](/mesh/data-plane-kubernetes/) resources are mesh-scoped and generated from the `app.kubernetes.io/name` label, which can cause resource collisions when the same workload name is used across different meshes in the same namespace.
 >
 > When {{site.mesh_product_name}} detects multiple meshes in a single namespace, it:
 >
@@ -126,7 +126,7 @@ specifies a particular `Mesh` will be part of that `Mesh`.
 > * Skips Workload resource generation for affected workloads
 > * Logs an error message
 >
-> To prevent this configuration issue proactively, you can enable the runtime flag [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/) (disabled by default). When enabled, the admission webhook rejects pod creation or updates if the namespace already contains Dataplanes in a different mesh.
+> To prevent this configuration issue proactively, you can enable the runtime flag [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/reference/kuma-cp/) (disabled by default). When enabled, the admission webhook rejects pod creation or updates if the namespace already contains Dataplanes in a different mesh.
 >
 > **Best practice:** Keep all pods in a single namespace within the same mesh.
 
