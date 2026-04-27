@@ -971,27 +971,6 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### {{site.konnect_short_name}} Workspaces
-
-The following table describes the predefined roles for {{site.konnect_short_name}} [Workspaces](/gateway/entities/workspace/):
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: Role
-    key: role
-  - title: Description
-    key: description
-  - title: CRUD permissions
-    key: permissions
-rows:
-  - role: "`Admin`"
-    description: Allows users to manage and delete Workspaces in {{site.konnect_short_name}}. Workspace Admins **cannot** manage parent control planes.
-    permissions: |
-      * List, read, edit, and delete Workspaces.
-{% endtable %}
-<!--vale on-->
-
 #### API Products (Classic)
 
 {:.warning}

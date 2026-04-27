@@ -46,6 +46,7 @@ faqs:
 
 api_specs:
     - gateway/admin-ee
+    - konnect/control-planes-config
 
 works_on:
   - on-prem
@@ -56,7 +57,9 @@ tags:
 ---
 
 {:.warning}
-> **{{site.konnect_short_name}} Workspaces are in public beta**
+> **{{site.konnect_short_name}} Workspaces are in private beta**
+> {{site.konnect_short_name}} Workspaces are in private beta. 
+> To use this feature, contact your Kong representative or Kong Support.
 
 ## What is a Workspace?
 
@@ -97,9 +100,14 @@ flowchart LR
 
 Routing rules are configured at the Data Plane level. The Data Plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the Data Plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
-To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm.
 
-When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
+How traffic is routed to the appropriate Workspace varies depending on if you're using {{site.base_gateway}} or {{site.konnect_short_name}}:
+* **{{site.base_gateway}}:** Uses a [conflict detection algorithm](#collision-settings-for-kong-gateway).
+* **{{site.konnect_short_name}}:** Uses exact-match collision detection by using path, method, host, and SNI.
+
+#### Collision settings for {{site.base_gateway}}
+
+For {{site.base_gateway}} Workspaces, when a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
 1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
 1. If an existing Service or Route object in the current Workspace has the same routing rules as the one being created or modified, the operation proceeds. 
@@ -124,7 +132,8 @@ config:
 ## Roles, groups, and permissions
 
 Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. {{site.base_gateway}} users will require either a Super Admin or Admin role to configure Workspaces. 
-{{site.konnect_short_name}} users will need a [Workspace Admin role](/konnect-platform/teams-and-roles/#konnect-workspaces) to configure Workspaces. 
+{{site.konnect_short_name}} users will need a [Control Plane Admin role](/konnect-platform/teams-and-roles/#control-planes) on the parent control plane. 
+Workspace-scoped roles will be introduced in a future phase.
 
 The following table details which {{site.base_gateway}} Workspace permissions each Admin role has:
 <!-- vale off -->
