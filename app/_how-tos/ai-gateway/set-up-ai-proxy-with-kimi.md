@@ -64,7 +64,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with Kimi, use the `openai` provider, specify the [model](https://platform.kimi.ai/docs/models) and set the appropriate authentication header and upstream URL.
+To set up AI Proxy with Kimi, use the `kimi` provider, specify the [model](https://platform.kimi.ai/docs/models) and set the appropriate authentication header and upstream URL.
 
 In this example, we'll use the `kimi-k2.6` model:
 
