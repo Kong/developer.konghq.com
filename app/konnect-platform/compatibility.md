@@ -51,6 +51,10 @@ faqs:
       You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
       
       If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
+  - q: Why did a configuration that was previously valid start failing after a control plane update?
+    a: |
+      The {{site.konnect_short_name}} control plane is versionless, so it always runs the latest release. If a validation rule changes, a config that worked before can fail next time you perform a `deck sync`.
+
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
@@ -64,6 +68,19 @@ This reference explains which browsers, software versions, tools, and applicatio
 ### Dedicated Cloud Gateway upgrades
 
 {% include /sections/dcgw-upgrades.md %}
+
+## {{site.konnect_short_name}} control plane compatibility
+
+The {{site.konnect_short_name}} control plane is **versionless** and always runs the latest release. {{site.konnect_short_name}} manages upgrades automatically. You can't pin a specific control plane version.
+
+This means a behavior change or a tightened validation rule takes effect on your next `deck sync`, regardless of which data plane version you're running.
+
+To limit disruption from control plane updates:
+
+* **Behavior changes ship as opt-in flags first.** For example, stricter validation modes are introduced alongside a permissive mode that preserves the previous behavior.
+* **The previous behavior remains the default.** Existing configurations continue to work without modification until you explicitly opt in to the new behavior (is opt-in doing a `deck sync`?)
+* breaking changes place holder
+
 
 ## {{site.mesh_product_name}} compatibility
 
