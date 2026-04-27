@@ -11,7 +11,7 @@ body:
   full_name: "Raina Sovani"
   email: "raina.sovani@example.com"
   status: "approved"
-  send_notification_email: true
+  send_invitation_email: true
 {% endkonnect_api_request %}
 <!--vale on-->
 {% endcapture %}
