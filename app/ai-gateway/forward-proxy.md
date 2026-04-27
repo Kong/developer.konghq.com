@@ -62,6 +62,12 @@ A shared `proxy_config` record, added to every affected {{site.ai_gateway}} plug
 
 {{site.ai_gateway}} plugins issue three categories of outbound request. `proxy_config` applies to all three, though the underlying mechanism differs depending on where the request originates.
 
+The three request categories are:
+
+- **Inference**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
+- **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
+- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor plugins to their external services (embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint).
+
 <!--vale off-->
 {% mermaid %}
 flowchart LR
@@ -83,12 +89,6 @@ flowchart LR
 {% endmermaid %}
 > _Figure 1: Outbound traffic from {{site.ai_gateway}} plugins routed through a forward proxy._
 <!--vale on-->
-
-The three request categories are:
-
-- **Inference**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
-- **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
-- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor plugins to their external services (embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint).
 
 When `proxy_config` is set on a plugin, every outbound request that plugin issues goes through the configured proxy.
 
@@ -190,6 +190,8 @@ Two validation rules apply to the record:
 ## Configuration
 
 The minimal configuration adds a `proxy_config` block to any supported plugin. The same block applies unchanged across plugins: configure it once per plugin instance that needs to reach external services through the proxy.
+
+For a complete local setup with a running forward proxy, full decK configuration, and validation steps, see [Route AI Proxy Advanced traffic through a forward proxy](/how-to/route-ai-proxy-advanced-traffic-through-forward-proxy/).
 
 {% entity_example %}
 type: plugin

@@ -167,6 +167,7 @@ rows:
                     - "[{{site.ai_gateway}} resource sizing guidelines](/ai-gateway/resource-sizing-guidelines-ai/): Review recommended resource allocation guidelines for {{site.ai_gateway}}."
                     - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
                     - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
+                    - "[Route AI Proxy Advanced traffic through a forward proxy](/how-to/route-ai-proxy-advanced-traffic-through-forward-proxy/): Configure a local forward proxy and validate that {{site.ai_gateway}} traffic traverses it."
       - header:
           type: h2
           text: "Tools to manage {{site.ai_gateway}}"
@@ -339,6 +340,15 @@ rows:
             icon: /assets/icons/network.svg
             cta:
               url: /ai-gateway/streaming/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Forward proxy support
+            description: Route outbound {{site.ai_gateway}} plugin traffic through a controlled HTTP forward proxy
+            icon: /assets/icons/network.svg
+            cta:
+              url: /ai-gateway/forward-proxy/
               align: end
       - blocks:
         - type: card
