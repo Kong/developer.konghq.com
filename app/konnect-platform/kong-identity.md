@@ -107,7 +107,7 @@ This allows you to rotate secrets without incurring downtime using the UI or API
 To rotate a secret, do the following:
 
 1. **Create the new secret**
-   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients** and selecting a client.
+   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
    * API: Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint. 
    This will add a new active secret while existing secrets will continue to work. 
    You can either specify a secret or have it generated automatically. 
@@ -117,14 +117,16 @@ To rotate a secret, do the following:
    Update the configuration of the actual applications to use the newly generated active secret.
 
 1. **Disable the old secret**
-   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients** and selecting a client.
-   * API: Send a ? request to the ? endpoint and set `enabled: false` to disable the secret.
+   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
+   * API: Send a PATCH request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint and set `enabled: false` to disable the secret.
 
 1. **Test the client application**
    Test the client application to ensure it can continue to authenticate successfully with the new secret.
 
 1. **Delete the old secret**
-   After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can delete the old secret in the API or revoke the secret in the UI.
+   After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can delete the old secret in the API or revoke the secret in the UI:
+   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
+   * API: Send a DELETE request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint.
 
 {% comment %}
 ## Kong Identity authorization code flow
