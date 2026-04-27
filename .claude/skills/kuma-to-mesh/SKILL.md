@@ -88,7 +88,7 @@ permalink: <based on the original url>
 
 **Include if the page is a policy:**
 ```yaml
-name: <CRD kind, e.g. MeshFaultInjection or MeshAccessLogs>
+name: <CRD kind, usually plural, e.g. MeshFaultInjections or MeshAccessLogs>
 content_type: plugin
 type: policy
 icon: policy.svg
