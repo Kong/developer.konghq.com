@@ -31,7 +31,7 @@ To connect your services to the control plane, you need one or more data planes.
 
 {:.info}
 > On Universal, data planes need to start with a token for authentication. 
-> To learn how to generate tokens, see the [data plane authentication docs](/mesh/dp-auth/#data-plane-proxy-token).
+> To learn how to generate tokens, see the [data plane authentication docs](/mesh/data-plane-proxy-authentication/#data-plane-proxy-token).
 
 When transparent proxying isn't enabled, the outbound service dependencies have to be manually specified in the [`Dataplane`](/mesh/data-plane-proxy/#dataplane-entity) entity.
 This also means that without transparent proxying, you must update your codebases to consume those external services on `127.0.0.1`, on the port specified in the `outbound` section.

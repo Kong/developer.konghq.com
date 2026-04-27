@@ -92,7 +92,7 @@ networking:
 
 Note that this gateway has an identifying `kuma.io/service` tag.
 
-Then, run `kuma-dp` with the `Dataplane` configuration file and a [token](/mesh/dp-auth/#data-plane-proxy-token):
+Then, run `kuma-dp` with the `Dataplane` configuration file and a [token](/mesh/data-plane-proxy-authentication/#data-plane-proxy-token):
 
 ```shell
 kuma-dp run \
