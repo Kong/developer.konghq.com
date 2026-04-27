@@ -2,12 +2,12 @@ Download the latest kongctl binary for Linux from the [GitHub releases page](htt
 
 1. Download the binary:
    ```sh
-   curl -sL https://github.com/Kong/kongctl/releases/download/v{{site.data.kongctl_latest.version}}/kongctl_{{site.data.kongctl_latest.version}}_linux_amd64.tar.gz -o kongctl.tar.gz
+   curl -sL https://github.com/Kong/kongctl/releases/download/v{{site.data.kongctl_latest.version}}/kongctl_linux_amd64.zip -o kongctl.zip
    ```
 
 1. Extract the archive: 
    ```sh
-   tar -xzf kongctl.tar.gz
+   unzip kongctl.zip
    ```
 
 1. Move the binary to your PATH:

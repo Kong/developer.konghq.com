@@ -9,7 +9,7 @@ mise use -g github:Kong/kongctl@latest
 Or install a specific version:
 
 ```bash
-mise use -g github:Kong/kongctl@0.3.8
+mise use -g github:Kong/kongctl@{{site.data.kongctl_latest.version}}
 ```
 
 Verify the installation:
