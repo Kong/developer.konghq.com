@@ -316,8 +316,23 @@ pages:
     related_resources:
       - text: Data plane proxy
         url: '/mesh/data-plane-proxy/'
+      - text: MeshIdentity
+        url: '/mesh/policies/meshidentity/'
     tags:
       - security
     min_version:
       mesh: '2.12'
-
+  -
+    path: app/_src/policies/meshidentity.md
+    title: 'MeshIdentity'
+    description: 'Define how workloads obtain cryptographic identity with MeshIdentity, supporting SPIFFE IDs and multiple certificate providers.'
+    url: '/mesh/policies/meshidentity/'
+    related_resources:
+      - text: Data plane proxy
+        url: '/mesh/policies/meshidentity/'
+      - text: Issue identity with MeshIdentity Spire provider
+        url: '/mesh/meshidentity-spire/'
+    tags:
+      - security
+    min_version:
+      mesh: '2.12'
