@@ -203,7 +203,6 @@ KUMA_RUNTIME_KUBERNETES_NODE_TAINT_CONTROLLER_ENABLED="false"
 To install Merbridge CNI with eBPF, append the following options to your install command:
 
 ```
---set ... \
 --set "{{site.set_flag_values_prefix}}cni.enabled=true" \
 --set "{{site.set_flag_values_prefix}}experimental.ebpf.enabled=true"
 ```
