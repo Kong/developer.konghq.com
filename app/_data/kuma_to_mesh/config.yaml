@@ -32,16 +32,6 @@ pages:
     min_version:
       mesh: '2.7'
   -
-    path: app/_src/policies/mutual-tls.md
-    title: 'Configuring Mutual TLS'
-    description: 'Configuring Mutual TLS for your workloads'
-    url: '/mesh/policies/mutual-tls/'
-    related_resources:
-      - text: MeshTLS Policy
-        url: /mesh/policies/meshtls/
-    min_version:
-      mesh: '2.9'
-  -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'

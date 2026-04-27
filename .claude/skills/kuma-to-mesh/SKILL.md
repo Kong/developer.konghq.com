@@ -50,9 +50,9 @@ Check whether the target file already exists. If it does, show the user the exis
 
 Do NOT add anything to the `/mesh/policies/` folder. For example, `/mesh/policies/mutual-tls.md` should be migrated to `/mesh/mutual-tls.md`.
 
-If the URL changes as a result, add a redirect in `app/_redirects` under "Mesh redirects", for example:
-```
-/mesh/policies/mutual-tls/ /mesh/mutual-tls/
+If the URL changes as a result, set a permalink. For example:
+```yaml
+permalink: /mesh/policies/mutual-tls/
 ```
 
 ---
@@ -124,6 +124,8 @@ Apply these verbatim substitutions anywhere they appear in link targets:
 - `/community/` → `https://konghq.com/community`
 - `/policies/` → `/mesh/policies/`
 - `/features/` → `/mesh/enterprise/`
+
+When replacing relative links, check against https://developer.konghq.com/ that the URL doesn't return a 404 and that the anchor exists.
 
 ### 5d. Prose "Kuma" replacement
 In body text (not inside code blocks, YAML examples, or annotations):
