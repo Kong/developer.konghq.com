@@ -1,6 +1,6 @@
 You can pre-create developer accounts to provision their team association and API access before they access the {{site.dev_portal}}.
 
-1. To automatically create developers and send them an email to create a password, send a `POST` request to the ` /portals/{portalId}/developers` endpoint:
+1. To automatically create developers and send them an email to create a password, send a `POST` request to the `/portals/{portalId}/developers` endpoint:
 {% capture create-dev %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -38,8 +38,8 @@ body:
 
 {:.warning}
 > **Logging in to {{site.dev_portal}}s:**
-> * **SSO:** If a developer is created in a {{site.dev_portal}} with SSO configured, they must be able to use SSO to login if their email address is configured in the identity provider. 
->  After they log in, they will automatically approved.
+> * **SSO:** If a developer is created in a {{site.dev_portal}} with SSO configured, they must be able to use SSO to log in if their email address is configured in the identity provider. 
+>  After they log in, they will automatically be approved.
 > * **Basic auth:** If a developer is created in a {{site.dev_portal}} with basic auth configured, they must be able to set their password. This can be done one of two ways:
->   * `send_notification_email: true`: Developers can use the link in the email to set their password.
->   * Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password, regardless of whether `send_notification_email` is `true` or `false`, 
+>   * `send_invitation_email: true`: Developers can use the link in the email to set their password.
+>   * Developers can click **Forgot password** in the {{site.dev_portal}} UI to set a password, regardless of whether `send_invitation_email` is `true` or `false`.

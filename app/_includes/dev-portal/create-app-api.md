@@ -20,7 +20,7 @@ body:
 {% endcapture %}
 {{create-application | indent: 3}}
    
-   If the application is for a team, configure `type: team`.
+   If the application is for a team, configure `owner.type: team` and set `owner.id` to the team ID instead of `$DEVELOPER_ID`.
 
 1. Copy and export the application ID:
   ```sh

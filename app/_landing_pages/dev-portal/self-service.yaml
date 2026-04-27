@@ -208,7 +208,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "Automate app creation"
+              text: "Automate application creation"
             blocks:
               - type: text
                 text: |
