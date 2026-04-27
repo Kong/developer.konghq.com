@@ -278,7 +278,7 @@ Keep the following security considerations in mind:
 You can compute the ARN for {{site.konnect_short_name}}'s IAM role using this pattern:
 
 ```
-arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
+arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID-dataplane
 ```
 
 1. To get the AWS account ID, do the following:
