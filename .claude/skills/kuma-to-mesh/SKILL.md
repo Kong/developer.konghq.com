@@ -211,6 +211,8 @@ config:
   spec:
     ...
 ```
+
+Then remove the examples from the policy reference page.
 ---
 
 ## Step 7 — Review text quality
