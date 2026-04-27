@@ -60,6 +60,7 @@ rows:
                   You can interact with the agent in the following ways:
                   * Use the chat in the {{site.konnect_short_name}} UI by clicking **Ask KAi** on the top right.
                   * Use the `kongctl` command-line tool with the `kongctl kai` command.
+                  * Click **Analyze with KAi** on an individual trace in the [Debugger](/observability/debugger/) to send the trace summary, spans, and logs directly to KAi.
 
                   The KAi agent uses backend LLMs for reasoning and natural language tasks. It also uses a {{site.konnect_short_name}} MCP server to provide information about {{site.konnect_short_name}} and the user's entities and data.
                   Because the MCP server is authenticated via the logged-in user's session, it only has access to data and resources that the user themselves has permission to access.
@@ -183,7 +184,7 @@ rows:
                     **Questions about {{site.konnect_short_name}}:**
                     - How do I set up the plugin `PLUGIN_NAME` in {{site.konnect_short_name}} for a particular use case? Give me the exact steps and the limitations.
                     - Explain the difference between Gateway Service vs Route in {{site.konnect_short_name}}, with an example from my current control plane.
-                    - What’s the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
+                    - What's the recommended way to troubleshoot `upstream timed out` errors in {{site.base_gateway}}?
                     - Search the Kong docs for best practices on rate limiting and summarize the key steps for my setup.
   - header:
       text: "Frequently asked questions"

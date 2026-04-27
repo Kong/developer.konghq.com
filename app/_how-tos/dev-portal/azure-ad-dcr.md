@@ -29,7 +29,9 @@ tldr:
     q: How do I automatically create and manage Dev Portal applications in Azure AD?
     a: |
       You can use Dynamic Client Registration to automatically create Dev Portal applications in Azure AD. First, create an application in Azure and configure the `Application.ReadWrite.OwnedBy` and `User.Read` API permissions, select **Accounts in this organizational directory only** for the supported account types, and create a client secret. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR.
-
+faqs:
+  - q: Can developers rotate their Entra DCR credentials?
+    a: Yes, developers can create multiple Entra DCR credentials and revoke old ones as needed. See [Managing credentials](/dev-portal/dynamic-client-registration/#managing-credentials) for more information.
 prereqs:
   skip_product: true
   inline:

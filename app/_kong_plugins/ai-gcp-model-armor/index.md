@@ -35,6 +35,7 @@ icon: ai-gcp-model-armor.png
 
 tags:
    - ai
+   - safety
 
 search_aliases:
   - ai

@@ -25,10 +25,10 @@ custom-dashboards:
   url: /how-to/create-custom-dashboards/
 mcp-conversion:
   title: Autogenerate and observe MCP tools from any RESTful API
-  url: /mcp/autogenerate-mcp-tools/
+  url: /mcp/map-api-to-mcp-tools/
 mcp-weather-api:
   title: Autogenerate and observe MCP tools for Weather API
-  url: /mcp/autogenerate-mcp-tools-for-weather-api/
+  url: /mcp/map-weather-api-to-mcp-tools/
 mcp-acls:
   title: Control MCP tool access with Consumer and Consumer Group ACLs
   url: /mcp/use-access-controls-for-mcp-tools/

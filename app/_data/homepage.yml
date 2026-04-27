@@ -1,0 +1,181 @@
+title: Kong Developer
+description: "Discover Kong's tools, APIs, and tutorials to help you build, secure, and scale your services."
+
+sections:
+  - title: Applications
+    items:
+      - title: Dev Portal
+        icon: /assets/icons/dev-portal.svg
+        icon_alt: Dev Portal icon
+        description: Empower API consumers with self-service API documentation and developer tools
+        links:
+          - text: Overview
+            url: /dev-portal/
+          - text: All documentation
+            url: /index/dev-portal/
+
+      - title: Observability
+        icon: /assets/icons/analytics.svg
+        icon_alt: Analytics icon
+        description: "Gain visibility into API performance and usage patterns with {{site.konnect_short_name}}'s {{site.observability}}"
+        links:
+          - text: Overview
+            url: /observability/
+          - text: All documentation
+            url: /index/observability/
+
+      - title: Catalog
+        icon: /assets/icons/service-hub.svg
+        icon_alt: Service Hub icon
+        description: Manage and discover services within the Kong ecosystem effortlessly
+        links:
+          - text: Overview
+            url: /catalog/
+          - text: All documentation
+            url: /index/catalog/
+
+      - title: Insomnia
+        icon: /assets/icons/insomnia/insomnia-logo-bug.svg
+        icon_alt: Insomnia icon
+        description: "Design, debug, test, and mock APIs locally, on Git, or cloud"
+        links:
+          - text: Overview
+            url: /insomnia/
+          - text: How-to guides
+            url: /how-to/?products=insomnia
+          - text: All documentation
+            url: /index/insomnia
+
+      - title: "Metering & Billing"
+        icon: /assets/icons/analytics.svg
+        icon_alt: Metering icon
+        description: Meter and monetize the entire API and AI connectivity data path with usage-based billing and entitlements.
+        links:
+          - text: "Metering & Billing overview"
+            url: /metering-and-billing/
+          - text: All documentation
+            url: /index/metering-and-billing/
+
+  - title: Connectivity
+    items:
+      - title: Kong Gateway
+        icon: /assets/icons/gateway.svg
+        icon_alt: Kong Gateway icon
+        description: "A lightweight, fast, and flexible cloud-native API gateway"
+        links:
+          - text: Overview
+            url: /gateway/
+          - text: Install
+            url: /gateway/install/
+          - text: How-to guides
+            url: /how-to/?products=gateway
+          - text: All documentation
+            url: /index/gateway/
+
+      - title: AI Gateway
+        icon: /assets/icons/ai.svg
+        icon_alt: Kong AI Gateway icon
+        description: Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway
+        links:
+          - text: Overview
+            url: /ai-gateway/
+          - text: Install
+            url: /ai-gateway/get-started/
+          - text: How-to guides
+            url: /how-to/?products=ai-gateway
+          - text: All documentation
+            url: /index/ai-gateway/
+
+      - title: Kong Mesh
+        icon: /assets/icons/mesh.svg
+        icon_alt: Kong Mesh icon
+        description: "Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security"
+        links:
+          - text: Overview
+            url: /mesh/
+          - text: Install
+            url: /mesh/#install-kong-mesh
+          - text: How-to guides
+            url: /how-to/?products=mesh
+          - text: All documentation
+            url: /index/mesh/
+
+      - title: KIC
+        icon: /assets/icons/kubernetes.svg
+        icon_alt: Kong Ingress Controller icon
+        description: "Kong's Kubernetes-native controller to manage API traffic for containerized apps"
+        links:
+          - text: Overview
+            url: /kubernetes-ingress-controller/
+          - text: Install
+            url: /kubernetes-ingress-controller/install/
+          - text: How-to guides
+            url: /how-to/?products=kic
+          - text: All documentation
+            url: /index/kubernetes-ingress-controller/
+
+      - title: Operator
+        icon: /assets/icons/kubernetes.svg
+        icon_alt: Kong Operator icon
+        description: Deploy and manage Kong on Kubernetes using Kubernetes resources
+        links:
+          - text: Overview
+            url: /operator/
+          - text: Install
+            url: /operator/get-started/gateway-api/install/
+          - text: How-to guides
+            url: /how-to/?products=operator
+          - text: All documentation
+            url: /index/operator/
+
+      - title: Event Gateway
+        icon: /assets/icons/event.svg
+        icon_alt: Kong Native Event Proxy icon
+        description: "A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka"
+        links:
+          - text: Overview
+            url: /event-gateway/
+          - text: Install
+            url: /event-gateway/get-started/
+          - text: How-to guides
+            url: /how-to/?products=event-gateway
+          - text: All documentation
+            url: /index/event-gateway/
+
+  - title: Konnect Platform
+    items:
+      - title: Platform auth
+        icon: /assets/icons/security.svg
+        icon_alt: Platform auth icon
+        description: Secure the Konnect Platform using single sign-on with any SAML and OIDC provider or use built-in authentication
+        links:
+          - text: Konnect platform authentication
+            url: /konnect-platform/authentication/
+          - text: Konnect SSO
+            url: /konnect-platform/sso/
+          - text: Teams and roles
+            url: /konnect-platform/teams-and-roles/
+
+      - title: Org management
+        icon: /assets/icons/organization.svg
+        icon_alt: Organization icon
+        description: Streamline and govern organization-wide API access and operations
+        links:
+          - text: Account management
+            url: /konnect-platform/account/
+          - text: Geographic regions
+            url: /konnect-platform/geos/
+          - text: All org management references
+            url: /index/konnect-platform/#org-management
+
+      - title: Audit logs
+        icon: /assets/icons/edit.svg
+        icon_alt: Audit logs icon
+        description: Detect and respond to potential security incidents when they occur
+        links:
+          - text: Collect audit logs for Konnect
+            url: /how-to/collect-audit-logs/
+          - text: Collect audit logs for Dev Portal
+            url: /how-to/collect-dev-portal-audit-logs/
+          - text: Konnect audit logs reference
+            url: /konnect-platform/audit-logs/

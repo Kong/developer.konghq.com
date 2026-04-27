@@ -20791,7 +20791,7 @@
         "scope": "Core"
       },
       {
-        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`; deprecated `sandbox` mode. Default changed to `strict`.\n",
+        "message": "**sandbox**: Added `strict` and `lax` modes for `untrusted_lua`. The default mode changed from `sandbox` to `strict`.\n",
         "type": "feature",
         "scope": "Core"
       },
@@ -21635,5 +21635,232 @@
       }
     ],
     "kong-manager-ee": []
+  },
+  "3.12.0.5": {
+    "kong": [
+      {
+        "message": "Optimized `GET /kong` endpoint to use `SELECT DISTINCT` for populating `enabled_in_cluster` instead of iterating all plugin rows.",
+        "type": "performance",
+        "scope": "Admin API"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Added `lru_cache_size` to allow configuration of in-memory LRU cache size.",
+        "type": "feature",
+        "scope": "Configuration"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we didn't keep the port after MCP conversion.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where id/created fields were missing in multiple drivers.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**core**: Resolved an issue where HTTPS was incorrectly detected if multiple `X-Forwarded-Proto` values were provided.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the Active Tracing would report incorrect `latencies.client` values due to not capturing the access end time properly. This fix ensures that the access end timestamp is always recorded regardless of Active Tracing being active or not.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where cached producers could cause memory leaks.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where nested references in oneOf / anyOf when they are used with a discriminator are not unfolded.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the postinstall script changed the ownership of `/etc/kong/kong.logrotate` to `kong:kong`, causing permission issues when executed by the root user. Ownership now resets to `root:root` after postinstall.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**vault**: Fixed an issue where `kong.vault.update()` changed the secret to an empty string temporarily after changed vault config.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**AI Proxy**: Fixed an issue where using ai-proxy-advanced in conjunction with a logging plugin (such as file-log) resulting in missing information on the last entry of the balancer \"tries\" section.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**core**: Improved performance of Kong core by using ngx.var.http_* instead of kong.tools.http.get_header.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where workspace navigation failed for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "githubs": [
+          4244
+        ],
+        "scope": "Core"
+      }
+    ]
+  },
+  "3.11.0.9": {
+    "kong": [
+      {
+        "message": "Optimized `GET /kong` endpoint to use `SELECT DISTINCT` for populating `enabled_in_cluster` instead of iterating all plugin rows.",
+        "type": "performance",
+        "scope": "Admin API"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Added `lru_cache_size` to allow configuration of in-memory LRU cache size.",
+        "type": "feature",
+        "scope": "Configuration"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**core**: Resolved an issue where HTTPS was incorrectly detected if multiple `X-Forwarded-Proto` values were provided.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the Active Tracing would report incorrect `latencies.client` values due to not capturing the access end time properly. This fix ensures that the access end timestamp is always recorded regardless of Active Tracing being active or not.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where swagger `formData` parameters were not properly handled.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**oas-validation**: Fixed an issue where `minLength` and `maxLength` constraints defined in a Swagger 2.0 parameter schema were not enforced.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed an issue where client-provided headers could be forwarded to upstream services when the corresponding JWT claim was missing from the token. The plugin now clears client headers before processing `upstream_headers_names`, ensuring that only verified JWT claim values are sent to upstream or downstream.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the postinstall script changed the ownership of `/etc/kong/kong.logrotate` to `kong:kong`, causing permission issues when executed by the root user. Ownership now resets to `root:root` after postinstall.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**vault**: Fixed an issue where `kong.vault.update()` changed the secret to an empty string temporarily after changed vault config.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**core**: Improved performance of Kong core by using ngx.var.http_* instead of kong.tools.http.get_header.",
+        "type": "performance",
+        "scope": "Core"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where workspace navigation failed for workspace names containing non-ASCII characters.",
+        "type": "bugfix",
+        "githubs": [
+          4245
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }

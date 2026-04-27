@@ -46,13 +46,13 @@ faqs:
       When a Data Plane node receives new configuration from the Control Plane, it immediately loads it into memory and also caches it to disk.
       The cache location depends on the Gateway version:
 
-      * **2.x Gateway** – Configuration is stored in an unencrypted cache file, `config.json.gz`, located in the {{site.base_gateway}} prefix path.
-      * **3.x Gateway** – Configuration is stored in an unencrypted LMDB database directory, `dbless.lmdb`, also in the {{site.base_gateway}} prefix path.
+      * **2.x Gateway** – The Data Plane node stores the configuration in an unencrypted cache file, `config.json.gz`, in the {{site.base_gateway}} prefix path.
+      * **3.x Gateway** – The Data Plane node stores the configuration in an unencrypted LMDB database directory, `dbless.lmdb`, also in the {{site.base_gateway}} prefix path.
   - q: What happens if the Control Plane and Data Plane nodes disconnect?
     a: |
       Data plane nodes use the cached configuration until they can reconnect.
       Once reconnected, the Control Plane sends the latest configuration.
-      It does not queue or replay any older configuration changes.
+      The Control Plane does not queue or replay any older configuration changes.
   - q: Can I restart a Data Plane node if the Control Plane is down or disconnected?
     a: |
       Yes. Restarting a Data Plane node will load its cached configuration and resume normal function.
@@ -157,7 +157,7 @@ rows:
 
 ## Mesh hostnames in {{site.konnect_short_name}}
 
-If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use {{site.konnect_short_name}} to manage your service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `me`, `in`, `sg`, `us`, or `global`.
 
 ## Specify IP addresses that can connect to {{site.konnect_short_name}}
 

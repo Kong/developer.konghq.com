@@ -25,7 +25,7 @@ related_resources:
 
 {{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization. 
 
-Geographic regions allow you to also operate {{site.konnect_short_name}} in a similar geo to your users and their infrastructure applications. 
+Geographic regions allow you to operate {{site.konnect_short_name}} in the same region as your users and their infrastructure. 
 <!--- Do not publish yet: "This reduces network latency and minimizes the blast-radius in the event of cross-region connectivity failures." -->
 
 ## Geo-specific objects

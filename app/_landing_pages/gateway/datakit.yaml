@@ -219,7 +219,7 @@ rows:
           - type: card
             config:
               title: Debugging
-              description: Learn more about Datakit’s debug and tracing modes.
+              description: Learn more about Datakit's debug and tracing modes.
               icon: /assets/icons/monitor.svg
               cta:
                 text: See debugging section

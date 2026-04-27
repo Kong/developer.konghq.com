@@ -3,13 +3,14 @@
     "dev": "bundle exec foreman start"
   },
   "type": "module",
+  "packageManager": "yarn@4.14.1",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.19",
-    "netlify-cli": "22.2.2",
+    "netlify-cli": "24.11.3",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "vite": "^5.4.16",
+    "vite": "^6.4.2",
     "vite-plugin-ruby": "^5.0.0",
     "vite-svg-loader": "^5.1.0",
     "wait-on": "^9.0.0"
@@ -31,14 +32,9 @@
     "mermaid": "^11.6.0",
     "node-fetch": "^3.3.2",
     "shiki": "^4.0.2",
-    "snowflake-sdk": "2.3.4",
-    "uuid": "^13.0.0",
+    "snowflake-sdk": "2.4.0",
+    "uuid": "^14.0.0",
     "vue": "^3.4.38",
     "vue-instantsearch": "^4.20.4"
-  },
-  "overrides": {
-    "vite": {
-      "rollup": "npm:@rollup/wasm-node"
-    }
   }
 }

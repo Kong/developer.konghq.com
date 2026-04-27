@@ -108,7 +108,7 @@ Once you have dumped configuration, take one of the following approaches to isol
   diff -u last_good.json last_bad.json
   ```
 
-- You can apply dumped configuration via the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config) (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
+- You can apply dumped configuration via the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-config) (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
 
 - To run a DB-less {{ site.base_gateway }} instance with Docker for testing purposes, run `curl https://get.konghq.com/quickstart | bash -s -- -D`.
 

@@ -38,6 +38,9 @@ categories:
 
 tags:
   - ai
+  - safety
+  - security
+  - dlp
 
 faqs:
   - q: Can I use a custom PII anonymization service instead of Kong's AI PII Anonymizer?
@@ -112,7 +115,7 @@ sequenceDiagram
 
 ## AI PII Anonymizer service
 
-Kong provides several [AI PII Anonymizer service](https://cloudsmith.io/~kong/repos/ai-pii/packages/) Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
+Kong provides several AI PII Anonymizer service Docker images in a private repository. Each image includes a built-in NLP model and is tagged using the `version-lang_code` format. For example:
 
 * `service:v0.1.4-en`: English model, version 0.1.4
 * `service:v0.1.4-it`: Italian model, version 0.1.4
