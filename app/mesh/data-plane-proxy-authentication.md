@@ -381,9 +381,9 @@ Signing key rotation works similarly:
 * Remove the old public key from the configuration.
 
 
-### Multizone
+### Multi-zone
 
-In multizone mode, you can generate a data plane proxy token on either the global or a zone control plane.
+In multi-zone mode, you can generate a data plane proxy token on either the global or a zone control plane.
 If your deployment pipeline generates tokens before starting the proxy, you can use the Zone CP — this way the Global CP is not a single point of failure.
 Signing key rotation and token revocation must be performed on the global control plane.
 
