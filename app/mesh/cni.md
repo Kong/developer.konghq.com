@@ -55,7 +55,7 @@ The components interact as follows:
 flowchart LR
  subgraph s1["conflist"]
         n2["existing CNIs"]
-        n3["kuma-cni"]
+        n3["{{site.mesh_product_name_path}}-cni"]
   end
  subgraph s2["application pod"]
         n4["kuma-sidecar"]
@@ -65,9 +65,9 @@ flowchart LR
     n3 -- configure iptables --> n4
 {% endmermaid %}
 
-1. The CNI installer copies the `kuma-cni` binary to the CNI directory on the host. When chained, it also sets up chaining for `kuma-cni` in the CNI conflist file. When chaining is disabled, `kuma-cni` is invoked explicitly as per the Pod manifest.
-2. When a mesh-enabled application Pod is created, Kubernetes invokes the `kuma-cni` binary, which configures the iptables rules required by the `kuma-sidecar` container.
-3. When chained, if the CNI conflist file is unexpectedly changed and `kuma-cni` is excluded, the installer immediately detects it and restarts itself to re-run the chaining installation and restore CNI functionality.
+1. The CNI installer copies the `{{site.mesh_product_name_path}}-cni` binary to the CNI directory on the host. When chained, it also sets up chaining for `{{site.mesh_product_name_path}}-cni` in the CNI conflist file. When chaining is disabled, `{{site.mesh_product_name_path}}-cni` is invoked explicitly as per the Pod manifest.
+2. When a mesh-enabled application Pod is created, Kubernetes invokes the `{{site.mesh_product_name_path}}-cni` binary, which configures the iptables rules required by the `kuma-sidecar` container.
+3. When chained, if the CNI conflist file is unexpectedly changed and `{{site.mesh_product_name_path}}-cni` is excluded, the installer immediately detects it and restarts itself to re-run the chaining installation and restore CNI functionality.
 
 ## Installation
 
@@ -194,10 +194,10 @@ To install the {{site.mesh_product_name}} CNI on OpenShift 3.11, configure admis
 
 1. [Install OpenShift 3.11](https://docs.redhat.com/en/documentation/openshift_container_platform/3.11/html/getting_started/getting-started-install-openshift) and enable `MutatingAdmissionWebhook` and `ValidatingAdmissionWebhook`.
 
-1. Grant privileged permissions to the kuma-cni service account:
+1. Grant privileged permissions to the {{site.mesh_product_name_path}}-cni service account:
 
    ```sh
-   oc adm policy add-scc-to-user privileged -z kuma-cni -n kube-system
+   oc adm policy add-scc-to-user privileged -z {{site.mesh_product_name_path}}-cni -n kube-system
    ```
 
 1. Install the CNI:
