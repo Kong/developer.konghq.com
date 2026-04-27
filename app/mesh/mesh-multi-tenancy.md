@@ -8,6 +8,9 @@ products:
 breadcrumbs:
   - /mesh/
 
+min_version:
+  mesh: '2.6'
+
 tags:
   - service-mesh
 
@@ -113,8 +116,8 @@ spec:
 A `Mesh` may span multiple Kubernetes namespaces. Any {{site.mesh_product_name}} resource in the cluster which
 specifies a particular `Mesh` will be part of that `Mesh`.
 
-{% if_version gte:2.13.x %}
 {:.warning}
+> {% new_in 2.13 %}
 > **namespace-mesh constraint:** A single Kubernetes namespace cannot contain pods in multiple meshes. This limitation exists because [Workload](/mesh/workload/) resources are mesh-scoped and generated from the `app.kubernetes.io/name` label, which can cause resource collisions when the same workload name is used across different meshes in the same namespace.
 >
 > When {{site.mesh_product_name}} detects multiple meshes in a single namespace, it:
@@ -126,7 +129,6 @@ specifies a particular `Mesh` will be part of that `Mesh`.
 > To prevent this configuration issue proactively, you can enable the runtime flag [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/) (disabled by default). When enabled, the admission webhook rejects pod creation or updates if the namespace already contains Dataplanes in a different mesh.
 >
 > **Best practice:** Keep all pods in a single namespace within the same mesh.
-{% endif_version %}
 
 {% endnavtab %}
 {% navtab "Universal" %}
