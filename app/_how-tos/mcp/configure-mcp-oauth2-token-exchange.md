@@ -261,6 +261,17 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+faqs:
+  - q: Why do I get `401` on `/mcp-exchange`?
+    a: |
+      A `401` means the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) rejected the incoming token before proxying upstream. Re-check token issuance inputs (`KEYCLOAK_HOST`, `DECK_TOKEN_EXCHANGE_CLIENT_ID`, and `DECK_TOKEN_EXCHANGE_CLIENT_SECRET`) and make sure the request includes `Authorization: Bearer $TOKEN_EXCHANGE_TOKEN`.
+  - q: Why do I get `503` with `Failed to verify token`?
+    a: |
+      This usually means {{site.ai_gateway}} cannot validate or exchange the token with the configured Keycloak client credentials. Confirm `DECK_TOKEN_EXCHANGE_GATEWAY_CLIENT_SECRET` matches the current secret for `token-exchange-gateway` in Keycloak, then re-apply the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) config.
+  - q: Why do authenticated requests fail with upstream connectivity errors?
+    a: |
+      The upstream MCP debug server must be running at `http://localhost:3002/mcp` for authenticated validation steps. Start `python3 token-exchange-mcp-server.py` in a separate terminal and verify it is listening before running `tools/list` or `tools/call` through {{site.ai_gateway}}.
+
 automated_tests: false
 ---
 
