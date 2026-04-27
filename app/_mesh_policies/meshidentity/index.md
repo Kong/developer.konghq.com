@@ -1,5 +1,5 @@
 ---
-title: MeshIdentity
+title: Mesh Identity
 name: MeshIdentities
 description: Define how workloads obtain cryptographic identity with MeshIdentity, supporting SPIFFE IDs and multiple certificate providers.
 products:
