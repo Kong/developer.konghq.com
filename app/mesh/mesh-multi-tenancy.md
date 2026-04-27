@@ -25,21 +25,21 @@ related_resources:
     url: /mesh/#install-kong-mesh
 ---
 
-This resource describes a very important concept in {{site.mesh_product_name}}, and that is the ability of creating multiple isolated service meshes within the same {{site.mesh_product_name}} cluster which in turn make {{site.mesh_product_name}} a very simple and easy project to operate in environments where more than one mesh is required based on security, segmentation or governance requirements.
+The `Mesh` resource lets you create multiple isolated service meshes within the same {{site.mesh_product_name}} cluster, making it straightforward to operate in environments that require more than one mesh for security, segmentation, or governance reasons.
 
-Typically, we would want to create a `Mesh` per line of business, per team, per application or per environment or for any other reason. Typically multiple meshes are being created so that a service mesh can be adopted by an organization with a gradual roll-out that doesn't require all the teams and their applications to coordinate with each other, or as an extra layer of security and segmentation for our services so that - for example - policies applied to one `Mesh` do not affect another `Mesh`.
+You can create a `Mesh` per line of business, per team, per application, or per environment. Multiple meshes allow organizations to adopt a service mesh gradually without requiring all teams to coordinate, and provide an extra layer of security and segmentation. For example, policies applied to one `Mesh` don't affect another `Mesh`.
 
 `Mesh` is the parent resource of every other resource in {{site.mesh_product_name}}, including:
 
 * [Data plane proxies](/mesh/data-plane-proxy/)
 * [Policies](/mesh/policies/)
 
-In order to use {{site.mesh_product_name}} at least one `Mesh` must exist, and there is no limit to the number of Meshes that can be created. When a data plane proxy connects to the control plane (`kuma-cp`) it specifies to what `Mesh` resource it belongs: a data plane proxy can only belong to one `Mesh` at a time.
+In order to use {{site.mesh_product_name}} at least one `Mesh` must exist, and there is no limit to the number of Meshes that can be created. When a data plane proxy connects to the control plane (`kuma-cp`), it specifies which `Mesh` resource it belongs to. A data plane proxy can only belong to one `Mesh` at a time.
 
 {:.info}
-> When starting a new {{site.mesh_product_name}} cluster from scratch a `default` Mesh is being created automatically.
+> When starting a new {{site.mesh_product_name}} cluster from scratch, a `default` Mesh is created automatically.
 
-Besides the ability of being able to create virtual service mesh, a `Mesh` resource will also be used for:
+In addition to creating virtual service meshes, the `Mesh` resource is also used for:
 
 * [Mutual TLS](/mesh/policies/mutual-tls/), to secure and encrypt our service traffic and assign an identity to the data plane proxies within the Mesh.
 * [Zone Egress](/mesh/zone-egress/), to setup if `ZoneEgress` should be used for cross zone and external service communication.
@@ -69,7 +69,7 @@ metadata:
   name: default
 ```
 
-We will apply the configuration with `kubectl apply -f [..]`.
+Apply the configuration with `kubectl apply -f [..]`.
 {% endnavtab %}
 {% navtab "Universal" %}
 
@@ -78,17 +78,17 @@ type: Mesh
 name: default
 ```
 
-We will apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
+Apply the configuration with `kumactl apply -f [..]` or via the [HTTP API](/mesh/http-api/).
 {% endnavtab %}
 {% endnavtabs %}
 
 ## Creating resources in a Mesh
 
-It is possible to determine to what `Mesh` other resources belong to in the following ways.
+You can specify which `Mesh` other resources belong to in the following ways.
 
 ### Data plane proxies
 
-Every time we start a data plane proxy, we need to specify to what `Mesh` it belongs, this can be done in the following way:
+When starting a data plane proxy, specify which `Mesh` it belongs to:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -150,7 +150,7 @@ You can control which data plane proxies are allowed to join the mesh using [mes
 
 ### Policies
 
-When creating new [Policies](/mesh/policies/) we also must specify to what `Mesh` they belong. This can be done in the following way:
+When creating new [Policies](/mesh/policies/), you must also specify which `Mesh` they belong to:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -284,7 +284,7 @@ spec:
 
 {% endpolicy_yaml %}
 
-If you want to not have these policies be added on creation of the mesh set the configuration: `skipCreatingInitialPolicies`:
+To prevent these policies from being added when creating a mesh, set `skipCreatingInitialPolicies`:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
