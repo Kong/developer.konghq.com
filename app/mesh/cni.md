@@ -14,6 +14,9 @@ tags:
   - kubernetes
   - network
 
+min_version:
+  mesh: '2.9'
+
 related_resources:
   - text: Mesh DNS
     url: '/mesh/dns/'
@@ -33,8 +36,7 @@ On Kubernetes, this is handled automatically by the `kuma-init` init container, 
 > writes executables to the host filesystem as `root`.
 
 Install the CNI using either
-{% if_version lte:2.8.x %}[kumactl](/mesh/cli/) or [Helm](https://helm.sh/){% endif_version %}
-{% if_version gte:2.9.x %}[kumactl](/mesh/#install-kong-mesh) or [Helm](https://helm.sh/).{% endif_version %}
+[kumactl](/mesh/#install-kong-mesh) or [Helm](https://helm.sh/).
 The default settings are optimized for OpenShift with Multus. To use {{site.mesh_product_name}} CNI in other environments, set the configuration parameters shown in the relevant section below.
 
 {:.warning}
@@ -170,7 +172,7 @@ cni.confName=${CNI_CONF_NAME}
 
 To install {{site.mesh_product_name}} CNI on OpenShift 3.11, configure admission webhooks and grant the CNI service account the required privileges.
 
-1. Follow the instructions in [OpenShift 3.11 installation](/mesh/{% if_version gte:2.6.x inline:true %}single-zone{% endif_version %}{% if_version lte:2.5.x inline:true %}stand-alone{% endif_version %}/)
+1. Follow the instructions in [OpenShift 3.11 installation](/mesh/single-zone/)
    to get the `MutatingAdmissionWebhook` and `ValidatingAdmissionWebhook` enabled (this is required for regular {{site.mesh_product_name}} installation).
 
 2. You need to grant privileged permission to kuma-cni service account:
