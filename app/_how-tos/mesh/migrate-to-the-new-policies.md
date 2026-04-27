@@ -21,7 +21,7 @@ products:
 tldr:
   q: How can I migrate from an old policy to the corresponding new policy?
   a: |
-    1. Create the new policy in [shadow mode](/mesh/policies-introduction/#applying-policies-in-shadow-mode), to avoid traffic disruption.
+    1. Create the new policy with the `kuma.io/effect: shadow` label to avoid traffic disruption.
     1. Inspect the list of changes between the old and new policies.
     1. Remove the `kuma.io/effect: shadow` label from the new policy.
     1. Observe metrics, traces and logs, and delete the old policy if everything looks good. Otherwise, go back to step 2.
@@ -338,7 +338,7 @@ You can migrate all policies at once, but we recommend migrating them separately
 
 The migration process consists or four steps:
 
-1. Create a new policy in [shadow mode](/mesh/policies-introduction/#applying-policies-in-shadow-mode), to avoid traffic disruption.
+1. Create a new policy with the `kuma.io/effect: shadow` label to avoid traffic disruption.
 1. Inspect the list of changes between the old and new policies.
 1. Remove the `kuma.io/effect: shadow` label.
 1. Observe metrics, traces and logs:
