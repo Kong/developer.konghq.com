@@ -1,0 +1,30 @@
+title: 'MeshIdentity with user-provided CA'
+description: 'Apply a MeshIdentity with a user-provided CA to a subset of data plane proxies.'
+weight: 910
+namespace: kong-mesh-demo
+config:
+  type: MeshIdentity
+  name: identity
+  mesh: default
+  spec:
+    selector:
+      dataplane:
+        matchLabels:
+          app: my-app
+    spiffeID:
+      trustDomain: "{{ .Mesh }}.{{ .Zone }}.mesh.local"
+      path: "/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}"
+    provider:
+      type: Bundled
+      bundled:
+        meshTrustCreation: Enabled
+        insecureAllowSelfSigned: true
+      ca:
+        certificate:
+          type: File
+          file:
+            path: /ca.crt
+        privateKey:
+          type: File
+          file:
+            path: /ca.key
