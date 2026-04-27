@@ -266,7 +266,7 @@ rows:
                   tools: "[CreateDebugSession](/konnect-platform/konnect-mcp/tools/#createdebugsession), [ActiveTracingSession](/konnect-platform/konnect-mcp/tools/#activetracingsession)"
                   description: Create tracing sessions and analyze performance
                 - category: Analytics
-                  tools: "[GetAnalytics](/konnect-platform/konnect-mcp/tools/#getanalytics)"
+                  tools: "[DatasourceConfig](/konnect-platform/konnect-mcp/tools/#datasourceconfig), [QueryExploreTimeRange](/konnect-platform/konnect-mcp/tools/#queryexploretimerange), [QueryAnalytics](/konnect-platform/konnect-mcp/tools/#queryanalytics), [QueryLLMAnalytics](/konnect-platform/konnect-mcp/tools/#queryllmanalytics), [QueryMCPAnalytics](/konnect-platform/konnect-mcp/tools/#querymcpanalytics), [QueryAPIRequests](/konnect-platform/konnect-mcp/tools/#queryapirequests), [GetConsumerRequests](/konnect-platform/konnect-mcp/tools/#getconsumerrequests)"
                   description: Query API requests and traffic patterns
                 # - category: Alerting
                 #   tools: "[FetchAlertingEventDetails](/konnect-platform/konnect-mcp/tools/#fetchalertingeventdetails)"
@@ -391,7 +391,7 @@ rows:
                → Select target control plane
                → Extract control_plane_id
 
-            2. GetAnalytics (
+            2. QueryAPIRequests (
                  time_range="24H",
                  operation="query_api_requests",
                  status_codes=[500, 502, 503]
@@ -405,7 +405,7 @@ rows:
                )
                → Review consumer configuration
 
-            4. GetAnalytics (
+            4. GetConsumerRequests (
                  time_range="24H",
                  operation="get_consumer_requests",
                  consumer_id=<from_step_3>,
