@@ -154,7 +154,7 @@ spec:
 
 #### Workload label requirement {% new_in 2.13 %}
 
-When using `{{ label "kuma.io/workload" }}` in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
+When using {% raw %}`{{ label "kuma.io/workload" }}`{% endraw %} in the `path` template, data plane proxies selected by this `MeshIdentity` must have the `kuma.io/workload` label. This label can be provided either:
 
 * Via a [data plane proxy token](/mesh/dp-auth/#workload-label-in-tokens) generated with the `--workload` parameter
 * Directly on the data plane proxy resource
