@@ -104,27 +104,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/quickstart/universal-docker-demo.md
-    title: 'Deploy Kong Mesh on Universal'
-    description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
-    url: '/mesh/universal/'
-    related_resources:
-      - text: "{{site.mesh_product_name}} data plane on Universal"
-        url: /mesh/data-plane-universal/
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: Mesh on Amazon ECS
-        url: '/mesh/ecs/'
-
-    min_version:
-      mesh: '2.9'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/overview.md
     title: 'How ingress works'
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
