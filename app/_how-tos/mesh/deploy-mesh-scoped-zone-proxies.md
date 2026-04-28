@@ -272,32 +272,29 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 ## Propagate trust between zones
 
 Each zone generates a `MeshTrust` containing its local CA bundle.
+The `MeshIdentity` controller appends a content hash to the trust name (for example, `identity-xf4d5dz5c4w47645`), so look it up by prefix rather than hardcoding the name.
 For cross-zone mTLS to work, each zone must trust the other zone's CA.
 Republish each zone's trust bundle to the global control plane so it syncs everywhere.
 
 1. Export zone-1's trust bundle and apply it to the global CP:
 
    ```sh
-   kubectl --context mesh-zone-1 -n kong-mesh-system get meshtrust identity -o yaml | \
-     sed 's/name: identity/name: trust-of-zone-1/' | \
-     sed '/resourceVersion:/d' | \
-     sed '/uid:/d' | \
-     sed '/creationTimestamp:/d' | \
-     sed '/generation:/d' | \
-     sed 's/kuma.io\/origin: zone/kuma.io\/origin: global/' | \
+   kubectl --context mesh-zone-1 -n kong-mesh-system get meshtrust -o json | \
+     jq '.items[] | select(.metadata.name | startswith("identity-")) |
+         .metadata.name = "trust-of-zone-1" |
+         .metadata.labels["kuma.io/origin"] = "global" |
+         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation)' | \
      kubectl --context mesh-global apply -f -
    ```
 
 1. Export zone-2's trust bundle and apply it to the global CP:
 
    ```sh
-   kubectl --context mesh-zone-2 -n kong-mesh-system get meshtrust identity -o yaml | \
-     sed 's/name: identity/name: trust-of-zone-2/' | \
-     sed '/resourceVersion:/d' | \
-     sed '/uid:/d' | \
-     sed '/creationTimestamp:/d' | \
-     sed '/generation:/d' | \
-     sed 's/kuma.io\/origin: zone/kuma.io\/origin: global/' | \
+   kubectl --context mesh-zone-2 -n kong-mesh-system get meshtrust -o json | \
+     jq '.items[] | select(.metadata.name | startswith("identity-")) |
+         .metadata.name = "trust-of-zone-2" |
+         .metadata.labels["kuma.io/origin"] = "global" |
+         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation)' | \
      kubectl --context mesh-global apply -f -
    ```
 
@@ -359,11 +356,12 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
    done
    ```
 
-1. From a `demo-app` pod in zone-1, curl the `demo-app` Service in zone-2 using its cross-zone hostname:
+1. From a `demo-app` pod in zone-1, request the `demo-app` Service in zone-2 using its cross-zone hostname.
+   The `demo-app` image ships with `wget` but not `curl`:
 
    ```sh
    kubectl --context mesh-zone-1 -n kuma-demo exec deploy/demo-app -c demo-app -- \
-     curl -s http://demo-app.kuma-demo.svc.zone-2.mesh.local:5000/
+     wget -qO- http://demo-app.kuma-demo.svc.zone-2.mesh.local:5000/
    ```
 
    The request leaves zone-1 through the zone egress, enters zone-2 through the zone ingress, and hits the `demo-app` pod there.
