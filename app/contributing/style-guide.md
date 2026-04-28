@@ -294,14 +294,14 @@ The type of placeholder you use depends on context:
 
   For example: `service: SERVICE_NAME`
 
-- **Placeholders in API URLs or OpenAPI specs** — enclose in `{ }` and write in camel-case, per [Swagger guidelines](https://swagger.io/docs/specification/describing-parameters/).
+- **Placeholders in API URLs or OpenAPI specs** — enclose in `{ }` and use the parameter name defined by the API or spec, per [Swagger guidelines](https://swagger.io/docs/specification/describing-parameters/).
 
   For example: `/services/{serviceID}/plugins`
 
 - **Hostnames and example URLs:**
   - For guides with examples intended to be run as-is, use `localhost` as the domain.
 
-    For example: `curl -i -X https://localhost:8001/services`
+    For example: `curl -i -X GET https://localhost:8001/services`
 
     A reader following this guide with {{site.base_gateway}} running locally can copy and paste the command directly into a terminal.
 
@@ -311,7 +311,7 @@ The type of placeholder you use depends on context:
 
 - **Path parameters** — always denote with curly braces `{}`.
 
-  For example: `http://localhost:8001/services/{service_id_or_name}/routes/{route_id_or_name}`
+  For example: `http://localhost:8001/services/{serviceID|serviceName}/routes/{routeID|routeName}`
 
 #### Inline placeholders
 
