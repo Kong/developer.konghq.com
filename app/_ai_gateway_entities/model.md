@@ -61,6 +61,8 @@ You can target policies and supported plugin behavior to a specific Model. This 
 
 In both deployment modes, you configure AI Gateway through first-class AI entities (for example, `ai_model`, `ai_provider`, and `ai_policy`). The control plane derives and manages the underlying runtime primitives (such as Services, Routes, and plugins) from those entities.
 
+For on-prem deployments, this `/ai/*` surface is a bridge architecture that aligns on-prem AI Gateway with the same domain model used in {{site.konnect_short_name}} while the next-generation runtime is introduced.
+
 ## Model and plugin interaction
 
 Model participates in runtime plugin resolution alongside other scoping dimensions, such as [Consumer](/gateway/entities/consumer/), [Consumer Group](/gateway/entities/consumer-group/), [Route](/gateway/entities/route/), and [Service](/gateway/entities/service/).
@@ -94,7 +96,7 @@ In on-prem AI Gateway, you declare Model through the `/ai/models` API surface (o
 ### Deployment mode differences
 
 * In {{site.konnect_short_name}}, Model is managed through {{site.konnect_short_name}} AI Gateway APIs.
-* In on-prem AI Gateway, Model is managed through `/ai/*` Admin API endpoints.
+* In on-prem AI Gateway, Model is managed through `/ai/*` Admin API endpoints (no workspace prefix).
 * In both modes, Model is first-class and runtime primitives are derived from AI entities.
 
 ### Policies are control-plane only
