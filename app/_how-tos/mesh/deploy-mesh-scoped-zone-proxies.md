@@ -272,18 +272,21 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
 ## Propagate trust between zones
 
 Each zone generates a `MeshTrust` containing its local CA bundle.
-The `MeshIdentity` controller appends a content hash to the trust name (for example, `identity-xf4d5dz5c4w47645`), so look it up by prefix rather than hardcoding the name.
+The `MeshIdentity` controller appends a content hash to the trust name (for example, `identity-xf4d5dz5c4w47645`), so look it up by label rather than hardcoding the name.
 For cross-zone mTLS to work, each zone must trust the other zone's CA.
 Republish each zone's trust bundle to the global control plane so it syncs everywhere.
+
+The `jq` filter selects only resources where `kuma.io/origin: zone`, which is the trust the local zone created.
+Resources synced back from the global control plane carry `kuma.io/origin: global` and must be excluded - otherwise you'd republish the wrong zone's CA.
 
 1. Export zone-1's trust bundle and apply it to the global CP:
 
    ```sh
    kubectl --context mesh-zone-1 -n kong-mesh-system get meshtrust -o json | \
-     jq '.items[] | select(.metadata.name | startswith("identity-")) |
+     jq '.items[] | select(.metadata.labels["kuma.io/origin"] == "zone") |
          .metadata.name = "trust-of-zone-1" |
          .metadata.labels["kuma.io/origin"] = "global" |
-         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation)' | \
+         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation, .metadata.ownerReferences)' | \
      kubectl --context mesh-global apply -f -
    ```
 
@@ -291,10 +294,10 @@ Republish each zone's trust bundle to the global control plane so it syncs every
 
    ```sh
    kubectl --context mesh-zone-2 -n kong-mesh-system get meshtrust -o json | \
-     jq '.items[] | select(.metadata.name | startswith("identity-")) |
+     jq '.items[] | select(.metadata.labels["kuma.io/origin"] == "zone") |
          .metadata.name = "trust-of-zone-2" |
          .metadata.labels["kuma.io/origin"] = "global" |
-         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation)' | \
+         del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.generation, .metadata.ownerReferences)' | \
      kubectl --context mesh-global apply -f -
    ```
 
@@ -370,14 +373,21 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
    > If the request times out, check that the minikube tunnels are still running.
    > Tunnels can become unresponsive after sleep/wake cycles; restart them with `minikube tunnel -p <profile> --bind-address=0.0.0.0`.
 
-1. Confirm the traffic passed through the zone-2 zone ingress by reading its sidecar stats:
+1. Confirm the traffic passed through the zone-2 zone ingress by reading its sidecar stats through the global control plane's inspect API.
+   The ingress dataplane name carries a hash suffix, so look it up by the `app` and `kuma.io/zone` labels:
 
    ```sh
-   kubectl --context mesh-zone-2 -n kong-mesh-system exec deploy/kong-mesh-default-ingress -c kuma-sidecar -- \
-     wget -qO- 'localhost:9901/stats?filter=upstream_rq_total'
+   DP=$(kubectl --context mesh-global -n kong-mesh-system exec deploy/kong-mesh-control-plane -- \
+     wget -qO- 'http://localhost:5681/meshes/default/dataplanes' | \
+     jq -r '.items[] | select(.labels.app=="kong-mesh-default-ingress" and .labels["kuma.io/zone"]=="zone-2") | .name')
+
+   kubectl --context mesh-global -n kong-mesh-system exec deploy/kong-mesh-control-plane -- \
+     wget -qO- "http://localhost:5681/meshes/default/dataplanes/${DP}/stats" | \
+     grep "kri_msvc_default_zone-2_kuma-demo_demo-app_5000.upstream_rq_total"
    ```
 
    `upstream_rq_total` for the `demo-app` cluster should be greater than zero.
+   The global control plane proxies inspect calls to whichever zone owns the dataplane, so you don't need a port-forward into zone-2.
 
 ## Next steps
 
