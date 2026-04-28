@@ -1,0 +1,9 @@
+- output: ../../app/assets/images/konnect/event-gateway-virtual-cluster.png
+  url: https://cloud.konghq.com/us/event-gateway/019a5a05-1dd3-7490-9cd9-38f88e8dd2c7/virtual-clusters/019a5a05-7935-7240-85e2-e999fe66d066/configuration
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+    }

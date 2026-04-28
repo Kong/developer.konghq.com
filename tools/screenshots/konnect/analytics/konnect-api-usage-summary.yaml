@@ -1,0 +1,9 @@
+- output: ../../app/assets/images/analytics/konnect-api-usage-summary.png
+  url: https://cloud.konghq.com/us/analytics/reports/4ba4a7c1-bd69-48c3-85e2-72414d250be7
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+    }
