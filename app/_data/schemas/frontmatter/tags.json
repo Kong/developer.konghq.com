@@ -117,6 +117,7 @@
     "kafka",
     "kds",
     "key-auth",
+    "kimi",
     "kong-manager",
     "kongair",
     "kong-identity",
