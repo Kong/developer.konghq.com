@@ -233,7 +233,7 @@ You can manage a user's roles by navigating to [**Organization**](https://cloud.
 
 #### Add-ons
 
-The following table describes the predefined roles for Dedicated Cloud Gateway add-ons, like [managed cache](/dedicated-cloud-gateways/reference/#managed-cache-for-redis):
+The following table describes the predefined roles for Dedicated Cloud Gateway add-ons, like [managed cache](/dedicated-cloud-gateways/managed-cache/):
 
 <!--vale off-->
 {% table %}
