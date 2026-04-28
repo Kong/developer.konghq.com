@@ -224,7 +224,8 @@
 # Cloud Gateways
 
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
-/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/reference/#managed-cache-for-redis 301
+/dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
+/dedicated-cloud-gateways/reference/#managed-cache-for-redis    /dedicated-cloud-gateways/managed-cache/ 301
 
 # Observability
 /advanced-analytics/*   /observability/:splat   301
