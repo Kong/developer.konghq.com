@@ -15,4 +15,14 @@ schema:
 
 works_on:
     - konnect
+
+tools:
+    - admin-api
+    - konnect-api
+    - deck
 ---
+
+
+## Schema
+
+{% entity_schema %}
