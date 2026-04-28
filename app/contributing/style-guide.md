@@ -21,6 +21,8 @@ works_on:
 llm: false
 ---
 
+<!--vale off-->
+
 ## Language
 
 The Kong docs use [American English (US English)](https://en.wikipedia.org/wiki/American_English). Pay attention to spelling and vocabulary differences, particularly when reviewing contributions from international authors.
@@ -49,7 +51,6 @@ We keep language simple and concise, take things seriously when we need to, and 
 
 Prefer plain, direct language over formal or technical-sounding alternatives:
 
-<!--vale off-->
 {% table %}
 columns:
   - title: "✅ Do use"
@@ -74,7 +75,6 @@ rows:
       Avoid generic pronouns.
       For example, don't say: "Once you have added *this*, ..."
 {% endtable %}
-<!--vale on-->
 
 ### Active voice
 
@@ -153,7 +153,6 @@ rows:
 
 Use gender-neutral and unbiased language.
 
-<!--vale off-->
 {% table %}
 columns:
   - title: "✅ Do use"
@@ -168,7 +167,6 @@ rows:
   - do: "Neutral pronouns (you, they/them)"
     dont: "Gendered pronouns (he/his, she/her)"
 {% endtable %}
-<!--vale on-->
 
 ### Recommendations
 
@@ -385,3 +383,5 @@ rows:
   - do: "Learn about [content best practices](#) in the Kong style guide."
     dont: "Learn about content best practices [here](#)."
 {% endtable %}
+
+<!--vale on-->
