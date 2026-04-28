@@ -1,31 +1,15 @@
 ```ansi
 Usage:
-  kongctl get portal [flags]
-  kongctl get portal [command]
+  kongctl get portal identity-providers [flags]
 
 Aliases:
-  portal, portals, p, ps, P, PS
+  identity-providers, identity-provider, idps, idp
 
 Examples:
-  # List all the portals for the organization
-  kongctl get portals
-  # Get a specific portal
-  kongctl get portal <id|name>
-  # List portals using aliases
-  kongctl get ps
-
-Available Commands:
-  application-registrations Manage portal application registrations for a Konnect portal
-  applications              Manage portal applications for a Konnect portal
-  assets                    Retrieve portal assets (logo, favicon)
-  auth-settings             Retrieve portal authentication settings
-  developers                Manage portal developers for a Konnect portal
-  email-domains             List portal email domains configured for the organization
-  identity-providers        List portal identity providers
-  pages                     Manage portal pages for a Konnect portal
-  snippets                  Manage portal snippets for a Konnect portal
-  team-roles                List portal team role assignments for a Konnect portal
-  teams                     Manage portal teams for a Konnect portal
+  # List identity providers for a portal by ID
+  kongctl get portal identity-providers --portal-id <portal-id>
+  # Filter identity providers by type
+  kongctl get portal identity-providers --portal-name my-portal --type oidc
 
 
 Flags:
@@ -38,7 +22,7 @@ Flags:
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for portal
+  -h, --help                    help for identity-providers
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string         Controls colorized output for jq filter results.
                                 - Config path: [ jq.color.enabled ]
@@ -62,10 +46,13 @@ Flags:
       --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
+      --portal-id string        The ID of the portal that owns the resource.
+                                - Config path: [ konnect.portal.id ]
+      --portal-name string      The name of the portal that owns the resource.
+                                - Config path: [ konnect.portal.name ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
-
-Use "kongctl get portal [command] --help" for more information about a command.
+      --type string             Filter identity providers by type
 
 ```
