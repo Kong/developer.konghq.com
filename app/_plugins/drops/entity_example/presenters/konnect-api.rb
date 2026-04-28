@@ -44,10 +44,15 @@ module Jekyll
 
             def default_variables
               @default_variables ||=
-                if @example_drop.product == 'gateway'
+                case @example_drop.product
+                when 'gateway'
                   formats['konnect-api']['variables']
-                else
+                when 'event_gateway'
                   formats['konnect-api']['event_gateway_variables']
+                when 'ai-gateway'
+                  formats['konnect-api']['ai_gateway_variables']
+                else
+                  raise ArgumentError, "Unsupported product: #{@example_drop.product}"
                 end
             end
 
@@ -59,10 +64,15 @@ module Jekyll
             end
 
             def base_url
-              @base_url ||= if @example_drop.product == 'gateway'
+              @base_url ||= case @example_drop.product
+                            when 'gateway'
                               formats['konnect-api']['base_url']
-                            else
+                            when 'event_gateway'
                               formats['konnect-api']['event_gateway_base_url']
+                            when 'ai-gateway'
+                              formats['konnect-api']['ai_gateway_base_url']
+                            else
+                              raise ArgumentError, "Unsupported product: #{@example_drop.product}"
                             end
             end
           end
