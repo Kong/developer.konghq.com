@@ -198,32 +198,48 @@ Signing key rotation and token revocation must be performed on the global contro
 
 ### Workload label validation errors {% new_in 2.13 %}
 
-When using workload labels in tokens or MeshIdentity resources, you may encounter the following errors:
+When using workload labels in tokens or MeshIdentity resources, you may encounter the following errors.
 
-{% table %}
-columns:
-  - title: Error message
-    key: error
-  - title: Cause
-    key: cause
-  - title: Solution
-    key: solution
-rows:
-  - error: |
-      `missing required label 'kuma.io/workload' - dataplane is selected by MeshIdentity 'backend-identity' with path template '/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}'`
-    cause: |
-      A [MeshIdentity](/mesh/policies/meshidentity/) resource uses `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
-    solution: |
-      Add the `kuma.io/workload` label by generating a token with `--workload` or by setting the label directly on the data plane proxy resource.
-  - error: "`dataplane workload 'frontend' is not allowed with this token. Allowed workload in token is 'backend'`"
-    cause: The token specifies a workload value, but the data plane proxy has a different `kuma.io/workload` label value.
-    solution: |
-      Regenerate the token with the correct `--workload` value, update the data plane proxy resource to match the token's workload value, or remove the explicit workload label to let it inherit the token's value.
-  - error: "`dataplane has no workload label required by the token`"
-    cause: The token was generated with a workload value, but the data plane proxy resource does not have the `kuma.io/workload` label.
-    solution: |
-      The workload label should be applied automatically from the token. Verify that the token was generated correctly with `--workload`, the token file is valid and not corrupted, and the data plane proxy is using the correct token file.
-{% endtable %}
+#### Missing required workload label
+
+```text
+missing required label 'kuma.io/workload' - dataplane is selected by MeshIdentity 'backend-identity' with path template '/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}'
+```
+
+Cause: A [MeshIdentity](/docs/{{ page.release }}/policies/meshidentity/) resource uses `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
+
+Solution: Add the `kuma.io/workload` label to your data plane proxy. You can do this by:
+
+* Generating a token with the `--workload` parameter (the label will be set automatically from the token)
+* Setting the label directly on the data plane proxy resource
+
+#### Workload mismatch between token and data plane proxy
+
+```text
+dataplane workload 'frontend' is not allowed with this token. Allowed workload in token is 'backend'
+```
+
+Cause: The data plane proxy token specifies a workload value, but the data plane proxy is configured with a different `kuma.io/workload` label value.
+
+Solution: Ensure consistency between the token and data plane proxy configuration:
+
+* Regenerate the token with the correct `--workload` value matching your data plane proxy
+* Update the data plane proxy resource to use the workload value that matches the token
+* If the data plane proxy resource explicitly sets a different workload label, remove it to use the token's value
+
+#### Missing workload label with workload token
+
+```text
+dataplane has no workload label required by the token
+```
+
+Cause: The token was generated with a workload value, but the data plane proxy resource does not have the `kuma.io/workload` label.
+
+Solution: The workload label should be automatically applied from the token. This error typically indicates a configuration issue. Verify:
+
+* The token was generated correctly with the `--workload` parameter
+* The token file is valid and not corrupted
+* The data plane proxy is using the correct token file
 
 ## Disable authentication
 
