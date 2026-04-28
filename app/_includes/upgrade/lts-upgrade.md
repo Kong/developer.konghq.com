@@ -36,7 +36,7 @@ To make sure your upgrade is successful, carefully review all the steps in this 
 
 Read this document thoroughly to successfully complete the upgrade process, as it includes all the necessary operational knowledge for the upgrade.
 
-* Review version compatibility between your platform version and the version of {{site.kong_gateway}} that you are upgrading to:
+* Review version compatibility between your platform version and the version of {{site.base_gateway}} that you are upgrading to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
   * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
   * [Hardware resources](/gateway/resource-sizing-guidelines/)

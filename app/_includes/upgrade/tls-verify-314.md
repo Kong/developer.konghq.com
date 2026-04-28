@@ -49,7 +49,7 @@ rows:
     action: |
       Manually update the custom plugin implementation to verify the server certificate.
   - category: Event Hooks
-    description: |
+    impact: |
       The webhook handler's `ssl_verify` setting is now `true` by default.
     action: |
       Ensure your webhook endpoints have a valid TLS certificate.
