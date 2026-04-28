@@ -225,7 +225,7 @@ Each entry renders its own Deployment, Service, and ServiceAccount for the ingre
      kong-mesh kong-mesh/kong-mesh
    ```
 
-## Deploy zone-2 with the same configuration
+## Deploy zone-2
 
 1. Start the zone-2 cluster and its tunnel:
 
