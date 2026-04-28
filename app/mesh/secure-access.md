@@ -246,7 +246,7 @@ To configure the API Server with custom TLS certificates:
      --ca-cert-file=/tmp/ca.crt
    ```
 
-   You can also hide the HTTP version of the API Server by binding it to localhost `KUMA_API_SERVER_HTTP_INTERFACE: 127.0.0.1` or by disabling it altogether `KUMA_API_SERVER_HTTP_ENABLED: false`
+   You can also hide the HTTP version of the API Server by binding it to localhost `KUMA_API_SERVER_HTTP_INTERFACE=127.0.0.1` or by disabling it altogether `KUMA_API_SERVER_HTTP_ENABLED=false`
 
 {% endnavtab %}
 {% endnavtabs %}
