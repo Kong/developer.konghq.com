@@ -1,0 +1,8 @@
+name: weather-jwk-route
+paths:
+  - /api/weather
+service:
+  name: weather-jwk-service
+protocols:
+  - http
+  - https

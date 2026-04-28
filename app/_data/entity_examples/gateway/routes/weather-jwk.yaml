@@ -1,0 +1,9 @@
+name: weather-jwk
+paths:
+  - /weather/mcp
+  - /.well-known/oauth-protected-resource/weather/mcp
+service:
+  name: weather-jwk-service
+protocols:
+  - http
+  - https
