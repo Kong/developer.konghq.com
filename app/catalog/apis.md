@@ -242,6 +242,19 @@ Based on this data, you get the following generated URLs:
 * Generated URL for `about` page: `/apis/routes-v3/docs/about`
 * Generated URL for `info` page: `/apis/routes-v3/docs/about/info`
 
+## API image
+
+You can upload an image for your API. 
+The image is displayed as an icon for your API in any [Dev Portal](/dev-portal/) where the API is published.
+The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 350 × 350 pixels.
+
+To upload an API image, do the following:
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
+1. In the {{site.konnect_catalog}} sidebar, click **[APIs](https://cloud.konghq.com/apis)**. 
+1. Click the API you want to add the image to.
+1. From the action menu, select "Edit".
+1. Click **Upload image** and upload an image.
+
 ## Allow developers to consume your API
 
 You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
