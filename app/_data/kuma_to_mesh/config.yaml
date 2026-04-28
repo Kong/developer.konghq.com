@@ -162,20 +162,6 @@ pages:
       - text: Configure zone proxy authentication
         url: /mesh/zone-proxy-auth/
   -
-    path: app/_src/production/upgrades-tuning/fine-tuning.md
-    title: 'Performance fine-tuning'
-    description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
-    url: '/mesh/performance-tuning/'
-    related_resources:
-      - text: Transparent proxying
-        url: '/mesh/transparent-proxying/'
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: Mesh observability
-        url: '/mesh/observability/'
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-  -
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
