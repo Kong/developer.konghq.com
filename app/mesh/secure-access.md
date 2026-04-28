@@ -167,15 +167,18 @@ You can enable it by using the `KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=tr
 
 {% endnavtab %}
 {% navtab "Universal" %}
+1. Prepare certificates:
 
-Configure the control plane with generated certificates:
+{{certificate | indent: 3}}
 
-```sh
-KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_CERT_FILE=/tmp/tls.crt \
-  KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_KEY_FILE=/tmp/tls.key \
-  KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=true \
-  kuma-cp run
-```
+1. Configure the control plane with generated certificates:
+
+   ```sh
+   KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_CERT_FILE=/tmp/tls.crt \
+     KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_KEY_FILE=/tmp/tls.key \
+     KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=true \
+     kuma-cp run
+   ```
 
 {% endnavtab %}
 {% endnavtabs %}
