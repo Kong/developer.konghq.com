@@ -190,7 +190,6 @@ spec:
 
 {% endraw %}
 
-This validation applies to Kubernetes and Universal deployments and is enforced at connection time.
 
 ### Provider
 
