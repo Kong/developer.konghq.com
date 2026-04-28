@@ -97,7 +97,7 @@ sections:
       - path: /mesh/secure-access/
       - path: /mesh/rbac/
       - path: /mesh/authentication-with-the-api-server/
-      - path: /mesh/dp-auth/
+      - path: /mesh/data-plane-proxy-authentication/
       - path: /mesh/zone-proxy-auth/
       - path: /mesh/manage-control-plane-permissions-on-kubernetes/
       - path: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/

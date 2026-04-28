@@ -142,26 +142,6 @@ pages:
       - text: Mesh Observability
         url: '/mesh/observability/'
   -
-    path: app/_src/production/secure-deployment/dp-auth.md
-    title: 'Authentication with the Data Plane proxy'
-    description: 'Reference guide to authentication methods for Data Plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
-    url: '/mesh/dp-auth/'
-    related_resources:
-      - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: 'Secure access across services'
-        url: '/mesh/secure-access/'
-      - text: Configure zone proxy authentication
-        url: /mesh/zone-proxy-auth/
-  -
     path: app/_src/production/upgrades-tuning/fine-tuning.md
     title: 'Performance fine-tuning'
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
