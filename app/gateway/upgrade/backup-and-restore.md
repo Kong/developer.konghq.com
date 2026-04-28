@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
+  - text: "3.10 to 3.14 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade-310-314/
   - text: "3.4 to 3.10 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade-34-310/
   - text: "2.8 to 3.4 LTS upgrade"
