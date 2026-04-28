@@ -15,7 +15,7 @@ default   dataplane-token-signing-key-default-1   49s
 ```sh
 kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/secret'
 NAME                                 TYPE                    DATA   AGE
-dataplane-token-signing-key-mesh-1   system.kuma.io/secret   1      25m
+dataplane-token-signing-key-default-1   system.kuma.io/secret   1      25m
 ```
 {% endcapture %}
 {% capture create_universal %}
@@ -35,7 +35,7 @@ data:
   value: $TOKEN
 kind: Secret
 metadata:
-  name: dataplane-token-signing-key-mesh-2
+  name: dataplane-token-signing-key-default-2
   namespace: {{site.mesh_namespace}}
 type: system.kuma.io/secret
 " | kubectl apply -f -
