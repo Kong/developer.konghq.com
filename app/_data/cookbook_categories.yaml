@@ -1,0 +1,15 @@
+- text: Access control
+  slug: access-control
+  icon: "/assets/icons/cookbooks/cost-optimization.svg"
+- text: Cost optimization
+  slug: cost-optimization
+  icon: "/assets/icons/cookbooks/cost-optimization.svg"
+- text: Guardrails
+  slug: guardrails
+  icon: "/assets/icons/cookbooks/guardrails.svg"
+- text: LLM routing
+  slug: llm-routing
+  icon: "/assets/icons/cookbooks/llm-routing.svg"
+- text: MCP governance
+  slug: mcp-governance
+  icon: "/assets/icons/cookbooks/mcp-governance.svg"

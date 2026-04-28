@@ -1,0 +1,20 @@
+{% assign cb = include.cookbook %}
+{% assign cat = include.category %}
+<div class="card card__bordered min-h-[260px]">
+  <a href="{{ cb.url }}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+    {% if cat.icon %}
+    <span class="text-brand">{% include_svg cat.icon width="32" height="32" %}</span>
+    {% endif %}
+
+    <div class="flex flex-col gap-3 flex-grow">
+      <h3>{{ cb.title }}</h3>
+      <p class="text-sm line-clamp-3">{{ cb.description }}</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      {% if cat %}{% include badge.html text=cat.text %}{% endif %}
+    </div>
+
+    <span class="text-sm text-primary font-normal pt-4 border-t border-primary/5">View recipe &rarr;</span>
+  </a>
+</div>

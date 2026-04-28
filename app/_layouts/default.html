@@ -153,6 +153,10 @@
       {% vite_javascript_tag hub %}
     {% endif %}
 
+    {% if page.cookbooks_index %}
+      {% vite_javascript_tag cookbooks %}
+    {% endif %}
+
     {% if page.search %}
       {% vite_javascript_tag search %}
     {% endif %}
