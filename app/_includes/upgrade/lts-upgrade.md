@@ -70,7 +70,6 @@ There are a number of steps you must complete before upgrading to {{site.base_ga
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
 1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
-1. Review any [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
