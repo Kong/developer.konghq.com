@@ -75,6 +75,8 @@ cp /tmp/tls.crt /tmp/ca.crt
 
 {{certificate | indent: 3}}
 
+{% capture steps %}
+
 1. Configure the control plane with the generated certificates:
 
 {% navtabs "environment" %}
@@ -124,6 +126,8 @@ kuma-dp run \
 You can also provide the CA via environment variable `KUMA_CONTROL_PLANE_CA_CERT`.
 {% endnavtab %}
 {% endnavtabs %}
+{% endcapture %}
+{{steps | indent: 3}}
 
 ### Authentication {#dpp-to-cp-auth}
 
