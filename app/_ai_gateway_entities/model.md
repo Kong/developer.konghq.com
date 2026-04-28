@@ -17,11 +17,18 @@ works_on:
     - konnect
 
 tools:
-    - admin-api
     - konnect-api
     - deck
 ---
 
+
+## Set up a Model
+
+{% entity_example %}
+type: model
+data:
+  model: openai-something
+{% endentity_example %}
 
 ## Schema
 
