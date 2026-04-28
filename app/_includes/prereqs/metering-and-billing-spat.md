@@ -4,7 +4,7 @@ This token authenticates the Metering & Billing plugin when it sends events to t
 Export your system account token:
 
 ```sh
-export AUTH_TOKEN='YOUR SPAT TOKEN'
+export DECK_AUTH_TOKEN='YOUR SPAT TOKEN'
 ```
 
 For more information, see [system accounts and access tokens](/konnect-api/#system-accounts-and-access-tokens).

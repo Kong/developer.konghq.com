@@ -211,6 +211,7 @@ Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on you
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Gateway.
 1. Click **Plugins**.
+1. Click **New Plugin**.
 1. Configure the **Metering and Billing** plugin.
 1. Click **Save**.
 
@@ -224,6 +225,7 @@ Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on you
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Gateway.
 1. Click **Plugins**.
+1. Click **New Plugin**.
 1. Configure the **Metering and Billing** plugin.
 1. Click **Save**.
 
