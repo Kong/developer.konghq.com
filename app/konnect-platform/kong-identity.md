@@ -106,9 +106,10 @@ This allows you to rotate secrets without incurring downtime using the UI or API
 
 To rotate a secret, do the following:
 
+{% navtabs "rotate-secret" %}
+{% navtab "UI" %}
 1. **Create the new secret**
    * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
-   * API: Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint. 
    This will add a new active secret while existing secrets will continue to work. 
    You can either specify a secret or have it generated automatically. 
    For the latter, be sure to securely record the value of the newly generated secret for subsequent steps.
@@ -118,15 +119,73 @@ To rotate a secret, do the following:
 
 1. **Disable the old secret**
    * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
-   * API: Send a PATCH request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint and set `enabled: false` to disable the secret.
 
 1. **Test the client application**
    Test the client application to ensure it can continue to authenticate successfully with the new secret.
 
 1. **Delete the old secret**
-   After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can delete the old secret in the API or revoke the secret in the UI:
+   After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can revoke the secret in the UI:
    * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
-   * API: Send a DELETE request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint.
+   
+{% endnavtab %}
+{% navtab "API" %}
+1. **Create the new secret**
+   Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint:
+{% capture create-client-secret %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets
+method: POST
+status_code: 201
+body:
+  secret: $SECRET
+  enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{create-client-secret | indent: 3}}
+   This will add a new active secret while existing secrets will continue to work. 
+   You can either specify a secret or have it generated automatically. 
+   For the latter, be sure to securely record the value of the newly generated secret for subsequent steps.
+
+1. **Update the client application**
+   Update the configuration of the actual applications to use the newly generated active secret.
+
+1. **Disable the old secret**
+   Send a PATCH request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint and set `enabled: false` to disable the secret:
+{% capture update-client-secret %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets/$SECRET_ID
+method: PATCH
+status_code: 200
+body:
+  enabled: true
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{update-client-secret | indent: 3}}
+
+1. **Test the client application**
+   Test the client application to ensure it can continue to authenticate successfully with the new secret.
+
+1. **Delete the old secret**
+   After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can delete the old secret in the API by sending a DELETE request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets/{clientSecretId}` endpoint:
+{% capture delete-client-secret %}
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/auth-servers/$AUTH_SERVER_ID/clients/$CLIENT_ID/secrets/$SECRET_ID
+method: DELETE
+status_code: 204
+{% endkonnect_api_request %}
+<!--vale on-->
+{% endcapture %}
+{{delete-client-secret | indent: 3}}
+{% endnavtab %}
+{% endnavtab %}
+{% endnavtabs %}
+
+
 
 {% comment %}
 ## Kong Identity authorization code flow
