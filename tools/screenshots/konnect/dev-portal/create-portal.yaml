@@ -1,0 +1,9 @@
+- output: ../../app/assets/images/dev-portal/create-portal.png
+  url: https://cloud.konghq.com/portals/create
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+    }

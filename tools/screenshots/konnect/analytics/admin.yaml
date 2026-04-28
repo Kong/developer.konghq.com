@@ -1,0 +1,11 @@
+# Shows a preset filter badge on a custom dashboard (analytics/custom-dashboards-reference.md)
+# Replace <dashboard-id> with the ID of a dashboard that has a preset filter configured
+- output: ../../app/assets/images/analytics/admin.png
+  url: https://cloud.konghq.com/us/analytics/dashboards/b499e50e-0dc5-485f-ae81-495708db1fc8
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+    }

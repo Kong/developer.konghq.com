@@ -1,0 +1,11 @@
+- output: ../../app/assets/images/konnect/datakit-flow-editor-node.png
+  url: https://cloud.konghq.com/us/gateway-manager/5b32f5e1-6c0e-498d-bd94-14c770c4ffbd/plugins/datakit/4fb77eee-c715-4c46-88a2-51ac43571d0e/update
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+      await clickElement('.button-open-editor');
+      await sleep(2000);
+    }

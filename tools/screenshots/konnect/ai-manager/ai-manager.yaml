@@ -1,0 +1,10 @@
+- output: ../../app/assets/images/konnect/ai-manager.png
+  url: https://cloud.konghq.com/us/ai-manager/c5c66850-8947-4d18-a707-ebc8cb86ba55/overview
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+      zoomPercentage(-0.50); // 150% zoom level (105% - 35%)
+    }
