@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@43cda3f695b1e0eeba0d82add0e9f0a65755e895
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/43cda3f695b1e0eeba0d82add0e9f0a65755e895'
+  x-oas-source: kong/platform-api@04e3c7e96d4cbd86883bde1030b754c0becdeb27
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/04e3c7e96d4cbd86883bde1030b754c0becdeb27'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -3823,6 +3823,24 @@ paths:
       responses:
         '204':
           description: Successfully deleted GraphQL Cost Decoration or the resource didn't exist
+      tags:
+        - GraphQL Cost Decorations
+    get:
+      operationId: get-graphql-rate-limiting-advanced-cost-with-service
+      summary: Get a GraphQL Cost Decoration associated with a Service
+      description: Get a GraphQL Cost Decoration associated with a Service using ID.
+      parameters:
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/GraphQLCostDecorationId'
+      responses:
+        '200':
+          description: Successfully fetched GraphQL Cost Decoration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+        '404':
+          description: Resource does not exist
       tags:
         - GraphQL Cost Decorations
     parameters:

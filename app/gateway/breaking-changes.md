@@ -463,6 +463,17 @@ rows:
 
 Review the [changelog](/gateway/changelog/#3-11-0-0) for all the changes in this release.
 
+### 3.11.0.10
+
+Breaking changes in the 3.11.0.10 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
+
 ### 3.11.0.0
 
 Breaking changes in the 3.11.0.0 release.
@@ -818,6 +829,12 @@ entity when using the AppRole authentication method.
 
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream
 path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
+
+#### PCRE version bump
+
+{{site.base_gateway}} 3.7 upgrades PCRE from `libpcre` 8.45 to `libpcre2` 10.43.
+This upgrade changes the expected regex syntax, and any incompatible regular expressions will prevent {{site.base_gateway}} from applying configuration.
+See the [PCRE2 syntax reference](https://www.pcre.org/current/doc/html/pcre2syntax.html) for more information on how to adjust your regexes.
 
 #### Known issues in 3.7.0.0
 

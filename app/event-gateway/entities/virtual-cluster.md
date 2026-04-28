@@ -128,31 +128,40 @@ columns:
   - title: "Credential mediation types (`authentication.mediation`)"
     key: credential
 rows:
-  - auth: "Anonymous"
+  - auth: "Anonymous (`anonymous`)"
     description: "Doesn't require clients to provide any authentication when connecting to the proxy."
     credential: None
-  - auth: "SASL/PLAIN"
+  - auth: "SASL/PLAIN (`sasl_plain`)"
     description: |
       Requires clients to provide a username and password.
       <br><br>
       Accepts a hardcoded list of usernames and passwords, either as strings or environment variables.
     credential: |
       `passthrough`, `terminate`
-  - auth: "SASL/OAUTHBEARER"
+  - auth: "SASL/OAUTHBEARER (`oauth_bearer`)"
     description: |
       Requires clients to provide an OAuth token and a JWKS endpoint to verify token signatures, optionally with claim mapping and validation rules.
     credential: |
       `passthrough`, `terminate`, `validate_forward`
-  - auth: "SASL/SCRAM-SHA-256"
+  - auth: "SASL/SCRAM-SHA-256 (`sasl_scram`)"
     description: |
       Requires clients to provide a username and password using SCRAM-SHA-256 hashing.
-    credential: |
-      `passthrough` 
-  - auth: "SASL/SCRAM-SHA-512"
-    description: |
-      Requires clients to provide a username and password using SCRAM-SHA-512 hashing.
+      Set `authentication.algorithm` to `sha256`.
     credential: |
       `passthrough`
+  - auth: "SASL/SCRAM-SHA-512 (`sasl_scram`)"
+    description: |
+      Requires clients to provide a username and password using SCRAM-SHA-512 hashing.
+      Set `authentication.algorithm` to `sha512`.
+    credential: |
+      `passthrough`
+  - auth: |
+      mTLS (`client_certificate`) {% new_in 1.1 %}
+    description: |
+      Requires clients to present a trusted TLS certificate during the TLS handshake.
+      The client certificate is verified against a [TLS trust bundle](/event-gateway/entities/tls-trust-bundle/).
+      The certificate's principal (for example, the Common Name) can be used to enforce access control with [ACL policies](/event-gateway/policies/acl/).
+    credential: None
 {% endtable %}
 
 ### Credential mediation

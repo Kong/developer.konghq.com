@@ -21,19 +21,12 @@ rows:
       text: "{{site.base_gateway}} WAF capabilities"
       sub_text: "Request filtering, validation, and abuse controls delivered through {{site.base_gateway}}"
 
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "WAF plugins"
-              blocks:
-                - type: text
-                  text: |
-                    {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
-
-
-  - column_count: 3
+  - header:
+      type: h2
+      text: "WAF plugins"
+      description: |
+        {{site.base_gateway}} can act as a front door for your applications by enforcing authentication and authorization, applying rate limits, restricting abusive sources, and validating requests before they reach upstream services.
+    column_count: 3
     columns:
       - blocks:
           - type: card
@@ -71,8 +64,6 @@ rows:
                 - text: Configure Javascript injection protection
                   url: /plugins/injection-protection/examples/javascript/
 
-  - column_count: 3
-    columns:
       - blocks:
           - type: card
             config:
@@ -108,8 +99,7 @@ rows:
                   url: /plugins/xml-threat-protection/
                 - text: Configure JSON Threat Protection
                   url: /plugins/json-threat-protection/  
-  - column_count: 3
-    columns:
+
       - blocks:
           - type: card
             config:
@@ -140,6 +130,33 @@ rows:
               ctas:
                 - text: Configure Response Transformer
                   url: /plugins/response-transformer/examples/add-header/
+  - header:
+      type: h2
+      text: "WAF for Dedicated Cloud Gateways"
+      description: |
+        {% include /sections/dcgw-waf-intro.md %}
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Public network WAF
+              description: |
+                Learn how to secure your public Dedicated Cloud Gateway with WAF.
+              icon: /assets/icons/world.svg
+              ctas:
+                - text: Configure public network WAF
+                  url: /dedicated-cloud-gateways/public-network/
+      - blocks:
+          - type: card
+            config:
+              title: Private network WAF
+              description: |
+                Learn how to secure your private Dedicated Cloud Gateway with WAF.
+              icon: /assets/icons/lock.svg
+              ctas:
+                - text: Configure private network WAF
+                  url: /dedicated-cloud-gateways/private-network/
   - header:
       type: h2
       text: "Other security-related resources"

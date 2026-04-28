@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@5c86310ccc2211b7511ad22a7b9e0a2807a21708
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5c86310ccc2211b7511ad22a7b9e0a2807a21708'
+  x-oas-source: kong/platform-api@15ead7ce7e5d258d6d6af501a5426d562f28e03c
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/15ead7ce7e5d258d6d6af501a5426d562f28e03c'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -198,6 +198,128 @@ paths:
       description: |
         Deletes an existing identity provider configuration. This operation removes a specific identity provider
         from the organization.
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Auth Settings
+  '/identity-providers/{idpId}/team-group-mappings':
+    parameters:
+      - name: idpId
+        in: path
+        description: ID of the identity provider.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+    get:
+      operationId: list-idp-team-group-mappings
+      summary: List Team Group Mappings
+      description: |
+        Returns a paginated list of team group mappings for the specified identity provider.
+        Mappings define the relationship between identity provider groups and Konnect teams.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageAfter'
+        - $ref: '#/components/parameters/PageBefore'
+        - name: filter
+          in: query
+          description: Filter mappings by team ID or group name.
+          required: false
+          schema:
+            type: object
+            properties:
+              team_id:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+              group:
+                $ref: '#/components/schemas/StringFieldEqualsFilter'
+          style: deepObject
+      responses:
+        '200':
+          $ref: '#/components/responses/IdpTeamGroupMappingsCollection'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Auth Settings
+    post:
+      operationId: create-idp-team-group-mapping
+      summary: Create Team Group Mapping
+      description: |
+        Creates a new team group mapping for the specified identity provider.
+        A mapping associates an identity provider group with a Konnect team.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateIdpTeamGroupMappingRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/IdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      tags:
+        - Auth Settings
+  '/identity-providers/{idpId}/team-group-mappings/{id}':
+    parameters:
+      - name: idpId
+        in: path
+        description: ID of the identity provider.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      - name: id
+        in: path
+        description: ID of the team group mapping.
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+    get:
+      operationId: get-idp-team-group-mapping
+      summary: Get Team Group Mapping
+      description: Returns the team group mapping for the specified ID.
+      responses:
+        '200':
+          $ref: '#/components/responses/IdpTeamGroupMapping'
+        '400':
+          $ref: '#/components/responses/IdentityBadRequest'
+        '401':
+          $ref: '#/components/responses/IdentityUnauthenticated'
+        '403':
+          $ref: '#/components/responses/IdentityPermissionDenied'
+        '404':
+          $ref: '#/components/responses/IdentityNotFound'
+      tags:
+        - Auth Settings
+    delete:
+      operationId: delete-idp-team-group-mapping
+      summary: Delete Team Group Mapping
+      description: |
+        Deletes a team group mapping by ID.
+        Returns 204 if the mapping was deleted, or 404 if the mapping was not found.
       responses:
         '204':
           description: No Content
@@ -1524,6 +1646,24 @@ paths:
         - Personal Access Tokens
 components:
   parameters:
+    PageAfter:
+      name: 'page[after]'
+      description: 'Request the next page of data, starting with the item after this parameter.'
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
+    PageBefore:
+      name: 'page[before]'
+      description: 'Request the next page of data, starting with the item before this parameter.'
+      required: false
+      in: query
+      allowEmptyValue: true
+      schema:
+        type: string
+        example: ewogICJpZCI6ICJoZWxsbyB3b3JsZCIKfQ
     PageNumber:
       name: 'page[number]'
       description: Determines which page of the entities to retrieve.
@@ -1925,6 +2065,32 @@ components:
           - Tech Leads
           - API Engineers
       title: TeamGroupMapping
+    IdpTeamGroupMapping:
+      description: A mapping between a Konnect team and an identity provider group.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        team_id:
+          description: The Konnect team ID.
+          type: string
+          format: uuid
+          example: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group:
+          description: The identity provider group name. Group names are case sensitive.
+          type: string
+          example: Tech Leads
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      required:
+        - id
+        - team_id
+        - group
+        - created_at
+        - updated_at
+      title: IdpTeamGroupMapping
     AssignedRole:
       description: An assigned role is a role that has been assigned to a user or team.
       type: object
@@ -2487,6 +2653,43 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
+    CursorMetaPage:
+      type: object
+      properties:
+        first:
+          description: URI to the first page
+          type: string
+          format: path
+        last:
+          description: URI to the last page
+          type: string
+          format: path
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        previous:
+          description: URI to the previous page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+      required:
+        - size
+        - next
+        - previous
+    CursorMeta:
+      description: Pagination metadata.
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaPage'
+      required:
+        - page
     LegacyStringFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `contains`'
       type: object
@@ -3122,6 +3325,37 @@ components:
       value:
         name: Token
         ttl_seconds: 2592000
+    IdpTeamGroupMappingExample:
+      value:
+        id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+        team_id: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group: Tech Leads
+        created_at: '2024-01-15T10:30:00.000Z'
+        updated_at: '2024-01-15T10:30:00.000Z'
+    IdpTeamGroupMappingsCollectionExample:
+      value:
+        meta:
+          page:
+            first: '/identity-providers/d32d905a-ed33-46a3-a093-d8f536af9a8a/team-group-mappings?page[size]=10'
+            last: '/identity-providers/d32d905a-ed33-46a3-a093-d8f536af9a8a/team-group-mappings?page[size]=10&page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ'
+            next: '/identity-providers/d32d905a-ed33-46a3-a093-d8f536af9a8a/team-group-mappings?page[size]=10&page[after]=ewogICJpZCI6ICJoZWysbyB3b3JsZCIKgZ'
+            previous: null
+            size: 10
+        data:
+          - id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
+            team_id: 6801e673-cc10-498a-94cd-4271de07a0d3
+            group: Tech Leads
+            created_at: '2024-01-15T10:30:00.000Z'
+            updated_at: '2024-01-15T10:30:00.000Z'
+          - id: 8f9fd312-a987-4628-b4c5-bb4f4fddd5f8
+            team_id: 6801e673-cc10-498a-94cd-4271de07a0d3
+            group: API Engineers
+            created_at: '2024-01-15T11:00:00.000Z'
+            updated_at: '2024-01-15T11:00:00.000Z'
+    CreateIdpTeamGroupMappingExample:
+      value:
+        team_id: 6801e673-cc10-498a-94cd-4271de07a0d3
+        group: Tech Leads
     UnauthorizedExample:
       value:
         status: 401
@@ -3305,6 +3539,29 @@ components:
             Example Request Body:
               $ref: '#/components/examples/Patch-Team-Group-Mappings'
       description: The request schema for a partial update of mappings from Konnect Teams to IdP Groups.
+    CreateIdpTeamGroupMappingRequest:
+      description: Request to create an IDP team group mapping.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              team_id:
+                description: The Konnect team ID to associate with the identity provider group.
+                type: string
+                format: uuid
+                example: 6801e673-cc10-498a-94cd-4271de07a0d3
+              group:
+                description: The identity provider group name. Group names are case sensitive.
+                type: string
+                example: Tech Leads
+            required:
+              - team_id
+              - group
+          examples:
+            CreateIdpTeamGroupMapping:
+              $ref: '#/components/examples/CreateIdpTeamGroupMappingExample'
     AssignRole:
       content:
         application/json:
@@ -3355,6 +3612,8 @@ components:
                   - Viewer
                   - Registration Approver
                   - Content Editor
+                  - Add On Admin
+                  - Add On Viewer
               entity_id:
                 description: The ID of the entity.
                 type: string
@@ -3365,6 +3624,7 @@ components:
                 type: string
                 example: Control Planes
                 enum:
+                  - Add Ons
                   - APIs
                   - API Products
                   - Application Auth Strategies
@@ -3757,6 +4017,31 @@ components:
           examples:
             Team Mapping Collection:
               $ref: '#/components/examples/team-group-mapping-collection'
+    IdpTeamGroupMapping:
+      description: A single team group mapping.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IdpTeamGroupMapping'
+          examples:
+            IdpTeamGroupMapping:
+              $ref: '#/components/examples/IdpTeamGroupMappingExample'
+    IdpTeamGroupMappingsCollection:
+      description: A paginated collection of IDP team group mappings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/CursorMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdpTeamGroupMapping'
+          examples:
+            IdpTeamGroupMappingsCollection:
+              $ref: '#/components/examples/IdpTeamGroupMappingsCollectionExample'
     AssignedRoleSingle:
       description: A get action response of a single assigned role.
       content:

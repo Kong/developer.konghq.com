@@ -61,6 +61,7 @@ autoscaler
 autoscalers
 autoscales
 autoscaling
+availability_zones
 Avalara
 Avro
 aws
@@ -108,6 +109,7 @@ CAs
 callout
 callouts
 camelCase
+CDNs
 cef
 Cerebras
 certificate_admin
@@ -118,6 +120,7 @@ chatbot
 chatbots
 chatwise
 cidr
+cidr_block
 cidrs
 cleartext
 cli
@@ -132,10 +135,12 @@ CloudFormation
 CloudFormation
 Cloudformation
 Cloudformation
+cloud_gateway_provider_account_id
 Cloudsmith
 cmd
 cncf
 cncf's
+CNAMEs
 Cohere
 cohere
 Cognito
@@ -158,6 +163,7 @@ cors
 cosmiconfig
 cosocket
 CPUs
+vCPUs
 crd
 crds
 created_at
@@ -279,6 +285,7 @@ failover
 fapi
 Fargate
 Fargate
+Fastly
 favicon
 filepath
 filetype
@@ -621,6 +628,7 @@ ngrok
 ngx
 ngx_stream_proxy_module
 ngx_wasm_module
+NLBs
 no_version
 node_quantifier
 Node.js
@@ -679,6 +687,7 @@ perf
 performant
 petstore
 PDFs
+pg_max_concurrent_queries
 pgdump
 pgvector
 pipeline
@@ -1023,6 +1032,7 @@ vLLM
 vllm
 vms
 vnet
+VNets
 vpc
 vpcs
 VS Code

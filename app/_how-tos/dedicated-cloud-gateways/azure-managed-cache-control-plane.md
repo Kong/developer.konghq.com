@@ -19,6 +19,14 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: Partials
     url: /gateway/entities/partial/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Dedicated Cloud Gateways public network architecture and security
+    url: /dedicated-cloud-gateways/public-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 min_version:
   gateway: '3.13'
 prereqs:
