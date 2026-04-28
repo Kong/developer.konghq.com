@@ -69,6 +69,15 @@ Model participates in runtime plugin resolution alongside other scoping dimensio
 
 A plugin configuration can reference a Model through its `model` field. When a plugin entry is scoped to a Model, that entry only applies to requests where AI Proxy or AI Proxy Advanced resolves the same model name from the request. Plugin entries without a `model` field apply regardless of which model the request targets.
 
+{% mermaid %}
+flowchart LR
+  A["Incoming request"] --> B["Route + Service selection"]
+  B --> C["Resolve request model"]
+  C --> D{"Model-scoped config match?"}
+  D -- yes --> E["Apply model-scoped plugins"]
+  D -- no --> F["Apply non-model-scoped plugins"]
+{% endmermaid %}
+
 At runtime, the request model is resolved by the AI routing flow (AI Proxy, AI Proxy Advanced, or a model shim flow, depending on deployment configuration). The plugin iterator then uses the resolved Model to select matching plugin configurations.
 
 {:.warning}
@@ -209,7 +218,11 @@ The following example shows a Model named `openai/gpt-4o`.
 {% entity_example %}
 type: model
 data:
-  model: openai-something
+  name: openai/gpt-4o
+formats:
+  - deck
+  - admin-api
+  - konnect-api
 {% endentity_example %}
 
 ## Scope a plugin to a Model
@@ -235,8 +248,6 @@ formats:
   - deck
   - admin-api
 {% endentity_example %}
-
-
 
 ## Schema
 
