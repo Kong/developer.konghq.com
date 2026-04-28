@@ -53,7 +53,7 @@ We recommend that data plane proxies verify the identity of the control plane. T
 > If overridden, {{site.mesh_product_name}} uses the certificates to protect not only [data plane proxy to control plane](#data-plane-proxy-to-control-plane-communication) traffic, but also [user to control plane](#user-to-control-plane-communication) traffic and [control plane to control plane](#control-plane-to-control-plane-multi-zone) traffic.
 
 {% capture certificate %}
-Generate a TLS pair with a PKI of your choice and store it in PEM-encoded format in `/tmp/tls.crt`, `/tmp/tls.key`. 
+Generate a TLS pair with a PKI of your choice and store it in PEM-encoded format in `/tmp/tls.crt` and `/tmp/tls.key`. 
 Store the CA used to sign this pair in `/tmp/ca.crt`.
 
 You can also use `kumactl` to generate self-signed certificates:
@@ -98,7 +98,7 @@ To configure the control plane and data plane proxies with custom TLS certificat
 
    The data plane proxy injector in the control plane automatically provides the CA to the {{site.mesh_product_name}} sidecar so it can verify the control plane's identity.
 
-   If you receive an error like the following, make sure you are using a supported certificate type (PEM) and that the certificate doesn't contain incomplete or corrupted data:
+   If you get an error like the following, make sure you are using a supported certificate type (PEM) and that the certificate doesn't contain incomplete or corrupted data:
    ```sh
    Warning  FailedCreate  3m39s (x18 over 14m)  replicaset-controller  Error creating: Internal error occurred: failed calling webhook "namespace-kuma-injector.kuma.io": could not get REST client: unable to load root certificates: unable to parse bytes as PEM block
    ```
@@ -117,7 +117,7 @@ To configure the control plane and data plane proxies with custom TLS certificat
      kuma-cp run
    ```
 
-1. Configure the data plane proxy with CA:
+1. Configure the data plane proxy with the CA:
    ```sh
    kuma-dp run \
      --cp-address=https://<KUMA_CP_DNS_NAME>:5678 \
@@ -126,7 +126,7 @@ To configure the control plane and data plane proxies with custom TLS certificat
      --dataplane-token-file=/tmp/kuma-dp-redis-1-token
    ```
 
-   You can also provide the CA via environment variable `KUMA_CONTROL_PLANE_CA_CERT`.
+   You can also provide the CA via the environment variable `KUMA_CONTROL_PLANE_CA_CERT`.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -143,21 +143,27 @@ You can enable it by using the `KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=tr
 
 {% navtabs "prometheus" %}
 {% navtab "Kubernetes" %}
-Create a secret in the namespace where the control plane is installed:
-```sh
-kubectl create secret generic general-tls-certs -n {{site.mesh_namespace}} \
-  --from-file=tls.crt=/tmp/tls.crt \
-  --from-file=tls.key=/tmp/tls.key \
-  --from-file=ca.crt=/tmp/ca.crt
-```
+1. Prepare certificates:
 
-Point to this secret when installing {{site.mesh_product_name}}:
+{{certificate | indent: 3}}
 
-{% cpinstall install-mads %}
-controlPlane.tls.general.secretName=general-tls-certs
-controlPlane.tls.general.caBundle=$(cat /tmp/ca.crt | base64)
-controlPlane.envVars.KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=true
-{% endcpinstall %}
+1. Create a secret in the namespace where the control plane is installed:
+   ```sh
+   kubectl create secret generic general-tls-certs -n {{site.mesh_namespace}} \
+     --from-file=tls.crt=/tmp/tls.crt \
+     --from-file=tls.key=/tmp/tls.key \
+     --from-file=ca.crt=/tmp/ca.crt
+   ```
+
+1. Point to this secret when installing {{site.mesh_product_name}}:
+
+   ```sh
+   helm upgrade --install kong-mesh kong-mesh/kong-mesh \
+     --namespace {{site.mesh_namespace}} \
+     --set controlPlane.tls.general.secretName=general-tls-certs \
+     --set "controlPlane.tls.general.caBundle=$(cat /tmp/ca.crt | base64)" \
+     --set controlPlane.envVars.KUMA_MONITORING_ASSIGNMENT_SERVER_TLS_ENABLED=true
+   ```
 
 {% endnavtab %}
 {% navtab "Universal" %}
@@ -210,7 +216,7 @@ To configure the API Server with custom TLS certificates:
      --set controlPlane.tls.apiServer.secretName=api-server-tls
    ```
 
-   If you receive an error like the following, make sure you are using a supported PEM certificate and that the certificate doesn't contain incomplete or corrupted data:
+   If you get an error like the following, make sure you are using a supported PEM certificate and that the certificate doesn't contain incomplete or corrupted data:
    ```sh
    Warning  FailedCreate  3m39s (x18 over 14m)  replicaset-controller  Error creating: Internal error occurred: failed calling webhook "namespace-kuma-injector.kuma.io": could not get REST client: unable to load root certificates: unable to parse bytes as PEM block
    ```
@@ -326,4 +332,4 @@ To configure the global and zone control planes with custom TLS certificates:
 Define firewall rules on the global control plane to only accept connections from known IPs of the zone control planes.
 
 {:.info}
-> Third-party extensions, cloud implementations, or [commercial offerings](/mesh/) may extend authentication support.
+> Third-party extensions, cloud implementations, or commercial offerings may extend authentication support.
