@@ -387,7 +387,6 @@ The global control plane syncs these trust bundles to all zones, enabling cross-
    ```
 
    `upstream_rq_total` for the `demo-app` cluster should be greater than zero.
-   The global control plane proxies inspect calls to whichever zone owns the dataplane, so you don't need a port-forward into zone-2.
 
 ## Next steps
 
