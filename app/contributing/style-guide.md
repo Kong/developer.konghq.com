@@ -20,7 +20,7 @@ works_on:
 
 llm: false
 ---
-
+Writing and formatting guidelines for contributing to the Kong Developer site. Covers language, tone, grammar, capitalization, code formatting, icons, and third-party tool documentation.
 <!--vale off-->
 
 ## Language
