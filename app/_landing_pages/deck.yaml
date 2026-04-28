@@ -370,7 +370,7 @@ rows:
                 * `POST /workspaces`: Create missing workspaces.
 
                 To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag.
-                This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:
+                This outputs all of the queries being made.
             - q: |
                 What is the latest version of decK, and where can I find all the releases?
               a: |
