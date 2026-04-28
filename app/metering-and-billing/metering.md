@@ -24,6 +24,9 @@ faqs:
   - q: Why don't I see any events in my customer's invoice?
     a: |
       {% include faqs/no-events-in-invoice.md %}
+  - q: I previously enabled metering using the **Enable Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
+    a: |
+      {% include faqs/metering-and-billing-legacy-ingestion.md %}
 ---
 
 {:.success}
@@ -193,9 +196,7 @@ rows:
 {% endtable %}
 <!--vale on -->
 
-For {{site.konnect_short_name}}, you can either use the built-in {{site.metering_and_billing}} event ingestion that uses events from Advanced Analytics or use the [Metering & Billing plugin](/plugins/metering-and-billing/).
-{% include /plugins/metering-and-billing/konnect-use-case-table.md %}
-For more information, see the [Metering & Billing plugin](/plugins/metering-and-billing/).
+For {{site.konnect_short_name}}, use the [Metering & Billing plugin](/plugins/metering-and-billing/) to ingest API Gateway and LLM events.
 
 ## Create a meter
 
@@ -203,21 +204,30 @@ To configure a meter in {{site.konnect_short_name}}, do the following:
 
 {% navtabs "create-meter" %}
 {% navtab "{{site.base_gateway}} API requests" %}
-To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and[Route](/gateway/entities/route/#set-up-a-route).
+To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and [Route](/gateway/entities/route/#set-up-a-route).
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. Enable **Gateway**.
-1. Select a Gateway
-1. Click **Enable Gateway**
+Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on your Gateway Service:
 
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click your Gateway.
+1. Click **Plugins**.
+1. Configure the **Metering and Billing** plugin.
+1. Click **Save**.
+
+For a complete tutorial, see [Meter {{site.base_gateway}} API requests by Consumer](/how-to/meter-api-requests-by-consumer/).
 {% endnavtab %}
 {% navtab "{{site.ai_gateway}} LLM tokens" %}
 To meter {{site.ai_gateway}} LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. Enable **{{site.ai_gateway}} Tokens**.
+Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on your Gateway Service:
 
-You will see `kong_konnect_llm_tokens` available from the list of available meters.
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Click your Gateway.
+1. Click **Plugins**.
+1. Configure the **Metering and Billing** plugin.
+1. Click **Save**.
+
+For a complete tutorial, see [Monetize LLM traffic in {{site.konnect_short_name}}](/how-to/meter-llm-traffic/).
 {% endnavtab %}
 {% navtab "Generic meters" %}
 
@@ -290,7 +300,7 @@ The following example show how you can configure meters and usage events for com
 ### LLM token usage
 
 {:.info}
-> If you want to meter {{site.ai_gateway}} LLM token usage, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Related API Gateways** for the {{site.ai_gateway}} Tokens setting.
+> If you want to meter {{site.ai_gateway}} LLM token usage, configure the [Metering & Billing plugin](/plugins/metering-and-billing/) with `meter_ai_token_usage: true`.
 
 In most cases, AI applications want to count token usage for billing or cost control purposes. As a single AI interaction involves consuming multiple tokens, we define our generic meter with the `sum` aggregation and report token usage in the data's tokens property. As most LLMs charge differently for input, output and system prompts and different models it makes sense to add model and prompt type to the group by.
 
@@ -381,7 +391,7 @@ body:
 ### API request count
 
 {:.info}
-> If you want to meter {{site.base_gateway}} API requests, you can enable the built-in integration to meter usage by navigating to **{{site.metering_and_billing}}** > **Metering** and clicking **Enable Gateways** for the API Gateway Requests setting.
+> If you want to meter {{site.base_gateway}} API requests, configure the [Metering & Billing plugin](/plugins/metering-and-billing/) with `meter_api_requests: true`.
 
 Products monetizing API usage may want to count the number of requests. With choosing the `count` aggregation each event will increase the meter by one. For grouping we can add method and route. Note how we report the route template not the actual HTTP path to avoid differences around IDs and dynamic routes.
 
