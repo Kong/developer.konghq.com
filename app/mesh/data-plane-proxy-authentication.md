@@ -139,7 +139,7 @@ When a token includes a workload value, the data plane proxy must have a matchin
 
 If a data plane proxy connects with a workload token, it must have the `kuma.io/workload` label with a value matching the token. Connection attempts without the matching label are rejected.
 
-If a [MeshIdentity](/mesh/policies/meshidentity/) resource references the `kuma.io/workload` label in its SPIFFE ID path template (for example, `/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}`), then:
+If a [MeshIdentity](/mesh/policies/meshidentity/) resource references the `kuma.io/workload` label in its SPIFFE ID path template (for example, `/workload/&#123;&#123; label "kuma.io/workload" &#125;&#125;`), then:
 
 * The data plane proxy must have the `kuma.io/workload` label
 * The label can be provided either via the token or on the data plane proxy resource
@@ -210,9 +210,9 @@ columns:
     key: solution
 rows:
   - error: |
-      `missing required label 'kuma.io/workload' - dataplane is selected by MeshIdentity 'backend-identity' with path template '/workload/{% raw %}{{ label "kuma.io/workload" }}{% endraw %}'`
+      `missing required label 'kuma.io/workload' - dataplane is selected by MeshIdentity 'backend-identity' with path template '/workload/&#123;&#123; label "kuma.io/workload" &#125;&#125;'`
     cause: |
-      A [MeshIdentity](/mesh/policies/meshidentity/) resource uses `{% raw %}{{ label "kuma.io/workload" }}{% endraw %}` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
+      A [MeshIdentity](/mesh/policies/meshidentity/) resource uses `&#123;&#123; label "kuma.io/workload" &#125;&#125;` in its SPIFFE ID path template, but the connecting data plane proxy lacks the `kuma.io/workload` label.
     solution: |
       Add the `kuma.io/workload` label by generating a token with `--workload` or by setting the label directly on the data plane proxy resource.
   - error: "`dataplane workload 'frontend' is not allowed with this token. Allowed workload in token is 'backend'`"
