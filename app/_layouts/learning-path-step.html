@@ -1,0 +1,60 @@
+---
+layout: with_aside
+---
+{% if page.series %}
+<p class="text-sm text-secondary m-0">Step {{ page.series.position }} of {{ page.series.items | size }}</p>
+{% endif %}
+
+<div class="flex flex-col gap-8 accordion" data-all-expanded="true">
+{% include sections/prerequisites.html tier=page.tier tools=page.tools %}
+
+  {% if page.learn %}
+  <div class="accordion-item flex flex-col border border-primary/10 rounded-lg overflow-hidden">
+    <a href="#learn" id="learn"
+       class="flex justify-between items-center px-6 py-4 bg-secondary cursor-pointer accordion-trigger hover:no-underline">
+      <h2 class="m-0 text-xl font-semibold">{{ page.learn.title | default: "Learn" }}</h2>
+      <span class="inline-flex chevron-icon rotate-180">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+    </a>
+    <div class="content accordion-panel px-6 pb-6 pt-4">
+      {% assign learn_include = page.learn.include | append: ".md" %}
+      {% capture learn_content %}{% include {{ learn_include }} %}{% endcapture %}
+      {{ learn_content | markdownify }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if page.practice %}
+  <div class="accordion-item flex flex-col border border-primary/10 rounded-lg overflow-hidden">
+    <a href="#practice" id="practice"
+       class="flex justify-between items-center px-6 py-4 bg-secondary cursor-pointer accordion-trigger hover:no-underline">
+      <h2 class="m-0 text-xl font-semibold">{{ page.practice.title | default: "Practice" }}</h2>
+      <span class="inline-flex chevron-icon rotate-180">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+    </a>
+    <div class="content accordion-panel px-6 pb-6 pt-4">
+      {% assign practice_include = page.practice.include | append: ".md" %}
+      {% capture practice_content %}{% include {{ practice_include }} %}{% endcapture %}
+      {{ practice_content | markdownify }}
+    </div>
+  </div>
+  {% endif %}
+
+{% if page.cleanup %}
+{% include sections/cleanup.html %}
+{% endif %}
+</div>
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
+
+{% if page.navigation %}
+{% include sections/prev_next.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
+{% endif %}
+
+{% contentfor info_box %}
+{% include info_box/learning_path.html %}
+{% endcontentfor %}

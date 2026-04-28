@@ -89,6 +89,35 @@ platform:
           url: /catalog/
           product: catalog
 
+learning_paths:
+    - text: API Gateway
+      url: /learning-paths/gateway/
+      product: gateway
+    - text: AI Gateway
+      url: /learning-paths/ai-gateway/
+      product: ai-gateway
+    - text: Event Gateway
+      url: /learning-paths/event-gateway/
+      product: event-gateway
+    - text: Insomnia
+      url: /learning-paths/insomnia/
+      product: insomnia
+    - text: Kong Ingress Controller
+      url: /learning-paths/kic/
+      product: kic
+    - text: Kubernetes Operator
+      url: /learning-paths/operator/
+      product: operator
+    - text: Kong Mesh
+      url: /learning-paths/mesh/
+      product: mesh
+    - text: Dev Portal
+      url: /learning-paths/dev-portal/
+      product: dev-portal
+    - text: "Catalog"
+      url: /learning-paths/catalog/
+      product: catalog
+
 how_tos:
     - text: API Gateway
       url: /how-to/?products=gateway

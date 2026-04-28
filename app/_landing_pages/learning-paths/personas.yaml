@@ -1,0 +1,50 @@
+metadata:
+  title: Learning Paths by Persona
+  content_type: landing_page
+  description: Find learning paths matched to your role and goals, regardless of which Kong product you're working with.
+  breadcrumbs:
+    - /learning-paths/
+
+rows:
+  - header:
+      type: h1
+      text: Learning Paths by Persona
+      sub_text: Not sure where to start? Pick the role that best describes you and explore paths tailored to your goals.
+
+  - column_count: 2
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: API Developer
+              description: Build, test, and consume APIs. Learn how to configure routes, secure endpoints, and integrate with upstream services.
+              cta:
+                url: /learning-paths/personas/api-developer/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: Platform Engineer
+              description: Deploy and operate Kong infrastructure at scale. Learn about deployment topologies, high availability, and observability.
+              cta:
+                url: /learning-paths/personas/platform-engineer/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: Security Engineer
+              description: Secure APIs with authentication, authorization, rate limiting, and policy enforcement.
+              cta:
+                url: /learning-paths/personas/security-engineer/
+                text: View paths
+
+      - blocks:
+          - type: card
+            config:
+              title: DevOps Engineer
+              description: Automate and manage Kong deployments with declarative tooling like decK, Terraform, and Kubernetes Operator.
+              cta:
+                url: /learning-paths/personas/devops-engineer/
+                text: View paths
