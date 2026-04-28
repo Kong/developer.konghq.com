@@ -371,6 +371,12 @@ rows:
 
                 To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag.
                 This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:
+            - q: |
+                What is the latest version of decK, and where can I find all the releases?
+              a: |
+                The latest version of decK is **{{site.data.deck_latest.version}}**. We recommend keeping your decK version up-to-date whenever possible.
+
+                For all available versions of decK, see the [decK releases page on GitHub](https://github.com/Kong/deck/releases).
 
   - header:
       type: h2

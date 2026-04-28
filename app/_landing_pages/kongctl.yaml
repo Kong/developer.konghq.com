@@ -328,6 +328,13 @@ rows:
                 * A command-line interface with human-friendly output formats
                 * Declarative configuration with plan-based workflows
                 * Interactive terminal UI for resource exploration
+            - q: |
+                What is the latest version of kongctl, and where can I find all the releases?
+              a: |
+                The latest version of kongctl is **{{site.data.kongctl_latest.version}}**. We recommend keeping your kongctl version up-to-date whenever possible.
+
+                For all available versions of kongctl, see the [kongctl releases page on GitHub](https://github.com/Kong/kongctl/releases).
+
 
   - header:
       type: h2
