@@ -41,7 +41,7 @@ For more information, see [Transparent proxying](/mesh/transparent-proxying/).
 ## Configuration trimming with MeshTrafficPermission
 
 {:.warning}
-> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/). If you're using [TrafficPermission](/mesh/policies/traffic-permissions/), migrate to MeshTrafficPermission before enabling this feature, otherwise all traffic flow may stop.
+> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/). If you're using TrafficPermission, migrate to MeshTrafficPermission before enabling this feature, otherwise all traffic flow may stop.
 
 The problem described in [Reachable services](#reachable-services) can also be mitigated by defining [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policies and [configuring](/mesh/control-plane-configuration/) a zone control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
 
@@ -247,7 +247,7 @@ Instead of sending the entire configuration on each update, the control plane se
 
 This feature is especially beneficial for sidecars that don't use `reachableBackends` or `reachableServices`.
 
-Enable it for the entire deployment with `KUMA_EXPERIMENTAL_DELTA_XDS: true`, or for an individual sidecar (including Ingress and Egress):
+Enable it for the entire deployment with `KUMA_EXPERIMENTAL_DELTA_XDS=true`, or for an individual sidecar (including Ingress and Egress):
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
