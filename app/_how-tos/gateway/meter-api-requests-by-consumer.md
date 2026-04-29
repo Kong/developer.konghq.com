@@ -157,14 +157,14 @@ done
 ```
 <!--vale on-->
 
-This sends three requests, each emitting a CloudEvent with `subject: alice` to {{site.konnect_short_name}}.
+This sends three requests, each emitting a CloudEvent with the subject `consumer:<consumer-id>` to {{site.konnect_short_name}}.
 
 Now verify that the events were received:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. Click the **Events** tab.
 
-You'll see three events listed, each with `subject: alice`, one for each request that passed through {{site.base_gateway}}.
+You'll see three events listed, each with the subject `consumer:<consumer-id>`, one for each request that passed through {{site.base_gateway}}.
 
 You'll also see an error message like `no customer found for event subject: consumer` associated with the event.
 This is expected since we're only tracking API usage.
