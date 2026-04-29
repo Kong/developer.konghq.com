@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@8bd8ee44447c70ca66847a463aa3d37bb574d1dd
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/8bd8ee44447c70ca66847a463aa3d37bb574d1dd'
+  x-oas-source: kong/platform-api@ad0b97c09341fa1f1a05e6c348a3b028ad36a503
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/ad0b97c09341fa1f1a05e6c348a3b028ad36a503'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -483,7 +483,6 @@ components:
           type: string
           format: uuid
           example: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
-          readOnly: true
         name:
           description: The name of the control plane.
           type: string
@@ -505,13 +504,11 @@ components:
               type: string
               format: url
               example: 'https://acfe5f253f.cp.konghq.com'
-              readOnly: true
             telemetry_endpoint:
               description: Telemetry Endpoint.
               type: string
               format: url
               example: 'https://acfe5f253f.tp0.konghq.com'
-              readOnly: true
             cluster_type:
               description: The ClusterType value of the cluster associated with the Control Plane.
               type: string
@@ -523,7 +520,6 @@ components:
                 - CLUSTER_TYPE_SERVERLESS
                 - CLUSTER_TYPE_KAFKA_NATIVE_EVENT_PROXY
                 - CLUSTER_TYPE_SERVERLESS_V1
-              readOnly: true
             auth_type:
               description: The auth type value of the cluster associated with the Runtime Group.
               type: string
@@ -531,12 +527,10 @@ components:
               enum:
                 - pinned_client_certs
                 - pki_client_certs
-              readOnly: true
             cloud_gateway:
               description: Whether the Control Plane can be used for cloud-gateways.
               type: boolean
               nullable: false
-              readOnly: true
             proxy_urls:
               $ref: '#/components/schemas/ProxyURLs'
           required:
@@ -545,18 +539,17 @@ components:
             - cluster_type
             - auth_type
             - cloud_gateway
+            - proxy_urls
         created_at:
           description: An ISO-8604 timestamp representation of control plane creation date.
           type: string
           format: date-time
           example: '2022-11-04T20:10:06.927Z'
-          readOnly: true
         updated_at:
           description: An ISO-8604 timestamp representation of control plane update date.
           type: string
           format: date-time
           example: '2022-11-04T20:10:06.927Z'
-          readOnly: true
       additionalProperties: false
       required:
         - id
@@ -564,6 +557,8 @@ components:
         - config
         - created_at
         - updated_at
+        - description
+        - labels
       x-examples:
         Example 1:
           id: 7f9fd312-a987-4628-b4c5-bb4f4fddd5f7
@@ -794,6 +789,34 @@ components:
           $ref: '#/components/schemas/BooleanFieldFilter'
       additionalProperties: false
       title: ControlPlaneFilterParameters
+    CursorPaginatedMetaWithSizeAndTotal:
+      description: returns the pagination information
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/CursorMetaWithSizeAndTotal'
+      required:
+        - page
+      title: CursorPaginatedMetaWithSizeAndTotal
+    CursorMetaWithSizeAndTotal:
+      type: object
+      properties:
+        next:
+          description: URI to the next page
+          type: string
+          format: path
+          nullable: true
+        size:
+          description: Requested page size
+          type: number
+          example: 10
+        total:
+          description: Total number of objects in the collection; will only be present on the first page
+          type: number
+          example: 974
+      required:
+        - size
+        - next
     BooleanFieldFilter:
       description: Filter by a boolean value (true/false).
       type: boolean
@@ -1142,36 +1165,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
-    CursorMetaWithSizeAndTotal:
-      type: object
-      properties:
-        next:
-          description: URI to the next page
-          type: string
-          format: path
-          nullable: true
-        size:
-          description: Requested page size
-          type: number
-          example: 10
-        total:
-          description: Total number of objects in the collection; will only be present on the first page
-          type: number
-          example: 974
-          nullable: true
-      required:
-        - size
-        - next
-        - total
-    CursorPaginatedMetaWithSizeAndTotal:
-      description: returns the pagination information
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/CursorMetaWithSizeAndTotal'
-      required:
-        - page
-      title: CursorPaginatedMetaWithSizeAndTotal
   examples:
     400RequestFormatInvalidExample:
       value:
