@@ -32,10 +32,12 @@ formats:
   admin-api:
     label: 'Admin API'
     base_url: 'http://localhost:8001'
-    ai_gateway_base_url: 'http://localhost:8001/ai-gateways/{ai_gateway}'
+    ai_gateway_base_url: 'http://localhost:8001/ai'
     endpoints:
+      # core entities
       consumer:       '/consumers/'
       consumer_group: '/consumer_groups/'
+      model:          '/models/'
       route:          '/routes/'
       service:        '/services/'
       target:         '/upstreams/{upstream}/targets/'
@@ -54,17 +56,38 @@ formats:
       keyring:        '/keyring/'
       event_hook:     '/event-hooks/'
       partial:        '/partials/'
+      # AI entities (/ai/* on on-prem AI Gateway)
+      ai_provider:       '/providers/'
+      ai_model:          '/models/'
+      ai_agent:          '/agents/'
+      ai_mcp_server:     '/mcp-servers/'
+      ai_policy:         '/policies/'
+      ai_consumer:       '/consumers/'
+      ai_consumer_group: '/consumer-groups/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
       global:         '/plugins/'
+    ai_policy_endpoints:
+      ai_model:      '/models/{ai_model}/policies/'
+      ai_agent:      '/agents/{ai_agent}/policies/'
+      ai_mcp_server: '/mcp-servers/{ai_mcp_server}/policies/'
     variables:
       <<: *variables
       ai_gateway:
         placeholder: 'AIGatewayId'
         description: 'The `id` of the AI Gateway.'
+      ai_model:
+        placeholder: 'aiModelId'
+        description: 'The `id` of the AI Model.'
+      ai_agent:
+        placeholder: 'aiAgentId'
+        description: 'The `id` of the AI Agent.'
+      ai_mcp_server:
+        placeholder: 'aiMCPServerId'
+        description: 'The `id` of the AI MCP Server.'
 
   konnect-api:
     label: 'Konnect API'

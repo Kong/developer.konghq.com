@@ -56,7 +56,7 @@ module Jekyll
                             when 'gateway'
                               formats['admin-api']['base_url']
                             when 'ai-gateway'
-                              formats['admin-api']['ai_gateway_base_url']
+                              formats['admin-api']['ai_gateway_base_url'] || formats['admin-api']['base_url']
                             else
                               raise ArgumentError, "Unsupported product: #{@example_drop.product}"
                             end
