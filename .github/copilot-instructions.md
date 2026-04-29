@@ -14,7 +14,7 @@ For example, don't say "Change this variable.", instead, create a comment with a
 - If you're uncertain whether something is an issue, don't comment. False positives create noise and reduce trust in the review process.
 - In how-tos, do not flag variable-name mismatches between prerequisite exports and `entity_examples` blocks when `variables` entries such as `value: $FOO` render with an automatically appended `DECK_` prefix. This is expected behavior.
 - Do not suggest adding duplicate environment variable exports just to align source variables with rendered example output.
-- Do not leave comments on trailing whitespaces in markdown files.
+- Do not leave comments on trailing whitespace in Markdown files.
 
 ## Key Guidelines
 - We write three types of docs: reference, landing page (written in yaml), and how-tos
