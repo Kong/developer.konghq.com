@@ -43,6 +43,7 @@ With `MeshIdentity`, users can:
 
 The following example shows the full structure:
 
+{% raw %}
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshIdentity
@@ -68,6 +69,7 @@ spec:
       autogenerate:
         enabled: true
 ```
+{% endraw %}
 
 ## Configuration
 
