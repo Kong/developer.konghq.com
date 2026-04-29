@@ -1,4 +1,6 @@
 title: 'MeshIdentity with Spire provider'
+tools: 
+  - kubernetes
 description: 'Apply a MeshIdentity policy using the Spire certificate provider to all data plane proxies.'
 weight: 920
 namespace: kong-mesh-demo
