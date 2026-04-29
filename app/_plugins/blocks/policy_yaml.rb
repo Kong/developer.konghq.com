@@ -272,8 +272,15 @@ module Jekyll
         next unless %w[use_meshservice namespace tools].include?(k)
         next unless v.is_a?(String)
 
-        resolved = v.split('.').reduce(context) { |c, key| c[key] }
-        @params[k] = k == 'tools' ? resolved : (resolved || false)
+        if v.include?('.')
+          resolved = v.split('.').reduce(context) { |c, key| c[key] }
+          @params[k] = k == 'tools' ? resolved : (resolved || false)
+        elsif k == 'tools'
+          @params[k] = v.split(',')
+        elsif k == 'use_meshservice'
+          @params[k] = v == 'true'
+        end
+        # namespace literals (no dot) are kept as set by parse_markup
       end
 
       has_raw = @body.nodelist.first { |x| x.has?('tag_name') and x.tag_name == 'raw' }

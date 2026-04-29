@@ -43,15 +43,12 @@ With `MeshIdentity`, users can:
 
 The following example shows the full structure:
 
+{% policy_yaml tools=kubernetes %}
 {% raw %}
 ```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshIdentity
-metadata:
-  name: identity
-  namespace: kong-mesh-system
-  labels:
-    kuma.io/mesh: default
+type: MeshIdentity
+name: identity
+mesh: default
 spec:
   selector:
     dataplane:
@@ -70,6 +67,7 @@ spec:
         enabled: true
 ```
 {% endraw %}
+{% endpolicy_yaml %}
 
 ## Configuration
 
