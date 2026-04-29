@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@365bf1096e943ec288b5059125c9d9c549a35c55
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/365bf1096e943ec288b5059125c9d9c549a35c55'
+  x-oas-source: kong/platform-api@abed88dae4eb29c14e158dace1cfc5e2f95bd7ab
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/abed88dae4eb29c14e158dace1cfc5e2f95bd7ab'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -909,6 +909,66 @@ paths:
               examples:
                 Linked Plugins Exist:
                   $ref: '#/components/examples/DeleteAddOnLinkedPluginsBadRequestExample'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+              examples:
+                Unauthorized:
+                  $ref: '#/components/examples/AddOnUnauthorizedExample'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                Forbidden:
+                  $ref: '#/components/examples/AddOnForbiddenExample'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                Not Found:
+                  $ref: '#/components/examples/AddOnNotFoundExample'
+      tags:
+        - Add-Ons
+    patch:
+      operationId: update-add-on
+      summary: Update Add-On
+      description: Updates the configuration of an existing add-on.
+      parameters:
+        - $ref: '#/components/parameters/AddOnId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAddOnRequest'
+            examples:
+              update-managed-cache-tier:
+                $ref: '#/components/examples/UpdateAddOnManagedCacheTierExample'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateAddOnResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                Cache Tier Unavailable:
+                  $ref: '#/components/examples/PatchAddOnTierUnavailableBadRequestExample'
+                Identical Tier:
+                  $ref: '#/components/examples/PatchAddOnIdenticalTierBadRequestExample'
+                Tier Downgrade Not Supported:
+                  $ref: '#/components/examples/PatchAddOnTierDowngradeBadRequestExample'
         '401':
           description: Unauthorized
           content:
@@ -3362,6 +3422,7 @@ components:
         - count/networks.not-offline
         - count/data-planes-estimate
         - count/serverless-data-planes-estimate
+        - count/data-plane-groups-estimate
     ResourceQuotaName:
       description: The human-readable name of this resource quota.
       type: string
@@ -3770,6 +3831,38 @@ components:
         - kind
         - capacity_config
       title: CreateManagedCacheAddOnConfig
+    UpdateAddOnRequest:
+      description: Request body for updating an add-on.
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/UpdateAddOnConfig'
+      additionalProperties: false
+      required:
+        - config
+      title: UpdateAddOnRequest
+    UpdateAddOnConfig:
+      description: Configuration for updating different types of add-ons.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/UpdateManagedCacheAddOnConfig'
+      title: UpdateAddOnConfig
+    UpdateManagedCacheAddOnConfig:
+      description: Configuration for updating a managed cache add-on.
+      type: object
+      properties:
+        kind:
+          description: Type of add-on configuration.
+          type: string
+          enum:
+            - managed-cache.v0
+        capacity_config:
+          $ref: '#/components/schemas/ManagedCacheCapacityConfig'
+      additionalProperties: false
+      required:
+        - kind
+        - capacity_config
+      title: UpdateManagedCacheAddOnConfig
     ManagedCacheCapacityConfig:
       description: Configuration for managed cache capacity and performance characteristics.
       type: object
@@ -4948,6 +5041,47 @@ components:
         title: Forbidden
         instance: 'kong:trace:2909730654778726250'
         detail: You do not have permission to perform this action.
+    UpdateAddOnManagedCacheTierExample:
+      summary: Update managed cache add-on tier
+      value:
+        config:
+          kind: managed-cache.v0
+          capacity_config:
+            kind: tiered
+            tier: large
+    PatchAddOnTierUnavailableBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: config.capacity_config.tier
+            rule: invalid
+            reason: 'Cache tier ''medium'' is not available. Available tiers: micro, small. Please contact support or sales to select larger sizes.'
+            source: body
+    PatchAddOnIdenticalTierBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: config.capacity_config.tier
+            rule: invalid
+            reason: Proposed tier is identical to existing tier.
+            source: body
+    PatchAddOnTierDowngradeBadRequestExample:
+      value:
+        status: 400
+        title: Invalid Request
+        instance: 'kong:trace:2822394689570210664'
+        detail: Invalid Parameters
+        invalid_parameters:
+          - field: config.capacity_config.tier
+            rule: invalid
+            reason: Cache tier downgrade is not supported.
+            source: body
     UnauthorizedExample:
       value:
         status: 401
@@ -5328,6 +5462,12 @@ components:
             $ref: '#/components/schemas/AddOnResponse'
     RetrieveAddOnResponse:
       description: Response format for retrieving an add-on by ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddOnResponse'
+    UpdateAddOnResponse:
+      description: Response format for updating an add-on.
       content:
         application/json:
           schema:
