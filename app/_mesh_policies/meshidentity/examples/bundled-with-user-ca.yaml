@@ -1,5 +1,5 @@
 title: 'MeshIdentity with user-provided CA'
-description: 'Apply a MeshIdentity with a user-provided CA to a subset of data plane proxies.'
+description: 'Apply a MeshIdentity policy with a user-provided CA to a subset of data plane proxies.'
 weight: 910
 namespace: kong-mesh-demo
 config:

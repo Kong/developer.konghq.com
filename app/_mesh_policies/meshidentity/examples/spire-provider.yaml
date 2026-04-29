@@ -1,5 +1,5 @@
 title: 'MeshIdentity with Spire provider'
-description: 'Apply a MeshIdentity using the Spire certificate provider to all data plane proxies.'
+description: 'Apply a MeshIdentity policy using the Spire certificate provider to all data plane proxies.'
 weight: 920
 namespace: kong-mesh-demo
 config:

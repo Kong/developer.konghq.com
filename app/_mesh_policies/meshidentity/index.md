@@ -73,9 +73,8 @@ spec:
 
 ## Configuration
 
-`MeshIdentity` is a namespaced (system-namespace only) resource that controls how data plane proxies receive identity certificates.
-It includes a few key fields that control how identities are issued and applied.
-The following sections describe each field:
+`MeshIdentity` is a namespaced resource for system namespaces that controls how data plane proxies receive identity certificates.
+The following key fields define how identities are issued and applied:
 
 * [`selector`](#selector): Which data plane proxies this identity applies to.
 * [`spiffeID`](#spiffeid): How the SPIFFE ID is constructed (trust domain and path).
@@ -145,12 +144,12 @@ spec:
 
 {% endraw %}
 
-Supported variables in `trustDomain` field are:
+Supported variables in the `trustDomain` field are:
 
 * `.Mesh`
 * `.Zone`
 
-Supported variables in `path` field are:
+Supported variables in the `path` field are:
 
 * `.Namespace`
 * `.ServiceAccount`
