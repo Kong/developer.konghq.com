@@ -242,6 +242,14 @@ data:
     window_type: fixed
 {% endentity_example %}
 
+## Set up a Model
+
+{% entity_example %}
+type: model
+data:
+  model: openai-something
+{% endentity_example %}
+
 ## Schema
 
 {% entity_schema %}
