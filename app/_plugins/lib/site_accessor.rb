@@ -7,16 +7,22 @@ module Jekyll
     end
 
     def site_redirects
-      @site_redirects ||= site.pages.detect { |p| p.url == '/_redirects' }.content.lines.each_with_object({}) do |line, hash|
-        line = line.strip
+      @site_redirects ||= begin
+        return {} if Jekyll.env == 'development' && ENV['PAGE_PATHS']
 
-        # Skip blank lines and comments
-        next if line.empty? || line.start_with?('#')
+        site.pages.detect do |p|
+          p.url == '/_redirects'
+        end.content.lines.each_with_object({}) do |line, hash|
+          line = line.strip
 
-        parts = line.split(/\s+/)
+          # Skip blank lines and comments
+          next if line.empty? || line.start_with?('#')
 
-        # Only proceed if we have at least a source and destination
-        if parts.size >= 2
+          parts = line.split(/\s+/)
+
+          # Only proceed if we have at least a source and destination
+          next unless parts.size >= 2
+
           source = parts[0]
           destination = parts[1]
           hash[source] = destination
