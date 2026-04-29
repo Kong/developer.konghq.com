@@ -57,15 +57,15 @@ faqs:
 
 ## What is a Model?
 
-A Model is a first-class AI Gateway entity that defines a named AI model (for example, `openai/gpt-4o`) for model selection and policy targeting.
+A Model is a first-class {{site.ai_gateway}} entity that defines a named AI model (for example, `openai/gpt-4o`) for model selection and policy targeting.
 
 You can target policies and supported plugin behavior to a specific Model. This lets you apply different rate limits, guardrails, and transformations per model without duplicating Routes or Services.
 
-In both deployment modes, you configure AI Gateway through first-class AI entities (for example, `ai_model`, `ai_provider`, and `ai_policy`). The Control Plane derives and manages the underlying Data Plane primitives (such as Services, Routes, and plugins) from those entities.
+In both deployment modes, you configure {{site.ai_gateway}} through first-class AI entities (for example, `ai_model`, `ai_provider`, and `ai_policy`). The Control Plane derives and manages the underlying Data Plane primitives (such as Services, Routes, and plugins) from those entities.
 
 In this document, **Control Plane** refers to where AI entities are declared and managed, while **Data Plane** refers to where request-time routing and plugin matching execute.
 
-For on-prem deployments, the AI Gateway Admin API (`/ai/*`) is the Control Plane surface for managing first-class AI entities; it follows the same domain model as {{site.konnect_short_name}} and translates those entities into Data Plane primitives.
+For on-prem deployments, the {{site.ai_gateway}} Admin API (`/ai/*`) is the Control Plane surface for managing first-class AI entities; it follows the same domain model as {{site.konnect_short_name}} and translates those entities into Data Plane primitives.
 
 ## Model and plugin interaction
 
@@ -73,8 +73,8 @@ Model participates in plugin resolution for runtime behavior on the Data Plane, 
 
 Control Plane management differs by deployment mode:
 
-* In {{site.konnect_short_name}}, you manage Model and related AI entities through {{site.konnect_short_name}} AI Gateway APIs.
-* In on-prem AI Gateway, you manage the same entity concepts through `/ai/*` Admin API endpoints.
+* In {{site.konnect_short_name}}, you manage Model and related AI entities through {{site.konnect_short_name}} {{site.ai_gateway}} APIs.
+* In on-prem {{site.ai_gateway}}, you manage the same entity concepts through `/ai/*` Admin API endpoints.
 
 A plugin configuration can reference a Model through its `model` field. When a plugin entry is scoped to a Model, that entry only applies to requests where AI Proxy or AI Proxy Advanced resolves the same model name from the request. Plugin entries without a `model` field apply regardless of which model the request targets.
 
@@ -89,15 +89,15 @@ After Control Plane configuration is translated and applied to the Data Plane, b
 
 The Model entity exists in both {{site.konnect_short_name}} (Control Plane) and {{site.base_gateway}} (Data Plane).
 
-In {{site.konnect_short_name}}, you declare Model through the AI Gateway Control Plane APIs. During config sync, the Control Plane translates the configuration into Data Plane configuration.
+In {{site.konnect_short_name}}, you declare Model through the {{site.ai_gateway}} Control Plane APIs. During config sync, the Control Plane translates the configuration into Data Plane configuration.
 
-In on-prem AI Gateway, you declare Model through the `/ai/models` API surface (or compatible tooling such as decK). The on-prem Control Plane stores AI entities as first-class objects and manages derived Data Plane primitives for you.
+In on-prem {{site.ai_gateway}}, you declare Model through the `/ai/models` API surface (or compatible tooling such as decK). The on-prem Control Plane stores AI entities as first-class objects and manages derived Data Plane primitives for you.
 
 For request-time behavior and plugin matching details, see [Model and plugin interaction](#model-and-plugin-interaction).
 
 ### Policies are Control Plane only
 
-AI Gateway exposes a Policy entity for declaring AI guardrails, rate limits, and similar controls against Models. <!-- TODO: link to Policy entity docs once available. -->
+{{site.ai_gateway}} exposes a Policy entity for declaring AI guardrails, rate limits, and similar controls against Models. <!-- TODO: link to Policy entity docs once available. -->
 
 The Policy entity has no Data Plane counterpart. During config sync, each Policy is translated into one or more plugin configurations that target the corresponding Data Plane Model.
 

@@ -5,7 +5,7 @@ entities:
   - ai-consumer
 products:
   - ai-gateway
-description: AI consumer entity wrapper for consumer-specific AI Gateway behavior.
+description: AI consumer entity wrapper for consumer-specific {{site.ai_gateway}} behavior.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayConsumer
