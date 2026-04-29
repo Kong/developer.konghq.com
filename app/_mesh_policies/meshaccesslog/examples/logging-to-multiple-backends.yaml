@@ -3,6 +3,10 @@ title: 'Logging to multiple backends'
 description: 'This configuration logs to three backends: TCP, file and OpenTelemetry.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 

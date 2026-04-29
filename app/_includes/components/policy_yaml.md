@@ -1,5 +1,6 @@
 {%- navtabs "policy-yaml" additional_classes heading_level -%}
 {%- if use_meshservice -%}
+{%- if show_kubernetes -%}
 {%- navtab "Kubernetes" -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
@@ -12,6 +13,8 @@
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{kube | liquify}}
 {%- endnavtab -%}
+{%- endif -%}
+{%- if show_universal -%}
 {%- navtab "Universal" -%}
 {%- if page.output_format != 'markdown' -%}
 <div class="meshservice text-sm">
@@ -24,15 +27,20 @@
 {% if page.output_format == 'markdown' %}Using `MeshService` Kubernetes resources:{% endif %}
 {{uni | liquify}}
 {%- endnavtab -%}
+{%- endif -%}
 {%- else -%}
+{%- if show_kubernetes -%}
 {%- navtab "Kubernetes" -%}
 {{kube_legacy | liquify}}
 {%- endnavtab -%}
+{%- endif -%}
+{%- if show_universal -%}
 {% navtab "Universal" %}
 {{uni_legacy | liquify}}
 {%- endnavtab -%}
 {%- endif -%}
-{%- if show_tf -%}
+{%- endif -%}
+{%- if show_terraform -%}
 {%- navtab "Terraform" %}
 Please adjust **konnect_mesh_control_plane.my_meshcontrolplane.id** and **konnect_mesh.my_mesh.name** according to your current configuration.
 {: .text-sm}

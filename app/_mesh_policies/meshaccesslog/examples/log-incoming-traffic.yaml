@@ -3,6 +3,10 @@ title: 'Log all incoming traffic'
 description: 'Log all incoming traffic with MeshAccessLog.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 

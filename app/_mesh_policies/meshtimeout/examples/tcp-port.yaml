@@ -2,6 +2,10 @@ title: "Configuration for a single inbound port named `tcp-port`"
 description: "Configuration for a single inbound port named `tcp-port`"
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 

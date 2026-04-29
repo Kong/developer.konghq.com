@@ -2,6 +2,10 @@ title: 'gRPC health check from cart to payment service'
 description: 'gRPC health check from cart to payment service.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

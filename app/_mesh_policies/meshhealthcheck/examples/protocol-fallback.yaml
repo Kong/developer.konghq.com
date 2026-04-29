@@ -2,6 +2,10 @@ title: 'Protocol fallback'
 description: 'Protocol fallback'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

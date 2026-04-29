@@ -2,6 +2,10 @@ title: '50.5% of requests to service backend from any service is going to be del
 description: '50.5% of requests to service backend from any service is going to be delayed by 5 seconds'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 config:

@@ -2,6 +2,10 @@ title: "Full config applied to inbound and outbound of specific service"
 description: "This timeout configuration will be applied to all inbound connections to `frontend` and outbound connections from `frontend` to `backend` service"
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

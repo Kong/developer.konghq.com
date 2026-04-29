@@ -2,6 +2,10 @@ title: 'Traffic redirection'
 description: "You can use `MeshTCPRoute` to redirect outgoing traffic from one service to another."
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

@@ -2,6 +2,10 @@ title: 'Traffic modification'
 description: 'An example of a MeshHTTPRoute that adds x-custom-header with value xyz when frontend tries to consume backend.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

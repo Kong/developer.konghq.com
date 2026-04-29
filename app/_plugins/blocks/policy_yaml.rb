@@ -39,7 +39,7 @@ module Jekyll
     def initialize(tag_name, markup, options)
       super
 
-      @params = { 'raw' => false, 'apiVersion' => 'kuma.io/v1alpha1', 'use_meshservice' => false }
+      @params = { 'raw' => false, 'apiVersion' => 'kuma.io/v1alpha1', 'use_meshservice' => false, 'tools' => nil }
       markup.strip.split(' ').each do |item|
         sp = item.split('=')
         @params[sp[0]] = sp[1] unless sp[1] == ''
@@ -269,7 +269,7 @@ module Jekyll
       @page = context.environments.first['page']
 
       @params.each do |k, v|
-        next unless %w[use_meshservice namespace].include?(k)
+        next unless %w[use_meshservice namespace tools].include?(k)
         next unless v.is_a?(String)
 
         @params[k] = v.split('.').reduce(context) { |c, key| c[key] } || false
@@ -285,6 +285,15 @@ module Jekyll
       use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
                                                                                                       '0')) >= TARGET_VERSION
       show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
+
+      tools = @params['tools']
+      tools = tools.split(',').map(&:strip) if tools.is_a?(String)
+      tools = tools.map(&:to_s) if tools.is_a?(Array)
+      tools = %w[kubernetes universal terraform] unless tools.is_a?(Array) && !tools.empty?
+
+      show_kubernetes = tools.include?('kubernetes')
+      show_universal = tools.include?('universal')
+      show_terraform = show_tf && tools.include?('terraform')
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
@@ -320,7 +329,9 @@ module Jekyll
       context.stack do
         context['additional_classes'] = additional_classes
         context['use_meshservice'] = use_meshservice
-        context['show_tf'] = show_tf
+        context['show_kubernetes'] = show_kubernetes
+        context['show_universal'] = show_universal
+        context['show_terraform'] = show_terraform
         context['terraform_content'] = terraform_content
         context['kube_legacy'] = contents[:kube_legacy]
         context['kube'] = contents[:kube]

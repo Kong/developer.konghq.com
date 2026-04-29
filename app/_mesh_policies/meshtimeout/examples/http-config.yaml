@@ -2,6 +2,10 @@ title: 'Simple outbound HTTP configuration'
 description: 'This configuration will be applied to all data plane proxies inside of Mesh.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

@@ -2,6 +2,10 @@ title: 'Disable cross-zone traffic'
 description: ' Disable cross zone traffic and prioritize traffic the dataplanes on the same node and availability zone'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

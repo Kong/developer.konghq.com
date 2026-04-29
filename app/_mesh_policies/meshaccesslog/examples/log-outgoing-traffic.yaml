@@ -3,6 +3,10 @@ title: 'Log all outgoing traffic'
 description: 'Log all outgoing traffic with MeshAccessLog.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 

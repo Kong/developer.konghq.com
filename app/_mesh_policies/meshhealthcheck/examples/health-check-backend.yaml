@@ -2,6 +2,10 @@ title: 'Health check from web to backend service'
 description: 'Health check from web to backend service'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

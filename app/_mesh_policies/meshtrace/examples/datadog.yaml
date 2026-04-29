@@ -2,6 +2,10 @@ title: 'Datadog'
 description: "This assumes a Datadog agent is configured and running. If you haven't already check the [Datadog observability page](/docs/{{ page.release }}/explore/observability#configuring-datadog)."
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 
 config:

@@ -2,6 +2,10 @@ title: 'Lua filter'
 description: "Adds the new x-header: test header to all outgoing HTTP requests to service offers"
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 
 config:

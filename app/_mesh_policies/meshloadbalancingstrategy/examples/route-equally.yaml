@@ -2,6 +2,10 @@ title: 'Route to the local zone instances equally'
 description: 'In this example, when a user sends a request to the backend service, the request is routed equally to all instances in the local zone. If there are no instances in the local zone, the request will fail because there is no cross zone traffic.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

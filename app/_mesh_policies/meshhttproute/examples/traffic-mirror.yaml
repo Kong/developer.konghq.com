@@ -2,6 +2,10 @@ title: 'Traffic mirror'
 description: '`MeshHTTPRoute` can mirror a fraction of requests to another service.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

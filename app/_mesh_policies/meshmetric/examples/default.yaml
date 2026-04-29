@@ -2,6 +2,10 @@ title: 'Metrics default'
 description: "A default `MeshMetric` policy for the `default` mesh"
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 config:

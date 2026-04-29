@@ -2,6 +2,10 @@ title: 'Configure on Services'
 description: 'Use MeshHTTPRoute to split an HTTP traffic between different MeshServices.'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 config:

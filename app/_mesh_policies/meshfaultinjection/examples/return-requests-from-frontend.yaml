@@ -2,6 +2,10 @@ title: 'Service backend returns 500 for 50% of requests from frontend service'
 description: 'Service backend returns 500 for 50% of requests from frontend service'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 namespace: kuma-demo
 config:

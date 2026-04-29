@@ -2,6 +2,10 @@ title: 'Zipkin'
 description: 'Zipkin full example'
 
 weight: 900
+tools:
+  - kubernetes
+  - universal
+  - terraform
 
 
 config:
