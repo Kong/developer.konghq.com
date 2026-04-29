@@ -124,7 +124,8 @@ variables:
 
 ## Configure the Metering & Billing plugin
 
-In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. Configure the Metering & Billing plugin to emit LLM token usage events to {{site.metering_and_billing}}.
+In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. 
+The following configures the Metering & Billing plugin to emit LLM token usage events to {{site.metering_and_billing}}:
 
 <!--vale off-->
 {% entity_examples %}
