@@ -25,7 +25,7 @@ Writing and formatting guidelines for contributing to the Kong Developer site. C
 
 ## Language
 
-The Kong docs use [American English (US English)](https://en.wikipedia.org/wiki/American_English). Pay attention to spelling and vocabulary differences, particularly when reviewing contributions from international authors.
+The Kong docs use [American English (US English)](https://en.wikipedia.org/wiki/American_English).
 
 {% table %}
 columns:
@@ -103,7 +103,7 @@ In this sentence, the account isn't doing anything, so passive voice is appropri
 
 ### Present tense for references
 
-Whenever possible, use present tense instead of past or future tense for reference documentation.
+Whenever possible, use present tense instead of past or future tense for documentation.
 
 {% table %}
 columns:
@@ -128,7 +128,7 @@ Don't be afraid to use contractions (*can't*, *isn't*, *you'll*, and so on). The
 There are exceptions. Omit contractions when aiming for a more serious tone, such as in a warning or caution:
 
 - **Contraction (informational):** "This plugin isn't available in Konnect."
-- **No contraction (warning):** "**Do not** use this plugin in Konnect because it will break things."
+- **No contraction (warning):** "**Do not** use this plugin in Konnect because it will break your configuration."
 
 ### Latin phrases
 
@@ -142,7 +142,7 @@ columns:
     key: dont
 rows:
   - do: "For example, ..."
-    dont: "e.g., ..."
+    dont: "e.g., ex., ..."
   - do: "That is, ..."
     dont: "i.e., ..."
   - do: "So (or therefore), ..."
@@ -296,10 +296,10 @@ The type of placeholder you use depends on context:
 
 - **Placeholders in API URLs or OpenAPI specs** — enclose in `{ }` and use the parameter name defined by the API or spec, per [Swagger guidelines](https://swagger.io/docs/specification/describing-parameters/).
 
-  For example: `/services/{serviceID}/plugins`
+  For example: `/services/{serviceId}/plugins`
 
 - **Hostnames and example URLs:**
-  - For guides with examples intended to be run as-is, use `localhost` as the domain.
+  - For guides with examples intended to be run as-is, use `localhost` as the domain or `$KONNECT_PROXY_URL` for {{site.konnect_short_name}} documentation.
 
     For example: `curl -i -X GET https://localhost:8001/services`
 
@@ -311,7 +311,7 @@ The type of placeholder you use depends on context:
 
 - **Path parameters** — always denote with curly braces `{}`.
 
-  For example: `http://localhost:8001/services/{serviceID|serviceName}/routes/{routeID|routeName}`
+  For example: `http://localhost:8001/services/{serviceId|serviceName}/routes/{routeId|routeName}`
 
 #### Inline placeholders
 
@@ -319,11 +319,11 @@ If you're adding a placeholder inline in a sentence, enclose it in single backti
 
 ### Code formatting
 
-- Separate commands from their output. Put each in its own code block.
+- Separate commands from their output. Put each in its own code block. Use `{:.no-copy-code}` directly under an output if users won't need to copy the output.
 - Include properly formatted code comments.
 - For long commands, split the code block across multiple lines using `\` to avoid horizontal scrolling.
 - Never include more than one command in a single code block.
-- Always set a language for code blocks (for example, `bash`, `yaml`) to enable syntax highlighting.
+- Use yaml liquid blocks for code when it's supported (for example, `entity_example`, `konnect_api_request`). If there are no corresponding liquid blocks, always set a language for code blocks (for example, `bash`, `yaml`) to enable syntax highlighting.
 - Do **not** use the command prompt marker (`$`) in code snippets.
 
 ## Icons
@@ -334,9 +334,13 @@ For inline icons in prose or tables, use SVG files from the [`/app/assets/icons/
 
 When a how-to guide requires a third-party tool (such as an identity provider, cloud service, or external API), include complete setup instructions as a prerequisite rather than linking out to third-party documentation and expecting readers to figure it out.
 
+In most cases, the third-party instructions should be a prerequisite.
 Write the prerequisite steps in a file under `app/_includes/prereqs/` and include it at the top of the how-to. This keeps the how-to self-contained: readers can follow the entire guide in one place without switching between multiple sources.
 
 For an example, see [`app/_includes/prereqs/gemini.md`](https://github.com/Kong/developer.konghq.com/blob/main/app/_includes/prereqs/gemini.md), which walks users through getting a Gemini API key from Google Cloud before the main tutorial begins.
+
+In certain cases, the third-party instructions should be in the main how-to body.
+For example, if users need to update a routing table in AWS after they've set up their Dedicated Cloud Gateway network or if they need to approve a Catalog integration in the third-party provider after they configure it in Catalog.
 
 ### Writing prerequisite instructions
 
