@@ -5,7 +5,7 @@ entities:
   - ai-policy
 products:
   - ai-gateway
-description: Policy entity for AI Gateway plugin configuration and scoping.
+description: Policy entity for {{site.ai_gateway}} plugin configuration and scoping.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayPolicy
