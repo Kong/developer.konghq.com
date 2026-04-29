@@ -1,6 +1,6 @@
 ---
 title: Running built-in gateway pods on Kubernetes with MeshGatewayInstance
-description: Guide to running builtin gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.
+description: Guide to running built-in gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.
 products:
   - mesh
 content_type: reference
@@ -12,7 +12,7 @@ min_version:
   mesh: '2.7'
 
 related_resources:
-  - text: Add a builtin gateway
+  - text: Add a built-in gateway
     url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Deploy Kong Mesh on Kubernetes
     url: /mesh/kubernetes/
@@ -22,21 +22,17 @@ related_resources:
     url: /mesh/gateway-routes/
 ---
 
-`MeshGatewayInstance` is a Kubernetes-only resource for deploying [{{site.mesh_product_name}}'s builtin gateway](/mesh/built-in-gateway/).
+`MeshGatewayInstance` is a Kubernetes-only resource for deploying [{{site.mesh_product_name}}'s built-in gateway](/mesh/built-in-gateway/).
 
-[`MeshGateway`](/mesh/gateway-listeners/) and [`MeshHTTPRoute`](/mesh/policies/meshhttproute/)/[`MeshTCPRoute`](/mesh/policies/meshtcproute/) allow specifying builtin gateway
-listener and route configuration but don't handle deploying `kuma-dp`
-instances that listen and serve traffic.
+[`MeshGateway`](/mesh/gateway-listeners/) and [`MeshHTTPRoute`](/mesh/policies/meshhttproute/)/[`MeshTCPRoute`](/mesh/policies/meshtcproute/) configure built-in gateway listeners and routes, but don't manage the `kuma-dp` instances that serve traffic.
 
 {{site.mesh_product_name}} offers `MeshGatewayInstance` to manage a Kubernetes `Deployment` and `Service`
 that together provide service capacity for the `MeshGateway`.
 
 {:.info}
-> If you're not using the `default` `Mesh`, you'll need to _label_ the
-> `MeshGatewayInstance` using `kuma.io/mesh`.
+> If you're not using the `default` `Mesh`, label the `MeshGatewayInstance` with `kuma.io/mesh`.
 
 Consider the following example:
-
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -52,16 +48,16 @@ spec:
 ```
 
 Once a `MeshGateway` exists with `kuma.io/service: edge-gateway_default_svc`, the control plane creates a new `Deployment` in the `default` namespace.
-This `Deployment` deploys 2 replicas of `kuma-dp` and corresponding builtin gateway `Dataplane` running with `kuma.io/service: edge-gateway_default_svc`.
+This `Deployment` deploys 2 replicas of `kuma-dp` and a corresponding built-in gateway `Dataplane` with `kuma.io/service: edge-gateway_default_svc`.
 
-The control plane also creates a new `Service` to send network traffic to the builtin `Dataplane` pods.
+The control plane also creates a new `Service` to send network traffic to the built-in `Dataplane` pods.
 The `Service` is of type `LoadBalancer`, and its ports are automatically adjusted to match the listeners on the corresponding `MeshGateway`.
 
 ## Customization
 
-Additional customization of the generated `Service` or `Pods` is possible via `spec.serviceTemplate` and `spec.podTemplate`.
+You can further customize the generated `Service` or `Pods` using `spec.serviceTemplate` and `spec.podTemplate`.
 
-For example, you can add annotations and/or labels to the generated objects:
+For example, you can add annotations or labels to the generated objects:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
