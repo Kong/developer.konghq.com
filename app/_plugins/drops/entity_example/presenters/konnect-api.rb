@@ -47,7 +47,7 @@ module Jekyll
                 case @example_drop.product
                 when 'gateway'
                   formats['konnect-api']['variables']
-                when 'event_gateway'
+                when 'event-gateway'
                   formats['konnect-api']['event_gateway_variables']
                 when 'ai-gateway'
                   formats['konnect-api']['ai_gateway_variables']
@@ -67,7 +67,7 @@ module Jekyll
               @base_url ||= case @example_drop.product
                             when 'gateway'
                               formats['konnect-api']['base_url']
-                            when 'event_gateway'
+                            when 'event-gateway'
                               formats['konnect-api']['event_gateway_base_url']
                             when 'ai-gateway'
                               formats['konnect-api']['ai_gateway_base_url']
