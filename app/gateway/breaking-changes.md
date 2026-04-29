@@ -41,6 +41,17 @@ This is a Long Term Support (LTS) release, so you can migrate your configuration
 This utility converts a set of predefined entity configuration changes into 3.14 format so that they continue to function as before. 
 See the [how-to guide on converting 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/) for more information.
 
+### 3.14.0.2
+
+Breaking changes in the 3.14.0.2 release.
+
+#### Service Protection plugin: priority change
+
+The priority of the [Service Protection plugin](/plugins/service-protection/) changed from 915 to 901.
+The plugin now executes after other rate limiting plugins, and only evaluates requests that have passed rate limiting.
+
+This fixes an issue where the Service Protection plugin would evaluate requests already rejected by the other plugins.
+
 ### 3.14.0.0
 
 Breaking changes in the 3.14.0.0 release.
