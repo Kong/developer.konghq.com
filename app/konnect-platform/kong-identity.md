@@ -109,28 +109,35 @@ To rotate a secret, do the following:
 {% navtabs "rotate-secret" %}
 {% navtab "UI" %}
 1. **Create the new secret**
-   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
-   This will add a new active secret while existing secrets will continue to work. 
-   You can either specify a secret or have it generated automatically. 
-   For the latter, be sure to securely record the value of the newly generated secret for subsequent steps.
+   1. In the {{site.konnect_short_name}} sidebar, click **Identity**.
+   1. Click an authorization server.
+   1. Click the **Clients** tab.
+   1. Click a client.
+   1. Click **Generate a new secret**.
+   1. Click **Copy secret and close**.
+   This adds a new active secret while existing secrets will continue to work. 
+   Be sure to securely record the value of the newly generated secret for subsequent steps.
+   If you want to specify a secret instead of generating it automatically, use the API. 
 
 1. **Update the client application**
    Update the configuration of the actual applications to use the newly generated active secret.
-
-1. **Disable the old secret**
-   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
 
 1. **Test the client application**
    Test the client application to ensure it can continue to authenticate successfully with the new secret.
 
 1. **Delete the old secret**
    After you've verified the current application can still authenticate using the new secret with the old secret disabled, you can revoke the secret in the UI:
-   * {{site.konnect_short_name}} UI: Navigate to **Identity > Clients**, select a client, and ?.
+   1. In the {{site.konnect_short_name}} sidebar, click **Identity**.
+   1. Click an authorization server.
+   1. Click the **Clients** tab.
+   1. Click a client.
+   1. For the secret you want to disable, click **Revoke secret**.
+   1. Click **Revoke secret**.
    
 {% endnavtab %}
 {% navtab "API" %}
 1. **Create the new secret**
-   Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint:
+   Send a POST request to the `/auth-servers/{authServerId}/clients/{clientId}/secrets` endpoint with the secret value you want to use:
 {% capture create-client-secret %}
 <!--vale off-->
 {% konnect_api_request %}
@@ -181,7 +188,6 @@ status_code: 204
 <!--vale on-->
 {% endcapture %}
 {{delete-client-secret | indent: 3}}
-{% endnavtab %}
 {% endnavtab %}
 {% endnavtabs %}
 
