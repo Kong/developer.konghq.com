@@ -20,6 +20,9 @@ related_resources:
     url: '/mesh/observability/'
   - text: MeshMultiZoneService
     url: /mesh/meshmultizoneservice/
+
+min_version:
+  mesh: '2.6'
 ---
 
 ## Reachable services
@@ -35,16 +38,10 @@ The result is that:
 
 Follow the [transparent proxying](/mesh/transparent-proxying/) docs on how to configure it.
 
-{% if_version gte:2.5.x %}
 ## Config trimming by using MeshTrafficPermission
 
 {:.warning}
-> 1. This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/),
->    if you're using [TrafficPermission](/mesh/policies/traffic-permissions/) you need to migrate to MeshTrafficPermission,
->    otherwise enabling this feature could stop all traffic flow.
-> {% if_version lte:2.5.x %}
-> 2. Due to [a bug](https://github.com/kumahq/kuma/issues/6589) [ExternalServices](/mesh/policies/external-services/) won't work without Traffic Permissions without [Zone Egress](/mesh/zone-egress/), if you're using External Services you need to keep associated TrafficPermissions, or upgrade {{site.mesh_product_name}} to 2.6.x or newer.
-> {% endif_version %}
+> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/), if you're using [TrafficPermission](/mesh/policies/traffic-permissions/) you need to migrate to MeshTrafficPermission, otherwise enabling this feature could stop all traffic flow.
 
 Starting with release 2.5 the problem stated in [reachable services](#reachable-services) section
 can be also mitigated by defining [MeshTrafficPermissions](/mesh/policies/meshtrafficpermission/) and [configuring](/mesh/control-plane-configuration/) a **zone** control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
@@ -154,8 +151,6 @@ upstream connect error or disconnect/reset before headers. retried and the lates
 
 A recommended path of migration is to start with a coarse grain `MeshTrafficPermission` targeting a `MeshSubset` with `k8s.kuma.io/namespace` and then drill down to individual services if needed.
 
-{% endif_version %}
-
 ## Postgres
 
 If you choose `Postgres` as a configuration store for {{site.mesh_product_name}} on Universal,
@@ -233,8 +228,6 @@ Then, you can analyze the retrieved profiling data using an application like [Sp
 {:.warning}
 > After a successful debugging session, please remember to turn off the debugging endpoints since anybody could execute heap dumps on them potentially exposing sensitive data.
 
-{% if_version gte:2.3.x %}
-
 ### Kubernetes client
 
 Kubernetes client uses client level throttling to not overwhelm kube-api server. In larger deployments, bigger than 2000 services in a single kubernetes cluster, number
@@ -260,8 +253,6 @@ runtime:
     controllersConcurrency:
       podController: ... # PodController defines maximum concurrent reconciliations of Pod resources
 ```
-
-{% endif_version %}
 
 ## Envoy
 
@@ -307,9 +298,7 @@ kuma-dp run \
 {% endnavtab %}
 {% endnavtabs %}
 
-{% if_version gte:2.11.x %}
-
-### Incremental xDS
+### Incremental xDS {% new_in 2.11 %}
 
 {:.warning}
 > This feature is experimental
@@ -353,5 +342,3 @@ KUMA_DATAPLANE_RUNTIME_ENVOY_XDS_TRANSPORT_PROTOCOL_VARIANT=DELTA_GRPC
 
 {% endnavtab %}
 {% endnavtabs %}
-
-{% endif_version %}
