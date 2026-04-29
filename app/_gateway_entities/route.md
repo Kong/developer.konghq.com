@@ -177,7 +177,7 @@ To maximise performance, the {{site.base_gateway}} router orders all defined Rou
 
 For Routes configured in the traditional JSON format, priority is dynamically calculated based on the [routing criteria](#routing-criteria) (`regex_priority` included) when the [`router_flavor`](/gateway/configuration/#router-flavor) property in `kong.conf` is set to `traditional_compat` or `expressions`. For example, a Route that specifies both `hosts` and `headers` will have a higher priority than one that only specifies `hosts`.
 
-If you find that a Route with lower priority is matched over Routes with higher priority and common [routing criteria](#routing-criteria) (e.g. same `hosts`), try setting the [`route_match_calculation`](/gateway/configuration/#route-match-calculation) property in `kong.conf` to `strict`.
+If you find that a Route with lower priority is matched over Routes with higher priority and common [routing criteria](#routing-criteria) (for example, same `hosts`), try setting the [`route_match_calculation`](/gateway/configuration/#route-match-calculation) property in `kong.conf` to `strict`.
 
 For more information, see the detailed [expressions](/gateway/routing/expressions/#priority-matching) or [traditional](/gateway/routing/traditional/#route-priority) sections.
 
