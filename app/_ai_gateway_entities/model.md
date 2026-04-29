@@ -67,16 +67,7 @@ For on-prem deployments, this `/ai/*` surface is a bridge architecture that alig
 
 Model participates in runtime plugin resolution alongside other scoping dimensions, such as [Consumer](/gateway/entities/consumer/), [Consumer Group](/gateway/entities/consumer-group/), [Route](/gateway/entities/route/), and [Service](/gateway/entities/service/).
 
-Model behavior spans both control-plane configuration and request-time execution:
-
-{% mermaid %}
-flowchart LR
-  A["Incoming request"] --> B["Route + Service selection"]
-  B --> C["Resolve request model"]
-  C --> D{"Model-scoped config match?"}
-  D -- "yes" --> E["Apply model-scoped plugins"]
-  D -- "no" --> F["Apply non-model-scoped plugins"]
-{% endmermaid %}
+A plugin configuration can reference a Model through its `model` field. When a plugin entry is scoped to a Model, that entry only applies to requests where AI Proxy or AI Proxy Advanced resolves the same model name from the request. Plugin entries without a `model` field apply regardless of which model the request targets.
 
 At runtime, the request model is resolved by the AI routing flow (AI Proxy, AI Proxy Advanced, or a model shim flow, depending on deployment configuration). The plugin iterator then uses the resolved Model to select matching plugin configurations.
 
