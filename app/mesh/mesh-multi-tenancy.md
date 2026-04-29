@@ -17,7 +17,7 @@ tags:
 related_resources:
   - text: Data plane proxy
     url: '/mesh/data-plane-proxy/'
-  - text: Mesh Observability
+  - text: Mesh observability
     url: '/mesh/observability/'
   - text: Multi-zone deployment
     url: '/mesh/mesh-multizone-service-deployment/'
@@ -34,18 +34,20 @@ You can create a mesh per line of business, per team, per application, or per en
 * [Data plane proxies](/mesh/data-plane-proxy/)
 * [Policies](/mesh/policies/)
 
-In order to use {{site.mesh_product_name}}, at least one mesh must exist, and there is no limit to the number of meshes that can be created. When a data plane proxy connects to the control plane (`kuma-cp`), it specifies which `Mesh` resource it belongs to. A data plane proxy can only belong to one mesh at a time.
+To use {{site.mesh_product_name}}, at least one mesh must exist. There is no limit to the number of meshes that can be created.
+
+When a data plane proxy connects to the control plane (`kuma-cp`), it specifies which `Mesh` resource it belongs to. A data plane proxy can only belong to one mesh at a time.
 
 {:.info}
 > When starting a new {{site.mesh_product_name}} cluster from scratch, a `default` mesh is created automatically.
 
 In addition to creating virtual service meshes, the `Mesh` resource is also used for:
 
-* [Mutual TLS](/mesh/policies/mutual-tls/), to secure and encrypt our service traffic and assign an identity to the data plane proxies within the mesh.
-* [Zone egress](/mesh/zone-egress/), to define whether `ZoneEgress` should be used for cross zone and external service communication.
+* [Mutual TLS](/mesh/policies/mutual-tls/), to secure and encrypt service traffic and assign an identity to the data plane proxies within the mesh.
+* [Zone egress](/mesh/zone-egress/), to define whether `ZoneEgress` should be used for cross-zone and external service communication.
 * [Non-mesh traffic](/mesh/policies/meshpassthrough/), to define whether `passthrough` mode should be used for the non-mesh traffic.
 
-To support cross-mesh communication an intermediate API Gateway must be used. For more information, see [Built-in gateways in {{site.mesh_product_name}}](/mesh/built-in-gateway/).
+If you need cross-mesh communication, you must use an intermediary API Gateway. For more information, see [Built-in gateways in {{site.mesh_product_name}}](/mesh/built-in-gateway/).
 
 ## Creating a mesh
 
@@ -96,7 +98,7 @@ spec:
   template:
     metadata:
       annotations:
-        # indicate to {{site.mesh_product_name}} what is the Mesh that the data plane proxy belongs to
+        # indicates to {{site.mesh_product_name}} which Mesh the data plane proxy belongs to
         kuma.io/mesh: default
 ```
 
@@ -115,7 +117,7 @@ specifies a particular mesh will be part of that mesh.
 > * Skips `Workload` resource generation for affected workloads
 > * Logs an error message
 >
-> To prevent this configuration issue proactively, you can enable the runtime flag [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/reference/kuma-cp/). When enabled, the admission webhook rejects Pod creation or updates if the namespace already contains data planes in a different mesh.
+> To prevent this configuration issue proactively, you can enable the runtime flag [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/reference/kuma-cp/). When enabled, the admission webhook rejects Pod creation and Pod updates if the namespace already contains data planes in a different mesh.
 >
 > We recommend keeping all pods in a single namespace within the same mesh.
 
@@ -169,10 +171,13 @@ mesh: default
 {% endnavtab %}
 {% endnavtabs %}
 
-## Skipping default resource creation
+## Default resources
 
-By default, to help users get started, {{site.mesh_product_name}} creates the following default policies:
-
+To help users get started, {{site.mesh_product_name}} creates the following default policies:
+* MeshTimeout for all gateways
+* MeshTimeout for all sidecar resources
+* MeshRetry
+* MeshCircuitBreaker
 {% policy_yaml %}
 
 ```yaml
@@ -270,6 +275,7 @@ spec:
 
 {% endpolicy_yaml %}
 
+### Skipping default resource creation
 To prevent these policies from being added when creating a mesh, set `skipCreatingInitialPolicies`:
 
 {% navtabs "environment" %}
