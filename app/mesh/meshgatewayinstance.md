@@ -26,11 +26,11 @@ related_resources:
 
 [`MeshGateway`](/mesh/gateway-listeners/) and [`MeshHTTPRoute`](/mesh/policies/meshhttproute/)/[`MeshTCPRoute`](/mesh/policies/meshtcproute/) configure built-in gateway listeners and routes, but don't manage the `kuma-dp` instances that serve traffic.
 
-{{site.mesh_product_name}} offers `MeshGatewayInstance` to manage a Kubernetes `Deployment` and `Service`
+{{site.mesh_product_name}} offers `MeshGatewayInstance` to manage a Kubernetes Deployment and Service
 that together provide service capacity for the `MeshGateway`.
 
 {:.info}
-> If you're not using the `default` `Mesh`, label the `MeshGatewayInstance` with `kuma.io/mesh`.
+> If you're not using the `default` mesh, label the `MeshGatewayInstance` with `kuma.io/mesh`.
 
 Consider the following example:
 
@@ -41,21 +41,21 @@ metadata:
   name: edge-gateway
   namespace: default
   labels:
-    kuma.io/mesh: default # only necessary if not using default Mesh
+    kuma.io/mesh: mesh-name
 spec:
   replicas: 2
   serviceType: LoadBalancer
 ```
 
-Once a `MeshGateway` exists with `kuma.io/service: edge-gateway_default_svc`, the control plane creates a new `Deployment` in the `default` namespace.
-This `Deployment` deploys 2 replicas of `kuma-dp` and a corresponding built-in gateway `Dataplane` with `kuma.io/service: edge-gateway_default_svc`.
+Once a `MeshGateway` exists with `kuma.io/service: edge-gateway_default_svc`, the control plane creates a new Deployment in the `default` namespace.
+This Deployment deploys 2 replicas of `kuma-dp` and a corresponding built-in gateway data plane with `kuma.io/service: edge-gateway_default_svc`.
 
-The control plane also creates a new `Service` to send network traffic to the built-in `Dataplane` pods.
-The `Service` is of type `LoadBalancer`, and its ports are automatically adjusted to match the listeners on the corresponding `MeshGateway`.
+The control plane also creates a new Service to send network traffic to the built-in data plane Pods.
+The Service is of type `LoadBalancer`, and its ports are automatically adjusted to match the listeners on the corresponding `MeshGateway`.
 
 ## Customization
 
-You can further customize the generated `Service` or `Pods` using `spec.serviceTemplate` and `spec.podTemplate`.
+You can further customize the generated Service or Pods using `spec.serviceTemplate` and `spec.podTemplate`.
 
 For example, you can add annotations or labels to the generated objects:
 
@@ -78,7 +78,7 @@ spec:
         app-name: my-app
 ```
 
-You can also modify several resource limits or security-related parameters for the generated `Pods` or specify a `loadBalancerIP` for the `Service`:
+You can also modify several resource limits or security-related parameters for the generated Pods or specify a `loadBalancerIP` for the Service:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
