@@ -115,6 +115,38 @@ Dynamic mocking uses [**Liquid**](https://liquidjs.com/tutorials/intro-to-liquid
 To keep templates safe and predictable, only a limited subset of Liquid tags is supported for logic control. For filters, only the [default filter](https://liquidjs.com/filters/default.html) is supported.
 
 
+
+### Liquid logic control
+
+Logic control in dynamic mocking is based on Liquid’s templating language; it only supports a subset of built-in tags for safety and simplicity.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Tag
+    key: tag
+  - title: Description
+    key: description
+  - title: Reference
+    key: ref
+rows:
+  - tag: "`assign`"
+    description: "Creates or updates a variable within the template scope."
+    ref: "[LiquidJS Assign](https://liquidjs.com/zh-cn/tags/assign.html)"
+  - tag: "`if`"
+    description: "Conditionally renders a block of content when a statement evaluates as true."
+    ref: "[LiquidJS If](https://liquidjs.com/zh-cn/tags/if.html)"
+  - tag: "`unless`"
+    description: "Renders a block when a statement evaluates as false; acts as the inverse of `if`."
+    ref: "[LiquidJS Unless](https://liquidjs.com/zh-cn/tags/unless.html)"
+  - tag: "`raw`"
+    description: "Prevents Liquid from interpreting enclosed content. Use this to escape template syntax within mock responses."
+    ref: "[LiquidJS Raw](https://liquidjs.com/zh-cn/tags/raw.html)"
+{% endtable %}
+<!-- vale on -->
+
+For additional implementation details and syntax behavior, go to the [**LiquidJS documentation**](https://liquidjs.com/zh-cn/).
+
 ### Use data from requests
 
 You can access values from incoming requests and include them in your mock responses.
@@ -145,14 +177,15 @@ You can access values from incoming requests and include them in your mock respo
 
 Use faker variables to generate random but realistic data in mock responses.
 
+For a complete list of available faker variables, check the [faker variables list](/insomnia/faker-variables).
+
 **Format to output random data:**
 
 ```liquid
 {% raw %}{{ faker.<variable-name> }}{% endraw %}
 ```
 
-For a complete list of available faker variables, go to [**run.js#L218**](https://github.com/Kong/insomnia-mockbin/blob/04134cf81ce29ae7ffcc7ee13e2ecbce70414a96/lib/routes/bins/run.js#L218). Use the names listed under `fakerFunctions` (such as `guid`, `randomFullName`, `randomPhoneNumber`, etc.). For example:
-
+For example:
 
 ```liquid
 {% raw %}{{ faker.randomFullName }}{% endraw %}
