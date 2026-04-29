@@ -86,7 +86,7 @@ faqs:
 
 ## Configure the plugin
 
-First, let's configure AI Proxy Advanced to use the gemini-3.1-pro-preview models via Vertex AI:
+First, let's configure AI Proxy Advanced to use the gemini-3.1-pro-preview model via Vertex AI:
 
 {% entity_examples %}
 entities:
