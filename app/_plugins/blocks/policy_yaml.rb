@@ -269,10 +269,19 @@ module Jekyll
       @page = context.environments.first['page']
 
       @params.each do |k, v|
-        next unless %w[use_meshservice namespace tools].include?(k)
+        next unless %w[use_meshservice namespace].include?(k)
         next unless v.is_a?(String)
 
         @params[k] = v.split('.').reduce(context) { |c, key| c[key] } || false
+      end
+
+      if @params['tools'].is_a?(String)
+        tools_param = @params['tools']
+        @params['tools'] = if tools_param.include?('.')
+                             tools_param.split('.').reduce(context) { |c, key| c[key] }
+                           else
+                             tools_param.split(',').map(&:strip)
+                           end
       end
 
       has_raw = @body.nodelist.first { |x| x.has?('tag_name') and x.tag_name == 'raw' }
