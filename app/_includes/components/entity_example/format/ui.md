@@ -106,12 +106,23 @@ The following creates a new SNI with basic configuration:
 1. Click **Save**.
 
 {% when 'workspace' %}
-The following creates a new Workspace:
+The following creates a new Workspace in {{site.base_gateway}}:
 
 1. From the Kong Manager Dashboard, click **New Workspace**.
 2. Add a name, then click **Create New Workspace**.
 
 This will create a new Workspace, and from here you can start managing entities from Kong Manager.
+
+The following creates a new Workspace in {{site.konnect_short_name}}:
+
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
+1. Select your API Gateway.
+1. In the **API Gateway** sidebar, click **Workspaces**.
+1. Click **New workspace**.
+1. In the **Workspace name** field, enter a name for your Workspace.
+1. Click **Create**.
+
+This will create a new Workspace, and from here you can start managing entities.
 
 {% when 'certificate' %}
 The following creates a new Certificate with basic configuration:
