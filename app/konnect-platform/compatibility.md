@@ -71,12 +71,7 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 ## {{site.konnect_short_name}} control plane compatibility
 
-The {{site.konnect_short_name}} control plane is **versionless** and always runs the latest release. You can't pin a specific control plane version, and there is no per-plugin versioning.
-
-This means changes take effect on your next `deck sync`, regardless of which data plane version you're running.
-
-* **Defaults only change at major {{site.base_gateway}} versions.** Your configuration continues to work without modification across minor and patch releases.
-* **Breaking changes target major {{site.base_gateway}} versions.** Security CVEs may require an exception in a minor or patch version.
+The {{site.konnect_short_name}} control plane is **versionless** and always runs the latest release. You can't pin a specific control plane version, and there is no per-plugin versioning. This means changes will take effect the next time you perform a`deck sync`, regardless of which data plane version you're running. Defaults only change at major {{site.base_gateway}} versions, so your configuration continues to work without modification across minor and patch releases. Breaking changes target major versions, security CVEs may require an update in a minor or patch version.
 
 
 ## {{site.mesh_product_name}} compatibility
