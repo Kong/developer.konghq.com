@@ -2,7 +2,7 @@
 title: "Managed cache for Redis"
 content_type: reference
 layout: reference
-description: "Learn how to configure, scale, and troubleshoot a Dedicated Cloud Gateway managed cache for Redis."
+description: "Learn how to configure and scale a Dedicated Cloud Gateway managed cache for Redis. See recommended sizing configurations based on use case."
 
 products:
     - gateway
@@ -45,6 +45,7 @@ Only AWS and Azure are supported as providers currently.
 ## Managed cache sizing recommendations
 
 You can choose from the following cache sizes:
+<!--vale off-->
 * micro: ~0.5 GiB capacity
 * small: ~1 GiB capacity
 * medium: ~3 GiB capacity
@@ -56,7 +57,7 @@ You can choose from the following cache sizes:
 * 12xlarge: ~150 GiB capacity
 * 16xlarge: ~200 GiB capacity
 * 24xlarge: ~300 GiB capacity
-
+<!--vale on-->
 {:.info}
 > **Contact Kong to enable cache tiers**
 >
@@ -129,7 +130,7 @@ rows:
 ### Sync rate recommendations
 
 The sync rate is the most impactful tuning lever and interacts directly with cache sizing:
-
+<!--vale off-->
 {% table %}
 columns:
   - title: Sync rate
@@ -162,7 +163,7 @@ rows:
       At high entity counts, the rate limited percentage drops to 57–60% (expected: ~99%), which allows requests through that should be blocked. 
       Only use for non-critical or approximate rate limiting at very low entity counts.
 {% endtable %}
-
+<!--vale on-->
 ## Configure a managed cache
 
 Managed caches are either created at the control plane or control plane group-level. 
