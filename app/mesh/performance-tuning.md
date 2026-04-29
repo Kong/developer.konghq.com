@@ -27,30 +27,27 @@ min_version:
 
 ## Reachable services
 
-By default, when transparent proxying is used, every data plane proxy follows every other data plane proxy in the mesh.
-With large meshes, usually, a data plane proxy connects to just a couple of services in the mesh.
-By defining the list of such services, we can dramatically improve the performance of {{site.mesh_product_name}}.
+By default, when transparent proxying is enabled, every data plane proxy receives configuration for every other data plane proxy in the mesh.
+In large meshes, a data plane proxy typically communicates with only a small number of services.
+Defining that list of services can dramatically improve {{site.mesh_product_name}} performance.
 
-The result is that:
-* The control plane has to generate a much smaller XDS configuration (just a couple of Clusters/Listeners etc.) saving CPU and memory
-* Smaller config is sent over a wire saving a lot of network bandwidth
-* Envoy only has to keep a couple of Clusters/Listeners which means much fewer statistics and lower memory usage.
+The benefits are:
+* The control plane generates a much smaller XDS configuration (fewer Clusters, Listeners, and so on), reducing CPU and memory usage.
+* Smaller configurations reduce network bandwidth.
+* Envoy maintains fewer Clusters and Listeners, resulting in fewer statistics and lower memory usage.
 
-Follow the [transparent proxying](/mesh/transparent-proxying/) docs on how to configure it.
+Follow the [transparent proxying](/mesh/transparent-proxying/) docs on how to configure this.
 
-## Config trimming by using MeshTrafficPermission
+## Config trimming with MeshTrafficPermission
 
 {:.warning}
-> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/), if you're using [TrafficPermission](/mesh/policies/traffic-permissions/) you need to migrate to MeshTrafficPermission, otherwise enabling this feature could stop all traffic flow.
+> This feature only works with [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/). If you're using [TrafficPermission](/mesh/policies/traffic-permissions/), migrate to MeshTrafficPermission before enabling this feature, otherwise all traffic flow may stop.
 
-Starting with release 2.5 the problem stated in [reachable services](#reachable-services) section
-can be also mitigated by defining [MeshTrafficPermissions](/mesh/policies/meshtrafficpermission/) and [configuring](/mesh/control-plane-configuration/) a **zone** control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
+The problem described in [Reachable services](#reachable-services) can also be mitigated by defining [MeshTrafficPermissions](/mesh/policies/meshtrafficpermission/) and [configuring](/mesh/control-plane-configuration/) a **zone** control plane with `KUMA_EXPERIMENTAL_AUTO_REACHABLE_SERVICES=true`.
 
-Switching on the flag will result in computing a graph of dependencies between the services
-and generating XDS configuration that enables communication **only** with services that are allowed to communicate with each other
-(their [effective](/mesh/policies-introduction/) action is **not** `deny`).
+Enabling this flag causes {{site.mesh_product_name}} to compute a dependency graph between services and generate XDS configuration that allows communication **only** between services permitted to reach each other (those whose [effective](/mesh/policies-introduction/) action is not `deny`).
 
-For example: if a service `b` can be called only by service `a`:
+For example, if service `b` can only be called by service `a`:
 
 ```yaml
 apiVersion: kuma.io/v1alpha1
@@ -70,22 +67,21 @@ spec:
         action: Allow
 ```
 
-Then there is no reason to compute and distribute configuration of service `b` to any other services in the Mesh since (even if they wanted)
-they wouldn't be able to communicate with it.
+There is no reason to compute or distribute configuration for service `b` to any other service, since they are not permitted to communicate with it.
 
 {:.info}
-> You can combine `autoReachableServices` with [reachable services](#reachable-services), but **reachable services** will take precedence.
+> You can combine `autoReachableServices` with [reachable services](#reachable-services), but **reachable services** takes precedence.
 
-Sections below highlight the most important aspects of this feature, if you want to dig deeper please take a look at the [MADR](https://github.com/kumahq/kuma/blob/master/docs/madr/decisions/031-automatic-rechable-services.md#automatic-reachable-services).
+The sections below highlight the most important aspects of this feature. For a deeper dive, see the [MADR](https://github.com/kumahq/kuma/blob/master/docs/madr/decisions/031-automatic-rechable-services.md#automatic-reachable-services).
 
 ### Supported targetRef kinds
 
-The following kinds affect the graph generation and performance:
+The following kinds affect graph generation and performance:
 - all levels of `MeshService`
 - [top](/mesh/policies-introduction/) level `MeshSubset` and `MeshServiceSubset` with `k8s.kuma.io/namespace`, `k8s.kuma.io/service-name`, `k8s.kuma.io/service-port` tags
 - [from](/mesh/policies-introduction/) level `MeshSubset` and `MeshServiceSubset` with all tags
 
-If you define a MeshTrafficPermission with other kind, like this one:
+A MeshTrafficPermission using any other kind, like this one:
 
 {% policy_yaml %}
 ```yaml
@@ -105,11 +101,11 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-it **won't** affect performance.
+**won't** affect performance.
 
-### Changes to the communication between services
+### Changes to service communication
 
-Requests from services trying to communicate with services that they don't have access to will now fail with connection closed error like this:
+Requests from services that don't have access to a given service now fail with a connection closed error:
 
 ```sh
 root@second-test-server:/# curl -v first-test-server:80
@@ -125,7 +121,7 @@ root@second-test-server:/# curl -v first-test-server:80
 curl: (52) Empty reply from server
 ```
 
-instead of getting a `503` error.
+instead of a `503` error:
 
 ```sh
 root@second-test-server:/# curl -v first-test-server:80
@@ -149,63 +145,56 @@ upstream connect error or disconnect/reset before headers. retried and the lates
 
 ### Migration
 
-A recommended path of migration is to start with a coarse grain `MeshTrafficPermission` targeting a `MeshSubset` with `k8s.kuma.io/namespace` and then drill down to individual services if needed.
+The recommended migration path is to start with a coarse-grained `MeshTrafficPermission` targeting a `MeshSubset` with `k8s.kuma.io/namespace`, then narrow down to individual services as needed.
 
 ## Postgres
 
-If you choose `Postgres` as a configuration store for {{site.mesh_product_name}} on Universal,
-please be aware of the following key settings that affect performance of {{site.mesh_product_name}} Control Plane.
+If you're using `Postgres` as a configuration store for {{site.mesh_product_name}} on Universal, the following settings affect control plane performance:
 
 * `KUMA_STORE_POSTGRES_CONNECTION_TIMEOUT` : connection timeout to the Postgres database (default: `5s`)
 * `KUMA_STORE_POSTGRES_MAX_OPEN_CONNECTIONS` : maximum number of open connections to the Postgres database (default: `unlimited`)
 
 ### KUMA_STORE_POSTGRES_CONNECTION_TIMEOUT
 
-The default value will work well in those cases where both `kuma-cp` and Postgres database are deployed in the same data center / cloud region.
+The default value works well when `kuma-cp` and the Postgres database are deployed in the same data center or cloud region.
 
-However, if you're pursuing a more distributed topology, for example by hosting `kuma-cp` on premise and using Postgres as a service in the cloud, the default value might no longer be enough.
+If you're using a more distributed topology — for example, hosting `kuma-cp` on-premises with Postgres as a cloud service — the default timeout may not be sufficient.
 
 ### KUMA_STORE_POSTGRES_MAX_OPEN_CONNECTIONS
 
-The more data planes join your meshes, the more connections to Postgres database {{site.mesh_product_name}} might need to fetch configurations and update statuses.
+As more data planes join your meshes, {{site.mesh_product_name}} may need more Postgres connections to fetch configurations and update statuses.
 
-As of version 1.4.1 the default value is 50.
+As of version 1.4.1, the default value is 50.
 
-However, if your Postgres database (for example as a service in the cloud) only permits a small number of concurrent connections, you will have to adjust {{site.mesh_product_name}} configuration respectively.
+If your Postgres database only permits a small number of concurrent connections, adjust {{site.mesh_product_name}}'s configuration accordingly.
 
-## Snapshot Generation
+## Snapshot generation
 
 {:.warning}
-> This is advanced topic describing {{site.mesh_product_name}} implementation internals
+> This is an advanced topic describing {{site.mesh_product_name}} implementation internals.
 
-The main task of the control plane is to provide config for data planes. When a data plane connects to the control plane, the control plane starts a new Goroutine.
-This Goroutine runs the reconciliation process with given interval (`1s` by default). During this process, all data planes and policies are fetched for matching.
-When matching is done, the Envoy config (including policies and available endpoints of services) for given data plane is generated and sent only if there is an actual change.
+The main task of the control plane is to provide configuration to data planes. When a data plane connects to the control plane, the control plane starts a new goroutine that runs a reconciliation process at a configurable interval (default: `1s`). During reconciliation, all data planes and policies are fetched and matched. The resulting Envoy config — including policies and available service endpoints — is generated and sent only if it has changed.
 
-* `KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL` : interval for re-generating configuration for data planes connected to the control plane (default: `1s`)
+* `KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL` : interval for regenerating configuration for connected data planes (default: `1s`)
 
-This process can be CPU intensive with high number of data planes therefore you can control the interval time for a single data plane.
-You can lower the interval scarifying the latency of the new config propagation to avoid overloading the control plane. For example,
-changing it to 5 seconds means that when you apply a policy (like `MeshTrafficPermission`) or the new data plane of the service is up or down, control plane will generate and send new config within 5 seconds.
+This process can be CPU-intensive with a large number of data planes. Increasing the interval reduces control plane load at the cost of higher config propagation latency. For example, setting it to 5 seconds means that when you apply a policy or a service instance changes state, the control plane will generate and distribute new config within 5 seconds.
 
-For systems with high traffic, keeping old endpoints for such a long time (5 seconds) may not be acceptable. To solve this, you can use passive or active [health checks](/mesh/policies/health-check/) provided by {{site.mesh_product_name}}.
+For high-traffic systems, stale endpoint data for that long may not be acceptable. In that case, use passive or active [health checks](/mesh/policies/health-check/).
 
-Additionally, to avoid overloading the underlying storage there is a cache that shares fetch results between concurrent reconciliation processes for multiple dataplanes.
+To reduce storage load, a cache shares fetch results across concurrent reconciliation goroutines for multiple data planes.
 
-* `KUMA_STORE_CACHE_EXPIRATION_TIME` : expiration time for elements in cache (1 second by default).
+* `KUMA_STORE_CACHE_EXPIRATION_TIME` : expiration time for cache entries (default: `1s`)
 
-You can also change the expiration time, but it should not exceed `KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`, otherwise CP will be wasting time building Envoy config with the same data.
+This value should not exceed `KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`, otherwise the control plane will build Envoy config from stale data.
 
 ## Profiling
 
-{{site.mesh_product_name}}'s control plane ships with [`pprof`](https://golang.org/pkg/net/http/pprof/) endpoints so you can profile and debug the performance of the `kuma-cp` process.
+{{site.mesh_product_name}}'s control plane exposes [`pprof`](https://golang.org/pkg/net/http/pprof/) endpoints for profiling and debugging `kuma-cp` performance.
 
-To enable the debugging endpoints, you can set the `KUMA_DIAGNOSTICS_DEBUG_ENDPOINTS` environment variable to `true` before starting `kuma-cp` and use one of the following methods to retrieve the profiling information:
+To enable debugging endpoints, set `KUMA_DIAGNOSTICS_DEBUG_ENDPOINTS=true` before starting `kuma-cp`, then retrieve profiling data using one of the following methods:
 
 {% navtabs "profiling" %}
 {% navtab "pprof" %}
-
-You can retrieve the profiling information with Golang's `pprof` tool, for example:
 
 ```sh
 go tool pprof http://<IP of the CP>:5680/debug/pprof/profile?seconds=30
@@ -214,8 +203,6 @@ go tool pprof http://<IP of the CP>:5680/debug/pprof/profile?seconds=30
 {% endnavtab %}
 {% navtab "curl" %}
 
-You can retrieve the profiling information with `curl`, for example:
-
 ```sh
 curl http://<IP of the CP>:5680/debug/pprof/profile?seconds=30 --output prof.out
 ```
@@ -223,48 +210,44 @@ curl http://<IP of the CP>:5680/debug/pprof/profile?seconds=30 --output prof.out
 {% endnavtab %}
 {% endnavtabs %}
 
-Then, you can analyze the retrieved profiling data using an application like [Speedscope](https://www.speedscope.app/).
+Then analyze the profiling data using a tool like [Speedscope](https://www.speedscope.app/).
 
 {:.warning}
-> After a successful debugging session, please remember to turn off the debugging endpoints since anybody could execute heap dumps on them potentially exposing sensitive data.
+> After debugging, disable the debugging endpoints. Anyone with access can execute heap dumps, potentially exposing sensitive data.
 
 ### Kubernetes client
 
-Kubernetes client uses client level throttling to not overwhelm kube-api server. In larger deployments, bigger than 2000 services in a single kubernetes cluster, number
-of resources updates can hit this throttling. In most cases it's safe to increase this limit as kube-api has it's own throttling mechanism. To change client
-throttling configuration you need to update config.
+The Kubernetes client uses client-level throttling to avoid overwhelming the kube-apiserver. In deployments with more than 2,000 services in a single Kubernetes cluster, the volume of resource updates can hit this limit. It is generally safe to raise this limit, since kube-apiserver has its own throttling mechanism. To adjust client throttling:
 
 ```yaml
 runtime:
   kubernetes:
     clientConfig:
-      qps: ... # Qps defines maximum requests kubernetes client is allowed to make per second.
-      burstQps: ... # BurstQps defines maximum burst requests kubernetes client is allowed to make per second
+      qps: ... # maximum requests per second the Kubernetes client is allowed to make
+      burstQps: ... # maximum burst requests per second the Kubernetes client is allowed to make
 ```
 
 ### Kubernetes controller manager
 
-{{site.mesh_product_name}} is modifying some Kubernetes resources. Kubernetes calls the process of modification reconciliation. Every resource has its own working queue, and control plane adds reconciliation tasks to that queue. In larger deployments, bigger than 2000 services in a single Kubernetes cluster, size of the work queue for pod reconciliation
-can grow and slow down pods updates. In this situation you can change the number of concurrent pod reconciliation tasks, by changing configuration:
+{{site.mesh_product_name}} modifies Kubernetes resources through reconciliation. Each resource type has its own work queue, and the control plane adds reconciliation tasks to that queue. In deployments with more than 2,000 services in a single Kubernetes cluster, the pod reconciliation queue can grow and slow down pod updates. To increase the number of concurrent pod reconciliation tasks:
 
 ```yaml
 runtime:
   kubernetes:
     controllersConcurrency:
-      podController: ... # PodController defines maximum concurrent reconciliations of Pod resources
+      podController: ... # maximum concurrent Pod reconciliations
 ```
 
 ## Envoy
 
 ### Envoy concurrency tuning
 
-Envoy allows configuring the number of [worker threads](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/intro/threading_model)
-used for processing requests. Sometimes it might be useful to change the default number of worker threads e.g.: high CPU machine with low traffic. Depending on the type of deployment, there are different mechanisms in `kuma-dp` to change Envoy's concurrency level.
+Envoy's [worker thread](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/intro/threading_model) count can be tuned — for example, on a high-CPU machine with low traffic. The mechanism differs by deployment type.
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-By default, Envoy runs with a concurrency level based on resource limit. For example, if you've started the `kuma-dp` container with CPU resource limit `7000m` then concurrency is going to be set to 7. It's also worth mentioning that concurrency for K8s is set from at least 2 to a maximum of 10 worker threads. In case when higher concurrency level is required it's possible to change the setting by using annotation `kuma.io/sidecar-proxy-concurrency` which allows to change the concurrency level without limits.
+By default, Envoy sets concurrency based on the container's CPU resource limit. For example, a limit of `7000m` results in 7 worker threads. On Kubernetes, concurrency is clamped between 2 and 10 by default. To exceed that limit, use the `kuma.io/sidecar-proxy-concurrency` annotation:
 
 ```yaml
 apiVersion: apps/v1
@@ -287,7 +270,7 @@ spec:
 {% endnavtab %}
 {% navtab "Universal" %}
 
-Envoy on Linux, by default, starts with the flag `--cpuset-threads`. In this case, `cpuset` size is used to determine the number of worker threads on systems. When the value is not present then the number of worker threads is based on the number of hardware threads on the machine. `kuma-dp` allows tuning that value by providing a `--concurrency` flag with the number of worker threads to create.
+On Linux, Envoy starts with the `--cpuset-threads` flag by default, using the `cpuset` size to determine worker thread count. When not available, it falls back to the number of hardware threads. Use the `--concurrency` flag when starting `kuma-dp` to override this:
 
 ```sh
 kuma-dp run \
@@ -301,20 +284,20 @@ kuma-dp run \
 ### Incremental xDS {% new_in 2.11 %}
 
 {:.warning}
-> This feature is experimental
+> This feature is experimental.
 
-Since version `2.11.x`, we have introduced a new way of exchanging configuration between the control plane and Envoy: [Incremental xDS](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol#incremental-xds).
+Since version `2.11.x`, {{site.mesh_product_name}} supports [Incremental xDS](https://www.envoyproxy.io/docs/envoy/latest/api-docs/xds_protocol#incremental-xds), a new model for exchanging configuration between the control plane and Envoy.
 
-In this model, instead of sending the entire configuration on each update, the control plane sends only the changes (deltas). This can reduce CPU and memory usage on sidecars during updates but might slightly increases the load on the control plane, which must maintain state and compute the differences.
+Instead of sending the entire configuration on each update, the control plane sends only the changes (deltas). This reduces CPU and memory usage on sidecars during updates, but may slightly increase load on the control plane, which must maintain state and compute diffs.
 
-This feature can be especially beneficial for sidecars that do not use `reachableBackends` or `reachableServices`.
+This feature is especially beneficial for sidecars that don't use `reachableBackends` or `reachableServices`.
 
-You can enable it for the entire deployment by setting `KUMA_EXPERIMENTAL_DELTA_XDS: true`, or enable it for an individual sidecar (including Ingress and Egress):
+Enable it for the entire deployment with `KUMA_EXPERIMENTAL_DELTA_XDS: true`, or for an individual sidecar (including Ingress and Egress):
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-Add the following annotation to the pod template to enable Incremental xDS for a specific sidecar:
+Add the following annotation to the pod template:
 
 ```yaml
 apiVersion: apps/v1
@@ -334,7 +317,7 @@ spec:
 {% endnavtab %}
 {% navtab "Universal" %}
 
-Start your sidecar with the following environment variable to enable Incremental xDS:
+Set the following environment variable when starting the sidecar:
 
 ```bash
 KUMA_DATAPLANE_RUNTIME_ENVOY_XDS_TRANSPORT_PROTOCOL_VARIANT=DELTA_GRPC
