@@ -82,7 +82,7 @@ sections:
       - path: /mesh/gateway-listeners/
       - path: /mesh/gateway-routes/
       - path: /how-to/set-up-a-built-in-kubernetes-gateway/
-      - path: /mesh/gateway-pods-k8s/
+      - path: /mesh/meshgatewayinstance/
       - path: /mesh/kubernetes-gateway-api/
 
   - title: Delegated Gateways
