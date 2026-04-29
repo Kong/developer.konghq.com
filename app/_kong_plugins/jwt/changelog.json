@@ -1,4 +1,11 @@
 {
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.12.0.5": [
     {
       "message": "Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
