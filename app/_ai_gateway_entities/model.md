@@ -209,11 +209,7 @@ The following example shows a Model named `openai/gpt-4o`.
 {% entity_example %}
 type: model
 data:
-  name: openai/gpt-4o
-formats:
-  - deck
-  - admin-api
-  - konnect-api
+  model: openai-something
 {% endentity_example %}
 
 ## Scope a plugin to a Model
