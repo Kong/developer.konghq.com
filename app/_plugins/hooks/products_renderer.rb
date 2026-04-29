@@ -7,7 +7,7 @@ class ProductsRenderer
   end
 
   def page_paths
-    @page_paths ||= ENV['PAGE_PATHS']&.split(',')
+    @page_paths ||= ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
   end
 
   def read?(page)
