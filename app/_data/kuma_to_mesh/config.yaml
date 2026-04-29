@@ -130,18 +130,6 @@ pages:
       - text: Install Kong Mesh
         url: /mesh/#install-kong-mesh
   -
-    path: app/_src/production/secure-deployment/certificates.md
-    title: 'Secure access across services'
-    description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
-    url: '/mesh/secure-access/'
-    related_resources:
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Mesh Observability
-        url: '/mesh/observability/'
-  -
     path: app/_src/production/secure-deployment/dp-auth.md
     title: 'Authentication with the Data Plane proxy'
     description: 'Reference guide to authentication methods for Data Plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
