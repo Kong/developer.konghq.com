@@ -835,6 +835,7 @@ SLT_Enc
 sni
 snis
 sonarqube
+Speedscope
 Splunk
 Splunk
 sse
