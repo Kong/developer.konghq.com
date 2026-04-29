@@ -55,7 +55,7 @@ rows:
       - Prefix any paths that look like a regular expression with a `~`
       - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
       - Convert decK file `_format_version` from 1.1 to 3.0
-    guide: "[Convert Gateway entity config from 2.8 LTS to 3.4 LTS](/gateway/upgrade/convert-lts-28-34/)"
+    guide: "--"
   - path: |
       `2.8` to `3.4` {% new_in 1.47.0 %}
     transforms: |
@@ -69,7 +69,7 @@ rows:
         - Remove the deprecated `config.proxy_scheme` parameter
       - Pre-Function and Post-Function plugins: 
         - Convert `config.functions` to `config.access`
-      guide: "[Convert Gateway entity config from 3.4 LTS to 3.10 LTS](/gateway/upgrade/convert-lts-34-310/)"
+    guide: "[Convert Gateway entity config from 2.8 LTS to 3.4 LTS](/gateway/upgrade/convert-lts-28-34/)"  
   - path: |
       `3.4` to `3.10` {% new_in 1.51.0 %}
     transforms: |
@@ -80,6 +80,7 @@ rows:
         - Transform `model.options.upstream_path` into `model.options.upstream_url`
       - AI Rate Limiting Advanced plugin:
         - Transform `llm_providers.window_size` from a single value to a list
+    guide: "[Convert Gateway entity config from 3.4 LTS to 3.10 LTS](/gateway/upgrade/convert-lts-34-310/)"
   - path: |
       `3.10` to `3.14` {% new_in 1.57.3 %}
     transforms: |
