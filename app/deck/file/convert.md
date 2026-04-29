@@ -47,12 +47,15 @@ columns:
     key: path
   - title: Applied transformations
     key: transforms
+  - title: How-to guide
+    key: guide
 rows:
   - path: "`kong-gateway-2.x` to `kong-gateway-3.x`"
     transforms: |
       - Prefix any paths that look like a regular expression with a `~`
       - Generate default values for missing `namespace` fields in any Rate Limiting Advanced plugins
       - Convert decK file `_format_version` from 1.1 to 3.0
+    guide: "[Convert Gateway entity config from 2.8 LTS to 3.4 LTS](/gateway/upgrade/convert-lts-28-34/)"
   - path: |
       `2.8` to `3.4` {% new_in 1.47.0 %}
     transforms: |
@@ -66,6 +69,7 @@ rows:
         - Remove the deprecated `config.proxy_scheme` parameter
       - Pre-Function and Post-Function plugins: 
         - Convert `config.functions` to `config.access`
+      guide: "[Convert Gateway entity config from 3.4 LTS to 3.10 LTS](/gateway/upgrade/convert-lts-34-310/)"
   - path: |
       `3.4` to `3.10` {% new_in 1.51.0 %}
     transforms: |
@@ -83,7 +87,7 @@ rows:
       - Services using secure protocols (`https`, `tls`, `grpcs`, `wss`) without an explicit `tls_verify` field: Set `tls_verify` to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default)
       - Key Auth, Key Auth Encrypted, Basic Auth, HMAC Auth, LDAP Auth, OAuth2, OAuth2 Introspection, Vault Auth, and LDAP Auth Advanced plugins without an explicit `hide_credentials` field: Set `hide_credentials` to `false` to preserve the 3.10 default (3.14 changes the default to `true`)
       - Plugins that connect to external services over TLS (such as OpenID Connect, AI plugins, Kafka, and others) without an explicit TLS verification field (for example `ssl_verify`, `tls_verify`, or `https_verify`): Set that field to `false` to preserve the 3.10 default (3.14 enables TLS certificate verification by default). See [Gateway breaking changes in 3.14](/gateway/breaking-changes/#tls-certificate-verify-by-default) for the full list of plugins and changed fields.
-
+    guide: "[Convert Gateway entity config from 3.10 LTS to 3.14 LTS](/gateway/upgrade/convert-lts-310-314/)"
 {% endtable %}
 
 ## Command usage
