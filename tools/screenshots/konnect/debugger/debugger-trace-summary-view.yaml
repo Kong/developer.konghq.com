@@ -1,0 +1,9 @@
+- output: ../../app/assets/images/konnect/debugger-trace-summary-view.png
+  url: https://cloud.konghq.com/us/analytics/debugger/sessions/019dda70-daf6-7b82-8a04-4d03c2fd0cd6/traces/3259848320fb4df51436a43bb6065807?cp_id=5b32f5e1-6c0e-498d-bd94-14c770c4ffbd
+  wait: 1000
+  width: 2033
+  height: 1384
+  javascript: |
+    async () => {
+      await sleep(9000);
+    }
