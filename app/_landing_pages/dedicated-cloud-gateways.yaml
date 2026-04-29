@@ -156,8 +156,19 @@ rows:
                   url: /dedicated-cloud-gateways/azure-virtual-wan-with-outbound-dns-resolver/
   - header:
       type: h2
-      text: "Managed Redis Cache"
+      text: "Managed cache for Redis"
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Managed cache reference
+              description: |
+                Learn how to configure and scale a Dedicated Cloud Gateway managed cache for Redis. 
+                See recommended sizing configurations based on use case.
+              icon: /assets/icons/redis.svg
+              ctas:
+                - text: Read recommendations
+                  url: /dedicated-cloud-gateways/managed-cache/
       - blocks:
           - type: card
             config:
