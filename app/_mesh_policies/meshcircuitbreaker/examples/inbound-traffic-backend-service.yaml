@@ -3,10 +3,6 @@ title: 'Outlier detection'
 description: 'Outlier detection for inbound traffic to backend service'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 

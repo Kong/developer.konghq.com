@@ -3,10 +3,6 @@ title: 'Rate limit the whole mesh'
 description: Simplify your per service configuration, by configuring the ratelimit service backend for the whole mesh.
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 config:
   type: MeshGlobalRateLimit

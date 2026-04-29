@@ -2,10 +2,6 @@ title: 'Simple configuration for inbound applied to specific service'
 description: 'This configuration will be applied to `backend` service inbound.'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 

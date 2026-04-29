@@ -2,10 +2,6 @@ title: 'Enable passthrough'
 description: 'Enable pasthrough for all sidecars'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

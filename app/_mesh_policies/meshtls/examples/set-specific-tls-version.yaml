@@ -2,10 +2,6 @@ title: 'Set specific TLS version and ciphers'
 description: 'Set specific TLS version and ciphers'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

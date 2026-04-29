@@ -2,10 +2,6 @@ title: 'Allow traffic to a service'
 description: 'Use MeshTrafficPermission to allow traffic to a specific MeshService.'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kong-mesh-demo
 config:

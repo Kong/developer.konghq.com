@@ -2,10 +2,6 @@ title: "Default configuration"
 description: "This configuration will be applied on inbounds and outbounds of all gateways"
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

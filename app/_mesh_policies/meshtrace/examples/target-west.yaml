@@ -2,10 +2,6 @@ title: "Targeting parts of the infrastructure: West Only"
 description: "To do this, we use a `TargetRef` kind value of `MeshSubset` to filter which data plane proxy a policy applies to."
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

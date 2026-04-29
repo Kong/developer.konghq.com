@@ -2,10 +2,6 @@ title: 'Basic circuit breaker for outbound traffic'
 description: 'Basic circuit breaker for outbound traffic from web, to backend service'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

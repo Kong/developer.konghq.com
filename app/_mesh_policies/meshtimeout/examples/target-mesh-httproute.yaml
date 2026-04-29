@@ -2,10 +2,6 @@ title: "Target `MeshHTTPRoute`"
 description: "the `MeshHTTPRoute` policy `route-to-backend-v2` redirects all requests to `/v2*` to `backend` instances with `version: v2` tag. `MeshTimeout` `backend-v2` configures timeouts only for requests that are going through `route-to-backend-v2` route. "
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

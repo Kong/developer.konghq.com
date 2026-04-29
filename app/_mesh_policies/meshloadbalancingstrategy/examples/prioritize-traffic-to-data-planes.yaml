@@ -2,10 +2,6 @@ title: 'Prioritize traffic to data planesin specific order'
 description: "Requests to backend will be distributed based on weights, with 99.9% of requests routed to data planes in the same data center, 0.099% to data planes in the same region, and the remainder to other local instances."
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

@@ -2,10 +2,6 @@ title: 'Allow services to communicate with external endpoints'
 description: 'Allow a subset of services to communicate with specific external endpoints'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

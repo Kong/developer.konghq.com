@@ -1,10 +1,6 @@
 title: 'Load balance from HTTP header'
 description: "Load balance requests from `frontend` to `backend` based on the HTTP header `x-header`"
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

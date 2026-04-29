@@ -23,7 +23,7 @@
 
 ## Configuration
 
-{% policy_yaml namespace=page.example.namespace use_meshservice=page.example.use_meshservice tools=page.example.tools %}
+{% policy_yaml namespace=page.example.namespace use_meshservice=page.example.use_meshservice %}
 ```yaml
 {{page.example.yaml_config}}
 ```

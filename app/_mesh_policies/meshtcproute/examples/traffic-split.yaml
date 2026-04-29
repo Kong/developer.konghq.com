@@ -2,10 +2,6 @@ title: 'Traffic split'
 description: 'Use MeshHTTPRoute to split TCP traffic between different MeshServices.'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

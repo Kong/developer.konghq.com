@@ -2,10 +2,6 @@ title: 'gRPC frontend to backend on DeadlineExceeded'
 description: 'gRPC frontend to backend on DeadlineExceeded'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 use_meshservice: true

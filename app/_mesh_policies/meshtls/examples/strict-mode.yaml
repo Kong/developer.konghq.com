@@ -2,10 +2,6 @@ title: 'Enable strict mode on specific subset'
 description: 'Enable strict mode on specific subset'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 
 config:

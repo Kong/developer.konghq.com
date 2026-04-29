@@ -2,10 +2,6 @@ title: 'TCP rate limiting'
 description: 'TCP rate limit for service backend from all services in the Mesh'
 
 weight: 900
-tools:
-  - kubernetes
-  - universal
-  - terraform
 
 namespace: kuma-demo
 config:
