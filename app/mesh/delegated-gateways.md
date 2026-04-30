@@ -30,7 +30,7 @@ The non-{{site.mesh_product_name}} gateway is in charge of policy such as securi
 
 At a technical level, the delegated gateway sidecar is similar to any other sidecar in the mesh, except that incoming traffic bypasses the sidecar and directly reaches the gateway.
 
-See [Set up a built-in gateway with {{site.mesh_product_name}}](/mesh/use-kong-as-delegated-gateway/) to get started with delegated gateways.
+See [Use Kong as a delegated gateway with {{site.mesh_product_name}}](/mesh/use-kong-as-delegated-gateway/) to get started with delegated gateways.
 
 ## Usage
 
@@ -75,7 +75,7 @@ spec:
 
 #### Delegated gateway data planes
 
-To use the delegated gateway feature, add your the `kuma.io/gateway: enabled` annotation to your gateway's Pod.
+To use the delegated gateway feature, add the `kuma.io/gateway: enabled` annotation to your gateway's Pod.
 The control plane automatically generates `Dataplane` objects.
 
 For example:

@@ -88,7 +88,6 @@ sections:
   - title: Delegated Gateways
     items:
       - path: /mesh/delegated-gateways/
-      - path: /mesh/using-mesh/managing-ingress-traffic/delegated
       - path: /mesh/use-kong-as-delegated-gateway/
 
   - title: Authentication and Authorization
