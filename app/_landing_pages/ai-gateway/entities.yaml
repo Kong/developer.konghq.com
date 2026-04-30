@@ -90,7 +90,7 @@ rows:
               description: Store and reference secrets used by AI Gateway entities and plugins.
               cta:
                 text: Vault entity
-                url: /ai-gateway/entities/vault/
+                url: /gateway/entities/vault/
       - blocks:
           - type: card
             config:
@@ -98,7 +98,7 @@ rows:
               description: Manage cryptographic key material used by AI Gateway security workflows.
               cta:
                 text: Key entity
-                url: /ai-gateway/entities/key/
+                url: /gateway/entities/key/
       - blocks:
           - type: card
             config:
@@ -106,4 +106,4 @@ rows:
               description: Group keys for rotation and key management in AI Gateway configurations.
               cta:
                 text: Key Set entity
-                url: /ai-gateway/entities/key-set/
+                url: /gateway/entities/key-set/

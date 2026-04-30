@@ -163,7 +163,7 @@ A Policy attached to a Model creates one plugin entry on the Service of the Mode
 
 The AI Proxy Advanced plugin runs at priority `770` and is the plugin that parses the request body and resolves the model name. Any Policy whose underlying plugin type has a priority higher than `770` runs before that resolution. Authentication plugin types (such as OpenID Connect) fall into this category. They run before AI Proxy Advanced parses the request, but after the request has been routed to the Model's generated Service, so they still gate access correctly. The Model identity in the AI sense (which provider, which target model) is just not available to them.
 
-For Policies whose runtime behavior depends on the resolved Model identity, attach plugin types that run at priority `770` or lower, or use [dynamic plugin ordering](/gateway/plugin-development/entities/plugin/) to push their execution later.
+For Policies whose runtime behavior depends on the resolved Model identity, attach plugin types that run at priority `770` or lower, or use [dynamic plugin ordering](/gateway/entities/plugin/) to push their execution later.
 
 ## Set up a Model
 
