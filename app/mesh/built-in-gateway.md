@@ -20,13 +20,13 @@ related_resources:
   - text: Configuring built-in routes
     url: /mesh/gateway-routes/
   - text: Delegated gateways
-    url: /mesh/ingress-gateway-delegated/
+    url: /mesh/delegated-gateways/
   - text: Kubernetes Gateway API
     url: /mesh/kubernetes-gateway-api/
 
 ---
 
-In {{site.mesh_product_name}}, gateways allow you to manage [ingress traffic](/mesh/ingress/) between a client and the Services in your meshes. You can either use a [delegated gateway](/mesh/ingress-gateway-delegated/), such as {{site.base_gateway}}, or a built-in gateway. 
+In {{site.mesh_product_name}}, gateways allow you to manage [ingress traffic](/mesh/ingress/) between a client and the Services in your meshes. You can either use a [delegated gateway](/mesh/delegated-gateways/), such as {{site.base_gateway}}, or a built-in gateway. 
 
 {:.info}
 > In a Kubernetes environment, you can choose between the built-in {{site.mesh_product_name}} gateway, or the built-in gateway provided by the Kubernetes Gateway API.

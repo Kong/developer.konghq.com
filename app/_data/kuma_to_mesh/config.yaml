@@ -241,7 +241,7 @@ pages:
       - text: Built-in gateways
         url: '/mesh/built-in-gateway/'
       - text: 'Delegated gateways'
-        url: '/mesh/ingress-gateway-delegated/'
+        url: '/mesh/delegated-gateways/'
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
