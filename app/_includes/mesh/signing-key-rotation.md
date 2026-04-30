@@ -7,6 +7,10 @@
 {% capture check_universal %}
 ```sh
 kumactl get secrets
+```
+{% endcapture %}
+{% capture universal_result %}
+```
 MESH      NAME                                    AGE
 default   dataplane-token-signing-key-default-1   49s
 ```
@@ -14,6 +18,10 @@ default   dataplane-token-signing-key-default-1   49s
 {% capture check_kube %}
 ```sh
 kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/secret'
+```
+{% endcapture %}
+{% capture kube_result %}
+```
 NAME                                 TYPE                    DATA   AGE
 dataplane-token-signing-key-default-1   system.kuma.io/secret   1      25m
 ```
@@ -60,6 +68,10 @@ kubectl delete secret dataplane-token-signing-key-default-1 -n {{site.mesh_names
 {% capture check_universal %}
 ```sh
 kumactl get global-secrets
+```
+{% endcapture %}
+{% capture universal_result %}
+```
 NAME                       AGE
 zone-token-signing-key-1   36m
 ```
@@ -67,6 +79,10 @@ zone-token-signing-key-1   36m
 {% capture check_kube %}
 ```sh
 kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/global-secret'
+```
+{% endcapture %}
+{% capture kube_result %}
+```
 NAME                       TYPE                           DATA   AGE
 zone-token-signing-key-1   system.kuma.io/global-secret   1      25m
 ```
@@ -112,6 +128,10 @@ kubectl delete secret zone-token-signing-key-1 -n {{site.mesh_namespace}}
 {% capture check_universal %}
 ```sh
 kumactl get global-secrets
+```
+{% endcapture %}
+{% capture universal_result %}
+```
 NAME                       AGE
 user-token-signing-key-1   36m
 ```
@@ -119,6 +139,10 @@ user-token-signing-key-1   36m
 {% capture check_kube %}
 ```sh
 kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/global-secret'
+```
+{% endcapture %}
+{% capture kube_result %}
+```
 NAME                       TYPE                           DATA   AGE
 user-token-signing-key-1   system.kuma.io/global-secret   1      25m
 ```
@@ -170,7 +194,8 @@ If the signing key is compromised, you must rotate it. You must also rotate all 
    Get the current key's serial number:
    {{ check_kube }}
 
-   In this example, the highest serial number is `1`.
+   In this example, the highest serial number is `1`:
+   {{ kube_result }}
 
    Generate a new signing key with a serial number of `2`:
    {{ create_kube }}
@@ -179,7 +204,8 @@ If the signing key is compromised, you must rotate it. You must also rotate all 
    Get the current key's serial number:
    {{ check_universal }}
 
-   In this example, the highest serial number is `1`.
+   In this example, the highest serial number is `1`:
+   {{ universal_result }}
 
    Generate a new signing key with a serial number of `2`:
    {{ create_universal }}
