@@ -69,6 +69,35 @@ content: |
             - name: proxy
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
+
+### Do you already have a Control Plane in Konnect?
+
+If you already have a Control Plane in Konnect you need to specify the Control Plane ID with:
+
+  ```bash
+  echo '
+  kind: GatewayConfiguration
+  apiVersion: gateway-operator.konghq.com/{{ site.operator_gatewayconfiguration_api_version }}
+  metadata:
+    name: kong-configuration
+    namespace: kong
+  spec:
+    konnect:
+      authRef:
+        name: konnect-api-auth
+      source: Mirror
+      mirror:
+        konnect:
+          id: 876b58fd-ef30-4f29-81d7-792089593f56 # <-- Konnect Control Plane ID
+    dataPlaneOptions:
+      deployment:
+        podTemplateSpec:
+          spec:
+            containers:
+            - name: proxy
+              image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
+  ```
+
 {% endkonnect %}
 
 {% on_prem %}
