@@ -87,117 +87,11 @@ You can also pass the token as a `KUMA_DATAPLANE_RUNTIME_TOKEN` environment vari
 
 ## Revoke a token
 
-{{site.mesh_product_name}} doesn't keep a list of issued tokens. 
-Whenever a single token is compromised, you can add it to the revocation list to invalidate it.
-
-Every token has its own ID under the `jti` key.
-You can extract the ID from the token using jwt.io or the [`jwt-cli`](https://www.npmjs.com/package/jwt-cli) tool.
-
-To revoke tokens, specify a comma-separated list of revoked IDs in a global secret named `zone-token-revocations`.
-
-{% navtabs "Environment" %}
-{% navtab "Kubernetes" %}
-```sh
-REVOCATIONS=$(echo '0e120ec9-6b42-495d-9758-07b59fe86fb9' | base64) && echo "apiVersion: v1
-kind: Secret
-metadata:
-  name: zone-token-revocations
-  namespace: {{site.mesh_namespace}}
-data:
-  value: $REVOCATIONS
-type: system.kuma.io/global-secret" | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Universal" %}
-```sh
-echo "
-type: GlobalSecret
-name: zone-token-revocations
-data: {{ revocations }}" | kumactl apply --var revocations=$(echo '0e120ec9-6b42-495d-9758-07b59fe86fb9' | base64) -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
+{% include /mesh/token-revocation.md type="zone" %}
 
 ## Rotate a signing key
 
-If the signing key is compromised, you must rotate it. You must also rotate all the tokens that were signed by it.
-
-1. Generate a new signing key.
-   The signing key is stored as a global secret named in the following format: `zone-token-signing-key-<serial_number>`.
-
-   When generating a new signing key, assign it a serial number greater than the current key's serial number.
-
-{% capture navtabbed_content %}
-{% navtabs "Environment" %}
-{% navtab "Kubernetes" %}
-Get the current key's serial number:
-```sh
-kubectl get secrets -n {{site.mesh_namespace}} --field-selector='type=system.kuma.io/global-secret'
-NAME                       TYPE                           DATA   AGE
-zone-token-signing-key-1   system.kuma.io/global-secret   1      25m
-```
-
-In this example, the highest serial number is `1`. 
-
-Generate a new signing key with a serial number of `2`:
-```sh
-TOKEN="$(kumactl generate signing-key)" && echo "
-apiVersion: v1
-data:
-  value: $TOKEN
-kind: Secret
-metadata:
-  name: zone-token-signing-key-2
-  namespace: {{site.mesh_namespace}}
-type: system.kuma.io/global-secret
-" | kubectl apply -f -
-```
-
-{% endnavtab %}
-{% navtab "Universal" %}
-Get the current key's serial number:
-```sh
-kumactl get global-secrets
-NAME                       AGE
-zone-token-signing-key-1   36m
-```
-
-In this example, the highest serial number is `1`. 
-
-Generate a new signing key with a serial number of `2`:
-```sh
-echo "
-type: GlobalSecret
-name: zone-token-signing-key-2
-data: {{ key }}" | kumactl apply --var key=$(kumactl generate signing-key) -f -
-```
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-{{ navtabbed_content | indent }}
-
-2. [Generate new tokens](#generate-a-zone-token).
-   New tokens are generated with the signing key with the highest serial number.
-   At this point, tokens signed by either the new or old signing key are valid.
-
-3. Remove the old signing key:
-{% capture navtabbed_content %}
-{% navtabs "Environment" %}
-{% navtab "Kubernetes" %}
-```sh
-kubectl delete secret zone-token-signing-key-1 -n {{site.mesh_namespace}}
-```
-{% endnavtab %}
-{% navtab "Universal" %}
-```sh
-kumactl delete global-secret zone-token-signing-key-1
-```
-{% endnavtab %}
-{% endnavtabs %}
-All new connections to the control plane now require tokens signed with
-the new signing key.
-{% endcapture %}
-{{ navtabbed_content | indent }}
+{% include /mesh/signing-key-rotation.md type="zone" %}
 
 
 ## Offline token issuing
