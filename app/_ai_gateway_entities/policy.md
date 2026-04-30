@@ -5,7 +5,7 @@ entities:
   - policy
 products:
   - ai-gateway
-description: {{site.ai_gateway}}. policies
+description: "Policies for {{site.ai_gateway}}."
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayPolicy
@@ -17,7 +17,7 @@ tools:
   - admin-api
   - konnect-api
 related_resources:
-  - text: About {{site.ai_gateway}}
+  - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: Model entity
     url: /ai-gateway/entities/model/
