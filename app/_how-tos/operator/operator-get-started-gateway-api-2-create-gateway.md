@@ -50,7 +50,7 @@ prereqs:
 content: |
   First, let's create a `GatewayConfiguration` resource to specify our Hybrid Gateway parameters. Set `spec.konnect.authRef.name` to the name of the `KonnectAPIAuthConfiguration` resource we created in the [prerequisites](#create-a-konnectapiauthconfiguration-resource) and specify your data plane configuration.
 
-1. If you want to create and manage the Control Plane from Kubernetes:
+  ### If you want to create and manage the Control Plane from Kubernetes:
 
   ```bash
   echo '
@@ -72,7 +72,7 @@ content: |
               image: kong/kong-gateway:{{ site.data.gateway_latest.release }}' | kubectl apply -f -
   ```
 
-2. If you already have a Control Plane in Konnect you need to specify the Control Plane ID with:
+  ### If you already have a Control Plane in Konnect you need to specify the Control Plane ID with:
 
   ```bash
   echo '
