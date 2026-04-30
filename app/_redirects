@@ -64,10 +64,11 @@
 /mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
 /mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
-/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
+/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/meshgateway/
+/mesh/gateway-listeners/    /mesh/meshgateway/
 /mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/delegated-gateways/
 /mesh/ingress-gateway-delegated/    /mesh/delegated-gateways/
-/mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/gateway-pods-k8s/
+/mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/meshgatewayinstance/
 /mesh/using-mesh/managing-ingress-traffic/overview  /mesh/ingress/
 /mesh/using-mesh/managing-ingress-traffic/gateway-api   /mesh/kubernetes-gateway-api/
 /mesh/explore/observability     /mesh/observability/
@@ -87,7 +88,8 @@
 /mesh/production/dp-config/transparent-proxying     /mesh/transparent-proxying/
 /mesh/production/dp-config/ipv6     /mesh/ipv6-support/
 /mesh/production/secure-deployment/api-access-control   /mesh/enterprise/
-/mesh/production/secure-deployment/dp-auth  /mesh/dp-auth/
+/mesh/production/secure-deployment/dp-auth  /mesh/data-plane-proxy-authentication/
+/mesh/dp-auth/  /mesh/data-plane-proxy-authentication/
 /mesh/production/deployment/multi-zone  /mesh/mesh-multizone-service-deployment/
 /mesh/production/secure-deployment/dp-membership    /mesh/configure-data-plane-proxy-membership/
 /mesh/production/deployment/multi-zone      /mesh/mesh-multizone-service-deployment/
@@ -142,6 +144,7 @@
 /mesh/policies/traffic-permissions  /mesh/policies/meshtrafficpermission/
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
+/mesh/gateway-pods-k8s/        /mesh/meshgatewayinstance/
 
 
 ## Kubernetes

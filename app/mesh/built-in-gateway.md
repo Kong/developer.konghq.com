@@ -16,7 +16,7 @@ related_resources:
   - text: Set up a built-in gateway
     url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Configuring built-in listeners
-    url: /mesh/gateway-listeners/
+    url: /mesh/meshgateway/
   - text: Configuring built-in routes
     url: /mesh/gateway-routes/
   - text: Delegated gateways
@@ -33,7 +33,7 @@ In {{site.mesh_product_name}}, gateways allow you to manage [ingress traffic](/m
 > 
 > This page focuses on the built-in {{site.mesh_product_name}} gateway. For more information about the Kubernetes built-in gateway, see [Kubernetes built-in gateways with {{site.mesh_product_name}}](/mesh/kubernetes-gateway-api/).
 
-You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/gateway-listeners/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
+You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/meshgateway/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
 
 To learn how to create a built-in gateway in a Kubernetes environment, see [Set up a built-in gateway](/how-to/set-up-a-built-in-mesh-gateway/).
 
@@ -44,7 +44,7 @@ The process for deploying built-in gateways is different depending on whether yo
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
-To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/gateway-pods-k8s/) CRD.
+To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/meshgatewayinstance/) CRD.
 Here's a `MeshGatewayInstance` configuration example:
 
 ```yaml
@@ -72,7 +72,7 @@ The `MeshGatewayInstance` resource manages a Kubernetes `Deployment` and `Servic
 > We've automatically switched to generating the Service name for you based on your `MeshGatewayInstance` resource name and namespace. The Service name is generated using the following format: `{name}_{namespace}_svc`.
 
 
-See [the `MeshGatewayInstance` docs](/mesh/gateway-pods-k8s/) for more information.
+See [the `MeshGatewayInstance` docs](/mesh/meshgatewayinstance/) for more information.
 {% endnavtab %}
 {% navtab "Universal" %}
 
@@ -92,7 +92,7 @@ networking:
 
 Note that this gateway has an identifying `kuma.io/service` tag.
 
-Then, run `kuma-dp` with the `Dataplane` configuration file and a [token](/mesh/dp-auth/#data-plane-proxy-token):
+Then, run `kuma-dp` with the `Dataplane` configuration file and a [token](/mesh/data-plane-proxy-authentication/#data-plane-proxy-token):
 
 ```shell
 kuma-dp run \

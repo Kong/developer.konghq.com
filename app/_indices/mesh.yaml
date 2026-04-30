@@ -79,10 +79,10 @@ sections:
     items:
       - path: /how-to/set-up-a-built-in-mesh-gateway/
       - path: /mesh/built-in-gateway/
-      - path: /mesh/gateway-listeners/
+      - path: /mesh/meshgateway/
       - path: /mesh/gateway-routes/
       - path: /how-to/set-up-a-built-in-kubernetes-gateway/
-      - path: /mesh/gateway-pods-k8s/
+      - path: /mesh/meshgatewayinstance/
       - path: /mesh/kubernetes-gateway-api/
 
   - title: Delegated Gateways
@@ -96,7 +96,7 @@ sections:
       - path: /mesh/secure-access/
       - path: /mesh/rbac/
       - path: /mesh/authentication-with-the-api-server/
-      - path: /mesh/dp-auth/
+      - path: /mesh/data-plane-proxy-authentication/
       - path: /mesh/zone-proxy-auth/
       - path: /mesh/manage-control-plane-permissions-on-kubernetes/
       - path: /mesh/restrict-permissions-to-selected-namespaces-on-kubernetes/

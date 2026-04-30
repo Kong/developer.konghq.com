@@ -50,7 +50,7 @@ spec:
     name: kuma
 ```
 
-This resource has the same structure as the [`MeshGatewayInstance` resource](/mesh/gateway-pods-k8s/), but the `tags` field is optional.
+This resource has the same structure as the [`MeshGatewayInstance` resource](/mesh/meshgatewayinstance/), but the `tags` field is optional.
 With a `MeshGatewayConfig`, you can then customize the generated `Service` and `Deployment` resources.
 
 ## Multi-mesh
@@ -61,7 +61,7 @@ You can specify a `Mesh` for `Gateway` and `HTTPRoute` resources by setting the 
 
 ## Cross-mesh
 
-[Cross-mesh gateways](/mesh/gateway-listeners/#cross-mesh) are supported with the Gateway API.
+[Cross-mesh gateways](/mesh/meshgateway/#cross-mesh) are supported with the Gateway API.
 Create a corresponding `GatewayClass` pointing to a `MeshGatewayConfig` that sets `crossMesh: true`:
 
 ```yaml
