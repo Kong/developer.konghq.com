@@ -201,20 +201,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md
-    title: 'Configuring built-in listeners'
-    description: 'Reference for configuring built-in listeners using MeshGateway, including listener setup, TLS termination, hostnames, and cross-mesh support.'
-    url: '/mesh/gateway-listeners/'
-    related_resources:
-      - text: Add a builtin gateway
-        url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: Built-in gateways
-        url: '/mesh/built-in-gateway/'
-      - text: 'Configuring built-in routes'
-        url: '/mesh/gateway-routes/'
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-routes.md
     title: 'Configuring built-in routes'
     description: 'Reference for configuring HTTP and TCP routing through builtin gateways using MeshHTTPRoute and MeshTCPRoute, including hostname matching and weighted backends.'
