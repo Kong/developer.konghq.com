@@ -63,7 +63,8 @@
 /mesh/documentation/configuration    /mesh/control-plane-configuration/
 /mesh/:version/features/signed-images  /mesh/signed-images/
 /mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
-/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/gateway-listeners/
+/mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/meshgateway/
+/mesh/gateway-listeners/    /mesh/meshgateway/
 /mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/ingress-gateway-delegated/
 /mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/meshgatewayinstance/
 /mesh/using-mesh/managing-ingress-traffic/overview  /mesh/ingress/

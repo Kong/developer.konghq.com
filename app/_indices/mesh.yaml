@@ -79,7 +79,7 @@ sections:
     items:
       - path: /how-to/set-up-a-built-in-mesh-gateway/
       - path: /mesh/built-in-gateway/
-      - path: /mesh/gateway-listeners/
+      - path: /mesh/meshgateway/
       - path: /mesh/gateway-routes/
       - path: /how-to/set-up-a-built-in-kubernetes-gateway/
       - path: /mesh/meshgatewayinstance/
