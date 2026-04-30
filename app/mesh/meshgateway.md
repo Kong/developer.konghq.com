@@ -399,7 +399,7 @@ conf:
 If the listener includes a `hostname` value, the cross-mesh listener will be reachable from all meshes at this `hostname` and `port`.
 In the example above, the URL is `http://default.mesh:8080`.
 
-Otherwise it's be reachable at the host: `internal.<gateway-name>.<mesh-of-gateway-name>.mesh`.
+Otherwise, it will be reachable at the host: `internal.<gateway-name>.<mesh-of-gateway-name>.mesh`.
 
 #### Outbound
 
