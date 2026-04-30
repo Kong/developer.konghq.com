@@ -40,6 +40,7 @@ releases:
             graviton: true
           docker: true
           docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -48,6 +49,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
           default: true
       - debian11:
@@ -57,6 +60,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
       - debian12:
           package: true
@@ -65,6 +70,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
           default: true
       - rhel8:
@@ -83,6 +90,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: 2026-08-31
           default: true
@@ -94,6 +102,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: 2026-08-31
           default: true
@@ -193,6 +202,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: May 2025
       - amazonlinux2023:
           package: true
@@ -201,6 +212,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: May 2025
           default: true
       - debian10:
@@ -217,6 +230,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: May 2025
       - debian12:
           package: true
@@ -225,6 +240,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: May 2025
           default: true
       - rhel7:
@@ -250,6 +267,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: May 2025
           default: true
@@ -269,6 +287,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: May 2025
           default: true
@@ -374,6 +393,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Sept 2025
       - amazonlinux2023:
           package: true
@@ -382,6 +403,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Sept 2025
           default: true
       - debian11:
@@ -391,6 +414,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Sept 2025
       - debian12:
           package: true
@@ -399,6 +424,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Sept 2025
           default: true
       - rhel8:
@@ -417,6 +444,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: Sept 2025
           default: true
@@ -436,6 +464,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: Sept 2025
           default: true
@@ -543,6 +572,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Dec 2025
       - amazonlinux2023:
           package: true
@@ -551,6 +582,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Dec 2025
           default: true
       - debian11:
@@ -560,6 +593,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Dec 2025
       - debian12:
           package: true
@@ -568,6 +603,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: Dec 2025
           default: true
       - rhel8:
@@ -586,6 +623,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: Dec 2025
           default: true
@@ -605,6 +643,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: Dec 2025
       - ubuntu2404:
@@ -615,6 +654,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           eol: Dec 2025
           default: true
@@ -727,6 +767,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -735,6 +777,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - debian11:
           package: true
@@ -743,6 +787,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
       - debian12:
           package: true
@@ -751,6 +797,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - rhel8:
           package: true
@@ -767,6 +815,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
       - ubuntu2204:
@@ -777,6 +826,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
       - ubuntu2404:
           package: true
@@ -786,6 +836,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
     third_party_support:
@@ -904,6 +955,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -912,6 +965,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - debian11:
           package: true
@@ -920,6 +975,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
       - debian12:
           package: true
           package_support:
@@ -927,6 +984,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - rhel8:
           package: true
@@ -943,6 +1002,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
       - ubuntu2204:
@@ -953,6 +1013,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
       - ubuntu2404:
           package: true
@@ -962,6 +1023,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
     third_party_support:
@@ -1083,6 +1145,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -1091,6 +1155,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - debian11:
           package: true
@@ -1099,6 +1165,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
       - debian12:
           package: true
@@ -1107,6 +1175,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - rhel8:
           package: true
@@ -1123,6 +1193,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
       - ubuntu2204:
@@ -1133,6 +1204,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
       - ubuntu2404:
           package: true
@@ -1142,6 +1214,7 @@ releases:
             fips: true
           docker: true
           docker_support:
+            arm: true
             fips: true
           default: true
     third_party_support:
@@ -1262,6 +1335,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -1270,6 +1345,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - debian11:
           package: true
@@ -1278,6 +1355,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
       - debian12:
           package: true
@@ -1286,6 +1365,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - rhel8:
           package: true
@@ -1303,6 +1384,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
           default: true
       - ubuntu2204:
           package: true
@@ -1313,6 +1395,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
       - ubuntu2404:
           package: true
           package_support:
@@ -1322,6 +1405,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
           default: true
     third_party_support:
       ai_providers:
@@ -1443,6 +1527,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-06-30
       - amazonlinux2023:
           package: true
@@ -1451,6 +1537,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - debian11:
           package: true
@@ -1459,6 +1547,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           eol: 2026-08-31
       - debian12:
           package: true
@@ -1467,6 +1557,8 @@ releases:
             arm: true
             graviton: true
           docker: true
+          docker_support:
+            arm: true
           default: true
       - rhel8:
           package: true
@@ -1484,6 +1576,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
           default: true
       - ubuntu2204:
           package: true
@@ -1494,6 +1587,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
       - ubuntu2404:
           package: true
           package_support:
@@ -1503,6 +1597,7 @@ releases:
           docker: true
           docker_support:
             fips: true
+            arm: true
           default: true
     third_party_support:
       ai_providers:
