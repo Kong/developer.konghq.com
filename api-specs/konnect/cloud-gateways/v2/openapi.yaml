@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@abed88dae4eb29c14e158dace1cfc5e2f95bd7ab
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/abed88dae4eb29c14e158dace1cfc5e2f95bd7ab'
+  x-oas-source: kong/platform-api@5bc42eacb9a69b521cf583c06a9b9b8e7c252986
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5bc42eacb9a69b521cf583c06a9b9b8e7c252986'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3856,6 +3856,7 @@ components:
           type: string
           enum:
             - managed-cache.v0
+          x-terraform-transform-const: true
         capacity_config:
           $ref: '#/components/schemas/ManagedCacheCapacityConfig'
       additionalProperties: false

@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Portal Management V3
-  version: 3.4.1
+  version: 3.4.2
   description: The management API for Portals
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@e3d22e8e12a7c93ee828f034ce174f349ad83f6d
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d22e8e12a7c93ee828f034ce174f349ad83f6d'
+  x-oas-source: kong/platform-api@09a727105440f8a1b7a9cb144fb8262a1bf840fb
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/09a727105440f8a1b7a9cb144fb8262a1bf840fb'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -4054,6 +4054,22 @@ components:
       required:
         - domain_verification_method
       title: http
+    UpdatePortalCustomDomainSSL:
+      type: object
+      properties:
+        custom_certificate:
+          description: Custom certificate to be used for the SSL termination.
+          type: string
+        custom_private_key:
+          description: Custom certificate private key to be used for the SSL termination.
+          type: string
+        skip_ca_check:
+          description: |
+            Advanced option. If true, the custom certificate is served exactly as provided, without attempting to bundle against a public trust store. Required for certificates issued by an internal/private CA.
+          type: boolean
+          default: false
+      additionalProperties: false
+      title: UpdatePortalCustomDomainSSL
     PortalCustomDomainVerificationMethod:
       type: string
       enum:
@@ -4101,6 +4117,8 @@ components:
       properties:
         enabled:
           type: boolean
+        ssl:
+          $ref: '#/components/schemas/UpdatePortalCustomDomainSSL'
       additionalProperties: false
       title: UpdatePortalCustomDomainRequest
     PortalClaimMappings:
