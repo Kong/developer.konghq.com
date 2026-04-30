@@ -50,7 +50,7 @@ spec:
     name: kuma
 ```
 
-This resource has the same structure as the [`MeshGatewayInstance` resource](/mesh/gateway-pods-k8s/), but the `tags` field is optional.
+This resource has the same structure as the [`MeshGatewayInstance` resource](/mesh/meshgatewayinstance/), but the `tags` field is optional.
 With a `MeshGatewayConfig`, you can then customize the generated `Service` and `Deployment` resources.
 
 ## Multi-mesh
