@@ -48,7 +48,7 @@ spec:
 ```
 
 Once a `MeshGateway` exists with `kuma.io/service: edge-gateway_default_svc`, the control plane creates a new Deployment in the `default` namespace.
-This Deployment deploys 2 replicas of `kuma-dp` and a corresponding built-in gateway data plane with `kuma.io/service: edge-gateway_default_svc`.
+This Deployment deploys two replicas of `kuma-dp` and a corresponding built-in gateway data plane with `kuma.io/service: edge-gateway_default_svc`.
 
 The control plane also creates a new Service to send network traffic to the built-in data plane Pods.
 The Service is of type `LoadBalancer`, and its ports are automatically adjusted to match the listeners on the corresponding `MeshGateway`.
