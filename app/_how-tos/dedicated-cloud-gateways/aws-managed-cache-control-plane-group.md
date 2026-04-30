@@ -43,7 +43,7 @@ faqs:
   - q: |
       {% include faqs/resize-managed-cache.md section='question' %}
     a: |
-      {% include faqs/resize-managed-cache.md section='answer' %}    
+      {% include faqs/resize-managed-cache.md section='answer' %}
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/

@@ -179,7 +179,7 @@ To create a managed cache at the control plane level, do the following:
 <!--vale off-->
 {% konnect_api_request %}
 url: /v2/control-planes?filter%5Bcloud_gateway%5D=true
-status_code: 201
+status_code: 200
 method: GET
 region: global
 {% endkonnect_api_request %}
@@ -303,7 +303,7 @@ Before you resize a managed cache, consider the following:
 * Schedule cache resizes during low traffic hours.
 * Caches will remain online while they are resized, but you may experience brief interruptions of a few seconds. 
 
-You can resize a managed cache sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
+You can resize a managed cache by sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
 
 <!--vale off-->
 {% konnect_api_request %}
