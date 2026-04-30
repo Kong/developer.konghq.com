@@ -294,10 +294,10 @@ module Jekyll
                                                                                                       '0')) >= TARGET_VERSION
       show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
 
-      tools = @params['tools']
-      show_kubernetes = tools.nil? || (tools.is_a?(Array) && tools.include?('kubernetes'))
-      show_universal = tools.nil? || (tools.is_a?(Array) && tools.include?('universal'))
-      show_tf = show_tf && (tools.nil? || (tools.is_a?(Array) && tools.include?('terraform')))
+      tools = Array(@params['tools'])
+      show_kubernetes = (tools.empty? || tools.include?('kubernetes'))
+      show_universal = (tools.empty? || tools.include?('universal'))
+      show_tf = show_tf && (tools.empty? || tools.include?('terraform'))
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
