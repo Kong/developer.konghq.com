@@ -10,7 +10,7 @@ tags:
 - mock-servers
 
 
-description: Use dynamic mocking in Insomnia mock servers to return request-aware responses and realistic mock data with self-hosted mocks.
+description: Generate random data from Liquid faker variables in Insomnia mock servers with dynamic mocking.
 
 breadcrumbs:
   - /insomnia/
@@ -30,15 +30,13 @@ related_resources:
     url: /insomnia/dynamic-mocking/
 ---
 
-Faker usage follows Insomnia’s template tag model. You can use Faker functions anywhere template tags are supported to generate realistic mock data like names, emails, or timestamps.
+Use [Faker functions](https://github.com/Kong/insomnia/blob/develop/packages/insomnia/src/templating/faker-functions.ts) anywhere template tags are supported to generate realistic mock data like names, emails, or timestamps.
 
 Faker output varies per call. Example values in the tables are illustrative.
 
-Sourced from [**faker-functions.ts**](https://github.com/Kong/insomnia/blob/develop/packages/insomnia/src/templating/faker-functions.ts).
+## Usage
 
-## Format in Request's Body
-
-Generate random fake data when making a request in Insomnia by inputing feker under this format in the Body pane:
+Generate random fake data when making a request in Insomnia by including the `faker.` prefix before the variable name. Use this format wherever template tags are supported, such as the Body pane:
 
 ```liquid
 {% raw %}{{ faker.<variable-name> }}{% endraw %}
