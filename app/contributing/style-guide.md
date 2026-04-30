@@ -332,7 +332,7 @@ For inline icons in prose or tables, use SVG files from the [`/app/assets/icons/
 
 ## Documenting third-party tools
 
-When a how-to guide requires a third-party tool (such as an identity provider, cloud service, or external API), include complete setup instructions as a prerequisite rather than linking out to third-party documentation and expecting readers to figure it out.
+When a how-to guide requires a third-party tool (such as an identity provider, cloud service, or external API) to be configured in a specific way to work with Kong, include complete setup instructions rather than linking out to third-party documentation and expecting readers to figure it out.
 
 In most cases, the third-party instructions should be a prerequisite.
 Write the prerequisite steps in a file under `app/_includes/prereqs/` and include it at the top of the how-to. This keeps the how-to self-contained: readers can follow the entire guide in one place without switching between multiple sources.
