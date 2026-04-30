@@ -6,8 +6,13 @@ class ProductsRenderer
                      .split(',')
   end
 
+  def page_paths
+    @page_paths ||= ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
+  end
+
   def read?(page)
     return false if page.relative_path.start_with?('assets')
+    return page_paths.any? { |path| page.url.start_with?(path) } if page_paths
 
     products.any? do |product|
       return true if page.respond_to?(:dir) && page.dir == '/'
@@ -24,6 +29,7 @@ class ProductsRenderer
 
   def render?(page)
     return false if page.relative_path.start_with?('assets')
+    return page_paths.any? { |path| page.url.start_with?(path) } if page_paths
 
     products.any? do |product|
       return true if page.respond_to?(:dir) && page.dir == '/'
@@ -42,8 +48,12 @@ end
 renderer = ProductsRenderer.new
 
 Jekyll::Hooks.register :site, :post_read do |site|
-  if ENV['KONG_PRODUCTS']
-    Jekyll.logger.info "Rendering the following products: #{ENV['KONG_PRODUCTS']}, skipping everything else..."
+  if ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS']
+    if ENV['KONG_PRODUCTS']
+      Jekyll.logger.info "Rendering the following products: #{ENV['KONG_PRODUCTS']}, skipping everything else..."
+    else
+      Jekyll.logger.info "Rendering the following urls: #{ENV['PAGE_PATHS']}, skipping everything else..."
+    end
 
     # Filter pages
     site.pages.delete_if do |page|
@@ -60,7 +70,7 @@ Jekyll::Hooks.register :site, :post_read do |site|
 end
 
 Jekyll::Hooks.register :site, :pre_render do |site|
-  if ENV['KONG_PRODUCTS']
+  if ENV['KONG_PRODUCTS'] || ENV['PAGE_PATHS']
     site.pages = site.pages.select do |page|
       renderer.render?(page)
     end

@@ -31,6 +31,16 @@ Once you see the `Server now ready on …` message, the docs site is available a
 
 Building the entire docs site can take a while. To speed up build times, you can generate a specific subset of products by setting the `KONG_PRODUCTS` environment variable. This variable accepts a comma-separated list of products (product slugs as defined in `app/_data/products`), e.g `KONG_PRODUCTS=ai-gateway make run`.
 
+## Generating specific pages locally
+
+You can generate specific pages by setting the PAGE_PATHS environment variable. This variable accepts a comma-separated list of paths. For example:
+
+```sh
+PAGE_PATHS="/plugins/acme/,/gateway/entities/" make run
+```
+
+The platform will generate all pages that match each specified path. For instance, `/gateway/entities/` will generate all pages whose paths start with `/gateway/entities/`.
+
 ## Contributing to the docs
 
 If you want to contribute to the Kong Developer docs, see the [Contributing guide](https://developer.konghq.com/contributing/).
