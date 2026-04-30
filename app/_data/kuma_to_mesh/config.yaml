@@ -32,16 +32,6 @@ pages:
     min_version:
       mesh: '2.7'
   -
-    path: app/_src/policies/mutual-tls.md
-    title: 'Configuring Mutual TLS'
-    description: 'Configuring Mutual TLS for your workloads'
-    url: '/mesh/policies/mutual-tls/'
-    related_resources:
-      - text: MeshTLS Policy
-        url: /mesh/policies/meshtls/
-    min_version:
-      mesh: '2.9'
-  -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
     description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
@@ -73,16 +63,6 @@ pages:
         url: /mesh/concepts/
       - text: Service discovery
         url: /mesh/service-discovery/
-  -
-    path: app/_src/policies/introduction.md
-    title: 'Policies'
-    description: 'Learn how policies in Kong Mesh configure Data Plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
-    url: '/mesh/policies-introduction/'
-    related_resources:
-      - text: Policy hub
-        url: '/mesh/policies/'
-      - text: Service meshes
-        url: /mesh/service-mesh/
   -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
@@ -124,18 +104,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/production/dp-config/cni.md
-    title: 'Configure the Kong Mesh CNI'
-    description: 'Install and configure {{site.mesh_product_name}} CNI to enable transparent proxying without requiring privileged init containers.'
-    url: '/mesh/cni/'
-    related_resources:
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: Transparent proxying
-        url: '/mesh/transparent-proxying/'
-      - text: Kubernetes annotations and labels
-        url: /mesh/annotations/
-  -
     path: app/_src/production/mesh.md
     title: 'Configuring your Mesh and multi-tenancy'
     description: 'Learn how to create and configure isolated service meshes using the Mesh resource in {{site.mesh_product_name}}, supporting multi-tenancy and gradual adoption.'
@@ -149,18 +117,6 @@ pages:
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Install Kong Mesh
         url: /mesh/#install-kong-mesh
-  -
-    path: app/_src/production/secure-deployment/certificates.md
-    title: 'Secure access across services'
-    description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
-    url: '/mesh/secure-access/'
-    related_resources:
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: Mesh Observability
-        url: '/mesh/observability/'
   -
     path: app/_src/production/upgrades-tuning/fine-tuning.md
     title: 'Performance fine-tuning'

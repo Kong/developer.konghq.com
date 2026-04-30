@@ -106,6 +106,33 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where Claude Code (or CLI) statistics were missing when using an Anthropic model via the Bedrock provider.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where we treated plaintext Anthropic response as gzipped.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't correctly ungzip streaming response.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Supported health checks and circuit breaker for the load balancer. Added two new fields `max_fails` and `fail_timeout`.",

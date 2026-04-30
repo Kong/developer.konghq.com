@@ -38,7 +38,7 @@ tags:
 
 tldr:
   q: How do I use Gemini's thinkingConfig with the AI Proxy Advanced plugin?
-  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3-pro-preview model, then pass thinkingConfig parameters via extra_body in your requests.
+  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3.1-pro-preview model, then pass thinkingConfig parameters via extra_body in your requests.
 
 tools:
   - deck
@@ -86,7 +86,7 @@ faqs:
 
 ## Configure the plugin
 
-First, let's configure AI Proxy Advanced to use the gemini-3-pro-preview models via Vertex AI:
+First, let's configure AI Proxy Advanced to use the gemini-3.1-pro-preview model via Vertex AI:
 
 {% entity_examples %}
 entities:
@@ -98,7 +98,7 @@ entities:
           - route_type: llm/v1/chat
             model:
               provider: gemini
-              name: gemini-3-pro-preview
+              name: gemini-3.1-pro-preview
               options:
                 gemini:
                   api_endpoint: aiplatform.googleapis.com
@@ -136,7 +136,7 @@ client = OpenAI(
     api_key="ignored"
 )
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {
             "role": "user",

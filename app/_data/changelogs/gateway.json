@@ -21862,5 +21862,207 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.10": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**forward-proxy**: Added `ca_certificates` option for per-plugin TLS verification.\nIt allows certificate chain and hostname checks against specified CAs instead of\nglobal settings, ensuring explicit trust.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.14.0.2": {
+    "kong": [
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where `token_exchange.cache.enabled = false` was ignored and exchanged tokens were still cached because the cache toggle incorrectly read `token_exchange.cache.ttl` instead of `token_exchange.cache.enabled`.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "Bumped kong-pgmoon from 2.3.3.0 to 2.3.4.0, which adds SHA-384 support\nfor SCRAM channel binding during PostgreSQL SSL authentication.\n",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Claude Code (or CLI) statistics were missing when using an Anthropic model via the Bedrock provider.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**acl**: Fixed an issue where anonymous consumers with valid legacy ACL group credentials were rejected with 403 when `include_consumer_groups` was enabled and no enterprise consumer groups were assigned.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-oauth2**: Fixed an issue where token exchange actor tokens were not sourced correctly from `token_exchange.request`, ensuring correct forwarding of actor tokens configured in headers or plugin config.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.\n",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where observability errors occurred when `gpt-image-1.5` returned image token usage details.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where Azure OpenAI authentication failed during load balancer failover due to token refresh attempts in `balancer_by_lua`. Tokens are now pre-fetched in the `access` phase.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we treated plaintext Anthropic response as gzipped.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed an issue where we didn't correctly ungzip streaming response.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-transformers**: Fixed an issue where `ai-request-transformer` and `ai-response-tranformer`\nplugins did not work properly with the `ollama` provider.\n",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "Fixed an issue where DP may spawn multiple sync timers when downgrading sync protocol to v1, which may cause excessive load on CP and lead to performance degradation.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Bumped kong-gql from 0.2.3 to 0.2.4 to fix the null value issue in the GraphQL query syntax that causes a parsed AST error in degraphql plugin.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the graphql-rate-limiting-advanced plugin's API throws 500 when handling HTTP PUT request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**kafka-log**: Fixed an issue where cached producers could cause memory leaks.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**opa**: Fixed json body processing to recognize `application/json` content-type with charset, ensuring proper handling of JSON request bodies.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**openid-connect**: Fixed DPoP verification for opaque tokens (RFC 9449 Section 6.2) where Kong failed to correctly parse nested `cnf.jkt` claims from introspection responses.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where `$remote_addr` was not replaced with the proxy protocol source address for early nginx error responses (501, 505) when `proxy_protocol` is enabled on the proxy listener. Also added proper error body messages for 501 and 505 status codes.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed a bug where tables in `strict` and `lax` `untrusted_lua` modes were not properly protected against modification.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-manager-ee": [
+      {
+        "message": "Fixed an issue where the `tls_sans` field was missing in the service entity form.",
+        "type": "bugfix",
+        "githubs": [
+          4332
+        ],
+        "scope": "Core"
+      }
+    ]
   }
 }

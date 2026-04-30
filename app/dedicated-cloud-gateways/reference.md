@@ -247,7 +247,7 @@ Using AWS workload identities with Dedicated Cloud Gateways provides the followi
 ### How AWS workload identities works
 
 1. When an AWS Dedicated Cloud Gateway is provisioned, {{site.konnect_short_name}} automatically creates the following:
-   * An IAM Role in your dedicated tenant AWS account named after the network UUID. You can [derive this IAM Role ARN](#derive-the-konnect-iam-role-arn).
+   * An IAM Role in your dedicated tenant AWS account named after the network UUID and appended with `-dataplane`. You can [derive this IAM Role ARN](#derive-the-konnect-iam-role-arn).
    * A trust policy that enables `AssumeRoleWithWebIdentity` for the EKS service account used by the {{site.base_gateway}} data planes. For example:
      ```json
      {
@@ -278,7 +278,7 @@ Keep the following security considerations in mind:
 You can compute the ARN for {{site.konnect_short_name}}'s IAM role using this pattern:
 
 ```
-arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID
+arn:aws:iam::$KONNECT_AWS_ACCOUNT_ID:role/$NETWORK_ID-dataplane
 ```
 
 1. To get the AWS account ID, do the following:
