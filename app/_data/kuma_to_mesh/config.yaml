@@ -104,52 +104,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/production/dp-config/cni.md
-    title: 'Configure the Kong Mesh CNI'
-    description: 'Install and configure {{site.mesh_product_name}} CNI to enable transparent proxying without requiring privileged init containers.'
-    url: '/mesh/cni/'
-    related_resources:
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: Transparent proxying
-        url: '/mesh/transparent-proxying/'
-      - text: Kubernetes annotations and labels
-        url: /mesh/annotations/
-  -
-    path: app/_src/production/mesh.md
-    title: 'Configuring your Mesh and multi-tenancy'
-    description: 'Learn how to create and configure isolated service meshes using the Mesh resource in {{site.mesh_product_name}}, supporting multi-tenancy and gradual adoption.'
-    url: '/mesh/mesh-multi-tenancy/'
-    related_resources:
-      - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
-      - text: Mesh Observability
-        url: '/mesh/observability/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
-  -
-    path: app/_src/production/secure-deployment/dp-auth.md
-    title: 'Authentication with the Data Plane proxy'
-    description: 'Reference guide to authentication methods for Data Plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
-    url: '/mesh/dp-auth/'
-    related_resources:
-      - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
-      - text: Zone egress
-        url: /mesh/zone-egress/
-      - text: MeshMultiZoneService
-        url: /mesh/meshmultizoneservice/
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: 'Secure access across services'
-        url: '/mesh/secure-access/'
-      - text: Configure zone proxy authentication
-        url: /mesh/zone-proxy-auth/
-  -
     path: app/_src/production/upgrades-tuning/fine-tuning.md
     title: 'Performance fine-tuning'
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
@@ -185,50 +139,6 @@ pages:
     min_version:
       mesh: '2.9'
   -
-    path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
-    title: 'Running built-in gateway pods on Kubernetes'
-    description: 'Guide to running builtin gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.'
-    url: '/mesh/gateway-pods-k8s/'
-    related_resources:
-      - text: Add a builtin gateway
-        url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: 'Deploy Kong Mesh on Kubernetes'
-        url: '/mesh/kubernetes/'
-      - text: Built-in gateways
-        url: '/mesh/built-in-gateway/'
-      - text: 'Configuring built-in routes'
-        url: '/mesh/gateway-routes/'
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md
-    title: 'Configuring built-in listeners'
-    description: 'Reference for configuring built-in listeners using MeshGateway, including listener setup, TLS termination, hostnames, and cross-mesh support.'
-    url: '/mesh/gateway-listeners/'
-    related_resources:
-      - text: Add a builtin gateway
-        url: /how-to/set-up-a-built-in-mesh-gateway/
-      - text: Built-in gateways
-        url: '/mesh/built-in-gateway/'
-      - text: 'Configuring built-in routes'
-        url: '/mesh/gateway-routes/'
-    min_version:
-      mesh: '2.6'
-  -
-    path: app/_src/using-mesh/managing-ingress-traffic/delegated.md
-    title: 'Delegated gateways'
-    description: 'Guide to configuring delegated gateways in {{site.mesh_product_name}}, allowing external API gateways to handle ingress while {{site.mesh_product_name}} manages egress to the mesh.'
-    url: '/mesh/ingress-gateway-delegated/'
-    related_resources:
-      - text: 'Data plane proxy'
-        url: '/mesh/data-plane-proxy/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Built-in gateways
-        url: '/mesh/built-in-gateway/'
-    min_version:
-      mesh: '2.6'
-  -
     path: app/_src/using-mesh/managing-ingress-traffic/overview.md
     title: 'How ingress works'
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
@@ -237,7 +147,7 @@ pages:
       - text: Built-in gateways
         url: '/mesh/built-in-gateway/'
       - text: 'Delegated gateways'
-        url: '/mesh/ingress-gateway-delegated/'
+        url: '/mesh/delegated-gateways/'
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
       - text: Multi-zone deployment
