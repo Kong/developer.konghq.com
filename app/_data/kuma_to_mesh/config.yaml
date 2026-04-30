@@ -64,32 +64,6 @@ pages:
       - text: Service discovery
         url: /mesh/service-discovery/
   -
-    path: app/_src/production/deployment/multi-zone.md
-    title: 'Multi-zone deployment'
-    description: 'Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.'
-    url: '/mesh/mesh-multizone-service-deployment/'
-    related_resources:
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
-      - text: Multi-zone authentication
-        url: '/mesh/multi-zone-authentication/'
-      - text: 'Single-zone deployment'
-        url: '/mesh/single-zone/'
-      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
-        url: /mesh/data-plane-kubernetes/
-      - text: "{{ site.mesh_product_name }} data plane proxy"
-        url: /mesh/data-plane-proxy/
-      - text: "{{site.mesh_product_name}} data plane on Universal"
-        url: /mesh/data-plane-universal/
-      - text: Service discovery
-        url: /mesh/service-discovery/
-  -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
     description: 'Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.'
