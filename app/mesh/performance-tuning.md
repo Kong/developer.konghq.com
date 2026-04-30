@@ -136,7 +136,6 @@ If you're using a more distributed topology, such as hosting `kuma-cp` on-premis
 
 As more data planes join your meshes, {{site.mesh_product_name}} may need more PostgreSQL connections to fetch configurations and update statuses.
 
-As of version 1.4.1, the default value is 50.
 
 If your PostgreSQL database only permits a small number of concurrent connections, adjust {{site.mesh_product_name}}'s configuration accordingly.
 
@@ -202,7 +201,7 @@ Envoy's [worker thread](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_o
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-By default, Envoy sets concurrency based on the container's CPU resource limit. For example, a limit of `7000m` results in 7 worker threads. On Kubernetes, concurrency is clamped between 2 and 10 by default. To exceed that limit, use the `kuma.io/sidecar-proxy-concurrency` annotation:
+By default, Envoy sets concurrency based on the container's CPU resource limit. For example, a limit of `7000m` results in 7 worker threads. On Kubernetes, concurrency is capped between 2 and 10 by default. To exceed that limit, use the `kuma.io/sidecar-proxy-concurrency` annotation:
 
 ```yaml
 apiVersion: apps/v1
@@ -292,6 +291,6 @@ This process can be CPU-intensive with a large number of data planes. Increasing
 
 For high-traffic systems, stale endpoint data for that long may not be acceptable. In that case, use passive or active [health checks](/mesh/policies/health-check/).
 
-To reduce storage load, a cache shares fetch results across concurrent reconciliation Goroutines for multiple data planes. The default expiration time for cache entries is five seconds, you can customize it using the `KUMA_STORE_CACHE_EXPIRATION_TIME` parameter.
+To reduce storage load, a cache shares fetch results across concurrent reconciliation Goroutines for multiple data planes. The default expiration time for cache entries is five seconds, but you can customize it using the `KUMA_STORE_CACHE_EXPIRATION_TIME` parameter.
 
 This value should not exceed `KUMA_XDS_SERVER_DATAPLANE_CONFIGURATION_REFRESH_INTERVAL`, otherwise the control plane will build Envoy config from stale data.
