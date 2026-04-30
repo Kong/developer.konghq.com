@@ -15,151 +15,151 @@
     {
       "title": "HYBRID MODE DATA PLANE",
       "start": 402,
-      "end": 444,
+      "end": 439,
       "description": ""
     },
     {
       "title": "HYBRID MODE CONTROL PLANE",
-      "start": 445,
-      "end": 520,
+      "start": 440,
+      "end": 515,
       "description": ""
     },
     {
       "title": "NGINX",
-      "start": 521,
-      "end": 1128,
+      "start": 516,
+      "end": 1123,
       "description": ""
     },
     {
       "title": "NGINX injected directives",
-      "start": 1129,
-      "end": 1279,
+      "start": 1124,
+      "end": 1274,
       "description": "Nginx directives can be dynamically injected in the runtime nginx.conf file\nwithout requiring a custom Nginx configuration template.\n\nAll configuration properties respecting the naming scheme\n`nginx_<namespace>_<directive>` will result in `<directive>` being injected in\nthe Nginx configuration block corresponding to the property's `<namespace>`.\nExample:\n`nginx_proxy_large_client_header_buffers = 8 24k`\n\nWill inject the following directive in Kong's proxy `server {}` block:\n\n`large_client_header_buffers 8 24k;`\n\nThe following namespaces are supported:\n\n- `nginx_main_<directive>`: Injects `<directive>` in Kong's configuration\n`main` context.\n- `nginx_events_<directive>`: Injects `<directive>` in Kong's `events {}`\nblock.\n- `nginx_http_<directive>`: Injects `<directive>` in Kong's `http {}` block.\n- `nginx_proxy_<directive>`: Injects `<directive>` in Kong's proxy\n`server {}` block.\n- `nginx_upstream_<directive>`: Injects `<directive>` in Kong's proxy\n`upstream {}` block.\n- `nginx_admin_<directive>`: Injects `<directive>` in Kong's Admin API\n`server {}` block.\n- `nginx_status_<directive>`: Injects `<directive>` in Kong's Status API\n`server {}` block  (only effective if `status_listen` is enabled).\n- `nginx_debug_<directive>`: Injects `<directive>` in Kong's Debug API\n`server {}` block  (only effective if `debug_listen` is enabled).\n- `nginx_stream_<directive>`: Injects `<directive>` in Kong's stream module\n`stream {}` block (only effective if `stream_listen` is enabled).\n- `nginx_sproxy_<directive>`: Injects `<directive>` in Kong's stream module\n`server {}` block (only effective if `stream_listen` is enabled).\n- `nginx_supstream_<directive>`: Injects `<directive>` in Kong's stream\nmodule `upstream {}` block.\n\nAs with other configuration properties, Nginx directives can be injected via\nenvironment variables when capitalized and prefixed with `KONG_`.\nExample:\n`KONG_NGINX_HTTP_SSL_PROTOCOLS` -> `nginx_http_ssl_protocols`\n\nWill inject the following directive in Kong's `http {}` block:\n\n`ssl_protocols <value>;`\n\nIf different sets of protocols are desired between the proxy and Admin API\nserver, you may specify `nginx_proxy_ssl_protocols` and/or\n`nginx_admin_ssl_protocols`, both of which taking precedence over the\n`http {}` block.\n"
     },
     {
       "title": "DATASTORE",
-      "start": 1280,
-      "end": 1563,
+      "start": 1275,
+      "end": 1558,
       "description": "Kong can run with a database to store coordinated data between Kong nodes in\na cluster, or without a database, where each node stores its information\nindependently in memory.\n\nWhen using a database, Kong will store data for all its entities (such as\nRoutes, Services, Consumers, and Plugins) in PostgreSQL,\nand all Kong nodes belonging to the same cluster must connect themselves\nto the same database.\n\nKong supports PostgreSQL versions 9.5 and above.\n\nWhen not using a database, Kong is said to be in \"DB-less mode\": it will keep\nits entities in memory, and each node needs to have this data entered via a\ndeclarative configuration file, which can be specified through the\n`declarative_config` property, or via the Admin API using the `/config`\nendpoint.\n\nWhen using Postgres as the backend storage, you can optionally enable Kong\nto serve read queries from a separate database instance.\nWhen the number of proxies is large, this can greatly reduce the load\non the main Postgres instance and achieve better scalability. It may also\nreduce the latency jitter if the Kong proxy node's latency to the main\nPostgres instance is high.\n\nThe read-only Postgres instance only serves read queries and write\nqueries still goes to the main connection. The read-only Postgres instance\ncan be eventually consistent while replicating changes from the main\ninstance.\n\nAt least the `pg_ro_host` config is needed to enable this feature.\nBy default, all other database config for the read-only connection are\ninherited from the corresponding main connection config described above but\nmay be optionally overwritten explicitly using the `pg_ro_*` config below.\n"
     },
     {
       "title": "DATASTORE CACHE",
-      "start": 1564,
-      "end": 1640,
+      "start": 1559,
+      "end": 1635,
       "description": "In order to avoid unnecessary communication with the datastore, Kong caches\nentities (such as APIs, Consumers, Credentials...) for a configurable period\nof time. It also handles invalidations if such an entity is updated.\n\nThis section allows for configuring the behavior of Kong regarding the\ncaching of such configuration entities.\n"
     },
     {
       "title": "DNS RESOLVER",
-      "start": 1641,
-      "end": 1716,
+      "start": 1636,
+      "end": 1711,
       "description": "By default, the DNS resolver will use the standard configuration files\n`/etc/hosts` and `/etc/resolv.conf`. The settings in the latter file will be\noverridden by the environment variables `LOCALDOMAIN` and `RES_OPTIONS` if\nthey have been set.\n\nKong will resolve hostnames as either `SRV` or `A` records (in that order, and\n`CNAME` records will be dereferenced in the process).\nIn case a name was resolved as an `SRV` record it will also override any given\nport number by the `port` field contents received from the DNS server.\n\nThe DNS options `SEARCH` and `NDOTS` (from the `/etc/resolv.conf` file) will\nbe used to expand short names to fully qualified ones. So it will first try\nthe entire `SEARCH` list for the `SRV` type, if that fails it will try the\n`SEARCH` list for `A`, etc.\n\nFor the duration of the `ttl`, the internal DNS resolver will loadbalance each\nrequest it gets over the entries in the DNS record. For `SRV` records the\n`weight` fields will be honored, but it will only use the lowest `priority`\nfield entries in the record.\n"
     },
     {
       "title": "VAULTS",
-      "start": 1717,
-      "end": 1942,
+      "start": 1712,
+      "end": 1937,
       "description": "A secret is any sensitive piece of information required for API gateway\noperations. Secrets may be part of the core Kong Gateway configuration,\nused in plugins, or part of the configuration associated with APIs serviced\nby the gateway.\n\nSome of the most common types of secrets used by Kong Gateway include:\n\n- Data store usernames and passwords, used with PostgreSQL and Redis\n- Private X.509 certificates\n- API keys\n\nSensitive plugin configuration fields are generally used for authentication,\nhashing, signing, or encryption. Kong Gateway lets you store certain values\nin a vault. Here are the vault specific configuration options.\n"
     },
     {
       "title": "TUNING & BEHAVIOR",
-      "start": 1943,
-      "end": 2063,
+      "start": 1938,
+      "end": 2068,
       "description": ""
     },
     {
       "title": "MISCELLANEOUS",
-      "start": 2064,
-      "end": 2184,
+      "start": 2069,
+      "end": 2189,
       "description": "Additional settings inherited from lua-nginx-module allowing for more\nflexibility and advanced usage.\n\nSee the lua-nginx-module documentation for more information:\nhttps://github.com/openresty/lua-nginx-module\n"
     },
     {
       "title": "KONG MANAGER",
-      "start": 2185,
-      "end": 2414,
+      "start": 2190,
+      "end": 2419,
       "description": "\nThe Admin GUI for Kong Enterprise.\n\n"
     },
     {
       "title": "VITALS",
-      "start": 2415,
-      "end": 2480,
+      "start": 2420,
+      "end": 2485,
       "description": ""
     },
     {
       "title": "Konnect",
-      "start": 2481,
-      "end": 2487,
+      "start": 2486,
+      "end": 2492,
       "description": ""
     },
     {
       "title": "Analytics for Konnect",
-      "start": 2488,
-      "end": 2498,
+      "start": 2493,
+      "end": 2503,
       "description": ""
     },
     {
       "title": "DEVELOPER PORTAL",
-      "start": 2499,
-      "end": 2731,
+      "start": 2504,
+      "end": 2736,
       "description": ""
     },
     {
       "title": "DEFAULT DEVELOPER PORTAL AUTHENTICATION",
-      "start": 2732,
-      "end": 2848,
+      "start": 2737,
+      "end": 2853,
       "description": "Referenced on workspace creation to set Dev Portal authentication defaults\nin the database for that particular workspace.\n\n"
     },
     {
       "title": "DEFAULT PORTAL SMTP CONFIGURATION",
-      "start": 2849,
-      "end": 3037,
+      "start": 2854,
+      "end": 3042,
       "description": "Referenced on workspace creation to set SMTP defaults in the database\nfor that particular workspace.\n\n"
     },
     {
       "title": "ADMIN SMTP CONFIGURATION",
-      "start": 3038,
-      "end": 3052,
+      "start": 3043,
+      "end": 3057,
       "description": ""
     },
     {
       "title": "GENERAL SMTP CONFIGURATION",
-      "start": 3053,
-      "end": 3103,
+      "start": 3058,
+      "end": 3108,
       "description": ""
     },
     {
       "title": "DATA & ADMIN AUDIT",
-      "start": 3104,
-      "end": 3149,
+      "start": 3109,
+      "end": 3154,
       "description": "When enabled, Kong will store detailed audit data regarding Admin API and\ndatabase access. In most cases, updates to the database are associated with\nAdmin API requests. As such, database object audit log data is tied to a\ngiven HTTP via a unique identifier, providing built-in association of Admin\nAPI and database traffic.\n\n"
     },
     {
       "title": "GRANULAR TRACING",
-      "start": 3150,
-      "end": 3256,
+      "start": 3155,
+      "end": 3261,
       "description": "{:.warning}\n> **Deprecation warning**: Granular tracing is deprecated. This means the feature will eventually be removed.\nOur target for Granular tracing removal is the Kong Gateway 4.0 release.\n\nGranular tracing offers a mechanism to expose metrics and detailed debug data\nabout the lifecycle of Kong in a human- or machine-consumable format.\n\n"
     },
     {
       "title": "ROUTE COLLISION DETECTION/PREVENTION",
-      "start": 3257,
-      "end": 3292,
+      "start": 3262,
+      "end": 3297,
       "description": ""
     },
     {
       "title": "DATABASE ENCRYPTION & KEYRING MANAGEMENT",
-      "start": 3293,
-      "end": 3543,
+      "start": 3298,
+      "end": 3548,
       "description": "When enabled, Kong will transparently encrypt sensitive fields, such as Consumer\ncredentials, TLS private keys, and RBAC user tokens, among others. A full list\nof encrypted fields is available from the Kong Enterprise documentation site.\nEncrypted data is transparently decrypted before being displayed to the Admin\nAPI or made available to plugins or core routing logic.\n\nWhile this feature is GA, do note that we currently do not provide normal semantic\nversioning compatibility guarantees on the keyring feature's APIs in that Kong may\nmake a breaking change to the feature in a minor version. Also note that\nmis-management of keyring data may result in irrecoverable data loss.\n\n"
     },
     {
       "title": "WASM",
-      "start": 3544,
-      "end": 3655,
+      "start": 3549,
+      "end": 3660,
       "description": ""
     },
     {
       "title": "REQUEST DEBUGGING",
-      "start": 3656,
-      "end": 3713,
+      "start": 3661,
+      "end": 3718,
       "description": "Request debugging is a mechanism that allows admin to collect the timing of\nproxy path request in the response header (X-Kong-Request-Debug-Output)\nand optionally, the error log.\n\nThis feature provides insights into the time spent within various components of Kong,\nsuch as plugins, DNS resolution, load balancing, and more. It also provides contextual\ninformation such as domain name tried during these processes.\n\n"
     }
   ],
@@ -366,7 +366,7 @@
     },
     "cluster_dp_labels": {
       "defaultValue": null,
-      "description": "Comma separated list of Labels for the data plane.\nLabels are key-value pairs that provide additional\ncontext information for each DP.\nEach label must be configured as a string in the\nformat `key:value`.\n\nLabels are only compatible with hybrid mode\ndeployments with Kong Konnect (SaaS),\nthis configuration doesn't work with\nself-hosted deployments.\n\nKeys and values follow the AIP standards:\nhttps://kong-aip.netlify.app/aip/129/\n\nExample:\n`deployment:mycloud,region:us-east-1`\n",
+      "description": "Comma separated list of Labels for the data plane.\nLabels are key-value pairs that provide additional\ncontext information for each DP.\nEach label must be configured as a string in the\nformat `key:value`.\n\nKeys and values follow the AIP standards:\nhttps://kong-aip.netlify.app/aip/129/\n\nExample:\n`deployment:mycloud,region:us-east-1`\n",
       "sectionTitle": "HYBRID MODE DATA PLANE"
     },
     "cluster_listen": {
@@ -1192,6 +1192,11 @@
     "router_flavor": {
       "defaultValue": "traditional_compatible",
       "description": "Selects the router implementation to use when\nperforming request routing. Incremental router\nrebuild is available when the flavor is set\nto either `expressions` or\n`traditional_compatible` which could\nsignificantly shorten rebuild time for large\nnumber of routes.\n\nAccepted values are:\n\n- `traditional_compatible`: the DSL based expression\n  router engine will be used under the hood. However\n  the router config interface will be the same\n  as `traditional` and expressions are\n  automatically generated at router build time.\n  The `expression` field on the `Route` object\n  is not visible.\n- `expressions`: the DSL based expression router engine\n  will be used under the hood. Traditional router\n  config interface is not visible and you must write\n  Router Expression manually and provide them in the\n  `expression` field on the `Route` object.\n- `traditional`: the pre-3.0 Router engine will be\n  used. Config interface will be the same as\n  pre-3.0 Kong and the `expression` field on the\n  `Route` object is not visible.\n\n  Deprecation warning: In Kong 3.0, `traditional`\n  mode should be avoided and only be used in case\n  `traditional_compatible` did not work as expected.\n  This flavor of router will be removed in the next\n  major release of Kong.\n",
+      "sectionTitle": "TUNING & BEHAVIOR"
+    },
+    "route_match_calculation": {
+      "defaultValue": "original",
+      "description": "When using the `traditional_compatible` router flavor,\nselect the router matching calculation method to use.\n\nAccepted values are:\n- `original`: the default value. It retains the current\n `3.x` router matching behavior without changes.\n- `strict`: enforces the router matching behavior with\ncorrected calculation.\n",
       "sectionTitle": "TUNING & BEHAVIOR"
     },
     "lua_max_req_headers": {

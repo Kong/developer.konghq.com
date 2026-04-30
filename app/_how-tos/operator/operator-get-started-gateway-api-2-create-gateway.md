@@ -153,3 +153,23 @@ name: kong
 namespace: kong
 {% endvalidation %}
 
+
+### Troubleshooting `DependenciesNotReady`
+
+If your `Gateway` or `DataPlane` resources are partially initialized, you will get an error like the following:
+<!--vale off-->
+```json
+{
+  "lastTransitionTime": "2026-04-24T19:25:47Z",
+  "message": "There are other conditions that are not yet ready",
+  "observedGeneration": 1,
+  "reason": "DependenciesNotReady",
+  "status": "False",
+  "type": "Programmed"
+}
+```
+{:.no-copy-code} 
+<!--vale on-->
+
+Wait for a few minutes to allow the dependencies to be provisioned before trying again.
+

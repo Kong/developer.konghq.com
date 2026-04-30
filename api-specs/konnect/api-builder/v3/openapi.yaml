@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Konnect API Catalog
-  version: 3.1.1
+  version: 3.1.2
   description: 'The management API for creating, managing APIs in the Konnect API Catalog, and publishing APIs in Dev Portals.'
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@e3083742a0cf90baaa88cd947bcbc6e471acdab8
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3083742a0cf90baaa88cd947bcbc6e471acdab8'
+  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -661,6 +661,85 @@ paths:
           $ref: '#/components/responses/ApiNotFound'
       tags:
         - API Publication
+  '/apis/{apiId}/images/{imageType}':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+      - $ref: '#/components/parameters/ImageType'
+    put:
+      operationId: upsert-api-image
+      summary: Create or Replace an API Image
+      description: Create or Replace an API Image. The replacement image is not applied to the API until asynchronous validation completes successfully.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceApiImageRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiImageResponse'
+        '201':
+          $ref: '#/components/responses/ApiImageResponse'
+        '401':
+          $ref: '#/components/responses/ApiImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiImageNotFound'
+        '409':
+          $ref: '#/components/responses/ApiImageConflict'
+      tags:
+        - API Image
+    get:
+      operationId: fetch-api-image
+      summary: Get API Image
+      description: 'Retrieves the status and metadata associated with an API Image. Returns the latest image if it has not yet been applied (status: uploading, validating, or invalid), otherwise returns the details of currently applied image (status: valid).'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiImageResponse'
+        '401':
+          $ref: '#/components/responses/ApiImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiImageNotFound'
+      tags:
+        - API Image
+    delete:
+      operationId: delete-api-image
+      summary: Delete an API Image
+      description: Delete an API Image.
+      responses:
+        '204':
+          description: API Image was deleted successfully.
+        '401':
+          $ref: '#/components/responses/ApiImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiImageNotFound'
+      tags:
+        - API Image
+  '/apis/{apiId}/images/{imageType}/raw':
+    parameters:
+      - $ref: '#/components/parameters/ApiId'
+      - $ref: '#/components/parameters/ImageType'
+    get:
+      operationId: fetch-api-raw-image
+      summary: Get an API Raw Image
+      description: 'Retrieves the raw image of an API. Only the currently applied image (status: valid) can be retrieved.'
+      responses:
+        '302':
+          description: Redirect to the image URL.
+          headers:
+            Location:
+              description: The CDN URL of the image.
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/ApiImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiImageNotFound'
+      tags:
+        - API Image
   /api-publications:
     get:
       operationId: list-api-publications
@@ -1428,6 +1507,99 @@ paths:
           $ref: '#/components/responses/ApiNotFound'
       tags:
         - API Package Specification
+  '/api-packages/{packageId}/images/{imageType}':
+    parameters:
+      - $ref: '#/components/parameters/ImageType'
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    put:
+      operationId: upsert-api-package-image
+      summary: Create or Replace an API Package Image
+      description: Create or Replace an API Package Image. The replacement image is not applied to the API Package until asynchronous validation completes successfully.
+      requestBody:
+        $ref: '#/components/requestBodies/ReplaceApiPackageImageRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageImageResponse'
+        '201':
+          $ref: '#/components/responses/ApiPackageImageResponse'
+        '401':
+          $ref: '#/components/responses/ApiPackageImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiPackageImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiPackageImageNotFound'
+        '409':
+          $ref: '#/components/responses/ApiPackageImageConflict'
+      tags:
+        - API Package Image
+    get:
+      operationId: fetch-api-package-image
+      summary: Get API Package Image
+      description: 'Retrieves the status and metadata associated with an API package Image. Returns the latest image if it has not yet been applied (status: uploading, validating, or invalid), otherwise returns the details of currently applied image (status: valid).'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiPackageImageResponse'
+        '401':
+          $ref: '#/components/responses/ApiPackageImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiPackageImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiPackageImageNotFound'
+      tags:
+        - API Package Image
+    delete:
+      operationId: delete-api-package-image
+      summary: Delete an API Package Image
+      description: Delete an API Package Image.
+      responses:
+        '204':
+          description: API Package Image was deleted successfully.
+        '401':
+          $ref: '#/components/responses/ApiPackageImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiPackageImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiPackageImageNotFound'
+      tags:
+        - API Package Image
+  '/api-packages/{packageId}/images/{imageType}/raw':
+    parameters:
+      - $ref: '#/components/parameters/ImageType'
+      - name: packageId
+        in: path
+        description: The UUID API Package identifier
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 9f5061ce-78f6-4452-9108-ad7c02821fd5
+    get:
+      operationId: fetch-api-package-raw-image
+      summary: Get an API Package Raw Image
+      description: 'Retrieves the raw image of an API Package. Only the currently applied image (status: valid) can be retrieved.'
+      responses:
+        '302':
+          description: Redirect to the image URL.
+          headers:
+            Location:
+              description: The CDN URL of the image.
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/ApiPackageImageUnauthorized'
+        '403':
+          $ref: '#/components/responses/ApiPackageImageForbidden'
+        '404':
+          $ref: '#/components/responses/ApiPackageImageNotFound'
+      tags:
+        - API Package Image
 components:
   parameters:
     ApiAttributeFilters:
@@ -1623,6 +1795,13 @@ components:
       description: The document identifier related to the API
       in: path
       required: true
+    ImageType:
+      schema:
+        $ref: '#/components/schemas/ImageTypeSchema'
+      name: imageType
+      in: path
+      required: true
+      description: The Supported image type.
     ImplementationId:
       schema:
         type: string
@@ -1707,6 +1886,28 @@ components:
       in: path
       required: true
   schemas:
+    ImageDataUri:
+      example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA'
+      oneOf:
+        - $ref: '#/components/schemas/ImagePNGDataUri'
+        - $ref: '#/components/schemas/ImageJPGDataUri'
+        - $ref: '#/components/schemas/ImageSVGDataUri'
+      title: ImageDataUri
+    ImageTypeSchema:
+      description: The type of the image.
+      type: string
+      example: icon
+      enum:
+        - icon
+    ReplaceImageRequestSchema:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ImageDataUri'
+      additionalProperties: false
+      required:
+        - data
+      title: Replace Image Payload
     ApiResponseSchema:
       type: object
       properties:
@@ -1807,6 +2008,48 @@ components:
         - api_spec_ids
         - current_version_summary
       title: API
+    APIImage:
+      type: object
+      properties:
+        error:
+          description: An error related to the image invalid status.
+          type: string
+          example: null
+          nullable: true
+          readOnly: true
+        status:
+          description: The status of the image.
+          type: string
+          example: valid
+          enum:
+            - uploading
+            - validating
+            - valid
+            - invalid
+          readOnly: true
+        api_id:
+          description: The API identifier which the image belongs to.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          readOnly: true
+        image_type:
+          allOf:
+            - $ref: '#/components/schemas/ImageTypeSchema'
+            - readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - status
+        - error
+        - api_id
+        - image_type
+        - created_at
+        - updated_at
+      title: Image Status
     AuthStrategyApiSyncError:
       type: object
       properties:
@@ -2874,6 +3117,48 @@ components:
         - limit
         - duration
       title: Rate Limiting configuration
+    APIPackageImage:
+      type: object
+      properties:
+        error:
+          description: An error related to the image invalid status.
+          type: string
+          example: null
+          nullable: true
+          readOnly: true
+        status:
+          description: The status of the image.
+          type: string
+          example: valid
+          enum:
+            - uploading
+            - validating
+            - valid
+            - invalid
+          readOnly: true
+        api_package_id:
+          description: The API identifier which the image belongs to.
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          readOnly: true
+        image_type:
+          allOf:
+            - $ref: '#/components/schemas/ImageTypeSchema'
+            - readOnly: true
+        created_at:
+          $ref: '#/components/schemas/CreatedAt'
+        updated_at:
+          $ref: '#/components/schemas/UpdatedAt'
+      additionalProperties: false
+      required:
+        - status
+        - error
+        - api_package_id
+        - image_type
+        - created_at
+        - updated_at
+      title: Image Status
     UuidFieldFilter:
       description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`'
       type: object
@@ -3447,6 +3732,30 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Conflict
+    ImagePNGDataUri:
+      description: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/png,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/png(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImagePNGDataUri
+      x-validation-message: 'must be a data URL with base64 PNG image data, e.g., data:image/png;base64,<BASE64_IMAGE_DATA>'
+    ImageJPGDataUri:
+      description: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/jpeg,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/jpeg(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageJPGDataUri
+      x-validation-message: 'must be a data URL with base64 JPEG image data, e.g., data:image/jpeg;base64,<BASE64_IMAGE_DATA>'
+    ImageSVGDataUri:
+      description: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
+      type: string
+      format: uri
+      example: 'data:image/svg+xml,YW5faW1hZ2VfZmlsZQ=='
+      pattern: '^data:image/svg\+xml(;base64)?,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
+      title: ImageSVGDataUri
+      x-validation-message: 'must be a data URL with base64 SVG image data, e.g., data:image/svg\+xml;base64,<BASE64_IMAGE_DATA>'
     EntityType:
       description: The type of entity that is being published. Can be either an API or an API Package.
       type: string
@@ -3501,6 +3810,24 @@ components:
         attributes:
           env:
             - production
+    ApiPackageImageUnauthorizedExample:
+      value:
+        status: 401
+        title: ApiPackageImageUnauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: ApiPackageImageUnauthorized
+    ApiPackageImageNotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+    ApiPackageImageForbiddenExample:
+      value:
+        status: 403
+        title: ApiPackageImageForbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
     ApiPackageOperationExample:
       value:
         id: 4fa80de7-bce1-41e0-8788-8c5df14a23a0
@@ -3816,6 +4143,36 @@ components:
         title: Conflict
         instance: 'kong:trace:9039922446017540182'
         detail: 'Key (api_id, path)=(23380be0-c15e-4ca8-bcf7-43aadddc91b1, hidden.yaml) already exists.'
+    ApiImageUnauthorizedExample:
+      value:
+        status: 401
+        title: ApiImageUnauthorized
+        instance: 'kong:trace:8347343766220159418'
+        detail: ApiImageUnauthorized
+    ApiImageNotFoundExample:
+      value:
+        status: 404
+        title: Not Found
+        instance: 'kong:trace:6816496025408232265'
+        detail: Not Found
+    ApiImageForbiddenExample:
+      value:
+        status: 403
+        title: ApiImageForbidden
+        instance: 'kong:trace:2723154947768991354'
+        detail: You do not have permission to perform this action
+    ApiImageConflictExample:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:3169213858331814220'
+        detail: The image is currently being updated by another request
+    ApiPackageImageConflictExample:
+      value:
+        status: 409
+        title: Conflict
+        instance: 'kong:trace:3169213858331814220'
+        detail: The image is currently being updated by another request
     ApiOperationsRemovalConflictExample:
       value:
         status: 409
@@ -4516,6 +4873,20 @@ components:
               $ref: '#/components/examples/ValidateApiSpecRequestExampleYaml'
             ValidateApiSpecRequestExampleAsyncApi:
               $ref: '#/components/examples/ValidateApiSpecRequestExampleAsyncApi'
+    ReplaceApiImageRequest:
+      required: true
+      description: Request body to upload an image base64 dataURI for API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceImageRequestSchema'
+    ReplaceApiPackageImageRequest:
+      required: true
+      description: Request body to upload an image base64 dataURI for API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReplaceImageRequestSchema'
   responses:
     ApiSlugConflict:
       description: Conflict - `slug` property must be unique
@@ -5288,6 +5659,90 @@ components:
               $ref: '#/components/examples/ListApiOperationExample'
             ListApiOperationWithImplementationStatusExample:
               $ref: '#/components/examples/ListApiOperationWithImplementationStatusExample'
+    ApiImageResponse:
+      description: ApiImageResponse
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIImage'
+    ApiImageUnauthorized:
+      description: ApiImageUnauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            ApiUnauthorizedExample:
+              $ref: '#/components/examples/ApiImageUnauthorizedExample'
+    ApiImageNotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            ApiNotFoundExample:
+              $ref: '#/components/examples/ApiImageNotFoundExample'
+    ApiImageForbidden:
+      description: ApiImageForbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            ApiForbiddenExample:
+              $ref: '#/components/examples/ApiImageForbiddenExample'
+    ApiImageConflict:
+      description: Conflict - The image is currently being updated by another request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+          examples:
+            ApiImageConflictExample:
+              $ref: '#/components/examples/ApiImageConflictExample'
+    ApiPackageImageResponse:
+      description: ApiPackageImageResponse
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/APIPackageImage'
+    ApiPackageImageUnauthorized:
+      description: ApiPackageImageUnauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+          examples:
+            ApiUnauthorizedExample:
+              $ref: '#/components/examples/ApiPackageImageUnauthorizedExample'
+    ApiPackageImageNotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/NotFoundError'
+          examples:
+            ApiNotFoundExample:
+              $ref: '#/components/examples/ApiPackageImageNotFoundExample'
+    ApiPackageImageForbidden:
+      description: ApiImageForbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ForbiddenError'
+          examples:
+            ApiForbiddenExample:
+              $ref: '#/components/examples/ApiPackageImageForbiddenExample'
+    ApiPackageImageConflict:
+      description: Conflict - The image is currently being updated by another request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
+          examples:
+            ApiPackageImageConflictExample:
+              $ref: '#/components/examples/ApiPackageImageConflictExample'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:
@@ -5333,12 +5788,14 @@ tags:
   - name: API Documentation
   - name: API Specification
   - name: API Publication
+  - name: API Image
   - name: API Implementation
   - name: API Operations
   - name: API Attributes
   - name: API Packages
   - name: API Package Operations
   - name: API Package Documentation
+  - name: API Package Image
 security:
   - konnectAccessToken: []
   - personalAccessToken: []

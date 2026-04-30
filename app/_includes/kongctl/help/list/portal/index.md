@@ -19,6 +19,7 @@ Available Commands:
   auth-settings             Retrieve portal authentication settings
   developers                Manage portal developers for a Konnect portal
   email-domains             List portal email domains configured for the organization
+  identity-providers        List portal identity providers
   pages                     Manage portal pages for a Konnect portal
   snippets                  Manage portal snippets for a Konnect portal
   team-roles                List portal team role assignments for a Konnect portal

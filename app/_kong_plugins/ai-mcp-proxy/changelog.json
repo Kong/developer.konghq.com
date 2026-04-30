@@ -51,6 +51,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.14.0.2": [
+    {
+      "message": "Fixed an issue where WWW-Authenticate: Bearer error=\"insufficient_scope\" header was not emitted.\n",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.13.0.0": [
     {
       "message": "Added support for MCP ACL control.\n",

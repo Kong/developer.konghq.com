@@ -2429,7 +2429,7 @@ Allowed values:
 
 | Value | Description |
 | --- | --- |
-| `openai` | AICloudProviderOpenAI is the OpenAI cloud provider.<br />They are known for models such as ChatGPT 3.5, 4, gpt-image, e.t.c.<br /> |
+| `openai` | AICloudProviderOpenAI is the OpenAI cloud provider.<br />They are known for models such as ChatGPT 3.5, 4, Dall-e, e.t.c.<br /> |
 | `azure` | AICloudProviderAzure is the Azure cloud provider.<br />They are known for models such as PHI-2.<br /> |
 | `cohere` | AICloudProviderCohere is the Cohere cloud provider.<br />They are known for models such as Cohere-Embed, and Cohere-Rerank.<br /> |
 | `mistral` | AICloudProviderMistral is the Mistral.AI cloud provider.<br />They are known for models such as mistral-tiny.<br /> |
