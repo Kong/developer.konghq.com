@@ -211,7 +211,7 @@ pages:
       - text: Built-in gateways
         url: '/mesh/built-in-gateway/'
       - text: 'Configuring built-in listeners'
-        url: '/mesh/gateway-listeners/'
+        url: '/mesh/meshgateway/'
       - text: MeshHttpRoute policy
         url: /mesh/policies/meshhttproute/
       - text: MeshTCPRoute policy

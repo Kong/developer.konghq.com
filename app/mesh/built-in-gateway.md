@@ -16,7 +16,7 @@ related_resources:
   - text: Set up a built-in gateway
     url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Configuring built-in listeners
-    url: /mesh/gateway-listeners/
+    url: /mesh/meshgateway/
   - text: Configuring built-in routes
     url: /mesh/gateway-routes/
   - text: Delegated gateways
@@ -33,7 +33,7 @@ In {{site.mesh_product_name}}, gateways allow you to manage [ingress traffic](/m
 > 
 > This page focuses on the built-in {{site.mesh_product_name}} gateway. For more information about the Kubernetes built-in gateway, see [Kubernetes built-in gateways with {{site.mesh_product_name}}](/mesh/kubernetes-gateway-api/).
 
-You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/gateway-listeners/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
+You can set up a built-in gateway using a combination of the [`MeshGateway`](/mesh/meshgateway/), [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) resources. Each gateway uses Envoy instances represented by `Dataplane` resources configured as built-in. You can then use {{ site.mesh_product_name }} policies to configure your gateway.
 
 To learn how to create a built-in gateway in a Kubernetes environment, see [Set up a built-in gateway](/how-to/set-up-a-built-in-mesh-gateway/).
 

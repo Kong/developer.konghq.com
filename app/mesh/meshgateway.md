@@ -1,5 +1,5 @@
 ---
-title: Configuring built-in listeners
+title: Configuring built-in listeners with MeshGateway
 description: 'Reference for configuring built-in listeners using MeshGateway, including listener setup, TLS termination, hostnames, and cross-mesh support.'
 
 content_type: reference
@@ -18,10 +18,8 @@ related_resources:
     url: /mesh/gateway-routes/
 
 min_version:
-  mesh: '2.6'
+  mesh: '2.7'
 ---
-
-{% capture k8s_service_selector_suffix %}{% if_version gte:2.7.x inline:true %}_default_svc{% endif_version %}{% endcapture %}
 
 For configuring built-in gateway listeners, use the `MeshGateway` resource.
 
@@ -32,16 +30,6 @@ For configuring built-in gateway listeners, use the `MeshGateway` resource.
 The `MeshGateway` resource specifies what network ports the gateway should listen on and how network traffic should be accepted.
 A builtin gateway Dataplane can have exactly one `MeshGateway` resource bound to it.
 This binding uses standard, tag-based {{site.mesh_product_name}} matching semantics:
-
-{% if_version gte:2.7.x lte:2.9.x %}
-
-{:.warning}
-> **Heads up!**
-> In previous versions of {{site.mesh_product_name}}, setting the `kuma.io/service` tag directly within a `MeshGatewayInstance` resource was used to identify the service. However, this practice is deprecated and no longer recommended for security reasons since {{site.mesh_product_name}} version 2.7.0.
->
-> We've automatically switched to generating the service name for you based on your `MeshGatewayInstance` resource name and namespace (format: `{name}_{namespace}_svc`).
-
-{% endif_version %}
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -55,7 +43,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: edge-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: edge-gateway_default_svc
 ```
 
 {% endnavtab %}
@@ -91,7 +79,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: edge-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: edge-gateway_default_svc
   conf:
     listeners:
       - port: 8080
@@ -121,7 +109,7 @@ conf:
 {% endnavtab %}
 {% endnavtabs %}
 
-#### Hostname
+## Hostname
 
 An HTTP or HTTPS listener can also specify a `hostname`.
 
@@ -141,7 +129,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: edge-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: edge-gateway_default_svc
   conf:
     listeners:
       - port: 8080
@@ -187,7 +175,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: edge-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: edge-gateway_default_svc
   conf:
     listeners:
       - port: 8080
@@ -242,21 +230,21 @@ columns:
     key: dataplane_tags
   - title: Listener tags
     key: listener_tags
-  - title: Final Tags
+  - title: Final tags
     key: final_tags
 rows:
-  - dataplane_tags: "kuma.io/service=edge-gateway{{ k8s_service_selector_suffix }}"
+  - dataplane_tags: "kuma.io/service=edge-gateway_default_svc"
     listener_tags: "vhost=foo.example.com"
-    final_tags: "kuma.io/service=edge-gateway{{ k8s_service_selector_suffix }},vhost=foo.example.com"
-  - dataplane_tags: "kuma.io/service=edge-gateway{{ k8s_service_selector_suffix }}"
+    final_tags: "kuma.io/service=edge-gateway_default_svc,vhost=foo.example.com"
+  - dataplane_tags: "kuma.io/service=edge-gateway_default_svc"
     listener_tags: "kuma.io/service=example,domain=example.com"
     final_tags: "kuma.io/service=example,domain=example.com"
-  - dataplane_tags: "kuma.io/service=edge{{ k8s_service_selector_suffix }},location=us"
+  - dataplane_tags: "kuma.io/service=edge_default_svc,location=us"
     listener_tags: "version=2"
-    final_tags: "kuma.io/service=edge{{ k8s_service_selector_suffix }},location=us,version=2"
+    final_tags: "kuma.io/service=edge_default_svc,location=us,version=2"
 {% endtable %}
 
-## TLS Termination
+## TLS termination
 
 TLS sessions are terminated on a Gateway by specifying the "HTTPS" protocol, and providing a server certificate configuration.
 Below, the gateway listens on port 8443 and terminates TLS sessions.
@@ -273,7 +261,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: edge-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: edge-gateway_default_svc
   conf:
     listeners:
       - port: 8443
@@ -315,7 +303,7 @@ conf:
 
 The server certificate is provided through a {{site.mesh_product_name}} datasource reference, in this case naming a secret that must contain both the server certificate and the corresponding private key.
 
-### Server Certificate Secrets
+### Server certificate secrets
 
 A TLS server certificate secret is a collection of PEM objects in a {{site.mesh_product_name}} datasource (which may be a file, a {{site.mesh_product_name}} secret, or inline data).
 
@@ -383,7 +371,7 @@ metadata:
 spec:
   selectors:
     - match:
-        kuma.io/service: cross-mesh-gateway{{ k8s_service_selector_suffix }}
+        kuma.io/service: cross-mesh-gateway_default_svc
   conf:
     listeners:
       - port: 8080
@@ -449,6 +437,6 @@ In the future, this limitation may be relaxed.
 There can be only one entry in `selectors`
 for a `MeshGateway` with `crossMesh: true`.
 
-## All options
+## Schema
 
 {% json_schema MeshGateway type=proto %}
