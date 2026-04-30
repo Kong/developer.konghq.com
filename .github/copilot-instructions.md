@@ -9,11 +9,12 @@ This is a docs repository for the Kong Developer site (https://developer.konghq.
 ## PR Review Philosophy
 - When you leave PR reviews, always provide GitHub suggestions with actionable feedback that the PR creator can directly commit.
 For example, don't say "Change this variable.", instead, create a comment with a suggestion that changes the variable to the correct one.
-- Only comment when you have HIGH CONFIDENCE (>80%) that an issue exists
-- Be concise: one sentence per comment when possible
+- Only comment when you have HIGH CONFIDENCE (>80%) that an issue exists.
+- Be concise: one sentence per comment when possible.
 - If you're uncertain whether something is an issue, don't comment. False positives create noise and reduce trust in the review process.
 - In how-tos, do not flag variable-name mismatches between prerequisite exports and `entity_examples` blocks when `variables` entries such as `value: $FOO` render with an automatically appended `DECK_` prefix. This is expected behavior.
 - Do not suggest adding duplicate environment variable exports just to align source variables with rendered example output.
+- Do not leave comments on trailing whitespace in Markdown files.
 
 ## Key Guidelines
 - We write three types of docs: reference, landing page (written in yaml), and how-tos

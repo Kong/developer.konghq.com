@@ -182,7 +182,7 @@ rows:
     description: "The LLM provider (for example, `openai`, `anthropic`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
   - static: Model
     dynamic: Model property
-    description: "The model ID (for example, `gpt-4`, `claude-3-5-sonnet`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
+    description: "The model ID (for example, `gpt-4`, `claude-sonnet-4-6`). Static sets a fixed value, dynamic reads from a meter group-by dimension."
   - static: Token type
     dynamic: Token type property
     description: "The token type (for example, `input`, `output`, `cache_read`, `reasoning`). Static sets a fixed value, dynamic reads from a meter group-by dimension."

@@ -141,6 +141,7 @@ cmd
 cncf
 cncf's
 CNAMEs
+CNIs
 Cohere
 cohere
 Cognito
@@ -566,6 +567,7 @@ mebibytes
 Memcached
 Memcached
 Memorystore
+Merbridge
 meshopa
 meshopas
 meshpassthrough
@@ -596,6 +598,7 @@ MongoDB
 multimodal
 multitenant
 multitenancy
+Multus
 mutex
 NACLs
 nameserver
@@ -1069,6 +1072,8 @@ Zipkin
 Zipkin
 zipkin
 zsh
+conflist
+kindnet
 Subrequest
 Tablepool
 XMLua

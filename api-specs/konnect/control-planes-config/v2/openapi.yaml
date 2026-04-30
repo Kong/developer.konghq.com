@@ -14,8 +14,8 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   title: Konnect Control Planes Configuration
   version: 3.14.0
-  x-oas-source: kong/platform-api@04e3c7e96d4cbd86883bde1030b754c0becdeb27
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/04e3c7e96d4cbd86883bde1030b754c0becdeb27'
+  x-oas-source: kong/platform-api@72168f6e347897e4179787401f92e0a277234138
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/72168f6e347897e4179787401f92e0a277234138'
 servers:
   - url: 'https://us.api.konghq.com/v2'
     description: United-States Production region
@@ -1045,6 +1045,8 @@ paths:
       operationId: get-consumer_group
       summary: Get a Consumer Group
       description: Get a Consumer Group using ID.
+      parameters:
+        - $ref: '#/components/parameters/ListConsumers'
       responses:
         '200':
           description: Successfully fetched Consumer Group
@@ -4688,6 +4690,13 @@ components:
       required: true
       schema:
         type: string
+    ListConsumers:
+      description: Expand the consumer group to include a list of its consumers.
+      example: false
+      in: query
+      name: list_consumers
+      schema:
+        type: boolean
     MTLSAuthId:
       description: ID of the MTLS-auth credential to lookup
       example: ''

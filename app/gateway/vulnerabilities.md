@@ -117,4 +117,4 @@ Kong does not undertake to address third-party vulnerabilities in convenience im
 
 ## Reporting vulnerabilities in Kong code
 
-If you are reporting a vulnerability in Kong code, we request you to follow the instructions in the [Kong Vulnerability Disclosure Program](https://konghq.com/compliance/bug-bounty). 
+{% include_cached /support/vulnerability-reporting.md %}
