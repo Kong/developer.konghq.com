@@ -1,6 +1,6 @@
 ---
 title: "Configuring built-in routes with MeshHTTPRoute and MeshTCPRoute"
-description: "Reference for configuring HTTP and TCP routing through builtin gateways using MeshHTTPRoute and MeshTCPRoute, including hostname matching and weighted backends."
+description: "Reference for configuring HTTP and TCP routing through built-in gateways using MeshHTTPRoute and MeshTCPRoute, including hostname matching and weighted backends."
 content_type: reference
 layout: reference
 products:
@@ -14,13 +14,13 @@ tags:
 min_version:
   mesh: '2.9'
 related_resources:
-  - text: Add a builtin gateway
+  - text: Set up a built-in gateway
     url: /how-to/set-up-a-built-in-mesh-gateway/
   - text: Built-in gateways
     url: /mesh/built-in-gateway/
   - text: Configuring built-in listeners
     url: /mesh/gateway-listeners/
-  - text: MeshHttpRoute policy
+  - text: MeshHTTPRoute policy
     url: /mesh/policies/meshhttproute/
   - text: MeshTCPRoute policy
     url: /mesh/policies/meshtcproute/
