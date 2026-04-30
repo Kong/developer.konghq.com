@@ -104,20 +104,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/production/mesh.md
-    title: 'Configuring your Mesh and multi-tenancy'
-    description: 'Learn how to create and configure isolated service meshes using the Mesh resource in {{site.mesh_product_name}}, supporting multi-tenancy and gradual adoption.'
-    url: '/mesh/mesh-multi-tenancy/'
-    related_resources:
-      - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
-      - text: Mesh Observability
-        url: '/mesh/observability/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
-  -
     path: app/_src/production/upgrades-tuning/fine-tuning.md
     title: 'Performance fine-tuning'
     description: 'Reference guide to performance tuning in {{site.mesh_product_name}}, including configuration trimming, Postgres tuning, XDS snapshot generation, profiling, and Envoy concurrency.'
