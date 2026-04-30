@@ -3,6 +3,8 @@ tools:
   - kubernetes
 description: 'Apply a MeshIdentity policy with a user-provided CA to a subset of data plane proxies.'
 weight: 910
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
 namespace: kong-mesh-demo
 config:
   type: MeshIdentity

@@ -3,6 +3,8 @@ tools:
   - kubernetes
 description: 'Apply a MeshIdentity policy using the Spire certificate provider to all data plane proxies.'
 weight: 920
+requirements:
+  - "A [MeshService](/mesh/meshservice/) resource must be configured in your mesh."
 namespace: kong-mesh-demo
 config:
   type: MeshIdentity
