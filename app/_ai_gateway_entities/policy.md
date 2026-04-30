@@ -129,9 +129,6 @@ data:
       - phone
       - creditcard
     stop_on_error: true
-formats:
-  - admin-api
-  - konnect-api
 {% endentity_example %}
 
 ## Set up a Model-scoped Policy
@@ -153,9 +150,6 @@ data:
         window_size:
           - 60
     window_type: sliding
-formats:
-  - admin-api
-  - konnect-api
 {% endentity_example %}
 
 <!-- TODO: confirm the actual `config` shape for ai-rate-limiting-advanced against the plugin's current schema. -->
