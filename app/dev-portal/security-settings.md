@@ -103,6 +103,29 @@ When RBAC is enabled for a {{site.dev_portal}}, the option to configure API acce
 > {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
 Authentication strategies determine how [published APIs](/catalog/apis/#publish-your-api-to-dev-portal) are authenticated, and how developers create API Keys. 
+When you link an API to a Gateway, you have two options:
+* Link to a single Gateway Service
+* Link to a control plane
+
+The following table can help you decide which option to pick:
+
+{% table %}
+columns:
+  - title: Single Gateway Service
+    key: kaa
+  - title: Control plane
+    key: ace
+rows:
+  - title: Plugin used
+    kaa: "{{site.konnect_short_name}} Application Auth (KAA) plugin (automatically applied)"
+    ace: "[Access Control Enforcement plugin](/plugins/ace/)"
+  - title: "{{site.base_gateway}} version"
+    kaa: "{% new_in 3.6 %}"
+    ace: "{% new_in 3.13 %}"
+  - title: "Can be used with declarative configuration"
+    kaa: "No, because the plugin is applied automatically"
+    ace: "Yes, because you must configure the plugin"
+{% endtable %}
 
 Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link). The KAA plugin can only be configured from the associated {{site.dev_portal}} and not from API Gateway.
 
