@@ -36,68 +36,86 @@ faqs:
 
   - q: How is a Policy different from a plugin?
     a: |
-      A Policy is a plugin instance configured through the {{site.ai_gateway}}. entity
-      surface instead of the classic `/plugins` endpoint. The runtime effect
-      is the same: a plugin attached at the appropriate scope. The differences
-      are how you create it (`/ai/policies` or under a parent entity), how it's
-      tagged in the workspace, and that the {{site.ai_gateway}}. control plane manages
-      its lifecycle alongside the entity it's attached to.
+      A Policy is a plugin instance configured through the {{site.ai_gateway}} entity surface
+      instead of the classic `/plugins` endpoint. The runtime effect is the same: a plugin attached
+      at the appropriate scope. {{site.ai_gateway}} manages the Policy's lifecycle alongside the
+      entity it's attached to.
 
   - q: Can a Policy be scoped to a Consumer or Consumer Group?
     a: |
-      Not directly. A Policy attaches to the {{site.ai_gateway}} globally or
-      to a Model, Agent, or MCP Server. Per-consumer access is expressed
-      through the `acls` field on those parent entities, which gates which
-      Consumer Groups can reach the entity in the first place.
+      Not directly. A Policy attaches to {{site.ai_gateway}} globally or to a Model, Agent,
+      or MCP Server. Per-consumer access is expressed through the `acls` field on those parent
+      entities, which gates which Consumer Groups can reach the entity in the first place.
 
   - q: What plugin types can a Policy use?
     a: |
-      Any {{site.ai_gateway}}.-compatible plugin. Common values include `ai-sanitizer`,
-      `ai-prompt-guard`, `ai-prompt-decorator`, `ai-rate-limiting-advanced`,
-      and `openid-connect`. Set the plugin name in the Policy's `type` field
-      and provide the plugin's configuration in the `config` field.
+      Set the plugin name in the Policy's `type` field and provide the plugin's configuration
+      in the `config` field. Examples include `ai-sanitizer`, `ai-prompt-guard`,
+      `ai-prompt-decorator`, `ai-rate-limiting-advanced`, and `openid-connect`. The supported set
+      isn't enumerated on this page, refer to the {{site.ai_gateway}} plugin reference for the full list.
 
   - q: What happens to a Policy when its parent entity is deleted?
     a: |
-      Policies attached to a Model, Agent, or MCP Server are removed when the
-      parent entity is deleted, along with the rest of that entity's derived
-      primitives. Global policies are independent and aren't affected by
-      deletions of other entities.
+      Policies attached to a Model, Agent, or MCP Server are removed when the parent entity is
+      deleted, along with the rest of that entity's derived primitives. Global policies are
+      independent and aren't affected by deletions of other entities.
 ---
 
 ## What is a Policy?
 
 A Policy is a plugin instance registered through the {{site.ai_gateway}} entity surface.
 
-Each Policy declares a `type` (the plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. The {{site.ai_gateway}} control plane attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
+Each Policy declares a `type` (the plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
 
 Policies are not shared. Each Policy is one plugin instance. To apply the same configuration to two parent entities, create two Policies.
+
+Policies are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
+
+{% table %}
+columns:
+  - title: Deployment
+    key: deployment
+  - title: Control Plane
+    key: cp
+  - title: Endpoint
+    key: endpoint
+rows:
+  - deployment: "{{site.konnect_short_name}}"
+    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+    endpoint: /v1/ai-gateways/{aiGatewayId}/policies
+  - deployment: On-prem
+    cp: Admin API
+    endpoint: /ai/policies
+{% endtable %}
+
+<!-- TODO: confirm the Konnect endpoint base path against the public Konnect API spec. The architecture proposal references `/ai-gateways/{id}/policies` as the path segment. -->
 
 ## Policy scopes
 
 A Policy is scoped at the time you create it, by the endpoint you POST it to:
 
-* **Global**: `POST /ai/policies` attaches the underlying plugin at the global scope of the `_ai_gateway` workspace. The plugin runs for every {{site.ai_gateway}} request that reaches the runtime.
-* **Model**: `POST /ai/models/{modelId}/policies` attaches the underlying plugin at the Service of the Model's derived primitives. The plugin runs for requests routed through that Model.
-* **Agent**: `POST /ai/agents/{agentId}/policies` attaches the plugin at the Service of the Agent's derived primitives.
-* **MCP Server**: `POST /ai/mcp-servers/{mcpServerId}/policies` attaches the plugin at the Service of the MCP Server's derived primitives.
+* **Global**: `POST /ai/policies` attaches the underlying plugin globally so it runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane is not affected.
+* **Model**: `POST /ai/models/{modelId}/policies` attaches the underlying plugin at the Service of the Model's derived primitives. The plugin runs for requests routed through that Model. See the [Model entity](/ai-gateway/entities/model/).
+* **Agent**: `POST /ai/agents/{agentId}/policies` attaches the plugin at the Service of the Agent's derived primitives. See the [Agent entity](/ai-gateway/entities/agent/).
+* **MCP Server**: `POST /ai/mcp-servers/{mcpServerId}/policies` attaches the plugin at the Service of the MCP Server's derived primitives. See the [MCP Server entity](/ai-gateway/entities/mcp-server/).
 
 Scope is fixed at creation time. Moving a Policy from one scope to another means deleting it and creating a new one under the target endpoint.
 
-## Policy and plugin relationship
+## Lifecycle
 
-Creating a Policy creates exactly one plugin entry in the underlying runtime. Updating a Policy updates that plugin entry. Deleting a Policy deletes that plugin entry.
+Creating a Policy creates exactly one plugin entry in the underlying runtime. Updating a Policy updates that plugin entry. Deleting a Policy deletes that plugin entry. All scopes support standard CRUD operations through the matching path.
 
-The `config` field is passed through to the plugin without translation. Refer to the documentation for the specific plugin to see the available fields, defaults, and validation rules.
+The `config` field is passed through to the plugin without translation.
 
-{:.info}
+{:.note}
 > **Plugin config schemas live with the plugin docs**
 >
-> {{site.ai_gateway}} does not define plugin configuration schemas under the Policy entity. For each plugin you intend to use as a Policy `type`, look up that plugin's reference page for its `config` shape.
+> {{site.ai_gateway}} does not define plugin configuration schemas under the Policy entity.
+> For each plugin you intend to use as a Policy `type`, look up that plugin's reference page for its `config` shape.
 
 ## Set up a global Policy
 
-The following example creates a global PII sanitizer Policy that runs for every {{site.ai_gateway}}. request.
+The following example creates a global PII sanitizer Policy that runs for every {{site.ai_gateway}} route.
 
 {% entity_example %}
 type: policy
@@ -118,7 +136,7 @@ formats:
 
 ## Set up a Model-scoped Policy
 
-The following example attaches a rate limiting Policy to a Model. It assumes a Model with `id` `bf138ba2-c9b1-4229-b268-04d9d8a6410b` already exists.
+The following example attaches a rate-limiting Policy to a Model.
 
 {% entity_example %}
 type: policy
