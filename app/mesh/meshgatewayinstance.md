@@ -14,7 +14,7 @@ min_version:
 related_resources:
   - text: Add a built-in gateway
     url: /how-to/set-up-a-built-in-mesh-gateway/
-  - text: Deploy Kong Mesh on Kubernetes
+  - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
   - text: Built-in gateways
     url: /mesh/built-in-gateway/
