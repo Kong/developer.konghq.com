@@ -18,10 +18,10 @@ For example, don't say "Change this variable.", instead, create a comment with a
 
 ## Key Guidelines
 - We write three types of docs: reference, landing page (written in yaml), and how-tos
-- When you write or edit a doc, use app/contributing/index.md to format the body text (as well as code blocks) correctly for each page type
-- When writing or editing UI steps, use the formats listed in docs/ui-steps-standards.md
-- When adding tags to the frontmatter, follow the instructions here: docs/update-tag-schema.md
-- For anything that is added to the frontmatter of a doc, use docs/front-matter-reference.md for a reference
+- When you write or edit a doc, use `app/contributing/index.md` to format the body text (as well as code blocks) correctly for each page type, and consult the style guide in `app/contributing/style-guide.md` for guidance on tone, voice, language, formatting, and more
+- When writing or editing UI steps, use the formats listed in `docs/ui-steps-standards.md`
+- When adding tags to the frontmatter, follow the instructions here: `docs/update-tag-schema.md`
+- For anything that is added to the frontmatter of a doc, use `docs/front-matter-reference.md` for a reference
 
 ## Content to ignore
 Our repository contains some files that are generated from other sources.
