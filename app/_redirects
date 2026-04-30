@@ -56,7 +56,8 @@
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
-/mesh/guides/gateway-delegated  /mesh/gateway-delegated/
+/mesh/guides/gateway-delegated  /mesh/use-kong-as-delegated-gateway/
+/mesh/gateway-delegated/    /mesh/use-kong-as-delegated-gateway/
 /mesh/guides/federate   /mesh/federate/
 /mesh/guides/gateway-api    /how-to/set-up-a-built-in-kubernetes-gateway/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/

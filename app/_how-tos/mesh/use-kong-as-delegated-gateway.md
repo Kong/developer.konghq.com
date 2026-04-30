@@ -5,7 +5,7 @@ description: 'Set up {{site.base_gateway}} as a delegated gateway for {{site.bas
 
 content_type: how_to
 
-permalink: /mesh/gateway-delegated/
+permalink: /mesh/use-kong-as-delegated-gateway/
 
 bread-crumbs: 
   - /mesh/
