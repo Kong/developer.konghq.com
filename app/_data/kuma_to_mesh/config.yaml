@@ -104,18 +104,6 @@ pages:
     min_version:
       mesh: '2.6'
   -
-    path: app/_src/production/dp-config/cni.md
-    title: 'Configure the Kong Mesh CNI'
-    description: 'Install and configure {{site.mesh_product_name}} CNI to enable transparent proxying without requiring privileged init containers.'
-    url: '/mesh/cni/'
-    related_resources:
-      - text: Mesh DNS
-        url: '/mesh/dns/'
-      - text: Transparent proxying
-        url: '/mesh/transparent-proxying/'
-      - text: Kubernetes annotations and labels
-        url: /mesh/annotations/
-  -
     path: app/_src/production/secure-deployment/dp-auth.md
     title: 'Authentication with the Data Plane proxy'
     description: 'Reference guide to authentication methods for Data Plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
