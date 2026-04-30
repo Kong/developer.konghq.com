@@ -35,9 +35,16 @@ At a technical level the delegated gateway sidecar is similar to any other sidec
 in the mesh except that incoming traffic bypasses the sidecar and directly reaches the
 gateway.
 
-<center>
-<img src="/assets/images/docs/diagram-delegated-gateway-detailed@3x.jpg" alt="Delegated gateway" style="width: 387px;"/>
-</center>
+{% mermaid %}
+graph TD
+    Client
+    subgraph Edge
+        DG[Delegated Gateway]
+    end
+    FE[Frontend-App]
+
+    Client --> DG --> FE
+{% endmermaid %}
 
 {:.info}
 > **New to {{site.mesh_product_name}}?**
