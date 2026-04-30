@@ -44,7 +44,7 @@ The process for deploying built-in gateways is different depending on whether yo
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
-To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/gateway-pods-k8s/) CRD.
+To manage gateway instances on Kubernetes, {{site.mesh_product_name}} provides a [`MeshGatewayInstance`](/mesh/meshgatewayinstance/) CRD.
 Here's a `MeshGatewayInstance` configuration example:
 
 ```yaml
@@ -72,7 +72,7 @@ The `MeshGatewayInstance` resource manages a Kubernetes `Deployment` and `Servic
 > We've automatically switched to generating the Service name for you based on your `MeshGatewayInstance` resource name and namespace. The Service name is generated using the following format: `{name}_{namespace}_svc`.
 
 
-See [the `MeshGatewayInstance` docs](/mesh/gateway-pods-k8s/) for more information.
+See [the `MeshGatewayInstance` docs](/mesh/meshgatewayinstance/) for more information.
 {% endnavtab %}
 {% navtab "Universal" %}
 
