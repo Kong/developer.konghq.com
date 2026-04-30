@@ -88,7 +88,7 @@ content: |
       source: Mirror
       mirror:
         konnect:
-          id: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # <-- Konnect Control Plane ID
+          id: YOUR-KONNECT-CONTROL-PLANE-ID
     dataPlaneOptions:
       deployment:
         podTemplateSpec:

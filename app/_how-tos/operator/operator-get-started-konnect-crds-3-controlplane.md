@@ -45,6 +45,8 @@ Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short
 
 Apply the following configuration to define a Control Plane named `gateway-control-plane`:
 
+### If you want to create and manage the Control Plane from Kubernetes:
+
 <!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
@@ -57,6 +59,27 @@ spec:
   konnect:
     authRef:
       name: konnect-api-auth
+{% endkonnect_crd %}
+<!-- vale on -->
+
+### If you already have a Control Plane in Konnect you need to specify the Control Plane ID with:
+
+<!-- vale off -->
+{% konnect_crd %}
+kind: KonnectGatewayControlPlane
+apiVersion: konnect.konghq.com/{{ site.operator_konnectgatewaycontrolplane_api_version }}
+metadata:
+  name: gateway-control-plane
+spec:
+  createControlPlaneRequest:
+    name: gateway-control-plane
+  konnect:
+    authRef:
+      name: konnect-api-auth
+    source: Mirror
+    mirror:
+      konnect:
+        id: YOUR-KONNECT-CONTROL-PLANE-ID
 {% endkonnect_crd %}
 <!-- vale on -->
 
