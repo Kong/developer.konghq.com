@@ -90,10 +90,10 @@ Creating a Policy creates exactly one plugin entry in the underlying runtime. Up
 
 The `config` field is passed through to the plugin without translation. Refer to the documentation for the specific plugin to see the available fields, defaults, and validation rules.
 
-{:.note}
+{:.info}
 > **Plugin config schemas live with the plugin docs**
 >
-> {{site.ai_gateway}} does not redeclare plugin configuration schemas under the Policy entity. For each plugin you intend to use as a Policy `type`, look up that plugin's reference page for its `config` shape.
+> {{site.ai_gateway}} does not define plugin configuration schemas under the Policy entity. For each plugin you intend to use as a Policy `type`, look up that plugin's reference page for its `config` shape.
 
 ## Set up a global Policy
 
