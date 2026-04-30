@@ -37,7 +37,7 @@
 {%- endif -%}
 {%- if show_tf -%}
 {%- navtab "Terraform" %}
-Please adjust **konnect_mesh_control_plane.my_meshcontrolplane.id** and **konnect_mesh.my_mesh.name** according to your current configuration.
+Adjust **konnect_mesh_control_plane.my_meshcontrolplane.id** and **konnect_mesh.my_mesh.name** according to your current configuration.
 {: .text-sm}
 
 {{ terraform_content | liquify }}
