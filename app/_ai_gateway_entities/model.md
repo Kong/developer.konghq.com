@@ -111,7 +111,7 @@ Provider credentials are materialized into the AI Proxy Advanced plugin configur
 
 Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service, Routes, or plugin entries through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
-{:.note}
+{:.info}
 > **Why a transaction instead of an in-place update?**
 >
 > A Model's structure (which capabilities exist, which providers it routes to) determines how many Routes and plugin entries are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
@@ -133,7 +133,9 @@ Supported values for a `model` type are:
 
 For an `api` type Model (used for batch and file APIs), the supported values are `batches` and `files`.
 
-Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [AI Gateway providers](/ai-gateway/ai-providers/) for per-provider details.## Target models and load balancing
+Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
+
+## Target models and load balancing
 
 A Model's `target_models` field lists one or more upstream provider model instances. Each entry references a Provider (by `id` or `ref`), names the upstream model (for example, `gpt-4o`), and can override per-target settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
 
