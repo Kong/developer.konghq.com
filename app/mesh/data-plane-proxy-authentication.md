@@ -45,7 +45,7 @@ This means that the authentication scope is bound to a namespace, so any Pod in 
 To enforce strict security per Deployment, every Deployment should use a unique Service Account Token.
 Users should also not be able to modify `serviceAccountToken` in a `Deployment`. You can enforce this with a policy engine such as [OPA Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/docs/).
 
-A Service Account Token is not bound to a mesh. For information on restricting which Pods can join a mesh, see [data plane proxy membership](/mesh/configure-data-plane-proxy-membership/).
+Kubernetes itself doesn't bound the Service Account Token to a mesh. For information on restricting which Pods can join a mesh, see [data plane proxy membership](/mesh/configure-data-plane-proxy-membership/).
 
 ## Data plane proxy token
 
@@ -101,6 +101,7 @@ kumactl generate dataplane-token \
   --valid-for 720h > /tmp/kuma-dp-echo1-token
 ```
 
+Your generated token will be stored in `/tmp/kuma-dp-echo1-token`. To check its value, you can run `cat /tmp/kuma-dp-echo1-token`.
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -178,7 +179,9 @@ The control plane verifies the connecting data plane proxy resource against the 
 
 ### Token rotation
 
-If you need to generate a new token for a data plane proxy, or if you are using Service Account Token projection on Kubernetes, you can configure dynamic token reloading. 
+You can configure dynamic token reloading if:
+* You need to generate a new token for a data plane proxy.
+* You are using Service Account Token projection on Kubernetes. 
 
 Set the `kuma-cp` configuration property `dpServer.auth.enableReloadableTokens` to `true`. When enabled, `kuma-dp` detects changes to the token file, reloads the token, and uses the new value when establishing a new connection to `kuma-cp`. By default, `enableReloadableTokens` is enabled on Kubernetes.
 
