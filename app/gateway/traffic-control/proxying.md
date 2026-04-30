@@ -164,7 +164,7 @@ For more information, see the [Proxy WebSocket traffic](#proxy-websocket-traffic
 
 ## Errors and retries
 
-Whenever an error occurs during proxying, {{site.base_gateway}} uses the underlying
+Whenever an error or timeout occurs during proxying, {{site.base_gateway}} uses the underlying
 Nginx [retries](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream_tries) mechanism to pass the request on to
 the next upstream.
 
@@ -175,6 +175,10 @@ There are two configurable elements:
 This is based on Nginx's [`proxy_next_upstream`](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive. 
 This option is not directly configurable through {{site.base_gateway}}, but can be added using a custom Nginx configuration. 
 See the [Nginx directives reference](/gateway/nginx-directives/) for more details.
+
+These retries apply to transport-level failures only. If the upstream responds with a 5xx or 429 status code, {{site.base_gateway}} does not retry the request. For example, a `503` from the upstream is not retried because the upstream replied. If the upstream starts streaming a response body and then fails, {{site.base_gateway}} also does not retry because bytes have already been sent to the client. For bad status codes, configure passive health checks on the [Upstream entity](/gateway/entities/upstream/) using `healthchecks.passive.unhealthy.http_statuses`, which marks the target unhealthy and removes it from the load balancer pool.
+
+For non-idempotent methods (`POST`, `PATCH`, and similar), {{site.base_gateway}} only retries if the TCP connection failed before the upstream received the request. If the upstream received the request and a timeout occurs afterward, {{site.base_gateway}} does not retry. For example, a `POST /orders` that times out after the upstream received it is not retried because the upstream may have already processed the write. Idempotent methods (`GET`, `HEAD`, `PUT`, `DELETE`, `OPTIONS`, `TRACE`) are always retried. To change this, set `proxy_next_upstream non_idempotent` via [custom Nginx configuration](/gateway/nginx-directives/).
 
 ## Response
 
