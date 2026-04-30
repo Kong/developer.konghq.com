@@ -29,7 +29,7 @@ related_resources:
 For traffic to flow through {{site.mesh_product_name}}, all inbound and outbound traffic for a service must pass through its sidecar proxy.
 The recommended way of accomplishing this is via [transparent proxying](/mesh/transparent-proxying/).
 
-On Kubernetes, this is handled automatically by the `kuma-init` init container, but it requires elevated privileges. The {{site.mesh_product_name}} CNI is an alternative that removes this requirement from every Pod in the mesh, which can make security compliance easier.
+On Kubernetes, this is handled automatically by the `kuma-init` container, which requires elevated privileges for every Pod in the mesh. The {{site.mesh_product_name}} CNI is an alternative that removes this requirement, which can make security compliance easier.
 
 {:.info}
 > The CNI `DaemonSet` itself requires elevated privileges because it
