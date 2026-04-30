@@ -56,7 +56,8 @@
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
-/mesh/guides/gateway-delegated  /mesh/gateway-delegated/
+/mesh/guides/gateway-delegated  /mesh/use-kong-as-delegated-gateway/
+/mesh/gateway-delegated/    /mesh/use-kong-as-delegated-gateway/
 /mesh/guides/federate   /mesh/federate/
 /mesh/guides/gateway-api    /how-to/set-up-a-built-in-kubernetes-gateway/
 /mesh/reference/kubernetes-annotations  /mesh/annotations/
@@ -65,7 +66,8 @@
 /mesh/using-mesh/managing-ingress-traffic/builtin   /mesh/built-in-gateway/
 /mesh/using-mesh/managing-ingress-traffic/builtin-listeners     /mesh/meshgateway/
 /mesh/gateway-listeners/    /mesh/meshgateway/
-/mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/ingress-gateway-delegated/
+/mesh/using-mesh/managing-ingress-traffic/delegated     /mesh/delegated-gateways/
+/mesh/ingress-gateway-delegated/    /mesh/delegated-gateways/
 /mesh/using-mesh/managing-ingress-traffic/builtin-k8s   /mesh/meshgatewayinstance/
 /mesh/using-mesh/managing-ingress-traffic/overview  /mesh/ingress/
 /mesh/using-mesh/managing-ingress-traffic/gateway-api   /mesh/kubernetes-gateway-api/
