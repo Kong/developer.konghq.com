@@ -547,6 +547,3 @@ are listed. Route `A` will be selected over `B` if:
 - `A` has at least one regex path and `B` has only plain paths
 - `A`'s longest path is longer than `B`'s longest path
 - `A.created_at < B.created_at`
-
-If you find that a Route with lower priority is matched over Routes with higher priority and common [routing criteria](/gateway/entities/route/#routing-criteria) (for example, same `hosts`), 
-try setting the [`route_match_calculation`](/gateway/configuration/#route-match-calculation) property in `kong.conf` to `strict`.
