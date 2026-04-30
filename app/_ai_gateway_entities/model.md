@@ -19,233 +19,190 @@ tools:
 related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
-  - text: Control Plane and Data Plane networking in {{site.konnect_short_name}}
-    url: /konnect-platform/network/
-  - text: AI Proxy plugin
-    url: /plugins/ai-proxy/
+  - text: AI Gateway providers
+    url: /ai-gateway/ai-providers/
+  - text: Load balancing with AI Proxy Advanced
+    url: /ai-gateway/load-balancing/
+  - text: Provider entity
+    url: /ai-gateway/entities/provider/
+  - text: Policy entity
+    url: /ai-gateway/entities/policy/
   - text: AI Proxy Advanced plugin
     url: /plugins/ai-proxy-advanced/
-  - text: Plugin entity
-    url: /gateway/entities/plugin/
-  - text: Consumer entity
-    url: /gateway/entities/consumer/
   - text: Consumer Group entity
     url: /gateway/entities/consumer-group/
 faqs:
-  - q: What happens if a request's model doesn't match any Model entity?
-    a: Plugins scoped to a Model won't run. Plugins without a Model scope run normally.
-
-  - q: Can the same plugin be configured for multiple Models?
-    a: Yes. Create one plugin entry per Model scope. Each entry is resolved independently by the plugin iterator.
-
-  - q: Can I scope a plugin to both a Model and a Consumer, Route, or Service?
-    a: Yes. Combined scopes are supported and follow the precedence chain described in [Plugin configuration precedence](#plugin-configuration-precedence).
-
-  - q: Does the Model entity configure the provider, credentials, or endpoint?
+  - q: What's the difference between a Model entity and the `model` field inside an AI Proxy Advanced plugin config?
     a: |
-      Model identifies the model and defines model-level behavior. Provider credentials are managed separately (for example, through provider configuration) and are not stored on the Model itself.
+      A Model entity is the first-class {{site.ai_gateway}} entity you declare through the `/ai/models` API or {{site.konnect_short_name}}.
+      {{site.ai_gateway}} derives the AI Proxy Advanced plugin (and its `model` configuration) from the entity.
+      You don't configure the underlying plugin directly.
 
-  - q: Does the Data Plane Model entity have the same fields as the {{site.konnect_short_name}} Model entity?
+  - q: Can I edit the Service, Routes, or plugins that {{site.ai_gateway}} generates from a Model?
     a: |
-      Not necessarily. The Data Plane Model entity is a smaller surface than the {{site.konnect_short_name}} entity, and field parity isn't guaranteed across releases.
-      See [Models in {{site.konnect_short_name}} and on-prem deployments](#models-in-konnect-and-on-prem-deployments).
+      No. Generated primitives are protected from direct modification through the standard Admin API.
+      Update the Model entity instead, and {{site.ai_gateway}} recreates the underlying primitives within a single transaction.
 
-  - q: Where do {{site.konnect_short_name}} Policies fit in?
+  - q: What happens when I update a Model?
     a: |
-      Policies are Control Plane entities. They are translated into plugin configurations used for runtime behavior on the Data Plane. There is no separate Data Plane Policy entity.
+      {{site.ai_gateway}} deletes the Model's derived primitives and recreates them from the updated entity state, all within a single database transaction.
+      On failure, the transaction rolls back and no partial state is written.
+
+  - q: What happens when I delete a Model?
+    a: |
+      The Model and all its derived primitives (Service, Routes, plugin instances) are deleted within a single transaction.
+
+  - q: Can I apply the same configuration to multiple Models?
+    a: |
+      Yes, by attaching one Policy with that configuration to each Model.
+      Policies are not shared between entities, each instance is independent.
+      See [Policy entity](/ai-gateway/entities/policy/).
+
+  - q: How do I limit which consumers can reach a Model?
+    a: |
+      Set the `acls` field on the Model with allow or deny lists referencing Consumer Groups.
+      Consumer-level access is not configured on the Model directly.
+
+  - q: Does the Model entity store provider credentials?
+    a: |
+      No. Provider credentials live on the [Provider entity](/ai-gateway/entities/provider/) and are materialized into the generated AI Proxy Advanced plugin configuration at Model creation time.
+      Updating a Provider propagates the credential change to all Models that reference it.
+
+  - q: Are on-prem and {{site.konnect_short_name}} Model entities the same?
+    a: |
+      The schemas are intentionally aligned at the field level. The same Model definition works in both modes.
+      On-prem omits a few {{site.konnect_short_name}}-specific path segments and concepts that don't apply in a single-deployment context, such as the `ai-gateways/{id}` container and Data Plane certificate or node management. The Model entity itself is identical.
 ---
 
 ## What is a Model?
 
-A Model is a first-class {{site.ai_gateway}} entity that defines a named AI model (for example, `openai/gpt-4o`) for model selection and policy targeting.
+A Model is a first-class {{site.ai_gateway}} entity that represents an AI model endpoint exposed through {{site.ai_gateway}}.
 
-You can target policies and supported plugin behavior to a specific Model. This lets you apply different rate limits, guardrails, and transformations per model without duplicating Routes or Services.
+A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't assemble Services, Routes, or plugin entries by hand.
 
-In both deployment modes, you configure {{site.ai_gateway}} through first-class AI entities (for example, `ai_model`, `ai_provider`, and `ai_policy`). The Control Plane derives and manages the underlying Data Plane primitives (such as Services, Routes, and plugins) from those entities.
-
-In this document, **Control Plane** refers to where AI entities are declared and managed, while **Data Plane** refers to where request-time routing and plugin matching execute.
-
-For on-prem deployments, the {{site.ai_gateway}} Admin API (`/ai/*`) is the Control Plane surface for managing first-class AI entities; it follows the same domain model as {{site.konnect_short_name}} and translates those entities into Data Plane primitives.
-
-## Model and plugin interaction
-
-Model participates in plugin resolution for runtime behavior on the Data Plane, alongside other scoping dimensions, such as [Consumer](/gateway/entities/consumer/), [Consumer Group](/gateway/entities/consumer-group/), [Route](/gateway/entities/route/), and [Service](/gateway/entities/service/).
-
-Control Plane management differs by deployment mode:
-
-* In {{site.konnect_short_name}}, you manage Model and related AI entities through {{site.konnect_short_name}} {{site.ai_gateway}} APIs.
-* In on-prem {{site.ai_gateway}}, you manage the same entity concepts through `/ai/*` Admin API endpoints.
-
-A plugin configuration can reference a Model through its `model` field. When a plugin entry is scoped to a Model, that entry only applies to requests where AI Proxy or AI Proxy Advanced resolves the same model name from the request. Plugin entries without a `model` field apply regardless of which model the request targets.
-
-After Control Plane configuration is translated and applied to the Data Plane, behavior is shared across deployment modes: the request model is resolved by the AI routing flow (AI Proxy, AI Proxy Advanced, or a model shim flow, depending on deployment configuration), and the plugin iterator uses the resolved Model to select matching plugin configurations.
-
-{:.warning}
-> **Caveat for plugins with priority higher than AI Proxy**
->
-> The AI Proxy and AI Proxy Advanced plugins run at priority `770`. Any plugin with a higher priority runs *before* the model is resolved. For those earlier plugins, the Model context is not yet available, and Model-scoped configurations won't activate on that request. See [Limitations](#limitations).
-
-## Models in {{site.konnect_short_name}} and on-prem deployments
-
-The Model entity exists in both {{site.konnect_short_name}} (Control Plane) and {{site.base_gateway}} (Data Plane).
-
-In {{site.konnect_short_name}}, you declare Model through the {{site.ai_gateway}} Control Plane APIs. During config sync, the Control Plane translates the configuration into Data Plane configuration.
-
-In on-prem {{site.ai_gateway}}, you declare Model through the `/ai/models` API surface (or compatible tooling such as decK). The on-prem Control Plane stores AI entities as first-class objects and manages derived Data Plane primitives for you.
-
-For request-time behavior and plugin matching details, see [Model and plugin interaction](#model-and-plugin-interaction).
-
-### Policies are Control Plane only
-
-{{site.ai_gateway}} exposes a Policy entity for declaring AI guardrails, rate limits, and similar controls against Models. <!-- TODO: link to Policy entity docs once available. -->
-
-The Policy entity has no Data Plane counterpart. During config sync, each Policy is translated into one or more plugin configurations that target the corresponding Data Plane Model.
-
-### {{site.konnect_short_name}} and Data Plane field parity
-
-The Data Plane Model entity is intentionally a smaller surface than Control Plane Model APIs. Depending on deployment mode, some Control Plane fields may not map 1:1 to Data Plane fields.
-
-## Plugin configuration precedence
-
-When multiple plugin configurations could match a request, {{site.base_gateway}} picks the most specific one. Model is treated as an additional specificity axis: within any Consumer / Route / Service tier, the variant with `+ Model` outranks the variant without.
-
-The full precedence chain is:
+Models are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
 
 {% table %}
 columns:
-  - title: Rank
-    key: rank
-  - title: Scope combination
-    key: scope
+  - title: Deployment
+    key: deployment
+  - title: Control Plane
+    key: cp
+  - title: Endpoint
+    key: endpoint
 rows:
-  - rank: 1
-    scope: Consumer + Route + Service + Model
-  - rank: 2
-    scope: Consumer + Route + Service
-  - rank: 3
-    scope: Consumer Group + Route + Service + Model
-  - rank: 4
-    scope: Consumer Group + Route + Service
-  - rank: 5
-    scope: Consumer + Route + Model
-  - rank: 6
-    scope: Consumer + Route
-  - rank: 7
-    scope: Consumer + Service + Model
-  - rank: 8
-    scope: Consumer + Service
-  - rank: 9
-    scope: Consumer Group + Route + Model
-  - rank: 10
-    scope: Consumer Group + Route
-  - rank: 11
-    scope: Consumer Group + Service + Model
-  - rank: 12
-    scope: Consumer Group + Service
-  - rank: 13
-    scope: Route + Service + Model
-  - rank: 14
-    scope: Route + Service
-  - rank: 15
-    scope: Consumer + Model
-  - rank: 16
-    scope: Consumer
-  - rank: 17
-    scope: Consumer Group + Model
-  - rank: 18
-    scope: Consumer Group
-  - rank: 19
-    scope: Route + Model
-  - rank: 20
-    scope: Route
-  - rank: 21
-    scope: Service + Model
-  - rank: 22
-    scope: Service
-  - rank: 23
-    scope: Model
-  - rank: 24
-    scope: Global
+  - deployment: "{{site.konnect_short_name}}"
+    cp: "{{site.konnect_short_name}} {{site.ai_gateway}} API"
+    endpoint: /v1/ai-gateways/{aiGatewayId}/models
+  - deployment: On-prem
+    cp: Admin API
+    endpoint: /ai/models
 {% endtable %}
 
-## Limitations
+## How a Model maps to runtime configuration
 
-Not every plugin can be scoped to a Model. Some plugins run before model context is available, and some are structurally incompatible with Model scoping.
+When you create or update a Model, {{site.ai_gateway}} generates a fixed set of primitives:
 
-### Plugins that cannot be scoped to a Model
+* One [Gateway Service](/gateway/entities/service/).
+* One [Route](/gateway/entities/route/) per declared capability in the `capabilities` array.
+* One [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin per generated Route.
 
-The following plugins do not accept a Model scope:
+Provider credentials are materialized into the AI Proxy Advanced plugin configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
 
-* Authentication plugins, because they must run before any AI-specific processing to establish the consumer identity that Model-scoped configs depend on:
-  * [Basic Authentication](/plugins/basic-auth/)
-  * [HMAC Authentication](/plugins/hmac-auth/)
-  * [JWE Decrypt](/plugins/jwe-decrypt/)
-  * [JWT](/plugins/jwt/)
-  * [JWT Signer](/plugins/jwt-signer/)
-  * [Key Authentication](/plugins/key-auth/)
-  * [Key Authentication Encrypted](/plugins/key-auth-enc/)
-  * [LDAP Authentication](/plugins/ldap-auth/)
-  * [LDAP Authentication Advanced](/plugins/ldap-auth-advanced/)
-  * [OAuth 2.0](/plugins/oauth2/)
-  * [OAuth 2.0 Introspection](/plugins/oauth2-introspection/)
-  * [OpenID Connect](/plugins/openid-connect/)
-  * [Session](/plugins/session/)
-  * [Mutual TLS Authentication](/plugins/mtls-auth/)
-  * [Header Certificate Authentication](/plugins/header-cert-auth/)
-  * [SAML](/plugins/saml/)
-  * [Vault Authentication](/plugins/vault-auth/)
-* AI routing and agent plugins, because these plugins resolve the model (AI Proxy, AI Proxy Advanced) or operate on protocols where Model scoping is not meaningful (A2A, MCP):
-  * [AI Proxy](/plugins/ai-proxy/)
-  * [AI Proxy Advanced](/plugins/ai-proxy-advanced/)
-  * [AI A2A Proxy](/plugins/ai-a2a-proxy/)
-  * [AI MCP Proxy](/plugins/ai-mcp-proxy/)
+Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service, Routes, or plugin entries through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
-### Plugins that run before model resolution
+{:.note}
+> **Why a transaction instead of an in-place update?**
+>
+> A Model's structure (which capabilities exist, which providers it routes to) determines how many Routes and plugin entries are needed. A delete-and-recreate cycle is the simplest way to keep the entity and its derived primitives consistent, especially when capabilities are added or removed.
 
-Any plugin with a priority higher than `770` (the priority of AI Proxy and AI Proxy Advanced) runs before the model is known. For those plugins, Model-scoped configs are not applied unless one of the following is true:
+## Capabilities
 
-* [Dynamic plugin ordering](/gateway/plugin-development/entities/plugin/) is enabled to push the plugin's execution after AI Proxy.
-* The AI Model Shim plugin is deployed on the route or service to resolve the model during the access phase before other plugins run. <!-- TODO: link once the shim plugin page exists -->
+The `capabilities` field tells {{site.ai_gateway}} which AI workflows the Model exposes. Each capability becomes one Route on the generated Service. A Model must declare at least one capability.
+
+Supported values for a `model` type are:
+
+* `chat`
+* `responses`
+* `embeddings`
+* `image-generation`
+* `image-edits`
+* `audio-transcriptions`
+* `audio-translations`
+* `realtime`
+
+For an `api` type Model (used for batch and file APIs), the supported values are `batches` and `files`.
+
+Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [AI Gateway providers](/ai-gateway/ai-providers/) for per-provider details.## Target models and load balancing
+
+A Model's `target_models` field lists one or more upstream provider model instances. Each entry references a Provider (by `id` or `ref`), names the upstream model (for example, `gpt-4o`), and can override per-target settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+
+When a Model has more than one target, requests are load-balanced according to `config.balancer`. For the supported algorithms, configuration options, and tuning guidance, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
+
+## Access control
+
+A Model's `acls` field controls which Consumer Groups are allowed to reach the Model. The field accepts `allow` and `deny` lists, each containing references to Consumer Groups by `id` or `ref`. Access is enforced at the Service level of the generated primitives.
+
+For per-request authentication and identity, configure the appropriate authentication plugin globally or as a Policy on the Model.
+
+## Attach Policies
+
+Policies are the way you apply plugin configurations to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
+
+You can attach multiple Policies to a single Model. Each Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
+
+Not every plugin type is valid as a Model Policy. For the supported set, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+
+Policies attached to a Model are deleted when the Model is deleted.
+
+### Plugin priority and Policy execution order
+
+A Policy attached to a Model creates one plugin entry on the Service of the Model's derived primitives. That plugin runs at the [priority](/gateway/entities/plugin/#plugin-priority) of its underlying plugin type, which determines when it executes relative to other plugins on the request.
+
+The AI Proxy Advanced plugin runs at priority `770` and is the plugin that parses the request body and resolves the model name. Any Policy whose underlying plugin type has a priority higher than `770` runs before that resolution. Authentication plugin types (such as OpenID Connect) fall into this category. They run before AI Proxy Advanced parses the request, but after the request has been routed to the Model's generated Service, so they still gate access correctly. The Model identity in the AI sense (which provider, which target model) is just not available to them.
+
+For Policies whose runtime behavior depends on the resolved Model identity, attach plugin types that run at priority `770` or lower, or use [dynamic plugin ordering](/gateway/plugin-development/entities/plugin/) to push their execution later.
 
 ## Set up a Model
 
-The following example shows a Model named `openai/gpt-4o`.
+The following example creates an OpenAI Model that exposes both `chat` and `responses` capabilities, routed through a single OpenAI Provider, with token usage logging enabled.
 
 {% entity_example %}
 type: model
 data:
-  model: openai-something
-{% endentity_example %}
-
-## Scope a plugin to a Model
-
-Once a Model exists, you can scope a Model-aware plugin configuration by setting the `model` field on the plugin.
-
-The following example assumes two Models (`openai/gpt-4o` and `openai/gpt-4o-mini`) already exist and applies a quota to one of them.
-
-{% entity_example %}
-type: plugin
-data:
-  name: ai-rate-limiting-advanced
-  model: openai/gpt-4o
+  display_name: GPT-4o Production
+  ref: gpt-4o-production
+  type: model
+  enabled: true
+  capabilities:
+    - chat
+    - responses
+  formats:
+    - openai
+  acls:
+    allow:
+      - ref: internal-teams
+  target_models:
+    - name: gpt-4o
+      provider:
+        ref: my-openai-account
+      config:
+        temperature: 0.7
+        max_tokens: 4096
+        input_cost: 0.0000025
+        output_cost: 0.000010
   config:
-    llm_providers:
-      - name: openai
-        limit:
-          - 3
-        window_size:
-          - 30
-    window_type: fixed
-{% endentity_example %}
-
-
-
-## Set up a Model
-
-{% entity_example %}
-type: model
-data:
-  model: openai-something
+    logging:
+      log_statistics: true
+      log_payloads: false
+    response_streaming: allow
+    max_request_body_size: 1048576
+    balancer:
+      algorithm: round-robin
+      retries: 3
+      connect_timeout: 60000
+      read_timeout: 60000
+      write_timeout: 60000
 {% endentity_example %}
 
 ## Schema
