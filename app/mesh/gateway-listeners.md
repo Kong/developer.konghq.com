@@ -23,7 +23,7 @@ min_version:
 
 {% capture k8s_service_selector_suffix %}{% if_version gte:2.7.x inline:true %}_default_svc{% endif_version %}{% endcapture %}
 
-For configuring built-in gateway listeners, use the [`MeshGateway`](/mesh/gateway-listeners/) resource.
+For configuring built-in gateway listeners, use the `MeshGateway` resource.
 
 {:.info}
 > These are {{site.mesh_product_name}} policies so if you are running on multi-zone they need to be created on the Global CP.
