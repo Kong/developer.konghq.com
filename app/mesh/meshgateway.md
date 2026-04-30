@@ -224,6 +224,7 @@ Note that because each listener entry has its own {{site.mesh_product_name}} tag
 {{site.mesh_product_name}} generates a set of tags for each listener by combining the tags from the listener, the `MeshGateway` and the `Dataplane`.
 {{site.mesh_product_name}} matches policies against this set of combined tags.
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: "`Dataplane` tags"
@@ -243,6 +244,7 @@ rows:
     listener_tags: "version=2"
     final_tags: "kuma.io/service=edge_default_svc,location=us,version=2"
 {% endtable %}
+<!-- vale on -->
 
 ## TLS termination
 
