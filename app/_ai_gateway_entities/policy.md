@@ -5,7 +5,7 @@ entities:
   - policy
 products:
   - ai-gateway
-description: AI Gateway policies registered with the {{site.ai_gateway}}.
+description: {{site.ai_gateway}}. policies
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGatewayPolicy
@@ -36,11 +36,11 @@ faqs:
 
   - q: How is a Policy different from a plugin?
     a: |
-      A Policy is a plugin instance configured through the AI Gateway entity
+      A Policy is a plugin instance configured through the {{site.ai_gateway}}. entity
       surface instead of the classic `/plugins` endpoint. The runtime effect
       is the same: a plugin attached at the appropriate scope. The differences
       are how you create it (`/ai/policies` or under a parent entity), how it's
-      tagged in the workspace, and that the AI Gateway control plane manages
+      tagged in the workspace, and that the {{site.ai_gateway}}. control plane manages
       its lifecycle alongside the entity it's attached to.
 
   - q: Can a Policy be scoped to a Consumer or Consumer Group?
@@ -52,7 +52,7 @@ faqs:
 
   - q: What plugin types can a Policy use?
     a: |
-      Any AI Gateway-compatible plugin. Common values include `ai-sanitizer`,
+      Any {{site.ai_gateway}}.-compatible plugin. Common values include `ai-sanitizer`,
       `ai-prompt-guard`, `ai-prompt-decorator`, `ai-rate-limiting-advanced`,
       and `openid-connect`. Set the plugin name in the Policy's `type` field
       and provide the plugin's configuration in the `config` field.
@@ -97,7 +97,7 @@ The `config` field is passed through to the plugin without translation. Refer to
 
 ## Set up a global Policy
 
-The following example creates a global PII sanitizer Policy that runs for every AI Gateway request.
+The following example creates a global PII sanitizer Policy that runs for every {{site.ai_gateway}}. request.
 
 {% entity_example %}
 type: policy
