@@ -19,7 +19,7 @@ tools:
 related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
-  - text: AI Gateway providers
+  - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/
   - text: Load balancing with AI Proxy Advanced
     url: /ai-gateway/load-balancing/
