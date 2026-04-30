@@ -24,58 +24,58 @@ min_version:
 
 Delegated gateways allow you to integrate existing API gateway solutions into your mesh.
 
-In delegated gateway mode, {{site.mesh_product_name}} configures an Envoy sidecar for your API gateway.
-Handling incoming traffic is left to the API gateway while Envoy and
-{{site.mesh_product_name}} take care of traffic leaving the gateway for the mesh.
-The non-{{site.mesh_product_name}} gateway is in charge of policy like security or timeouts
-when it comes to incoming traffic and {{site.mesh_product_name}} takes over
-after traffic leaves the gateway destined for the mesh.
+In delegated gateway mode, {{site.mesh_product_name}} configures an Envoy [sidecar](/mesh/data-plane-proxy/) for your API gateway.
+Handling incoming traffic is left to the API gateway while Envoy and {{site.mesh_product_name}} take care of traffic leaving the gateway for the mesh.
+The non-{{site.mesh_product_name}} gateway is in charge of policy such as security or timeouts related to incoming traffic, and {{site.mesh_product_name}} takes over after traffic leaves the gateway for the mesh.
 
-At a technical level the delegated gateway sidecar is similar to any other sidecar
-in the mesh except that incoming traffic bypasses the sidecar and directly reaches the
-gateway.
+At a technical level, the delegated gateway sidecar is similar to any other sidecar in the mesh, except that incoming traffic bypasses the sidecar and directly reaches the gateway.
 
-{% mermaid %}
-graph TD
-    Client
-    subgraph Edge
-        DG[Delegated Gateway]
-    end
-    FE[Frontend-App]
-
-    Client --> DG --> FE
-{% endmermaid %}
-
-{:.info}
-> **New to {{site.mesh_product_name}}?**
-> Check out the [delegated gateway guide](/mesh/gateway-delegated/) to get quickly started with delegated gateways.
+See [Set up a built-in gateway with {{site.mesh_product_name}}](/mesh/use-kong-as-delegated-gateway/) to get started with delegated gateways.
 
 ## Usage
 
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
+### Kubernetes
 
-{{site.mesh_product_name}} supports most ingress controllers. However, the recommended gateway in Kubernetes is [Kong](https://developer.konghq.com/gateway/). You can use [Kong Ingress Controller for Kubernetes](https://developer.konghq.com/kubernetes-ingress-controller/) to implement authentication, transformations, and other functionality across Kubernetes clusters with zero downtime.
+{{site.mesh_product_name}} supports most ingress controllers. However, the recommended gateway in Kubernetes is [{{site.base_gateway}}](/gateway/). You can use [{{site.operator_product_name}}](/operator/) to implement authentication, transformations, and other functionality across Kubernetes clusters with zero downtime.
 
-### Service upstream
+#### Service upstream
 
-Remember that {{site.mesh_product_name}} takes over from `kube-proxy` when it comes to managing endpoints for `Service` traffic.
-Ingress controllers generally do the same thing for upstream traffic.
-In order for these two functionalities not to conflict with each other, `Services` are required to
-have the [`ingress.kubernetes.io/service-upstream=true`](https://developer.konghq.com/kubernetes-ingress-controller/reference/annotations/#ingress-kubernetes-io-service-upstream) annotation.
-With this annotation the ingress controller sends traffic to the `Service` IP instead of directly to the endpoints selected by the `Service`.
+{{site.mesh_product_name}} takes over from `kube-proxy` when managing endpoints for `Service` traffic.
+{{site.base_gateway}} does the same for upstream traffic.
+To prevent these from conflicting, configure {{site.operator_product_name}} to forward traffic to the `Service` IP rather than directly to Pod endpoints by setting `serviceUpstream: true` in an [`IngressClassParameters`](/operator/reference/custom-resources/#ingressclassparametersspec) resource:
+
+```yaml
+apiVersion: configuration.konghq.com/v1alpha1
+kind: IngressClassParameters
+metadata:
+  name: kong-params
+  namespace: default
+spec:
+  serviceUpstream: true
+```
+
+Then reference this in your `IngressClass`:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: kong
+spec:
+  controller: ingress-controllers.konghq.com/kong
+  parameters:
+    apiGroup: configuration.konghq.com
+    kind: IngressClassParameters
+    name: kong-params
+    namespace: default
+    scope: Namespace
+```
+
 {{site.mesh_product_name}} then routes this `Service` traffic to endpoints as configured by the mesh.
-{{site.mesh_product_name}} automatically injects this annotation for every
-`Service` that is in a namespace with the label `kuma.io/sidecar-injection=enabled`.
 
-For workloads (Deployment/StatefulSet, etc) with kuma sidecar injection enabled by labeling the workload pod template rather than labeling on the namespace, `Service` objects are not annotated automatically in these namespaces. So users need to add these annotations manually to the `Service` objects:
+#### Delegated gateway data planes
 
-* `ingress.kubernetes.io/service-upstream`
-* `nginx.ingress.kubernetes.io/service-upstream`
-
-### Delegated gateway `Dataplanes`
-
-To use the delegated gateway feature, mark your API Gateway's `Pod` with the `kuma.io/gateway: enabled` annotation.
+To use the delegated gateway feature, add your the `kuma.io/gateway: enabled` annotation to your gateway's Pod.
 The control plane automatically generates `Dataplane` objects.
 
 For example:
@@ -93,14 +93,11 @@ spec:
       ...
 ```
 
-Now the gateway can send traffic to any services in the mesh including other
-zones.
+Now the gateway can send traffic to any services in the mesh including other zones.
 
-Note that in order to send multi-zone traffic you can either use the
-[`.mesh` address](/mesh/dns/) or create a `Service` of type `ExternalName` that points to that URL.
+In order to send multi-zone traffic, you can either use the [`.mesh` address](/mesh/dns/) or create a `Service` of type `ExternalName` that points to that URL.
 
-{% endnavtab %}
-{% navtab "Universal" %}
+### Universal
 
 On Universal, you should define the `Dataplane` entity like this:
 
@@ -114,13 +111,7 @@ networking:
     type: DELEGATED
     tags:
       kuma.io/service: kong
-  ...
 ```
 
-Traffic that should go through the gateway should be sent directly to the
-gateway process. When configuring your API Gateway to forward traffic into the
-mesh, you configure the `Dataplane` object as if it were any other `Dataplane`
-on Universal.
+Traffic that should go through the gateway should be sent directly to the gateway process. When configuring your API Gateway to forward traffic to the mesh, configure the `Dataplane` object as any other `Dataplane` on Universal.
 
-{% endnavtab %}
-{% endnavtabs %}
