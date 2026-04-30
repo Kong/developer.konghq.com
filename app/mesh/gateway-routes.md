@@ -28,7 +28,7 @@ related_resources:
 
 To configure how traffic is forwarded from a listener to your mesh services, use [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/).
 
-Using these route resources with a gateway requires using [`spec.targetRef`](/mesh/policies-introduction/) to target gateway data plane proxies.
+You must use [`spec.targetRef`](/mesh/policies-introduction/) to target gateway data plane proxies when you use these route resources with a gateway.
 
 {:.info}
 > When using [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) and [`MeshTCPRoute`](/mesh/policies/meshtcproute/) with built-in gateways, `spec.to[].targetRef` is restricted to `kind: Mesh`.
@@ -171,7 +171,7 @@ spec:
 ```
 {% endpolicy_yaml %}
 
-This route would send all traffic to `dev.example.com` to the `v2` backend but other traffic to `v1`.
+This route would send all traffic to `dev.example.com` to the `v2` backend, but other traffic to `v1`.
 
 ## `MeshTCPRoute`
 
