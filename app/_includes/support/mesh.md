@@ -1,3 +1,4 @@
+<!-- vale off-->
 {% assign releases = site.data.products.mesh.releases %}
 {% table %}
 columns:
@@ -17,3 +18,4 @@ rows:
     eol: "{{release.eol}}"
 {% endfor %}
 {% endtable %}
+<!-- vale on-->
