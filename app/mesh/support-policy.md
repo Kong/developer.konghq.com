@@ -36,8 +36,6 @@ columns:
   - title: Planned release date
     key: date
 rows:
-  - version: "2.13"
-    date: January 2026
   - version: "2.17"
     date: January 2027
   - version: "2.21"
@@ -52,7 +50,7 @@ rows:
 > Each year, the first version we release will become an LTS release.
 > Starting from 2.13, we will have 1 LTS release every year, in January of that year.
 > <br><br>
-> Example of planned LTS schedule for next 4 years:
+> Example of planned LTS schedule for next 2 years:
 > {{long_term_support | strip | replace: "
 ", "
 > "}}
