@@ -23,10 +23,10 @@ related_resources:
     url: /ai-gateway/entities/model/
   - text: Policy entity
     url: /ai-gateway/entities/policy/
-  - text: "Kong Gateway Consumer entity"
+  - text: "{{site.base_gateway}} Consumer entity"
     url: /gateway/entities/consumer/
 faqs:
-  - q: How is an {{site.ai_gateway}} Consumer different from a Kong Gateway Consumer?
+  - q: How is an {{site.ai_gateway}} Consumer different from a {{site.base_gateway}} Consumer?
     a: |
       The runtime entity is a regular Kong Consumer. The {{site.ai_gateway}} surface uses the
       {{site.ai_gateway}} entity convention (`display_name`, `name`, `labels`), requires an
