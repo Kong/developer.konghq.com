@@ -108,7 +108,6 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{tab_name}} %}
-
 {% assign first_version = release.release | append: ".0.0" %}
 {% assign release_date = site.data.products.gateway.release_dates[first_version] | split: '/' | join: '-' %}
 {% if release_date %}

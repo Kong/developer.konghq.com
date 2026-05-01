@@ -10,7 +10,7 @@ columns:
   - title: End of Full Support
     key: eol
 rows:
-{% for release in releases %}
+{% for release in releases reversed %}
   - version: "{{release.release}}.x{% if release.lts %} (LTS){% endif %}"
     patch: "{{release.version}}"
     releaseDate: "{{release.releaseDate}}"
