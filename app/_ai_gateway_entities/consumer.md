@@ -28,11 +28,10 @@ related_resources:
 faqs:
   - q: How is an {{site.ai_gateway}} Consumer different from a Kong Gateway Consumer?
     a: |
-      The runtime entity is a regular Kong Consumer. The {{site.ai_gateway}} surface adds a required
-      authentication `type` field, accepts inline Consumer Group assignment at creation, and uses the
-      {{site.ai_gateway}} entity convention (`display_name`, `ref`, `labels`). The AI Consumer's `ref`
-      maps to the underlying Kong Consumer's `username`. The AI Consumer surface does not expose
-      `custom_id` or `tags`.
+      The runtime entity is a regular Kong Consumer. The {{site.ai_gateway}} surface uses the
+      {{site.ai_gateway}} entity convention (`display_name`, `name`, `labels`), requires an
+      authentication `type` field, accepts inline Consumer Group assignment, and lets you reference
+      Policies and embed credentials directly on the Consumer.
 
   - q: Can I edit the underlying Kong Consumer that {{site.ai_gateway}} generates?
     a: |
@@ -41,19 +40,25 @@ faqs:
 
   - q: How do I add credentials to an AI Consumer?
     a: |
-      <!-- TODO: confirm whether the `type` field auto-provisions a credential, or whether credentials
-      must be created separately against the underlying Kong Consumer. -->
+      For `type: apikey`, set `config.credentials[].api_key` on the Consumer.
+      Each entry can also set a `ttl` in seconds.
 
   - q: Can a Consumer belong to multiple Consumer Groups?
     a: |
-      Yes. The `consumer_groups` array accepts one or more AI Consumer Group references by `id` or `ref`.
+      Yes. The `consumer_groups` array accepts one or more references to Consumer Groups by
+      `name` or `id`.
+
+  - q: How do I attach Policies to a Consumer?
+    a: |
+      Add the Policy's `name` or `id` to the Consumer's `policies` array.
+      See the [Policy entity](/ai-gateway/entities/policy/) reference.
 ---
 
 ## What is a Consumer?
 
 A Consumer is the {{site.ai_gateway}} surface for an external client of the AI APIs you publish through {{site.ai_gateway}}. The underlying runtime entity is a regular {{site.base_gateway}} [Consumer](/gateway/entities/consumer/).
 
-You use Consumers to authenticate clients, assign them to Consumer Groups, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
+You use Consumers to authenticate clients, assign them to Consumer Groups, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
 
 <!-- THIS IS A PROVISIONAL FLOW, TO BE VERIFIED -->
 
@@ -121,29 +126,52 @@ The `type` field declares how the Consumer authenticates to {{site.ai_gateway}}.
 * `apikey`
 * `oauth`
 
-<!-- TODO: confirm runtime semantics of the `type` field. Open question: does setting `type: apikey` auto-provision a `keyauth_credentials` entry, constrain which credentials may be added against the underlying Kong Consumer, constrain which authentication Policies may be attached, or serve as declarative metadata only? -->
+<!-- TODO: confirm what `type: oauth` does at runtime. The spec lists the value but doesn't define behavior or any oauth-specific fields under `config`. -->
+
+## Credentials
+
+For Consumers of `type: apikey`, you can declare credentials inline on the Consumer's `config.credentials` array. Each entry has:
+
+* `api_key`: the API key value the client presents.
+* `ttl`: optional time-to-live in seconds. Once elapsed, the credential is no longer valid.
+
+Multiple credentials can be declared per Consumer. Rotating a key means adding a new entry and removing the old one.
+
+## External identity mapping
+
+The `config.custom_id` field stores an external identifier for the Consumer, such as an OIDC Client ID. This field is optional and informational. {{site.ai_gateway}} does not use it for authentication or routing.
 
 ## Consumer Group membership
 
-You can assign a Consumer to one or more AI Consumer Groups inline on the `consumer_groups` array. Each entry references an AI Consumer Group by `id` or `ref`.
+You can assign a Consumer to one or more Consumer Groups through the `consumer_groups` array. Each entry references a Consumer Group by `name` or `id`.
 
-AI Consumer Groups themselves are managed through the AI Consumer Group surface, which is documented separately. <!-- TODO: link to AI Consumer Group entity reference once available. -->
+Consumer Groups are managed through their own entity surface. <!-- TODO: link to Consumer Group entity reference once available. -->
+
+## Attach Policies
+
+To attach a Policy to a Consumer, add the Policy's `name` or `id` to the Consumer's `policies` array. The Policy's underlying plugin then runs in the request lifecycle when this Consumer is identified.
+
+You can reference multiple Policies from a single Consumer. Each Policy is an independent instance.
+
+For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
 ## Set up a Consumer
 
-The following example creates an AI Consumer assigned to a single Consumer Group.
+The following example creates an AI Consumer with one API key credential, assigned to a single Consumer Group.
 
 {% entity_example %}
 type: consumer
 data:
   display_name: Mobile App - Production
-  ref: mobile-app-production
+  name: mobile-app-production
   type: apikey
   consumer_groups:
-    - ref: internal-teams
-formats:
-  - admin-api
-  - konnect-api
+    - internal-teams
+  policies: []
+  config:
+    credentials:
+      - api_key: sk-387788hd3xnej
+        ttl: 86400
 {% endentity_example %}
 
 ## Schema
