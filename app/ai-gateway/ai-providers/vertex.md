@@ -97,4 +97,14 @@ variables:
 > - [AI Proxy examples](/plugins/ai-proxy/examples/)
 > - [AI Proxy Advanced examples](/plugins/ai-proxy-advanced/examples/)
 
+## Authentication with GCP IAM
+
+Using {{ provider.name }} requires credentials from Google Cloud Platform (GCP).
+
+The authentication chain follows the same order of precedence as the `gcloud` tool:
+1. Service account JSON defined directly in the {{ provider.name }} plugin: `auth.gcp_service_account_json`
+1. Service account JSON defined in environment variable `GCP_SERVICE_ACCOUNT`
+1. Workload IAM Role (e.g. GKE/Deployment Service Account)
+1. VM Instance defined IAM Role
+
 {% include plugins/ai-proxy/providers/how-tos.md %}
