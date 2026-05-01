@@ -1,0 +1,47 @@
+name: Label issues by author
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Check team membership and label
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            let isTeamMember = false;
+
+            try {
+              const { data } = await github.rest.teams.getMembershipForUserInOrg({
+                org: 'Kong',
+                team_slug: 'docs-maintainers',
+                username: context.actor,
+              });
+              isTeamMember = data.state === 'active';
+            } catch (e) {
+              // 404 means the user is not a team member
+              if (e.status !== 404) throw e;
+            }
+
+            const label = isTeamMember ? 'internal' : 'user-reported';
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [label],
+            });
