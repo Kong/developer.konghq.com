@@ -35,6 +35,11 @@ related_resources:
     url: /how-to/automate-api-catalog-with-terraform/
   - text: Application authentication strategies
     url: /dev-portal/auth-strategies/
+faqs:
+  - q: |
+      {% include faqs/api-app-reg-override.md section='question' %}
+    a: |
+      {% include faqs/api-app-reg-override.md section='answer' %}
 ---
 
 {:.success}

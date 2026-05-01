@@ -28,31 +28,35 @@ related_resources:
     url: /how-to/automate-api-catalog/
   - text: Developer self-service and app registration
     url: /dev-portal/self-service/
-  - text: Package APIs with Dev Portal
+  - text: Package APIs with {{site.dev_portal}}
     url: /how-to/package-apis-with-dev-portal/
   - text: API packages reference
     url: /catalog/api-packaging/
 faqs:
-  - q: I'm using the Try it feature in the spec renderer to send requests from Dev Portal, but I'm getting a `401`. How do I fix it?
+  - q: I'm using the Try it feature in the spec renderer to send requests from {{site.dev_portal}}, but I'm getting a `401`. How do I fix it?
     a: If the published API has an [authentication strategy](/dev-portal/auth-strategies/) configured for it, you must include your key in the request. All requests without a key to the Service linked to the API are blocked if it is published with an auth strategy.
-  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the Dev Portal?
+  - q: I just edited or deleted my spec, document, page, or snippet. Why don't I immediately see these changes live in the {{site.dev_portal}}?
     a: If you recently viewed the related content, your browser might be serving a cached version of the page. To fix this, you can clear your browser cache and refresh the page. 
-  - q: How do I allow developers to view multiple versions of an API in the Dev Portal?
+  - q: How do I allow developers to view multiple versions of an API in the {{site.dev_portal}}?
     a: |
-      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the Dev Portal spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
+      Use the [`/apis/{apiId}/versions` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-version) to publish multiple versions of an API. Developers can then select which API version to view in the {{site.dev_portal}} spec renderer. Each version reflects how the endpoints were documented at a specific time. It doesn’t reflect the actual implementation, which will usually align with the latest version. Changing the version in the dropdown only changes the specs you see. It **does not** change the requests made with application credentials or app registration.
       
       There are two exceptions when the underlying implementation should match the selected version:
-      * With [Dev Portal app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
-      * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
+      * With [{{site.dev_portal}} app registration](/dev-portal/self-service/): If non-current versions have Route configurations that allow requests to specify the version in some way, each version must document how to modify the request to access the given version (for example, using a header). 
+      * Without {{site.dev_portal}} app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
-      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
-  - q: My team has a Dev Portal, why can't I see APIs?
+      [API Products](/api-products/) were used to create and publish APIs to classic (v2) {{site.dev_portal}}s. When the new (v3) {{site.dev_portal}} was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) {{site.dev_portal}}. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
+  - q: My team has a {{site.dev_portal}}, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
   - q: |
       {% include faqs/portal-markdown.md section='question' %}
     a: |
       {% include faqs/portal-markdown.md section='answer' %}
+  - q: |
+      {% include faqs/api-app-reg-override.md section='question' %}
+    a: |
+      {% include faqs/api-app-reg-override.md section='answer' %}
 ---
 
 {:.success}
@@ -110,7 +114,7 @@ While you can use any version style, we recommend the following:
 * Semantic versioning (for example `1.0.0`, `2.1.0`) is best supported for default ordering
 * Create a unique API for each major version, since APIs must be unique based on the combination of `name` + `version`
 
-The API `slug` determines Dev Portal URL routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a name and version (major version if semantic versioning) in slug form. For example, if your API is named `my-test-api` and the version is `3`, this will default to `my-test-api-3`. If a version isn't specified, then `name` is used as the unique identifier. 
+The API `slug` determines {{site.dev_portal}} URL routing in your [list of APIs](/api/konnect/api-builder/v3/#/operations/list-apis), which defaults to a name and version (major version if semantic versioning) in slug form. For example, if your API is named `my-test-api` and the version is `3`, this will default to `my-test-api-3`. If a version isn't specified, then `name` is used as the unique identifier. 
 
 ### API specification versions
 
@@ -180,7 +184,7 @@ All API specification files are validated during upload, although invalid specif
 
 API documentation is content in Markdown that you can use to provide additional information about your API.
 
-While you are creating or editing an API document, you can also choose to publish it and make it available in your [Dev Portal](/dev-portal/) (assuming all parent pages are published as well). Keep the following in mind:
+While you are creating or editing an API document, you can also choose to publish it and make it available in your [{{site.dev_portal}}](/dev-portal/) (assuming all parent pages are published as well). Keep the following in mind:
 * The visibility of an API document is inherited from the API's visibility and access controls. 
 * If a parent page is unpublished, all child pages will also be unpublished. 
 * If no parent pages are published, no API documentation will be visible, and the APIs list will navigate directly to generated specifications.
@@ -245,7 +249,7 @@ Based on this data, you get the following generated URLs:
 ## API image
 
 You can upload an image for your API. 
-The image is displayed as an icon for your API in any [Dev Portal](/dev-portal/) where the API is published.
+The image is displayed as an icon for your API in any [{{site.dev_portal}}](/dev-portal/) where the API is published.
 The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 350 × 350 pixels.
 
 To upload an API image, do the following:
@@ -289,7 +293,7 @@ sequenceDiagram
  {% endmermaid %}
  <!--vale on-->
 
-If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
+If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your {{site.dev_portal}}](/dev-portal/self-service/).
 
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
@@ -331,9 +335,9 @@ resource "konnect_api_implementation" "my_apiimplementation" {
 {:.info}
 > Currently, you APIs can only have a 1:1 mapping with a Gateway Service.
 
-## Publish your API to Dev Portal
+## Publish your API to {{site.dev_portal}}
 
-Publishing an API makes it available to one or more [Dev Portals](/dev-portal/). Publishing an API in the Dev Portal involves several steps:
+Publishing an API makes it available to one or more [{{site.dev_portal}}s](/dev-portal/). Publishing an API in the {{site.dev_portal}} involves several steps:
 
 1. Create a new API, including the [API version](#api-versioning).
 2. Upload an OpenAPI spec and/or markdown documentation (one of these is required to generate API docs).
@@ -345,7 +349,7 @@ Publishing an API makes it available to one or more [Dev Portals](/dev-portal/).
 > * The visibility of [pages](/dev-portal/pages-and-content/) and [menus](/dev-portal/customizations/dev-portal-customizations/) is configured independently from APIs, maximizing your flexibility.
 > * {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
-With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience. The following table describes various Dev Portal access control scenarios and their settings:
+With the appropriate [security](/dev-portal/security-settings/) and [access and approval](/dev-portal/self-service/) settings, you can publish an API securely to the appropriate audience. The following table describes various {{site.dev_portal}} access control scenarios and their settings:
 
 <!--vale off-->
 {% table %}
@@ -426,11 +430,11 @@ resource "konnect_api_publication" "my_apipublication" {
 {% endnavtab %}
 {% endnavtabs %}
 
-Once published, the API appears in the selected Dev Portal. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
+Once published, the API appears in the selected {{site.dev_portal}}. If [user authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API. If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a team to access the API.
 
-### Allow developers to try requests from the Dev Portal spec renderer
+### Allow developers to try requests from the {{site.dev_portal}} spec renderer
 
-When you upload a spec for your API to Dev Portal, you can use the **Try it!** feature to allow developers to try your API right from Dev Portal. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in Dev Portal and send the request with their configuration. 
+When you upload a spec for your API to {{site.dev_portal}}, you can use the **Try it!** feature to allow developers to try your API right from {{site.dev_portal}}. **Try it!** enables developers to add their authentication credentials, path parameters, and request body from the spec renderer in {{site.dev_portal}} and send the request with their configuration. 
 
 The **Try it!** feature is enabled by default for published APIs. You can disable it by sending a PATCH request to the [`/v3/portals/{portalId}/customization` endpoint](/api/konnect/portal-management/v3/#/operations/update-portal-customization). 
 
@@ -455,14 +459,14 @@ features:
   - title: Requests with any headers
     headers: Any header
     route: "Add [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) to any associated Routes that use the headers."
-    cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
+    cors: "[Enable Try it in {{site.dev_portal}} for requests with any header](/plugins/cors/examples/try-it-headers/)"
   - title: Routes configured with a header to match
     headers: Any header that is required by the request
     route: |
       Do one of the following:
       * Add a new Route at the same path with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured.
       * Add a global Route (a Route that isn't associated with a Service) at the Control Plane-level with [`methods: OPTIONS`](/gateway/entities/route/#schema-route-methods) configured (no path needs to be specified).
-    cors: "[Enable Try it in Dev Portal for requests with any header](/plugins/cors/examples/try-it-headers/)"
+    cors: "[Enable Try it in {{site.dev_portal}} for requests with any header](/plugins/cors/examples/try-it-headers/)"
 {% endfeature_table %}
 
 When using OAuth2 flows, some IdPs may require including additional parameters for token requests. You can include the `x-kong-client-credentials-config` property in `oauth2` type `securitySchemes` to allow users to input specific values for predefined parameters.
@@ -486,8 +490,8 @@ components:
           tokenUrl: 'https://example.com/oauth/token'
 ```
 
-### Filtering published APIs in Dev Portal
+### Filtering published APIs in {{site.dev_portal}}
 
-You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the Dev Portal sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
+You can filter and categorize published APIs on your {{site.dev_portal}}s with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the {{site.dev_portal}} sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
 
-For more information about how to use custom attributes for filtering APIs displayed in your Dev Portal, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
+For more information about how to use custom attributes for filtering APIs displayed in your {{site.dev_portal}}, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
