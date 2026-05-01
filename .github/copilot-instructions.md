@@ -56,23 +56,24 @@ Tags must exist in `/app/_data/schemas/frontmatter/tags.json` or the build fails
 
 ### Frontmatter fields by page type
 
-**How-to** (`/app/_how_tos/`): Required: `title`, `content_type: how_to`, `description`, `tools`, `products`, `works_on`, `tldr` (with `q` and `a`). Optional: `tags`, `plugins`, `prereqs`, `cleanup`, `related_resources`, `min_version`, `faqs`, `series`, `beta`, `tech_preview`, `automated_tests`.
+**How-to** (`/app/_how-tos/`): Required: `title`, `content_type: how_to`, `description`, `tools`, `products`, `works_on`, `tldr` (with `q` and `a`). Optional: `tags`, `plugins`, `prereqs`, `cleanup`, `related_resources`, `min_version`, `faqs`, `series`, `beta`, `tech_preview`, `automated_tests`.
 
-**Reference** (anywhere in `/app/`): Required: `title`, `content_type: reference`, `layout: reference`, `breadcrumbs`, `description`, `products`, `works_on`. Optional: `tags`, `related_resources`, `min_version`, `max_version`, `faqs`, `beta`, `tech_preview`.
+**Reference** (anywhere in `/app/`): Required: `title`, `content_type: reference`, `layout: reference`, `breadcrumbs`, `description`, `products`. Optional: `works_on`, `tags`, `related_resources`, `min_version`, `max_version`, `faqs`, `beta`, `tech_preview`.
 
-**Landing page** (`/app/_landing_pages/`): Fields nested under `metadata`. Required: `title`, `content_type: reference`, `breadcrumbs`, `products`. Optional: `tags`, `search_aliases`, `beta`, `tech_preview`. Body content goes in a `rows` key.
+**Landing page** (`/app/_landing_pages/`): Fields nested under `metadata`. Required: `title`, `content_type: landing_page`, `breadcrumbs`, `products`. Optional: `tags`, `search_aliases`, `beta`, `tech_preview`. Body content goes in a `rows` key.
 
-**Plugin/policy overview** (`/app/_kong_plugins/<name>/index.md`): Required: `title`, `name`, `publisher`, `content_type: plugin`, `description`, `products`, `works_on`, `categories`, `topologies`, `icon`. Optional: `tier`, `tags`, `min_version`, `max_version`, `related_resources`, `faqs`, `beta`, `tech_preview`.
+**Plugin overview** (`/app/_kong_plugins/<name>/index.md` for plugins): Required: `title`, `name`, `publisher`, `content_type: plugin`, `description`, `products`, `works_on`, `categories`, `topologies`, `icon`. Optional: `tier`, `tags`, `min_version`, `max_version`, `related_resources`, `faqs`, `beta`, `tech_preview`.
 
+**Policy overview** (`/app/_event_gateway_policies/<name>/index.md` or `/app/_mesh_policies/<name>/index.md`): Required: `title`, `name`, `content_type: plugin`, `type: policy`, `description`, `products`, `icon`. Optional: `tier`, `tags`, `min_version`, `max_version`, `related_resources`, `faqs`, `beta`, `tech_preview`.
 **Plugin example** (`/app/_kong_plugins/<name>/examples/`): Required: `title`, `description`, `weight`, `config`, `tools`. Optional: `extended_description`, `variables`, `requirements`, `min_version`, `max_version`, `beta`, `tech_preview`.
 
-Valid `products` values: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `observability`, `service-catalog`, `event-gateway`, `konnect-platform`, `reference-platform`.
+Valid `products` values: `gateway`, `ai-gateway`, `dev-portal`, `mesh`, `kic`, `operator`, `insomnia`, `observability`, `catalog`, `event-gateway`, `konnect`, `reference-platform`.
 Valid `tools` values: `deck`, `admin-api`, `konnect-api`, `kic`, `terraform`.
-Valid `works_on` values: `on_prem`, `konnect`.
+Valid `works_on` values: `on-prem`, `konnect`.
 
 ### Formatting
 
-**Tables:** Always use the `{% table %}` Liquid block in YAML — never Markdown tables.
+**Tables:** In Markdown docs, use the `{% table %}` Liquid block with YAML contents; in landing-page `.yaml` files, use the `table` block type. Never use Markdown tables.
 
 **Feature tables** (boolean support matrix): use `{% feature_table %}` block.
 
@@ -154,6 +155,7 @@ Add .no-icon to any type to remove the icon: {:.info .no-icon}
 
 **Third-party tools:** Include complete setup instructions as a prerequisite, not a link. Write prereq steps in `app/_includes/prereqs/` and include at the top of the how-to. Do not include screenshots of third-party UIs. Refer to UI elements by label only, not position or color.
 
+For more detail on any formatting or style issues, refer to the [formatting reference](https://github.com/Kong/developer.konghq.com/blob/main/app/contributing/index.md) and the [style guide](https://github.com/Kong/developer.konghq.com/blob/main/app/contributing/style-guide.md) as needed.
 ## Content to ignore
 Our repository contains some files that are generated from other sources.
 These files are not meant to be edited or reviewed, and should be ignored when making changes to the repository.
