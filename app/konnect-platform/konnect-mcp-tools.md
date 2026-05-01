@@ -325,9 +325,77 @@ rows:
 **Returns:** Vault objects with `id`, `name`, `prefix`, `provider`, and configuration details.
 
 
-## GetAnalytics
+## DatasourceConfig
 
-Retrieves API request analytics and statistics. Query API requests with filters, analyze traffic patterns, or monitor performance metrics. Use this tool to identify error trends and spikes in failed requests, analyze consumer-specific traffic patterns and usage, investigate performance degradation over time, monitor API health and identify high-latency endpoints, or track rate limiting violations and throttled requests.
+Discovers available metrics, dimensions, and filter fields for {{site.konnect_short_name}} analytics data sources. 
+Call this tool first before using `query_analytics`, `query_llm_analytics`, `query_mcp_analytics`, or `query_api_requests` to learn what fields are valid for each data source.
+
+<!-- vale off -->
+
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - parameter: "`datasource`"
+    type: string
+    description: |
+      Optional data source name to filter results: `"api_usage"`, `"llm_usage"`, `"mcp_usage"`, or `"requests"`. Returns all data sources if omitted.
+{% endtable %}
+
+<!-- vale on -->
+
+**Returns:** Per data source: `metrics`, `dimensions`, `filterable_fields` (with value types and supported operators), and the `tool` to use for that data source. 
+Also returns `org_config` with data retention and percentile availability.
+
+
+## QueryExploreTimeRange
+
+Resolves a time range to effective start/end timestamps and minimum granularity for a {{site.konnect_short_name}} analytics data source. 
+Use this after `datasource_config` and before an explore query when you need to understand the exact resolved time window or choose a valid granularity. 
+Use `query_analytics`, `query_llm_analytics`, or `query_mcp_analytics` for aggregate questions before using this tool.
+
+<!-- vale off -->
+
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - parameter: "`datasource`"
+    type: string
+    description: |
+      The analytics data source to query: `"api-usage"`, `"llm-usage"`, or `"mcp-usage"`. Defaults to `"api-usage"`.
+  - parameter: "`time_range`"
+    type: object
+    description: |
+      Required. Time range to check. Contains:
+      - `type` (required): `"relative"` or `"absolute"`
+      - `time_range`: Relative range (for example, `"15m"`, `"1h"`, `"6h"`, `"12h"`, `"24h"`, `"7d"`, `"30d"`, `"current_week"`, `"current_month"`, `"previous_week"`, `"previous_month"`). Required when `type="relative"`
+      - `start`: ISO 8601 start time. Required when `type="absolute"`
+      - `end`: ISO 8601 end time. Required when `type="absolute"`
+      - `tz`: IANA timezone (defaults to `Etc/UTC`)
+{% endtable %}
+
+<!-- vale on -->
+
+**Returns:** Resolved `start`, `end`, and `min_granularity_ms` for the selected data source and time range.
+
+
+## QueryAnalytics
+
+Queries {{site.konnect_short_name}} analytics data for aggregated API traffic metrics over time. 
+Use this to answer questions about API traffic patterns, error rates, latency, and throughput. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `api_usage` data source. 
+Use this explore-style query before `query_api_requests` or `get_consumer_requests`.
 
 <!-- vale off -->
 
@@ -341,60 +409,199 @@ columns:
     key: description
 rows:
   - parameter: "`time_range`"
+    type: object
+    description: |
+      Required. 
+      Time range for the query. 
+      Contains:
+      - `type` (required): `"relative"` or `"absolute"`
+      - `time_range`: Relative range (for example, `"15m"`, `"1h"`, `"6h"`, `"12h"`, `"24h"`, `"7d"`, `"30d"`, `"current_week"`, `"current_month"`, `"previous_week"`, `"previous_month"`). Required when `type="relative"`
+      - `start`: ISO 8601 start time. Required when `type="absolute"`
+      - `end`: ISO 8601 end time. Required when `type="absolute"`
+      - `tz`: IANA timezone (defaults to `Etc/UTC`)
+  - parameter: "`metrics`"
+    type: list of strings
+    description: |
+      Metrics to aggregate. 
+      Call `datasource_config` to discover valid metric names. 
+      Defaults to `request_count` if omitted.
+  - parameter: "`dimensions`"
+    type: list of strings
+    description: |
+      Dimensions to group results by (maximum of two). 
+      Call `datasource_config` to discover valid dimension names. 
+      Adding dimensions can expand response size.
+  - parameter: "`filters`"
+    type: list of objects
+    description: |
+      Filters to narrow results. 
+      Each filter contains:
+      - `field` (required): Dimension to filter on. Call `datasource_config` to discover valid filter fields
+      - `operator` (required): `"in"`, `"not_in"`, `"selector"`, `"empty"`, or `"not_empty"`
+      - `value`: Array of values for `in`/`not_in`/`selector`. Omit for `empty`/`not_empty`
+  - parameter: "`granularity`"
     type: string
     description: |
-      Time window: `"15M"`, `"1H"`, `"6H"`, `"12H"`, `"24H"`, or `"7D"`
-  - parameter: "`operation`"
-    type: string
-    description: |
-      Operation type: `"query_api_requests"` or `"get_consumer_requests"`
-  - parameter: "`status_codes`"
-    type: list of integers
-    description: |
-      HTTP status codes to include (for `query_api_requests`)
-  - parameter: "`excluded_status_codes`"
-    type: list of integers
-    description: |
-      HTTP status codes to exclude (for `query_api_requests`)
-  - parameter: "`http_methods`"
-    type: list of strings
-    description: |
-      HTTP methods to include (for `query_api_requests`)
-  - parameter: "`consumer_ids`"
-    type: list of strings
-    description: |
-      Consumer IDs to filter by (for `query_api_requests`)
-  - parameter: "`service_ids`"
-    type: list of strings
-    description: |
-      Service IDs to filter by (for `query_api_requests`)
-  - parameter: "`route_ids`"
-    type: list of strings
-    description: |
-      Route IDs to filter by (for `query_api_requests`)
-  - parameter: "`consumer_id`"
-    type: string
-    description: |
-      Specific consumer ID. Required when `operation="get_consumer_requests"`
-  - parameter: "`successOnly`"
-    type: boolean
-    description: |
-      Return only successful requests (200-299) (for `get_consumer_requests`)
-  - parameter: "`failureOnly`"
-    type: boolean
-    description: |
-      Return only failed requests (≥400) (for `get_consumer_requests`)
-  - parameter: "`max_results`"
+      Time bucket size for results: 
+      * `"tenSecondly"`
+      * `"thirtySecondly"`
+      * `"minutely"`
+      * `"fiveMinutely"`
+      * `"tenMinutely"`
+      * `"thirtyMinutely"`
+      * `"hourly"`
+      * `"twoHourly"`
+      * `"twelveHourly"`
+      * `"daily"`
+      * `"weekly"`
+      * `"trend"`
+      
+      Use `tenSecondly` and `thirtySecondly` only for short windows.
+  - parameter: "`limit`"
     type: integer
     description: |
-      Maximum number of results (default: 100)
+      Maximum number of grouped series to return (1–5000). 
+      Limits top groups, not time buckets within each group. 
+      Defaults to `10` when dimensions are provided.
+  - parameter: "`descending`"
+    type: boolean
+    description: |
+      Sort order for results. Defaults to `true`.
 {% endtable %}
 
 <!-- vale on -->
 
-**Returns:**
-- For `query_api_requests`: Detailed request data with metadata, latency breakdowns, and trace identifiers
-- For `get_consumer_requests`: Aggregated statistics and per-request details for a specific consumer
+**Returns:** Time-bucketed aggregated metrics with `meta` and `data` arrays. 
+Responses exceeding 500 rows are truncated, with `meta.truncated` set to `true` and guidance on how to narrow the query.
+
+
+## QueryLLMAnalytics
+
+Queries {{site.konnect_short_name}} LLM/AI analytics data for aggregated metrics over time. 
+Use this to answer questions about AI/LLM API usage, token consumption, costs, and latency. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `llm_usage` data source. 
+For general API traffic metrics, use `query_analytics` instead.
+
+Uses the same parameters as [QueryAnalytics](#queryanalytics).
+
+**Returns:** Time-bucketed aggregated LLM metrics with `meta` and `data` arrays. 
+Responses exceeding 500 rows are truncated, with `meta.truncated` set to `true` and guidance on how to narrow the query.
+
+
+## QueryMCPAnalytics
+
+Queries {{site.konnect_short_name}} MCP (Model Context Protocol) analytics data for aggregated metrics over time. 
+Use this to answer questions about MCP server traffic, tool usage, session activity, and errors. 
+Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `mcp_usage` data source. 
+For general API traffic without MCP dimensions, use `query_analytics` instead.
+
+Uses the same parameters as [QueryAnalytics](#queryanalytics).
+
+**Returns:** Time-bucketed aggregated MCP metrics with `meta` and `data` arrays. 
+Responses exceeding 500 rows are truncated, with `meta.truncated` set to `true` and guidance on how to narrow the query.
+
+
+## QueryAPIRequests
+
+Queries individual API request logs from {{site.konnect_short_name}}. 
+Use this only when you need to inspect a narrow set of raw requests, find specific failures, or examine per-request details after aggregate explore queries are no longer sufficient. 
+Call `datasource_config` with `datasource="requests"` first to discover valid filter fields. 
+Use `query_analytics`, `query_llm_analytics`, or `query_mcp_analytics` first for aggregate questions.
+
+<!-- vale off -->
+
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - parameter: "`time_range`"
+    type: object
+    description: |
+      Required. 
+      Time range for the query. 
+      Relative ranges use uppercase values. Contains:
+      - `type` (required): `"relative"` or `"absolute"`
+      - `time_range`: Relative range: `"15M"`, `"1H"`, `"6H"`, `"12H"`, `"24H"`, or `"7D"`. Required when `type="relative"`
+      - `start`: ISO 8601 start time. Required when `type="absolute"`
+      - `end`: ISO 8601 end time. Required when `type="absolute"`
+      - `tz`: IANA timezone (defaults to `Etc/UTC`)
+  - parameter: "`filters`"
+    type: list of objects
+    description: |
+      Filters to narrow results. 
+      Each filter contains:
+      - `field` (required): Field to filter on. Call `datasource_config` with `datasource="requests"` to discover valid fields
+      - `operator` (required): `"in"`, `"not_in"`, `"selector"`, `"="`, `"!="`, `"<"`, `">"`, `"<="`, `">="`, `"starts_with"`, `"ends_with"`, `"empty"`, or `"not_empty"`
+      - `value`: Array for `in`/`not_in`/`selector`, scalar for equality/comparison. Omit for `empty`/`not_empty`
+  - parameter: "`order`"
+    type: string
+    description: |
+      Sort order by timestamp: `"ascending"` or `"descending"`. Defaults to `"descending"`.
+  - parameter: "`size`"
+    type: integer
+    description: |
+      Number of request-log rows to return in this response page (1–1000). 
+      Keep this small when possible as records are wide and consume context quickly.
+  - parameter: "`cursor`"
+    type: string
+    description: |
+      Base64 cursor from a previous response page for pagination.
+{% endtable %}
+
+<!-- vale on -->
+
+**Returns:** Paginated request-log rows with metadata, latency breakdowns, and trace identifiers.
+
+
+## GetConsumerRequests
+
+Gets Consumer-focused request summaries and samples. Use this when asking specifically about one Consumer's request patterns, success/failure mix, latency, or affected services. 
+Use `query_analytics` first for high-level traffic or trend questions, and use specific filters to reduce data volume.
+
+<!-- vale off -->
+
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - parameter: "`consumer_id`"
+    type: string
+    description: Required. Consumer UUID to inspect.
+  - parameter: "`time_range`"
+    type: string
+    description: |
+      Required. Relative time range for the query: `"15M"`, `"1H"`, `"6H"`, `"12H"`, `"24H"`, or `"7D"`
+  - parameter: "`successOnly`"
+    type: boolean
+    description: |
+      If `true`, returns only successful requests (`2xx`). 
+      Mutually exclusive with `failureOnly`.
+  - parameter: "`failureOnly`"
+    type: boolean
+    description: |
+      If `true`, returns only failed requests (`4xx`/`5xx`). 
+      Mutually exclusive with `successOnly`.
+  - parameter: "`max_results`"
+    type: integer
+    description: |
+      Maximum number of results to return (1–1000). 
+      Keep this small when possible as records are wide and consume context quickly. 
+      Defaults to `100`.
+{% endtable %}
+
+<!-- vale on -->
+
+**Returns:** Aggregated statistics and per-request details for the specified consumer.
 
 
 ## CreateDebugSession
