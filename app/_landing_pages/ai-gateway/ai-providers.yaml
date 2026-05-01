@@ -149,6 +149,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Kimi
+            icon: /assets/icons/kimi.svg
+            cta:
+              url: /ai-gateway/ai-providers/kimi/
+      - blocks:
+        - type: icon_card
+          config:
             title: vLLM
             icon: /assets/icons/vllm.svg
             cta:

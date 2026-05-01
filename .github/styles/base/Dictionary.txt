@@ -473,6 +473,8 @@ kiali
 Kibana
 kibibytes
 kic
+kimi
+Kimi
 Knative
 Knative
 knative
