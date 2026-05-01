@@ -191,7 +191,9 @@ region: global
 
 1. Copy and export the control plane you want to configure the managed cache for:
 
-   
+   ```sh
+   export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
+   ```
 
 1. Create a managed cache using the Cloud Gateways add-ons API:
 
@@ -222,8 +224,9 @@ region: global
 
 1. Export the ID of your managed cache from the response:
 
-   
-   
+   ```sh
+   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
+   ```
 
 1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
 
