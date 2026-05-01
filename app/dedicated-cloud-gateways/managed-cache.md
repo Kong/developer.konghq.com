@@ -223,8 +223,9 @@ region: global
 1. Export the ID of your managed cache from the response:
 
    
+   
 
-1. Check the status of the managed cache. Once it's marked as ready, the cache is ready to use:
+1. Check the status of the managed cache. Once the `state` is marked as ready, the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->
