@@ -32,7 +32,7 @@ tags:
 ---
 
 {:.success}
-> **Getting started with managed cache?**<br>
+> **Getting started with managed cache?**<br><br>
 > For complete tutorials, see the following:
 > * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane](/dedicated-cloud-gateways/aws-managed-cache-control-plane/)
 > * [Configure an AWS managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/aws-managed-cache-control-plane-group/)
@@ -40,7 +40,8 @@ tags:
 > * [Configure an Azure managed cache for a Dedicated Cloud Gateway control plane group](/dedicated-cloud-gateways/azure-managed-cache-control-plane-group/)
 
 {% include_cached /sections/managed-cache-intro.md %}
-Only AWS and Azure are supported as providers currently.
+
+Only AWS and Azure are currently supported as providers.
 
 ## Managed cache sizing recommendations
 
@@ -58,25 +59,24 @@ You can choose from the following cache sizes:
 * 16xlarge: ~200 GiB capacity
 * 24xlarge: ~300 GiB capacity
 <!--vale on-->
+
 {:.info}
 > **Contact Kong to enable cache tiers**
->
-> The managed cache size must be enabled on your account.
+> <br><br>
+> Specific cache sizes must be enabled on your account.
 > Contact your Kong support team to enable a specific cache size before you create or upgrade one.
 
-For capacity planning, you should size workloads assuming approximately 70–75% of total managed cache memory is usable for cache data. 
-A portion of each managed cache instance, approximately 25%, is reserved by the platform to maintain performance and reliability. 
-This headroom is used for operational needs such as replication, failover, and memory management, so the usable cache capacity will be less than the total provisioned size.
+When sizing workloads, plan for approximately 70–75% of total managed cache memory to be available for cache data.
+The platform reserves around 25% of each managed cache instance for operational needs, such as replication, failover, and memory management, so the usable cache capacity will be less than the total provisioned size.
 
-To determine which cache size is the correct fit, you'll need to know the number of Redis keys (and thus the cache pressure).
+To choose the right cache size, you'll need to know your Redis key count, which determines your cache pressure.
 This is driven by the following equation:
 
-**Key count ≈ Unique Consumers × Unique Routes × Rate limit windows × Kong data plane nodes**
 
 For example, if you have 5,000 Consumers, 3,000 Routes, and 3 windows, this produces a theoretical key space of **45 million counters** per window cycle, each needing a periodic sync to Redis. 
 The sync rate determines how aggressively these counters are pushed, and the cache instance must absorb both the read (fetch counters) and write (push diffs) load.
 
-The following table describes which cache size you should use based on your entity count (Consumers and Routes), rate limit windows, and target RPS:
+The following table describes which cache size you should use based on your entity count (Consumers and Routes), rate limit windows, and target number of requests per second (RPS):
 
 <!--vale off-->
 {% table %}
@@ -146,20 +146,22 @@ rows:
       Highest Redis command load. 
       Only viable on `cache.m5.xlarge` or larger when entity counts exceed 1,000 Consumers. 
       On smaller instances, it causes cache CPU saturation, Redis timeout cascades, and data plane node restarts.
+      <br><br>
       Only use this when sub-second rate limiting accuracy is business-critical.
+      <br><br>
       If you must use sync rate 0.1 for accuracy, size up the cache by at least one tier beyond what the entity count alone would suggest. 
       If you can tolerate sync rate 0.5, you can use a smaller cache instance.
   - sync_rate: "0.5"
     syncs_per_sec: "2"
     notes: |
-      Recommended default for production.
+      **Recommended default for production.**
       Best balance of accuracy and resource efficiency. 
       Stable across all instance types for standard workloads. 
       For high-entity deployments, this works well on `cache.m5.large` and above.
   - sync_rate: "1.0"
     syncs_per_sec: "1"
     notes: |
-      Lowest Redis load, but introduces rate-limiting accuracy degradation.
+      Lowest Redis load, but introduces rate limiting accuracy degradation.
       At high entity counts, the rate limited percentage drops to 57–60% (expected: ~99%), which allows requests through that should be blocked. 
       Only use for non-critical or approximate rate limiting at very low entity counts.
 {% endtable %}
@@ -188,9 +190,8 @@ region: global
 {{ list_cp | indent: 3}}
 
 1. Copy and export the control plane you want to configure the managed cache for:
-   ```sh
-   export CONTROL_PLANE_ID='YOUR CONTROL PLANE ID'
-   ```
+
+   
 
 1. Create a managed cache using the Cloud Gateways add-ons API:
 
@@ -220,11 +221,10 @@ region: global
    All regions are supported and you can configure the managed cache for multiple regions.
 
 1. Export the ID of your managed cache from the response:
-   ```sh
-   export MANAGED_CACHE_ID='YOUR MANAGED CACHE ID'
-   ```
 
-1. Check the status of the managed cache. Once it's marked as ready, it indicates the cache is ready to use:
+   
+
+1. Check the status of the managed cache. Once it's marked as ready, the cache is ready to use:
 
    {% capture get_addon %}
    <!--vale off-->
@@ -240,10 +240,6 @@ region: global
 
    This can take about 15 minutes. 
 
-For control plane managed caches, you don't need to manually configure a Redis partial. 
-After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
-[Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
-You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
 {% endnavtab %}
 {% navtab "Terraform" %}
 1. Add the [`konnect_cloud_gateway_addon` resource](https://registry.terraform.io/providers/Kong/konnect/latest/docs/resources/cloud_gateway_addon) to your Terraform configuration:
@@ -283,12 +279,15 @@ You can’t use the Redis partial configuration in custom plugins. Instead, use 
    terraform apply
    ```
 
+{% endnavtab %}
+{% endnavtabs %}
+
 For control plane managed caches, you don't need to manually configure a Redis partial. 
 After the managed cache is ready, {{site.konnect_short_name}} automatically creates a [Redis partial](/gateway/entities/partial/) configuration for you. 
 [Use the Redis configuration](/gateway/entities/partial/#add-a-partial-to-a-plugin) to set up Redis-supported plugins by selecting the automatically created {{site.konnect_short_name}}-managed Redis configuration. 
-You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
-{% endnavtab %}
-{% endnavtabs %}
+
+{:.info}
+> You can’t use the Redis partial configuration in custom plugins. Instead, use env referenceable fields directly.
 
 ## Resize a managed cache
 
@@ -299,9 +298,9 @@ You can’t use the Redis partial configuration in custom plugins. Instead, use 
 > If you want to downsize a cache, you must delete and recreate it.
 
 Before you resize a managed cache, consider the following:
-* Caches are resized immediately.
+* Resizes happen immediately.
 * Schedule cache resizes during low traffic hours.
-* Caches will remain online while they are resized, but you may experience brief interruptions of a few seconds. 
+* Caches remain online during a resize, but you may experience brief interruptions of a few seconds. 
 
 You can resize a managed cache by sending a PATCH request to the [`/cloud-gateways/add-ons/{addOnId}` endpoint](/api/konnect/cloud-gateways/v2/#/operations/update-add-on):
 

@@ -163,8 +163,7 @@ rows:
             config:
               title: Managed cache reference
               description: |
-                Learn how to configure and scale a Dedicated Cloud Gateway managed cache for Redis. 
-                See recommended sizing configurations based on use case.
+                Learn how to size, configure, and scale a Dedicated Cloud Gateway managed cache for Redis. 
               icon: /assets/icons/redis.svg
               ctas:
                 - text: Read recommendations
