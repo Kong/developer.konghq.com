@@ -42,15 +42,15 @@ jobs:
               });
               isTeamMember = data.state === 'active';
             } catch (e) {
-              // 404 means the user is not a team member
               if (e.status !== 404) throw e;
+              // 404: user is not a member of the team (distinct from a config/auth
+              // failure, which would throw a 401/403 and re-raise above)
             }
 
             const label = isTeamMember ? 'internal' : 'user-reported';
 
             await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              ...context.repo,
               issue_number: context.issue.number,
               labels: [label],
             });
