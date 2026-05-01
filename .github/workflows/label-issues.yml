@@ -32,22 +32,19 @@ jobs:
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
-            let isTeamMember = false;
+            const { data: file } = await github.rest.repos.getContent({
+              ...context.repo,
+              path: '.github/docs-maintainers',
+            });
 
-            try {
-              const { data } = await github.rest.teams.getMembershipForUserInOrg({
-                org: 'Kong',
-                team_slug: 'docs-maintainers',
-                username: context.actor,
-              });
-              isTeamMember = data.state === 'active';
-            } catch (e) {
-              if (e.status !== 404) throw e;
-              // 404: user is not a member of the team (distinct from a config/auth
-              // failure, which would throw a 401/403 and re-raise above)
-            }
+            const maintainers = new Set(
+              Buffer.from(file.content, 'base64').toString('utf8')
+                .split('\n')
+                .map(u => u.trim().toLowerCase())
+                .filter(Boolean)
+            );
 
-            const label = isTeamMember ? 'internal' : 'user-reported';
+            const label = maintainers.has(context.actor.toLowerCase()) ? 'internal' : 'user-reported';
 
             await github.rest.issues.addLabels({
               ...context.repo,
