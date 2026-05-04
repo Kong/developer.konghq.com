@@ -25,170 +25,170 @@ tldr:
 
 The `kv` service mimics a key/value store database.
 
-1. **Generate a data plane token**
+## Generate a data plane token
 
-   Create a token for the `kv` data plane proxy to authenticate with the control plane:
+Create a token for the `kv` data plane proxy to authenticate with the control plane:
 
-   ```sh
-   kumactl generate dataplane-token \
-     --tag kuma.io/service=kv \
-     --valid-for 720h \
-     > "$KONG_MESH_DEMO_TMP/token-kv"
-   ```
+```sh
+kumactl generate dataplane-token \
+  --tag kuma.io/service=kv \
+  --valid-for 720h \
+  > "$KONG_MESH_DEMO_TMP/token-kv"
+```
 
-2. **Start the container**
+## Start the container
 
-   ```sh
-   docker run \
-     --detach \
-     --name kong-mesh-demo-kv \
-     --hostname kv \
-     --network kong-mesh-demo \
-     --ip 172.57.78.2 \
-     --volume "$KONG_MESH_DEMO_TMP:/demo" \
-     ghcr.io/kumahq/kuma-counter-demo:debian-slim
-   ```
-   
-   To confirm the container is running properly, check its logs:
+```sh
+docker run \
+  --detach \
+  --name kong-mesh-demo-kv \
+  --hostname kv \
+  --network kong-mesh-demo \
+  --ip 172.57.78.2 \
+  --volume "$KONG_MESH_DEMO_TMP:/demo" \
+  ghcr.io/kumahq/kuma-counter-demo:debian-slim
+```
 
-   ```sh
-   docker logs kong-mesh-demo-kv
-   ```
+To confirm the container is running properly, check its logs:
 
-   You should see a line like:
+```sh
+docker logs kong-mesh-demo-kv
+```
 
-   ```txt
-   time=2025-03-14T12:17:34.630Z level=INFO ... msg="server running" addr=:5050
-   ```
+You should see a line like:
 
-   indicating that the key/value store is up and running.
+```txt
+time=2025-03-14T12:17:34.630Z level=INFO ... msg="server running" addr=:5050
+```
 
-3. **Prepare the container**
+indicating that the key/value store is up and running.
 
-   Enter the container for the remaining steps. Inside it, you'll configure the zone name in the key-value store, start the data plane proxy, and install the transparent proxy.
+## Prepare the container
 
-   ```sh
-   docker exec --tty --interactive --privileged kong-mesh-demo-kv bash
-   ```
+Enter the container for the remaining steps. Inside it, you'll configure the zone name in the key-value store, start the data plane proxy, and install the transparent proxy.
 
-   {:.important.no-icon}
-   > **Important:** The following steps must be executed inside the container.
+```sh
+docker exec --tty --interactive --privileged kong-mesh-demo-kv bash
+```
 
-   1. **Install tools and create data plane proxy user**
+{:.important.no-icon}
+> **Important:** The following steps must be executed inside the container.
 
-      Install the required tools for downloading {{site.mesh_product_name}} binaries, setting up the [transparent proxy](/mesh/transparent-proxying/), and create a dedicated user for the data plane proxy:
+### Install tools and create data plane proxy user
 
-      - `curl`: Needed to download the {{site.mesh_product_name}} binaries.
-      - `iptables`: Required to configure the transparent proxy.
+Install the required tools for downloading {{site.mesh_product_name}} binaries, setting up the [transparent proxy](/mesh/transparent-proxying/), and create a dedicated user for the data plane proxy:
 
-      Run the following commands:
+- `curl`: Needed to download the {{site.mesh_product_name}} binaries.
+- `iptables`: Required to configure the transparent proxy.
 
-      ```sh
-      # install necessary packages
-      apt-get update && \
-        apt-get install --yes curl iptables
-      
-      # download and install {{site.mesh_product_name}}
-      curl --location https://developer.konghq.com/mesh/installer.sh | sh -
-      
-      # move {{site.mesh_product_name}} binaries to /usr/local/bin/ for global availability
-      mv kong-mesh-*/bin/* /usr/local/bin/
-      
-      # create a dedicated user for the data plane proxy
-      useradd --uid 5678 --user-group kong-mesh-data-plane-proxy
-      ```
+Run the following commands:
 
-   2. **Set the zone name**
+```sh
+# install necessary packages
+apt-get update && \
+  apt-get install --yes curl iptables
 
-      Give the `kv` instance a name. The demo application will use this name to identify which `kv` instance is accessed:
+# download and install {{site.mesh_product_name}}
+curl --location https://developer.konghq.com/mesh/installer.sh | sh -
 
-      ```sh
-      curl localhost:5050/api/key-value/zone \
-        --header 'Content-Type: application/json' \
-        --data '{"value":"local-demo-zone"}'
-      ```
+# move {{site.mesh_product_name}} binaries to /usr/local/bin/ for global availability
+mv kong-mesh-*/bin/* /usr/local/bin/
 
-      You should see a response:
+# create a dedicated user for the data plane proxy
+useradd --uid 5678 --user-group kong-mesh-data-plane-proxy
+```
 
-      ```json
-      {"value":"local-demo-zone"}
-      ```
+### Set the zone name
 
-      indicating that the name was successfully set.
+Give the `kv` instance a name. The demo application will use this name to identify which `kv` instance is accessed:
 
-   3. **Start the data plane proxy**
+```sh
+curl localhost:5050/api/key-value/zone \
+  --header 'Content-Type: application/json' \
+  --data '{"value":"local-demo-zone"}'
+```
 
-      ```sh
-      runuser --user kong-mesh-data-plane-proxy -- \
-        /usr/local/bin/kuma-dp run \
-          --cp-address https://control-plane:5678 \
-          --dataplane-token-file /demo/token-kv \
-          --dataplane-file /demo/dataplane.yaml \
-          --dataplane-var name=kv \
-          --dataplane-var address=172.57.78.2 \
-          --dataplane-var port=5050 \
-          > /demo/logs-data-plane-proxy-kv.log 2>&1 &
-      ```
+You should see a response:
 
-      To verify the data plane proxy is running, after few seconds check the logs:
+```json
+{"value":"local-demo-zone"}
+```
 
-      ```sh
-      tail /demo/logs-data-plane-proxy-kv.log
-      ```
+indicating that the name was successfully set.
 
-      You should see entries like:
-      
-      ```
-      [2025-03-14 12:24:54.779][3088][info][config] [source/common/listener_manager/listener_manager_impl.cc:944] all dependencies initialized. starting workers
-      [2025-03-14 12:24:59.595][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:32] cds: add 8 cluster(s), remove 2 cluster(s)
-      [2025-03-14 12:24:59.623][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:71] cds: added/updated 1 cluster(s), skipped 7 unmodified cluster(s)
-      [2025-03-14 12:24:59.628][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
-      [2025-03-14 12:24:59.649][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.0:5050'
-      ```
+### Start the data plane proxy
 
-      indicating that the data plane proxy has started and is configured successfully.
+```sh
+runuser --user kong-mesh-data-plane-proxy -- \
+  /usr/local/bin/kuma-dp run \
+    --cp-address https://control-plane:5678 \
+    --dataplane-token-file /demo/token-kv \
+    --dataplane-file /demo/dataplane.yaml \
+    --dataplane-var name=kv \
+    --dataplane-var address=172.57.78.2 \
+    --dataplane-var port=5050 \
+    > /demo/logs-data-plane-proxy-kv.log 2>&1 &
+```
 
-   4. **Install the transparent proxy**
+To verify the data plane proxy is running, after few seconds check the logs:
 
-      {:.warning}
-      > **Important:** Make sure this command is executed **inside the container**. It changes iptables rules to redirect all traffic to the data plane proxy. Running it on your computer or a virtual machine without the data plane proxy can disrupt network connectivity. On a virtual machine, this might lock you out until you restart it.
+```sh
+tail /demo/logs-data-plane-proxy-kv.log
+```
 
-      ```sh
-      kumactl install transparent-proxy \
-        --config-file /demo/config-transparent-proxy.yaml \
-        > /demo/logs-transparent-proxy-install-kv.log 2>&1
-      ```
+You should see entries like:
 
-      To confirm the transparent proxy installed successfully, check the last log line:
+```
+[2025-03-14 12:24:54.779][3088][info][config] [source/common/listener_manager/listener_manager_impl.cc:944] all dependencies initialized. starting workers
+[2025-03-14 12:24:59.595][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:32] cds: add 8 cluster(s), remove 2 cluster(s)
+[2025-03-14 12:24:59.623][3088][info][upstream] [source/common/upstream/cds_api_helper.cc:71] cds: added/updated 1 cluster(s), skipped 7 unmodified cluster(s)
+[2025-03-14 12:24:59.628][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
+[2025-03-14 12:24:59.649][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.0:5050'
+```
 
-      ```sh
-      tail -n1 /demo/logs-transparent-proxy-install-kv.log
-      ```
+indicating that the data plane proxy has started and is configured successfully.
 
-      You should see a message containing:
+### Install the transparent proxy
 
-      ```sh
-      # transparent proxy setup completed successfully
-      ```
+{:.warning}
+> **Important:** Make sure this command is executed **inside the container**. It changes iptables rules to redirect all traffic to the data plane proxy. Running it on your computer or a virtual machine without the data plane proxy can disrupt network connectivity. On a virtual machine, this might lock you out until you restart it.
 
-      indicating that the transparent proxy is now configured.
+```sh
+kumactl install transparent-proxy \
+  --config-file /demo/config-transparent-proxy.yaml \
+  > /demo/logs-transparent-proxy-install-kv.log 2>&1
+```
 
-   5. **Exit the container**
+To confirm the transparent proxy installed successfully, check the last log line:
 
-      Key/Value Store is now set up and running. You can safely exit the container as the configuration is complete:
+```sh
+tail -n1 /demo/logs-transparent-proxy-install-kv.log
+```
 
-      ```sh
-      exit
-      ```
+You should see a message containing:
 
-4. **Check if service is running**
+```sh
+# transparent proxy setup completed successfully
+```
 
-   To confirm the service is set up correctly and running, use [kumactl](/mesh/cli/) to inspect the MeshServices:
+indicating that the transparent proxy is now configured.
 
-   ```sh
-   kumactl get meshservices
-   ```
+### Exit the container
 
-   The output should show a single service, `kv`.
+Key/Value Store is now set up and running. You can safely exit the container as the configuration is complete:
 
-   You can also open the [{{site.mesh_product_name}} GUI](/mesh/interact-with-control-plane/) at <http://127.0.0.1:25681/gui/meshes/default/services/mesh-services>. Look for the `kv` service, and verify that its state is `Available`.
+```sh
+exit
+```
+
+## Check if service is running
+
+To confirm the service is set up correctly and running, use [kumactl](/mesh/cli/) to inspect the MeshServices:
+
+```sh
+kumactl get meshservices
+```
+
+The output should show a single service, `kv`.
+
+You can also open the [{{site.mesh_product_name}} GUI](/mesh/interact-with-control-plane/) at <http://127.0.0.1:25681/gui/meshes/default/services/mesh-services>. Look for the `kv` service, and verify that its state is `Available`.

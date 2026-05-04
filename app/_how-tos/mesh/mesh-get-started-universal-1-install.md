@@ -57,88 +57,88 @@ browser --> edge-gateway
 {% endmermaid %}
 <!-- vale on -->
 
-1. **Install {{site.mesh_product_name}}**
+## Install {{site.mesh_product_name}}
 
-   Run the installation command:
+Run the installation command:
 
-   ```sh
-   curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
-   ```
+```sh
+curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
+```
 
-   Then add the binaries to your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)). Replace `<version>` with the version shown by the installer:
+Then add the binaries to your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)). Replace `<version>` with the version shown by the installer:
 
-   ```sh
-   export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
-   ```
+```sh
+export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
+```
 
-   To confirm that {{site.mesh_product_name}} is installed correctly, run:
+To confirm that {{site.mesh_product_name}} is installed correctly, run:
 
-   ```sh
-   kumactl version 2>/dev/null
-   ```
+```sh
+kumactl version 2>/dev/null
+```
 
-   You should see output similar to:
+You should see output similar to:
 
-   ```
-   Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
-   ```
+```
+Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
+```
 
-2. **Prepare a temporary directory**
+## Prepare a temporary directory
 
-   Set up a temporary directory to store resources like data plane tokens, [Dataplane](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
+Set up a temporary directory to store resources like data plane tokens, [Dataplane](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
 
-   {:.warning}
-   > **Important:** If you are using **Colima**, make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
+{:.warning}
+> **Important:** If you are using **Colima**, make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
 
-   Check if the directory exists and is empty, and create it if necessary:
+Check if the directory exists and is empty, and create it if necessary:
 
-   ```sh
-   export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"
-   mkdir -p "$KONG_MESH_DEMO_TMP"
-   ```
+```sh
+export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"
+mkdir -p "$KONG_MESH_DEMO_TMP"
+```
 
-3. **Prepare a Dataplane resource template**
+## Prepare a Dataplane resource template
 
-   Create a reusable [Dataplane](/mesh/data-plane-proxy/) resource template for services:
+Create a reusable [Dataplane](/mesh/data-plane-proxy/) resource template for services:
 
-   ```sh
-   echo 'type: Dataplane
-   mesh: default
-   name: {% raw %}{{ name }}{% endraw %}
-   labels:
-     app: {% raw %}{{ name }}{% endraw %}
-   networking:
-     address: {% raw %}{{ address }}{% endraw %}
-     inbound:
-       - port: {% raw %}{{ port }}{% endraw %}
-         tags:
-           kuma.io/service: {% raw %}{{ name }}{% endraw %}
-           kuma.io/protocol: http
-     transparentProxying:
-       redirectPortInbound: 15006
-       redirectPortOutbound: 15001' > "$KONG_MESH_DEMO_TMP/dataplane.yaml" 
-   ```
+```sh
+echo 'type: Dataplane
+mesh: default
+name: {% raw %}{{ name }}{% endraw %}
+labels:
+  app: {% raw %}{{ name }}{% endraw %}
+networking:
+  address: {% raw %}{{ address }}{% endraw %}
+  inbound:
+    - port: {% raw %}{{ port }}{% endraw %}
+      tags:
+        kuma.io/service: {% raw %}{{ name }}{% endraw %}
+        kuma.io/protocol: http
+  transparentProxying:
+    redirectPortInbound: 15006
+    redirectPortOutbound: 15001' > "$KONG_MESH_DEMO_TMP/dataplane.yaml"
+```
 
-   This template simplifies creating Dataplane configurations for different services by replacing dynamic values during deployment.
+This template simplifies creating Dataplane configurations for different services by replacing dynamic values during deployment.
 
-4. **Prepare a transparent proxy configuration file**
+## Prepare a transparent proxy configuration file
 
-   ```sh
-   echo 'kumaDPUser: kong-mesh-data-plane-proxy
-   redirect:
-     dns:
-       enabled: true
-   verbose: true' > "$KONG_MESH_DEMO_TMP/config-transparent-proxy.yaml"
-   ```
+```sh
+echo 'kumaDPUser: kong-mesh-data-plane-proxy
+redirect:
+  dns:
+    enabled: true
+verbose: true' > "$KONG_MESH_DEMO_TMP/config-transparent-proxy.yaml"
+```
 
-5. **Create a Docker network**
+## Create a Docker network
 
-   Set up a separate Docker network for the containers. Use IP addresses in the `172.57.78.0/24` range or customize as needed:
+Set up a separate Docker network for the containers. Use IP addresses in the `172.57.78.0/24` range or customize as needed:
 
-   ```sh
-   docker network create \
-     --subnet 172.57.0.0/16 \
-     --ip-range 172.57.78.0/24 \
-     --gateway 172.57.78.254 \
-     kong-mesh-demo
-   ```
+```sh
+docker network create \
+  --subnet 172.57.0.0/16 \
+  --ip-range 172.57.78.0/24 \
+  --gateway 172.57.78.254 \
+  kong-mesh-demo
+```

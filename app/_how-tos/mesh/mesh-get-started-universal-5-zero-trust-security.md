@@ -42,6 +42,17 @@ cleanup:
         ```
 
         If you're using Colima, replace `/tmp/kong-mesh-demo` with `/tmp/colima/kong-mesh-demo`.
+next_steps:
+  - text: Explore {{site.mesh_product_name}} enterprise features
+    url: /mesh/enterprise/
+  - text: Visualize your mesh with the {{site.mesh_product_name}} GUI
+    url: /mesh/interact-with-control-plane/
+  - text: Read the full {{site.mesh_product_name}} documentation
+    url: /mesh/
+  - text: Deploy in single-zone mode
+    url: /mesh/single-zone/
+  - text: Deploy in multi-zone mode
+    url: /mesh/mesh-multizone-service-deployment/
 ---
 
 By default, the network is **insecure and unencrypted**. With {{site.mesh_product_name}}, you can enable the [Mutual TLS (mTLS)](/mesh/policies/mutual-tls/) policy to secure the network. This works by setting up a Certificate Authority (CA) that automatically provides TLS certificates to your services (specifically to the data plane proxies running next to each service).
@@ -95,154 +106,145 @@ The second issue is a bit more challenging. You can't just get the necessary cer
 
 In this guide, we'll use the built-in gateway. It allows you to configure a data plane proxy to act as a gateway and manage external traffic securely.
 
-## Set up the built-in gateway
-
 The built-in gateway works like the data plane proxy for a regular service, but it requires its own configuration. Here's how to set it up step by step.
 
-1. **Create a Dataplane resource**
+## Create a Dataplane resource
 
-   For regular services, we reused a single [Dataplane](/mesh/data-plane-proxy/) configuration file and provided dynamic values (like names and addresses) when starting the data plane proxy. This made it easier to scale or deploy multiple instances. However, since we're deploying only one instance of the gateway, we can simplify things by hardcoding all the values directly into the file, as shown below:
+For regular services, we reused a single [Dataplane](/mesh/data-plane-proxy/) configuration file and provided dynamic values (like names and addresses) when starting the data plane proxy. This made it easier to scale or deploy multiple instances. However, since we're deploying only one instance of the gateway, we can simplify things by hardcoding all the values directly into the file, as shown below:
 
-   ```sh
-   echo 'type: Dataplane
-   mesh: default
-   name: edge-gateway-instance-1
-   networking:
-     gateway:
-       type: BUILTIN
-       tags:
-         kuma.io/service: edge-gateway
-     address: 172.57.78.4' > "$KONG_MESH_DEMO_TMP/dataplane-edge-gateway.yaml"
-   ```
+```sh
+echo 'type: Dataplane
+mesh: default
+name: edge-gateway-instance-1
+networking:
+  gateway:
+    type: BUILTIN
+    tags:
+      kuma.io/service: edge-gateway
+  address: 172.57.78.4' > "$KONG_MESH_DEMO_TMP/dataplane-edge-gateway.yaml"
+```
 
-   If you prefer to keep the flexibility of dynamic values, you can use the same template mechanisms for the gateway's [Dataplane](/mesh/data-plane-proxy/) configuration as you did for regular services.
+If you prefer to keep the flexibility of dynamic values, you can use the same template mechanisms for the gateway's [Dataplane](/mesh/data-plane-proxy/) configuration as you did for regular services.
 
-2. **Generate a data plane token**
+## Generate a data plane token
 
-   The gateway proxy requires a data plane token to securely register with the control plane. You can generate the token using the following command:
+The gateway proxy requires a data plane token to securely register with the control plane. You can generate the token using the following command:
 
-   ```sh
-   kumactl generate dataplane-token \
-     --tag kuma.io/service=edge-gateway \
-     --valid-for 720h \
-     > "$KONG_MESH_DEMO_TMP/token-edge-gateway"
-   ```
+```sh
+kumactl generate dataplane-token \
+  --tag kuma.io/service=edge-gateway \
+  --valid-for 720h \
+  > "$KONG_MESH_DEMO_TMP/token-edge-gateway"
+```
 
-3. **Start the gateway container**
+## Start the gateway container
 
-   With the configuration and token in place, you can start the gateway proxy as a container:
+With the configuration and token in place, you can start the gateway proxy as a container:
 
-   ```sh
-   docker run \
-     --detach \
-     --name kong-mesh-demo-edge-gateway \
-     --hostname gateway \
-     --network kong-mesh-demo \
-     --ip 172.57.78.4 \
-     --publish 28080:8080 \
-     --volume "$KONG_MESH_DEMO_TMP:/demo" \
-     kong/kuma-dp:latest run \
-       --cp-address https://control-plane:5678 \
-       --dataplane-token-file /demo/token-edge-gateway \
-       --dataplane-file /demo/dataplane-edge-gateway.yaml \
-       --dns-enabled=false
-   ```
+```sh
+docker run \
+  --detach \
+  --name kong-mesh-demo-edge-gateway \
+  --hostname gateway \
+  --network kong-mesh-demo \
+  --ip 172.57.78.4 \
+  --publish 28080:8080 \
+  --volume "$KONG_MESH_DEMO_TMP:/demo" \
+  kong/kuma-dp:latest run \
+    --cp-address https://control-plane:5678 \
+    --dataplane-token-file /demo/token-edge-gateway \
+    --dataplane-file /demo/dataplane-edge-gateway.yaml \
+    --dns-enabled=false
+```
 
-   This command starts the gateway proxy and registers it with the control plane. However, the gateway is not yet ready to route traffic.
+This command starts the gateway proxy and registers it with the control plane. However, the gateway is not yet ready to route traffic.
 
-4. **Configure the gateway with [MeshGateway](/mesh/gateway-listeners/)**
+## Configure the gateway with [MeshGateway](/mesh/gateway-listeners/)
 
-   To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/gateway-listeners/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services.
+To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/gateway-listeners/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services.
 
-   Apply the configuration:
+Apply the configuration:
 
-   ```sh
-   echo 'type: MeshGateway
-   mesh: default
-   name: edge-gateway
-   selectors:
-   - match:
-       kuma.io/service: edge-gateway
-   conf:
-     listeners:
-     - port: 8080
-       protocol: HTTP
-       tags:
-         port: http-8080' | kumactl apply -f -
-   ```
+```sh
+echo 'type: MeshGateway
+mesh: default
+name: edge-gateway
+selectors:
+- match:
+    kuma.io/service: edge-gateway
+conf:
+  listeners:
+  - port: 8080
+    protocol: HTTP
+    tags:
+      port: http-8080' | kumactl apply -f -
+```
 
-   <!-- vale Vale.Terms = NO -->
-   This sets up the gateway to listen on port `8080` using the HTTP protocol and adds a tag (`port: http-8080`) to identify this listener in routing policies.
-   <!-- vale Vale.Terms = YES -->
+<!-- vale Vale.Terms = NO -->
+This sets up the gateway to listen on port `8080` using the HTTP protocol and adds a tag (`port: http-8080`) to identify this listener in routing policies.
+<!-- vale Vale.Terms = YES -->
 
-   You can test the gateway by visiting <http://127.0.0.1:28080>. You should see a message saying no routes match this [MeshGateway](/mesh/gateway-listeners/). This means the gateway is running, but no routes are set up yet to handle traffic.
+You can test the gateway by visiting <http://127.0.0.1:28080>. You should see a message saying no routes match this [MeshGateway](/mesh/gateway-listeners/). This means the gateway is running, but no routes are set up yet to handle traffic.
 
-5. **Create a route to connect the gateway to `demo-app`**
+## Create a route to connect the gateway to `demo-app`
 
-   To route traffic from the gateway to the service, create a [MeshHTTPRoute](/mesh/policies/meshhttproute/) policy:
+To route traffic from the gateway to the service, create a [MeshHTTPRoute](/mesh/policies/meshhttproute/) policy:
 
-   ```sh
-   echo 'type: MeshHTTPRoute
-   name: edge-gateway-demo-app-route
-   mesh: default
-   spec:
-     targetRef:
-       kind: MeshGateway
-       name: edge-gateway
-       tags:
-         port: http-8080
-     to:
-     - targetRef:
-         kind: Mesh
-       rules:
-       - matches:
-         - path:
-             type: PathPrefix
-             value: "/"
-         default:
-           backendRefs:
-           - kind: MeshService
-             name: demo-app' | kumactl apply -f -
-   ```
+```sh
+echo 'type: MeshHTTPRoute
+name: edge-gateway-demo-app-route
+mesh: default
+spec:
+  targetRef:
+    kind: MeshGateway
+    name: edge-gateway
+    tags:
+      port: http-8080
+  to:
+  - targetRef:
+      kind: Mesh
+    rules:
+    - matches:
+      - path:
+          type: PathPrefix
+          value: "/"
+      default:
+        backendRefs:
+        - kind: MeshService
+          name: demo-app' | kumactl apply -f -
+```
 
-   This route connects the gateway and its listener (`port: http-8080`) to the `demo-app` service. It forwards any requests with the path prefix `/` to `demo-app`.
+This route connects the gateway and its listener (`port: http-8080`) to the `demo-app` service. It forwards any requests with the path prefix `/` to `demo-app`.
 
-   After setting up this route, the gateway will try to send traffic to `demo-app`. However, if you test it by visiting <http://127.0.0.1:28080>, you'll see:
+After setting up this route, the gateway will try to send traffic to `demo-app`. However, if you test it by visiting <http://127.0.0.1:28080>, you'll see:
 
-   ```
-   RBAC: access denied
-   ```
-   {:.no-line-numbers}
+```
+RBAC: access denied
+```
+{:.no-line-numbers}
 
-   This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`. You'll need to create one in the next step.
+This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`. You'll need to create one in the next step.
 
-6. **Allow traffic from the gateway to `demo-app`**
+## Allow traffic from the gateway to `demo-app`
 
-   To fix the `RBAC: access denied` error, create a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow the gateway to send traffic to `demo-app`:
+To fix the `RBAC: access denied` error, create a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow the gateway to send traffic to `demo-app`:
 
-   ```sh
-   echo 'type: MeshTrafficPermission
-   name: allow-demo-app-from-edge-gateway
-   mesh: default
-   spec:
-     targetRef:
-       kind: Dataplane
-       labels:
-         app: demo-app
-     from:
-     - targetRef:
-         kind: MeshSubset
-         tags:
-           kuma.io/service: edge-gateway
-       default:
-         action: Allow' | kumactl apply -f -
-   ```
+```sh
+echo 'type: MeshTrafficPermission
+name: allow-demo-app-from-edge-gateway
+mesh: default
+spec:
+  targetRef:
+    kind: Dataplane
+    labels:
+      app: demo-app
+  from:
+  - targetRef:
+      kind: MeshSubset
+      tags:
+        kuma.io/service: edge-gateway
+    default:
+      action: Allow' | kumactl apply -f -
+```
 
-   This policy allows traffic from the gateway to `demo-app`. After applying it, you can access <http://127.0.0.1:28080>, and the traffic will reach the `demo-app` service successfully.
-
-## Next steps
-
-- Explore all [features](/mesh/enterprise/) to better understand {{site.mesh_product_name}}'s capabilities.
-- Try using the [{{site.mesh_product_name}} GUI](/mesh/interact-with-control-plane/) to easily visualize your mesh.
-- Read the [full documentation](/mesh/) for more details.
-- Check deployment examples for [single-zone](/mesh/single-zone/) or [multi-zone](/mesh/mesh-multizone-service-deployment/) setups.
+This policy allows traffic from the gateway to `demo-app`. After applying it, you can access <http://127.0.0.1:28080>, and the traffic will reach the `demo-app` service successfully.
