@@ -103,7 +103,7 @@ The `config.custom_id` field stores an external identifier for the Consumer, suc
 
 You can assign a Consumer to one or more Consumer Groups through the `consumer_groups` array. Each entry references a Consumer Group by `name` or `id`.
 
-Consumer Groups are managed through their own entity surface. <!-- TODO: link to Consumer Group entity reference once available. -->
+Consumer Groups are managed through their own entity surface. See the [Consumer Group entity](/ai-gateway/entities/consumer-group/) reference.
 
 ## Attach Policies
 
@@ -128,7 +128,7 @@ data:
   policies: []
   config:
     credentials:
-      - api_key: sk-387788hd3xnej
+      - api_key: <your-api-key>
         ttl: 86400
 {% endentity_example %}
 

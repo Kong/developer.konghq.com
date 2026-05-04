@@ -71,7 +71,7 @@ faqs:
 
 ## What is a Policy?
 
-A Policy is an AI Gateway entity that represents an action, taken by a plugin, that can be attached to an AI Gateway entity.
+A Policy is an {{site.ai_gateway}} entity that represents an action, taken by a plugin, that can be attached to an {{site.ai_gateway}} entity.
 
 Each Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
 
@@ -111,7 +111,7 @@ The available scopes are:
 
 ### Creating Policies
 
-In {{site.konnect_short_name}}, all Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or leave it unreferenced for global scope.
+In {{site.konnect_short_name}}, all Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or omit the reference for global scope.
 
 In on-prem, the same flat creation endpoint is available at `/ai/policies`. On-prem additionally exposes convenience nested endpoints that create and scope a Policy in one call:
 
