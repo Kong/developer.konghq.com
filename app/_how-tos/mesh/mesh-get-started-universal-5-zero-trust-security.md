@@ -17,7 +17,7 @@ min_version:
   mesh: '2.10'
 series:
   id: mesh-get-started-universal
-  position: 4
+  position: 5
 tldr:
   q: How do I secure services in {{site.mesh_product_name}} with zero-trust security?
   a: Enable mTLS with a built-in CA to encrypt all traffic, apply MeshTrafficPermission policies to control access, and configure a built-in gateway to route external traffic into the mesh.
