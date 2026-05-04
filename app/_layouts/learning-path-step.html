@@ -5,6 +5,10 @@ layout: with_aside
 <p class="text-sm text-secondary m-0">Step {{ page.series.position }} of {{ page.series.items | size }}</p>
 {% endif %}
 
+{% if page.navigation.prev %}
+<p class="text-sm text-secondary m-0">Requires completing <a href="{{ page.navigation.prev.url }}">{{ page.navigation.prev.title }}</a> first.</p>
+{% endif %}
+
 {% if page.description %}
 <p class="text-secondary">{{ page.description }}</p>
 {% endif %}

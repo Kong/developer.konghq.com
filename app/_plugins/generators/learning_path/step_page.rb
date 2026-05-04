@@ -33,6 +33,11 @@ module Jekyll
           }
         )
 
+        # Tools (e.g. deck) are only shown as prerequisites on the first step.
+        # Subsequent steps inherit them from path metadata but users already
+        # have them installed by that point.
+        @data['tools'] = [] if position > 1
+
         @relative_path = "_generated/learning-path-steps#{permalink}index.md"
       end
 
