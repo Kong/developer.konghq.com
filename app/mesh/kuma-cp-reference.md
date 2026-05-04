@@ -15,7 +15,7 @@ related_resources:
   - text: Control plane configuration
     url: /mesh/control-plane-configuration/
   - text: Deploy {{site.mesh_product_name}} on Universal
-    url: /mesh/universal/
+    url: /mesh/get-started/universal/install/
   - text: Deploy {{site.mesh_product_name}} on Kubernetes
     url: /mesh/kubernetes/
 

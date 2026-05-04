@@ -148,7 +148,7 @@ pages:
       - text: Get started with Red Hat OpenShift
         url: /mesh/openshift-quickstart/
       - text: Deploy Kong Mesh on Universal
-        url: /mesh/universal/
+        url: /mesh/get-started/universal/install/
       - text: '{{site.mesh_product_name}} data plane on Kubernetes'
         url: /mesh/data-plane-kubernetes/
     tags:

@@ -14,7 +14,7 @@ tags:
 
 related_resources:
   - text: Deploy {{site.mesh_product_name}} on Universal
-    url: '/mesh/universal/'
+    url: '/mesh/get-started/universal/install/'
   - text: 'Data plane on Kubernetes'
     url: '/mesh/data-plane-kubernetes/'
   - text: Multi-zone deployment

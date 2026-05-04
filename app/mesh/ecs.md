@@ -22,7 +22,7 @@ related_resources:
   - text: Install {{site.mesh_product_name}}
     url: /mesh/#install-kong-mesh
   - text: Deploy {{site.mesh_product_name}} on Universal
-    url: /mesh/universal/
+    url: /mesh/get-started/universal/install/
   - text: "Access Audit"
     url: /mesh/access-audit/
   - text: "Vault Policy"
