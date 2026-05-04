@@ -14,8 +14,12 @@ related_resources:
 products:
   - mesh
 
+tags:
+  - get-started
+  - install
+
 tldr:
-  q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} self managed Control plane
+  q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} self managed Control plane?
   a: Install {{site.mesh_product_name}} on your environment and manage the Control plane yourself.
 
 

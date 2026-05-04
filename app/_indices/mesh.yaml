@@ -15,9 +15,6 @@ sections:
 
   - title: Install & Configure
     items:
-      - title: Kong Mesh quickstart
-        description: Run an instance of Kong Mesh in Universal mode with one command.
-        url: /mesh/#install-kong-mesh
       - path: /mesh/requirements/
       - path: /mesh/universal/
       - path: /mesh/kubernetes/

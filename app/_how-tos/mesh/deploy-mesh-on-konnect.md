@@ -9,11 +9,18 @@ related_resources:
   - text: "{{site.mesh_product_name}}"
     url: /mesh/overview/
 
+tags:
+  - get-started
+  - install
+
+search_aliases:
+  - quickstart
+
 products:
   - mesh
 
 tldr:
-  q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} managed Control plane
+  q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} managed Control plane?
   a: Install {{site.mesh_product_name}} zone Control plane in your environment and let {{site.konnect_short_name}} take care of the global Control plane.
 
 prereqs:
