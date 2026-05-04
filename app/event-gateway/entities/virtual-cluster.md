@@ -14,6 +14,8 @@ related_resources:
     url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
     url: /event-gateway/entities/listener/
+  - text: "How-to: Configure topic aliases"
+    url: /event-gateway/configure-topic-aliases/
 
 tools:
     - konnect-api
@@ -316,6 +318,48 @@ You can also pass an exact list of consumer groups as an array:
   }
 ]
 ```
+
+## Topic aliases
+
+Topic aliases let you expose a backend Kafka topic under a different, client-facing name. 
+Clients connecting to the virtual cluster see the alias, while {{site.event_gateway_short}} transparently routes requests to the original backend topic.
+
+This is useful when you want to:
+* Expose internally-named topics (like `team-alpha-orders-v2`) under client-friendly names (like `orders`)
+* Migrate clients to renamed backend topics without updating client configuration
+* Provide multiple client-facing names for the same backend topic
+
+Unlike [namespaces](#namespaces), which apply a prefix to every topic and consumer group, topic aliases are explicit one-to-one mappings between an alias and a backend topic. 
+Both the alias and the original backend topic name remain accessible through the virtual cluster.
+
+### Map a friendly name to a backend topic
+
+Define topic aliases on the virtual cluster using the `topic_aliases` field:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example-virtual-cluster
+  destination:
+    name: example-backend-cluster
+  authentication:
+    - type: anonymous
+  dns_label: virtual-cluster-1
+  acl_mode: passthrough
+  topic_aliases:
+    - alias: orders
+      topic: team-alpha-orders-v2
+    - alias: clicks
+      topic: analytics-raw-clicks
+{% endkonnect_api_request %}
+<!--vale on-->
+
+In this example, clients can produce and consume to `orders` and `clicks`. {{site.event_gateway_short}} resolves these to the backend topics `team-alpha-orders-v2` and `analytics-raw-clicks`.
+
+For a full walkthrough, see [Configure topic aliases](/event-gateway/configure-topic-aliases/).
 
 ## Virtual cluster policies
 
