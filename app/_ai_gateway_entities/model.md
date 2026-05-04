@@ -78,7 +78,7 @@ faqs:
 
 A Model is a first-class {{site.ai_gateway}} entity that represents an AI model endpoint exposed through {{site.ai_gateway}}.
 
-A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't assemble Services, Routes, or plugin entries by hand.
+A Model declares which capabilities it exposes (such as `chat`, `responses`, or `embeddings`), which upstream provider models it routes to, and how requests are load-balanced and logged. {{site.ai_gateway}} translates a Model into the underlying primitives that the runtime uses to serve traffic, so you don't need to assemble Services, Routes, or plugin entries by hand.
 
 Models are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
 
@@ -107,7 +107,7 @@ When you create or update a Model, {{site.ai_gateway}} generates a fixed set of 
 * One [Route](/gateway/entities/route/) per declared capability in the `capabilities` array.
 * One [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin per generated Route.
 
-Provider credentials are materialized into the AI Proxy Advanced plugin configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
+Provider credentials are added into the AI Proxy Advanced plugin configuration at generation time, sourced from the Provider entity that the Model's `target_models` reference. Updating the Provider propagates credential changes to every Model that uses it.
 
 Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against the underlying Service, Routes, or plugin entries through the standard Admin API are rejected. To change anything about a Model's runtime footprint, update the Model entity. {{site.ai_gateway}} deletes and recreates the derived primitives within a single transaction.
 
@@ -151,11 +151,13 @@ For per-request authentication and identity, configure the appropriate authentic
 
 Policies are the way you apply plugin configurations to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
 
-You can attach multiple Policies to a single Model. Each Policy is an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
+You can attach multiple Policies to a single Model. Each Policy has an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
-Not every plugin type is valid as a Model Policy. For the supported set, see the [Policy entity](/ai-gateway/entities/policy/) reference.
+Not every plugin type is valid as a Model Policy. 
 
 Policies attached to a Model are deleted when the Model is deleted.
+
+For further information see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
 ### Plugin priority and Policy execution order
 

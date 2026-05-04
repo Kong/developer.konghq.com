@@ -65,7 +65,7 @@ faqs:
 
 A Policy is a plugin instance registered through the {{site.ai_gateway}} entity surface.
 
-Each Policy declares a `type` (the plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
+Each Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
 
 Policies are not shared. Each Policy is one plugin instance. To apply the same configuration to two parent entities, create two Policies.
 

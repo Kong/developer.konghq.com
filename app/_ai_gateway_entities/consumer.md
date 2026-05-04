@@ -56,13 +56,13 @@ faqs:
 
 ## What is a Consumer?
 
-A Consumer is the {{site.ai_gateway}} surface for an external client of the AI APIs you publish through {{site.ai_gateway}}. The underlying runtime entity is a regular {{site.base_gateway}} [Consumer](/gateway/entities/consumer/).
+A Consumer is the {{site.ai_gateway}} entity that represents an downstream client of the AI APIs you publish through {{site.ai_gateway}}. 
 
-You use Consumers to authenticate clients, assign them to Consumer Groups, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
+You can use Consumers and Consumer Groups to authenticate clients, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
 
 <!-- THIS IS A PROVISIONAL FLOW, TO BE VERIFIED -->
 
-The following diagram shows where a Consumer participates in an {{site.ai_gateway}} request. The client passes credentials to a Model, an Auth Policy on that Model identifies the Consumer, and the identified Consumer is then available to other Policies on the Model before the request reaches the upstream provider.
+The following diagram shows how a Consumer participates in an {{site.ai_gateway}} request. The client passes {{site.ai_gateway}} credentials for a Model, an Auth Policy on that Model identifies the Consumer, and the identified Consumer is then available to other Policies on the Model before the request reaches the upstream provider.
 
 {% mermaid %}
 flowchart LR
@@ -100,7 +100,7 @@ style padding stroke:none!important,fill:none!important
 
 {% endmermaid %}
 
-Consumers are managed through the {{site.ai_gateway}} entity surface in both deployment modes:
+Consumers are managed through the {{site.ai_gateway}} entity API surface in either deployment modes:
 
 {% table %}
 columns:
@@ -149,9 +149,9 @@ Consumer Groups are managed through their own entity surface. <!-- TODO: link to
 
 ## Attach Policies
 
-To attach a Policy to a Consumer, add the Policy's `name` or `id` to the Consumer's `policies` array. The Policy's underlying plugin then runs in the request lifecycle when this Consumer is identified.
+A Policy is an {{site.ai_gateway}} Entity that triggers an action using a plugin. You can attach a Policy to a Consumer and the underlying plugin will run in the request lifecycle when this Consumer is identified. To attach a Policy add the Policy's `name` or `id` to the Consumer's `policies` array.
 
-You can reference multiple Policies from a single Consumer. Each Policy is an independent instance.
+You can add multiple Policies to a single Consumer. Each Policy is an independent instance.
 
 For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
