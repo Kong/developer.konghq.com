@@ -43,7 +43,7 @@ export default class ToggleSwitchManager {
     this.switches = [];
     this.initialValue = "konnect";
 
-    document.querySelectorAll(".switch").forEach((elem) => {
+    document.querySelectorAll(".switch:not([data-lp-toggle])").forEach((elem) => {
       this.switches.push(new ToggleSwitch(elem));
     });
 
