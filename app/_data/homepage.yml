@@ -69,6 +69,8 @@ sections:
             url: /gateway/install/
           - text: How-to guides
             url: /how-to/?products=gateway
+          - text: Learning paths
+            url: /learning-paths/gateway/
           - text: All documentation
             url: /index/gateway/
 
