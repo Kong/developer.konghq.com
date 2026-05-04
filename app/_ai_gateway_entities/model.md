@@ -1,5 +1,5 @@
 ---
-title: Model
+title: AI Models
 content_type: reference
 entities:
   - model

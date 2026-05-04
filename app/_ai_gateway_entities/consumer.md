@@ -1,5 +1,5 @@
 ---
-title: Consumer
+title: AI Consumers
 content_type: reference
 entities:
   - consumer

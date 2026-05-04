@@ -1,5 +1,5 @@
 ---
-title: AI MCP Server
+title: AI MCP Servers
 content_type: reference
 entities:
   - ai-mcp-server

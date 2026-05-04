@@ -1,5 +1,5 @@
 ---
-title: AI Agent
+title: AI Agents
 content_type: reference
 entities:
   - ai-agent

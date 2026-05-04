@@ -1,5 +1,5 @@
 ---
-title: Policy
+title: AI Policies
 content_type: reference
 entities:
   - policy

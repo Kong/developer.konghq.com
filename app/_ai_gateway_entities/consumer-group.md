@@ -1,5 +1,5 @@
 ---
-title: AI Consumer Group
+title: AI Consumer Groups
 content_type: reference
 entities:
   - ai-consumer-group
