@@ -1,4 +1,4 @@
-1. Enter the repository URI.
+1. Enter the repository [URI](/how-to/use-git-cli/#find-your-projects-uri).
 1. Enter the author name, the author email, and the username.
 1. Generate a token from your Git provider. For more information, see the docs for your provider:
     * [GitHub](https://docs.github.com/github/authenticating-to-github/creating-a-personal-access-token)
