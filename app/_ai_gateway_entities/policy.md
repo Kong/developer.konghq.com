@@ -43,9 +43,14 @@ faqs:
 
   - q: Can a Policy be scoped to a Consumer or Consumer Group?
     a: |
-      Not directly. A Policy attaches to {{site.ai_gateway}} globally or to a Model, Agent,
-      or MCP Server. Per-consumer access is expressed through the `acls` field on those parent
-      entities, which gates which Consumer Groups can reach the entity in the first place.
+      Yes. Add the Policy's `name` or `id` to the Consumer's or Consumer Group's `policies` array.
+      The plugin runs when the Consumer is identified during a request, or when a member of the
+      Consumer Group is identified.
+
+      Unlike Model, Agent, and MCP Server, on-prem does not expose nested policy endpoints
+      (`/ai/consumers/{id}/policies` or `/ai/consumer-groups/{id}/policies`) for these two entity
+      types. The reference-array mechanism is the only way to attach a Policy to a Consumer or
+      Consumer Group in either deployment mode.
 
   - q: What plugin types can a Policy use?
     a: |
@@ -56,9 +61,12 @@ faqs:
 
   - q: What happens to a Policy when its parent entity is deleted?
     a: |
-      Policies attached to a Model, Agent, or MCP Server are removed when the parent entity is
-      deleted, along with the rest of that entity's derived primitives. Global policies are
-      independent and aren't affected by deletions of other entities.
+      Policies created through an on-prem nested endpoint (`POST /ai/models/{modelId}/policies`,
+      `POST /ai/agents/{agentId}/policies`, or `POST /ai/mcp-servers/{mcpServerId}/policies`) are
+      lifecycle-coupled to the parent and removed when the parent is deleted, along with the rest
+      of that entity's derived primitives.
+      Standalone Policies referenced from parent entities through a `policies` array are independent
+      and aren't deleted when a referencing parent is deleted. The reference is simply removed.
 ---
 
 ## What is a Policy?
@@ -88,18 +96,30 @@ rows:
     endpoint: /ai/policies
 {% endtable %}
 
-<!-- TODO: confirm the Konnect endpoint base path against the public Konnect API spec. The architecture proposal references `/ai-gateways/{id}/policies` as the path segment. -->
-
 ## Policy scopes
 
-A Policy is scoped at the time you create it, by the endpoint you POST it to:
+A Policy is scoped by where it's referenced from. Each Policy is an independent plugin instance attached at exactly one scope. To apply the same configuration in multiple places, create one Policy per place.
 
-* **Global**: `POST /ai/policies` attaches the underlying plugin globally so it runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane is not affected.
-* **Model**: `POST /ai/models/{modelId}/policies` attaches the underlying plugin at the Service of the Model's derived primitives. The plugin runs for requests routed through that Model. See the [Model entity](/ai-gateway/entities/model/).
-* **Agent**: `POST /ai/agents/{agentId}/policies` attaches the plugin at the Service of the Agent's derived primitives. See the [Agent entity](/ai-gateway/entities/agent/).
-* **MCP Server**: `POST /ai/mcp-servers/{mcpServerId}/policies` attaches the plugin at the Service of the MCP Server's derived primitives. See the [MCP Server entity](/ai-gateway/entities/mcp-server/).
+The available scopes are:
 
-Scope is fixed at creation time. Moving a Policy from one scope to another means deleting it and creating a new one under the target endpoint.
+* **Global**: a Policy that no parent entity references runs for every {{site.ai_gateway}} route on the data plane. Non-AI traffic on the same data plane isn't affected.
+* **Model**: referenced from the `policies` array on a [Model entity](/ai-gateway/entities/model/). The plugin runs at the Service of the Model's derived primitives.
+* **Agent**: referenced from the `policies` array on an [Agent entity](/ai-gateway/entities/agent/). The plugin runs at the Service of the Agent's derived primitives.
+* **MCP Server**: referenced from the `policies` array on an [MCP Server entity](/ai-gateway/entities/mcp-server/). The plugin runs at the Service of the MCP Server's derived primitives.
+* **Consumer**: referenced from the `policies` array on a [Consumer entity](/ai-gateway/entities/consumer/). The plugin runs when the Consumer is identified during a request.
+* **Consumer Group**: referenced from the `policies` array on a [Consumer Group entity](/ai-gateway/entities/consumer-group/). The plugin runs when a member of the Consumer Group is identified during a request.
+
+### Creating Policies
+
+In {{site.konnect_short_name}}, all Policies are created through a single endpoint at `/v1/ai-gateways/{aiGatewayId}/policies`. Scope is set entirely through the reference-array mechanism above: add the Policy's `name` or `id` to the parent entity's `policies` array, or leave it unreferenced for global scope.
+
+In on-prem, the same flat creation endpoint is available at `/ai/policies`. On-prem additionally exposes convenience nested endpoints that create and scope a Policy in one call:
+
+* `POST /ai/models/{modelId}/policies`
+* `POST /ai/agents/{agentId}/policies`
+* `POST /ai/mcp-servers/{mcpServerId}/policies`
+
+Consumer and Consumer Group scoping uses the reference-array mechanism in both deployment modes.
 
 ## Lifecycle
 
@@ -121,7 +141,7 @@ The following example creates a global PII sanitizer Policy that runs for every 
 type: policy
 data:
   display_name: PII Sanitizer - Global
-  ref: pii-sanitizer-global
+  name: pii-sanitizer-global
   type: ai-sanitizer
   enabled: true
   config:
@@ -139,7 +159,7 @@ The following example attaches a rate-limiting Policy to a Model.
 type: policy
 data:
   display_name: Rate Limit - Production GPT-4o
-  ref: rate-limit-prod-gpt4o
+  name: rate-limit-prod-gpt4o
   type: ai-rate-limiting-advanced
   enabled: true
   config:

@@ -60,8 +60,8 @@ faqs:
 
   - q: How do I limit which consumers can reach a Model?
     a: |
-      Set the `acls` field on the Model with allow or deny lists referencing Consumer Groups.
-      Consumer-level access is not configured on the Model directly.
+      Set the `acls` field on the Model with allow or deny lists.
+      Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name.
 
   - q: Does the Model entity store provider credentials?
     a: |
@@ -120,33 +120,22 @@ Generated primitives are protected. Direct PUT, PATCH, or DELETE calls against t
 
 The `capabilities` field tells {{site.ai_gateway}} which AI workflows the Model exposes. Each capability becomes one Route on the generated Service. A Model must declare at least one capability.
 
-Supported values for a `model` type are:
-
-* `chat`
-* `responses`
-* `embeddings`
-* `image-generation`
-* `image-edits`
-* `audio-transcriptions`
-* `audio-translations`
-* `realtime`
-
 Model `type` controls which capability set applies:
 
-* `model`: general LLM workloads, with capabilities such as `chat`, `responses`, and `embeddings`.
-* `api`: API-style workloads, where the supported capabilities are `batches` and `files`.
+* `model`: synchronous request/response workloads through generative APIs. Supported capabilities are `chat`, `embeddings`, `assistants`, `responses`, `audio-transcriptions`, `audio-translations`, `image-generation`, `image-edits`, `video-generations`, and `realtime`.
+* `api`: asynchronous workloads through the files and batches APIs. Supported capabilities are `batches` and `files`.
 
 Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
 ## Target models and load balancing
 
-A Model's `target_models` field lists one or more upstream provider model instances. For each entry, you provide the upstream model name (for example, `gpt-4o`) and select the Provider to use (by `id` or `ref`). Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+A Model's `target_models` field lists one or more upstream provider model instances. For each entry, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
 
 When a Model has more than one target, requests are load-balanced according to `config.balancer`. For the supported algorithms, configuration options, and tuning guidance, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
 
 ## Access control
 
-A Model's `acls` field controls which Consumer Groups are allowed to reach the Model. The field accepts `allow` and `deny` lists, each containing references to Consumer Groups by `id` or `ref`. Access is enforced at the Service level of the generated primitives. ACLs on a Model apply to Consumer Groups, not individual Consumers.
+A Model's `acls` field controls which identities are allowed to reach the Model. The field accepts `allow` and `deny` lists. Each entry is a string that references a Consumer, Consumer Group, or Authenticated Group by name. Access is enforced at the Service level of the generated primitives.
 
 For per-request authentication and identity, configure the appropriate authentication plugin globally or as a Policy on the Model.
 
@@ -154,9 +143,11 @@ For per-request authentication and identity, configure the appropriate authentic
 
 Policies are the way you apply plugin configurations to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
 
+A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`. On-prem also supports the nested endpoint `/ai/models/{modelId}/policies`, which creates and attaches a Policy in one call.
+
 You can attach multiple Policies to a single Model. Each Policy has an independent plugin instance, so attaching the same plugin type twice with different configurations creates two separate plugin entries.
 
-Not every plugin type is valid as a Model Policy. 
+Not every plugin type is valid as a Model Policy.
 
 Policies attached to a Model are deleted when the Model is deleted.
 
@@ -178,21 +169,23 @@ The following example creates an OpenAI Model that exposes both `chat` and `resp
 type: model
 data:
   display_name: GPT-4o Production
-  ref: gpt-4o-production
+  name: gpt-4o-production
   type: model
   enabled: true
   capabilities:
     - chat
     - responses
   formats:
-    - openai
+    - type: openai
   acls:
     allow:
-      - ref: internal-teams
+      - internal-teams
+    deny: []
+  policies: []
   target_models:
     - name: gpt-4o
       provider:
-        ref: my-openai-account
+        name: my-openai-account
       config:
         temperature: 0.7
         max_tokens: 4096
@@ -200,10 +193,12 @@ data:
         output_cost: 0.000010
   config:
     logging:
-      log_statistics: true
-      log_payloads: false
+      statistics: true
+      payloads: false
     response_streaming: allow
     max_request_body_size: 1048576
+    model:
+      name_header: true
     balancer:
       algorithm: round-robin
       retries: 3

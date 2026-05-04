@@ -56,49 +56,9 @@ faqs:
 
 ## What is a Consumer?
 
-A Consumer is the {{site.ai_gateway}} entity that represents an downstream client of the AI APIs you publish through {{site.ai_gateway}}. 
+A Consumer is the {{site.ai_gateway}} entity that represents a downstream client of the AI APIs you publish through {{site.ai_gateway}}.
 
 You can use Consumers and Consumer Groups to authenticate clients, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
-
-<!-- THIS IS A PROVISIONAL FLOW, TO BE VERIFIED -->
-
-The following diagram shows how a Consumer participates in an {{site.ai_gateway}} request. The client passes {{site.ai_gateway}} credentials for a Model, an Auth Policy on that Model identifies the Consumer, and the identified Consumer is then available to other Policies on the Model before the request reaches the upstream provider.
-
-{% mermaid %}
-flowchart LR
-
-Client(["Client"])
-Consumer(AI Consumer
-entity)
-Auth(Auth Policy)
-Model(Model entity)
-Policies("Policies
-attached to Model")
-Provider[Upstream
-AI provider]
-
-Client --pass
-credentials--> Model
-subgraph id1 ["`**AI GATEWAY**`"]
-  subgraph padding[ ]
-
-    subgraph Identify ["Consumer Identity Added"]
-      direction LR
-      Model --> Auth
-      Auth--identify
-      Consumer-->Consumer
-    end
-  end
-
-  Consumer--> Policies
-end
-Policies --apply
-per-Model policies--> Provider
-
-style Identify stroke-dasharray: 5 5
-style padding stroke:none!important,fill:none!important
-
-{% endmermaid %}
 
 Consumers are managed through the {{site.ai_gateway}} entity API surface in either deployment modes:
 
