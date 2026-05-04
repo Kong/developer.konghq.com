@@ -40,8 +40,6 @@ cleanup:
 
         rm -rf /tmp/kong-mesh-demo
         ```
-
-        If you're using Colima, replace `/tmp/kong-mesh-demo` with `/tmp/colima/kong-mesh-demo`.
 next_steps:
   - text: Explore {{site.mesh_product_name}} enterprise features
     url: /mesh/enterprise/
@@ -150,7 +148,7 @@ docker run \
   --ip 172.57.78.4 \
   --publish 28080:8080 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  kong/kuma-dp:latest run \
+  kong/kuma-dp:{{site.data.mesh_latest.version}} run \
     --cp-address https://control-plane:5678 \
     --dataplane-token-file /demo/token-edge-gateway \
     --dataplane-file /demo/dataplane-edge-gateway.yaml \
@@ -159,7 +157,7 @@ docker run \
 
 This command starts the gateway proxy and registers it with the control plane. However, the gateway is not yet ready to route traffic.
 
-## Configure the gateway with [MeshGateway](/mesh/gateway-listeners/)
+## Configure the gateway with MeshGateway
 
 To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/gateway-listeners/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services.
 

@@ -31,6 +31,14 @@ min_version:
 series:
   id: mesh-get-started-universal
   position: 1
+
+prereqs:
+  skip_product: true
+  inline: 
+    - title: Docker 
+      content: |
+        This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
+
 tldr:
   q: How do I prepare my environment to run {{site.mesh_product_name}} on Universal?
   a: Install the {{site.mesh_product_name}} binaries, create a temporary directory for tokens and configuration files, and set up a Docker network for the demo containers.
