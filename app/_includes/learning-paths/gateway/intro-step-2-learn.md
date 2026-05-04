@@ -1,8 +1,8 @@
-## What is a plugin?
+### What is a plugin?
 
 A **plugin** extends {{site.base_gateway}} with additional functionality — authentication, rate limiting, logging, request/response transformation, and more. Plugins run as part of the request lifecycle and can be applied at different scopes.
 
-## Plugin scopes
+#### Plugin scopes
 
 Plugins can be attached to:
 
@@ -15,11 +15,11 @@ Plugins can be attached to:
 
 More specific scopes take precedence over broader ones, giving you fine-grained control.
 
-## Plugin execution order
+#### Plugin execution order
 
 Plugins run in a deterministic order based on their priority value. High-priority plugins (such as authentication) run before low-priority ones (such as logging). This ensures, for example, that a request is authenticated before rate limiting is applied.
 
-## Key plugins to know
+##### Key plugins to know
 
 | Plugin | Purpose |
 |--------|---------|
@@ -29,7 +29,7 @@ Plugins run in a deterministic order based on their priority value. High-priorit
 | [Request Transformer](/hub/kong-inc/request-transformer/) | Add, remove, or rename headers and query parameters |
 | [HTTP Log](/hub/kong-inc/http-log/) | Send request/response logs to an HTTP endpoint |
 
-## Further reading
+### Further reading
 
 - [Plugin Hub](/hub/) — Browse all available plugins
 - [Plugin configuration reference](/gateway/entities/plugins/)
