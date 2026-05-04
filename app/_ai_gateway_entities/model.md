@@ -27,8 +27,8 @@ related_resources:
     url: /ai-gateway/entities/provider/
   - text: Policy entity
     url: /ai-gateway/entities/policy/
-  - text: AI Proxy Advanced plugin
-    url: /plugins/ai-proxy-advanced/
+  - text: "{{site.ai_gateway}} entities"
+    url: /ai-gateway/entities/
   - text: Consumer Group entity
     url: /gateway/entities/consumer-group/
 faqs:
@@ -131,19 +131,22 @@ Supported values for a `model` type are:
 * `audio-translations`
 * `realtime`
 
-For an `api` type Model (used for batch and file APIs), the supported values are `batches` and `files`.
+Model `type` controls which capability set applies:
+
+* `model`: general LLM workloads, with capabilities such as `chat`, `responses`, and `embeddings`.
+* `api`: API-style workloads, where the supported capabilities are `batches` and `files`.
 
 Not every provider supports every capability. The set of capabilities you can declare on a Model depends on what the provider in `target_models` exposes. See [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for per-provider details.
 
 ## Target models and load balancing
 
-A Model's `target_models` field lists one or more upstream provider model instances. Each entry references a Provider (by `id` or `ref`), names the upstream model (for example, `gpt-4o`), and can override per-target settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+A Model's `target_models` field lists one or more upstream provider model instances. For each entry, you provide the upstream model name (for example, `gpt-4o`) and select the Provider to use (by `id` or `ref`). Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
 
 When a Model has more than one target, requests are load-balanced according to `config.balancer`. For the supported algorithms, configuration options, and tuning guidance, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
 
 ## Access control
 
-A Model's `acls` field controls which Consumer Groups are allowed to reach the Model. The field accepts `allow` and `deny` lists, each containing references to Consumer Groups by `id` or `ref`. Access is enforced at the Service level of the generated primitives.
+A Model's `acls` field controls which Consumer Groups are allowed to reach the Model. The field accepts `allow` and `deny` lists, each containing references to Consumer Groups by `id` or `ref`. Access is enforced at the Service level of the generated primitives. ACLs on a Model apply to Consumer Groups, not individual Consumers.
 
 For per-request authentication and identity, configure the appropriate authentication plugin globally or as a Policy on the Model.
 
@@ -163,7 +166,7 @@ For further information see the [Policy entity](/ai-gateway/entities/policy/) re
 
 A Policy attached to a Model creates one plugin entry on the Service of the Model's derived primitives. That plugin runs at the [priority](/gateway/entities/plugin/#plugin-priority) of its underlying plugin type, which determines when it executes relative to other plugins on the request.
 
-The AI Proxy Advanced plugin runs at priority `770` and is the plugin that parses the request body and resolves the model name. Any Policy whose underlying plugin type has a priority higher than `770` runs before that resolution. Authentication plugin types (such as OpenID Connect) fall into this category. They run before AI Proxy Advanced parses the request, but after the request has been routed to the Model's generated Service, so they still gate access correctly. The Model identity in the AI sense (which provider, which target model) is just not available to them.
+The AI Proxy Advanced plugin runs at priority `770` and parses the request body to resolve the model name. Any Policy whose underlying plugin type has a priority higher than `770` runs before that resolution. Authentication plugin types (such as OpenID Connect) fall into this category. They still gate access correctly because routing to the Model's generated Service already occurred, but model-level identity details (provider and target model) are not available yet.
 
 For Policies whose runtime behavior depends on the resolved Model identity, attach plugin types that run at priority `770` or lower, or use [dynamic plugin ordering](/gateway/entities/plugin/) to push their execution later.
 

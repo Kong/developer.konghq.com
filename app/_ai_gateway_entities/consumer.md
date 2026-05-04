@@ -130,12 +130,10 @@ The `type` field declares how the Consumer authenticates to {{site.ai_gateway}}.
 
 ## Credentials
 
-For Consumers of `type: apikey`, you can declare credentials inline on the Consumer's `config.credentials` array. Each entry has:
+For Consumers of `type: apikey`, set credentials in the Consumer's `config.credentials` array. Each entry has:
 
 * `api_key`: the API key value the client presents.
 * `ttl`: optional time-to-live in seconds. Once elapsed, the credential is no longer valid.
-
-Multiple credentials can be declared per Consumer. Rotating a key means adding a new entry and removing the old one.
 
 ## External identity mapping
 
