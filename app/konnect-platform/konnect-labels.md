@@ -43,7 +43,4 @@ Each label must follow these requirements:
 
 ## Setting labels
 
-You can use labels separately on the Control Plane and Data Plane nodes:
-* On the Control Plane, you can set a label for `control plane` and for individual API products.
-* On Data Plane nodes, set labels through `kong.conf` or via environment variables using the [`cluster_dp_labels`](/gateway/configuration/#cluster-dp-labels) property.
-The {{site.konnect_short_name}} API exposes these labels through the [`/nodes`](/api/konnect/control-planes-config/#/operations/list-dataplane-nodes) endpoint.
+You can use labels across various components, including control planes and data planes. See the [API specs](/apis/) to learn which entities accept labels.
