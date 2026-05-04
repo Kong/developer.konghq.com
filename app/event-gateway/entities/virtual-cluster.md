@@ -359,6 +359,29 @@ body:
 
 In this example, clients can produce and consume to `orders` and `clicks`. {{site.event_gateway_short}} resolves these to the backend topics `team-alpha-orders-v2` and `analytics-raw-clicks`.
 
+### Supported operations
+
+Aliases are a read-only abstraction over physical topics. Read and write operations are forwarded to the backend topic, but topic-modifying operations are rejected.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Operation
+    key: operation
+  - title: Behavior
+    key: behavior
+rows:
+  - operation: "Produce, fetch, list offsets, consumer group operations"
+    behavior: "Allowed. Requests reference the alias name and are transparently resolved to the backend topic."
+  - operation: "Metadata (`ListTopics`)"
+    behavior: "Allowed. Both the alias and the original backend topic name appear in the response."
+  - operation: "`CreateTopics`, `DeleteTopics`, `CreatePartitions`, `DeleteRecords`, `AlterPartitionReassignments`, `ElectLeaders`"
+    behavior: "Rejected with `InvalidTopicException` when the request references an alias. This avoids a client unintentionally modifying a physical topic that other aliases or clients depend on."
+{% endtable %}
+<!--vale on-->
+
+ACLs are evaluated on the name the client uses, before alias resolution. An ACL on the backend topic does not automatically grant access to its aliases, and vice versa. Operators must configure ACLs for each alias name explicitly. With `acl_mode: enforce_on_gateway` (deny-by-default), a new alias with no matching ACL is blocked.
+
 For a full walkthrough, see [Configure topic aliases](/event-gateway/configure-topic-aliases/).
 
 ## Virtual cluster policies

@@ -49,13 +49,22 @@ related_resources:
 ## Overview
 
 Topic aliases let you expose backend Kafka topics under different, client-friendly names.
-This is useful when backend topics follow internal naming conventions (like `team-alpha-orders-v2`) that you don't want to expose to consumers.
+This is useful when backend topics follow internal naming conventions (like `team-alpha-orders-v2`) that you don't want to expose to clients.
 
 {% mermaid %}
 flowchart LR
-    A[Kafka client] -->|produces to 'orders'| B[{{site.event_gateway_short}}]
+    A[Kafka client] -->|produces/consumes to 'orders'| B[{{site.event_gateway_short}}]
     B -->|resolves to 'team-alpha-orders-v2'| C[Kafka cluster]
 {% endmermaid %}
+
+### Supported operations
+
+Aliases are a read-only abstraction over physical topics:
+
+* **Allowed**: produce, fetch, list offsets, consumer group operations, and metadata (`ListTopics`). Both the alias and the original backend topic name appear in metadata responses.
+* **Rejected with `InvalidTopicException`**: `CreateTopics`, `DeleteTopics`, `CreatePartitions`, `DeleteRecords`, `AlterPartitionReassignments`, and `ElectLeaders`. Modifying a physical topic through an alias would be surprising because other aliases or clients may also depend on it.
+
+ACLs are evaluated on the name the client uses, before alias resolution. An ACL on the backend topic does not automatically grant access to its aliases, and vice versa. Each alias name must be granted access explicitly. With `acl_mode: enforce_on_gateway`, a new alias with no matching ACL is blocked by default.
 
 ## Create Kafka topics
 
