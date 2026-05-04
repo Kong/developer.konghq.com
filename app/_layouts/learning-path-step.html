@@ -20,7 +20,7 @@ layout: with_aside
   <div class="accordion-item flex flex-col border border-primary/10 rounded-lg overflow-hidden">
     <a href="#learn" id="learn"
        class="flex justify-between items-center px-6 py-4 bg-secondary cursor-pointer accordion-trigger hover:no-underline">
-      <h2 class="m-0 text-xl font-semibold">{{ page.learn.title | default: "Learn" }}</h2>
+      <h2 id="learn-heading" class="m-0 text-xl font-semibold">{{ page.learn.title | default: "Learn" }}</h2>
       <span class="inline-flex chevron-icon rotate-180">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
     </a>
     <div class="content accordion-panel px-6 pb-6 pt-4">
@@ -35,7 +35,7 @@ layout: with_aside
   <div class="accordion-item flex flex-col border border-primary/10 rounded-lg overflow-hidden">
     <a href="#practice" id="practice"
        class="flex justify-between items-center px-6 py-4 bg-secondary cursor-pointer accordion-trigger hover:no-underline">
-      <h2 class="m-0 text-xl font-semibold">{{ page.practice.title | default: "Practice" }}</h2>
+      <h2 id="practice-heading" class="m-0 text-xl font-semibold">{{ page.practice.title | default: "Practice" }}</h2>
       <span class="inline-flex chevron-icon rotate-180">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
     </a>
     <div class="content accordion-panel px-6 pb-6 pt-4">
