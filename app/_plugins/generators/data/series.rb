@@ -96,10 +96,12 @@ module Jekyll
 
       def set_breadcrumbs!(page)
         return unless page.data['series']
-        return unless @series_meta['breadcrumb_title']
+
+        series_meta = @site.data['series'][page.data['series']['id']]
+        return unless series_meta&.fetch('breadcrumb_title', nil)
 
         page.data['breadcrumbs'] << {
-          'title' => @series_meta['breadcrumb_title'],
+          'title' => series_meta['breadcrumb_title'],
           'url' => page.data['series']['items'].first.url
         }
       end
