@@ -16,6 +16,7 @@ metadata:
 
 steps:
   - title: "Step 1: Services and Routes"
+    description: "Learn how Services and Routes model your upstream APIs in Kong Gateway, then deploy a gateway in DB-less mode and proxy your first request through it."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-1/
     prereqs:
       inline:
@@ -29,6 +30,7 @@ steps:
       include: learning-paths/gateway/intro-step-1-practice
 
   - title: "Step 2: Plugins"
+    description: "Learn how Kong Gateway's plugin system extends the request lifecycle, then apply the Rate Limiting plugin to your service and verify it enforces limits."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-2/
     prereqs:
       inline:
