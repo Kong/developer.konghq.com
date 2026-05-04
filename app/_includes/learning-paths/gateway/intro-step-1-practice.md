@@ -1,6 +1,6 @@
 In this guide you'll start a local {{site.base_gateway}} instance in DB-less mode, define a Service and Route, and verify that traffic is proxied correctly.
 
-## Step 1: Start {{site.base_gateway}} in DB-less mode
+### Step 1: Start {{site.base_gateway}} in DB-less mode
 
 Run a minimal {{site.base_gateway}} container that reads its configuration from a file on startup:
 
@@ -19,7 +19,7 @@ docker run -d --name kong-gateway \
   kong/kong-gateway:{{site.latest_gateway_oss_version}}
 ```
 
-## Step 2: Create a Service
+### Step 2: Create a Service
 
 A **Service** points to the upstream API you want to proxy. Create one targeting the public httpbin echo API:
 
@@ -30,7 +30,7 @@ entities:
       url: https://httpbin.konghq.com
 {% endentity_examples %}
 
-## Step 3: Create a Route
+### Step 3: Create a Route
 
 A **Route** matches incoming requests and forwards them to the Service. Create one that matches requests with the path prefix `/httpbin`:
 
@@ -44,7 +44,7 @@ entities:
         name: httpbin
 {% endentity_examples %}
 
-## Step 4: Verify the proxy
+### Step 4: Verify the proxy
 
 Send a request through the gateway:
 
@@ -54,7 +54,7 @@ curl -i http://localhost:8000/httpbin/get
 
 You should receive a `200 OK` response from httpbin with your request details echoed back.
 
-## What you did
+### What you did
 
 - Started {{site.base_gateway}} in DB-less mode
 - Created a Service pointing to an upstream API

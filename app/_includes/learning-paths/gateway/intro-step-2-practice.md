@@ -1,6 +1,6 @@
 Building on the Service and Route you created in Step 1, you'll now attach two plugins: **Rate Limiting** to cap request volume, and **Key Auth** to require an API key.
 
-## Step 1: Add the Rate Limiting plugin
+### Step 1: Add the Rate Limiting plugin
 
 Attach Rate Limiting to the `httpbin-route` Route. This limits each client to 5 requests per minute:
 
@@ -16,7 +16,7 @@ entities:
 
 Send more than five requests within a minute — after the fifth, {{site.base_gateway}} returns `429 Too Many Requests`.
 
-## Step 2: Add Key Auth
+### Step 2: Add Key Auth
 
 Enable Key Auth on the same Route to require an API key on every request:
 
@@ -27,7 +27,7 @@ entities:
       route: httpbin-route
 {% endentity_examples %}
 
-## Step 3: Create a Consumer with a credential
+### Step 3: Create a Consumer with a credential
 
 Create a Consumer named `alice` and issue her an API key:
 
@@ -39,7 +39,7 @@ entities:
         - key: my-secret-key
 {% endentity_examples %}
 
-## Step 4: Verify authentication
+### Step 4: Verify authentication
 
 Test that unauthenticated requests are rejected and authenticated ones succeed:
 
@@ -51,7 +51,7 @@ curl -i http://localhost:8000/httpbin/get
 curl -i http://localhost:8000/httpbin/get -H "apikey: my-secret-key"
 ```
 
-## What you did
+### What you did
 
 - Applied Rate Limiting at the Route scope
 - Added Key Auth to require API key credentials
