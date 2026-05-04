@@ -169,6 +169,8 @@
 /dev-portal/publishing/ /catalog/apis/
 /dev-portal/portal-customization/   /dev-portal/customizations/dev-portal-customizations/
 /dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
+/dev-portal/api-products/  /catalog/apis/
+/api-products/  /catalog/apis/
 
 
 # Gateway LTS
