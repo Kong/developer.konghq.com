@@ -17,9 +17,11 @@ works_on:
 ---
 
 {{ site.operator_product_name }} is built with Go and respects the standard proxy environment variables defined by Go's [`ProxyFromEnvironment`](https://pkg.go.dev/net/http#ProxyFromEnvironment).
-This allows you to route the operator's outbound HTTP(S) traffic through a corporate proxy or forward proxy.
+This allows you to route the {{ site.operator_product_name_short }}'s outbound HTTP(S) traffic through a corporate proxy or forward proxy.
 
 ## Supported environment variables
+
+Use the following environment variables to configure the proxying:
 
 {% table %}
 columns:
