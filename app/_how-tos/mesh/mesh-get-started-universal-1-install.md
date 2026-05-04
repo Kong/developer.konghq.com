@@ -27,7 +27,7 @@ tags:
   - universal-mode
   - docker
 min_version:
-  mesh: '2.9'
+  mesh: '2.10'
 series:
   id: mesh-get-started-universal
   position: 1
@@ -104,9 +104,9 @@ browser --> edge-gateway
    ```sh
    echo 'type: Dataplane
    mesh: default
-   name: {% raw %}{{ name }}{% endraw %}{% if_version gte:2.10.x %}
+   name: {% raw %}{{ name }}{% endraw %}
    labels:
-     app: {% raw %}{{ name }}{% endraw %}{% endif_version %}
+     app: {% raw %}{{ name }}{% endraw %}
    networking:
      address: {% raw %}{{ address }}{% endraw %}
      inbound:

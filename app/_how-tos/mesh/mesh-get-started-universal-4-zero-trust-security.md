@@ -14,7 +14,7 @@ tags:
   - universal-mode
   - docker
 min_version:
-  mesh: '2.9'
+  mesh: '2.10'
 series:
   id: mesh-get-started-universal
   position: 4
@@ -76,11 +76,9 @@ name: allow-kv-from-demo-app
 mesh: default 
 spec: 
   targetRef:
-    kind: {% if_version lte:2.9.x %}MeshSubset
-    tags:
-      kuma.io/service{% endif_version %}{% if_version gte:2.10.x %}Dataplane
+    kind: Dataplane
     labels:
-      app{% endif_version %}: kv
+      app: kv
   from: 
   - targetRef: 
       kind: MeshSubset 
@@ -228,11 +226,9 @@ The built-in gateway works like the data plane proxy for a regular service, but 
    mesh: default
    spec:
      targetRef:
-       kind: {% if_version lte:2.9.x %}MeshSubset
-       tags:
-         kuma.io/service{% endif_version %}{% if_version gte:2.10.x %}Dataplane
+       kind: Dataplane
        labels:
-         app{% endif_version %}: demo-app
+         app: demo-app
      from:
      - targetRef:
          kind: MeshSubset

@@ -14,7 +14,7 @@ tags:
   - universal-mode
   - docker
 min_version:
-  mesh: '2.9'
+  mesh: '2.10'
 series:
   id: mesh-get-started-universal
   position: 3
