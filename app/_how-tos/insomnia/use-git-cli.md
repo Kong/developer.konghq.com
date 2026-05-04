@@ -26,7 +26,7 @@ prereqs:
 
 tldr:
     q: How can I use Git natively in an Insomnia project?
-    a: TLDR here.
+    a: Navigate to the local folder to use Git natively in your Insomnia Git Sync project.
 
 faqs:
   - q: macOS:Why do I get the error string not in pwd?
