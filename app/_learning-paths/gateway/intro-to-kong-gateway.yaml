@@ -18,10 +18,6 @@ steps:
   - title: "Step 1: Services and Routes"
     description: "Learn how Services and Routes model your upstream APIs in Kong Gateway, then deploy a gateway in DB-less mode and proxy your first request through it."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-1/
-    prereqs:
-      inline:
-        - title: decK
-          include_content: prereqs/tools/deck
     learn:
       title: "Learn: Core concepts"
       include: learning-paths/gateway/intro-step-1-learn
@@ -30,12 +26,8 @@ steps:
       include: learning-paths/gateway/intro-step-1-practice
 
   - title: "Step 2: Plugins"
-    description: "Learn how Kong Gateway's plugin system extends the request lifecycle, then apply the Rate Limiting plugin to your service and verify it enforces limits."
+    description: "Learn how Kong Gateway's plugin system extends the request lifecycle, then apply the Rate Limiting plugin to your service and verify it enforces limits. You'll need the running {{site.base_gateway}} container and `kong.yaml` from Step 1."
     permalink: /learning-paths/gateway/intro-to-kong-gateway/step-2/
-    prereqs:
-      inline:
-        - title: Complete Step 1
-          content: Complete [Step 1](/learning-paths/gateway/intro-to-kong-gateway/step-1/) before continuing. You need the running {{site.base_gateway}} container and `kong.yaml` from that step.
     next_steps:
       - text: Add Proxy Cache to cache upstream responses
         url: /hub/kong-inc/proxy-cache/

@@ -43,6 +43,7 @@ module Jekyll
 
       def set_prerequisites!(page) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         return unless page.data['series']
+        return if page.data['content_type'] == 'learning_path_step'
 
         page.data['prereqs'] = page.data['prereqs'] || {}
 
