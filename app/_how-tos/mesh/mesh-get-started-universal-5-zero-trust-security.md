@@ -97,18 +97,16 @@ spec:
       action: Allow' | kumactl apply -f -
 ```
 
-The second issue is a bit more challenging. You can't just get the necessary certificate and set up your web browser to act as part of the mesh. To handle traffic from outside the mesh, you need a _gateway proxy_. You can use tools like [Kong](https://github.com/Kong/kong), or you can use the [Built-in Gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
+The second issue requires a gateway proxy. Browsers and HTTP clients outside the mesh don't have a valid mTLS certificate, so {{site.mesh_product_name}} rejects their connections. To route external traffic into the mesh, use the [built-in gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
 
 {:.info}
-> **Note:** For more information, see the [Managing incoming traffic with gateways](/mesh/ingress/) section in the documentation.
+> For more information, see [Managing incoming traffic with gateways](/mesh/ingress/).
 
-In this guide, we'll use the built-in gateway. It allows you to configure a data plane proxy to act as a gateway and manage external traffic securely.
-
-The built-in gateway works like the data plane proxy for a regular service, but it requires its own configuration. Here's how to set it up step by step.
+The built-in gateway needs its own Dataplane resource, separate from the service data plane proxies.
 
 ## Create a Dataplane resource
 
-For regular services, we reused a single [Dataplane](/mesh/data-plane-proxy/) configuration file and provided dynamic values (like names and addresses) when starting the data plane proxy. This made it easier to scale or deploy multiple instances. However, since we're deploying only one instance of the gateway, we can simplify things by hardcoding all the values directly into the file, as shown below:
+Unlike the service Dataplane template used in earlier pages, the gateway uses a static configuration since there's only one instance:
 
 ```sh
 echo 'type: Dataplane
@@ -221,7 +219,7 @@ RBAC: access denied
 ```
 {:.no-line-numbers}
 
-This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`. You'll need to create one in the next step.
+This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`. Create one in the next section.
 
 ## Allow traffic from the gateway to `demo-app`
 

@@ -25,7 +25,7 @@ tldr:
 
 ## Start the control plane
 
-Use the official Docker image to run the {{site.mesh_product_name}} control plane. This image starts the control plane binary automatically, so no extra flags or configurations are needed for this guide. Simply use the `run` command:
+Run the {{site.mesh_product_name}} control plane using the official Docker image:
 
 ```sh
 docker run \
@@ -43,7 +43,7 @@ You can now access the [{{site.mesh_product_name}} user interface (GUI)](/mesh/i
 
 ## Configure kumactl
 
-To use [kumactl](/mesh/cli/) with our {{site.mesh_product_name}} deployment, we need to connect it to the control plane we set up earlier.
+To manage the deployment with [kumactl](/mesh/cli/), connect it to the control plane you started in the previous section.
 
 ### Retrieve the admin token
 
@@ -74,17 +74,17 @@ kumactl config control-planes add \
 
 ### Verify the connection
 
-Run this command to check if the connection is working:
+To verify the connection, run:
 
 ```sh
 kumactl get meshes
 ```
 
-You should see a list of meshes with one entry: `default`. This confirms the configuration is successful.
+You should see one mesh listed: `default`.
 
 ## Configure the default mesh
 
-Set the default mesh to use [MeshServices](/mesh/meshservice/) in [Exclusive mode](/mesh/meshservice/#exclusive). MeshServices are explicit resources that represent destinations for traffic in the mesh. They define which [Dataplanes](/mesh/data-plane-proxy/) serve the traffic, as well as the available ports, IPs, and hostnames. This configuration ensures a clearer and more precise way to manage services and traffic routing in the mesh.
+Set the default mesh to use [MeshServices](/mesh/meshservice/) in [Exclusive mode](/mesh/meshservice/#exclusive). MeshServices are explicit resources that represent traffic destinations — they define which [Dataplanes](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.
 
 ```sh
 echo 'type: Mesh

@@ -73,7 +73,7 @@ Run the installation command:
 curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
 ```
 
-Then add the binaries to your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)). Replace `<version>` with the version shown by the installer:
+Then add the binaries to your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)):
 
 ```sh
 export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
@@ -98,7 +98,7 @@ Set up a temporary directory to store resources like data plane tokens, [Datapla
 {:.warning}
 > **Important:** If you are using **Colima**, make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
 
-Check if the directory exists and is empty, and create it if necessary:
+Create the directory if it doesn't exist:
 
 ```sh
 export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"

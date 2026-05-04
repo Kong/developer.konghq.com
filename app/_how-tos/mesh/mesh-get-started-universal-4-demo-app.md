@@ -50,20 +50,18 @@ docker run \
   ghcr.io/kumahq/kuma-counter-demo:debian-slim
 ```
 
-To confirm the container is running, check its logs:
+Check the container logs to confirm it started:
 
 ```sh
 docker logs kong-mesh-demo-app
 ```
 
-Look for log entries like:
+You should see:
 
 ```
 time=2025-03-14T12:40:51.954Z level=INFO ... msg="starting handler with" kv-url=http://kv.svc.mesh.local:5050 version=v1
 time=2025-03-14T12:40:51.961Z level=INFO ... msg="server running" addr=:5050
 ```
-
-which indicates the demo app is up and listening on port `5050`.
 
 ## Prepare the application container
 
@@ -107,7 +105,7 @@ runuser --user kong-mesh-data-plane-proxy -- \
     > /demo/logs-data-plane-proxy-demo-app.log 2>&1 &
 ```
 
-To verify the proxy is running, after few seconds check its logs:
+After a few seconds, check the logs to verify the proxy is running:
 
 ```sh
 tail /demo/logs-data-plane-proxy-demo-app.log
@@ -122,8 +120,6 @@ You should see logs similar to:
 [2025-03-14 12:42:48.218][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
 [2025-03-14 12:42:48.245][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.1:5050'
 ```
-
-indicating that the data plane proxy has started and is configured successfully.
 
 ### Install the transparent proxy
 
@@ -142,7 +138,7 @@ To confirm success, check the last line of the log:
 tail -n1 /demo/logs-transparent-proxy-install-demo-app.log
 ```
 
-You should see a message containing:
+You should see:
 
 ```sh
 # transparent proxy setup completed successfully
@@ -150,7 +146,7 @@ You should see a message containing:
 
 ### Exit the container
 
-Demo application is now set up and running. You can safely exit the container as the configuration is complete:
+The demo application is running. Exit the container:
 
 ```sh
 exit

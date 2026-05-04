@@ -49,19 +49,17 @@ docker run \
   ghcr.io/kumahq/kuma-counter-demo:debian-slim
 ```
 
-To confirm the container is running properly, check its logs:
+Check the container logs to confirm it started:
 
 ```sh
 docker logs kong-mesh-demo-kv
 ```
 
-You should see a line like:
+You should see:
 
 ```txt
 time=2025-03-14T12:17:34.630Z level=INFO ... msg="server running" addr=:5050
 ```
-
-indicating that the key/value store is up and running.
 
 ## Prepare the container
 
@@ -76,10 +74,10 @@ docker exec --tty --interactive --privileged kong-mesh-demo-kv bash
 
 ### Install tools and create data plane proxy user
 
-Install the required tools for downloading {{site.mesh_product_name}} binaries, setting up the [transparent proxy](/mesh/transparent-proxying/), and create a dedicated user for the data plane proxy:
+Install the required tools and create a dedicated user for the data plane proxy:
 
-- `curl`: Needed to download the {{site.mesh_product_name}} binaries.
-- `iptables`: Required to configure the transparent proxy.
+- `curl`: Downloads the {{site.mesh_product_name}} binaries.
+- `iptables`: Configures the [transparent proxy](/mesh/transparent-proxying/).
 
 Run the following commands:
 
@@ -108,13 +106,11 @@ curl localhost:5050/api/key-value/zone \
   --data '{"value":"local-demo-zone"}'
 ```
 
-You should see a response:
+You should see:
 
 ```json
 {"value":"local-demo-zone"}
 ```
-
-indicating that the name was successfully set.
 
 ### Start the data plane proxy
 
@@ -130,7 +126,7 @@ runuser --user kong-mesh-data-plane-proxy -- \
     > /demo/logs-data-plane-proxy-kv.log 2>&1 &
 ```
 
-To verify the data plane proxy is running, after few seconds check the logs:
+After a few seconds, check the logs to verify the proxy is running:
 
 ```sh
 tail /demo/logs-data-plane-proxy-kv.log
@@ -146,8 +142,6 @@ You should see entries like:
 [2025-03-14 12:24:59.649][3088][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.0:5050'
 ```
 
-indicating that the data plane proxy has started and is configured successfully.
-
 ### Install the transparent proxy
 
 {:.warning}
@@ -159,23 +153,21 @@ kumactl install transparent-proxy \
   > /demo/logs-transparent-proxy-install-kv.log 2>&1
 ```
 
-To confirm the transparent proxy installed successfully, check the last log line:
+To confirm the installation succeeded, check the last line of the log:
 
 ```sh
 tail -n1 /demo/logs-transparent-proxy-install-kv.log
 ```
 
-You should see a message containing:
+You should see:
 
 ```sh
 # transparent proxy setup completed successfully
 ```
 
-indicating that the transparent proxy is now configured.
-
 ### Exit the container
 
-Key/Value Store is now set up and running. You can safely exit the container as the configuration is complete:
+The key/value store is set up. Exit the container:
 
 ```sh
 exit
