@@ -13,9 +13,7 @@ layout: default
                 {% assign h_max = 2 %}
                 {% if page.content_type == 'reference' or page.content_type == 'plugin' %}{% assign h_max= 3 %}{% endif %}
                 {% if page.toc_depth %}{% assign h_max = page.toc_depth %}{% endif %}
-                {% assign toc_flat = false %}
-                {% if page.content_type == 'learning_path_step' %}{% assign toc_flat = true %}{% endif %}
-                {% include toc.html page_title=page.title toc_skip_page_title=page.toc_skip_page_title html=content h_min=2 h_max=h_max id='toc' anchor_class='tab-button__vertical scroll-to' class="tabcolumn" flat_toc=toc_flat %}
+                {% include toc.html page_title=page.title toc_skip_page_title=page.toc_skip_page_title html=content h_min=2 h_max=h_max id='toc' anchor_class='tab-button__vertical scroll-to' class="tabcolumn" %}
             </div>
         {% endif %}
     </aside>
