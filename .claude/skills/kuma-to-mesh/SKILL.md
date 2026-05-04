@@ -80,12 +80,6 @@ layout: reference
 permalink: <config url when the desired URL does not match the default URL from app/mesh/<filename>.md>
 ```
 
-**Include if the page is a how-to guide:**
-```yaml
-content_type: how_to
-permalink: <based on the original url>
-```
-
 **Include if the page is a policy:**
 ```yaml
 name: <CRD kind, usually plural, e.g. MeshFaultInjections or MeshAccessLogs>
@@ -95,6 +89,31 @@ icon: policy.svg
 ```
 
 Do NOT include `breadcrumbs` or `layout` for policies.
+
+**Include if the page is a how-to guide:**
+```yaml
+content_type: how_to
+permalink: <based on the original url>
+works_on:
+  - on-prem        # always for Universal/VM guides; add konnect if the guide applies there too
+tldr:
+  q: <question form of the page title, e.g. "How do I deploy X?">
+  a: <one-sentence summary of what the reader achieves by following this guide>
+prereqs:
+  inline:
+    - title: <prerequisite title>
+      content: |
+        <prerequisite content — see Step 5g for how to extract this from the body>
+cleanup:
+  inline:
+    - title: <cleanup title>
+      content: |
+        <cleanup steps — see Step 5g for how to extract this from the body>
+```
+
+Omit `prereqs` or `cleanup` if the source page has no corresponding section.  
+Omit `works_on` only if scope cannot be determined.  
+The `tldr.a` value should complete the sentence "By the end of this guide, 
 
 **Include if available:**
 ```yaml
@@ -186,7 +205,19 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
    {% endtable %}
    ```
 
-### 5g. Keep unchanged
+### 5g. How-to structural transformations (how-to pages only)
+
+**Prerequisites section:** If the body contains a `## Prerequisites` section, move its content into the `prereqs.inline` frontmatter field and remove the heading from the body. Each top-level list item in that section becomes a separate `- title: / content: |` entry.
+
+**Cleanup section:** If the body contains a `## Cleanup` section, move its content (including any code blocks) into the `cleanup.inline` frontmatter field and remove the heading from the body. Use a `content: |` block scalar — code fences inside YAML block scalars are preserved correctly.
+
+**Section heading style:** Rewrite section headings to use imperative mood:
+- "Introduction to X" → "Introduce X"
+- "Setting up X" / "Setup of X" → "Set up X"
+- "Configuration of X" / "Configuring X" → "Configure X"
+- "Enabling X" → "Enable X"
+
+### 5h. Keep unchanged
 - `{% mermaid %}` blocks
 - `{% schema_viewer %}`, `{% policy_yaml %}` tags
 - `{:.warning}`, `{:.info}` callouts
