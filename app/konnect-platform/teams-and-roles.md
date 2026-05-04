@@ -27,7 +27,7 @@ faqs:
     a: A team is a group of users with access to the same roles. Teams allow assigning access to {{site.konnect_short_name}} resources based on roles.
   - q: What is a role in {{site.konnect_short_name}}?
     a: |
-      A role defines predefined access to a particular resource or instances of a resource type. For example, API roles can be scoped to a specific API or all APIs, while Control Plane roles can be scoped to a specific Control Plane or all Control Planes.
+      A role defines predefined access to a particular resource or instances of a resource type. For example, Catalog API roles can be scoped to a specific API or all APIs, while Control Plane roles can be scoped to a specific Control Plane or all Control Planes.
   - q: Can predefined teams in {{site.konnect_short_name}} be modified or deleted?
     a: No, predefined teams have fixed role sets that cannot be modified or deleted.
   - q: My team has a Dev Portal, why can't I see APIs?

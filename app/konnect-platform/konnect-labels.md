@@ -43,4 +43,4 @@ Each label must follow these requirements:
 
 ## Setting labels
 
-You can use labels across various components, including control planes and data planes. See the [API specs](/apis/) to learn which entities accept labels.
+You can use labels across various components, including control planes and data planes. See the [API specs](/api/) to learn which entities accept labels.
