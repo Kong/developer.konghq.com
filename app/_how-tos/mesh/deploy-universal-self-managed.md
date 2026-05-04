@@ -17,6 +17,8 @@ products:
 tags:
   - get-started
   - install
+search_aliases:
+  - quickstart
 
 tldr:
   q: How do I install {{site.mesh_product_name}} with a {{site.konnect_short_name}} self managed Control plane?
