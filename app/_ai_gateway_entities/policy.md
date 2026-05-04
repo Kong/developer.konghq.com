@@ -63,7 +63,7 @@ faqs:
 
 ## What is a Policy?
 
-A Policy is a plugin instance registered through the {{site.ai_gateway}} entity surface.
+A Policy is an AI Gateway entity that represents an action, taken by a plugin, that can be attached to an AI Gateway entity.
 
 Each Policy declares a `type` (which is a plugin name, for example `ai-sanitizer` or `ai-rate-limiting-advanced`) and a `config` block whose contents follow that plugin's own schema. {{site.ai_gateway}} attaches the configured plugin at the scope you select: globally, or to a specific Model, Agent, or MCP Server.
 
