@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@0a73b4a5f51ebe63c6d45446f906c0222e59a803
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/0a73b4a5f51ebe63c6d45446f906c0222e59a803'
+  x-oas-source: kong/platform-api@e3d5dfe7bdaea8d4805488b5519e30efbadcdaea
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/e3d5dfe7bdaea8d4805488b5519e30efbadcdaea'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -2198,57 +2198,6 @@ components:
           type: integer
           example: 1
       title: Move document
-    ApiVersion:
-      type: object
-      properties:
-        id:
-          description: The API version identifier.
-          type: string
-          format: uuid
-          example: 7710d5c4-d902-410b-992f-18b814155b53
-          readOnly: true
-        version:
-          description: The version of the api.
-          type: string
-          example: 1.0.0
-        spec:
-          type: object
-          additionalProperties: false
-          properties:
-            content:
-              description: |
-                The raw content of your API spec, in json or yaml format (OpenAPI or AsyncAPI).
-              example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
-              type: string
-            type:
-              description: |
-                The type of specification being stored. This allows us to render the specification correctly.
-              type: string
-              example: oas3
-              enum:
-                - oas2
-                - oas3
-                - asyncapi
-              readOnly: true
-              title: API Spec Type
-            validation_messages:
-              description: The errors that occurred while parsing the API version spec.
-              type: array
-              items:
-                type: object
-                additionalProperties: false
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-              readOnly: true
-        created_at:
-          $ref: '#/components/schemas/CreatedAt'
-        updated_at:
-          $ref: '#/components/schemas/UpdatedAt'
-      additionalProperties: false
-      title: API Version
     ApiVersionSummary:
       type: object
       properties:
@@ -2275,6 +2224,23 @@ components:
       nullable: true
       readOnly: true
       title: API Version Summary
+    APIVersionRequest:
+      type: object
+      properties:
+        version:
+          description: The version of the api.
+          type: string
+          example: 1.0.0
+        spec:
+          type: object
+          additionalProperties: false
+          properties:
+            content:
+              description: 'The raw content of API specification, in json or yaml format (OpenAPI or AsyncAPI).'
+              example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
+              type: string
+      additionalProperties: false
+      title: API Version Request
     ApiSpec:
       type: object
       properties:
@@ -4554,12 +4520,6 @@ components:
           schema:
             type: object
             properties:
-              id:
-                description: The API version identifier.
-                type: string
-                format: uuid
-                example: 7710d5c4-d902-410b-992f-18b814155b53
-                readOnly: true
               version:
                 description: The version of the api.
                 type: string
@@ -4569,41 +4529,13 @@ components:
                 additionalProperties: false
                 properties:
                   content:
-                    description: |
-                      The raw content of your API spec, in json or yaml format (OpenAPI or AsyncAPI).
+                    description: 'The raw content of API specification, in json or yaml format (OpenAPI or AsyncAPI).'
                     example: '{"openapi":"3.0.3","info":{"title":"Example API","version":"1.0.0"},"paths":{"/example":{"get":{"summary":"Example endpoint","responses":{"200":{"description":"Successful response"}}}}}}'
                     type: string
-                  type:
-                    description: |
-                      The type of specification being stored. This allows us to render the specification correctly.
-                    type: string
-                    example: oas3
-                    enum:
-                      - oas2
-                      - oas3
-                      - asyncapi
-                    readOnly: true
-                    title: API Spec Type
-                  validation_messages:
-                    description: The errors that occurred while parsing the API version spec.
-                    type: array
-                    items:
-                      type: object
-                      additionalProperties: false
-                      required:
-                        - message
-                      properties:
-                        message:
-                          type: string
-                    readOnly: true
-              created_at:
-                $ref: '#/components/schemas/CreatedAt'
-              updated_at:
-                $ref: '#/components/schemas/UpdatedAt'
             additionalProperties: false
             required:
               - spec
-            title: API Version
+            title: API Version Request
           examples:
             CreateApiVersionRequestExampleJson:
               $ref: '#/components/examples/CreateApiVersionRequestExampleJson'
@@ -4825,7 +4757,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApiVersion'
+            $ref: '#/components/schemas/APIVersionRequest'
           examples:
             UpdateApiVersionContentRequest:
               $ref: '#/components/examples/UpdateApiVersionContentRequestExample'
