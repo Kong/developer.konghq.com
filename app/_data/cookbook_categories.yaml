@@ -13,3 +13,9 @@
 - text: MCP governance
   slug: mcp-governance
   icon: "/assets/icons/cookbooks/mcp-governance.svg"
+- text: MCP
+  slug: mcp
+  icon: "/assets/icons/cookbooks/mcp.svg"
+- text: LLM
+  slug: llm
+  icon: "/assets/icons/cookbooks/ai.svg"
