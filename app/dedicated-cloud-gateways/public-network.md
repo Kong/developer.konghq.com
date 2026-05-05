@@ -156,7 +156,7 @@ Because the Kong-managed Dedicated Cloud Gateway data plane exposes a DNS hostna
 Instead, you must use a CDN because it natively supports DNS-based origins and can attach WAF policies at the distribution level.
 
 Examples of CDN or edge services that support this pattern:
-- Amazon CloudFront with AWS WAF
+- {{ site.amazon }} CloudFront with AWS WAF
 - Azure Front Door with Azure WAF
 - Cloudflare (WAF built in)
 - Fastly with Next-Gen WAF

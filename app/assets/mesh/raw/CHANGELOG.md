@@ -4646,13 +4646,13 @@ Built on top of [Kuma 2.0.1](https://github.com/kumahq/kuma/releases/tag/2.0.1)
 
 Built on top of [Kuma 2.0.0](https://github.com/kumahq/kuma/releases/tag/2.0.0)
 
-### Amazon ECS
+### {{ site.amazon }} ECS
 
 You can now configure the sidecar to authenticate using the IAM role of the ECS task it's running as instead of using a data plane token. 
 The control plane interprets the tags on the role similar to how it interprets the data plane token.
 This simplifies the deployment and management of Kong Mesh on ECS.
 
-For more information, see [Kong Mesh on Amazon ECS](/mesh/latest/installation/ecs/).
+For more information, see [Kong Mesh on {{ site.amazon }} ECS](/mesh/latest/installation/ecs/).
 
 ### Includes [kumahq/kuma@2.0.0](https://github.com/kumahq/kuma/releases/tag/2.0.0) changelog
 * chore(.github): remove old release workflow [#4836](https://github.com/kumahq/kuma/pull/4836) @lobkovilya

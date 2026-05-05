@@ -52,7 +52,7 @@ plane certificates.
 using a CA root certificate and key stored in a HashiCorp Vault
 server.
 * [`acmpca`](/mesh/acm-private-ca-policy/): {{site.mesh_product_name}} generates Data Plane certificates
-using Amazon Certificate Manager Private CA.
+using {{ site.amazon }} Certificate Manager Private CA.
 * [`certmanager`](/mesh/cert-manager/): {{site.mesh_product_name}} generates Data Plane certificates
 using Kubernetes [cert-manager](https://cert-manager.io) certificate controller.
 

@@ -5,7 +5,7 @@ You can follow the setup instructions in the UI wizard when you add the AWS API 
 
 {% navtabs "IAM-role" %}
 {% navtab "AWS UI" %}
-If you want to use the AWS console UI, follow the steps in Amazon's Creating an IAM role (console) documentation. Make sure to select Another AWS account and enter the Account ID (auto gen id here) and select Require external ID and enter the External ID (external id here). Navigate to the role in the console UI and copy the ARN to use in Konnect.
+If you want to use the AWS console UI, follow the steps in {{ site.amazon }}'s Creating an IAM role (console) documentation. Make sure to select Another AWS account and enter the Account ID (auto gen id here) and select Require external ID and enter the External ID (external id here). Navigate to the role in the console UI and copy the ARN to use in Konnect.
 1. In the AWS console, navigate to the [**IAM**](https://console.aws.amazon.com/iam/) settings.
 2. In the IAM sidebar, click **Policies**.
 3. Click **Create policy**.

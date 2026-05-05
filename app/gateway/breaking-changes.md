@@ -387,8 +387,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -484,8 +484,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -541,8 +541,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -622,8 +622,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -691,8 +691,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -822,8 +822,8 @@ rows:
       The Brotli module is missing from all the following ARM64 {{site.base_gateway}} Docker images:
       * RHEL 9
       * Debian 12
-      * Amazon Linux 2
-      * Amazon Linux 2023
+      * {{ site.amazon }} Linux 2
+      * {{ site.amazon }} Linux 2023
 
       There is no workaround for this issue.
     status: Not fixed
@@ -898,9 +898,9 @@ Additionally, compression is disabled.
 
 Breaking changes in the 3.4.0.0 release.
 
-#### Amazon Linux 2022 to 2023 rename
+#### {{ site.amazon }} Linux 2022 to 2023 rename
 
-Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
+{{ site.amazon }} Linux 2022 artifacts are renamed to {{ site.amazon }} Linux 2023, based on AWS's own renaming.
 
 #### Alpine support removed
 
@@ -1041,9 +1041,9 @@ You can grant the permissions in one of two ways:
 
 Breaking changes in the 3.2.2.4 release.
 
-#### Amazon Linux 2022 to 2023 rename
+#### {{ site.amazon }} Linux 2022 to 2023 rename
 
-Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
+{{ site.amazon }} Linux 2022 artifacts are renamed to {{ site.amazon }} Linux 2023, based on AWS's own renaming.
 
 #### Ubuntu 18.04 support removed
 
@@ -1294,7 +1294,7 @@ setting the upstream headers for a credential.
 
 #### Deployment
 
-Amazon Linux 1 and Debian 8 (Jessie) containers and packages are deprecated and are no longer produced for new versions of {{site.base_gateway}}.
+{{ site.amazon }} Linux 1 and Debian 8 (Jessie) containers and packages are deprecated and are no longer produced for new versions of {{site.base_gateway}}.
 
 #### Blue-green deployments
 
@@ -1656,9 +1656,9 @@ images or packages, and Kong will not test package installation on Ubuntu 18.04.
 
 Breaking changes in the 2.8.0.0 release.
 
-#### Amazon Linux 2022 to 2023 rename
+#### {{ site.amazon }} Linux 2022 to 2023 rename
 
-Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
+{{ site.amazon }} Linux 2022 artifacts are renamed to {{ site.amazon }} Linux 2023, based on AWS's own renaming.
 
 
 
