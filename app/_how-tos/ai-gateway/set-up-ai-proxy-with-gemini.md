@@ -84,7 +84,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy with {{ site.gemini}}, configure API key authentication and specify the {{ site.gemini}} model to use. 
+To set up AI Proxy with {{ site.gemini }}, configure API key authentication and specify the {{ site.gemini }} model to use. 
 
 In this example, we use the gemini-2.5-flash model:
 

@@ -85,7 +85,7 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The {{ site.gemini}} CLI expects to communicate with {{ site.google}}'s {{ site.gemini}} API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
+First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The {{ site.gemini }} CLI expects to communicate with {{ site.google}}'s {{ site.gemini }} API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
 
 Routing CLI tools through {{site.ai_gateway}} removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
 
@@ -114,7 +114,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between {{ site.gemini}} CLI and {{site.ai_gateway}} by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as {{ site.gemini}} CLI runs through {{site.base_gateway}}.
+Now, let's configure the [File Log](/plugins/file-log/) plugin to inspect the traffic between {{ site.gemini }} CLI and {{site.ai_gateway}} by attaching a File Log plugin to the Service. This creates a local log file for examining requests and responses as {{ site.gemini }} CLI runs through {{site.base_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -126,7 +126,7 @@ entities:
 
 ## Export environment variables
 
-Open a new terminal window and export the variables that the {{ site.gemini}} CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from {{ site.gemini}} CLI will route:
+Open a new terminal window and export the variables that the {{ site.gemini }} CLI will use. Point `GOOGLE_GEMINI_BASE_URL` to the local proxy endpoint where LLM traffic from {{ site.gemini }} CLI will route:
 
 {% on_prem %}
 content: |
@@ -149,15 +149,15 @@ content: |
 
 ## Validate the configuration
 
-Now you can test the {{ site.gemini}} CLI setup.
+Now you can test the {{ site.gemini }} CLI setup.
 
-1. In the terminal where you exported your {{ site.gemini}} environment variables, run:
+1. In the terminal where you exported your {{ site.gemini }} environment variables, run:
 
    ```sh
    gemini --model gemini-2.5-flash
    ```
 
-   You should see the {{ site.gemini}} CLI interface start up.
+   You should see the {{ site.gemini }} CLI interface start up.
 
 2. Run a command to test the connection:
 

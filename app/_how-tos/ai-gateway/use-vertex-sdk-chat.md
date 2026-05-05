@@ -77,7 +77,7 @@ automated_tests: false
 
 ## Configure the AI Proxy Advanced plugin
 
-The AI Proxy Advanced plugin supports {{ site.google}}'s Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through {{site.ai_gateway}}. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the {{ site.gemini}}-specific request structure.
+The AI Proxy Advanced plugin supports {{ site.google}}'s Vertex AI models with service account authentication. This configuration allows you to route requests in Vertex AI's native format through {{site.ai_gateway}}. The plugin handles authentication with GCP, manages the connection to Vertex AI endpoints, and proxies requests without modifying the {{ site.gemini }}-specific request structure.
 
 Apply the plugin configuration with your GCP service account credentials:
 

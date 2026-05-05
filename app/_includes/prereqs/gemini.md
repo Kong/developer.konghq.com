@@ -1,4 +1,4 @@
-Before you begin, you must get the {{ site.gemini}} API key from {{ site.google}} Cloud:
+Before you begin, you must get the {{ site.gemini }} API key from {{ site.google}} Cloud:
 
 1. Go to the [{{ site.google}} Cloud Console](https://console.cloud.google.com/).
 2. Select or create a project.

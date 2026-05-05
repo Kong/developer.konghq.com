@@ -84,7 +84,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with {{ site.gemini}}, configure API key authentication and specify the {{ site.gemini}} model to use. 
+To set up AI Proxy Advanced with {{ site.gemini }}, configure API key authentication and specify the {{ site.gemini }} model to use. 
 
 In this example, we use the `gemini-2.5-flash` model:
 
@@ -106,7 +106,7 @@ entities:
 variables:
   gemini_api_key:
     value: $GEMINI_API_KEY
-    description: The API key to use to connect to {{ site.gemini}}.
+    description: The API key to use to connect to {{ site.gemini }}.
 {% endentity_examples %}
 <!--vale on-->
 
