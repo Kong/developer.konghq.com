@@ -1,5 +1,5 @@
 ---
-title: Introduce zero-trust security
+title: Introduce zero-trust security with {{site.mesh_product_name}}
 description: "Enable mTLS and configure the built-in gateway to secure {{site.mesh_product_name}} services and allow external traffic into the mesh."
 content_type: how_to
 permalink: /mesh/get-started/universal/zero-trust-security/
@@ -53,9 +53,11 @@ next_steps:
     url: /mesh/mesh-multizone-service-deployment/
 ---
 
-By default, the network is **insecure and unencrypted**. With {{site.mesh_product_name}}, you can enable the [Mutual TLS (mTLS)](/mesh/policies/mutual-tls/) policy to secure the network. This works by setting up a Certificate Authority (CA) that automatically provides TLS certificates to your services (specifically to the data plane proxies running next to each service).
+By default, the network is insecure and unencrypted. With {{site.mesh_product_name}}, you can enable the [Mutual TLS (mTLS)](/mesh/policies/mutual-tls/) policy to secure the network. It sets up a Certificate Authority (CA) that automatically provides TLS certificates to your services, specifically to the data plane proxies running next to each service.
 
-To enable Mutual TLS using a `builtin` CA backend, run the following command:
+## Enable Mutual TLS
+
+Enable Mutual TLS using a `builtin` CA backend:
 
 ```sh
 echo 'type: Mesh
@@ -69,15 +71,14 @@ mtls:
     type: builtin' | kumactl apply -f -
 ```
 
-After enabling mTLS, all traffic is **encrypted and secure**. However, you can no longer access the `demo-app` directly, meaning <http://127.0.0.1:25050> will no longer work. This happens for two reasons:
+After enabling mTLS, all traffic is encrypted and secure. However, you can no longer access the `demo-app` directly, meaning <http://127.0.0.1:25050> will no longer work. This happens for two reasons:
 
-<!-- vale Vale.Terms = NO -->
-1. When mTLS is enabled, {{site.mesh_product_name}} doesn't create traffic permissions by default. This means no traffic will flow until you define a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow `demo-app` to communicate with `kv`.
+* {{site.mesh_product_name}} doesn't create traffic permissions by default when mTLS is enabled. No traffic will flow until you define a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy.
+* Browsers and HTTP clients outside the mesh don't have a valid certificate signed by the `ca-1` CA, so their connections are rejected.
 
-2. When you try to call `demo-app` using a browser or other HTTP client, you are essentially acting as an external client without a valid TLS certificate. Since all services are now required to present a certificate signed by the `ca-1` Certificate Authority, the connection is rejected. Only services within the `default` mesh, which are assigned valid certificates, can communicate with each other.
-<!-- vale Vale.Terms = YES -->
+## Allow traffic between `demo-app` and `kv`
 
-To address the first issue, you need to apply an appropriate [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy:
+Apply a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow traffic between the `kv` and `demo-app` services:
 
 ```sh
 echo 'type: MeshTrafficPermission 
@@ -97,16 +98,11 @@ spec:
       action: Allow' | kumactl apply -f -
 ```
 
-The second issue requires a gateway proxy. Browsers and HTTP clients outside the mesh don't have a valid mTLS certificate, so {{site.mesh_product_name}} rejects their connections. To route external traffic into the mesh, use the [built-in gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
-
-{:.info}
-> For more information, see [Managing incoming traffic with gateways](/mesh/ingress/).
-
-The built-in gateway needs its own Dataplane resource, separate from the service data plane proxies.
+To allow external traffic into the mesh, we'll use the [built-in gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
 
 ## Create a Dataplane resource
 
-Unlike the service Dataplane template used in earlier pages, the gateway uses a static configuration since there's only one instance:
+The built-in gateway needs its own `Dataplane` resource, separate from the service data plane proxies. Unlike the service `Dataplane` template used in previous steps, the gateway uses a static configuration since there's only one instance:
 
 ```sh
 echo 'type: Dataplane
@@ -120,11 +116,9 @@ networking:
   address: 172.57.78.4' > "$KONG_MESH_DEMO_TMP/dataplane-edge-gateway.yaml"
 ```
 
-If you prefer to keep the flexibility of dynamic values, you can use the same template mechanisms for the gateway's [Dataplane](/mesh/data-plane-proxy/) configuration as you did for regular services.
-
 ## Generate a data plane token
 
-The gateway proxy requires a data plane token to securely register with the control plane. You can generate the token using the following command:
+The gateway proxy requires a data plane token to securely register with the control plane. Generate the token using the following command:
 
 ```sh
 kumactl generate dataplane-token \
@@ -135,7 +129,7 @@ kumactl generate dataplane-token \
 
 ## Start the gateway container
 
-With the configuration and token in place, you can start the gateway proxy as a container:
+With the configuration and token in place, we can start the gateway proxy as a container:
 
 ```sh
 docker run \
@@ -157,9 +151,7 @@ This command starts the gateway proxy and registers it with the control plane. H
 
 ## Configure the gateway with MeshGateway
 
-To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/gateway-listeners/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services.
-
-Apply the configuration:
+To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/meshgateway/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services:
 
 ```sh
 echo 'type: MeshGateway
@@ -176,15 +168,13 @@ conf:
       port: http-8080' | kumactl apply -f -
 ```
 
-<!-- vale Vale.Terms = NO -->
-This sets up the gateway to listen on port `8080` using the HTTP protocol and adds a tag (`port: http-8080`) to identify this listener in routing policies.
-<!-- vale Vale.Terms = YES -->
+This sets up the gateway to listen on port `8080` using the HTTP protocol and adds the tag `port: http-8080` to identify this listener in routing policies.
 
-You can test the gateway by visiting <http://127.0.0.1:28080>. You should see a message saying no routes match this [MeshGateway](/mesh/gateway-listeners/). This means the gateway is running, but no routes are set up yet to handle traffic.
+You can test the gateway by visiting <http://127.0.0.1:28080>. You should see a message saying no routes match this `MeshGateway`. This means the gateway is running, but no routes are set up yet to handle traffic.
 
 ## Create a route to connect the gateway to `demo-app`
 
-To route traffic from the gateway to the service, create a [MeshHTTPRoute](/mesh/policies/meshhttproute/) policy:
+To route traffic from the gateway to the service, create a [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) policy:
 
 ```sh
 echo 'type: MeshHTTPRoute
@@ -210,16 +200,16 @@ spec:
           name: demo-app' | kumactl apply -f -
 ```
 
-This route connects the gateway and its listener (`port: http-8080`) to the `demo-app` service. It forwards any requests with the path prefix `/` to `demo-app`.
+This route connects the gateway and its listener to the `demo-app` service. It forwards any requests with the path prefix `/` to `demo-app`.
 
 After setting up this route, the gateway will try to send traffic to `demo-app`. However, if you test it by visiting <http://127.0.0.1:28080>, you'll see:
 
 ```
 RBAC: access denied
 ```
-{:.no-line-numbers}
+{:.no-copy-code}
 
-This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`. Create one in the next section.
+This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`.
 
 ## Allow traffic from the gateway to `demo-app`
 

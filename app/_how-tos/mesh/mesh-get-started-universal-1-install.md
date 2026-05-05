@@ -1,5 +1,5 @@
 ---
-title: Install
+title: Install {{site.mesh_product_name}}
 description: "Install {{site.mesh_product_name}}, prepare working directories and configuration files, and create a Docker network for the Universal mode demo."
 content_type: how_to
 permalink: /mesh/get-started/universal/install/
@@ -55,7 +55,7 @@ flowchart LR
 browser(browser)
 
 subgraph mesh
-edge-gateway(edge-gateway)
+edge-gateway
 demo-app(demo-app :5050)
 kv(kv :5050)
 end
@@ -67,36 +67,37 @@ browser --> edge-gateway
 
 ## Install {{site.mesh_product_name}}
 
-Run the installation command:
+1. Run the following command ton install the {{site.mesh_product_name}} binaries:
 
-```sh
-curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
-```
+   ```sh
+   curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
+   ```
 
-Then add the binaries to your system's [PATH](https://en.wikipedia.org/wiki/PATH_(variable)):
+1. Add the binaries to your system's path:
 
-```sh
-export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
-```
+   ```sh
+   export PATH="$(pwd)/kong-mesh-{{site.data.mesh_latest.version}}/bin:$PATH"
+   ```
 
-To confirm that {{site.mesh_product_name}} is installed correctly, run:
+1. Run the following command to confirm that {{site.mesh_product_name}} is installed correctly:
 
-```sh
-kumactl version 2>/dev/null
-```
+   ```sh
+   kumactl version 2>/dev/null
+   ```
 
-You should see output similar to:
+   You should see the following output:
 
-```
-Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
-```
+   ```
+   Client: {{site.mesh_product_name}} {{site.data.mesh_latest.version}}
+   ```
+   {:.no-copy-code}
 
 ## Prepare a temporary directory
 
-Set up a temporary directory to store resources like data plane tokens, [Dataplane](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
+Set up a temporary directory to store resources like data plane tokens, [`Dataplane`](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
 
 {:.warning}
-> **Important:** If you are using **Colima**, make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
+> If you are using [Colima](https://colima.run/), make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-demo`, you can use `/tmp/colima/kong-mesh-demo`.
 
 Create the directory if it doesn't exist:
 
@@ -107,7 +108,7 @@ mkdir -p "$KONG_MESH_DEMO_TMP"
 
 ## Prepare a Dataplane resource template
 
-Create a reusable [Dataplane](/mesh/data-plane-proxy/) resource template for services:
+Create a reusable [`Dataplane`](/mesh/data-plane-proxy/) resource template for services:
 
 ```sh
 echo 'type: Dataplane
@@ -127,9 +128,11 @@ networking:
     redirectPortOutbound: 15001' > "$KONG_MESH_DEMO_TMP/dataplane.yaml"
 ```
 
-This template simplifies creating Dataplane configurations for different services by replacing dynamic values during deployment.
+This template simplifies creating `Dataplane` configurations for different services by replacing dynamic values during deployment.
 
 ## Prepare a transparent proxy configuration file
+
+Create a configuration file that identifies the data plane proxy user and enables DNS traffic redirection through the mesh:
 
 ```sh
 echo 'kumaDPUser: kong-mesh-data-plane-proxy
@@ -141,7 +144,7 @@ verbose: true' > "$KONG_MESH_DEMO_TMP/config-transparent-proxy.yaml"
 
 ## Create a Docker network
 
-Set up a separate Docker network for the containers. Use IP addresses in the `172.57.78.0/24` range or customize as needed:
+Set up a separate Docker network for the containers. In this example we'll use IP addresses in the `172.57.78.0/24` range:
 
 ```sh
 docker network create \

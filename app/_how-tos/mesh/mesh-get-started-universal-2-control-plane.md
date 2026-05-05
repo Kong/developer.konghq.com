@@ -1,5 +1,5 @@
 ---
-title: Set up the control plane
+title: Set up the {{site.mesh_product_name}} control plane
 description: "Start the {{site.mesh_product_name}} control plane as a Docker container and configure kumactl to connect to it."
 content_type: how_to
 permalink: /mesh/get-started/universal/control-plane/
@@ -25,7 +25,7 @@ tldr:
 
 ## Start the control plane
 
-Run the {{site.mesh_product_name}} control plane using the official Docker image:
+Run the {{site.mesh_product_name}} control plane using the `kuma-cp` Docker image:
 
 ```sh
 docker run \
@@ -39,52 +39,46 @@ docker run \
   kong/kuma-cp:{{site.data.mesh_latest.version}} run
 ```
 
-You can now access the [{{site.mesh_product_name}} user interface (GUI)](/mesh/interact-with-control-plane/) at <http://127.0.0.1:25681/gui>.
+You can now access the {{site.mesh_product_name}} user interface at <http://127.0.0.1:25681/gui>.
 
 ## Configure kumactl
 
 To manage the deployment with [kumactl](/mesh/cli/), connect it to the control plane you started in the previous section.
 
-### Retrieve the admin token
+1. Run the following command to get the admin token from the control plane:
 
-Run the following command to get the admin token from the control plane:
+   ```sh
+   export KONG_MESH_DEMO_ADMIN_TOKEN="$( 
+     docker exec --tty --interactive kong-mesh-demo-control-plane \
+       wget --quiet --output-document - \
+       http://127.0.0.1:5681/global-secrets/admin-user-token \
+       | jq --raw-output .data \
+       | base64 --decode
+   )"
+   ```
 
-```sh
-export KONG_MESH_DEMO_ADMIN_TOKEN="$( 
-  docker exec --tty --interactive kong-mesh-demo-control-plane \
-    wget --quiet --output-document - \
-    http://127.0.0.1:5681/global-secrets/admin-user-token \
-    | jq --raw-output .data \
-    | base64 --decode
-)"
-```
+1. Use the retrieved token to link kumactl to the control plane:
 
-### Connect to the control plane
+   ```sh
+   kumactl config control-planes add \
+     --name kong-mesh-demo \
+     --address http://127.0.0.1:25681 \
+     --auth-type tokens \
+     --auth-conf "token=$KONG_MESH_DEMO_ADMIN_TOKEN" \
+     --skip-verify
+   ```
 
-Use the retrieved token to link [kumactl](/mesh/cli/) to the control plane:
+1. Run the following command to verify the connection:
 
-```sh
-kumactl config control-planes add \
-  --name kong-mesh-demo \
-  --address http://127.0.0.1:25681 \
-  --auth-type tokens \
-  --auth-conf "token=$KONG_MESH_DEMO_ADMIN_TOKEN" \
-  --skip-verify
-```
+   ```sh
+   kumactl get meshes
+   ```
 
-### Verify the connection
-
-To verify the connection, run:
-
-```sh
-kumactl get meshes
-```
-
-You should see one mesh listed: `default`.
+   You should see one mesh listed: `default`.
 
 ## Configure the default mesh
 
-Set the default mesh to use [MeshServices](/mesh/meshservice/) in [Exclusive mode](/mesh/meshservice/#exclusive). MeshServices are explicit resources that represent traffic destinations — they define which [Dataplanes](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.
+Configure the default mesh to use [MeshServices](/mesh/meshservice/) in [Exclusive mode](/mesh/meshservice/#exclusive):
 
 ```sh
 echo 'type: Mesh
@@ -92,3 +86,5 @@ name: default
 meshServices:
   mode: Exclusive' | kumactl apply -f -
 ```
+
+MeshServices are explicit resources that represent traffic destinations, they define which [data plane proxies](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.

@@ -1,5 +1,5 @@
 ---
-title: Set up the demo application
+title: Set up a {{site.mesh_product_name}} demo application
 description: "Deploy the demo-app service as a Docker container and configure a data plane proxy and transparent proxy in {{site.mesh_product_name}} Universal mode."
 content_type: how_to
 permalink: /mesh/get-started/universal/demo-app/
@@ -23,9 +23,9 @@ tldr:
   a: Deploy the demo-app container, install the data plane proxy inside it, start the proxy with a generated token, and configure the transparent proxy to intercept all traffic automatically.
 ---
 
-The steps are the same as in the [previous page](/mesh/get-started/universal/kv/), with only the names changed.
-
 ## Generate a data plane token
+
+Create a token for the `demo-app` data plane proxy to authenticate with the control plane:
 
 ```sh
 kumactl generate dataplane-token \
@@ -36,113 +36,135 @@ kumactl generate dataplane-token \
 
 ## Start the application container
 
-```sh
-docker run \
-  --detach \
-  --name kong-mesh-demo-app \
-  --hostname demo-app \
-  --network kong-mesh-demo \
-  --ip 172.57.78.3 \
-  --publish 25050:5050 \
-  --volume "$KONG_MESH_DEMO_TMP:/demo" \
-  --env KV_URL=http://kv.svc.mesh.local:5050 \
-  --env APP_VERSION=v1 \
-  ghcr.io/kumahq/kuma-counter-demo:debian-slim
-```
+1. Run the container:
 
-Check the container logs to confirm it started:
+   ```sh
+   docker run \
+     --detach \
+     --name kong-mesh-demo-app \
+     --hostname demo-app \
+     --network kong-mesh-demo \
+     --ip 172.57.78.3 \
+     --publish 25050:5050 \
+     --volume "$KONG_MESH_DEMO_TMP:/demo" \
+     --env KV_URL=http://kv.svc.mesh.local:5050 \
+     --env APP_VERSION=v1 \
+     ghcr.io/kumahq/kuma-counter-demo:debian-slim
+   ```
 
-```sh
-docker logs kong-mesh-demo-app
-```
+1. Check the container logs to confirm it started:
 
-You should see:
+   ```sh
+   docker logs kong-mesh-demo-app
+   ```
 
-```
-time=2025-03-14T12:40:51.954Z level=INFO ... msg="starting handler with" kv-url=http://kv.svc.mesh.local:5050 version=v1
-time=2025-03-14T12:40:51.961Z level=INFO ... msg="server running" addr=:5050
-```
+   You should see something like this:
 
-## Prepare the application container
+   ```
+   time=2025-03-14T12:40:51.954Z level=INFO ... msg="starting handler with" kv-url=http://kv.svc.mesh.local:5050 version=v1
+   time=2025-03-14T12:40:51.961Z level=INFO ... msg="server running" addr=:5050
+   ```
+   {:.no-copy-code}
 
-Enter the container to install the data plane proxy and transparent proxy.
+## Configure the application container
+
+Enter the container for the remaining steps. Inside it, you'll install the data plane proxy and transparent proxy.
 
 ```sh
 docker exec --tty --interactive --privileged kong-mesh-demo-app bash
 ```
 
-{:.important.no-icon}
-> **Important:** The following steps must be executed inside the container.
+{:.warning}
+> The following steps must be executed inside the container.
 
 ### Install tools and create data plane proxy user
 
-```sh
-# install necessary packages
-apt-get update && \
-  apt-get install --yes curl iptables
+1. Install the required tools:
 
-# download and install {{site.mesh_product_name}}
-curl --location https://developer.konghq.com/mesh/installer.sh | sh -
+   * `curl`: Downloads the {{site.mesh_product_name}} binaries.
+   * `iptables`: Configures the [transparent proxy](/mesh/transparent-proxying/).
 
-# move {{site.mesh_product_name}} binaries to /usr/local/bin/ for global availability
-mv kong-mesh-*/bin/* /usr/local/bin/
+   ```sh
+   apt-get update && \
+     apt-get install --yes curl iptables
+   ```
 
-# create a dedicated user for the data plane proxy
-useradd --uid 5678 --user-group kong-mesh-data-plane-proxy
-```
+1. Download and install {{site.mesh_product_name}}:
+
+   ```sh
+   curl --location https://developer.konghq.com/mesh/installer.sh | sh -
+   ```
+
+1. Move {{site.mesh_product_name}} binaries to `/usr/local/bin/` for global availability:
+
+   ```sh
+   mv kong-mesh-*/bin/* /usr/local/bin/
+   ```
+
+1. Create a dedicated user for the data plane proxy:
+
+   ```sh
+   useradd --uid 5678 --user-group kong-mesh-data-plane-proxy
+   ```
 
 ### Start the data plane proxy
 
-```sh
-runuser --user kong-mesh-data-plane-proxy -- \
-  /usr/local/bin/kuma-dp run \
-    --cp-address https://control-plane:5678 \
-    --dataplane-token-file /demo/token-demo-app \
-    --dataplane-file /demo/dataplane.yaml \
-    --dataplane-var name=demo-app \
-    --dataplane-var address=172.57.78.3 \
-    --dataplane-var port=5050 \
-    > /demo/logs-data-plane-proxy-demo-app.log 2>&1 &
-```
+1. Start the proxy:
 
-After a few seconds, check the logs to verify the proxy is running:
+   ```sh
+   runuser --user kong-mesh-data-plane-proxy -- \
+     /usr/local/bin/kuma-dp run \
+       --cp-address https://control-plane:5678 \
+       --dataplane-token-file /demo/token-demo-app \
+       --dataplane-file /demo/dataplane.yaml \
+       --dataplane-var name=demo-app \
+       --dataplane-var address=172.57.78.3 \
+       --dataplane-var port=5050 \
+       > /demo/logs-data-plane-proxy-demo-app.log 2>&1 &
+   ```
 
-```sh
-tail /demo/logs-data-plane-proxy-demo-app.log
-```
+1. After a few seconds, check the logs to verify the proxy is running:
 
-You should see logs similar to:
+   ```sh
+   tail /demo/logs-data-plane-proxy-demo-app.log
+   ```
 
-```
-[2025-03-14 12:42:45.797][3090][info][config] [source/common/listener_manager/listener_manager_impl.cc:944] all dependencies initialized. starting workers
-[2025-03-14 12:42:48.159][3090][info][upstream] [source/common/upstream/cds_api_helper.cc:32] cds: add 9 cluster(s), remove 2 cluster(s)
-[2025-03-14 12:42:48.210][3090][info][upstream] [source/common/upstream/cds_api_helper.cc:71] cds: added/updated 1 cluster(s), skipped 8 unmodified cluster(s)
-[2025-03-14 12:42:48.218][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
-[2025-03-14 12:42:48.245][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.1:5050'
-```
+   You should see entries like these:
+
+   ```
+   [2025-03-14 12:42:45.797][3090][info][config] [source/common/listener_manager/listener_manager_impl.cc:944] all dependencies initialized. starting workers
+   [2025-03-14 12:42:48.159][3090][info][upstream] [source/common/upstream/cds_api_helper.cc:32] cds: add 9 cluster(s), remove 2 cluster(s)
+   [2025-03-14 12:42:48.210][3090][info][upstream] [source/common/upstream/cds_api_helper.cc:71] cds: added/updated 1 cluster(s), skipped 8 unmodified cluster(s)
+   [2025-03-14 12:42:48.218][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'kuma:dns'
+   [2025-03-14 12:42:48.245][3090][info][upstream] [source/common/listener_manager/lds_api.cc:106] lds: add/update listener 'outbound:241.0.0.1:5050'
+   ```
+   {:.no-copy-code}
 
 ### Install the transparent proxy
 
-{:.warning}
-> **Important:** Make sure this command is executed **inside the container**. It changes iptables rules to redirect all traffic to the data plane proxy. Running it on your computer or a virtual machine without the data plane proxy can disrupt network connectivity. On a virtual machine, this might lock you out until you restart it.
+{:.danger}
+> Make sure this command is executed **inside the container**. It changes iptables rules to redirect all traffic to the data plane proxy. Running it on your computer or a virtual machine without the data plane proxy can disrupt network connectivity. On a virtual machine, this might lock you out until you restart it.
 
-```sh
-kumactl install transparent-proxy \
-  --config-file /demo/config-transparent-proxy.yaml \
-  > /demo/logs-transparent-proxy-install-demo-app.log 2>&1
-```
+1. Install the transparent proxy:
 
-To confirm success, check the last line of the log:
+   ```sh
+   kumactl install transparent-proxy \
+     --config-file /demo/config-transparent-proxy.yaml \
+     > /demo/logs-transparent-proxy-install-demo-app.log 2>&1
+   ```
 
-```sh
-tail -n1 /demo/logs-transparent-proxy-install-demo-app.log
-```
+1. Confirm the installation succeeded by checking the last line of the log:
 
-You should see:
+   ```sh
+   tail -n1 /demo/logs-transparent-proxy-install-demo-app.log
+   ```
 
-```sh
-# transparent proxy setup completed successfully
-```
+   You should see:
+
+   ```sh
+   # transparent proxy setup completed successfully
+   ```
+   {:.no-copy-code}
 
 ### Exit the container
 
