@@ -70,6 +70,11 @@ There are a number of steps you must complete before upgrading to {{site.base_ga
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
 1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
+{%- if include.lts_version_from == "3.10" %}
+1. (_Optional_) Using your chosen strategy, upgrade to the latest patch version of 3.10. 
+   
+   This will give you the smoothest upgrade path, and access to the `kong check --lts-314-compatibility` CLI tool.
+{%- endif %}
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
@@ -166,6 +171,23 @@ The following tables categorize all relevant changelog entries from {{site.ee_pr
 Carefully review each entry and make changes to your configuration accordingly.
 
 {% include_cached /upgrade/lts-changes-310-314.md %}
+
+{% endif %}
+
+{% if include.lts_version_from == "3.10" %}
+
+## Optional: Upgrade to latest 3.10 patch version
+
+{{site.base_gateway}} 3.10.0.11 includes a preflight check tool to help you validate your `kong.conf` configuration against 3.14.
+We recommend upgrading to this version before upgrading to 3.14 to take advantage of this tool.
+
+After upgrading to 3.10.0.11 or later, run:
+
+```sh
+kong check --lts-314-compatibility /path/to/kong.conf
+```
+
+This check will output a list of changes and potential errors or areas of concern. Adjust the file as needed before moving on to the LTS upgrade.
 
 {% endif %}
 

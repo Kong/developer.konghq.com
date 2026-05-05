@@ -39,7 +39,7 @@ Review the [changelog](/gateway/changelog/#3-14-0-0) for all the changes in this
 
 This is a Long Term Support (LTS) release, so you can migrate your configurations from 3.10 (the previous LTS release) with [`deck file convert`](/deck/file/convert/).
 This utility converts a set of predefined entity configuration changes into 3.14 format so that they continue to function as before. 
-See the [how-to guide on converting 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/) for more information.
+See the [how-to guide on converting 3.10 to 3.14](/gateway/upgrade/convert-lts-310-314/) for more information, or see the [complete 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/) for all possible preparation steps and upgrade pathways.
 
 ### 3.14.0.2
 
