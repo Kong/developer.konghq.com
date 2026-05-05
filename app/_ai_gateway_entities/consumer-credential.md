@@ -92,9 +92,9 @@ The `api_key` field is write-only and cannot be retrieved after creation. Treat 
 
 ## Lifecycle
 
-Each Credential has its own UUID and is independently listable, gettable, and deletable through the nested endpoints under its parent Consumer. There's no PUT operation: rotation is an explicit "create new, delete old" flow, which avoids long-lived stale references.
+Each Credential has its own UUID and supports independent list, get, and delete operations through the nested endpoints under its parent Consumer. There is no `PUT` operation: rotation is an explicit "create new, delete old" flow, which avoids long-lived stale references.
 
-Deleting a Credential immediately stops authenticating that key. Deleting the parent Consumer removes all of its Credentials.
+Deleting a Credential immediately stops it from authenticating. Deleting the parent Consumer removes all of its Credentials.
 
 ## Set up an API key Credential
 
