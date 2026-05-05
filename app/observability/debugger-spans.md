@@ -24,7 +24,7 @@ related_resources:
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow.
 The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong
@@ -43,14 +43,14 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the client making the request. This considers forwarded addresses in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring the real_ip_header. Please refer to the real_ip_header and trusted_ips documentation.
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. This considers forwarded ports in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring the real_ip_header. Please refer to the real_ip_header and trusted_ips documentation.
   - name: "`network.peer.address`"
-    description: IP of the component that is connecting to Kong
+    description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
-    description: Port of the component that is connecting to Kong
+    description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
     description: Kong's DNS name or IP used in client connection
   - name: "`server.port`"
