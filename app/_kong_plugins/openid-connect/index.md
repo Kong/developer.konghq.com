@@ -699,7 +699,7 @@ If one of these other applications is causing issues, looking into using the fol
 The plugin has been tested with several OpenID Connect providers:
 
 - [Auth0](https://auth0.com/docs/protocols/openid-connect-protocol)
-- [Amazon AWS Cognito](https://curity.io/resources/learn/openid-connect-overview/)
+- [Amazon AWS Cognito](https://aws.amazon.com/cognito/dev-resources/)
 - [Connect2id](https://connect2id.com/products/server)
 - [Curity](https://curity.io/resources/learn/openid-connect-overview/)
 - [Dex](https://dexidp.io/docs/openid-connect/)

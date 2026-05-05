@@ -12,6 +12,7 @@ module Jekyll
 
       def process
         return unless @page.data['breadcrumbs']
+        return if Jekyll.env == 'development' && ENV['PAGE_PATHS']
 
         @page.data['breadcrumbs'] = build_breadcrumbs
       end

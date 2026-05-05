@@ -269,10 +269,18 @@ module Jekyll
       @page = context.environments.first['page']
 
       @params.each do |k, v|
-        next unless %w[use_meshservice namespace].include?(k)
+        next unless %w[use_meshservice namespace tools].include?(k)
         next unless v.is_a?(String)
 
-        @params[k] = v.split('.').reduce(context) { |c, key| c[key] } || false
+        if v.include?('.')
+          resolved = v.split('.').reduce(context) { |c, key| c[key] }
+          @params[k] = k == 'tools' ? resolved : (resolved || false)
+        elsif k == 'tools'
+          @params[k] = v.split(',')
+        elsif k == 'use_meshservice'
+          @params[k] = v == 'true'
+        end
+        # namespace literals (no dot) are kept as set by parse_markup
       end
 
       has_raw = @body.nodelist.first { |x| x.has?('tag_name') and x.tag_name == 'raw' }
@@ -285,6 +293,11 @@ module Jekyll
       use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
                                                                                                       '0')) >= TARGET_VERSION
       show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
+
+      tools = Array(@params['tools'])
+      show_kubernetes = (tools.empty? || tools.include?('kubernetes'))
+      show_universal = (tools.empty? || tools.include?('universal'))
+      show_tf = show_tf && (tools.empty? || tools.include?('terraform'))
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
       styles = [
@@ -320,6 +333,8 @@ module Jekyll
       context.stack do
         context['additional_classes'] = additional_classes
         context['use_meshservice'] = use_meshservice
+        context['show_kubernetes'] = show_kubernetes
+        context['show_universal'] = show_universal
         context['show_tf'] = show_tf
         context['terraform_content'] = terraform_content
         context['kube_legacy'] = contents[:kube_legacy]

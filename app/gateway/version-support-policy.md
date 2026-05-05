@@ -51,11 +51,10 @@ For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version
 > Each year, the first version we release will become an LTS release. 
 > Starting from 3.10, we will have 1 LTS release every year, in March* of that year.
 > <br><br>
-> Example of planned LTS schedule for next 4 years:
+> Example of planned LTS schedule for next 2 years:
 >
 > | LTS Version | Planned release date |
 > |---|---|
-> | 3.14 | March 2026 |
 > | 3.18 | March 2027 |
 > | 3.22 | March 2028 |
 >
@@ -109,6 +108,11 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{tab_name}} %}
+{% assign first_version = release.release | append: ".0.0" %}
+{% assign release_date = site.data.products.gateway.release_dates[first_version] | split: '/' | join: '-' %}
+{% if release_date %}
+{{site.base_gateway}} version {{first_version}} was first released on {{release_date}}.
+{% endif %}
 {{site.ee_product_name}} {{tab_name}} supports the following deployment targets until {{release.eol}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
   {% include support/gateway.html release=release %}
 {% endnavtab %}
@@ -117,9 +121,9 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% endnavtabs %}
 
 {:.info}
-> **Note**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
-
-For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
+> **Notes**: 
+> - **OS End of Life**: If you're running a currently supported version of {{site.base_gateway}} on an OS that doesn't appear in this table, that OS has reached End of Life and Kong no longer supports it.
+> - **FIPS mode**: FIPS Docker images are only available for AMD64. ARM64 is not supported. For information about FIPS, see the [FIPS support policy](/gateway/fips-support/).
 
 ## Marketplaces
 

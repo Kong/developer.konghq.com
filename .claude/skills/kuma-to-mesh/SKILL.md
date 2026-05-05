@@ -14,6 +14,7 @@ Convert the Kuma documentation file into a Kong Mesh documentation page.
 - **Kuma source root**: https://github.com/kumahq/kuma-website/tree/master/app/_src
 - **Kong Mesh reference target root**: `/developer.konghq.com/app/mesh/`
 - **Kong Mesh how-to target root**: `/developer.konghq.com/app/_how-tos/mesh`
+- **Kong Mesh policy target root**: `/developer.konghq.com/app/_mesh_policies`
 - **Conversion config**: `/developer.konghq.com/app/_data/kuma_to_mesh/config.yaml`
 
 ---
@@ -34,7 +35,7 @@ If a config entry is found, use its values as the authoritative source for:
 
 ## Step 2 — Read the source file
 
-Read the Kuma source file. Note its existing frontmatter fields (`title`, `description`, `keywords`, `content_type`, `category`) and full body content. Identify the type of content: if it contains mostly step-by-step instructions, it's a how-to. Otherwise it's a reference.
+Read the Kuma source file. Note its existing frontmatter fields (`title`, `description`, `keywords`, `content_type`, `category`) and full body content. Identify the type of content: if it contains mostly step-by-step instructions, it's a how-to. If the category is policy, it's a policy. Otherwise it's a reference.
 
 ---
 
@@ -45,6 +46,7 @@ Read the Kuma source file. Note its existing frontmatter fields (`title`, `descr
 - Otherwise: use the source file's basename.
 - If the page is a reference: write it to `developer.konghq.com/app/mesh/<filename>.md`
 - If the page is a how-to: write it to `developer.konghq.com/app/_how-tos/mesh/<filename>.md`
+- If the page is a policy: write it to `developer.konghq.com/app/_mesh_policies/<policy_name>/index.md` and add `developer.konghq.com/app/_mesh_policies/<policy_name>/examples/<example_name>.yaml`
 
 Check whether the target file already exists. If it does, show the user the existing content and ask whether to overwrite before proceeding.
 
@@ -83,6 +85,16 @@ permalink: <config url when the desired URL does not match the default URL from 
 content_type: how_to
 permalink: <based on the original url>
 ```
+
+**Include if the page is a policy:**
+```yaml
+name: <CRD kind, usually plural, e.g. MeshFaultInjections or MeshAccessLogs>
+content_type: plugin
+type: policy
+icon: policy.svg
+```
+
+Do NOT include `breadcrumbs` or `layout` for policies.
 
 **Include if available:**
 ```yaml
@@ -187,6 +199,22 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
 
 Write the fully transformed content to the target file path.
 
+If the page is a policy, extract examples from the source file and write each one to `developer.konghq.com/app/_mesh_policies/<policy_name>/examples/<example_name>.yaml` using this format:
+
+```yaml
+title: 'Human readable title'
+description: 'What this example does.'
+weight: 900
+namespace: kong-mesh-demo
+config:
+  type: <CRD kind>
+  name: <example-name>
+  mesh: default
+  spec:
+    ...
+```
+
+Then remove the examples from the policy reference page.
 ---
 
 ## Step 7 — Review text quality

@@ -141,6 +141,7 @@ cmd
 cncf
 cncf's
 CNAMEs
+CNIs
 Cohere
 cohere
 Cognito
@@ -566,6 +567,7 @@ mebibytes
 Memcached
 Memcached
 Memorystore
+Merbridge
 meshopa
 meshopas
 meshpassthrough
@@ -596,6 +598,7 @@ MongoDB
 multimodal
 multitenant
 multitenancy
+Multus
 mutex
 NACLs
 nameserver
@@ -835,6 +838,7 @@ SLT_Enc
 sni
 snis
 sonarqube
+Speedscope
 Splunk
 Splunk
 sse
@@ -993,6 +997,7 @@ untrusted
 untyped
 unvetted
 unversioned
+versionless
 unwanted
 updated_at
 unprefixed
@@ -1068,6 +1073,8 @@ Zipkin
 Zipkin
 zipkin
 zsh
+conflist
+kindnet
 Subrequest
 Tablepool
 XMLua

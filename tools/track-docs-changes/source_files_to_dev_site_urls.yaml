@@ -1592,7 +1592,7 @@ app/_src/.repos/kuma/app/_src/production/mesh.md:
 app/_src/.repos/kuma/app/_src/production/secure-deployment/certificates.md:
   - /mesh/secure-access/
 app/_src/.repos/kuma/app/_src/production/secure-deployment/dp-auth.md:
-  - /mesh/dp-auth/
+  - /mesh/data-plane-proxy-authentication/
 app/_src/.repos/kuma/app/_src/production/upgrades-tuning/fine-tuning.md:
   - /mesh/performance-tuning/
 app/_src/.repos/kuma/app/_src/production/upgrades-tuning/upgrade-notes.md:
@@ -1608,7 +1608,7 @@ app/_src/.repos/kuma/app/_src/reference/kubernetes-annotations.md:
 app/_src/.repos/kuma/app/_src/reference/kuma-cp.md:
   - /mesh/reference/kuma-cp/
 app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md:
-  - /mesh/gateway-pods-k8s/
+  - /mesh/meshgatewayinstance/
 app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md:
   - /mesh/gateway-listeners/
 app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-routes.md:
