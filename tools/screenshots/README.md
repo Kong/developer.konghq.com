@@ -1,85 +1,51 @@
 <!--vale off-->
 
-## Prerequisites
+# Konnect Screenshots
 
-Make sure python3 and pipenv are installed:
-
-1. Install `python3`:
-
-    ```
-    brew install python3
-    ```
-
-2. Install `pipenv`:
-
-    ```
-    python3 -m pip install pipenv
-    ```
+Screenshots are captured using the [kong-product-org/shot-scraper](https://github.com/kong-product-org/shot-scraper) fork. Screenshot configs and macros live in that repo. Output images are written to `app/assets/images/` in this repo.
 
 ## Setup
 
-We're using a fork of `shot-scraper` that adds support for reusable macros and persistent Chrome authentication.
+Clone the fork and install:
 
-```
+```bash
 git clone https://github.com/kong-product-org/shot-scraper
 cd shot-scraper
-python3 -m pipenv shell
-pip install -e .
+make install
 ```
-
-You'll need to run `python3 -m pipenv shell` any time you want to use the tool.
 
 ## Authentication
 
-Konnect requires authentication before it will show you the pages you need.
-
-The fork supports persistent Chrome authentication via your existing Chrome profile, so you don't need to log in every time.
-
-### Option 1: Persistent Chrome profile (recommended)
-
-Set the `SHOT_SCRAPER_CHROME_PROFILE` environment variable to your Chrome profile directory:
-
-**macOS:**
 ```bash
-export SHOT_SCRAPER_CHROME_PROFILE="$HOME/Library/Application Support/Google/Chrome/Default"
+make set-env   # prints the export command — add it to your shell profile
+make auth      # opens a browser to log in to Konnect
 ```
 
-**Linux:**
-```bash
-export SHOT_SCRAPER_CHROME_PROFILE="$HOME/.config/google-chrome/Default"
-```
+## Taking screenshots
 
-Then run auth once to open Chrome and log in to Konnect:
+Run from inside the shot-scraper repo:
 
 ```bash
-shot-scraper auth https://cloud.konghq.com auth.json
+make screenshot konnect/platform/overview.yaml
 ```
 
-Press `<enter>` once you see the Konnect dashboard. Your session is saved in your Chrome profile and will persist across runs.
-
-### Option 2: Auth file (fallback)
-
-If you don't set `SHOT_SCRAPER_CHROME_PROFILE`, the tool falls back to file-based auth:
+If your docs repo is not at `../developer.konghq.com`, pass the path explicitly:
 
 ```bash
-shot-scraper auth https://cloud.konghq.com /tmp/auth.json
+make screenshot konnect/platform/overview.yaml DOCS_DIR=/path/to/developer.konghq.com
 ```
 
-## Usage
+Available configs:
 
-Run the following command to regenerate screenshots:
-
-```bash
-cd tools/screenshots
-shot-scraper multi --macro macros.yaml MY_SCREENSHOTS_FILE.yaml
 ```
-
-If using the auth file fallback, pass `-a` with the path:
-
-```bash
-shot-scraper multi -a /tmp/auth.json --macro macros.yaml MY_SCREENSHOTS_FILE.yaml
+konnect/ai-manager/
+konnect/analytics/
+konnect/catalog/
+konnect/datakit/
+konnect/debugger/
+konnect/dev-portal/
+konnect/event-gateway/
+konnect/gateway-manager/
+konnect/mesh-manager/
+konnect/platform/
 ```
-
-## Debugging
-
-To see the browser while capturing screenshots, set the `SHOT_SCRAPER_CHROME_PROFILE` env var (see above). The persistent context runs in non-headless mode by default when used interactively.

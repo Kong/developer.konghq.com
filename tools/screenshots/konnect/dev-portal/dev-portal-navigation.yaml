@@ -1,9 +1,0 @@
-- output: ../../app/assets/images/dev-portal/dev-portal-navigation.png
-  url: https://cloud.konghq.com/us/portals/96203762-1e75-49ab-a581-eb0ce46fe579/editor/navigation/main
-  wait: 1000
-  width: 2033
-  height: 1384
-  javascript: |
-    async () => {
-      await sleep(9000);
-    }

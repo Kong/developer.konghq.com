@@ -1,9 +1,0 @@
-- output: ../../app/assets/images/gateway-manager/konnect-control-plane-dashboard.png
-  url: https://cloud.konghq.com/us/gateway-manager
-  wait: 1000
-  width: 2033
-  height: 1384
-  javascript: |
-    async () => {
-      await sleep(9000);
-    }
