@@ -79,10 +79,10 @@ automated_tests: false
 ## Configure the AI Proxy plugin
 
 Configure the AI Proxy plugin for the DashScope provider.
-* This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
+* This setup uses the default `llm/v1/chat` route. {{ site.claude}} Code sends its requests to this route.
 * The configuration also raises the maximum token count size to 8192 to support larger prompts.
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the DashScope endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude}}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude}} Code communicates with the DashScope endpoint.
 
 {% entity_examples %}
 entities:
@@ -110,7 +110,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
+Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude}} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude}} sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -122,7 +122,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Start a Claude Code session that points to the local {{site.ai_gateway}} endpoint:
+Start a {{ site.claude}} Code session that points to the local {{site.ai_gateway}} endpoint:
 
 {:.warning}
 > Ensure that `ANTHROPIC_MODEL` matches the model you configured in the AI Proxy plugin (for example, `qwen-plus`).
@@ -133,7 +133,7 @@ ANTHROPIC_MODEL=qwen-plus \
 claude
 ```
 
-Claude Code asks for permission before it runs tools or interacts with files:
+{{ site.claude}} Code asks for permission before it runs tools or interacts with files:
 
 ```text
 I'll need permission to work with your files.
@@ -157,7 +157,7 @@ Select **Yes, continue**. The session starts. Ask a simple question to confirm t
 Tell me who Niketas Choniates was.
 ```
 
-Claude Code might prompt you to approve its web search for answering the question. When you select **Yes**, Claude will produce a full-length response to your request:
+{{ site.claude}} Code might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude}} will produce a full-length response to your request:
 
 ```text
 Niketas Choniates was a Byzantine Greek historian and government official
@@ -182,7 +182,7 @@ Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxie
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
 ```
 
-You should find an entry that shows the upstream request made by Claude Code. A typical log record looks like this:
+You should find an entry that shows the upstream request made by {{ site.claude}} Code. A typical log record looks like this:
 
 ```json
 {
@@ -232,4 +232,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through {{site.ai_gateway}} using DashScope with the `qwen-plus` model.
+This output confirms that {{ site.claude}} Code routed the request through {{site.ai_gateway}} using DashScope with the `qwen-plus` model.

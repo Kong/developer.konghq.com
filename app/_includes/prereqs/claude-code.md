@@ -1,4 +1,4 @@
-1. Install Claude:
+1. Install {{ site.claude}}:
     ```sh
     curl -fsSL https://claude.ai/install.sh | bash
     ```
