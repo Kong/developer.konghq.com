@@ -44,7 +44,7 @@ kumactl generate dataplane-token \
      --name kong-mesh-demo-kv \
      --hostname kv \
      --network kong-mesh-demo \
-     --ip 172.57.78.2 \
+     --ip 172.18.78.2 \
      --volume "$KONG_MESH_DEMO_TMP:/demo" \
      ghcr.io/kumahq/kuma-counter-demo:debian-slim
    ```

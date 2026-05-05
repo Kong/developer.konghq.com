@@ -113,7 +113,7 @@ cleanup:
 
 Omit `prereqs` or `cleanup` if the source page has no corresponding section.  
 Omit `works_on` only if scope cannot be determined.  
-The `tldr.a` value should complete the sentence "By the end of this guide, 
+The `tldr.a` value should complete the sentence "By the end of this guide, you will ...".
 
 **Include if available:**
 ```yaml

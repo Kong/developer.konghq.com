@@ -44,7 +44,7 @@ kumactl generate dataplane-token \
      --name kong-mesh-demo-app \
      --hostname demo-app \
      --network kong-mesh-demo \
-     --ip 172.57.78.3 \
+     --ip 172.18.78.3 \
      --publish 25050:5050 \
      --volume "$KONG_MESH_DEMO_TMP:/demo" \
      --env KV_URL=http://kv.svc.mesh.local:5050 \

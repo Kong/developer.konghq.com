@@ -67,7 +67,7 @@ browser --> edge-gateway
 
 ## Install {{site.mesh_product_name}}
 
-1. Run the following command ton install the {{site.mesh_product_name}} binaries:
+1. Run the following command to install the {{site.mesh_product_name}} binaries:
 
    ```sh
    curl -L https://developer.konghq.com/mesh/installer.sh | VERSION={{site.data.mesh_latest.version}} sh -
@@ -144,12 +144,12 @@ verbose: true' > "$KONG_MESH_DEMO_TMP/config-transparent-proxy.yaml"
 
 ## Create a Docker network
 
-Set up a separate Docker network for the containers. In this example we'll use IP addresses in the `172.57.78.0/24` range:
+Set up a separate Docker network for the containers. In this example we'll use IP addresses in the `172.18.78.0/24` range:
 
 ```sh
 docker network create \
-  --subnet 172.57.0.0/16 \
-  --ip-range 172.57.78.0/24 \
-  --gateway 172.57.78.254 \
+  --subnet 172.18.0.0/16 \
+  --ip-range 172.18.78.0/24 \
+  --gateway 172.18.78.254 \
   kong-mesh-demo
 ```

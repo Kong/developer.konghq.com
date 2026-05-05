@@ -137,7 +137,7 @@ docker run \
   --name kong-mesh-demo-edge-gateway \
   --hostname gateway \
   --network kong-mesh-demo \
-  --ip 172.57.78.4 \
+  --ip 172.18.78.4 \
   --publish 28080:8080 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
   kong/kuma-dp:{{site.data.mesh_latest.version}} run \

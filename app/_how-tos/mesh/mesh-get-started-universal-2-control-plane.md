@@ -33,7 +33,7 @@ docker run \
   --name kong-mesh-demo-control-plane \
   --hostname control-plane \
   --network kong-mesh-demo \
-  --ip 172.57.78.1 \
+  --ip 172.18.78.1 \
   --publish 25681:5681 \
   --volume "$KONG_MESH_DEMO_TMP:/demo" \
   kong/kuma-cp:{{site.data.mesh_latest.version}} run
