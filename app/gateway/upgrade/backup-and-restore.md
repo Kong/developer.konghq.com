@@ -86,7 +86,7 @@ If you're running {{site.base_gateway}} as a control plane in {{site.konnect_sho
 Review the list of [entities managed by decK](/deck/reference/entities/) to see what can be backed up using this method.
 
 {:.info}
-It does not back up Dev Portal, API Products, {{site.konnect_catalog}}, and so on. 
+> decK **does not** back up Dev Portal, {{site.konnect_catalog}}, Observability, and so on. 
 Data stored in these applications, such as API specs and documents, must be manually backed up.
 
 ### Back up a {{site.konnect_short_name}} control plane

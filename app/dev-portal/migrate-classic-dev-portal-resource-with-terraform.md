@@ -19,8 +19,6 @@ breadcrumbs:
 
 description: "Learn how to migrate your classic Dev Portal (v2) `konnect_portal` Terraform resource to `konnect_portal_classic`."
 related_resources:
-  - text: API Products
-    url: /api-products/
   - text: Migrate from classic Dev Portal (v2) to the new Dev Portal (v3)
     url: /dev-portal/v2-migration/
 ---

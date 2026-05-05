@@ -21,8 +21,8 @@ faqs:
   - q: What data can I collect Analytics from?
     a: |
         * **API**
-        * **API Product**
-        * **API Product Version**
+        * **API Product** (Classic)
+        * **API Product Version** (Classic)
         * **Application**
         * **Consumer**
         * **Control Plane**

@@ -51,6 +51,10 @@ faqs:
       You can see your support cases in the [Kong Support portal](https://support.konghq.com). 
       
       If you don't have a Kong Support portal account, request access from your org admin or reach out to a Kong representative for an invite.
+  - q: Why did a configuration that was previously valid start failing after a control plane update?
+    a: |
+      The {{site.konnect_short_name}} control plane is versionless, so it always runs the latest release. If a validation rule changes, a config that worked before can fail next time you perform a `deck sync`.
+
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
@@ -64,6 +68,11 @@ This reference explains which browsers, software versions, tools, and applicatio
 ### Dedicated Cloud Gateway upgrades
 
 {% include /sections/dcgw-upgrades.md %}
+
+## {{site.konnect_short_name}} control plane compatibility
+
+Defaults change at major {{site.base_gateway}} versions or when a security vulnerability requires it. Your configuration continues to work without modification across minor and patch releases.
+
 
 ## {{site.mesh_product_name}} compatibility
 

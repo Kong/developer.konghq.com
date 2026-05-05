@@ -838,6 +838,7 @@ SLT_Enc
 sni
 snis
 sonarqube
+Speedscope
 Splunk
 Splunk
 sse
@@ -996,6 +997,7 @@ untrusted
 untyped
 unvetted
 unversioned
+versionless
 unwanted
 updated_at
 unprefixed

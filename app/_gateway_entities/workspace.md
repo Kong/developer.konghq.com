@@ -119,9 +119,9 @@ config:
 
 ## Roles, groups, and permissions
 
-Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. Users will require either a Super Admin or Admin role to configure Workspaces. 
+Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. To do so, users need either the built-in Super Admin or Admin role.
 
-The following table details which Workspace permissions each Admin role has:
+The following table details which Workspace permissions each built-in role has:
 <!-- vale off -->
 {% feature_table %}
 columns:
@@ -147,6 +147,12 @@ features:
 
 {% endfeature_table %}
 <!-- vale on -->
+
+{:.info}
+> **Note:** Creating a Workspace is a global operation that isn't controlled by Workspace-specific permissions. 
+By default, custom roles are scoped to a single Workspace and **cannot** create new Workspaces. 
+To allow a user with a custom role to create Workspaces, use the [Admin API to grant the role permissions](/api/gateway/admin-ee/#/operations/create-rbac-roles-name_or_id-endpoints) with the Workspace set to `*` (all Workspaces).
+
 For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
 
