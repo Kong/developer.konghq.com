@@ -29,7 +29,7 @@ tldr:
     a: Navigate to the local folder to use Git natively in your Insomnia Git Sync project.
 
 faqs:
-  - q: macOS:Why do I get the error string not in pwd?
+  - q: macOS: Why do I get the error "string not in `pwd`" when trying to access my project's local folder?
     a: |
       That error is because the path has a space in it (Application Support), and your shell is splitting it into two arguments. `cd` only sees the first part (`/Users/<your-user>/Library/Application`), can't find it, and complains.
       
@@ -47,7 +47,7 @@ related_resources:
 
 ---
 
-## Find your project's URI
+## Find your project's local path
 
 1. Select your project options and click **Settings**.
 1. Check the section **Path to local files**: depending on your OS, Insomnia displays the exact local path where it stores the project.
