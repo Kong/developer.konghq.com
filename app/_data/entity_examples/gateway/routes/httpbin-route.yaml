@@ -1,0 +1,5 @@
+name: httpbin-route
+paths:
+  - /httpbin
+service:
+  name: httpbin

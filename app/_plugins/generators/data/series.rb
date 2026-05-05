@@ -44,6 +44,11 @@ module Jekyll
       def set_prerequisites!(page) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         return unless page.data['series']
 
+        if page.data['content_type'] == 'learning_path_step'
+          set_learning_path_prerequisites!(page)
+          return
+        end
+
         page.data['prereqs'] = page.data['prereqs'] || {}
 
         previous_page = page.data['series']['items'].find do |item|
@@ -67,6 +72,21 @@ module Jekyll
 
             Complete the previous page, [**#{previous_page.data['title']}**](#{previous_page.url}) before completing this page.
           HEREDOC
+        }
+      end
+
+      def set_learning_path_prerequisites!(page)
+        previous_page = page.data['series']['items'].find do |item|
+          item.data['series']['position'] == page.data['series']['position'] - 1
+        end
+        return unless previous_page
+
+        page.data['prereqs'] ||= {}
+        page.data['prereqs']['inline'] ||= []
+        page.data['prereqs']['inline'] << {
+          'position' => 'before',
+          'title' => 'Previous Step',
+          'content' => "Complete [**#{previous_page.data['title']}**](#{previous_page.url}) before continuing."
         }
       end
 
@@ -95,10 +115,12 @@ module Jekyll
 
       def set_breadcrumbs!(page)
         return unless page.data['series']
-        return unless @series_meta['breadcrumb_title']
+
+        series_meta = @site.data['series'][page.data['series']['id']]
+        return unless series_meta&.fetch('breadcrumb_title', nil)
 
         page.data['breadcrumbs'] << {
-          'title' => @series_meta['breadcrumb_title'],
+          'title' => series_meta['breadcrumb_title'],
           'url' => page.data['series']['items'].first.url
         }
       end

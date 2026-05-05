@@ -9,6 +9,8 @@ module Jekyll
           'concept' => 'Concept',
           'how_to' => 'HowTo',
           'landing_page' => 'LandingPage',
+          'learning_path' => 'LearningPath',
+          'learning_path_step' => 'LearningPath',
           'plugin' => 'Plugin',
           'plugin_example' => 'PluginExample',
           'reference' => 'Reference',

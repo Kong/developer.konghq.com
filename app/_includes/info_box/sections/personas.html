@@ -1,0 +1,16 @@
+{% if include.personas != empty %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">Personas</div>
+  <div class="flex gap-1.5 flex-wrap">
+    {% for persona_id in include.personas %}
+      {% assign persona = site.data.personas | where: "id", persona_id | first %}
+      {% if persona %}
+        {% assign persona_url = "/learning-paths/personas/" | append: persona_id | append: "/" %}
+        {% include badge.html url=persona_url text=persona.name %}
+      {% else %}
+        {% include badge.html text=persona_id %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
