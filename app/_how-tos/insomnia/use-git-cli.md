@@ -1,5 +1,5 @@
 ---
-title: Use Git CLI in an Insomnia project 
+title: Use Git CLI in an Insomnia project
 permalink: /how-to/use-git-cli/
 content_type: how_to
 
@@ -31,7 +31,7 @@ tldr:
 faqs:
   - q: macOS:Why do I get the error string not in pwd?
     a: |
-      That error is because the path has a space in it (Application Support), and your shell is splitting it into two arguments. `cd` only sees the first part (/Users/<your-user>/Library/Application), can't find it, and complains.
+      That error is because the path has a space in it (Application Support), and your shell is splitting it into two arguments. `cd` only sees the first part (`/Users/<your-user>/Library/Application`), can't find it, and complains.
       
       Fix it by quoting the path that Insomnia provides from the UI:
 
@@ -52,7 +52,7 @@ related_resources:
 1. Select your project options and click **Settings**.
 1. Check the section **Path to local files**: depending on your OS, Insomnia displays the exact local path where it stores the project.
 1. Copy the path.
-1. Paste the path in your terminal to navigate at the root of the repository. The command should look like that:
+1. Paste the path into your terminal to navigate to the root of the repository. The command should look like this:
 
 {% navtabs "repo" %}
 
