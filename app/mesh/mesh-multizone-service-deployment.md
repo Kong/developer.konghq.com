@@ -8,6 +8,9 @@ products:
 breadcrumbs:
   - /mesh/
 
+min_version:
+  mesh: '2.6'
+
 tags:
   - multi-zone
   - zones
@@ -40,13 +43,57 @@ related_resources:
 {{site.mesh_product_name}} supports running your service mesh in multiple zones. It is even possible to run with a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes (multi-tenancy), and workloads running in different regions, on different clouds, or in different datacenters. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
 The only condition is that all the data planes running within the zone must be able to connect to the other data planes in this same zone.
 
-<center>
-<img src="/assets/images/diagrams/gslides/kuma_multizone.svg" alt="{{site.mesh_product_name}} service mesh multi-zone deployment without zone egress" style="padding-top: 20px; padding-bottom: 10px;"/>
-</center>
+{% mermaid %}
+flowchart TB
+    GCP[Global control plane]
+
+    subgraph ZA[Zone A]
+        ZCPA[Zone control plane]
+        DPPA[Data plane proxies]
+        ZEA[Zone egress]
+        ZIA[Zone ingress]
+    end
+
+    subgraph ZB[Zone B]
+        ZCPB[Zone control plane]
+        DPPB[Data plane proxies]
+        ZEB[Zone egress]
+        ZIB[Zone ingress]
+    end
+
+    GCP <-->|KDS| ZCPA
+    GCP <-->|KDS| ZCPB
+    ZCPA <-->|xDS| DPPA & ZEA & ZIA
+    ZCPB <-->|xDS| DPPB & ZEB & ZIB
+    DPPA -->|outbound| ZEA -->|cross-zone| ZIB -->|inbound| DPPB
+    DPPB -->|outbound| ZEB -->|cross-zone| ZIA -->|inbound| DPPA
+{% endmermaid %}
+
 Or without the optional zone egress:
-<center>
-<img src="/assets/images/diagrams/gslides/kuma_multizone_without_egress.svg" alt="{{site.mesh_product_name}} service mesh multi-zone deployment without zone egress" style="padding-top: 20px; padding-bottom: 10px;"/>
-</center>
+
+{% mermaid %}
+flowchart TB
+    GCP[Global control plane]
+
+    subgraph ZA[Zone A]
+        ZCPA[Zone control plane]
+        DPPA[Data plane proxies]
+        ZIA[Zone ingress]
+    end
+
+    subgraph ZB[Zone B]
+        ZCPB[Zone control plane]
+        DPPB[Data plane proxies]
+        ZIB[Zone ingress]
+    end
+
+    GCP <-->|KDS| ZCPA
+    GCP <-->|KDS| ZCPB
+    ZCPA <-->|xDS| DPPA & ZIA
+    ZCPB <-->|xDS| DPPB & ZIB
+    DPPA -->|cross-zone| ZIB -->|inbound| DPPB
+    DPPB -->|cross-zone| ZIA -->|inbound| DPPA
+{% endmermaid %}
 
 ## How it works
 
@@ -73,14 +120,13 @@ Requests to the `availableServices` from `zone-a` are load balanced between loca
 Requests sent to `zone-b` are routed to the zone ingress proxy of `zone-b`.
 
 For load-balancing, the zone ingress endpoints are weighted with the number of instances running behind them. So a zone with 2 instances will receive twice as much traffic as a zone with 1 instance.
-You can also favor local service instances with {% if_version lte:2.5.x %}[locality-aware load balancing](/mesh/policies/locality-aware){% endif_version %}{% if_version gte:2.6.x %}[locality-aware load balancing](/mesh/policies/meshloadbalancingstrategy){% endif_version %}.
+You can also favor local service instances with [locality-aware load balancing](/mesh/policies/meshloadbalancingstrategy).
 
 In the presence of a [zone egress](/mesh/zone-egress/), the traffic is routed through the local zone egress before being sent to the remote zone ingress.
 
 When using [transparent proxy](/mesh/transparent-proxying/) (default in Kubernetes),
 {{site.mesh_product_name}} generates a VIP,
 a DNS entry with the format `<kuma.io/service>.mesh`, and will listen for traffic on port 80. The `<kuma.io/service>.mesh:80` format is just a convention.
-[`VirtualOutbounds`](/mesh/policies/virtual-outbound) enable you to customize the listening port and how the DNS name for these services looks.
 
 {:.info}
 > A zone ingress is not an API gateway. It is only used for cross-zone communication within a mesh. API gateways are supported in {{site.mesh_product_name}} [gateway mode](/mesh/ingress/) and can be deployed in addition to zone ingresses.
@@ -180,4 +226,4 @@ When it happens:
 - Communication across zones will fail.
 
 {:.info}
-> With the right resiliency setup ({% if_version lte:2.5.x %}[Retries](/mesh/policies/meshretry){% endif_version %}{% if_version gte:2.6.x %}[MeshRetries](/mesh/policies/meshretry){% endif_version %}, {% if_version lte:2.5.x %}[Probes](/mesh/policies/meshhealthcheck){% endif_version %}{% if_version gte:2.6.x %}[MeshHealthCheck](/mesh/policies/meshhealthcheck){% endif_version %}, {% if_version lte:2.5.x %}[Locality Aware Load Balancing](/mesh/policies/meshloadbalancingstrategy){% endif_version %}{% if_version gte:2.6.x %}[MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy){% endif_version %}, {% if_version lte:2.5.x %}[Circuit Breakers](/mesh/policies/meshcircuitbreaker){% endif_version %}{% if_version gte:2.6.x %}[MeshCircuitBreakers](/mesh/policies/meshcircuitbreaker){% endif_version %}) the failing zone can be quickly severed and traffic re-routed to another zone.
+> With the right resiliency setup ([MeshRetries](/mesh/policies/meshretry), [MeshHealthCheck](/mesh/policies/meshhealthcheck), [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy), [MeshCircuitBreakers](/mesh/policies/meshcircuitbreaker)) the failing zone can be quickly severed and traffic re-routed to another zone.
