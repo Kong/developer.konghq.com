@@ -215,6 +215,63 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+#### Dedicated Cloud Gateway custom teams
+
+You can use custom teams in {{site.konnect_short_name}} to manage access for common Dedicated Cloud Gateway personas. The following table details the roles you can assign to each custom team:
+<!--vale off-->
+{% table %}
+columns:
+  - title: Persona
+    key: persona
+  - title: Custom team description
+    key: description
+  - title: Roles
+    key: roles
+rows:
+  - persona: Platform engineer
+    description: |
+      A platform engineer has access to create and manage Dedicated Cloud Gateway networks and control planes.
+      They also can configure Dedicated Cloud Gateway add-ons, like managed cache.
+    roles: |
+      * Network Creator
+      * Network Admin
+      * Control Plane Creator
+      * Cloud Gateway Cluster Admin
+      * Add On Viewer
+      * Add On Admin
+  - persona: Network engineer
+    description: |
+      A network engineer has access to configure private networking, transit gateways, and DNS resolution for Dedicated Cloud Gateway networks.
+    roles: |
+      * Network Admin
+      * Network Viewer
+      * Cloud Gateway Cluster Admin
+      * Cloud Gateway Cluster Viewer
+  - persona: Serverless engineer
+    description: |
+      A serverless engineer has access to configure serverless gateways.
+    roles: |
+      * Serverless Cluster Admin
+      * Serverless Cluster Viewer
+  - persona: API/gateway developer
+    description: |
+      An API/gateway developer has access to configure Gateway Services, Routes, plugins, and Consumers within a Dedicated Cloud Gateway control plane.
+    roles: |
+      * Gateway Service Admin
+      * Route Admin
+      * Plugin Admin
+      * Consumer Admin
+  - persona: Ops viewer
+    description: |
+      An ops viewer has read-only access to Dedicated Cloud Gateway networks, control planes, and add-ons for monitoring and troubleshooting.
+    roles: |
+      * Network Viewer
+      * Cloud Gateway Cluster Viewer
+      * Add On Viewer
+      * Viewer (Control Plane)
+{% endtable %}
+<!--vale on-->
+
 ## Roles
 
 Roles predefine access to a particular resource, or
