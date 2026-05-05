@@ -40,7 +40,7 @@ related_resources:
 
 ## About
 
-{{site.mesh_product_name}} supports running your service mesh in multiple zones, including a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes (multi-tenancy), and workloads running in different regions, on different clouds, or in different datacenters. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
+{{site.mesh_product_name}} supports running your service mesh in multiple zones, including a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes (multi-tenancy), and workloads running in different regions, on different clouds, or in different data centers. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
 The only condition is that all the data planes running within the zone can connect to the other data planes in the same zone.
 
 {% mermaid %}
