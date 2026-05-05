@@ -126,9 +126,9 @@ cleanup:
 automated_tests: false
 ---
 
-## Add an invalid API key as a secret in Google Cloud Secret Manager
+## Add an invalid API key as a secret in {{ site.google}} Cloud Secret Manager
 
-In this tutorial, first we'll create a secret with an invalid API key in Google Cloud Secret Manager. Later, we'll add the correct API key as another secret version, but this allows us to test if {{site.base_gateway}} picks up the rotated secret correctly.
+In this tutorial, first we'll create a secret with an invalid API key in {{ site.google}} Cloud Secret Manager. Later, we'll add the correct API key as another secret version, but this allows us to test if {{site.base_gateway}} picks up the rotated secret correctly.
 
 Create a secret called `test-secret` and then create a new secret version with the secret value of `Bearer invalid`:
 
@@ -140,13 +140,13 @@ echo -n "Bearer invalid" | \
       gcloud secrets versions add test-secret --data-file=-
 ```
 
-The first command is supported on Linux, macOS, and Cloud Shell. For other distributions, see [Create a secret](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret) in Google Cloud documentation.
+The first command is supported on Linux, macOS, and Cloud Shell. For other distributions, see [Create a secret](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret) in {{ site.google}} Cloud documentation.
 
 ## Configure Secret Manager as a vault with the Vault entity
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
-In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with Google Cloud to get the rotated secret. We've configured a low value so that we can quickly validate that the secret rotation is functioning as expected.
+In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with {{ site.google}} Cloud to get the rotated secret. We've configured a low value so that we can quickly validate that the secret rotation is functioning as expected.
 
 {% entity_examples %}
 entities:
@@ -183,7 +183,7 @@ entities:
 
 ## Validate that {{site.base_gateway}} uses the invalid API key from the secret
 
-First, let's validate that the secret was stored correctly in Google Cloud by calling a secret from your vault using the `kong vault get` command within the Data Plane container.
+First, let's validate that the secret was stored correctly in {{ site.google}} Cloud by calling a secret from your vault using the `kong vault get` command within the Data Plane container.
 
 {% validation vault-secret %}
 secret: '{vault://gcp-sm-vault/test-secret}'

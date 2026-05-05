@@ -35,14 +35,14 @@ prereqs:
       icon_url: /assets/icons/analytics.svg
 ---
 
-You can integrate Google Analytics 4 with your Dev Portal to track developer activity and Dev Portal usage. Once configured, Google Analytics 4 will receive event data from your Dev Portal, allowing you to monitor page views, developer journeys, and API documentation engagement.
+You can integrate {{ site.google}} Analytics 4 with your Dev Portal to track developer activity and Dev Portal usage. Once configured, {{ site.google}} Analytics 4 will receive event data from your Dev Portal, allowing you to monitor page views, developer journeys, and API documentation engagement.
 
-## Configure the Google Analytics 4 integration
+## Configure the {{ site.google}} Analytics 4 integration
 
-Configure the Google Analytics integration in your Dev Portal settings.
+Configure the {{ site.google}} Analytics integration in your Dev Portal settings.
 
 {% include /dev-portal/google-analytics-integration.md %}
 
 ## Validate
 
-You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Analytics information there.
+You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Analytics information there.

@@ -78,7 +78,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-The AI Proxy plugin supports Google's Gemini models and works with the Google Generative AI SDK. This configuration allows you to use the standard Gemini SDK. Apply the plugin configuration with your Gemini credentials:
+The AI Proxy plugin supports {{ site.google}}'s Gemini models and works with the {{ site.google}} Generative AI SDK. This configuration allows you to use the standard Gemini SDK. Apply the plugin configuration with your Gemini credentials:
 
 {% entity_examples %}
 entities:
@@ -100,9 +100,9 @@ variables:
     value: $GEMINI_API_KEY
 {% endentity_examples %}
 
-## Test with Google Generative AI SDK
+## Test with {{ site.google}} Generative AI SDK
 
-Create a test script that uses the Google Generative AI SDK. The script initializes a client with a dummy API key because {{site.ai_gateway}} handles authentication, then sends a generation request through the gateway:
+Create a test script that uses the {{ site.google}} Generative AI SDK. The script initializes a client with a dummy API key because {{site.ai_gateway}} handles authentication, then sends a generation request through the gateway:
 
 ```py
 cat << 'EOF' > gemini.py

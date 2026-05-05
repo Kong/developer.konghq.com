@@ -582,7 +582,7 @@ Replace the following with your actual values:
 {% navtab "GCP instance" %}
 
 You need:
-* A running Redis instance on an [Google Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+* A running Redis instance on an [{{ site.google}} Cloud Memorystore instance](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
 * Assign the principal to the corresponding role: 
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey
@@ -681,7 +681,7 @@ Replace the following with your actual values:
 {% navtab "GCP cluster" %}
 
 You need:
-* A running Redis instance on an [Google Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
+* A running Redis instance on an [{{ site.google}} Cloud Memorystore cluster](https://cloud.google.com/memorystore/docs/cluster/about-iam-auth)
 * Assign the principal to the corresponding role: 
     * [Cloud Memorystore Redis DB Connection User(`roles/redis.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/cluster/about-iam-auth) for Memorystore for Redis Cluster
     * [Memorystore DB Connector User (`roles/memorystore.dbConnectionUser`)](https://docs.cloud.google.com/memorystore/docs/valkey/about-iam-auth) for Memorystore for Valkey

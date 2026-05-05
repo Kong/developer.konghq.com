@@ -85,7 +85,7 @@ automated_tests: false
 ---
 ## Configure the AI Proxy plugin
 
-First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with Google's Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
+First, let's configure the [AI Proxy](/plugins/ai-proxy/) plugin. The Gemini CLI expects to communicate with {{ site.google}}'s Gemini API using the chat endpoint. The plugin handles authentication using a query parameter and forwards requests to the specified model. CLI tools installed across multiple developer machines typically require distributing API keys to each installation, which exposes credentials and makes rotation difficult.
 
 Routing CLI tools through {{site.ai_gateway}} removes this requirement. Developers authenticate against the gateway instead of directly to AI providers. You can centralize authentication, enforce [rate limits](/plugins/ai-rate-limiting-advanced/), [track usage costs](/plugins/ai-rate-limiting-advanced/#token-count-strategies), [enforce guardrails](/ai-gateway/#guardrails-and-content-safety), and [cache repeated requests](/plugins/ai-semantic-cache/).
 

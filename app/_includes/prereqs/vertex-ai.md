@@ -1,8 +1,8 @@
-Before you begin, you must get the following credentials from Google Cloud:
+Before you begin, you must get the following credentials from {{ site.google}} Cloud:
 
 - **Service Account Key**: A JSON key file for a service account with Vertex AI permissions
-- **Project ID**: Your Google Cloud project identifier
-- **Location ID**: Your Google Cloud project location identifier
+- **Project ID**: Your {{ site.google}} Cloud project identifier
+- **Location ID**: Your {{ site.google}} Cloud project location identifier
 - **API Endpoint**: The global Vertex AI API endpoint `https://aiplatform.googleapis.com`
 
 Then export your credentials as environment variables:
