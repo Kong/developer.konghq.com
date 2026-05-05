@@ -19,6 +19,10 @@ tools:
 related_resources:
   - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
+  - text: Consumer Credential entity
+    url: /ai-gateway/entities/consumer-credential/
+  - text: Consumer Group entity
+    url: /ai-gateway/entities/consumer-group/
   - text: Model entity
     url: /ai-gateway/entities/model/
   - text: Policy entity
@@ -30,18 +34,22 @@ faqs:
     a: |
       The runtime entity is a regular Kong Consumer. The {{site.ai_gateway}} surface uses the
       {{site.ai_gateway}} entity convention (`display_name`, `name`, `labels`), requires an
-      authentication `type` field, accepts inline Consumer Group assignment, and lets you reference
-      Policies and embed credentials directly on the Consumer.
-
-  - q: Can I edit the underlying Kong Consumer that {{site.ai_gateway}} generates?
-    a: |
-      No. The generated Kong Consumer is protected from direct modification through the standard
-      `/consumers` Admin API. Update the AI Consumer instead.
+      authentication `type` field, accepts inline Consumer Group assignment, and lets you
+      reference Policies. Credentials are managed as a separate sub-entity rather than embedded
+      on the Consumer.
 
   - q: How do I add credentials to an AI Consumer?
     a: |
-      For `type: apikey`, set `config.credentials[].api_key` on the Consumer.
-      Each entry can also set a `ttl` in seconds.
+      Credentials are a separate sub-entity, not a field on the Consumer. Create them under the
+      Consumer's nested credentials endpoint. See the
+      [Consumer Credential entity](/ai-gateway/entities/consumer-credential/) reference.
+
+  - q: "What's the difference between `type: api-key` and `type: oauth`?"
+    a: |
+      The `type` declares which credential family the Consumer authenticates with. An `api-key`
+      Consumer holds one or more `api-key` Credentials. An `oauth` Consumer holds one or more
+      `oauth` Credentials whose `custom_id` maps to the OAuth provider's identifier. The
+      Credential's `type` must match the Consumer's `type`.
 
   - q: Can a Consumer belong to multiple Consumer Groups?
     a: |
@@ -60,7 +68,7 @@ A Consumer is the {{site.ai_gateway}} entity that represents a downstream client
 
 You can use Consumers and Consumer Groups to authenticate clients, attach Policies, and gate access to Models, Agents, and MCP Servers through those parent entities' `acls` field.
 
-Consumers are managed through the {{site.ai_gateway}} entity API surface in either deployment modes:
+Consumers are managed through the {{site.ai_gateway}} entity API surface in both deployment modes:
 
 {% table %}
 columns:
@@ -81,23 +89,12 @@ rows:
 
 ## Authentication type
 
-The `type` field declares how the Consumer authenticates to {{site.ai_gateway}}. Supported values are:
+The `type` field declares which credential family the Consumer authenticates with. Supported values are:
 
-* `apikey`
-* `oauth`
+* `api-key`: the Consumer authenticates with one or more API key Credentials.
+* `oauth`: the Consumer authenticates with one or more OAuth Credentials whose `custom_id` maps to the OAuth provider's identifier.
 
-<!-- TODO: confirm what `type: oauth` does at runtime. The spec lists the value but doesn't define behavior or any oauth-specific fields under `config`. -->
-
-## Credentials
-
-For Consumers of `type: apikey`, set credentials in the Consumer's `config.credentials` array. Each entry has:
-
-* `api_key`: the API key value the client presents.
-* `ttl`: optional time-to-live in seconds. Once elapsed, the credential is no longer valid.
-
-## External identity mapping
-
-The `config.custom_id` field stores an external identifier for the Consumer, such as an OIDC Client ID. This field is optional and informational. {{site.ai_gateway}} does not use it for authentication or routing.
+The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/) reference for credential management.
 
 ## Consumer Group membership
 
@@ -107,29 +104,25 @@ Consumer Groups are managed through their own entity surface. See the [Consumer 
 
 ## Attach Policies
 
-A Policy is an {{site.ai_gateway}} Entity that triggers an action using a plugin. You can attach a Policy to a Consumer and the underlying plugin will run in the request lifecycle when this Consumer is identified. To attach a Policy add the Policy's `name` or `id` to the Consumer's `policies` array.
+A Policy is an {{site.ai_gateway}} entity that triggers an action using a plugin. You can attach a Policy to a Consumer and the underlying plugin will run in the request lifecycle when this Consumer is identified. To attach a Policy, add the Policy's `name` or `id` to the Consumer's `policies` array.
 
-You can add multiple Policies to a single Consumer. Each Policy is an independent instance.
+You can attach multiple Policies to a single Consumer. Each Policy is an independent instance.
 
 For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
 ## Set up a Consumer
 
-The following example creates an AI Consumer with one API key credential, assigned to a single Consumer Group.
+The following example creates an AI Consumer assigned to a single Consumer Group. Credentials are issued separately through the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/).
 
 {% entity_example %}
 type: consumer
 data:
   display_name: Mobile App - Production
   name: mobile-app-production
-  type: apikey
+  type: api-key
   consumer_groups:
     - internal-teams
   policies: []
-  config:
-    credentials:
-      - api_key: <your-api-key>
-        ttl: 86400
 {% endentity_example %}
 
 ## Schema
