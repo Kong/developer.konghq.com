@@ -40,8 +40,8 @@ related_resources:
 
 ## About
 
-{{site.mesh_product_name}} supports running your service mesh in multiple zones. It is even possible to run with a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes (multi-tenancy), and workloads running in different regions, on different clouds, or in different datacenters. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
-The only condition is that all the data planes running within the zone must be able to connect to the other data planes in this same zone.
+{{site.mesh_product_name}} supports running your service mesh in multiple zones, including a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes (multi-tenancy), and workloads running in different regions, on different clouds, or in different datacenters. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
+The only condition is that all the data planes running within the zone can connect to the other data planes in the same zone.
 
 {% mermaid %}
 flowchart TB
@@ -97,8 +97,8 @@ flowchart TB
 
 ## How it works
 
-In {{site.mesh_product_name}}, zones are abstracted away, meaning that your data plane proxies will find services wherever they run.
-This way you can make a service multi-zone by having data planes using the same `kuma.io/service` in different zones. This gives you automatic fail-over of services in case a specific zone fails.
+{{site.mesh_product_name}} abstracts away zones, so your data plane proxies find services wherever they run.
+You can make a service multi-zone by having data planes use the same `kuma.io/service` in different zones. This gives you automatic failover of services if a specific zone fails.
 
 Let's look at how a service `backend` in `zone-b` is advertised to `zone-a` and a request from the local zone `zone-a` is routed to the remote
 service in `zone-b`.
@@ -119,17 +119,15 @@ plane to the `zone-a` zone control plane.
 Requests to the `availableServices` from `zone-a` are load balanced between local instances and remote instances of this service.
 Requests sent to `zone-b` are routed to the zone ingress proxy of `zone-b`.
 
-For load-balancing, the zone ingress endpoints are weighted with the number of instances running behind them. So a zone with 2 instances will receive twice as much traffic as a zone with 1 instance.
+For load balancing, zone ingress endpoints are weighted by the number of instances running behind them, so a zone with 2 instances receives twice as much traffic as a zone with 1 instance.
 You can also favor local service instances with [locality-aware load balancing](/mesh/policies/meshloadbalancingstrategy).
 
-In the presence of a [zone egress](/mesh/zone-egress/), the traffic is routed through the local zone egress before being sent to the remote zone ingress.
+When a [zone egress](/mesh/zone-egress/) is present, traffic routes through the local zone egress before reaching the remote zone ingress.
 
-When using [transparent proxy](/mesh/transparent-proxying/) (default in Kubernetes),
-{{site.mesh_product_name}} generates a VIP,
-a DNS entry with the format `<kuma.io/service>.mesh`, and will listen for traffic on port 80. The `<kuma.io/service>.mesh:80` format is just a convention.
+When using [transparent proxy](/mesh/transparent-proxying/) (default in Kubernetes), {{site.mesh_product_name}} generates a VIP and a DNS entry with the format `<kuma.io/service>.mesh`, and listens for traffic on port 80. The `<kuma.io/service>.mesh:80` format is just a convention.
 
 {:.info}
-> A zone ingress is not an API gateway. It is only used for cross-zone communication within a mesh. API gateways are supported in {{site.mesh_product_name}} [gateway mode](/mesh/ingress/) and can be deployed in addition to zone ingresses.
+> A zone ingress is not an API gateway. It only handles cross-zone communication within a mesh. API gateways are supported in {{site.mesh_product_name}} [gateway mode](/mesh/ingress/) and can be deployed in addition to zone ingresses.
 
 ## Components of a multi-zone deployment
 
@@ -147,13 +145,13 @@ A multi-zone deployment includes:
   - Receive policy updates from the global control plane.
   - Send data plane proxies and zone ingress changes to the global control plane.
   - Compute and send configurations using XDS to the local data plane proxies.
-  - Update list of services which exist in the zone in the zone ingress.
+  - Update the list of services available in the zone in the zone ingress.
   - Reject policy changes that do not come from global.
 - The **data plane proxies**:
   - Connect to the local zone control plane.
   - Receive configurations using XDS from the local zone control plane.
   - Connect to other local data plane proxies.
-  - Connect to zone ingresses for sending cross zone traffic.
+  - Connect to zone ingresses for sending cross-zone traffic.
   - Receive traffic from local data plane proxies and local zone ingresses.
 - The **zone ingress**:
   - Receive XDS configuration from the local zone control plane.
@@ -169,33 +167,33 @@ A multi-zone deployment includes:
 ### Global control plane offline
 
 - Policy updates will be impossible.
-- Changes in service list between zones will not propagate:
+- Changes in the service list between zones will not propagate:
   - New services will not be discoverable in other zones.
   - Services removed from a zone will still appear available in other zones.
 - You won't be able to disable or delete a zone.
 
 {:.info}
-> Note that both local and cross-zone application traffic is not impacted by this failure case.
-> Data plane proxy changes will be propagated within their zones.
+> Both local and cross-zone application traffic is unaffected by this failure case.
+> Data plane proxy changes continue to propagate within their zones.
 
 ### Zone control plane offline
 
 - New data plane proxies won't be able to join the mesh. This includes new instances (Pod/VM) that are newly created by automatic deployment mechanisms (for example, a rolling update process), meaning a control plane connection failure could block updates of applications and events that create new instances.
-- On mTLS enabled meshes, a data plane proxy may fail to refresh its client certificate prior to expiry (defaults to 24 hours), thus causing traffic from/to this data plane to fail.
+- On mTLS enabled meshes, a data plane proxy may fail to refresh its client certificate before it expires (defaults to 24 hours), causing traffic to and from the data plane to fail.
 - Data plane proxy configuration will not be updated.
 - Communication between data plane proxies will still work.
-- Cross zone communication will still work.
+- Cross-zone communication will still work.
 - Other zones are unaffected.
 
 {:.info}
-> You can think of this failure case as _"Freezing"_ the zone mesh configuration.
-> Communication will still work but changes will not be reflected on existing data plane proxies.
+> You can think of this failure case as "freezing" the zone mesh configuration.
+> Communication still works, but changes are not reflected on existing data plane proxies.
 
 ### Communication between global and zone control plane failing
 
-This can happen with misconfiguration or network connectivity issues between control planes.
+Misconfiguration or network connectivity issues between control planes can trigger this failure.
 
-- Operations inside the zone will happen correctly (data plane proxies can join, leave and all configuration will be updated and sent correctly).
+- Operations inside the zone continue to work correctly (data plane proxies can join, leave, and all configuration updates and sends correctly).
 - Policy changes will not be propagated to the zone control plane.
 - `ZoneIngress`, `ZoneEgress` and `Dataplane` changes will not be propagated to the global control plane:
   - The global inventory view of the data plane proxies will be outdated (this only impacts observability).
@@ -208,7 +206,7 @@ This can happen with misconfiguration or network connectivity issues between con
   - Local data plane proxies will not see changes in number of instances of each service running in other zones.
 
 {:.info}
-> Note that both local and cross-zone application traffic is not impacted by this failure case.
+> Both local and cross-zone application traffic is unaffected by this failure case.
 
 ### Communication between two zones failing
 
@@ -220,10 +218,10 @@ This can happen if there are network connectivity issues:
 - All zone egress instances of a zone (when present) are down.
 - All zone ingress instances of a zone are down.
 
-When it happens:
+When this happens:
 
-- Communication and operation within each zone is unaffected.
-- Communication across zones will fail.
+- Communication and operations within each zone are unaffected.
+- Communication across zones fails.
 
 {:.info}
 > With the right resiliency setup ([MeshRetries](/mesh/policies/meshretry), [MeshHealthCheck](/mesh/policies/meshhealthcheck), [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy), [MeshCircuitBreakers](/mesh/policies/meshcircuitbreaker)) the failing zone can be quickly severed and traffic re-routed to another zone.
