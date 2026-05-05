@@ -2,7 +2,7 @@
 title: AI Models
 content_type: reference
 entities:
-  - model
+  - ai-model
 products:
   - ai-gateway
 description: AI Models registered with the {{site.ai_gateway}}.

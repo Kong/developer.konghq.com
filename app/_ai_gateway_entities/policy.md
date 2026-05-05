@@ -2,9 +2,12 @@
 title: AI Policies
 content_type: reference
 entities:
-  - policy
+  - ai-policy
 products:
   - ai-gateway
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 description: "Policies for {{site.ai_gateway}}."
 schema:
   api: konnect/ai-gateway

@@ -174,6 +174,13 @@ formats:
   ui:
     label: 'UI'
     entities:
+      - ai-provider
+      - ai-model
+      - ai-agent
+      - ai-mcp-server
+      - ai-policy
+      - ai-consumer
+      - ai-consumer-group
       - admin
       - ca_certificate
       - certificate

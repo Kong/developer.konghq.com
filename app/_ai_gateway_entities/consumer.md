@@ -2,7 +2,7 @@
 title: AI Consumers
 content_type: reference
 entities:
-  - consumer
+  - ai-consumer
 products:
   - ai-gateway
 description: "Consumers for {{site.ai_gateway}}."
