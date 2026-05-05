@@ -78,7 +78,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-The AI Proxy plugin supports {{ site.google}}'s Gemini models and works with the {{ site.google}} Generative AI SDK. This configuration allows you to use the standard Gemini SDK. Apply the plugin configuration with your Gemini credentials:
+The AI Proxy plugin supports {{ site.google}}'s {{ site.gemini}} models and works with the {{ site.google}} Generative AI SDK. This configuration allows you to use the standard {{ site.gemini}} SDK. Apply the plugin configuration with your {{ site.gemini}} credentials:
 
 {% entity_examples %}
 entities:

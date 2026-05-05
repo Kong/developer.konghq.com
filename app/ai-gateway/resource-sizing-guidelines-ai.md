@@ -105,7 +105,7 @@ Effective scaling requires testing with realistic model behavior, applying safet
 - Benchmark with your model mix and prompt sizes
 - Size for token/s, not just RPS
 - Apply redundancy factor 2×–4×
-- Consider provider differences (OpenAI vs Gemini)
+- Consider provider differences (OpenAI vs {{ site.gemini}})
 - Test multi‑node scaling before production
 
 ## Baseline benchmark results

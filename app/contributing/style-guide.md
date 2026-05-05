@@ -337,7 +337,7 @@ When a how-to guide requires a third-party tool (such as an identity provider, c
 In most cases, the third-party instructions should be a prerequisite.
 Write the prerequisite steps in a file under `app/_includes/prereqs/` and include it at the top of the how-to. This keeps the how-to self-contained: readers can follow the entire guide in one place without switching between multiple sources.
 
-For an example, see [`app/_includes/prereqs/gemini.md`](https://github.com/Kong/developer.konghq.com/blob/main/app/_includes/prereqs/gemini.md), which walks users through getting a Gemini API key from {{ site.google}} Cloud before the main tutorial begins.
+For an example, see [`app/_includes/prereqs/gemini.md`](https://github.com/Kong/developer.konghq.com/blob/main/app/_includes/prereqs/gemini.md), which walks users through getting a {{ site.gemini}} API key from {{ site.google}} Cloud before the main tutorial begins.
 
 In certain cases, the third-party instructions should be in the main how-to body.
 For example, if users need to update a routing table in AWS after they've set up their Dedicated Cloud Gateway network or if they need to approve a Catalog integration in the third-party provider after they configure it in Catalog.

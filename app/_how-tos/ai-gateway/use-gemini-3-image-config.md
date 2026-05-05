@@ -121,14 +121,14 @@ variables:
 
 ## Use imageConfig with image generation
 
-Gemini 3 models support image generation with configurable parameters via `imageConfig`. This feature allows you to control the aspect ratio and resolution of generated images. For more information, see [Gemini Image Generation](https://ai.google.dev/gemini-api/docs/imagen).
+{{ site.gemini}} 3 models support image generation with configurable parameters via `imageConfig`. This feature allows you to control the aspect ratio and resolution of generated images. For more information, see [{{ site.gemini}} Image Generation](https://ai.google.dev/gemini-api/docs/imagen).
 
 The `imageConfig` supports the following parameters:
 
 * `aspectRatio` (string): Controls the aspect ratio of the generated image. Supported values include `1:1`, `4:3`, `16:9`, and others.
 * `imageSize` (string): Controls the resolution of the generated image. Accepted values include `1k`, `2k`, and `4k`.
 
-{{site.base_gateway}} now supports passing `generationConfig` parameters through to Gemini. Any parameters within reasonable size limits will be forwarded to the Gemini API, allowing you to use Gemini-specific features like `imageConfig`.
+{{site.base_gateway}} now supports passing `generationConfig` parameters through to {{ site.gemini}}. Any parameters within reasonable size limits will be forwarded to the {{ site.gemini}} API, allowing you to use {{ site.gemini}}-specific features like `imageConfig`.
 
 Create a Python script to generate images with different configurations:
 
@@ -254,7 +254,7 @@ This script demonstrates three different image generation configurations:
 2. **16:9 aspect ratio with 2k resolution**: Produces a widescreen landscape with higher resolution.
 3. **1:1 aspect ratio with 4k resolution**: Creates a square image with maximum resolution.
 
-The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass Gemini-specific configuration. {{site.ai_gateway}} forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
+The script uses the OpenAI Images API format (`/v1/images/generations` endpoint) with the `generationConfig` parameter to pass {{ site.gemini}}-specific configuration. {{site.ai_gateway}} forwards these parameters to Vertex AI and returns the generated images as either URLs or base64-encoded data. The script handles both response formats and saves the images locally.
 
 Run the script:
 ```sh

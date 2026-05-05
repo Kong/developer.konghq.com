@@ -118,7 +118,7 @@ variables:
 
 ## Use the OpenAI SDK with `thinkingConfig`
 
-Gemini 3 models support a `thinkingConfig` feature that returns detailed reasoning traces alongside the final response. This allows you to see how the model arrived at its answer. For more information, see [Gemini Thinking Mode](https://ai.google.dev/gemini-api/docs/thinking).
+{{ site.gemini}} 3 models support a `thinkingConfig` feature that returns detailed reasoning traces alongside the final response. This allows you to see how the model arrived at its answer. For more information, see [{{ site.gemini}} Thinking Mode](https://ai.google.dev/gemini-api/docs/thinking).
 
 The `thinkingConfig` supports the following parameters:
 
@@ -163,7 +163,7 @@ EOF
 
 This script sends a logic puzzle that requires multi-step reasoning. Complex queries like this are more likely to produce visible reasoning traces showing how the model analyzes the problem, deduces information from each response, and reaches its conclusion. The [`thinking_budget`](https://ai.google.dev/gemini-api/docs/thinking#set-budget) of 200 allows for detailed reasoning traces.
 
-The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `extra_body` parameter passes Gemini-specific configuration through to the model. {{site.ai_gateway}} transforms the OpenAI-format request into Gemini's native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
+The OpenAI SDK sends requests to {{site.ai_gateway}} using the OpenAI chat completions format. The `extra_body` parameter passes {{ site.gemini}}-specific configuration through to the model. {{site.ai_gateway}} transforms the OpenAI-format request into {{ site.gemini}}'s native format, forwards it to Vertex AI, and converts the response back to OpenAI format with reasoning traces wrapped in `<thought>` tags.
 
 
 Now, let's run the script:

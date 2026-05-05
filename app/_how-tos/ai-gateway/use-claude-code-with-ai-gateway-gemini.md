@@ -87,11 +87,11 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the [Gemini provider](/ai-gateway/ai-providers/#gemini):
+First, configure the AI Proxy plugin for the [{{ site.gemini}} provider](/ai-gateway/ai-providers/#gemini):
 * This setup uses the default `llm/v1/chat` route. {{ site.claude}} Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude}}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude}} Code communicates with the Gemini endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude}}'s native API format. Without this setting, the Gateway would default to OpenAI's format, which would cause request failures when {{ site.claude}} Code communicates with the {{ site.gemini}} endpoint.
 
 {% entity_examples %}
 entities:
