@@ -4,7 +4,7 @@
 The following creates a new AI Provider. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Providers**.
 1. Click **New Provider**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
@@ -15,7 +15,7 @@ The following creates a new AI Provider. Suggested values are shown in backticks
 The following creates a new AI Policy. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Policies**.
 1. Click **New Policy**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
@@ -26,7 +26,7 @@ The following creates a new AI Policy. Suggested values are shown in backticks:
 The following creates a new AI Consumer. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Consumers**.
 1. Click **New Consumer**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
@@ -37,7 +37,7 @@ The following creates a new AI Consumer. Suggested values are shown in backticks
 The following creates a new AI Consumer Group. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Credentials**.
 1. Select the **Groups** tab.
 1. Click **New Group**.
@@ -48,7 +48,7 @@ The following creates a new AI Consumer Group. Suggested values are shown in bac
 The following creates a new AI Model. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Models**.
 1. Click **New Model**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
@@ -59,7 +59,7 @@ The following creates a new AI Model. Suggested values are shown in backticks:
 The following creates a new AI Agent. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **Agents**.
 1. Click **New Agent**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
@@ -69,13 +69,13 @@ The following creates a new AI Agent. Suggested values are shown in backticks:
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
 
 1. In {{site.konnect_short_name}}, navigate to [{{site.ai_gateway_name}}](https://cloud.konghq.com/ai-gateway/) in the sidebar.
-1. Select an AI Gateway.
+1. Select an {{site.ai_gateway}}.
 1. Navigate to **MCP Servers**.
 1. Click **New MCP Server**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
 1. Configure endpoint/auth settings and optional policies.
 1. Click **Create**.
 {% else %}
-UI instructions are not yet available for this AI Gateway entity type.
+UI instructions are not yet available for this {{site.ai_gateway}} entity type.
 {% endcase %}
 {% endif %}
