@@ -73,12 +73,12 @@ mtls:
 
 After enabling mTLS, all traffic is encrypted and secure. However, you can no longer access the `demo-app` directly, meaning <http://127.0.0.1:25050> will no longer work. This happens for two reasons:
 
-* {{site.mesh_product_name}} doesn't create traffic permissions by default when mTLS is enabled. No traffic will flow until you define a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy.
+* {{site.mesh_product_name}} doesn't create traffic permissions by default when mTLS is enabled. No traffic will flow until you define a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy.
 * Browsers and HTTP clients outside the mesh don't have a valid certificate signed by the `ca-1` CA, so their connections are rejected.
 
 ## Allow traffic between `demo-app` and `kv`
 
-Apply a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow traffic between the `kv` and `demo-app` services:
+Apply a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy to allow traffic between the `kv` and `demo-app` services:
 
 ```sh
 echo 'type: MeshTrafficPermission 
@@ -100,7 +100,7 @@ spec:
 
 To allow external traffic into the mesh, we'll use the [built-in gateway](/mesh/built-in-gateway/) that {{site.mesh_product_name}} provides.
 
-## Create a Dataplane resource
+## Create a `Dataplane` resource
 
 The built-in gateway needs its own `Dataplane` resource, separate from the service data plane proxies. Unlike the service `Dataplane` template used in previous steps, the gateway uses a static configuration since there's only one instance:
 
@@ -149,9 +149,9 @@ docker run \
 
 This command starts the gateway proxy and registers it with the control plane. However, the gateway is not yet ready to route traffic.
 
-## Configure the gateway with MeshGateway
+## Configure the gateway with `MeshGateway`
 
-To enable the gateway to accept external traffic, configure it with a [MeshGateway](/mesh/meshgateway/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [MeshHTTPRoute](/mesh/policies/meshhttproute/) or [MeshTCPRoute](/mesh/policies/meshtcproute/) to route traffic to services:
+To enable the gateway to accept external traffic, configure it with a [`MeshGateway`](/mesh/meshgateway/). This setup defines listeners that specify the port, protocol, and tags for incoming traffic, allowing policies like [`MeshHTTPRoute`](/mesh/policies/meshhttproute/) or [`MeshTCPRoute`](/mesh/policies/meshtcproute/) to route traffic to services:
 
 ```sh
 echo 'type: MeshGateway
@@ -209,11 +209,11 @@ RBAC: access denied
 ```
 {:.no-copy-code}
 
-This happens because there is no [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`.
+This happens because there is no [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy allowing traffic from the gateway to `demo-app`.
 
 ## Allow traffic from the gateway to `demo-app`
 
-To fix the `RBAC: access denied` error, create a [MeshTrafficPermission](/mesh/policies/meshtrafficpermission/) policy to allow the gateway to send traffic to `demo-app`:
+To fix the `RBAC: access denied` error, create a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy to allow the gateway to send traffic to `demo-app`:
 
 ```sh
 echo 'type: MeshTrafficPermission

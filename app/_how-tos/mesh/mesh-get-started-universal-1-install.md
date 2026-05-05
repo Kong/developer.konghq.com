@@ -106,7 +106,7 @@ export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"
 mkdir -p "$KONG_MESH_DEMO_TMP"
 ```
 
-## Prepare a Dataplane resource template
+## Prepare a `Dataplane` resource template
 
 Create a reusable [`Dataplane`](/mesh/data-plane-proxy/) resource template for services:
 

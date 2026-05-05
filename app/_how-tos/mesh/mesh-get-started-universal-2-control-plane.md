@@ -20,7 +20,7 @@ series:
   position: 2
 tldr:
   q: How do I start the {{site.mesh_product_name}} control plane in Universal mode?
-  a: Run the control plane as a Docker container, retrieve the admin token, configure kumactl to connect to it, and enable MeshServices in Exclusive mode.
+  a: Run the control plane as a Docker container, retrieve the admin token, configure kumactl to connect to it, and enable `MeshService` resources in Exclusive mode.
 ---
 
 ## Start the control plane
@@ -78,7 +78,7 @@ To manage the deployment with [kumactl](/mesh/cli/), connect it to the control p
 
 ## Configure the default mesh
 
-Configure the default mesh to use [MeshServices](/mesh/meshservice/) in [Exclusive mode](/mesh/meshservice/#exclusive):
+Configure the default mesh to use [`MeshService`](/mesh/meshservice/) resources in [Exclusive mode](/mesh/meshservice/#exclusive):
 
 ```sh
 echo 'type: Mesh
@@ -87,4 +87,4 @@ meshServices:
   mode: Exclusive' | kumactl apply -f -
 ```
 
-MeshServices are explicit resources that represent traffic destinations, they define which [data plane proxies](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.
+`MeshService` resources are explicit representations of traffic destinations. They define which [data plane proxies](/mesh/data-plane-proxy/) serve the traffic and the available ports, IPs, and hostnames.

@@ -186,7 +186,7 @@ exit
 
 ## Check if service is running
 
-To confirm the service is set up correctly and running, use [kumactl](/mesh/cli/) to inspect the MeshServices:
+To confirm the service is set up correctly and running, use [kumactl](/mesh/cli/) to inspect the `MeshService` resources:
 
 ```sh
 kumactl get meshservices
