@@ -38,6 +38,9 @@ prereqs:
     - title: Docker 
       content: |
         This guide requires [Docker](https://docs.docker.com/get-started/get-docker/) installed on your system.
+    - title: jq
+      content: |
+        This guide requires [jq](https://jqlang.org/download/) installed on your system.
 
 tldr:
   q: How do I prepare my environment to run {{site.mesh_product_name}} on Universal?
@@ -92,7 +95,7 @@ browser --> edge-gateway
    ```
    {:.no-copy-code}
 
-## Prepare a temporary directory
+## Create a temporary directory
 
 Set up a temporary directory to store resources like data plane tokens, [`Dataplane`](/mesh/data-plane-proxy/) templates, and logs. Ensure the path does not end with a trailing `/`.
 
@@ -106,7 +109,7 @@ export KONG_MESH_DEMO_TMP="/tmp/kong-mesh-demo"
 mkdir -p "$KONG_MESH_DEMO_TMP"
 ```
 
-## Prepare a `Dataplane` resource template
+## Create a `Dataplane` resource template
 
 Create a reusable [`Dataplane`](/mesh/data-plane-proxy/) resource template for services:
 
@@ -130,7 +133,7 @@ networking:
 
 This template simplifies creating `Dataplane` configurations for different services by replacing dynamic values during deployment.
 
-## Prepare a transparent proxy configuration file
+## Create a transparent proxy configuration file
 
 Create a configuration file that identifies the data plane proxy user and enables DNS traffic redirection through the mesh:
 
