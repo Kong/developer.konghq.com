@@ -67,7 +67,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Anthropic, we need to specify the [model](https://docs.anthropic.com/en/docs/about-claude/models#model-names) and [Anthropic API version](https://docs.anthropic.com/en/api/versioning#version-history) to use.
+To set up AI Proxy Advanced with {{ site.anthropic }}, we need to specify the [model](https://docs.anthropic.com/en/docs/about-claude/models#model-names) and [{{ site.anthropic }} API version](https://docs.anthropic.com/en/api/versioning#version-history) to use.
 
 In this example, we'll use the Claude claude-sonnet-4-5  model and version 2023-06-01 of the API:
 

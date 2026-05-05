@@ -70,7 +70,7 @@ cleanup:
 
 ## Configure the AI Proxy plugin
 
-First, configure the AI Proxy plugin for the [Anthropic provider](/ai-gateway/ai-providers/#anthropic).
+First, configure the AI Proxy plugin for the [{{ site.anthropic }} provider](/ai-gateway/ai-providers/#anthropic).
 * This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
 * The configuration also raises the maximum request body size to 512 KB to support larger prompts.
 
