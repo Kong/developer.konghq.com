@@ -38,6 +38,9 @@ prereqs:
       content: |
         You need the [{{site.metering_and_billing}} Admin role](/konnect-platform/teams-and-roles/#metering-billing) in {{site.konnect_short_name}} to configure {{site.metering_and_billing}}.
       icon_url: /assets/icons/kogo-white.svg
+    - title: "{{site.konnect_short_name}} system account token"
+      include_content: prereqs/metering-and-billing-spat
+      icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
   inline:
@@ -70,6 +73,11 @@ next_steps:
     url: /gateway/configuration/
   - text: See all {{site.base_gateway}} plugins
     url: /plugins/
+faqs:
+  - q: I previously enabled metering using the **Enable Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
+    a: |
+      {% include faqs/metering-and-billing-legacy-ingestion.md %}
+
 automated_tests: false
 ---
 
@@ -152,12 +160,27 @@ entities:
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
-In this guide, you'll enable API Gateway requests for metering. This will meter API request traffic in {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
+In this guide, you'll configure the Metering & Billing plugin to emit API request events to {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
 
-1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
-1. In the API Gateway Requests settings, click **Enable Gateways**.
-1. Select the "quickstart" control plane.
-1. Click **Enable 1 Gateways**.
+<!--vale off-->
+{% entity_examples %}
+entities:
+  plugins:
+    - name: metering-and-billing
+      service: example-service
+      config:
+        ingest_endpoint: https://us.api.konghq.com/v3/openmeter/events
+        api_token: ${AUTH_TOKEN}
+        meter_api_requests: true
+        meter_ai_token_usage: false
+        subject:
+          look_up_value_in: consumer
+variables:
+  AUTH_TOKEN:
+    value: $AUTH_TOKEN
+    description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
+{% endentity_examples %}
+<!--vale on-->
 
 
 ## Create a feature

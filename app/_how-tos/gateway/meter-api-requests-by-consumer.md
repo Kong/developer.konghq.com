@@ -1,7 +1,7 @@
 ---
 title: Track API requests by Consumer with {{site.metering_and_billing}}
 permalink: /how-to/meter-api-requests-by-consumer/
-description: Learn how to emit a usage event for every API request using the {{site.metering_and_billing}} plugin on {{site.base_gateway}}, attributed to the authenticated Consumer.
+description: Learn how to use the {{site.metering_and_billing}} plugin on a self-managed {{site.base_gateway}} to emit per-Consumer API usage events to {{site.konnect_short_name}} {{site.metering_and_billing}}.
 content_type: how_to
 
 breadcrumbs:
@@ -40,16 +40,7 @@ prereqs:
         - example-route
   inline:
     - title: "{{site.konnect_short_name}} system account token"
-      content: |
-        You need a [{{site.konnect_short_name}} system account token](https://cloud.konghq.com/global/organization/system-accounts/) (`spat_`) with the **Ingest** role for Metering.
-        This token authenticates the plugin when it sends events to the {{site.konnect_short_name}} ingest endpoint.
-
-        Export your system account token:
-        ```
-        export DECK_AUTH_TOKEN='YOUR SPAT TOKEN'
-        ```
-        
-        For more information, see [system accounts and access tokens](/konnect-api/#system-accounts-and-access-tokens).
+      include_content: prereqs/metering-and-billing-spat
       icon_url: /assets/icons/kogo-white.svg
 
 cleanup:
@@ -59,9 +50,13 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 tldr:
-  q: How do I meter API requests by Consumer using the {{site.metering_and_billing}} plugin?
+  q: How do I meter API requests by Consumer using the {{site.metering_and_billing}} plugin on a self-managed gateway?
   a: |
-    Configure the {{site.metering_and_billing}} plugin on a Gateway Service with `meter_api_requests: true` and `subject.look_up_value_in: consumer`. The plugin emits one CloudEvent per API request to the {{site.konnect_short_name}} ingest endpoint, with the authenticated Consumer set as the event subject. Verify that events appear in the {{site.konnect_short_name}} UI under **{{site.metering_and_billing}}** > **Events**.
+    Configure the {{site.metering_and_billing}} plugin on a Gateway Service with `meter_api_requests: true` and `subject.look_up_value_in: consumer`. 
+    <br><br>
+    In this guide, the Gateway runs on-prem, while the plugin sends one CloudEvent per API request directly to the {{site.konnect_short_name}} {{site.metering_and_billing}} ingest endpoint, with the authenticated Consumer as the event subject. 
+    <br><br>
+    You can verify that events appear in the {{site.konnect_short_name}} UI under **{{site.metering_and_billing}}** > **Events**.
 
 related_resources:
   - text: "{{site.metering_and_billing}} plugin reference"
@@ -162,14 +157,14 @@ done
 ```
 <!--vale on-->
 
-This sends three requests, each emitting a CloudEvent with `subject: alice` to {{site.konnect_short_name}}.
+This sends three requests, each emitting a CloudEvent with the subject `consumer:<consumer-id>` to {{site.konnect_short_name}}.
 
 Now verify that the events were received:
 
 1. In the {{site.konnect_short_name}} sidebar, click **{{site.metering_and_billing}}**.
 1. Click the **Events** tab.
 
-You'll see three events listed, each with `subject: alice`, one for each request that passed through {{site.base_gateway}}.
+You'll see three events listed, each with the subject `consumer:<consumer-id>`, one for each request that passed through {{site.base_gateway}}.
 
 You'll also see an error message like `no customer found for event subject: consumer` associated with the event.
 This is expected since we're only tracking API usage.
