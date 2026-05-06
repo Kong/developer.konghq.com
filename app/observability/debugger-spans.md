@@ -120,8 +120,8 @@ columns:
   - title: Description
     key: description
 rows:
-  - name: "`proxy.kong.plugin.instance_id`"
-    description: Instance ID of the plugin configuration that ran
+  - name: "`proxy.kong.plugin.id`"
+    description: ID of the plugin configuration that ran
   - name: |
       `proxy.kong.plugin.http.response.status_code` {% new_in 3.14 %}
     description: HTTP status code set by the plugin when exiting early via `kong.response.exit()`. Only present when the plugin terminates the request.
