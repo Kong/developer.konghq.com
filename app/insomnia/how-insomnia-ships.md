@@ -1,5 +1,5 @@
 ---
-title: How Insomnia ships software
+title: Insomnia release and versioning policy
 content_type: reference
 layout: reference
 breadcrumbs:
@@ -23,7 +23,7 @@ related_resources:
 
 ## Overview
 
-In general, Insomnia follows [semantic versioning](https://semver.org/), a three-part number format: MAJOR.MINOR.PATCH (for example `2.5.1`).
+Insomnia uses [semantic versioning](https://semver.org/), a three-part number format: MAJOR.MINOR.PATCH (for example `2.5.1`) for defining versions. 
 
 Insomnia communicates all changes via:
 
@@ -31,9 +31,8 @@ Insomnia communicates all changes via:
 
 - The [GitHub releases page](https://github.com/kong/insomnia/releases).
 
-Public documentation updates support all versions of Insomnia.
+Public documentation updates support the latest versions of Insomnia.
 
-## When to update
 
 Update as often as you like, or stay on a past version. Unless you have a specific reason, the best practice is to use the newest version.
 
@@ -47,13 +46,13 @@ Insomnia doesn't have an explicit Long Term Support (LTS) policy, nor does it pu
 
 ### Versions within the last 12 months
 
-Insomnia's team investigates and debug support issues or bugs filed based on any version from the last 12 months. In some cases, upgrading may be necessary to complete the investigation. 
+Insomnia's team investigates and debugs support issues or bugs filed based on any version from the last 12 months. In some cases, upgrading may be necessary to complete the investigation. 
 
 ### Versions older than 12 months
 
 For versions more than 12 months out of date, Insomnia's team provides as much assistance as possible, but can't guarantee any particular outcome or level of assistance. Insomnia recommends upgrading to see if your issue is resolved in a newer version.
 
-## Patching Backwards
+## Backports
 
 Fixes and changes don't backport to earlier versions. Best practice is to upgrade to the latest version.
 
@@ -183,7 +182,7 @@ For example:
 - Fixing import/export issues where valid collections failed to load.
 - Resolving authentication flows that were not completing correctly.
 - Fixing environment variable resolution or template tag evaluation bugs.
-- Correcting UI rendering glitches or layout issues
+- Correcting UI rendering glitches or layout issues.
 - Fixing sync/collaboration conflicts or data loss scenarios.
 - Updating bundled dependencies to patch security vulnerabilities (with no user-facing behavior change).
 - Fixing incorrect HTTP header handling or encoding issues.
@@ -199,7 +198,6 @@ For example:
 
 Your feedback makes Insomnia better, and is especially critical for features that are in beta or preview.
 
-### How to
 
 Users can provide feedback depending on the type of plan they are on:
 
