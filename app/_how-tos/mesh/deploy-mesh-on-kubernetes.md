@@ -16,8 +16,15 @@ works_on:
   - konnect
   - on-prem
 
+tags:
+  - get-started
+  - install
+
+search_aliases:
+  - quickstart
+
 tldr:
-  q: How do I install Mesh on Kubernetes
+  q: How do I install Mesh on Kubernetes?
   a: Install {{site.mesh_product_name}} on your Kubernetes cluster using Helm, and deploy the {{site.mesh_product_name}} demo application.
 
 prereqs:
