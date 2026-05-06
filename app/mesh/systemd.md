@@ -31,7 +31,7 @@ The example below sets `LimitNOFILE` to `1048576`, the same limit that `docker` 
 
 `StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts, so systemd keeps trying to restart the control plane regardless of how often it has failed recently.
 
-```systemd
+```
 [Unit]
 Description = {{ site.mesh_product_name }} Control Plane
 After = network.target
@@ -55,7 +55,7 @@ WantedBy = multi-user.target
 
 The following unit file runs `kuma-dp` as a long-running service. The `ExecStart` command points the data plane proxy at the control plane address and supplies the dataplane token, dataplane definition, and CA certificate. `Restart = always` and `RestartSec = 1s` make systemd restart the proxy one second after any exit, and `StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts so systemd keeps retrying after repeated failures.
 
-```systemd
+```
 [Unit]
 Description = {{ site.mesh_product_name }} Data Plane Proxy
 After = network.target
