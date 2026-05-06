@@ -27,14 +27,14 @@ related_resources:
     url: /mesh/meshservice/
 ---
 
-The `Mesh` resource defines a service mesh instance. It is the parent resource of all other {{site.mesh_product_name}} resources, including [data plane proxies](/mesh/data-plane-proxy/) and [policies](/mesh/policies/).
+The `Mesh` resource defines a service mesh instance and is the parent resource of all other {{site.mesh_product_name}} resources, including [data plane proxies](/mesh/data-plane-proxy/) and [policies](/mesh/policies/).
 
 Create multiple meshes to isolate services by team, environment, or security requirements. Each data plane proxy belongs to exactly one mesh.
 
-{{site.mesh_product_name}} creates a `default` mesh automatically on startup. Disable this by setting `KUMA_DEFAULTS_SKIP_MESH_CREATION=true`.
+{{site.mesh_product_name}} creates a `default` mesh automatically on startup. To disable automatic creation, set `KUMA_DEFAULTS_SKIP_MESH_CREATION=true`.
 
 {:.warning}
-> **Kubernetes namespace constraint:** On Kubernetes, a single namespace cannot contain pods in multiple meshes. To prevent this, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/). See [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies) for details.
+> On Kubernetes, a single namespace cannot contain pods from multiple meshes. To enforce one mesh per namespace, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/). For details, see the [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies).
 
 ## Spec fields
 
@@ -46,29 +46,33 @@ columns:
     key: description
 rows:
   - field: "`mtls`"
-    description: "mTLS configuration with CA backends. See [Mutual TLS](/mesh/mutual-tls/)."
+    description: "Configures mTLS with CA backends. See [Mutual TLS](/mesh/mutual-tls/)."
   - field: "`networking.outbound.passthrough`"
-    description: "Allow traffic to unknown destinations. Default: `true`. See [Non-mesh traffic](/mesh/policies/meshpassthrough/)."
+    description: "Allows traffic to unknown destinations. Default: `true`. See [Non-mesh traffic](/mesh/policies/meshpassthrough/)."
   - field: "`routing.zoneEgress`"
-    description: "Route cross-zone/external traffic through ZoneEgress. See [Zone Egress](/mesh/zone-egress/)."
+    description: "Routes cross-zone and external traffic through ZoneEgress. See [Zone Egress](/mesh/zone-egress/)."
   - field: "`routing.localityAwareLoadBalancing`"
-    description: "Prefer endpoints in same zone. See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)."
+    description: "Prefers endpoints in the same zone. See [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy/)."
   - field: "`routing.defaultForbidMeshExternalServiceAccess`"
-    description: "Block MeshExternalService traffic by default."
+    description: "Blocks MeshExternalService traffic by default."
   - field: "`constraints.dataplaneProxy`"
-    description: "Control which proxies can join mesh. See [DP membership](/mesh/configure-data-plane-proxy-membership/)."
+    description: "Controls which proxies can join the mesh. See [Data plane proxy membership](/mesh/configure-data-plane-proxy-membership/)."
   - field: "`skipCreatingInitialPolicies`"
-    description: "Skip default policy creation. Use `['*']` to skip all."
+    description: "Skips default policy creation. Set to `['*']` to skip all policies."
   - field: "`meshServices.mode`"
-    description: "MeshService generation: `Disabled`, `Everywhere`, `ReachableBackends`, `Exclusive`. See [MeshService](/mesh/meshservice/)."
+    description: "Controls MeshService generation. Options: `Disabled`, `Everywhere`, `ReachableBackends`, `Exclusive`. See [MeshService](/mesh/meshservice/)."
 {% endtable %}
 
 {:.warning}
-> When mTLS is enabled, all traffic is denied unless [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) allows it.
+> When you enable mTLS, {{site.mesh_product_name}} denies all traffic unless a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy allows it.
 
 ## Examples
 
+The following examples show common `Mesh` configurations for both Kubernetes and Universal deployments.
+
 ### Basic mesh
+
+Define a minimal mesh with no additional configuration:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -91,7 +95,9 @@ name: default
 {% endnavtab %}
 {% endnavtabs %}
 
-### Mesh with mTLS enabled (builtin CA)
+### Mesh with mTLS enabled (built-in CA)
+
+Enable mTLS using a built-in certificate authority that {{site.mesh_product_name}} generates and rotates automatically:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -140,6 +146,8 @@ mtls:
 {% endnavtabs %}
 
 ### Mesh with mTLS (provided CA)
+
+Enable mTLS using your own root certificate and key, stored in secrets:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -191,7 +199,7 @@ mtls:
 
 ### Mesh with permissive mTLS mode
 
-Accept both mTLS and plaintext traffic (for migration):
+Accept both mTLS and plaintext traffic during a migration to mTLS:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -228,7 +236,7 @@ mtls:
 {% endnavtabs %}
 
 {:.warning}
-> PERMISSIVE mode is not secure. Use only during migration, then switch to STRICT.
+> `PERMISSIVE` mode is not secure because it accepts plaintext traffic. Use it only during migration, then switch to `STRICT`.
 
 ### Mesh with ZoneEgress routing
 
@@ -362,7 +370,7 @@ constraints:
 
 ### Mesh with zone segmentation
 
-Restrict mesh to specific zones in multizone deployment:
+Restrict the mesh to specific zones in a multi-zone deployment:
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
@@ -436,6 +444,6 @@ meshServices:
 {% endnavtab %}
 {% endnavtabs %}
 
-## All options
+## Schema
 
 {% json_schema Mesh type=proto %}
