@@ -14,6 +14,8 @@ related_resources:
     url: /event-gateway/entities/backend-cluster/
   - text: "Listeners"
     url: /event-gateway/entities/listener/
+  - text: "How-to: Configure topic aliases"
+    url: /event-gateway/configure-topic-aliases/
 
 tools:
     - konnect-api
@@ -316,6 +318,105 @@ You can also pass an exact list of consumer groups as an array:
   }
 ]
 ```
+
+## Topic aliases
+
+Topic aliases let you expose a backend Kafka topic under a different, client-facing name. 
+Clients connecting to the virtual cluster see the alias, while {{site.event_gateway_short}} transparently routes requests to the original backend topic.
+
+This is useful when you want to:
+* Expose internally-named topics (like `team-alpha-orders-v2`) under client-friendly names (like `orders`)
+* Migrate clients to renamed backend topics without updating client configuration
+* Provide multiple client-facing names for the same backend topic
+
+Unlike [namespaces](#namespaces), which apply a prefix to every topic and consumer group, topic aliases are explicit one-to-one mappings between an alias and a backend topic. 
+Both the alias and the original backend topic name remain accessible through the virtual cluster.
+
+### Map a friendly name to a backend topic
+
+Define topic aliases on the virtual cluster using the `topic_aliases` field:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v1/event-gateways/$EVENT_GATEWAY_ID/virtual-clusters
+status_code: 201
+method: POST
+body:
+  name: example-virtual-cluster
+  destination:
+    name: example-backend-cluster
+  authentication:
+    - type: anonymous
+  dns_label: virtual-cluster-1
+  acl_mode: passthrough
+  topic_aliases:
+    - alias: orders
+      topic: team-alpha-orders-v2
+    - alias: clicks
+      topic: analytics-raw-clicks
+{% endkonnect_api_request %}
+<!--vale on-->
+
+In this example, clients can produce and consume to `orders` and `clicks`. {{site.event_gateway_short}} resolves these to the backend topics `team-alpha-orders-v2` and `analytics-raw-clicks`.
+
+### Supported operations
+
+Aliases are a read-only abstraction over physical topics. Read and write operations are forwarded to the backend topic, but topic-modifying operations are rejected.
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Operation
+    key: operation
+  - title: Behavior
+    key: behavior
+rows:
+  - operation: "Produce, fetch, list offsets, consumer group operations"
+    behavior: "Allowed. Requests reference the alias name and are transparently resolved to the backend topic."
+  - operation: "Metadata (`ListTopics`)"
+    behavior: "Allowed. Both the alias and the original backend topic name appear in the response."
+  - operation: "`CreateTopics`, `DeleteTopics`, `CreatePartitions`, `DeleteRecords`, `AlterPartitionReassignments`, `ElectLeaders`"
+    behavior: "Rejected with `InvalidTopicException` when the request references an alias. This avoids a client unintentionally modifying a physical topic that other aliases or clients depend on."
+{% endtable %}
+<!--vale on-->
+
+ACLs are evaluated on the name the client uses, before alias resolution. An ACL on the backend topic does not automatically grant access to its aliases, and vice versa. Operators must configure ACLs for each alias name explicitly. With `acl_mode: enforce_on_gateway` (deny-by-default), a new alias with no matching ACL is blocked.
+
+### Interaction with namespaces
+
+The `topic` field in `topic_aliases` references namespace-visible names, not raw backend topic names. In the request path, aliases resolve *after* policies but *before* the [namespace](#namespaces) transformer:
+
+```
+client → policies → alias resolution → namespace → backend
+```
+{:.no-copy-code}
+
+If the virtual cluster has a namespace, the alias must target a name that the namespace already exposes. For example, with `namespace.mode: hide_prefix` and `prefix: analytics_`, `topic: foo` resolves to the backend topic `analytics_foo`.
+
+A backend topic that the namespace does not expose (it doesn't match the prefix and isn't listed in `additional_topics`) cannot be aliased directly. Expose it through the namespace first:
+
+```yaml
+namespace:
+  mode: hide_prefix
+  prefix: analytics_
+  additional_topics:
+    - type: exact_list
+      list:
+        - team-alpha-orders-v2
+topic_aliases:
+  - alias: orders
+    topic: team-alpha-orders-v2 # valid because additional_topics exposes it
+```
+
+### Policy context
+
+[Policies](/event-gateway/entities/policy/) attached to a virtual cluster see the alias name, not the backend topic name. In a CEL match expression, `topic.name` evaluates to the alias name. Policies that match on a backend topic name do not automatically apply to its aliases - match the alias name explicitly:
+
+```yaml
+condition: topic.name == "orders"
+```
+
+For a full walkthrough, see [Configure topic aliases](/event-gateway/configure-topic-aliases/).
 
 ## Virtual cluster policies
 
