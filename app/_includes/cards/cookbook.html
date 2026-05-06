@@ -8,7 +8,7 @@
 
     <div class="flex flex-col gap-3 flex-grow">
       <h3>{{ cb.title }}</h3>
-      <p class="text-sm line-clamp-3">{{ cb.description }}</p>
+      <p class="text-sm line-clamp-3">{{ cb.description | liquify }}</p>
     </div>
 
     <div class="flex items-center gap-3">
