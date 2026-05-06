@@ -32,9 +32,12 @@ formats:
   admin-api:
     label: 'Admin API'
     base_url: 'http://localhost:8001'
+    ai_gateway_base_url: 'http://localhost:8001/ai'
     endpoints:
+      # core entities
       consumer:       '/consumers/'
       consumer_group: '/consumer_groups/'
+      model:          '/models/'
       route:          '/routes/'
       service:        '/services/'
       target:         '/upstreams/{upstream}/targets/'
@@ -53,19 +56,44 @@ formats:
       keyring:        '/keyring/'
       event_hook:     '/event-hooks/'
       partial:        '/partials/'
+      # AI entities (/ai/* on on-prem AI Gateway)
+      ai_provider:       '/providers/'
+      ai_model:          '/models/'
+      ai_agent:          '/agents/'
+      ai_mcp_server:     '/mcp-servers/'
+      ai_policy:         '/policies/'
+      ai_consumer:       '/consumers/'
+      ai_consumer_group: '/consumer-groups/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
       global:         '/plugins/'
+    ai_policy_endpoints:
+      ai_model:      '/models/{ai_model}/policies/'
+      ai_agent:      '/agents/{ai_agent}/policies/'
+      ai_mcp_server: '/mcp-servers/{ai_mcp_server}/policies/'
     variables:
       <<: *variables
+      ai_gateway:
+        placeholder: 'AIGatewayId'
+        description: 'The `id` of the AI Gateway.'
+      ai_model:
+        placeholder: 'aiModelId'
+        description: 'The `id` of the AI Model.'
+      ai_agent:
+        placeholder: 'aiAgentId'
+        description: 'The `id` of the AI Agent.'
+      ai_mcp_server:
+        placeholder: 'aiMCPServerId'
+        description: 'The `id` of the AI MCP Server.'
 
   konnect-api:
     label: 'Konnect API'
     base_url: 'https://{region}.api.konghq.com/v2/control-planes/{control_plane}/core-entities'
     event_gateway_base_url: 'https://{region}.api.konghq.com/v1/event-gateways/{event_gateway}'
+    ai_gateway_base_url: 'https://{region}.api.konghq.com/v1/ai-gateways/{ai_gateway}'
     endpoints:
       consumer:        '/consumers/'
       consumer_group:  '/consumer_groups/'
@@ -85,6 +113,8 @@ formats:
       listener:        '/listeners'
       schema_registry: '/schema-registries'
       static_key:      '/static-keys'
+      model:           '/models'
+      policy:          '/policies'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
@@ -127,7 +157,11 @@ formats:
       event_gateway_listener:
         placeholder: 'eventGatewayListenerId'
         description: The `id` of the Event Gateway Listener.
-
+    ai_gateway_variables:
+      <<: *konnect_variables
+      ai_gateway:
+        placeholder: 'AIGatewayId'
+        description: 'The `id` of the AI Gateway.'
   kic:
     label: 'KIC'
 
@@ -140,6 +174,13 @@ formats:
   ui:
     label: 'UI'
     entities:
+      - ai-provider
+      - ai-model
+      - ai-agent
+      - ai-mcp-server
+      - ai-policy
+      - ai-consumer
+      - ai-consumer-group
       - admin
       - ca_certificate
       - certificate

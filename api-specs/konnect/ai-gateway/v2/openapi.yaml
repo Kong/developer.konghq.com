@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Konnect AI Gateway
+  version: 0.0.0
+  description: Internal API for managing Kong AI Gateway policies.
+  contact:
+    name: Kong
+    url: 'https://cloud.konghq.com'
+servers:
+  - url: 'https://us.api.konghq.com/v1'
+    description: US Region Base URL
+  - url: 'https://eu.api.konghq.com/v1'
+    description: EU Region Base URL
+  - url: 'https://au.api.konghq.com/v1'
+    description: AU Region Base URL
+  - url: 'https://me.api.konghq.com/v1'
+    description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v1'
+    description: India Production region

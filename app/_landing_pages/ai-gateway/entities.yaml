@@ -1,0 +1,109 @@
+metadata:
+  title: "{{site.ai_gateway}} entities"
+  content_type: landing_page
+  description: This page lists the entities that make up {{site.ai_gateway}}.
+  breadcrumbs:
+    - /ai-gateway/
+  products:
+    - ai-gateway
+  works_on:
+    - on-prem
+    - konnect
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.ai_gateway}} entities"
+      sub_text: "Entities are the components and objects that make up {{site.ai_gateway}}."
+
+  - header:
+      type: h2
+      text: "Core entities"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: AI Provider
+              description: Stores upstream provider credentials and connection configuration. Providers are reusable and are not model endpoints.
+              cta:
+                text: AI Provider entity
+                url: /ai-gateway/entities/provider/
+      - blocks:
+          - type: card
+            config:
+              title: Model
+              description: Defines a model endpoint and capability configuration used for model selection and policy targeting.
+              cta:
+                text: Model entity
+                url: /ai-gateway/entities/model/
+      - blocks:
+          - type: card
+            config:
+              title: AI Agent
+              description: An A2A or HTTP agent exposed through the A2A proxy flow. Independent of Model.
+              cta:
+                text: AI Agent entity
+                url: /ai-gateway/entities/agent/
+      - blocks:
+          - type: card
+            config:
+              title: AI MCP Server
+              description: An MCP server in passthrough, listener, or conversion-listener mode. Mode is immutable after creation.
+              cta:
+                text: AI MCP Server entity
+                url: /ai-gateway/entities/mcp-server/
+      - blocks:
+          - type: card
+            config:
+              title: AI Policy
+              description: An AI Gateway plugin instance scoped globally or to a specific AI entity. Policy instances are independent.
+              cta:
+                text: AI Policy entity
+                url: /ai-gateway/entities/policy/
+      - blocks:
+          - type: card
+            config:
+              title: AI Consumer
+              description: A thin wrapper around the existing Consumer entity.
+              cta:
+                text: AI Consumer entity
+                url: /ai-gateway/entities/consumer/
+      - blocks:
+          - type: card
+            config:
+              title: AI Consumer Group
+              description: A thin wrapper around the existing Consumer Group entity.
+              cta:
+                text: AI Consumer Group entity
+                url: /ai-gateway/entities/consumer-group/
+
+  - header:
+      type: h2
+      text: "Security"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Vault
+              description: Store and reference secrets used by AI Gateway entities and plugins.
+              cta:
+                text: Vault entity
+                url: /gateway/entities/vault/
+      - blocks:
+          - type: card
+            config:
+              title: Key
+              description: Manage cryptographic key material used by AI Gateway security workflows.
+              cta:
+                text: Key entity
+                url: /gateway/entities/key/
+      - blocks:
+          - type: card
+            config:
+              title: Key Set
+              description: Group keys for rotation and key management in AI Gateway configurations.
+              cta:
+                text: Key Set entity
+                url: /gateway/entities/key-set/
