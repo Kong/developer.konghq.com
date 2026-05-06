@@ -59,7 +59,15 @@ faqs:
       If you use GitHub, navigate to [Github applications](https://github.com/apps/insomnia-desktop) to ensure that the Insomnia GitHub App is installed and has access to the repository.
       
       {:.warning}
-      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.    
+      > If you use a managed GitHub account that restricts GitHub App installation, use the **Git** tab and configure the repository with the generic Git workflow instead.
+  - q: I tried the Insomnia beta version and then downgraded back to the release version. Why do I get a 'Could not find HEAD' error?
+    a: |
+      You haven't lost anything in your project, but after downgrading you need to specify which branch to use in your Git Sync project again. To fix the error:
+
+      1. Open your project.
+      2. Restart Insomnia.
+      3. Open the Git menu in the bottom-left corner.
+      4. Select your desired branch.
 
 related_resources:
   - text: Storage options in Insomnia
@@ -119,3 +127,5 @@ Once you've created content or made changes to existing content in your project,
 1. Click the name of the branch again and click **Push 1 Commit**.
 
 Git status notifications appear at the bottom right corner of the window.
+
+<div class="flex flex-col gap-4 heading-section" markdown="1">
