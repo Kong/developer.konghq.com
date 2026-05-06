@@ -4,7 +4,7 @@ This allows you to seamlessly rotate credentials without relying on static passw
 The following providers are supported:
 * AWS ElastiCache
 * Azure Managed Redis
-* Google Cloud Memorystore (with or without Valkey)
+* {{ site.google}} Cloud Memorystore (with or without Valkey)
 
 {% if include.tier == 'enterprise' %}
 Each provider also supports an instance and cluster configuration.

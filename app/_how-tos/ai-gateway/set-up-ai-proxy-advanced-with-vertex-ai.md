@@ -65,7 +65,7 @@ cleanup:
 
 To set up AI Proxy Advanced with Vertex AI, specify the model and set the appropriate authentication header.
 
-In this example, we'll use the Gemini 2.0 Flash Exp model:
+In this example, we'll use the {{ site.gemini }} 2.0 Flash Exp model:
 
 <!--vale off-->
 {% entity_examples %}

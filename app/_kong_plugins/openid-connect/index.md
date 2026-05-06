@@ -699,12 +699,12 @@ If one of these other applications is causing issues, looking into using the fol
 The plugin has been tested with several OpenID Connect providers:
 
 - [Auth0](https://auth0.com/docs/protocols/openid-connect-protocol)
-- [Amazon AWS Cognito](https://aws.amazon.com/cognito/dev-resources/)
+- [{{ site.amazon }} AWS Cognito](https://aws.amazon.com/cognito/dev-resources/)
 - [Connect2id](https://connect2id.com/products/server)
 - [Curity](https://curity.io/resources/learn/openid-connect-overview/)
 - [Dex](https://dexidp.io/docs/openid-connect/)
 - [Gluu](https://docs-4.gluu.org/gluu-server/admin-guide/openid-connect/)
-- [Google](https://developers.google.com/identity/protocols/oauth2/openid-connect)
+- [{{ site.google}}](https://developers.google.com/identity/protocols/oauth2/openid-connect)
 - [IdentityServer](https://duendesoftware.com/)
 - [Keycloak](http://www.keycloak.org/documentation.html)
 - [Microsoft Azure Active Directory](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc)

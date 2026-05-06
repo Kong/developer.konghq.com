@@ -59,23 +59,23 @@ The {{site.konnect_short_name}} platform provides built-in contextual analytics 
 
 ## Client app analytics
 
-Analyze web traffic, user behavior, and engagement for your Dev Portal with [Google Analytics](https://developers.google.com/analytics) and [Google Tag Manager](https://marketingplatform.google.com/about/tag-manager/). By integrating these with Dev Portal, you can analyze the following:
+Analyze web traffic, user behavior, and engagement for your Dev Portal with [{{ site.google}} Analytics](https://developers.google.com/analytics) and [{{ site.google}} Tag Manager](https://marketingplatform.google.com/about/tag-manager/). By integrating these with Dev Portal, you can analyze the following:
 * Which API docs get the most traffic?
 * Where do developers drop off and bounce on a page?
 * Are developers finding the search useful? Are they searching for something that isn't in the Dev Portal?
-* If Google Tag Manager is set up to track tab clicks, which SDK or language tab do developers prefer?
+* If {{ site.google}} Tag Manager is set up to track tab clicks, which SDK or language tab do developers prefer?
 * What does the Dev Portal conversion funnel look like?
 
-### Integrate Google Analytics with Dev Portal
+### Integrate {{ site.google}} Analytics with Dev Portal
 
-To configure the Google Analytics integration, do the following:
+To configure the {{ site.google}} Analytics integration, do the following:
 
 {% navtabs "analytics-integrations" %}
 {% navtab "UI" %}
 
 {% include /dev-portal/google-analytics-integration.md %}
 
-You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Analytics information there.
+You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Analytics information there.
 {% endnavtab %}
 {% navtab "API" %}
 
@@ -94,20 +94,20 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Analytics information there.
+You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Analytics information there.
 {% endnavtab %}
 {% endnavtabs %}
 
-### Integrate Google Tag Manager with Dev Portal
+### Integrate {{ site.google}} Tag Manager with Dev Portal
 
-To configure the Google Tag Manager integration, do the following:
+To configure the {{ site.google}} Tag Manager integration, do the following:
 
 {% navtabs "analytics-integrations" %}
 {% navtab "UI" %}
 
 {% include /dev-portal/google-tag-manager-integration.md %}
 
-You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Tag Manager information there.
+You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Tag Manager information there.
 {% endnavtab %}
 {% navtab "API" %}
 
@@ -126,6 +126,6 @@ body:
 {% endkonnect_api_request %}
 <!--vale on-->
 
-You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your Google Tag Manager information there.
+You can verify that the integrations are working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Tag Manager information there.
 {% endnavtab %}
 {% endnavtabs %}

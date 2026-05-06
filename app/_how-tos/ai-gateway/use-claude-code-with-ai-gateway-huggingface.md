@@ -80,7 +80,7 @@ automated_tests: false
 
 ## Configure the Pre-function plugin
 
-Claude CLI automatically includes a `model` field in its request payload. However, when the AI Proxy plugin is configured with HuggingFace provider and specific model in its settings, this creates a conflict. The pre-function plugin removes the `model` field from incoming requests before they reach the AI Proxy plugin, ensuring the gateway uses the model you configured rather than the one Claude CLI sends.
+{{ site.claude}} CLI automatically includes a `model` field in its request payload. However, when the AI Proxy plugin is configured with HuggingFace provider and specific model in its settings, this creates a conflict. The pre-function plugin removes the `model` field from incoming requests before they reach the AI Proxy plugin, ensuring the gateway uses the model you configured rather than the one {{ site.claude}} CLI sends.
 
 {% entity_examples %}
 entities:
@@ -99,9 +99,9 @@ entities:
 
 ## Configure the AI Proxy plugin
 
-Configure the AI Proxy plugin for the [HuggingFace provider](/ai-gateway/ai-providers/#huggingface). This setup uses the default `llm/v1/chat` route. Claude Code sends its requests to this route.
+Configure the AI Proxy plugin for the [HuggingFace provider](/ai-gateway/ai-providers/#huggingface). This setup uses the default `llm/v1/chat` route. {{ site.claude}} Code sends its requests to this route.
 
-The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match Claude's native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when Claude Code communicates with the HuggingFace endpoint.
+The `llm_format: anthropic` parameter tells {{site.ai_gateway}} to expect request and response payloads that match {{ site.claude}}'s native API format. Without this setting, the gateway would default to OpenAI's format, which would cause request failures when {{ site.claude}} Code communicates with the HuggingFace endpoint.
 
 {% entity_examples %}
 entities:
@@ -127,7 +127,7 @@ variables:
 
 ## Configure the File Log plugin
 
-Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between Claude and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what Claude sends through the {{site.ai_gateway}}.
+Enable the [File Log](/plugins/file-log/) plugin on the service to inspect the LLM traffic between {{ site.claude}} and the {{site.ai_gateway}}. This creates a local `claude.json` file on your machine. The file records each request and response so you can review what {{ site.claude}} sends through the {{site.ai_gateway}}.
 
 {% entity_examples %}
 entities:
@@ -139,7 +139,7 @@ entities:
 
 ## Verify traffic through Kong
 
-Start a Claude Code session that points to the local {{site.ai_gateway}} endpoint:
+Start a {{ site.claude}} Code session that points to the local {{site.ai_gateway}} endpoint:
 
 {:.warning}
 > The `ANTHROPIC_MODEL` value can be any string since the pre-function plugin removes it. The actual model used is `meta-llama/Llama-3.3-70B-Instruct` as configured in the AI Proxy plugin.
@@ -150,7 +150,7 @@ ANTHROPIC_MODEL=any-model-name \
 claude
 ```
 
-Claude Code asks for permission before it runs tools or interacts with files:
+{{ site.claude}} Code asks for permission before it runs tools or interacts with files:
 
 ```text
 I'll need permission to work with your files.
@@ -174,7 +174,7 @@ Select **Yes, continue**. The session starts. Ask a simple question to confirm t
 Try creating a logging.py that logs simple http logs.
 ```
 
-Claude Code might prompt you to approve its web search for answering the question. When you select **Yes**, Claude will produce a full-length response to your request:
+{{ site.claude}} Code might prompt you to approve its web search for answering the question. When you select **Yes**, {{ site.claude}} will produce a full-length response to your request:
 
 ```text
 Create file
@@ -206,7 +206,7 @@ Next, inspect the {{site.ai_gateway}} logs to verify that the traffic was proxie
 docker exec kong-quickstart-gateway cat /tmp/claude.json | jq
 ```
 
-You should find an entry that shows the upstream request made by Claude Code. A typical log record looks like this:
+You should find an entry that shows the upstream request made by {{ site.claude}} Code. A typical log record looks like this:
 
 ```json
 {
@@ -248,4 +248,4 @@ You should find an entry that shows the upstream request made by Claude Code. A 
 ```
 {:.no-copy-code}
 
-This output confirms that Claude Code routed the request through {{site.ai_gateway}} using HuggingFace with the `meta-llama/Llama-3.3-70B-Instruct` model.
+This output confirms that {{ site.claude}} Code routed the request through {{site.ai_gateway}} using HuggingFace with the `meta-llama/Llama-3.3-70B-Instruct` model.

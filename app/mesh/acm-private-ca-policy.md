@@ -29,7 +29,7 @@ related_resources:
     url: /mesh/enterprise/
 ---
 
-You can use Amazon Certificate Manager as a Certificate Authority (CA) for mTLS with {{site.mesh_product_name}}.
+You can use {{ site.amazon }} Certificate Manager as a Certificate Authority (CA) for mTLS with {{site.mesh_product_name}}.
 
 ## Supported mTLS backends
 
@@ -38,12 +38,12 @@ The default mTLS policy in {{site.mesh_product_name}} supports the following Cer
 * `builtin`: {{site.mesh_product_name}} automatically generates the CA root certificate and key used to generate Data Plane certificates.
 * `provided`: The CA root certificate and key can be provided by the user.
 * `vault`: Uses a CA root certificate and key stored in a HashiCorp Vault server.
-* `acmpca`: Uses [Amazon Certificate Manager Private CA](https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html) to generate Data Plane certificates.
+* `acmpca`: Uses [{{ site.amazon }} Certificate Manager Private CA](https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html) to generate Data Plane certificates.
 * `certmanager`: Uses the Kubernetes [cert-manager](https://cert-manager.io) certificate controller.
 
 ## How ACM Private CA works
 
-In `acmpca` mTLS mode, {{site.mesh_product_name}} uses Amazon Certificate Manager to automatically generate Data Plane certificates. The private key of the CA is secured by AWS and never exposed.
+In `acmpca` mTLS mode, {{site.mesh_product_name}} uses {{ site.amazon }} Certificate Manager to automatically generate Data Plane certificates. The private key of the CA is secured by AWS and never exposed.
 
 You configure {{site.mesh_product_name}} to use the ACM resource and optionally specify AWS authentication credentials. 
 The system uses the AWS default credential chain (environment variables, config files, roles).

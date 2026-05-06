@@ -113,7 +113,7 @@ cleanup:
 
 The [AI Proxy Advanced](/plugins/ai-proxy-advanced) plugin allows you to route requests to multiple LLM models and define load balancing, retries, timeouts, and token counting strategies. The AI LLM as Judge plugin requires AI Proxy Advanced with [`config.balancer.tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) set to `llm-accuracy`. This setting enables the balancer to compare responses from multiple LLM models and pass them to the judge for evaluation.
 
-In this tutorial, we configure AI Proxy Advanced to send requests to both OpenAI and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests. For testing purposes only, we include a less reliable Ollama model in the configuration. This makes it easier to demonstrate the evaluation differences when responses are judged by the AI LLM as Judge plugin.
+In this tutorial, we configure AI Proxy Advanced to send requests to both {{ site.openai }} and Ollama models, using the [lowest-usage balancer](/ai-gateway/load-balancing/#load-balancing-algorithms) to direct traffic to the model currently handling the fewest tokens or requests. For testing purposes only, we include a less reliable Ollama model in the configuration. This makes it easier to demonstrate the evaluation differences when responses are judged by the AI LLM as Judge plugin.
 
 {% entity_examples %}
 entities:

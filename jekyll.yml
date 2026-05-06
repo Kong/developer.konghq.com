@@ -130,6 +130,16 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
+# 3rd party product names
+openai: OpenAI
+anthropic: Anthropic
+claude: Claude
+google: Google
+gemini: Gemini
+amazon: Amazon
+cohere: Cohere
+hugging_face: Hugging Face
+
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com

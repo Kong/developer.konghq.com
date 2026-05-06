@@ -238,7 +238,7 @@ Cosine similarity measures the angle between vectors, ignoring their magnitude. 
 ![Cosine similarity example](/assets/images/ai-gateway/cosine-similarity.svg)
 > _**Figure 2:** Visualization of cosine similarity as the angle between vector directions._
 
-Cosine tends to perform well across both low and high dimensional space, especially in high-diversity datasets because it captures vector orientation rather than size. This can be useful, for example, when comparing texts about Microsoft, Apple, and Google.
+Cosine tends to perform well across both low and high dimensional space, especially in high-diversity datasets because it captures vector orientation rather than size. This can be useful, for example, when comparing texts about Microsoft, Apple, and {{ site.google}}.
 
 #### Euclidean distance
 

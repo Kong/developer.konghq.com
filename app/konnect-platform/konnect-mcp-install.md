@@ -27,7 +27,7 @@ related_resources:
 
 Configure the MCP client of your choice by adding the {{site.konnect_product_name}} MCP Server with your regional URL and PAT.
 
-## Claude Code CLI
+## {{ site.claude}} Code CLI
 
 For regional server URLs, see [Regional server endpoints](/konnect-platform/konnect-mcp/#regional-server-endpoints).
 
@@ -43,7 +43,7 @@ claude mcp add --transport http kong-konnect https://us.mcp.konghq.com/ \
 
 You can also configure by editing the configuration file directly:
 
-Claude CLI stores its configuration in `~/.claude.json` (or `.mcp.json` for project scope):
+{{ site.claude}} CLI stores its configuration in `~/.claude.json` (or `.mcp.json` for project scope):
 
 ```json
 {

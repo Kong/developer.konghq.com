@@ -566,9 +566,9 @@ To use GCP Secret Manager with [Workload Identity](https://cloud.google.com/kube
 > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn’t necessary.
 > * When using GCP Vault as a backend, make sure you have configured system as part of the [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua-ssl-trusted-certificate) configuration directive so that the SSL certificates used by the official GCP API can be trusted by Kong.
 
-For a complete tutorial on how to set up Google Cloud as a Vault entity, see the following:
-* [Set up Google Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
-* [Set up Google Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
+For a complete tutorial on how to set up {{ site.google}} Cloud as a Vault entity, see the following:
+* [Set up {{ site.google}} Cloud with {{ site.base_gateway }}](/how-to/configure-google-cloud-secret-as-a-vault-backend/)
+* [Set up {{ site.google}} Cloud with {{ site.kic_product_name }}](/kubernetes-ingress-controller/vault/gcp/)
 
 The following table lists the available configuration parameters for a GCP Secret Manager Vault:
 

@@ -111,7 +111,7 @@ entities:
 
 ## Validate
 
-To validate that the secret was stored correctly in Google Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
+To validate that the secret was stored correctly in {{ site.google}} Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}
 secret: '{vault://gcp-sm-vault/test-secret}'

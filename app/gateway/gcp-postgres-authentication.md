@@ -46,9 +46,9 @@ works_on:
   - on-prem
 ---
 
-You can use GCP Identity and Access Management (IAM) and Workload Identity authentication to connect to the Google Cloud Postgres database that you use for {{site.base_gateway}}. This page explains how to configure IAM and Workload Identity authentication to secure your database settings and connections.
+You can use GCP Identity and Access Management (IAM) and Workload Identity authentication to connect to the {{ site.google}} Cloud Postgres database that you use for {{site.base_gateway}}. This page explains how to configure IAM and Workload Identity authentication to secure your database settings and connections.
 
-With authentication enabled, you don't need a password to connect to a database instance. Instead, you use a temporary authentication token. Because GCP manages the authentication externally, the database doesn't store user credentials. If you're using Google Cloud Postgres for {{site.base_gateway}}'s database, you can enable authentication on your running cluster. This eliminates the need to store user credentials on both the {{site.base_gateway}} (`pg_password`) and Google Cloud Postgres sides.
+With authentication enabled, you don't need a password to connect to a database instance. Instead, you use a temporary authentication token. Because GCP manages the authentication externally, the database doesn't store user credentials. If you're using {{ site.google}} Cloud Postgres for {{site.base_gateway}}'s database, you can enable authentication on your running cluster. This eliminates the need to store user credentials on both the {{site.base_gateway}} (`pg_password`) and {{ site.google}} Cloud Postgres sides.
 
 ## GCP authentication limitations
 
@@ -58,7 +58,7 @@ GCP authentication has some limitations. Go through each one before you use this
 * When `pg_gcp_auth` is enabled, the `pg_password` won't be used. You can't use both methods at the same time.
 * Any incorrect configuration on the GCP side will result in a failure in initializing the database connection, such as an improperly configured managed identity or a missing role inside GCP Postgres.
 
-For additional recommendations and limitations, see the [IAM authentication restrictions](https://docs.cloud.google.com/sql/docs/postgres/iam-authentication#restrictions) in the Google Cloud documentation.
+For additional recommendations and limitations, see the [IAM authentication restrictions](https://docs.cloud.google.com/sql/docs/postgres/iam-authentication#restrictions) in the {{ site.google}} Cloud documentation.
 
 ## Enabling GCP authentication
 
@@ -69,7 +69,7 @@ You can enable GCP authentication through an environment variable or the {{site.
 
 ### Configuring your GCP resources
 
-Before you enable GCP authentication, you must configure your Google Cloud Postgres database and the IAM role or Workload Identity that {{site.base_gateway}} uses.
+Before you enable GCP authentication, you must configure your {{ site.google}} Cloud Postgres database and the IAM role or Workload Identity that {{site.base_gateway}} uses.
 
 * [A GCP service account key](https://docs.cloud.google.com/iam/docs/keys-create-delete#creating). The service account must have sufficiently broad permissions; at minimum, it must be able to access GCP Postgres.
 * [A database user bound to the GCP service account](https://docs.cloud.google.com/sql/docs/postgres/add-manage-iam-users#creating-a-database-user) with the Cloud SQL Instance User role (`roles/cloudsql.instanceUser`). The user must also be able to connect to the GCP Postgres instance from their GCP VM using `psql`.
