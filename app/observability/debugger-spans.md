@@ -43,20 +43,20 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring the real_ip_header. Please refer to the real_ip_header and trusted_ips documentation.
+        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring the real_ip_header. Please refer to the real_ip_header and trusted_ips documentation.
+        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
   - name: "`network.peer.address`"
     description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
     description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
-    description: Kong's DNS name or IP used in client connection
+    description: The IP address where Kong received the request
   - name: "`server.port`"
-    description: Kong's public port
+    description: The port where Kong received the request
   - name: "`network.protocol.name`"
-    description: HTTP, gRPC, WS, Kafka, etc.
+    description: Name of the network protocol. Debugger currently only supports `http`, so that is the only expected value for this attribute.
   - name: "`http.request.method`"
     description: HTTP request method
   - name: "`http.request.body.size`"
