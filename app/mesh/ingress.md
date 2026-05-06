@@ -80,13 +80,7 @@ flowchart TB
     end
 
     KGW --> BG1 & BG2
-
-    classDef kongBlue fill:#1456cb,color:#fff,stroke:#1456cb
-    classDef builtinPurple fill:#9c7fc1,color:#fff,stroke:#7c5fa1
-    class KGW kongBlue
-    class BG1,BG2 builtinPurple
-    linkStyle 0,17,18 stroke:#1456cb,stroke-width:2px
-    linkStyle 2,5,7,8,10,13,15,16 stroke:#e44b8a
+    BG1 <-.-> BG2
 {% endmermaid %}
 
 ## Delegated gateway
@@ -134,9 +128,5 @@ flowchart TB
     end
 
     KGW --> DG1 & DG2
-
-    classDef kongBlue fill:#1456cb,color:#fff,stroke:#1456cb
-    class KGW,DG1,DG2 kongBlue
-    linkStyle 0,17,18 stroke:#1456cb,stroke-width:2px
-    linkStyle 2,5,7,8,10,13,15,16 stroke:#e44b8a
+    DG1 <--> DG2
 {% endmermaid %}
