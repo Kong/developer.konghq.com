@@ -212,7 +212,7 @@
     @apply font-bold text-base tracking-[-.01em];
   }
 
-  main h4:not(.card h4) {
+  main h4:not(.card h4, .cookbook h4) {
     @apply pt-3;
   }
 
@@ -667,6 +667,10 @@
 
   .filter-results-field__input {
     @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
+
+    &::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
   }
 
   .searchbox-results-container {
@@ -681,7 +685,8 @@
     @apply border-[0.28px] border-primary/[.08];
   }
 
-  .how-to {
+  .how-to,
+  .cookbook {
     counter-reset: steps-counter;
   }
 
