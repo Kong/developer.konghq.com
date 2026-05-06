@@ -27,7 +27,7 @@ If your control plane needs to handle a non-trivial number of concurrent connect
 cat /proc/$(pgrep kuma-cp)/limits
 ```
 
-The example below sets `LimitNOFILE` to `1048576`, the same limit that `docker` and `containerd` [set by default](https://github.com/containerd/containerd/issues/3201).
+The example below sets `LimitNOFILE` to `1048576`, the same limit that `Docker` and `containerd` [set by default](https://github.com/containerd/containerd/issues/3201).
 
 `StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts, so systemd keeps trying to restart the control plane regardless of how often it has failed recently.
 
