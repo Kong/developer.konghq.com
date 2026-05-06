@@ -217,8 +217,31 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
 - "Configuration of X" / "Configuring X" → "Configure X"
 - "Enabling X" → "Enable X"
 
-### 5h. Keep unchanged
-- `{% mermaid %}` blocks
+### 5h. Diagram image → `{% mermaid %}` conversion
+
+For each image reference in the body (`![alt](path)` or `<img src="...">`) that appears to be an architectural or flow diagram:
+
+1. Identify the image by checking its alt text, filename, and surrounding prose for keywords like "architecture", "flow", "diagram", "topology", "traffic", "lifecycle", "sequence", or "overview".
+2. Fetch the image file from the kuma-website repo (e.g. `https://raw.githubusercontent.com/kumahq/kuma-website/master/app/assets/images/<filename>`) and inspect it visually to understand its content.
+3. Reconstruct the diagram as a `{% mermaid %}` block using the most appropriate diagram type:
+   - **flowchart** (`graph LR` / `graph TD`) — component relationships, request paths
+   - **sequenceDiagram** — step-by-step interactions between services
+   - **classDiagram** — object/resource hierarchies
+   - **C4Context** / **C4Container** — high-level architecture
+4. Replace the original image reference with the `{% mermaid %}` block.
+5. If the image cannot be fetched, cannot be interpreted as a diagram, or is a screenshot/photo, leave the image reference in place and flag it in the Step 9 report.
+
+Example output format:
+```
+{% mermaid %}
+graph LR
+  DPP(Data plane proxy) -->|XDS| CP(Control plane)
+  CP -->|config| DB[(PostgreSQL)]
+{% endmermaid %}
+```
+
+### 5i. Keep unchanged
+- Existing `{% mermaid %}` blocks (already converted)
 - `{% schema_viewer %}`, `{% policy_yaml %}` tags
 - `{:.warning}`, `{:.info}` callouts
 - All code blocks (content inside `` ``` `` fences)
