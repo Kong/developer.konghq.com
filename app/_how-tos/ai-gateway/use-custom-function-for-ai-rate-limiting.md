@@ -69,7 +69,7 @@ cleanup:
 
 ## Configure the plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your Cohere API key and the model details to proxy requests to Cohere. In this example, we'll use the `command-a-03-2025` model.
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your {{ site.cohere }} API key and the model details to proxy requests to {{ site.cohere }}. In this example, we'll use the `command-a-03-2025` model.
 
 {% entity_examples %}
 entities:

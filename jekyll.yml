@@ -137,6 +137,7 @@ claude: Claude
 google: Google
 gemini: Gemini
 amazon: Amazon
+cohere: Cohere
 
 
 repos:

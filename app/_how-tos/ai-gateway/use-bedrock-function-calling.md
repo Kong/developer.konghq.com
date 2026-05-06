@@ -306,4 +306,4 @@ Finished generating text with model cohere.command-r-v1:0.
 
 The output confirms that {{site.ai_gateway}} correctly proxied both the initial Converse API request and the follow-up tool result message to AWS Bedrock. The model received the `top_song` tool output and generated a natural language response that includes the song title and artist.
 
-If the request fails with authentication errors, verify that the `aws_access_key_id` and `aws_secret_access_key` in your Kong plugin configuration are valid and that the Cohere Command R model is enabled in your AWS Bedrock console.
+If the request fails with authentication errors, verify that the `aws_access_key_id` and `aws_secret_access_key` in your Kong plugin configuration are valid and that the {{ site.cohere }} Command R model is enabled in your AWS Bedrock console.

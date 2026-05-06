@@ -94,7 +94,7 @@ automated_tests: false
 
 ## Configure the plugin
 
-Configure AI Proxy to use Cohere's document-grounded chat:
+Configure AI Proxy to use {{ site.cohere }}'s document-grounded chat:
 
 {% entity_examples %}
 entities:
@@ -118,13 +118,13 @@ variables:
     value: $COHERE_API_KEY
 {% endentity_examples %}
 
-## Use Cohere document-grounded chat
+## Use {{ site.cohere }} document-grounded chat
 
-Cohere's document-grounded chat filters candidate documents and generates answers in a single API call. Send a query with candidate documents. The model selects relevant documents, generates an answer using only those documents, and returns citations linking answer segments to sources. This replaces multi-step RAG pipelines with one request.
+{{ site.cohere }}'s document-grounded chat filters candidate documents and generates answers in a single API call. Send a query with candidate documents. The model selects relevant documents, generates an answer using only those documents, and returns citations linking answer segments to sources. This replaces multi-step RAG pipelines with one request.
 
-The following script sends a query with 5 candidate documents to Cohere's chat endpoint. Three documents discuss green tea health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
+The following script sends a query with 5 candidate documents to {{ site.cohere }}'s chat endpoint. Three documents discuss green tea health benefits. Two documents are intentionally irrelevant (Eiffel Tower, Python programming).
 
-The script attempts to show which documents the model used by comparing the `documents` field in the response to the input documents. This demonstrates whether Cohere's document-grounded chat filters out irrelevant documents automatically.
+The script attempts to show which documents the model used by comparing the `documents` field in the response to the input documents. This demonstrates whether {{ site.cohere }}'s document-grounded chat filters out irrelevant documents automatically.
 
 Create the script:
 ```sh
@@ -206,7 +206,7 @@ EOF
 
 
 {:.info}
-> Verify that the `return_documents` parameter actually returns the filtered document subset. Check [Cohere's API documentation](https://docs.cohere.com/reference/about) or test the script to confirm this behavior.
+> Verify that the `return_documents` parameter actually returns the filtered document subset. Check [{{ site.cohere }}'s API documentation](https://docs.cohere.com/reference/about) or test the script to confirm this behavior.
 
 ## Validate the configuration
 
