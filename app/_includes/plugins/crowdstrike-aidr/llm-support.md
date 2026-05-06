@@ -8,7 +8,7 @@ The following providers are supported, along with their corresponding provider m
 * AWS Bedrock: `bedrock`
 * Cohere: `cohere`
 * Google Gemini: `gemini`
-* Kong AI Gateway: `kong`
+* {{site.ai_gateway_name}}: `kong`
 * OpenAI:`openai`
 
 {:.info}
