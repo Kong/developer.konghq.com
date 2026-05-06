@@ -50,7 +50,7 @@ related_resources:
     url: /plugins/ai-semantic-prompt-guard/
 ---
 
-The AI Prompt Guard plugin lets you to configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists,
+The AI Prompt Guard plugin lets you configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists,
 to guard against misuse of text completion requests.
 
 You can use this plugin to allow or block specific prompts, words, phrases, or otherwise have more control over how an LLM service is
