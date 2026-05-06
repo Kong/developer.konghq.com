@@ -24,7 +24,7 @@ related_resources:
 
 
 
-When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that detail {{site.konnect_short_name}} events.
+When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow.
 The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
 <!--vale off-->
 ### kong
@@ -43,32 +43,32 @@ rows:
     description: Full url, without query parameters
   - name: "`client.address`"
     description: |
-        Remote address of the client making the request. This considers forwarded addresses in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote address of the actual client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
   - name: "`client.port`"
     description: |
-        Remote port of the client making the request. This considers forwarded ports in cases when a load balancer is in front of Kong. Note: this requires configuring the real_ip_header and trusted_ips global configuration options.
+        Remote port of the client making the request. We try to handle proxy situations too where the client may be coming through a proxy. Note: this requires configuring [trusted\_ips](https://developer.konghq.com/gateway/configuration/#trusted-ips) and may require configuring [real\_ip\_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header).
   - name: "`network.peer.address`"
-    description: IP of the component that is connecting to Kong
+    description: IP of the network peer that is connecting to Kong
   - name: "`network.peer.port`"
-    description: Port of the component that is connecting to Kong
+    description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
-    description: Kong's DNS name or IP used in client connection
+    description: The IP address where Kong received the request
   - name: "`server.port`"
-    description: Kong's public port
+    description: The port where Kong received the request
   - name: "`network.protocol.name`"
-    description: HTTP, gRPC, WS, Kafka, etc.
+    description: Name of the network protocol. Debugger currently only supports `http`, so that is the only expected value for this attribute.
   - name: "`http.request.method`"
     description: HTTP request method
-  - name: "`http.request.body.size`"
-    description: Request content length or equivalent in bytes
+  - name: "`proxy.kong.http.request.body.size`"
+    description: Request body length in bytes
   - name: "`proxy.kong.request.id`"
     description: Unique id for each request
   - name: "`proxy.kong.request.time`"
     description: Request time as measured by Nginx ($request_time)
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
-  - name: "`http.response.body.size`"
-    description: Response content length or equivalent in bytes
+  - name: "`proxy.kong.http.response.body.size`"
+    description: Response body length in bytes
   - name: "`http.response.size`"
     description: Response body size and response headers size in bytes
   - name: "`kong.request.id`"
@@ -81,11 +81,11 @@ rows:
     description: SNI
   - name: "`http.request.header.host`"
     description: Host header if present. This can be different from the SNI.
-  - name: "`proxy.kong.consumer_id`"
+  - name: "`proxy.kong.consumer.id`"
     description: Authenticated Consumer ID if present
-  - name: "`proxy.kong.upstream_id`"
+  - name: "`proxy.kong.upstream.id`"
     description: Resolved Upstream ID
-  - name: "`proxy.kong.upstream_status_code`"
+  - name: "`proxy.kong.upstream.status_code`"
     description: status code returned by Upstream
   - name: "`http.response.status_code`"
     description: Status code sent back by Kong
@@ -95,9 +95,7 @@ rows:
     description: Time between the first byte into Kong and the last byte out of Kong
   - name: "`proxy.kong.latency.internal`"
     description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and i/o times.
-  - name: "`proxy.kong.latency.net_io_timings`"
-    description: Array containing `ip`, `connect_time`, and `rw_time`. I/o outside of the request context is not considered.
-  - name: "`proxy.kong.client_KA`"
+  - name: "`proxy.kong.client.keepalive`"
     description: Whether the downstream used a KeepAlive connection.
   - name: "`tls.resumed`"
     description: Whether the TLS session resumed.
@@ -172,14 +170,17 @@ A span capturing the execution of a plugin configured to run in the `rewrite` ph
 This span has the following attributes:
 {{instance_id}}
 
-### kong.io.function
+### kong.io.<service>.<operation>
 A span capturing network i/o timing that occurs during plugin execution or other request processing. 
 
 Can be one of:
 * `kong.io.http.request`: Requests done by the internal http client during the flow
 * `kong.io.http.connect`: Connections done by the internal http client during the flow
-* `kong.io.redis.function`: Redis functions
-* `kong.io.socket.function`: Functions called on the internal nginx socket
+* `kong.io.redis.<function>`: Redis functions
+* `kong.io.socket.connect`: Connections on the internal nginx socket
+* `kong.io.socket.sslhandshake`: SSL Handshake operations on the internal nginx socket
+* `kong.io.socket.send`: Send operations on the internal nginx socket
+* `kong.io.socket.receive`: Receive operations on the internal nginx socket
 
 Examples:
 * OIDC plugin making calls to IdP
@@ -250,7 +251,9 @@ columns:
   - title: Description
     key: description
 rows:
-  - name: "`proxy.kong.dns.entry`"
+  - name: "`proxy.kong.dns.domain`"
+    description: The domain name that was looked up
+  - name: "`proxy.kong.dns.tries`"
     description: A list of DNS attempts, responses and errors if any
 {% endtable %}
 
@@ -274,7 +277,7 @@ rows:
 {% endtable %}
 
 
-### kong.upstream.find_upstream
+### kong.find_upstream
 A span capturing the attempt to verify a specific upstream. 
 {{site.base_gateway}} attempts to open a TCP connection (if not `KeepAlive` cache is found), do a TLS handshake and send down the HTTP headers. 
 If all of this succeeds, the upstream is healthy and Kong will finish sending the full request and wait for a response. 
@@ -354,3 +357,12 @@ This span has the following attributes:
 
 ### kong.wait_for_client_read
 A span that measures the time Kong spends finishing the response write to the client. This duration may be extended for slow-reading clients, resulting in a longer span.
+
+### kong.phase.log
+A span capturing the execution of the `log` phase. Any plugins configured for running in this phase will show up as individual child spans.
+
+### kong.analytics.log_request
+A span capturing the execution of analytics logging. This span represents the time taken to prepare and serialize  analytics data during each request's log phase. That data will be later exported to Konnect in batches, asynchronously.
+
+### kong.log.plugin.plugin_name
+A span capturing the execution of a plugin configured to run in the `log` phase. Multiple such spans can occur in a trace.
