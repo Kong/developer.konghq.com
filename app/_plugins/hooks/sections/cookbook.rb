@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 require 'nokogiri'
 require_relative 'base'
 require_relative 'how-to'
@@ -42,8 +43,9 @@ module SectionWrapper
     end
 
     def h4_section_title(h4, slug, title)
+      escaped_title = CGI.escapeHTML(title)
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <a aria-label="Anchor" href="##{slug}" title="#{title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger" id="#{slug}">
+        <a aria-label="Anchor" href="##{slug}" title="#{escaped_title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">
             #{h4.to_html}
             <span class="text-brand hidden link-anchor-icon group-hover:flex">
