@@ -382,6 +382,40 @@ rows:
 
 ACLs are evaluated on the name the client uses, before alias resolution. An ACL on the backend topic does not automatically grant access to its aliases, and vice versa. Operators must configure ACLs for each alias name explicitly. With `acl_mode: enforce_on_gateway` (deny-by-default), a new alias with no matching ACL is blocked.
 
+### Interaction with namespaces
+
+The `topic` field in `topic_aliases` references namespace-visible names, not raw backend topic names. In the request path, aliases resolve *after* policies but *before* the [namespace](#namespaces) transformer:
+
+```
+client → policies → alias resolution → namespace → backend
+```
+{:.no-copy-code}
+
+If the virtual cluster has a namespace, the alias must target a name that the namespace already exposes. For example, with `namespace.mode: hide_prefix` and `prefix: analytics_`, `topic: foo` resolves to the backend topic `analytics_foo`.
+
+A backend topic that the namespace does not expose (it doesn't match the prefix and isn't listed in `additional_topics`) cannot be aliased directly. Expose it through the namespace first:
+
+```yaml
+namespace:
+  mode: hide_prefix
+  prefix: analytics_
+  additional_topics:
+    - type: exact_list
+      list:
+        - team-alpha-orders-v2
+topic_aliases:
+  - alias: orders
+    topic: team-alpha-orders-v2 # valid because additional_topics exposes it
+```
+
+### Policy context
+
+[Policies](/event-gateway/entities/policy/) attached to a virtual cluster see the alias name, not the backend topic name. In a CEL match expression, `topic.name` evaluates to the alias name. Policies that match on a backend topic name do not automatically apply to its aliases - match the alias name explicitly:
+
+```yaml
+condition: topic.name == "orders"
+```
+
 For a full walkthrough, see [Configure topic aliases](/event-gateway/configure-topic-aliases/).
 
 ## Virtual cluster policies
