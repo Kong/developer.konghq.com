@@ -86,24 +86,16 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Vault
+              title: AI Vault
               description: Store and reference secrets used by AI Gateway entities and plugins.
               cta:
-                text: Vault entity
-                url: /gateway/entities/vault/
+                text: AI Vault entity
+                url: /ai-gateway/entities/vault/
       - blocks:
           - type: card
             config:
-              title: Key
-              description: Manage cryptographic key material used by AI Gateway security workflows.
+              title: AI Data Plane Certificate
+              description: Public client certificates that authorize data planes to establish mTLS connections to an AI Gateway.
               cta:
-                text: Key entity
-                url: /gateway/entities/key/
-      - blocks:
-          - type: card
-            config:
-              title: Key Set
-              description: Group keys for rotation and key management in AI Gateway configurations.
-              cta:
-                text: Key Set entity
-                url: /gateway/entities/key-set/
+                text: AI Data Plane Certificate entity
+                url: /ai-gateway/entities/data-plane-certificate/
