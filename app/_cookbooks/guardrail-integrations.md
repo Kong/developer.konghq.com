@@ -212,7 +212,7 @@ The [key-auth](/plugins/key-auth/) Plugin matches the `apikey` request header ag
 
 **`hide_credentials: true`**: Strips the `apikey` header before Kong forwards the request upstream. This prevents the Consumer credential from leaking to the LLM provider in proxied requests.
 
-The recipe registers a single Consumer (`demo-app`) with one API key. Production deployments typically use multiple Consumers, often with [Consumer Groups](/gateway/consumer-groups/) to apply different policies per tier.
+The recipe registers a single Consumer (`demo-app`) with one API key. Production deployments typically use multiple Consumers, often with [Consumer Groups](/gateway/entities/consumer-group/) to apply different policies per tier.
 
 ### AI Azure Content Safety, dedicated integration
 
@@ -480,7 +480,7 @@ The AI Custom Guardrail Plugin is the default approach for new guardrail integra
 ### Production considerations
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. The `config.params` section of the AI Custom Guardrail Plugin supports vault references directly.
+> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. The `config.params` section of the AI Custom Guardrail Plugin supports vault references directly.
 
 ## Apply the Kong configuration
 
@@ -1091,4 +1091,4 @@ export KONNECT_CONTROL_PLANE_NAME='guardrail-integrations-recipe' && curl -Ls ht
 
 **Use AI AWS Guardrails for AWS Bedrock.** If your guardrail service is AWS Bedrock Guardrails, use the dedicated [AI AWS Guardrails](/plugins/ai-aws-guardrails/) Plugin. It handles SigV4 request signing natively, which the AI Custom Guardrail Plugin cannot do. Configure your guardrail ID and version in the Plugin config, and the Plugin manages the full AWS authentication flow.
 
-**Use Kong Vaults for production credential management.** Replace the environment variable exports with vault references to store your Azure Content Safety API key, Mistral moderation token, and OpenAI API key securely. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. See the [secrets management documentation](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/) for setup instructions.
+**Use Kong Vaults for production credential management.** Replace the environment variable exports with vault references to store your Azure Content Safety API key, Mistral moderation token, and OpenAI API key securely. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. See the [secrets management documentation](/gateway/entities/vault/) for setup instructions.

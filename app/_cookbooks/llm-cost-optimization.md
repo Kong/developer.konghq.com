@@ -568,7 +568,7 @@ consumer_groups:
 
 Kong sets response headers on every request so clients can track their remaining budget: `X-AI-RateLimit-Limit-hour-openai: 1` and `X-AI-RateLimit-Remaining-hour-openai: 0.987`. When the budget is exhausted, Kong returns `429 Too Many Requests` with a `Retry-After` header. The window label in the header (`hour`, `minute`, etc.) is derived from the configured `window_size`: `3600` becomes `hour`, `60` becomes `minute`, and non-standard sizes use the raw seconds value. Both targets in the recipe use `name: openai`, so a single bucket tracks total tier spend across `gpt-4o` and `gpt-4o-mini` together; to split budgets per model, add separate `llm_providers` entries with distinct `name` values or break each model onto its own Route.
 
-For simplicity, this recipe stores Consumer API keys directly in Plugin config and provider credentials in environment variables. In production, reference both through [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) instead, backed by your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault).
+For simplicity, this recipe stores Consumer API keys directly in Plugin config and provider credentials in environment variables. In production, reference both through [Kong Vaults](/gateway/entities/vault/) instead, backed by your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or Azure Key Vault).
 
 ### Example response
 

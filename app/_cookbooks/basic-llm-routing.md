@@ -331,7 +331,7 @@ The AI Proxy Advanced Plugin sits behind the Key Auth Plugin and handles everyth
 - **Additional route types.** A single Plugin instance can have multiple targets for different route types, each with their own model and auth configuration. Beyond `llm/v1/chat`, the Plugin supports additional route types for embeddings, completions, responses, realtime, and multimodal traffic. See the [ai-proxy-advanced reference](/plugins/ai-proxy-advanced/) for the current list.
 
 {:.info}
-> **Production credentials.** This recipe stores the Consumer API key directly in Plugin config and the LLM provider credentials in environment variables for simplicity. In production, use [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
+> **Production credentials.** This recipe stores the Consumer API key directly in Plugin config and the LLM provider credentials in environment variables for simplicity. In production, use [Kong Vaults](/gateway/entities/vault/) to reference both from your preferred secret manager (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, Azure Key Vault) instead.
 
 ### Example response
 

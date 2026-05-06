@@ -440,7 +440,7 @@ When a guardrail blocks the request, the response body is a JSON error and Kong 
 ### Production considerations
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [Kong Vaults](/gateway/entities/vault/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
 
 ## Apply the Kong configuration
 
@@ -1151,4 +1151,4 @@ docker rm -f kong-pii-anonymizer 2>/dev/null
 
 **Integrate with external guardrail services.** For organization-specific content policies, add cloud guardrail services alongside the layers in this recipe. The [AI Custom Guardrail](/plugins/ai-custom-guardrail/) Plugin connects to any HTTP-based guardrail service (Mistral Moderation, Azure Content Safety, custom internal endpoints) through a universal templating system. See the [Guardrail Integrations](/cookbooks/guardrail-integrations/) recipe for complete examples comparing dedicated and universal approaches.
 
-**Use Kong Vaults for production credential management.** Replace the environment variable exports with vault references to store your LLM API keys, Redis credentials, and PII service host securely. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. See the [secrets management documentation](/gateway/latest/kong-enterprise/secrets-management/) for setup instructions.
+**Use Kong Vaults for production credential management.** Replace the environment variable exports with vault references to store your LLM API keys, Redis credentials, and PII service host securely. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store. See the [secrets management documentation](/gateway/entities/vault/) for setup instructions.
