@@ -46,3 +46,4 @@ xai
 bedrock
 avro
 crowdstrike
+aidr

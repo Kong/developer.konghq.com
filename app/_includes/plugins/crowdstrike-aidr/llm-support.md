@@ -9,7 +9,7 @@ The following providers are supported, along with their corresponding provider m
 * Cohere: `cohere`
 * Google Gemini: `gemini`
 * {{site.ai_gateway_name}}: `kong`
-* OpenAI:`openai`
+* OpenAI: `openai`
 
 {:.info}
 > **Note**: Streaming responses are not currently supported.
