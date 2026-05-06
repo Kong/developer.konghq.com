@@ -1,6 +1,6 @@
 ---
 title: Dataplane
-description: Resource reference for Dataplane, which defines configuration for data plane proxies (sidecars) that run alongside workloads to handle service mesh traffic.
+description: Defines configuration for data plane proxies (sidecars) that handle service mesh traffic.
 
 content_type: reference
 layout: reference
