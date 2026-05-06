@@ -138,6 +138,7 @@ google: Google
 gemini: Gemini
 amazon: Amazon
 cohere: Cohere
+hugging_face: Hugging Face
 
 
 repos:
