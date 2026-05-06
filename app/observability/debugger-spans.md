@@ -59,24 +59,24 @@ rows:
     description: Name of the network protocol. Currently Debugger only supports `http`.
   - name: "`http.request.method`"
     description: HTTP request method
+  - name: "`proxy.kong.request.id`"
+    description: Unique id created by Kong for each request. [Useful for debugging](https://developer.konghq.com/gateway/debug-requests/#x-kong-request-id-header).
+  - name: "`proxy.kong.request.time`"
+    description: Time taken to process this request as measured from reading the first byte from the client, to writing the last byte to the client. Logging handler time is not part of this calculation.
   - name: "`proxy.kong.http.request.body.size`"
     description: Request body length in bytes
-  - name: "`proxy.kong.request.id`"
-    description: Unique id for each request
-  - name: "`proxy.kong.request.time`"
-    description: Request time as measured by Nginx ($request_time)
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`proxy.kong.http.response.body.size`"
-    description: Response body length in bytes
+    description: Response body length in bytes. Response Header size is not included
   - name: "`http.response.size`"
     description: Response body size and response headers size in bytes
   - name: "`url.scheme`"
     description: Protocol identifier
   - name: "`network.protocol.version`"
     description: Version of the HTTP protocol used in establishing connection [1.2, 2.0]
-  - name: "`http.request.header.host`"
-    description: Host header if present. This can be different from the SNI.
+  - name: "`proxy.kong.request.host`"
+    description: The value of "Host" as determined by Kong in this order of precedence: host name from the request line, or host name from the “Host” request header field, or the server name matching a request 
   - name: "`proxy.kong.consumer.id`"
     description: Authenticated Consumer ID if present
   - name: "`proxy.kong.upstream.id`"
