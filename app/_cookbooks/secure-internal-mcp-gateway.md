@@ -37,9 +37,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
-        This tutorial uses Kong Konnect. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
+        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token and the recipe-scoped Control Plane name:
@@ -60,7 +60,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -84,7 +84,7 @@ prereqs:
 
         You need an Okta organization with admin access. You will create two applications.
 
-        **1. Kong Gateway application (API Services)**
+        **1. {{site.base_gateway}} application (API Services)**
 
         This represents Kong as the resource server. Kong uses it to validate tokens via introspection.
 
@@ -154,7 +154,7 @@ prereqs:
 
         1. In the Keycloak Admin Console, create a new realm (for example, `mcp-demo`).
 
-        **2. Kong Gateway client (Confidential)**
+        **2. {{site.base_gateway}} client (Confidential)**
 
         This client represents Kong as the resource server for token introspection.
 
@@ -223,7 +223,7 @@ prereqs:
 
         See [MCP clients in Insomnia](/insomnia/mcp-clients-in-insomnia/) for an overview of MCP server testing in Insomnia.
 overview: |
-  Organizations adopting MCP (Model Context Protocol) face a common challenge when multiple API teams each expose tools but there is no centralized control over who can discover and call those tools. This recipe places Kong Gateway in front of internal MCP servers as a single aggregated endpoint. Each API team independently defines their tools and access policies using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin in `conversion-only` mode, while a central platform team aggregates those tools into one MCP server using `listener` mode, secures it with OAuth 2.1 via the [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin, and enforces per-tool access control through Consumer Group ACLs.
+  Organizations adopting MCP (Model Context Protocol) face a common challenge when multiple API teams each expose tools but there is no centralized control over who can discover and call those tools. This recipe places {{site.base_gateway}} in front of internal MCP servers as a single aggregated endpoint. Each API team independently defines their tools and access policies using the [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin in `conversion-only` mode, while a central platform team aggregates those tools into one MCP server using `listener` mode, secures it with OAuth 2.1 via the [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin, and enforces per-tool access control through Consumer Group ACLs.
 
   There are broadly two types of MCP servers that Kong can proxy. Internal MCP servers are hosted within your organization's trust boundary, wrapping internal APIs such as databases, ticketing systems, and proprietary services where you control both the server and the authentication. External MCP servers are third-party services like GitHub, Slack, and Figma that manage their own authentication and issue their own tokens. Proxying external servers through Kong requires a different approach. See [Secure External MCP Gateway](/cookbooks/secure-external-mcp-gateway/) for that pattern.
 
@@ -252,7 +252,7 @@ which means audience validation requires workarounds.
 
 ## The solution
 
-This recipe uses Kong Gateway as a federated MCP aggregation layer with three capabilities:
+This recipe uses {{site.base_gateway}} as a federated MCP aggregation layer with three capabilities:
 
 - **REST-to-MCP conversion.** Each API team applies the AI MCP Proxy Plugin in `conversion-only`
 mode to their existing Kong Routes. This converts selected REST endpoints into MCP tools, tagged
@@ -262,14 +262,14 @@ discovers all tagged tools and exposes them through a single MCP endpoint. MCP c
 to one URL and see a unified tool catalog.
 - **OAuth 2.1 + ACLs.** The AI MCP OAuth2 Plugin handles the full MCP auth spec: Protected
 Resource Metadata (PRM) discovery (RFC 9728), authorization code flow with PKCE, and token
-introspection. In Kong Gateway 3.14+, the Plugin maps token claims directly to Kong Consumers
+introspection. In {{site.base_gateway}} 3.14+, the Plugin maps token claims directly to Kong Consumers
 and Consumer Groups, enabling per-tool ACLs without a separate authentication Plugin.
 
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant B as Backend APIs
 
@@ -617,7 +617,7 @@ its tool catalog. Kong attaches the standard latency headers below on every auth
 
 ## Apply the Kong configuration
 
-The following configuration creates four Kong Gateway Services (three ecommerce APIs plus one
+The following configuration creates four {{site.base_gateway}} Services (three ecommerce APIs plus one
 aggregated MCP server), eight MCP tools with per-tool ACLs, two Consumer Groups, OAuth 2.1
 authentication via the AI MCP OAuth2 Plugin, and CORS support. All resources are scoped using
 `select_tags` and a kongctl `namespace` for clean teardown.
@@ -629,7 +629,7 @@ Plugin resolves the IdP endpoints from those variables at apply time.
 
 First, adopt the Control Plane into a kongctl namespace so subsequent `kongctl sync` calls can
 manage it. The `--pat` flag authenticates kongctl with the same Konnect PAT exported during the
-Kong Konnect prereq, so you do not need to run `kongctl login konnect` interactively.
+{{site.konnect_product_name}} prereq, so you do not need to run `kongctl login konnect` interactively.
 
 ```bash
 kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \

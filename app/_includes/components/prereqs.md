@@ -49,6 +49,7 @@
 {%- endfor -%}
 {%- endif -%}
 {%- endif -%}
+{%- unless prereqs.skip_tool == true -%}
 {%- for tool in prereqs.tools -%}
 {%- assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' -%}
 {%- capture tool_include_exists %}{% include_exists tool_include %}{% endcapture -%}
@@ -56,6 +57,7 @@
 {% include {{ tool_include }} %}
 {%- endif -%}
 {%- endfor -%}
+{%-endunless-%}
 {%- if prereqs.operator.konnect.auth -%}
 {% include prereqs/operator/konnect_auth.md config=prereqs.operator.konnect %}
 {%- endif -%}

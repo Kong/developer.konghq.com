@@ -1,6 +1,6 @@
 ---
 title: Secure External MCP Gateway
-description: Proxy third-party MCP servers (GitHub, Konnect) through Kong Gateway with centralized access control, observability, and tool-level ACLs.
+description: "Proxy third-party MCP servers (GitHub, Konnect) through {{site.base_gateway}} with centralized access control, observability, and tool-level ACLs."
 url: "/cookbooks/secure-external-mcp-gateway/"
 content_type: cookbook
 layout: cookbook
@@ -43,9 +43,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
-        This tutorial uses Kong Konnect. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
+        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token:
@@ -66,7 +66,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
 
         Verify both are installed:
@@ -101,7 +101,7 @@ prereqs:
 
         Create two Okta applications as described in the [Secure Internal MCP Gateway prerequisites](/cookbooks/secure-internal-mcp-gateway/#identity-provider):
 
-        1. **Kong Gateway application** (API Services), for token introspection.
+        1. **{{site.base_gateway}} application** (API Services), for token introspection.
         2. **MCP Client application** (SPA), for the OAuth flow.
 
         Note your **authorization server URL** and **introspection endpoint**, then export the values:
@@ -118,7 +118,7 @@ prereqs:
 
         Create a Keycloak realm and two clients as described in the [Secure Internal MCP Gateway prerequisites](/cookbooks/secure-internal-mcp-gateway/#identity-provider):
 
-        1. **Kong Gateway client** (Confidential), for token introspection.
+        1. **{{site.base_gateway}} client** (Confidential), for token introspection.
         2. **MCP Client** (Public), for the OAuth flow.
 
         Note your **realm URL** and **introspection endpoint**, then export the values:
@@ -171,7 +171,7 @@ overview: |
     provider.
 
   This recipe demonstrates two patterns for proxying external MCP servers, using GitHub MCP and
-  Kong Konnect MCP as examples:
+  {{site.konnect_product_name}} MCP as examples:
 
   | Pattern | Server | How it works |
   |---------|--------|-------------|
@@ -204,7 +204,7 @@ a shared service account for services that support it (like Konnect).
 
 ## The solution
 
-This recipe places Kong Gateway in front of external MCP servers with two distinct patterns:
+This recipe places {{site.base_gateway}} in front of external MCP servers with two distinct patterns:
 
 **GitHub MCP (passthrough pattern):**
 
@@ -212,7 +212,7 @@ This recipe places Kong Gateway in front of external MCP servers with two distin
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant GH as GitHub
 
     C->>K: MCP initialize (no token)
@@ -249,7 +249,7 @@ sequenceDiagram
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant KM as Konnect MCP Server
 

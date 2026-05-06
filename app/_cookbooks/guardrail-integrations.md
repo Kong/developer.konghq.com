@@ -38,9 +38,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
-        This tutorial uses Kong Konnect. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart), then claim the Control Plane for declarative management with kongctl.
+        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart), then claim the Control Plane for declarative management with kongctl.
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token:
@@ -61,7 +61,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
 
         You can verify both are installed:
@@ -115,7 +115,7 @@ prereqs:
         pip install 'openai>=1.0.0'
         ```
 overview: |
-  This recipe demonstrates how to integrate external guardrail services with Kong AI Gateway using the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) Plugin, introduced in Kong 3.14. The custom guardrail Plugin provides a single adaptable interface that works with any HTTP-based guardrail provider. You define the request format, write a short Lua function to parse the response, and the Plugin handles the rest.
+  This recipe demonstrates how to integrate external guardrail services with {{site.ai_gateway_name}} using the [AI Custom Guardrail](/plugins/ai-custom-guardrail/) Plugin, introduced in Kong 3.14. The custom guardrail Plugin provides a single adaptable interface that works with any HTTP-based guardrail provider. You define the request format, write a short Lua function to parse the response, and the Plugin handles the rest.
 
   The Azure Content Safety tab shows the custom guardrail Plugin alongside the dedicated [AI Azure Content Safety](/plugins/ai-azure-content-safety/) Plugin so you can see the difference. The Mistral Moderation tab shows the custom guardrail integrating with a service that has no dedicated Kong Plugin, demonstrating why a universal adapter is the default approach going forward.
 ---
@@ -132,7 +132,7 @@ The AI content safety landscape is fragmented and growing fast. Every major clou
 
 ## The solution
 
-Kong AI Gateway treats guardrail integration as a configuration problem rather than a code problem. Two capabilities anchor this recipe:
+{{site.ai_gateway_name}} treats guardrail integration as a configuration problem rather than a code problem. Two capabilities anchor this recipe:
 
 - **A universal HTTP adapter for content moderation.** Instead of waiting for a vendor-specific Plugin to ship for every new guardrail service, you describe the service's API in declarative configuration. The same adapter pattern serves Azure Content Safety, Mistral Moderation, internal compliance endpoints, or a custom ML model. When organizations switch providers or evaluate vendors in parallel, the change happens at the gateway layer, not in every application.
 
@@ -144,7 +144,7 @@ This recipe demonstrates the [AI Custom Guardrail](/plugins/ai-custom-guardrail/
 {% mermaid %}
 sequenceDiagram
     participant C as Client
-    participant K as Kong AI Gateway
+    participant K as {{site.ai_gateway_name}}
     participant G as Guardrail Service
     participant L as LLM Provider
 
@@ -440,7 +440,7 @@ The template syntax is `$(<function_name>.<field_name>)`, where the function nam
 
 ### AI Proxy Advanced, LLM routing with secure-by-default fields
 
-The [ai-proxy-advanced](/plugins/ai-proxy-advanced/) Plugin handles credential injection and LLM routing for approved requests. Two configuration fields are set explicitly to align with Kong Gateway 3.14's secure-by-default posture:
+The [ai-proxy-advanced](/plugins/ai-proxy-advanced/) Plugin handles credential injection and LLM routing for approved requests. Two configuration fields are set explicitly to align with {{site.base_gateway}} 3.14's secure-by-default posture:
 
 {%- raw %}
 ```yaml
@@ -484,7 +484,7 @@ The AI Custom Guardrail Plugin is the default approach for new guardrail integra
 
 ## Apply the Kong configuration
 
-The configuration below creates a Kong Gateway Service, Route, the Plugins described in [How it works](#how-it-works), and a single demo Consumer. The `select_tags` and kongctl `namespace` scope all resources to this recipe, enabling clean teardown and co-existence with other configurations on the same Control Plane.
+The configuration below creates a {{site.base_gateway}} Service, Route, the Plugins described in [How it works](#how-it-works), and a single demo Consumer. The `select_tags` and kongctl `namespace` scope all resources to this recipe, enabling clean teardown and co-existence with other configurations on the same Control Plane.
 
 This section runs in two parts. First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it:
 
@@ -496,7 +496,7 @@ kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
 
 Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
 
-`KONNECT_CONTROL_PLANE_NAME` and `KONNECT_TOKEN` are exported once during the Kong Konnect prereq, and `DECK_OPENAI_TOKEN`, `DECK_AZURE_CONTENT_SAFETY_*`, and `DECK_MISTRAL_MODERATION_TOKEN` come from the credential prereqs. Each tab below exports only the model selection that varies per configuration.
+`KONNECT_CONTROL_PLANE_NAME` and `KONNECT_TOKEN` are exported once during the {{site.konnect_product_name}} prereq, and `DECK_OPENAI_TOKEN`, `DECK_AZURE_CONTENT_SAFETY_*`, and `DECK_MISTRAL_MODERATION_TOKEN` come from the credential prereqs. Each tab below exports only the model selection that varies per configuration.
 
 {% navtabs "Guardrail Service" %}
 {% tab Azure Content Safety %}
@@ -847,7 +847,7 @@ The demo script works with any of the configurations above. It sends four reques
 
 {:.info}
 
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
 
 Create the demo script:
 

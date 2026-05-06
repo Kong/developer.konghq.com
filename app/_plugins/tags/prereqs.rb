@@ -10,9 +10,17 @@ module Jekyll
 
       return unless @page['prerequisites'].any?
 
+      # Set prereqs on both the context stack and the environment.
+      # The `liquify` filter renders templates with only the environment hash,
+      # not the full context, so nested tags (e.g. navtabs inside inline prereqs)
+      # would not see prereqs if it were only on the stack.
+      environment = context.environments.first
       context.stack do
         context['prereqs'] = @page['prerequisites']
-        Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        environment['prereqs'] = @page['prerequisites']
+        result = Liquid::Template.parse(template, { line_numbers: true }).render(context)
+        environment['prereqs'] = nil
+        result
       end
     end
 

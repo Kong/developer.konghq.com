@@ -40,9 +40,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
-        This tutorial uses Kong Konnect. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
+        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token. The same token is reused later for kongctl commands:
@@ -63,7 +63,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
 
         You can verify both are installed:
@@ -377,7 +377,7 @@ asking.
 
 ## The solution
 
-This recipe moves the enforcement point to a Kong Gateway that your organization controls, with
+This recipe moves the enforcement point to a {{site.base_gateway}} that your organization controls, with
 Okta as the single source of truth for identity:
 
 - **For API key users**, Kong replaces `ANTHROPIC_API_KEY` entirely. Developers never hold the
@@ -398,7 +398,7 @@ sequenceDiagram
     participant CC as Claude Code
     participant H as apiKeyHelper script
     participant O as Okta
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant L as LLM Provider
 
     CC->>H: Request bearer token
@@ -458,7 +458,7 @@ LLM provider. Here is the complete request lifecycle:
    JWT is returned to Claude Code.
 
 2. **Request to Kong.** Claude Code sends `POST /claude-code-sso/v1/messages` with
-   `Authorization: Bearer <jwt>` to Kong Gateway. The request body is in Anthropic's native
+   `Authorization: Bearer <jwt>` to {{site.base_gateway}}. The request body is in Anthropic's native
    message format.
 
 3. **JWT validation and Consumer mapping.** The [openid-connect](/plugins/openid-connect/)
@@ -547,12 +547,12 @@ headers. These are useful for audit logging. You can see which user made each re
 decoding the JWT.
 
 **`ssl_verify: true`**. Enables TLS certificate verification when Kong connects to Okta's JWKS
-endpoint to fetch signing keys. In Kong Gateway 3.14+, this defaults to `true` as part of the
+endpoint to fetch signing keys. In {{site.base_gateway}} 3.14+, this defaults to `true` as part of the
 Secure by Default initiative. Set explicitly here for clarity.
 
 **`hide_credentials: true`**. Strips the `Authorization` header from the request before
 forwarding upstream. Since the ai-proxy-advanced Plugin injects its own provider credentials,
-the Okta JWT is not needed upstream. In Kong Gateway 3.14+, this defaults to `true`. Set
+the Okta JWT is not needed upstream. In {{site.base_gateway}} 3.14+, this defaults to `true`. Set
 explicitly here for clarity.
 
 **Alternative configurations:**
@@ -735,7 +735,7 @@ kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
 
 Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
 
-The provider tabs below create a Kong Gateway Service and Route at `/claude-code-sso`,
+The provider tabs below create a {{site.base_gateway}} Service and Route at `/claude-code-sso`,
 two Consumers (`claude-standard-users` and `claude-power-users`), an
 [openid-connect](/plugins/openid-connect/) Plugin for Okta JWT validation, consumer-scoped
 [ai-proxy-advanced](/plugins/ai-proxy-advanced/) Plugins for model routing, and consumer-scoped
