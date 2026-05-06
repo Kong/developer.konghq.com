@@ -68,4 +68,4 @@ When the zone control plane is offline:
 * A single-zone deployment can't mix Universal and Kubernetes workloads.
 * A deployment can connect to only one Kubernetes cluster at once.
 
-To avoid these limitations,, see [Multi-zone deployments](/mesh/mesh-multizone-service-deployment/).
+To avoid these limitations, see [Multi-zone deployments](/mesh/mesh-multizone-service-deployment/).
