@@ -39,7 +39,7 @@ To learn how to create a built-in gateway in a Kubernetes environment, see [Set 
 
 ## Deploying gateways
 
-The process for deploying built-in gateways is different depending on whether you're running in [Kubernetes](/mesh/kubernetes/) or [Universal](/mesh/universal/) mode.
+The process for deploying built-in gateways is different depending on whether you're running in [Kubernetes](/mesh/kubernetes/) or [Universal](/mesh/get-started/universal/install/) mode.
 
 {% navtabs "Environment" %}
 {% navtab "Kubernetes" %}

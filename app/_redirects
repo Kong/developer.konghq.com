@@ -52,7 +52,8 @@
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
-/mesh/quickstart/universal-demo    /mesh/universal/
+/mesh/quickstart/universal-demo    /mesh/get-started/universal/install/
+/mesh/universal/    /mesh/get-started/universal/install/
 /mesh/quickstart/kubernetes     /mesh/kubernetes/
 /mesh/introduction/concepts     /mesh/concepts/
 /mesh/guides/gateway-builtin    /how-to/set-up-a-built-in-mesh-gateway/
