@@ -71,14 +71,10 @@ rows:
     description: Response body length in bytes
   - name: "`http.response.size`"
     description: Response body size and response headers size in bytes
-  - name: "`kong.request.id`"
-    description: Unique ID for each request
   - name: "`url.scheme`"
     description: Protocol identifier
   - name: "`network.protocol.version`"
     description: Version of the HTTP protocol used in establishing connection [1.2, 2.0]
-  - name: "`tls.client.server_name`"
-    description: SNI
   - name: "`http.request.header.host`"
     description: Host header if present. This can be different from the SNI.
   - name: "`proxy.kong.consumer.id`"
