@@ -45,8 +45,8 @@ flowchart TB
     KGW[{{site.base_gateway}}]
     CLIENT --> KGW
 
-    subgraph M1[Team 1 Service Mesh]
-        BG1[Built-in Gateway]
+    subgraph M1[Team 1 service mesh]
+        BG1[Built-in gateway]
         subgraph sg1a[ ]
             direction LR
             S1[Service] --- D1[KUMA-DP]
@@ -62,8 +62,8 @@ flowchart TB
         BG1 -.-> D1 & D3
     end
 
-    subgraph M2[Team 2 Service Mesh]
-        BG2[Built-in Gateway]
+    subgraph M2[Team 2 service mesh]
+        BG2[Built-in gateway]
         subgraph sg2a[ ]
             direction LR
             S5[Service] --- D5[KUMA-DP]
@@ -99,8 +99,8 @@ flowchart TB
     KGW[{{site.base_gateway}}]
     CLIENT --> KGW
 
-    subgraph M1[Team 1 Service Mesh]
-        DG1[Delegated Gateway]
+    subgraph M1[Team 1 service mesh]
+        DG1[Delegated gateway]
         subgraph sg1a[ ]
             direction LR
             S1[Service] --- D1[KUMA-DP]
@@ -116,8 +116,8 @@ flowchart TB
         DG1 -.-> D1 & D3
     end
 
-    subgraph M2[Team 2 Service Mesh]
-        DG2[Delegated Gateway]
+    subgraph M2[Team 2 service mesh]
+        DG2[Delegated gateway]
         subgraph sg2a[ ]
             direction LR
             S5[Service] --- D5[KUMA-DP]
