@@ -1075,47 +1075,7 @@ Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""
-LLM Cost Optimization. demo script
-==================================
-Demonstrates four cost optimization techniques composed on a single Kong AI
-Gateway Route:
-
-  1. Semantic routing. The ai-proxy-advanced Plugin runs the prompt through an
-     embedding model and routes to the target whose `description` is closest
-     in vector space. Simple prompts land on the cheap model, complex prompts
-     land on the expensive one.
-  2. Semantic caching. The ai-semantic-cache Plugin checks recent prompts for
-     a near-duplicate embedding before calling the LLM. A cache hit returns
-     instantly with no upstream cost.
-  3. Prompt compression. The ai-prompt-compressor Plugin sends the prompt
-     through an LLMLingua compressor before forwarding to the LLM, reducing
-     input tokens. Section 3 counts the original prompt's tokens locally with
-     tiktoken so the before/after delta is visible.
-  4. Cost-based rate limiting. The ai-rate-limiting-advanced Plugin tracks
-     dollar cost (input_cost + output_cost) per Consumer tier and enforces
-     per-tier hourly budgets. The two demo Consumers are mapped to consumer
-     groups with different budgets via API keys.
-
-Authentication uses the key-auth Plugin: each Consumer has an API key that
-identifies them and binds the request to the correct Consumer Group budget.
-
-Expected output:
-  Section 1 prints two requests landing on different upstream models, visible
-  in the X-Kong-LLM-Model header. Section 2 prints a cache MISS followed by a
-  HIT for a paraphrased question, with a latency speedup. Section 3 prints
-  original-vs-compressed token counts and the resulting reduction percentage.
-  Section 4 prints rate limit headers for the standard and premium tiers
-  showing different budgets debiting from each. A final section sends an
-  invalid API key with the credential value visible, and shows Kong rejecting
-  it with 401 before any upstream call.
-
-How to run:
-  1. Apply the recipe config (see README for the full kongctl sync command).
-  2. Start Redis Stack and the LLMLingua compressor sidecars (see Prerequisites).
-  3. Run:
-       python demo.py
-"""
+"""LLM cost optimization demo. See README for context."""
 
 import os
 import sys

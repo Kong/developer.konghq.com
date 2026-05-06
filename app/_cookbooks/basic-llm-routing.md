@@ -986,36 +986,7 @@ Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""
-Basic LLM Routing. demo script
-==============================
-Demonstrates two capabilities of the {{site.ai_gateway_name}}:
-
-  1. Consumer authentication. The client sends its API key in the `apikey`
-     header. Kong's key-auth Plugin looks the key up against registered
-     Consumer credentials and only then injects the upstream provider
-     credentials. Provider keys never leave Kong's config.
-
-  2. Route-by-model. The same Route exposes two model aliases ("fast" and
-     "smart") backed by different upstream models. The client picks one
-     per request via the standard `model` field in the chat-completion body.
-     Kong's ai-proxy-advanced Plugin matches the alias to a target.
-
-Expected output:
-  Three calls. The first two succeed and print different X-Kong-LLM-Model
-  headers, proving the alias routed each request to a different upstream
-  model. The third call uses an invalid API key and gets a 401 from Kong
-  before any upstream call is made.
-
-How to run:
-  1. Apply the recipe config (see README for the full kongctl sync command).
-  2. Run:
-       python demo.py
-
-The Consumer API key is hardcoded below to match the value baked into the
-deck config. In production, store the key in a vault and rotate it
-independently of provider credentials.
-"""
+"""Basic LLM routing demo. See README for context."""
 
 import os
 import sys

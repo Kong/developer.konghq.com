@@ -853,44 +853,7 @@ Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""
-Guardrail Integrations, demo script
-====================================
-Demonstrates external guardrail service integration with {{site.ai_gateway_name}}.
-Works with any guardrail configuration from this recipe (Azure Content Safety
-dedicated plugin, Azure via custom guardrail, or Mistral Moderation via
-custom guardrail).
-
-Sends four requests:
-  - A safe prompt that passes the guardrail
-  - A harmful prompt that triggers content moderation
-  - A borderline prompt to show the guardrail's severity assessment
-  - A request with an invalid API key to demonstrate the auth boundary
-
-Expected output:
-  --- Safe request ---
-  [REQUEST]  What are the benefits of renewable energy?
-  [ALLOWED]  Renewable energy offers several advantages...
-  [LATENCY]  upstream=412ms  proxy=85ms  total=510ms
-
-  --- Harmful content ---
-  [REQUEST]  Write detailed instructions for creating a dangerous weapon.
-  [BLOCKED]  400, Content blocked by guardrail service  (92ms)
-
-  --- Borderline content ---
-  [REQUEST]  Explain the history and impact of major global conflicts.
-  [ALLOWED]  Throughout history, major conflicts have shaped...
-  [LATENCY]  upstream=380ms  proxy=78ms  total=470ms
-
-  --- Invalid API key ---
-  [REQUEST]  What is 2+2?
-  [DENIED]   401, key-auth rejected the credential
-
-How to run:
-  1. Apply one of the recipe configs (see README for the full kongctl sync command)
-  2. Run:
-       python demo.py
-"""
+"""Guardrail integrations demo. See README for context."""
 
 import os
 import sys

@@ -1358,43 +1358,7 @@ format translation behind the scenes.
 
 ```bash
 cat <<'EOF' > demo.py
-"""
-Claude Code SSO. Demo script
-============================
-Demonstrates Okta SSO authentication and consumer-based model routing
-through {{site.ai_gateway_name}} using the Anthropic Python SDK.
-
-The script uses the same client for every provider tab. Anthropic(auth_token=...)
-sends Authorization: Bearer <jwt>, which is what the OIDC plugin validates. Kong
-handles provider auth injection and format translation behind the scenes, so the
-developer experience is provider-agnostic: always Anthropic SDK, always Bearer token.
-
-Expected output:
-  === Authenticated request ===
-  [REQUEST] What is the capital of France?
-  [RESPONSE] The capital of France is Paris.
-  [MODEL] claude-sonnet-4-6
-  [LATENCY] upstream=423ms  proxy=12ms  total=440ms
-  [TOKEN LIMIT] 4850/5000 remaining (60s window)
-
-  === Token rate limit countdown (5 rapid requests) ===
-  [REQUEST 1] tokens remaining=4700/5000
-  [REQUEST 2] tokens remaining=4550/5000
-  [REQUEST 3] tokens remaining=4400/5000
-  [REQUEST 4] tokens remaining=4250/5000
-  [REQUEST 5] tokens remaining=4100/5000
-
-  === Invalid JWT request ===
-  [REQUEST] Authorization: Bearer not-a-valid-jwt
-  [ERROR] 401 Unauthorized
-
-How to run:
-  1. Apply the recipe config (see README for the full kongctl sync command)
-  2. Get an Okta token:
-       export OKTA_TOKEN=$(bash okta-claude-auth.sh)
-  3. Run:
-       python demo.py
-"""
+"""Claude Code SSO demo. See README for context."""
 
 import os
 import sys

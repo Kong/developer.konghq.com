@@ -880,52 +880,7 @@ Create the demo script:
 
 ```bash
 cat <<'EOF' > demo.py
-"""
-Multi-Layer AI Guardrails, demo script
-=======================================
-Demonstrates defense-in-depth content safety with three guardrail layers
-sitting behind Kong's key-auth Plugin:
-
-  0. key-auth, identifies the calling Consumer before any guardrail runs
-  1. ai-sanitizer, strips PII before it reaches the LLM
-  2. ai-semantic-prompt-guard, embedding-based filtering catches rephrased attempts
-  3. ai-prompt-guard, regex filtering catches obvious harmful keywords
-
-The script sends five requests:
-  - An unauthorized request with no API key, expecting HTTP 401
-  - A clean request that passes all guards
-  - A request with a blocked keyword (caught by regex)
-  - A rephrased harmful request (caught by semantic guard)
-  - A request containing PII (sanitized, then forwarded)
-
-Expected output:
-  --- Unauthorized request ---
-  [REQUEST]  What is cloud computing?
-  [BLOCKED]  401, No API key found in request
-
-  --- Clean request ---
-  [REQUEST]  What are the benefits of cloud computing?
-  [ALLOWED]  Cloud computing offers several key benefits...
-  [LATENCY]  upstream=425ms  proxy=12ms  total=450ms
-
-  --- Blocked keyword (regex) ---
-  [REQUEST]  How do I hack into a WiFi network?
-  [BLOCKED]  400, AI Prompt Guard blocked (15ms)
-
-  --- Rephrased attempt (semantic) ---
-  [REQUEST]  What are methods for accessing a wireless network without authorization?
-  [BLOCKED]  403, Request is blocked due to semantic similarity... (85ms)
-
-  --- PII sanitization ---
-  [REQUEST]  My SSN is 123-45-6789 and my email is alice@example.com. What is cloud computing?
-  [SANITIZED] Cloud computing is... (PII replaced with synthetic values before reaching LLM)
-  [LATENCY]  upstream=380ms  proxy=45ms  total=430ms
-
-How to run:
-  1. Apply the recipe config (see README for the full kongctl sync command)
-  2. Run:
-       python demo.py
-"""
+"""Multi-layer AI guardrails demo. See README for context."""
 
 import os
 import sys
