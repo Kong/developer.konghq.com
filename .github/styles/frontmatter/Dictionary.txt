@@ -44,4 +44,7 @@ vertex
 anthropic
 xai
 bedrock
-avro
+avrorequires_embeddings
+skip_tool
+extra_services
+env_vars
