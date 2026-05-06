@@ -11,7 +11,6 @@ products:
 search_aliases:
   - updates
   - releases
-  - inso
 
 description: How Insomnia releases new versions, with recommendations for updating.
 
@@ -34,11 +33,10 @@ Insomnia communicates all changes via:
 Public documentation updates support the latest versions of Insomnia.
 
 
-Update as often as you like, or stay on a past version. Unless you have a specific reason, the best practice is to use the newest version.
 
 ### Recommendations
 
-Insomnia strongly recommends that all users collaborating on the same project remain on the same major version as often as possible.
+Insomnia strongly recommends using the newest version, and that all users collaborating on the same project remain on the same major version.
 
 ## Long Term Support (LTS)
 
