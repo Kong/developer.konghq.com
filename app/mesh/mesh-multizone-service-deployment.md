@@ -150,6 +150,7 @@ rows:
 
 The following table describes how {{site.mesh_product_name}} behaves when components of a multi-zone deployment become unavailable or lose connectivity:
 
+<!-- vale off -->
 {% table %}
 columns:
   - title: Failure mode
@@ -198,3 +199,4 @@ rows:
     still_works: |
       * Communication and operations within each zone.
 {% endtable %}
+<!-- vale on -->
