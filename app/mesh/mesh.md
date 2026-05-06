@@ -34,7 +34,7 @@ Create multiple meshes to isolate services by team, environment, or security req
 {{site.mesh_product_name}} creates a `default` mesh automatically on startup. Disable this by setting `KUMA_DEFAULTS_SKIP_MESH_CREATION=true`.
 
 {:.warning}
-> **Kubernetes namespace constraint:** On Kubernetes, a single namespace cannot contain pods in multiple meshes. This limitation exists because [Workload](/mesh/data-plane-kubernetes/) resources are mesh-scoped and generated from workload labels. When multiple meshes are detected in a namespace, {{site.mesh_product_name}} emits a warning event and skips Workload generation. Enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/) to proactively prevent this. See [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies) for details.
+> **Kubernetes namespace constraint:** On Kubernetes, a single namespace cannot contain pods in multiple meshes. To prevent this, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/). See [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies) for details.
 
 ## Spec fields
 
@@ -70,7 +70,7 @@ rows:
 
 ### Basic mesh
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -93,7 +93,7 @@ name: default
 
 ### Mesh with mTLS enabled (builtin CA)
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -141,7 +141,7 @@ mtls:
 
 ### Mesh with mTLS (provided CA)
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -193,7 +193,7 @@ mtls:
 
 Accept both mTLS and plaintext traffic (for migration):
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -234,7 +234,7 @@ mtls:
 
 Route cross-zone and external traffic through ZoneEgress:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -264,7 +264,7 @@ routing:
 
 Block traffic to unknown destinations:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -296,7 +296,7 @@ networking:
 
 Skip all default policy creation:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -324,7 +324,7 @@ skipCreatingInitialPolicies: ['*']
 
 Allow only pods from specific namespaces:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -364,7 +364,7 @@ constraints:
 
 Restrict mesh to specific zones in multizone deployment:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
@@ -410,7 +410,7 @@ constraints:
 
 Enable automatic MeshService generation:
 
-{% navtabs "environment" %}
+{% navtabs "Environment" %}
 {% navtab "Kubernetes" %}
 
 ```yaml
