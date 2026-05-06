@@ -490,7 +490,7 @@ providers:
       upstream_path: 'Uses `batchPredictionJobs` API'
       route_type: 'llm/v1/batches'
       model_example: 'n/a'
-      min_version: '3.13'
+      min_version: '3.14'
     image:
       generations:
         supported: true
