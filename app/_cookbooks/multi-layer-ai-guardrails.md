@@ -43,9 +43,9 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
-        This tutorial uses Kong Konnect. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart), then claim the Control Plane for declarative management with kongctl.
+        This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart), then claim the Control Plane for declarative management with kongctl.
 
         1. Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
         1. Export your token:
@@ -66,7 +66,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
 
         Verify both are installed:
@@ -175,7 +175,7 @@ prereqs:
         ```
 
 overview: |
-  This recipe configures Kong AI Gateway with three independent guardrail layers behind a key-auth boundary on a single Route: regex-based keyword filtering, embedding-based semantic analysis, and PII sanitization. By the end, you will have a gateway endpoint that authenticates the caller, strips sensitive data from every request, blocks prompts that are semantically similar to known harmful patterns, catches obvious keyword violations, and only then forwards the cleaned, validated request to your LLM provider.
+  This recipe configures {{site.ai_gateway_name}} with three independent guardrail layers behind a key-auth boundary on a single Route: regex-based keyword filtering, embedding-based semantic analysis, and PII sanitization. By the end, you will have a gateway endpoint that authenticates the caller, strips sensitive data from every request, blocks prompts that are semantically similar to known harmful patterns, catches obvious keyword violations, and only then forwards the cleaned, validated request to your LLM provider.
 
   Each layer addresses a different class of risk. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling Consumer, the [AI Sanitizer](/plugins/ai-sanitizer/) Plugin removes PII, the [AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/) Plugin checks the sanitized content against vector embeddings, the [AI Prompt Guard](/plugins/ai-prompt-guard/) Plugin applies regex pattern matching, and the [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin routes the request to the LLM.
 ---
@@ -196,7 +196,7 @@ Keyword matching is fast but shallow. Semantic analysis is deep but more expensi
 
 ## The solution
 
-Kong AI Gateway solves this by stacking four Plugins on a single Route, each responsible for one class of threat. Kong's Plugin priority system executes them in a fixed order on every request, giving you defense-in-depth with a single endpoint.
+{{site.ai_gateway_name}} solves this by stacking four Plugins on a single Route, each responsible for one class of threat. Kong's Plugin priority system executes them in a fixed order on every request, giving you defense-in-depth with a single endpoint.
 
 | Plugin | What it catches | How it works |
 |--------|----------------|-------------|
@@ -211,7 +211,7 @@ Authentication runs first so every downstream check is associated with a known C
 {% mermaid %}
 sequenceDiagram
     participant C as Client
-    participant K as Kong AI Gateway
+    participant K as {{site.ai_gateway_name}}
     participant P as PII Detection Service
     participant L as LLM Provider
 
@@ -402,7 +402,7 @@ The AI Proxy Advanced Plugin handles authentication with the LLM provider and ro
 {% endraw -%}
 {:.no-copy-code}
 
-**`max_request_body_size: 10485760`**, sets a 10 MB cap on incoming request bodies. Kong Gateway 3.14 requires this field on `ai-proxy-advanced` rather than relying on an implicit default. Tune for your expected payload size: large RAG injections or long conversation histories may need a higher value, and stricter limits make sense for narrow chatbot routes.
+**`max_request_body_size: 10485760`**, sets a 10 MB cap on incoming request bodies. {{site.base_gateway}} 3.14 requires this field on `ai-proxy-advanced` rather than relying on an implicit default. Tune for your expected payload size: large RAG injections or long conversation histories may need a higher value, and stricter limits make sense for narrow chatbot routes.
 
 **`response_streaming: deny`**, disables response streaming for this Route. The guardrail chain inspects full responses before returning them to the client (for example, the AI Sanitizer's `recover_redacted` mode replaces synthetic values with originals on the way back). Streaming would defeat post-response inspection, so this Route opts out. For interactive chat without post-response processing, set `allow` instead.
 
@@ -444,7 +444,7 @@ When a guardrail blocks the request, the response body is a JSON error and Kong 
 
 ## Apply the Kong configuration
 
-The configuration below creates a Kong Gateway Service, Route, four guardrail Plugins described in [How it works](#how-it-works), and a `demo-app` Consumer with the `apikey` credential `demo-api-key`. The `select_tags` and kongctl `namespace` scope all resources to this recipe, enabling clean teardown and co-existence with other configurations on the same Control Plane.
+The configuration below creates a {{site.base_gateway}} Service, Route, four guardrail Plugins described in [How it works](#how-it-works), and a `demo-app` Consumer with the `apikey` credential `demo-api-key`. The `select_tags` and kongctl `namespace` scope all resources to this recipe, enabling clean teardown and co-existence with other configurations on the same Control Plane.
 
 First, adopt the quickstart Control Plane into a kongctl namespace so the apply commands below can manage it:
 
@@ -874,7 +874,7 @@ The demo script sends five requests that exercise each layer of the chain: an un
 
 {:.info}
 
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
 
 Create the demo script:
 
@@ -1186,7 +1186,7 @@ docker rm -f kong-pii-anonymizer 2>/dev/null
 
 ## Variations and next steps
 
-**Adjust regex and semantic thresholds.** The `search.threshold: 0.5` on the semantic guard is a moderate starting point. Increase it to `0.7` or `0.8` to require closer semantic matches, reducing false positives at the cost of missing more creative rephrasing. Decrease it to catch broader variations at the risk of blocking legitimate prompts. For regex patterns, add domain-specific terms relevant to your application, and use `allow_patterns` to whitelist terms that contain blocked substrings (for example, "hackathon").
+**Adjust regex and semantic thresholds.** The `search.threshold: 0.5` on the semantic guard is a moderate starting point. Increase it to `0.7` or `0.8` to require closer semantic matches, reducing false positives at the cost of missing more creative rephrasing. Decrease it to catch broader variations at the risk of blocking legitimate prompts. For regex patterns, add domain-specific terms relevant to your application, and use `allow_patterns` to allowlist terms that contain blocked substrings (for example, "hackathon").
 
 **Add response-phase guardrails.** This recipe only inspects the request. Set `sanitization_mode: BOTH` on the AI Sanitizer Plugin to also scan LLM responses for PII before returning them to the client. Combine this with the [AI Semantic Response Guard](/plugins/ai-semantic-response-guard/) Plugin to check LLM output against a separate set of deny rules, catching cases where the model generates harmful content despite a safe prompt.
 

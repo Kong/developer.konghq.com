@@ -1,6 +1,6 @@
 ---
 title: Basic LLM Routing
-description: Route requests to any supported LLM provider through Kong AI Gateway with Consumer authentication and per-request model selection.
+description: "Route requests to any supported LLM provider through {{site.ai_gateway_name}} with Consumer authentication and per-request model selection."
 url: "/cookbooks/basic-llm-routing/"
 content_type: cookbook
 layout: cookbook
@@ -36,7 +36,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
         This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart).
 
@@ -59,7 +59,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -203,7 +203,7 @@ quotas, or routing policy.
 {% mermaid %}
 sequenceDiagram
     participant C as Client
-    participant K as Kong AI Gateway
+    participant K as {{site.ai_gateway_name}}
     participant L as LLM Provider
 
     C->>K: POST /basic-llm-routing (apikey, model: fast or smart)
@@ -263,7 +263,7 @@ The Key Auth Plugin sits in front of the AI Proxy Advanced Plugin and gates ever
 ```
 {:.no-copy-code}
 
-**`key_names: [apikey]`**. The headers (or query parameters) the Plugin looks in for the API key. The recipe uses `apikey` because the Key Auth Plugin performs an exact string match on the header value and does not inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side; the [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) guide has the full pattern.
+**`key_names: [apikey]`**. The headers (or query parameters) the Plugin looks in for the API key. The recipe uses `apikey` because the Key Auth Plugin performs an exact string match on the header value and does not inspect `Authorization` for Bearer tokens. The OpenAI SDK's `api_key` field always serializes as `Authorization: Bearer <key>`, which Kong would read as the literal string `Bearer <key>` and fail to match against any stored credential. The "Try it out" section below points at a pre-function pattern that bridges the SDK's Bearer token to the `apikey` header server-side; the [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) guide has the full pattern.
 
 **`hide_credentials: true`**. Strips the API key from the request before forwarding upstream. The provider never sees the Consumer's API key. This is a 3.14 default but the recipe sets it explicitly for clarity and to remain portable to older Gateway versions.
 
@@ -980,7 +980,7 @@ rm -f kong-recipe.yaml
 The demo script makes three calls. The first two send the same prompt with different `model` values (`fast` then `smart`) and print the `X-Kong-LLM-Model` header so you can confirm Kong routed each request to a different upstream model. The third call presents an invalid API key and shows Kong rejecting it with `401` before any upstream call.
 
 {:.info}
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
 
 Create the demo script:
 
@@ -989,7 +989,7 @@ cat <<'EOF' > demo.py
 """
 Basic LLM Routing. demo script
 ==============================
-Demonstrates two capabilities of the Kong AI Gateway:
+Demonstrates two capabilities of the {{site.ai_gateway_name}}:
 
   1. Consumer authentication. The client sends its API key in the `apikey`
      header. Kong's key-auth Plugin looks the key up against registered
