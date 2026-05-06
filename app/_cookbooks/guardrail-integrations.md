@@ -169,14 +169,28 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-| Component | Responsibility |
-|-----------|---------------|
-| Client application | Sends OpenAI-format chat requests with an API key for Consumer identification |
-| Kong, [key-auth](/plugins/key-auth/) | Identifies the Consumer and rejects requests without a valid API key |
-| Kong, guardrail Plugin ([ai-azure-content-safety](/plugins/ai-azure-content-safety/) or [ai-custom-guardrail](/plugins/ai-custom-guardrail/)) | Extracts text content and sends it to the external guardrail service for evaluation |
-| External guardrail service | Analyzes content against safety policies and returns a verdict |
-| Kong, [ai-proxy-advanced](/plugins/ai-proxy-advanced/) | Routes approved requests to the configured LLM provider |
-| LLM provider | Processes the prompt and returns a completion |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Responsibility
+    key: responsibility
+rows:
+  - component: Client application
+    responsibility: Sends OpenAI-format chat requests with an API key for Consumer identification
+  - component: Kong, [key-auth](/plugins/key-auth/)
+    responsibility: Identifies the Consumer and rejects requests without a valid API key
+  - component: Kong, guardrail Plugin ([ai-azure-content-safety](/plugins/ai-azure-content-safety/) or [ai-custom-guardrail](/plugins/ai-custom-guardrail/))
+    responsibility: Extracts text content and sends it to the external guardrail service for evaluation
+  - component: External guardrail service
+    responsibility: Analyzes content against safety policies and returns a verdict
+  - component: Kong, [ai-proxy-advanced](/plugins/ai-proxy-advanced/)
+    responsibility: Routes approved requests to the configured LLM provider
+  - component: LLM provider
+    responsibility: Processes the prompt and returns a completion
+{% endtable %}
+<!-- vale on -->
 
 {:.info}
 > **AWS SigV4 auth:** The AI Custom Guardrail Plugin supports HTTP-based authentication (API keys in headers, query parameters, or request body). AWS Bedrock Guardrails requires SigV4 request signing, which the custom Plugin does not support. Use the dedicated [AI AWS Guardrails](/plugins/ai-aws-guardrails/) Plugin for that service.
@@ -430,13 +444,26 @@ The template syntax is `$(<function_name>.<field_name>)`, where the function nam
 
 ##### Template variable reference
 
-| Variable | Description |
-|----------|-------------|
-| `$(content)` | Text being inspected, extracted based on `text_source` |
-| `$(source)` | Current inspection phase: `INPUT` or `OUTPUT` |
-| `$(conf.params.<KEY>)` | Access a value from `config.params` |
-| `$(resp)` | Raw guardrail service response (used in functions) |
-| `$(<function>.<field>)` | Access a field from a function's return table |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Description
+    key: description
+rows:
+  - variable: "`$(content)`"
+    description: Text being inspected, extracted based on `text_source`
+  - variable: "`$(source)`"
+    description: "Current inspection phase: `INPUT` or `OUTPUT`"
+  - variable: "`$(conf.params.<KEY>)`"
+    description: Access a value from `config.params`
+  - variable: "`$(resp)`"
+    description: Raw guardrail service response (used in functions)
+  - variable: "`$(<function>.<field>)`"
+    description: Access a field from a function's return table
+{% endtable %}
+<!-- vale on -->
 
 ### AI Proxy Advanced, LLM routing with secure-by-default fields
 
@@ -1057,11 +1084,22 @@ Content-Type: application/json
 
 Kong adds the following response headers to allowed requests:
 
-| Header | Description |
-|--------|-------------|
-| `X-Kong-LLM-Model` | Model name selected for this request |
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the LLM provider |
-| `X-Kong-Proxy-Latency` | Time (ms) Kong spent processing the request, including the guardrail call |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: Model name selected for this request
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the LLM provider
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent processing the request, including the guardrail call
+{% endtable %}
+<!-- vale on -->
 
 ### Explore in Konnect
 

@@ -198,12 +198,30 @@ Keyword matching is fast but shallow. Semantic analysis is deep but more expensi
 
 {{site.ai_gateway_name}} solves this by stacking four Plugins on a single Route, each responsible for one class of threat. Kong's Plugin priority system executes them in a fixed order on every request, giving you defense-in-depth with a single endpoint.
 
-| Plugin | What it catches | How it works |
-|--------|----------------|-------------|
-| [key-auth](/plugins/key-auth/) | Anonymous traffic | Matches the `apikey` header against registered Consumer credentials |
-| [ai-sanitizer](/plugins/ai-sanitizer/) | Sensitive data (SSN, email, credit cards, credentials) | Sends content to an external PII detection service |
-| [ai-semantic-prompt-guard](/plugins/ai-semantic-prompt-guard/) | Rephrased or paraphrased harmful prompts | Compares embeddings against known bad patterns in Redis |
-| [ai-prompt-guard](/plugins/ai-prompt-guard/) | Literal keyword matches (hack, exploit, malware, weapon) | Regex pattern matching, no external calls |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Plugin
+    key: plugin
+  - title: What it catches
+    key: catches
+  - title: How it works
+    key: works
+rows:
+  - plugin: "[key-auth](/plugins/key-auth/)"
+    catches: Anonymous traffic
+    works: Matches the `apikey` header against registered Consumer credentials
+  - plugin: "[ai-sanitizer](/plugins/ai-sanitizer/)"
+    catches: Sensitive data (SSN, email, credit cards, credentials)
+    works: Sends content to an external PII detection service
+  - plugin: "[ai-semantic-prompt-guard](/plugins/ai-semantic-prompt-guard/)"
+    catches: Rephrased or paraphrased harmful prompts
+    works: Compares embeddings against known bad patterns in Redis
+  - plugin: "[ai-prompt-guard](/plugins/ai-prompt-guard/)"
+    catches: Literal keyword matches (hack, exploit, malware, weapon)
+    works: Regex pattern matching, no external calls
+{% endtable %}
+<!-- vale on -->
 
 Authentication runs first so every downstream check is associated with a known Consumer. The PII sanitizer runs next, stripping sensitive data before any other Plugin or upstream provider sees it. The semantic guard then checks the sanitized content against deny rules stored as vectors. The regex guard runs last as a final check before the request reaches the LLM proxy.
 
@@ -420,11 +438,22 @@ This recipe uses the default `llm_format: openai`, which accepts OpenAI-format r
 
 A successful request returns a normal OpenAI-format chat completion plus a set of Kong-added response headers that confirm which guardrails ran and which model served the request:
 
-| Header | Description |
-|--------|-------------|
-| `X-Kong-LLM-Model` | Model name selected by `ai-proxy-advanced` |
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the provider to respond |
-| `X-Kong-Proxy-Latency` | Time (ms) Kong spent on auth, PII sanitization, and guardrails |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: Model name selected by `ai-proxy-advanced`
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the provider to respond
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent on auth, PII sanitization, and guardrails
+{% endtable %}
+<!-- vale on -->
 
 When a guardrail blocks the request, the response body is a JSON error and Kong does not call the LLM, so `X-Kong-Upstream-Latency` is `0`:
 

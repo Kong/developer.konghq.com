@@ -428,14 +428,28 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-| Component | Responsibility |
-|-----------|---------------|
-| `okta-claude-auth.sh` | PKCE flow, token caching, silent refresh. Runs on the developer machine |
-| Okta | Identity, MFA, group membership, JWT issuance |
-| Kong, [openid-connect](/plugins/openid-connect/) | JWT signature validation via JWKS, audience verification, Okta group to Kong Consumer mapping |
-| Kong, [ai-proxy-advanced](/plugins/ai-proxy-advanced/) | LLM provider auth injection, model routing per Consumer tier, format translation |
-| Kong, [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/) | Per-Consumer token rate limits with sliding windows |
-| LLM Provider | Model inference |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Responsibility
+    key: responsibility
+rows:
+  - component: "`okta-claude-auth.sh`"
+    responsibility: PKCE flow, token caching, silent refresh. Runs on the developer machine
+  - component: Okta
+    responsibility: Identity, MFA, group membership, JWT issuance
+  - component: Kong, [openid-connect](/plugins/openid-connect/)
+    responsibility: JWT signature validation via JWKS, audience verification, Okta group to Kong Consumer mapping
+  - component: Kong, [ai-proxy-advanced](/plugins/ai-proxy-advanced/)
+    responsibility: LLM provider auth injection, model routing per Consumer tier, format translation
+  - component: Kong, [ai-rate-limiting-advanced](/plugins/ai-rate-limiting-advanced/)
+    responsibility: Per-Consumer token rate limits with sliding windows
+  - component: LLM Provider
+    responsibility: Model inference
+{% endtable %}
+<!-- vale on -->
 
 {:.info}
 > **Provider compatibility:** Claude Code sends requests in Anthropic's native format.
@@ -711,11 +725,22 @@ rate limiting Plugin can correctly parse token counts from the response.
 
 Kong returns token rate limit headers with every response:
 
-| Header | Description |
-|--------|-------------|
-| `X-AI-RateLimit-Limit-{window}-{provider}` | Maximum tokens allowed in the window |
-| `X-AI-RateLimit-Remaining-{window}-{provider}` | Tokens remaining in the current window |
-| `RateLimit-Reset` | Seconds until the window resets |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-AI-RateLimit-Limit-{window}-{provider}`"
+    description: Maximum tokens allowed in the window
+  - header: "`X-AI-RateLimit-Remaining-{window}-{provider}`"
+    description: Tokens remaining in the current window
+  - header: "`RateLimit-Reset`"
+    description: Seconds until the window resets
+{% endtable %}
+<!-- vale on -->
 
 When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `Retry-After`
 header.
@@ -1312,14 +1337,28 @@ Response (Anthropic format, passed through or translated from the provider):
 
 Kong adds the following response headers:
 
-| Header | Description |
-|--------|-------------|
-| `X-Kong-LLM-Model` | Model name selected for this request |
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the provider to respond |
-| `X-Kong-Proxy-Latency` | Time (ms) Kong spent processing the request (auth, rate limiting, format translation) |
-| `X-AI-RateLimit-Limit-60-{provider}` | Token limit for the 60-second window for this Consumer tier |
-| `X-AI-RateLimit-Remaining-60-{provider}` | Tokens remaining in the current window |
-| `RateLimit-Reset` | Seconds until the window resets |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: Model name selected for this request
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the provider to respond
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent processing the request (auth, rate limiting, format translation)
+  - header: "`X-AI-RateLimit-Limit-60-{provider}`"
+    description: Token limit for the 60-second window for this Consumer tier
+  - header: "`X-AI-RateLimit-Remaining-60-{provider}`"
+    description: Tokens remaining in the current window
+  - header: "`RateLimit-Reset`"
+    description: Seconds until the window resets
+{% endtable %}
+<!-- vale on -->
 
 The `Authorization: Bearer` header on the request carries the Okta JWT. Kong validates it,
 strips it before forwarding upstream, and injects the provider API key in its place. The

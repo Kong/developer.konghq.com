@@ -317,14 +317,28 @@ backed by httpbin, two Consumer Groups (`warehouse-ops` and `customer-support`),
 authentication via Okta or Keycloak.
 
 
-| Component                                                         | Responsibility                                                                                    |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Identity Provider (Okta / Keycloak)                               | OAuth 2.1 authorization server, user identity, group membership, token issuance and introspection |
-| Kong - [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)                   | MCP-native OAuth: PRM discovery, token introspection, Consumer and Consumer Group mapping (3.14+) |
-| Kong - [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`conversion-only`) | Converts REST API endpoints into MCP tools with per-tool ACL definitions                          |
-| Kong - [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`listener`)        | Aggregates tagged tools into a single MCP server, enforces ACLs at call time                      |
-| Kong - [CORS](/plugins/cors/)                                     | Enables browser-based MCP clients to connect to the gateway                                       |
-| Backend APIs (httpbin)                                            | Mock ecommerce services representing independent API teams                                        |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Responsibility
+    key: responsibility
+rows:
+  - component: Identity Provider (Okta / Keycloak)
+    responsibility: OAuth 2.1 authorization server, user identity, group membership, token issuance and introspection
+  - component: Kong - [AI MCP OAuth2](/plugins/ai-mcp-oauth2/)
+    responsibility: "MCP-native OAuth: PRM discovery, token introspection, Consumer and Consumer Group mapping (3.14+)"
+  - component: Kong - [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`conversion-only`)
+    responsibility: Converts REST API endpoints into MCP tools with per-tool ACL definitions
+  - component: Kong - [AI MCP Proxy](/plugins/ai-mcp-proxy/) (`listener`)
+    responsibility: Aggregates tagged tools into a single MCP server, enforces ACLs at call time
+  - component: Kong - [CORS](/plugins/cors/)
+    responsibility: Enables browser-based MCP clients to connect to the gateway
+  - component: Backend APIs (httpbin)
+    responsibility: Mock ecommerce services representing independent API teams
+{% endtable %}
+<!-- vale on -->
 
 
 ### ACL matrix
@@ -332,16 +346,42 @@ authentication via Okta or Keycloak.
 This recipe creates two Consumer Groups with different tool access:
 
 
-| Tool                      | warehouse-ops | customer-support |
-| ------------------------- | ------------- | ---------------- |
-| `list-orders`             | yes           | yes              |
-| `get-order`               | yes           | yes              |
-| `cancel-order`            | no            | yes              |
-| `list-inventory`          | yes           | yes              |
-| `check-inventory`         | yes           | yes              |
-| `restock-item`            | yes           | no               |
-| `get-customer`            | no            | yes              |
-| `update-customer-contact` | no            | yes              |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Tool
+    key: tool
+  - title: warehouse-ops
+    key: warehouse_ops
+  - title: customer-support
+    key: customer_support
+rows:
+  - tool: "`list-orders`"
+    warehouse_ops: "yes"
+    customer_support: "yes"
+  - tool: "`get-order`"
+    warehouse_ops: "yes"
+    customer_support: "yes"
+  - tool: "`cancel-order`"
+    warehouse_ops: "no"
+    customer_support: "yes"
+  - tool: "`list-inventory`"
+    warehouse_ops: "yes"
+    customer_support: "yes"
+  - tool: "`check-inventory`"
+    warehouse_ops: "yes"
+    customer_support: "yes"
+  - tool: "`restock-item`"
+    warehouse_ops: "yes"
+    customer_support: "no"
+  - tool: "`get-customer`"
+    warehouse_ops: "no"
+    customer_support: "yes"
+  - tool: "`update-customer-contact`"
+    warehouse_ops: "no"
+    customer_support: "yes"
+{% endtable %}
+<!-- vale on -->
 
 
 Warehouse operations staff can view orders and manage inventory (including restocking), but
@@ -547,17 +587,56 @@ The AI MCP OAuth2 Plugin requires token introspection (RFC 7662). Not all identi
 support this. The table below summarizes compatibility:
 
 
-| Identity Provider      | Introspection | Compatible | Notes                                                                                                                                         |
-| ---------------------- | ------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Okta**               | Yes           | Yes        | Full RFC 7662 support. Endpoint: `https://{domain}/oauth2/{authServerId}/v1/introspect`                                                       |
-| **Keycloak**           | Yes           | Yes        | Full RFC 7662 support. Endpoint: `/realms/{realm}/protocol/openid-connect/token/introspect`                                                   |
-| **Ping Identity**      | Yes           | Yes        | Supports token introspection per RFC 7662                                                                                                     |
-| **FusionAuth**         | Yes           | Yes        | Supports RFC 7662 token introspection                                                                                                         |
-| **ORY Hydra**          | Yes           | Yes        | Open source OAuth2 server with full RFC 7662 support                                                                                          |
-| **Microsoft Entra ID** | No            | No         | Does not provide an introspection endpoint. Use JWKS-based JWT validation with the [OpenID Connect](/plugins/openid-connect/) Plugin instead. |
-| **Auth0**              | No            | No         | Does not support RFC 7662 introspection. Use JWKS-based JWT validation instead.                                                               |
-| **AWS Cognito**        | No            | No         | Does not provide an introspection endpoint. Use JWKS-based JWT validation instead.                                                            |
-| **Google OAuth2**      | Partial       | No         | Has a tokeninfo endpoint but it is not RFC 7662 compliant.                                                                                    |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Identity Provider
+    key: provider
+  - title: Introspection
+    key: introspection
+  - title: Compatible
+    key: compatible
+  - title: Notes
+    key: notes
+rows:
+  - provider: "**Okta**"
+    introspection: "Yes"
+    compatible: "Yes"
+    notes: "Full RFC 7662 support. Endpoint: `https://{domain}/oauth2/{authServerId}/v1/introspect`"
+  - provider: "**Keycloak**"
+    introspection: "Yes"
+    compatible: "Yes"
+    notes: "Full RFC 7662 support. Endpoint: `/realms/{realm}/protocol/openid-connect/token/introspect`"
+  - provider: "**Ping Identity**"
+    introspection: "Yes"
+    compatible: "Yes"
+    notes: Supports token introspection per RFC 7662
+  - provider: "**FusionAuth**"
+    introspection: "Yes"
+    compatible: "Yes"
+    notes: Supports RFC 7662 token introspection
+  - provider: "**ORY Hydra**"
+    introspection: "Yes"
+    compatible: "Yes"
+    notes: Open source OAuth2 server with full RFC 7662 support
+  - provider: "**Microsoft Entra ID**"
+    introspection: "No"
+    compatible: "No"
+    notes: Does not provide an introspection endpoint. Use JWKS-based JWT validation with the [OpenID Connect](/plugins/openid-connect/) Plugin instead.
+  - provider: "**Auth0**"
+    introspection: "No"
+    compatible: "No"
+    notes: Does not support RFC 7662 introspection. Use JWKS-based JWT validation instead.
+  - provider: "**AWS Cognito**"
+    introspection: "No"
+    compatible: "No"
+    notes: Does not provide an introspection endpoint. Use JWKS-based JWT validation instead.
+  - provider: "**Google OAuth2**"
+    introspection: "Partial"
+    compatible: "No"
+    notes: Has a tokeninfo endpoint but it is not RFC 7662 compliant.
+{% endtable %}
+<!-- vale on -->
 
 
 For IdPs that do not support introspection, you can achieve similar functionality using the
@@ -610,10 +689,20 @@ The three customer-only tools (`cancel-order`, `get-customer`, `update-customer-
 filtered out by Kong before the response leaves the Gateway, so the agent never sees them in
 its tool catalog. Kong attaches the standard latency headers below on every authenticated call.
 
-| Header                    | Description                                                      |
-| ------------------------- | ---------------------------------------------------------------- |
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the upstream MCP server         |
-| `X-Kong-Proxy-Latency`    | Time (ms) Kong spent processing the request (auth, ACL, routing) |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the upstream MCP server
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent processing the request (auth, ACL, routing)
+{% endtable %}
+<!-- vale on -->
 
 ## Apply the Kong configuration
 
@@ -1037,11 +1126,27 @@ To verify the gateway:
 
 The same gateway URL works in any MCP-compatible AI client. Each client handles OAuth differently — follow the upstream documentation for the client's configuration mechanics. The values below cover the gateway-specific bits.
 
-| Client | Documentation | Configuration |
-|--------|---------------|---------------|
-| Claude Code | [code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp) | `claude mcp add --transport http ecommerce-mcp http://localhost:8000/ecommerce-mcp` (Claude Code completes the OAuth flow automatically on first use). |
-| VS Code | [vscode-docs/copilot/reference/mcp-configuration.md](https://github.com/microsoft/vscode-docs/blob/main/docs/copilot/reference/mcp-configuration.md) | Add to `.vscode/mcp.json`: `{"servers": {"ecommerce-mcp": {"type": "http", "url": "http://localhost:8000/ecommerce-mcp"}}}`. Requires VS Code 1.101+. |
-| Claude Desktop | [Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) | Customize → Connectors → Add custom connector. The gateway must be reachable from Anthropic's IPs, so this client only works once Kong is deployed publicly — `http://localhost:8000` is not reachable from Claude Desktop. |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Client
+    key: client
+  - title: Documentation
+    key: documentation
+  - title: Configuration
+    key: configuration
+rows:
+  - client: Claude Code
+    documentation: "[code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp)"
+    configuration: "`claude mcp add --transport http ecommerce-mcp http://localhost:8000/ecommerce-mcp` (Claude Code completes the OAuth flow automatically on first use)."
+  - client: VS Code
+    documentation: "[vscode-docs/copilot/reference/mcp-configuration.md](https://github.com/microsoft/vscode-docs/blob/main/docs/copilot/reference/mcp-configuration.md)"
+    configuration: "Add to `.vscode/mcp.json`: `{\"servers\": {\"ecommerce-mcp\": {\"type\": \"http\", \"url\": \"http://localhost:8000/ecommerce-mcp\"}}}`. Requires VS Code 1.101+."
+  - client: Claude Desktop
+    documentation: "[Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)"
+    configuration: "Customize → Connectors → Add custom connector. The gateway must be reachable from Anthropic's IPs, so this client only works once Kong is deployed publicly; `http://localhost:8000` is not reachable from Claude Desktop."
+{% endtable %}
+<!-- vale on -->
 
 Once connected, ask the agent two questions: a permitted one (`Check stock for SKU WIDGET-42`) and a restricted one (`Cancel order ORD-1001`). The first succeeds and returns inventory data; the second is reported as denied because Kong filters the tool from the catalog or returns an ACL error on the call. The same enforcement applies regardless of which MCP client connects — the gateway is the policy boundary.
 

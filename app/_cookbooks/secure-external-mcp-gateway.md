@@ -279,36 +279,100 @@ sequenceDiagram
 {% endmermaid %}
 <!-- vale on -->
 
-| Component | Responsibility |
-|-----------|---------------|
-| GitHub OAuth | Issues tokens for GitHub API access; MCP clients authenticate directly |
-| Identity Provider (Okta / Keycloak) | Issues tokens for organizational identity; used by Konnect MCP pattern |
-| Kong [Datakit](/plugins/datakit/) Plugin | Checks for Authorization header; returns 401 + PRM pointer for unauthenticated requests |
-| Kong [Key Auth](/plugins/key-auth/) Plugin | Resolves Kong Consumer from apikey header for GitHub MCP ACL evaluation |
-| Kong [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin | MCP-native OAuth for Konnect MCP: PRM, introspection, Consumer mapping |
-| Kong [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin (`passthrough-listener`) | Proxies MCP traffic to upstream servers; enforces tool-level ACLs; provides observability |
-| Kong [Response Transformer Advanced](/plugins/response-transformer-advanced/) Plugin | Rewrites GitHub's PRM resource field to point at Kong |
-| Kong [Request Transformer Advanced](/plugins/request-transformer-advanced/) Plugin | Swaps user token for stored Konnect SAT |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Responsibility
+    key: responsibility
+rows:
+  - component: GitHub OAuth
+    responsibility: Issues tokens for GitHub API access; MCP clients authenticate directly
+  - component: Identity Provider (Okta / Keycloak)
+    responsibility: Issues tokens for organizational identity; used by Konnect MCP pattern
+  - component: Kong [Datakit](/plugins/datakit/) Plugin
+    responsibility: Checks for Authorization header; returns 401 + PRM pointer for unauthenticated requests
+  - component: Kong [Key Auth](/plugins/key-auth/) Plugin
+    responsibility: Resolves Kong Consumer from apikey header for GitHub MCP ACL evaluation
+  - component: Kong [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin
+    responsibility: MCP-native OAuth for Konnect MCP; PRM, introspection, Consumer mapping
+  - component: Kong [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin (`passthrough-listener`)
+    responsibility: Proxies MCP traffic to upstream servers; enforces tool-level ACLs; provides observability
+  - component: Kong [Response Transformer Advanced](/plugins/response-transformer-advanced/) Plugin
+    responsibility: Rewrites GitHub's PRM resource field to point at Kong
+  - component: Kong [Request Transformer Advanced](/plugins/request-transformer-advanced/) Plugin
+    responsibility: Swaps user token for stored Konnect SAT
+{% endtable %}
+<!-- vale on -->
 
 ### ACL matrix (GitHub MCP)
 
 The GitHub MCP server exposes 70+ tools. This recipe defines ACLs for a representative subset,
 with a default deny for the `developer` group on unlisted tools:
 
-| Tool | admin | developer | Type |
-|------|:-----:|:---------:|------|
-| `search_repositories` | yes | yes | read |
-| `get_file_contents` | yes | yes | read |
-| `list_issues` | yes | yes | read |
-| `list_pull_requests` | yes | yes | read |
-| `search_users` | yes | yes | read |
-| `search_code` | yes | yes | read |
-| `create_issue` | yes | no | write |
-| `push_files` | yes | no | write |
-| `create_pull_request` | yes | no | write |
-| `merge_pull_request` | yes | no | write |
-| `create_repository` | yes | no | write |
-| *(all other tools)* | yes | no | default deny |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Tool
+    key: tool
+  - title: admin
+    key: admin
+  - title: developer
+    key: developer
+  - title: Type
+    key: type
+rows:
+  - tool: "`search_repositories`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`get_file_contents`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`list_issues`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`list_pull_requests`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`search_users`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`search_code`"
+    admin: "yes"
+    developer: "yes"
+    type: read
+  - tool: "`create_issue`"
+    admin: "yes"
+    developer: "no"
+    type: write
+  - tool: "`push_files`"
+    admin: "yes"
+    developer: "no"
+    type: write
+  - tool: "`create_pull_request`"
+    admin: "yes"
+    developer: "no"
+    type: write
+  - tool: "`merge_pull_request`"
+    admin: "yes"
+    developer: "no"
+    type: write
+  - tool: "`create_repository`"
+    admin: "yes"
+    developer: "no"
+    type: write
+  - tool: "*(all other tools)*"
+    admin: "yes"
+    developer: "no"
+    type: default deny
+{% endtable %}
+<!-- vale on -->
 
 Developers can search and read repositories, issues, pull requests, and code. Admins can also
 create issues, push code, create and merge pull requests, and create repositories. Any GitHub
@@ -846,11 +910,32 @@ The Konnect MCP route demonstrates the token-swap pattern: the user authenticate
 
 Both routes are usable from any MCP-compatible AI client. Each client handles OAuth differently — follow the upstream documentation for the client's configuration mechanics. The values below cover the gateway-specific bits.
 
-| Client | Documentation | GitHub MCP route | Konnect MCP route |
-|--------|---------------|------------------|-------------------|
-| Claude Code | [code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp) | `claude mcp add --transport http github-mcp http://localhost:8000/github-mcp --header "apikey: dev-api-key"` | `claude mcp add --transport http konnect-mcp http://localhost:8000/konnect-mcp` |
-| VS Code | [vscode-docs/copilot/reference/mcp-configuration.md](https://github.com/microsoft/vscode-docs/blob/main/docs/copilot/reference/mcp-configuration.md) | Add `"github-mcp": {"type": "http", "url": "http://localhost:8000/github-mcp", "headers": {"apikey": "dev-api-key"}}` to `.vscode/mcp.json` | Add `"konnect-mcp": {"type": "http", "url": "http://localhost:8000/konnect-mcp"}` to `.vscode/mcp.json` |
-| Claude Desktop | [Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) | Customize → Connectors → Add custom connector. The gateway must be reachable from Anthropic's IPs, so this client only works once Kong is deployed publicly — `http://localhost:8000` is not reachable from Claude Desktop. | Same — public deployment only. |
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Client
+    key: client
+  - title: Documentation
+    key: documentation
+  - title: GitHub MCP route
+    key: github_route
+  - title: Konnect MCP route
+    key: konnect_route
+rows:
+  - client: Claude Code
+    documentation: "[code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp)"
+    github_route: '`claude mcp add --transport http github-mcp http://localhost:8000/github-mcp --header "apikey: dev-api-key"`'
+    konnect_route: "`claude mcp add --transport http konnect-mcp http://localhost:8000/konnect-mcp`"
+  - client: VS Code
+    documentation: "[vscode-docs/copilot/reference/mcp-configuration.md](https://github.com/microsoft/vscode-docs/blob/main/docs/copilot/reference/mcp-configuration.md)"
+    github_route: "Add `\"github-mcp\": {\"type\": \"http\", \"url\": \"http://localhost:8000/github-mcp\", \"headers\": {\"apikey\": \"dev-api-key\"}}` to `.vscode/mcp.json`"
+    konnect_route: "Add `\"konnect-mcp\": {\"type\": \"http\", \"url\": \"http://localhost:8000/konnect-mcp\"}` to `.vscode/mcp.json`"
+  - client: Claude Desktop
+    documentation: "[Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)"
+    github_route: "Customize → Connectors → Add custom connector. The gateway must be reachable from Anthropic's IPs, so this client only works once Kong is deployed publicly; `http://localhost:8000` is not reachable from Claude Desktop."
+    konnect_route: Same, public deployment only.
+{% endtable %}
+<!-- vale on -->
 
 For the GitHub route, the additional `apikey` header is what tells Kong which Consumer the call belongs to; the Bearer token continues to authenticate to GitHub upstream. Once connected, ask the agent a permitted task (`Search GitHub for repositories matching kong gateway language:go`) and a restricted one (`Push a file to test/test`). The first succeeds; the second is reported as denied because Kong filters the tool from the catalog or returns an ACL error on the call.
 
