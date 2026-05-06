@@ -1,11 +1,12 @@
 {% assign cb = include.cookbook %}
 {% assign cat = include.category %}
+{% assign rendered_description = cb.description | liquify %}
 <div
   class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary/5{% endunless %}"
   data-card="cookbook-row"
   data-category="{{ cat.slug }}"
   data-title="{{ cb.title | downcase }}"
-  data-description="{{ cb.description | downcase | truncate: 200 }}"
+  data-description="{{ rendered_description | downcase | truncate: 200 }}"
 >
   <a href="{{ cb.url }}" class="flex items-center gap-4 hover:no-underline text-secondary w-full">
     {% if cat.icon %}
@@ -14,7 +15,7 @@
 
     <div class="flex flex-col gap-0.5 flex-grow min-w-0">
       <h3>{{ cb.title }}</h3>
-      <span class="text-sm text-terciary line-clamp-1">{{ cb.description }}</span>
+      <span class="text-sm text-terciary line-clamp-1">{{ rendered_description }}</span>
     </div>
 
     <div class="flex items-center gap-4 flex-shrink-0">
