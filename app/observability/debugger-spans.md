@@ -52,11 +52,11 @@ rows:
   - name: "`network.peer.port`"
     description: Port of the network peer that is connecting to Kong
   - name: "`server.address`"
-    description: The IP address where Kong received the request
+    description: Kong can listen on multiple IP addresses. This is the IP address at which Kong received the request
   - name: "`server.port`"
-    description: The port where Kong received the request
+    description: The port at which Kong received the request
   - name: "`network.protocol.name`"
-    description: Name of the network protocol. Debugger currently only supports `http`, so that is the only expected value for this attribute.
+    description: Name of the network protocol. Currently Debugger only supports `http`.
   - name: "`http.request.method`"
     description: HTTP request method
   - name: "`proxy.kong.http.request.body.size`"
@@ -166,7 +166,7 @@ A span capturing the execution of a plugin configured to run in the `rewrite` ph
 This span has the following attributes:
 {{instance_id}}
 
-### kong.io.<service>.<operation>
+### kong.io.<network_transport>.<operation>
 A span capturing network i/o timing that occurs during plugin execution or other request processing. 
 
 Can be one of:
