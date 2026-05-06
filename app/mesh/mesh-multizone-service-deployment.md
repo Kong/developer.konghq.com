@@ -96,7 +96,7 @@ You can also favor local service instances with [locality-aware load balancing](
 
 When a [zone egress](/mesh/zone-egress/) is present, traffic routes through the local zone egress before reaching the remote zone ingress.
 
-When using [transparent proxying](/mesh/transparent-proxying/) (default in Kubernetes), {{site.mesh_product_name}} generates a VIP and a DNS entry with the format `<kuma.io/service>.mesh`, and listens for traffic on port 80.
+When using [transparent proxying](/mesh/transparent-proxying/) (default in Kubernetes), {{site.mesh_product_name}} generates a VIP and a DNS entry with the format `<kuma.io/service>.mesh`, and listens on the service VIP port (default 80).
 
 {:.info}
 > A zone ingress is not an API gateway. It only handles cross-zone communication within a mesh. API gateways are supported in {{site.mesh_product_name}} [gateway mode](/mesh/ingress/) and can be deployed in addition to zone ingresses.
@@ -117,7 +117,7 @@ rows:
       * Accept connections only from zone control planes.
       * Accept creation and changes to [policies](/mesh/policies/) that will be applied to the data plane proxies.
       * Send policies down to zone control planes.
-      * Send zone ingresses down to zone control plane.
+      * Send zone ingresses down to zone control planes.
       * Keep an inventory of all data plane proxies running in all zones (this is only done for observability but is not required for operations).
       * Reject connections from data plane proxies.
   - component: Zone control planes
