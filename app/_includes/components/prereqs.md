@@ -57,7 +57,7 @@
 {% include {{ tool_include }} %}
 {%- endif -%}
 {%- endfor -%}
-{%-endunless-%}
+{%- endunless -%}
 {%- if prereqs.operator.konnect.auth -%}
 {% include prereqs/operator/konnect_auth.md config=prereqs.operator.konnect %}
 {%- endif -%}
