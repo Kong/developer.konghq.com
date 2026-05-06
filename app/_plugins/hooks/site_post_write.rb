@@ -84,6 +84,7 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
       'api_pages' => api_pages,
       'plugin_pages' => plugin_pages,
       'how_to_pages' => how_to_pages,
+      'cookbook_pages' => cookbook_pages,
       'docs' => docs
     )
   end
@@ -97,7 +98,7 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
   end
 
   def doc_pages
-    @doc_pages ||= pages - api_pages - plugin_pages - how_to_pages
+    @doc_pages ||= pages - api_pages - plugin_pages - how_to_pages - cookbook_pages
   end
 
   def docs
@@ -137,6 +138,10 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
 
   def how_to_pages
     @how_to_pages ||= pages.select { |p| p.data['content_type'] == 'how_to' }
+  end
+
+  def cookbook_pages
+    @cookbook_pages ||= pages.select { |p| p.data['content_type'] == 'cookbook' }
   end
 
   def resolve_name(slug)
