@@ -28,9 +28,9 @@ related_resources:
     url: /mesh/built-in-gateway/
 ---
 
-The `Dataplane` resource defines the configuration of a [data plane proxy](/mesh/data-plane-proxy/) (also called a sidecar). A data plane proxy runs next to each workload and handles all inbound and outbound traffic for that workload.
+The `Dataplane` resource configures a [data plane proxy](/mesh/data-plane-proxy/) (also called a sidecar). The proxy runs alongside each workload and handles all inbound and outbound traffic for that workload.
 
-On Kubernetes, {{site.mesh_product_name}} automatically generates `Dataplane` resources when pods are injected with the sidecar. On Universal, you must manually create `Dataplane` resources to register workloads with the mesh.
+On Kubernetes, {{site.mesh_product_name}} generates `Dataplane` resources automatically when the sidecar is injected into a Pod. On Universal, create `Dataplane` resources manually to register workloads with the mesh.
 
 Each `Dataplane` belongs to exactly one mesh.
 
@@ -59,7 +59,7 @@ networking:
 
 ### Dataplane with multiple inbounds
 
-When a workload exposes multiple ports:
+Configure a `Dataplane` for a workload that exposes more than one port:
 
 ```yaml
 type: Dataplane
@@ -155,7 +155,7 @@ networking:
 
 ### Dataplane with advertised address
 
-For proxies in private networks (like Docker):
+Set an advertised address when the proxy runs in a private network, such as a Docker container:
 
 ```yaml
 type: Dataplane
