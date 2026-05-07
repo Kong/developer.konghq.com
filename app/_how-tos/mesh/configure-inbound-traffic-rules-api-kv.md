@@ -1,6 +1,6 @@
 ---
-title: Configure inbound traffic with the rules API
-description: Apply policies to data plane inbounds using the rules API with Dataplane targetRef kind.
+title: Configure inbound traffic with the rules API (KV demo app)
+description: Apply policies to data plane inbounds using the rules API with Dataplane targetRef kind using the KV demo application.
 content_type: how_to
 permalink: /mesh/configure-inbound-traffic-rules-api-kv/
 bread-crumbs:
