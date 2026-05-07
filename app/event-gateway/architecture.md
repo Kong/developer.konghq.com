@@ -46,11 +46,11 @@ This lets you productize your Kafka cluster to clients inside and outside of you
   These nodes intercept Kafka client traffic, evaluate it against the policies pushed by the control plane, and proxy the allowed traffic to the backend Kafka brokers.
 
 Periodically, the data plane polls the control plane for configuration updates.
-When the data plane receives configuration updates, it restarts the running proxy services.
 
 Depending on the type of configuration update, the connection between the Kafka client and the backend can be affected:
 * Updates to virtual cluster policies don't cause a connection drop. Policies reload dynamically and take effect on the next request.
 * Updates to any other part of the configuration (for example, listener policies, auth, or namespaces in virtual clusters) cause a connection drop.
+When the data plane receives configuration updates, it restarts the running proxy services.
 
 If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
 
@@ -61,22 +61,22 @@ The components of the high-level architecture can be visualized like this:
 
 flowchart TB
 
-subgraph Konnect ["Konnect (Kong Cloud)"]
+subgraph Konnect ["{{site.konnect_short_name}} (Kong-managed cloud)"]
 
-  CP["Event Gateway Control Plane"]
+  CP["{{site.event_gateway_short}} control plane"]
 end
 
 CP--DP pulls config<br/>from CP-->Customer
 
 subgraph Customer ["Self-managed<br>(on-prem or cloud)"]
   direction LR
-   KafkaClient["Kafka Client<br/>Producer + Consumer<br/>(e.g. Java, Python,<br/> Go app)"]
-   subgraph EGW ["Event Gateway Data Plane"]
-      Analytics["Virtual Cluster: <br/>analytics<br/>policies: e.g. ACL, filter"]
-      Payments["Virtual Cluster: <br/>payments<br/>policies: e.g. ACL,<br> Schema, filter"]
+   KafkaClient["Kafka Client<br/>producer + consumer<br/>(e.g. Java, Python,<br/> Go app)"]
+   subgraph EGW ["{{site.event_gateway_short}} data plane"]
+      Analytics["Virtual cluster: <br/>analytics<br/>policies: e.g. ACL, filter"]
+      Payments["Virtual cluster: <br/>payments<br/>policies: e.g. ACL,<br> Schema, Filter"]
    end
 
-   BackendKafka["Backend Kafka<br/>Cluster"]
+   BackendKafka["Backend Kafka<br/>cluster"]
    KafkaClient<-->EGW<-->BackendKafka
 
    OB["Observability system<br/>metrics & logs"]
