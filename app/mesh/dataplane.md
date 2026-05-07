@@ -28,7 +28,7 @@ related_resources:
     url: /mesh/built-in-gateway/
 ---
 
-The `Dataplane` resource defines the configuration of a [data plane proxy](/mesh/concepts/#data-plane) (also called a sidecar). A data plane proxy runs next to each workload and handles all inbound and outbound traffic for that workload.
+The `Dataplane` resource defines the configuration of a [data plane proxy](/mesh/data-plane-proxy/) (also called a sidecar). A data plane proxy runs next to each workload and handles all inbound and outbound traffic for that workload.
 
 On Kubernetes, {{site.mesh_product_name}} automatically generates `Dataplane` resources when pods are injected with the sidecar. On Universal, you must manually create `Dataplane` resources to register workloads with the mesh.
 
@@ -36,10 +36,11 @@ Each `Dataplane` belongs to exactly one mesh.
 
 ## Examples
 
-### Basic Dataplane with single inbound (Universal)
+The following examples show common `Dataplane` configurations for Universal deployments. On Kubernetes, {{site.mesh_product_name}} generates these resources automatically.
 
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+### Basic Dataplane with single inbound
+
+Register a workload that exposes a single HTTP port:
 
 ```yaml
 type: Dataplane
@@ -56,15 +57,9 @@ networking:
         version: v1
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
-
-### Dataplane with multiple inbounds (Universal)
+### Dataplane with multiple inbounds
 
 When a workload exposes multiple ports:
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
 
 ```yaml
 type: Dataplane
@@ -85,13 +80,9 @@ networking:
         kuma.io/protocol: grpc
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
+### Dataplane with outbounds and no transparent proxying
 
-### Dataplane with outbounds (Universal, without transparent proxying)
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+Declare each upstream service the workload calls as an explicit outbound listener:
 
 ```yaml
 type: Dataplane
@@ -114,13 +105,9 @@ networking:
         kuma.io/service: database
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
+### Dataplane with transparent proxying
 
-### Dataplane with transparent proxying (Universal)
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+Use [transparent proxying](/mesh/transparent-proxying/) so the workload reaches mesh services by their service name without declaring outbounds:
 
 ```yaml
 type: Dataplane
@@ -142,13 +129,9 @@ networking:
       - database
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
+### Dataplane with service probes
 
-### Dataplane with service probes (Universal)
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+Configure [health probes](/mesh/policies/service-health-probes/) so {{site.mesh_product_name}} can detect when the workload becomes unhealthy and stop routing traffic to it:
 
 ```yaml
 type: Dataplane
@@ -170,15 +153,9 @@ networking:
         tcp: {}
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
-
-### Dataplane with advertised address (Universal)
+### Dataplane with advertised address
 
 For proxies in private networks (like Docker):
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
 
 ```yaml
 type: Dataplane
@@ -195,13 +172,9 @@ networking:
         kuma.io/protocol: http
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
-
 ### Delegated gateway Dataplane
 
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+Register an existing API gateway (such as {{site.base_gateway}}) as a delegated gateway that fronts the mesh:
 
 ```yaml
 type: Dataplane
@@ -215,13 +188,9 @@ networking:
       kuma.io/service: kong-gateway
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
+### Built-in gateway Dataplane
 
-### Builtin gateway Dataplane
-
-{% navtabs "environment" %}
-{% navtab "Universal" %}
+Run a [built-in gateway](/mesh/built-in-gateway/) for ingress traffic, configured through `MeshGateway` resources:
 
 ```yaml
 type: Dataplane
@@ -235,9 +204,6 @@ networking:
       kuma.io/service: edge-gateway
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
+## Schema
 
-## All options
-
-{% schema_viewer Dataplane type=proto %}
+{% json_schema Dataplane type=proto %}
