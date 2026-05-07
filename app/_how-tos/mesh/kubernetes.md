@@ -231,4 +231,6 @@ You can click the increment button again and the application should function onc
 
 ## Validate
 
-In your browser at [127.0.0.1:5000](http://127.0.0.1:5000), click **Increment** and confirm the counter updates successfully.
+1. In your browser, go to [127.0.0.1:5000](http://127.0.0.1:5000).
+2. Click **Increment**.
+3. Confirm the counter value increases and the page does not show a connection error.
