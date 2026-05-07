@@ -56,7 +56,14 @@ Virtual cluster policies break down further into cluster, consume, and produce p
 Policies execute in chains. The order in which {{site.event_gateway}} applies policies to modify messages depends on the policy type, and whether the message is a request or response.
 
 {% include_cached /knep/entities-diagram.md entity="policy" %}
-<!-- Need more info here -->
+
+Depending on the type of configuration update, the connection between the Kafka client and the backend can be affected:
+* Updates to virtual cluster policies don't cause a connection drop. Policies reload dynamically and take effect on the next request.
+* Updates to listener policies cause a connection drop.
+
+If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
+
+The components of the high-level architecture can be visualized like this:
 
 ## Virtual cluster policies 
 

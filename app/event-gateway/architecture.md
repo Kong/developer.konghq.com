@@ -48,9 +48,9 @@ This lets you productize your Kafka cluster to clients inside and outside of you
 Periodically, the data plane polls the control plane for configuration updates.
 When the data plane receives configuration updates, it restarts the running proxy services.
 
-Depending on the policy type, the connection between the Kafka client and the backend can be interrupted:
-* Updates to virtual cluster policies don't cause a connection drop
-* Updates to listener policies cause a connection drop
+Depending on the type of configuration update, the connection between the Kafka client and the backend can be affected:
+* Updates to virtual cluster policies don't cause a connection drop. Policies reload dynamically and take effect on the next request.
+* Updates to any other part of the configuration (for example, listener policies, auth, or namespaces in virtual clusters) cause a connection drop.
 
 If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
 
