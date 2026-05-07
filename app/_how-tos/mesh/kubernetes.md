@@ -120,7 +120,7 @@ Traffic is now encrypted and secure.
 
 {{site.mesh_product_name}} doesn't define default traffic permissions, so no traffic flows with mTLS enabled until you define a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) policy.
 
-The demo app no longer works, if you click the increment button again you should get an error message in your browser.
+The demo app no longer works. If you click **Increment** again, you should get an error message in your browser.
 
 To allow traffic from `demo-app` to `redis`, apply a `MeshTrafficPermission`:
 
