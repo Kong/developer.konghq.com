@@ -60,6 +60,7 @@ sections:
 
   - title: Resource References
     items:
+      - path: /mesh/mesh/
       - path: /mesh/meshgateway/
       - path: /mesh/meshgatewayinstance/
       - path: /mesh/dataplane/
