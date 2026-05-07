@@ -46,11 +46,15 @@ This lets you productize your Kafka cluster to clients inside and outside of you
   These nodes intercept Kafka client traffic, evaluate it against the policies pushed by the control plane, and proxy the allowed traffic to the backend Kafka brokers.
 
 Periodically, the data plane polls the control plane for configuration updates.
-Once the data plane receives configuration updates, it restarts the running proxy services. 
-While listener policy updates do cause a connection drop, updates to virtual cluster policies don't.
+When the data plane receives configuration updates, it restarts the running proxy services.
+
+Depending on the policy type, the connection between the Kafka client and the backend can be interrupted:
+* Updates to virtual cluster policies don't cause a connection drop
+* Updates to listener policies cause a connection drop
+
 If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
 
-Logically, the components of the high-level architecture can be visualized like this:
+The components of the high-level architecture can be visualized like this:
 
 <!--vale off-->
 {% mermaid %}
