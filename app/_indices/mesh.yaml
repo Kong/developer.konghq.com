@@ -63,6 +63,7 @@ sections:
       - path: /mesh/meshgateway/
       - path: /mesh/meshgatewayinstance/
       - path: /mesh/dataplane/
+      - path: /mesh/workload/
       - path: /mesh/meshexternalservice/
       - path: /mesh/meshmultizoneservice/
       - path: /mesh/meshservice/
