@@ -32,22 +32,6 @@ pages:
     min_version:
       mesh: '2.7'
   -
-    path: app/_src/introduction/concepts.md
-    title: 'Concepts'
-    description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
-    url: '/mesh/concepts/'
-    related_resources:
-      - text: Service meshes
-        url: '/mesh/service-mesh/'
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-      - text: Mesh architecture
-        url: /mesh/architecture/
-      - text: Install Kong Mesh
-        url: /mesh/#install-kong-mesh
-    min_version:
-      mesh: '2.7'
-  -
     path: app/_src/networking/dns.md
     title: 'DNS'
     description: 'Learn how {{site.mesh_product_name}} DNS works with virtual IPs and service naming to enable transparent proxying.'
