@@ -144,6 +144,7 @@ xai: xAI
 grok: Grok
 cerebras: Cerebras
 ollama: Ollama
+deepseek: DeepSeek
 
 
 repos:
