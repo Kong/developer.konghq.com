@@ -29,7 +29,7 @@ The usage of {{site.mesh_product_name}} DNS is only relevant when [transparent p
 {{site.mesh_product_name}} DNS server responds to type `A` and `AAAA` DNS requests, and answers with `A` or `AAAA` records, for example `redis.mesh. 60 IN A 240.0.0.100` or `redis.mesh. 60 IN AAAA fd00:fd00::100`.
 
 The virtual IPs are allocated by the control plane from the configured CIDR (by default `240.0.0.0/4`), by constantly scanning the services available in all {{site.mesh_product_name}} meshes.
-When a service is removed, its VIP is also freed, and {{site.mesh_product_name}} DNS does not respond for it with `A` and `AAAA` DNS record.
+When a service is removed, its VIP is also freed, and {{site.mesh_product_name}} DNS does not respond for it with `A` and `AAAA` DNS records.
 Virtual IPs are stable (replicated) between instances of the control plane and data plane proxies.
 
 Once a new VIP is allocated or an old VIP is freed, the control plane configures the data plane proxy with this change.
@@ -174,7 +174,7 @@ To override DNS configuration from data planes, use `--dns-coredns-config-templa
 
 Once supported, you'll need to prepare a DNS configuration file to be used for overriding. This file is a [CoreDNS configuration](https://coredns.io/manual/toc/) that is processed as a go-template.
 
-Editing should base on [the existing and default configuration](https://github.com/kumahq/kuma/blob/master/app/kuma-dp/pkg/dataplane/dnsserver/Corefile). For example, you may use the following configuration to make the DNS server not respond errors to IPv6 queries when your cluster has IPv6 disabled:
+Editing should be based on [the existing and default configuration](https://github.com/kumahq/kuma/blob/master/app/kuma-dp/pkg/dataplane/dnsserver/Corefile). For example, you may use the following configuration to make the DNS server not respond errors to IPv6 queries when your cluster has IPv6 disabled:
 
 {% if_version lte:2.7.x %}
 {% raw %}
