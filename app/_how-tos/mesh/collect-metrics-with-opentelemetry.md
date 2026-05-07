@@ -56,7 +56,7 @@ The quickstart guide applies restrictive `MeshTrafficPermission` policies, so al
 echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
-  namespace: {{ site.mesh_namespace }}
+  namespace: {{ kuma-system }}
   name: allow-observability
 spec:
   targetRef:
