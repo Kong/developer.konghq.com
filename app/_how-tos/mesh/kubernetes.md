@@ -26,11 +26,9 @@ tldr:
 prereqs:
   inline:
     - title: Helm
-      content: |
-        Install [Helm](https://helm.sh/), a package manager for Kubernetes.
-    - title: minikube
-      content: |
-        Install [minikube](https://minikube.sigs.k8s.io/docs/), a tool for running local Kubernetes clusters.
+      include_content: prereqs/helm
+    - title: A running Kubernetes cluster
+      include_content: prereqs/kubernetes/mesh-cluster
 ---
 
 To start learning how {{site.mesh_product_name}} works, you run and secure a simple demo application that consists of two services:
