@@ -1,4 +1,4 @@
-title: 'Allow encrypted traffic from different trust domain'
+title: 'Allow encrypted traffic from a different trust domain'
 description: 'Allow encrypted mTLS traffic from a different trust domain to the mesh using a PEM certificate bundle.'
 tools:
   - kubernetes

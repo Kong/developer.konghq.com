@@ -23,7 +23,7 @@ related_resources:
 ---
 
 {:.warning}
-> `MeshTrust` is experimental. It works only on Kubernetes and requires [`MeshServices`](/mesh/meshservice/) to be enabled.
+> `MeshTrust` is experimental. It works only on Kubernetes and requires [`MeshService`](/mesh/meshservice/) to be enabled.
 
 The `MeshTrust` resource lets mesh applications accept encrypted traffic from different [trust](/mesh/concepts#trust) domains. You can configure `MeshTrust` with a certificate that {{site.mesh_product_name}} uses to validate incoming traffic.
 
