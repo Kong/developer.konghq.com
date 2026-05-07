@@ -43,7 +43,7 @@ which handles the actual traffic between services.
 ## Data plane
 
 The data plane handles traffic between services.
-In practice these are the apps that you build and that you want to put inside your service-mesh.
+In practice these are the apps that you build and that you want to put inside your service mesh.
 
 ### Data plane proxy / sidecar
 
@@ -90,12 +90,12 @@ A resource is an object or entity that can be created, managed, and interacted w
 Resources are the building blocks that define the behavior and state of your service mesh.
 Each resource is defined as a type of API object that has a specific purpose and is represented by its state and configuration.
 
-A resource is most often expressed as yaml and can have 2 formats:
+A resource is most often expressed as YAML and can have 2 formats:
 
 - `Kubernetes` when the backing control plane runs on Kubernetes. In this case {{ site.mesh_product_name }} resources are defined as Kubernetes Custom Resource Definitions.
-- `Universal` in other cases or when accessing resources through {{ site.mesh_product_name}}'s REST API.
+- `Universal` in other cases or when accessing resources through {{ site.mesh_product_name }}'s REST API.
 
-Resources are most commonly represented in yaml format.
+Resources are most commonly represented in YAML format.
 
 ### Policy
 
