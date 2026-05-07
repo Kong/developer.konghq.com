@@ -63,7 +63,9 @@ The following creates a new AI Agent. Suggested values are shown in backticks:
 1. Navigate to **Agents**.
 1. Click **New Agent**.
 1. Enter a **Display Name** (for example: `{{ include.presenter.data['display_name'] }}`) and **Name** (for example: `{{ include.presenter.data['name'] }}`).
-1. Configure the agent settings, model/tool references, and optional policies.
+1. Select an Agent **Type** (for example: `{{ include.presenter.data['type'] }}`).
+1. Enter the upstream Agent **URL** (for example: `{{ include.presenter.data['config']['url'] }}`).
+1. Optionally configure logging, max payload size, ACLs, and Policy references.
 1. Click **Create**.
 {% when 'mcp-server' %}
 The following creates a new AI MCP Server. Suggested values are shown in backticks:
