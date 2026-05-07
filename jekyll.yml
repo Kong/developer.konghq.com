@@ -142,6 +142,7 @@ hugging_face: Hugging Face
 mistral: Mistral
 xai: xAI
 grok: Grok
+cerebras: Cerebras
 
 
 repos:
