@@ -27,7 +27,7 @@ related_resources:
     url: /insomnia/template-tags/     
 ---
 
-Dynamic mocking extends Insomnia’s existing mock server feature. For each request, dynamic mocking renders Liquid templates so responses can include:
+Dynamic mocking extends Insomnia’s existing local mock server feature. For each request, dynamic mocking renders Liquid templates so responses can include:
 
 - Data from the request (headers, query parameters, path, or body).
 - Randomly generated fake data.
