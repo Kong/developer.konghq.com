@@ -159,8 +159,8 @@ Unified naming improves traceability and reduces the time required to understand
 
 ## Validate the rollout
 
-Run the following command and confirm that cluster names use the `kri_msvc_` prefix and include your mesh resource names:
+Run the following command and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
 
 ```sh
-curl -s localhost:9901/stats | grep -i '^cluster.kri_msvc_'
+curl -s localhost:9901/stats | grep -i 'kri_msvc_'
 ```
