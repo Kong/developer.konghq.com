@@ -85,12 +85,28 @@ rows:
     description: status code returned by Upstream
   - name: "`http.response.status_code`"
     description: Status code sent back by Kong
+  - name: "`proxy.kong.latency.3p.dns.total_io`"
+    description: Time spent performing synchronous DNS I/O operations
+  - name: "`proxy.kong.latency.3p.http_client.total_io`"
+    description: Time spent by the internal HTTP client performing request and response I/O
+  - name: "`proxy.kong.latency.3p.redis.total_io`"
+    description: Time spent by the internal Redis client executing Redis operations and performing network I/O
+  - name: "`proxy.kong.latency.3p.tcpsock.total_io`"
+    description: Time spent performing raw TCP socket I/O operations
+  - name: "`proxy.kong.latency.3p.total_io`"
+    description: Total time spent performing all third-party I/O operations listed above
+  - name: "`proxy.kong.latency.client`"
+    description: Time spent waiting for the client to send or receive data
+  - name: "`proxy.kong.latency.upstream.read_headers_duration`"
+    description: Time spent reading response headers from the upstream
+  - name: "`proxy.kong.latency.upstream.read_body_duration`"
+    description: Time spent reading the response body from the upstream
   - name: "`proxy.kong.latency.upstream`"
     description: Time between the connection to the upstream and the last byte of response
   - name: "`proxy.kong.latency.total`"
     description: Time between the first byte into Kong and the last byte out of Kong
   - name: "`proxy.kong.latency.internal`"
-    description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and i/o times.
+    description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and third party I/O.
   - name: "`proxy.kong.client.keepalive`"
     description: Whether the downstream used a KeepAlive connection.
   - name: "`tls.resumed`"
