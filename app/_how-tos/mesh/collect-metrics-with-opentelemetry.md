@@ -195,7 +195,13 @@ helm install --namespace mesh-observability opentelemetry-collector open-telemet
 
 ## Configure Prometheus to scrape metrics from OpenTelemetry collector
 
-Update the `prometheus-server` ConfigMap and add the following `scrape_configs` entry:
+Open the `prometheus-server` ConfigMap:
+
+```sh
+kubectl edit configmap/prometheus-server -n mesh-observability
+```
+
+In the `prometheus.yml` value, add the following `scrape_configs` entry:
 
 ```yaml
 - job_name: "opentelemetry-collector"
