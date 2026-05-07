@@ -82,35 +82,37 @@ rows:
   - name: "`proxy.kong.upstream.id`"
     description: Resolved Upstream ID
   - name: "`proxy.kong.upstream.status_code`"
-    description: status code returned by Upstream
+    description: status code returned by Upstream to Kong
   - name: "`http.response.status_code`"
-    description: Status code sent back by Kong
+    description: Status code sent back by Kong to client
   - name: "`proxy.kong.latency.3p.dns.total_io`"
     description: Time spent performing synchronous DNS I/O operations
   - name: "`proxy.kong.latency.3p.http_client.total_io`"
-    description: Time spent by the internal HTTP client performing request and response I/O
+    description: Time spent on third party HTTP calls (like talking to an auth server, fetching metadata from a external http api and so forth)
   - name: "`proxy.kong.latency.3p.redis.total_io`"
-    description: Time spent by the internal Redis client executing Redis operations and performing network I/O
+    description: Time spent on executing Redis operations and performing network I/O to redis
   - name: "`proxy.kong.latency.3p.tcpsock.total_io`"
-    description: Time spent performing raw TCP socket I/O operations
+    description: Time spent performing raw TCP socket I/O operations that are not using the internal instrumented DNS, HTTP or Redis clients
   - name: "`proxy.kong.latency.3p.total_io`"
-    description: Total time spent performing all third-party I/O operations listed above
+    description: Total time spent performing all third-party I/O operations (DNS + Redis + HTTP + Raw)
   - name: "`proxy.kong.latency.client`"
-    description: Time spent waiting for the client to send or receive data
+    description: Time spent waiting for the client to send or receive data. This attribute includes time spent waiting for client to finish TLS handshake (span `tls_handshake`), send all HTTP headers (span `read_client_http_headers`), send the request body (span `read_client_http_body`) and the time taken for the client to read the full response (span `wait_for_client_read`).
   - name: "`proxy.kong.latency.upstream.read_headers_duration`"
     description: Time spent reading response headers from the upstream
   - name: "`proxy.kong.latency.upstream.read_body_duration`"
     description: Time spent reading the response body from the upstream
   - name: "`proxy.kong.latency.upstream`"
-    description: Time between the connection to the upstream and the last byte of response
+    description: Time between the connection to the upstream and the last byte of response. This factors in attempts to connect to a healthy upstream if multiple upstreams were configured. See span `upstream.selection` to see breakdown of each failed attempt and the successful attempt.
   - name: "`proxy.kong.latency.total`"
     description: Time between the first byte into Kong and the last byte out of Kong
   - name: "`proxy.kong.latency.internal`"
     description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and third party I/O.
-  - name: "`proxy.kong.client.keepalive`"
-    description: Whether the downstream used a KeepAlive connection.
+  - name: "`http.request.header.connection`"
+    description: The value of the `Connection` header if present. A value of `close` implies that the client does not want to use KeepAlive.
+  - name: "`proxy.kong.client.connection.request_count`"
+    description: The total number of HTTP requests sent by the client over the same reused underlying TCP connection
   - name: "`tls.resumed`"
-    description: Whether the TLS session resumed.
+    description: Whether the TLS session was resumed. A value of `true` implies that the client is reusing an existing TLS (& TCP) connection.
   - name: "`tls.client.subject`"
     description: x509 client DN (if mTLS).
   - name: "`tls.server.subject`"
