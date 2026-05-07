@@ -13,7 +13,7 @@ tags:
   - observability
 tldr:
   q: How do I progressively roll out unified resource naming?
-  a: This guide enables unified resource naming for one workload, validates the new Envoy stats, and helps you choose a cluster-wide rollout mode.
+  a: This guide enables unified resource naming for one workload, helps you choose a cluster-wide rollout mode, and validates that cluster names include the `kri_msvc_` prefix.
 prereqs:
   inline:
     - title: Deploy the Kubernetes demo environment
@@ -163,7 +163,18 @@ Unified naming improves traceability and reduces the time required to understand
 
 ## Validate the rollout
 
-Run the following command and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
+Send a request to the sidecar stats endpoint:
+
+<!-- vale off -->
+{% validation request-check %}
+url: '/stats'
+on_prem_url: localhost:9901
+status_code: 200
+method: GET
+{% endvalidation %}
+<!-- vale on -->
+
+Then run the following command and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
 
 ```sh
 curl -s localhost:9901/stats | grep -i 'kri_msvc_'
