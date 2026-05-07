@@ -126,8 +126,6 @@ Combine `Workload` with `MeshIdentity` to assign identity based on the workload 
 
 Define a `MeshIdentity` that selects data plane proxies by their `kuma.io/workload` label:
 
-{% raw %}
-
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: MeshIdentity
@@ -143,7 +141,7 @@ spec:
         kuma.io/workload: demo-workload
   spiffeID:
     trustDomain: example.com
-    path: "/workload/{{ .Workload }}"
+    path: "/workload/{% raw %}{{ .Workload }}{% endraw %}"
   provider:
     type: Bundled
     bundled:
@@ -153,16 +151,12 @@ spec:
         enabled: true
 ```
 
-{% endraw %}
-
 With this configuration, data plane proxies labeled `kuma.io/workload: demo-workload` receive the SPIFFE ID `spiffe://example.com/workload/demo-workload`.
 
 {% endnavtab %}
 {% navtab "Universal" %}
 
 Define a `MeshIdentity` that selects data plane proxies by their `kuma.io/workload` label:
-
-{% raw %}
 
 ```yaml
 type: MeshIdentity
@@ -175,7 +169,7 @@ spec:
         kuma.io/workload: demo-workload
   spiffeID:
     trustDomain: example.com
-    path: "/workload/{{ .Workload }}"
+    path: "/workload/{% raw %}{{ .Workload }}{% endraw %}"
   provider:
     type: Bundled
     bundled:
@@ -184,8 +178,6 @@ spec:
       autogenerate:
         enabled: true
 ```
-
-{% endraw %}
 
 With this configuration, data plane proxies labeled `kuma.io/workload: demo-workload` receive the SPIFFE ID `spiffe://example.com/workload/demo-workload`.
 
