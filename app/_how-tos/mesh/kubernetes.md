@@ -27,7 +27,7 @@ prereqs:
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: A running Kubernetes cluster
+    - title: Kubernetes cluster
       include_content: prereqs/kubernetes/mesh-cluster
 ---
 
@@ -55,7 +55,7 @@ Install {{site.mesh_product_name}} control plane with Helm by executing:
 ```sh
 helm repo add {{site.mesh_helm_repo_name}} {{site.mesh_helm_repo_url}}
 helm repo update
-helm install --create-namespace --namespace {{site.mesh_namespace}} {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
+helm install --create-namespace --namespace {{site.mesh_namespace}} {{site.mesh_helm_install_name}} {{site.mesh_helm_repo}}
 ```
 
 ## Deploy the demo application
