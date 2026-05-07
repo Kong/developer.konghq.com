@@ -25,7 +25,7 @@ min_version:
   mesh: '2.7'
 ---
 
-In this page we will introduce concepts that are core to understanding {{ site.mesh_product_name }}.
+On this page we will introduce concepts that are core to understanding {{ site.mesh_product_name }}.
 
 ## Mesh
 
@@ -97,11 +97,11 @@ A resource is most often expressed as YAML and can have 2 formats:
 
 ### Policy
 
-Policies are a specific type of resources that controls the behavior and communication of applications running inside your service mesh.
+Policies are a specific type of resources that control the behavior and communication of applications running inside your service mesh.
 They can enable traffic management, security, observability and traffic reliability.
 
 Policies always have a clear specific area of impact and goal.
-To learn more about [policies checkout the in depth introduction](/mesh/policies-introduction/).
+To learn more about [policies check out the in depth introduction](/mesh/policies-introduction/).
 
 ### Identity
 
@@ -109,4 +109,4 @@ Who a workload is—a workload's identity is the name encoded in its certificate
 
 ### Trust
 
-Who to believe - Trust defines which identities you accept as valid, and is established through trusted certificate authorities <!-- vale off -->(CAs)<!-- vale on --> that issue those identities. Trust is attached to trust domain, and there can be multiple Trusts in the cluster.
+Trust defines which identities you accept as valid, and is established through trusted certificate authorities <!-- vale off -->(CAs)<!-- vale on --> that issue those identities. Trust is attached to trust domain, and there can be multiple Trusts in the cluster.
