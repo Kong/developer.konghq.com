@@ -128,4 +128,3 @@ Once you've created content or made changes to existing content in your project,
 
 Git status notifications appear at the bottom right corner of the window.
 
-<div class="flex flex-col gap-4 heading-section" markdown="1">
