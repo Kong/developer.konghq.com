@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Argus Redact Bridge plugin icon">
+  <title>Argus Redact Bridge</title>
+  <path d="M60 8 L100 26 V62 Q100 92 60 112 Q20 92 20 62 V26 Z"
+        fill="#1f3a5f" stroke="#0e1f3a" stroke-width="2"/>
+  <ellipse cx="60" cy="58" rx="22" ry="14" fill="#f5f7fa"/>
+  <circle cx="60" cy="58" r="8" fill="#1f3a5f"/>
+  <circle cx="60" cy="58" r="3" fill="#f5f7fa"/>
+  <rect x="32" y="55" width="56" height="6" fill="#0e1f3a" opacity="0.85"/>
+</svg>

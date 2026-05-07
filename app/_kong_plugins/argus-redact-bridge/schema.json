@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "argus_url": {
+          "default": "http://argus-redact:8000",
+          "description": "Base URL of the argus-redact HTTP server (the redaction sidecar). Must begin with `http://` or `https://` and include a host.",
+          "type": "string"
+        },
+        "argus_api_key": {
+          "description": "Bearer token sent in the `Authorization` header on each `/redact` call. Must match the `ARGUS_API_KEY` environment variable on the argus-redact server. Use a Kong vault reference (for example, `{vault://env/ARGUS_API_KEY}`) in production.",
+          "type": "string",
+          "referenceable": true
+        },
+        "lang": {
+          "default": "zh",
+          "description": "argus-redact language pack to apply. One of `zh`, `en`, `ja`, `ko`, `de`, `uk`, `in`, `br`.",
+          "type": "string"
+        },
+        "mode": {
+          "default": "fast",
+          "description": "argus-redact detection mode. `fast` (regex-only, sub-millisecond engine cost) is the only mode suitable for the request path; `ner` and `auto` are exposed for completeness but their latency profile makes them better suited to async/sidecar deployments than to inline gateway use.",
+          "enum": ["fast", "ner", "auto"],
+          "type": "string"
+        },
+        "profile": {
+          "default": "pseudonym-llm",
+          "description": "argus-redact compliance profile. `pseudonym-llm` emits realistic-looking, reserved-range faked values that preserve LLM-reasoning quality. Other accepted values include `default`, `pipl`, `gdpr`, and `hipaa`.",
+          "type": "string"
+        },
+        "timeout_ms": {
+          "default": 2000,
+          "description": "Per-call timeout in milliseconds for `/redact`. Bounded to `[100, 60000]`.",
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 60000
+        },
+        "on_error": {
+          "default": "closed",
+          "description": "Behavior when the argus-redact sidecar is unreachable during the access phase. `closed` returns HTTP 503 (default — unredacted PII never reaches the upstream LLM). `open` logs a warning and lets the original request through unmodified.",
+          "enum": ["closed", "open"],
+          "type": "string"
+        }
+      },
+      "required": ["argus_url"]
+    }
+  }
+}

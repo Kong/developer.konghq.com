@@ -1,0 +1,32 @@
+description: 'Pseudonymize PII in OpenAI Chat Completions requests with the Argus Redact Bridge plugin, and transparently restore the original PII on the response.'
+
+title: 'Reversible PII redaction'
+
+weight: 900
+
+requirements:
+  - The Argus Redact Bridge plugin is [installed](/plugins/argus-redact-bridge/#install-the-argus-redact-bridge-plugin)
+  - An [argus-redact](https://github.com/wan9yu/argus-redact) sidecar is reachable from {{site.base_gateway}}, with `ARGUS_API_KEY` set on the sidecar
+
+variables:
+  argus-url:
+    value: $ARGUS_URL
+    description: Base URL of the argus-redact server, for example `http://argus-redact:8000`.
+  argus-api-key:
+    value: $ARGUS_API_KEY
+    description: Bearer token shared with the argus-redact server. Use a [Kong vault reference](/gateway/secrets-management/) in production.
+
+config:
+  argus_url: ${argus-url}
+  argus_api_key: ${argus-api-key}
+  lang: zh
+  mode: fast
+  profile: pseudonym-llm
+  on_error: closed
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
