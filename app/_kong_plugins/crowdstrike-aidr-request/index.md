@@ -1,11 +1,11 @@
 ---
-title: 'CrowdStrike AIDR Request'
-name: 'CrowdStrike AIDR Request'
+title: 'CrowdStrike Falcon AIDR Request'
+name: 'CrowdStrike Falcon AIDR Request'
 
 content_type: plugin
 
 publisher: crowdstrike
-description: 'Inspect AI prompts against CrowdStrike AIDR input rules, blocking threats before they reach the upstream LLM'
+description: 'Inspect AI prompts against CrowdStrike Falcon AIDR input rules, blocking threats before they reach the upstream LLM'
 
 products:
   - gateway
@@ -37,9 +37,9 @@ min_version:
   gateway: '3.8'
 
 related_resources:
-  - text: CrowdStrike AIDR documentation
+  - text: CrowdStrike Falcon AIDR documentation
     url: https://pangea.cloud/docs/aidr
-  - text: CrowdStrike AIDR Response plugin
+  - text: CrowdStrike Falcon AIDR Response plugin
     url: /plugins/crowdstrike-aidr-response/
 ---
 
@@ -47,17 +47,17 @@ The {{page.name}} plugin intercepts AI prompts before they reach the upstream LL
 Requests that violate your security policies are blocked at the gateway, with no application code changes required.
 
 {:.info}
-> Use this plugin together with the [CrowdStrike AIDR Response plugin](/plugins/crowdstrike-aidr-response/) to protect both sides of your AI traffic.
+> Use this plugin together with the [CrowdStrike Falcon AIDR Response plugin](/plugins/crowdstrike-aidr-response/) to protect both sides of your AI traffic.
 
 Integrating the {{page.name}} plugin into your {{site.base_gateway}} allows you to:
 * **Block prompt injection and jailbreak attempts**: Evaluate every incoming prompt against configurable input rules before it reaches the LLM.
 * **Enforce compliance and data policies**: Prevent sensitive data such as PII and credentials from being submitted to the LLM.
-* **Centralize AI security visibility**: Stream audit events to the CrowdStrike AIDR console and Next-Gen SIEM without modifying your application.
+* **Centralize AI security visibility**: Stream audit events to the CrowdStrike Falcon AIDR console and Next-Gen SIEM without modifying your application.
 
 ## How it works
 
 The {{page.name}} plugin runs in the access phase. 
-It extracts the user prompt from the incoming request and submits it to the CrowdStrike AIDR AI Guard API for evaluation against your input rules. 
+It extracts the user prompt from the incoming request and submits it to the CrowdStrike Falcon AIDR AI Guard API for evaluation against your input rules. 
 Based on the verdict, the plugin either blocks the request or forwards it to the upstream LLM.
 
 <!-- vale off-->
@@ -66,7 +66,7 @@ sequenceDiagram
 autonumber
     participant Client
     participant Plugin as {{site.base_gateway}}<br/>AIDR Request Plugin
-    participant AIDR as CrowdStrike AIDR
+    participant AIDR as CrowdStrike Falcon AIDR
     participant LLM
 
     Client->>Plugin: Send request with user prompt
@@ -88,11 +88,11 @@ autonumber
 
 ## Install the {{page.name}} plugin
 
-{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" other_plugin_slug="crowdstrike-aidr-response" other_plugin_name="CrowdStrike AIDR Response" name=page.name %}
+{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-request" other_plugin_slug="crowdstrike-aidr-response" other_plugin_name="CrowdStrike Falcon AIDR Response" name=page.name %}
 
 ## Enable the plugin
 
-After installing the plugin, [enable the CrowdStrike AIDR Request plugin](/plugins/crowdstrike-aidr-request/examples/enable-crowdstrike-aidr-request/).
+After installing the plugin, [enable the CrowdStrike Falcon AIDR Request plugin](/plugins/crowdstrike-aidr-request/examples/enable-crowdstrike-aidr-request/).
 
 If you're routing LLM traffic through {{site.ai_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. 
 Then set `upstream_llm.provider` to `kong` and `upstream_llm.api_uri` to the AI Proxy route path.
@@ -123,7 +123,7 @@ The response should look something like this:
 ```json
 {
   "reason": "Malicious Prompt was detected and blocked. Confidential and PII Entity was not detected.",
-  "status": "Prompt has been rejected by CrowdStrike AIDR"
+  "status": "Prompt has been rejected by CrowdStrike Falcon AIDR"
 }
 ```
 The blocked request also appears in the AIDR console under your collector.

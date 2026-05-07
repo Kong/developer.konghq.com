@@ -1,17 +1,17 @@
-description: 'Enable the CrowdStrike AIDR Request plugin to inspect AI prompts against AIDR Input Rules before forwarding to the upstream LLM.'
+description: 'Enable the CrowdStrike Falcon AIDR Request plugin to inspect AI prompts against AIDR Input Rules before forwarding to the upstream LLM.'
 
-title: 'Enable CrowdStrike AIDR Request'
+title: 'Enable CrowdStrike Falcon AIDR Request'
 
 weight: 900
 
 requirements:
-  - "The CrowdStrike AIDR Request plugin is [installed](/plugins/crowdstrike-aidr-request/#install-the-crowdstrike-aidr-request-plugin)."
+  - "The CrowdStrike Falcon AIDR Request plugin is [installed](/plugins/crowdstrike-aidr-request/#install-the-crowdstrike-aidr-request-plugin)."
   - "You have [registered a Kong Collector](/plugins/crowdstrike-aidr-request/#register-a-kong-collector-in-aidr) in the AIDR console and have your API key and base URL."
 
 variables:
   api-key:
     value: $CROWDSTRIKE_AIDR_API_KEY
-    description: "Your CrowdStrike AIDR API key, obtained from the collector's Config tab in the AIDR console."
+    description: "Your CrowdStrike Falcon AIDR API key, obtained from the collector's Config tab in the AIDR console."
   api-base-url:
     value: https://api.crowdstrike.com/aidr/aiguard
     description: "The AIDR base URL, obtained from the collector's Config tab in the AIDR console."

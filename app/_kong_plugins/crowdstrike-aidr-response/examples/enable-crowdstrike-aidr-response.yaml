@@ -1,17 +1,17 @@
-description: 'Enable the CrowdStrike AIDR Response plugin to inspect LLM responses against AIDR Output Rules before returning to the client.'
+description: 'Enable the CrowdStrike Falcon AIDR Response plugin to inspect LLM responses against AIDR Output Rules before returning to the client.'
 
-title: 'Enable CrowdStrike AIDR Response'
+title: 'Enable CrowdStrike Falcon AIDR Response'
 
 weight: 900
 
 requirements:
-  - "The CrowdStrike AIDR Response plugin is [installed](/plugins/crowdstrike-aidr-response/#install-the-crowdstrike-aidr-response-plugin)."
+  - "The CrowdStrike Falcon AIDR Response plugin is [installed](/plugins/crowdstrike-aidr-response/#install-the-crowdstrike-aidr-response-plugin)."
   - "You have [registered a Kong Collector](/plugins/crowdstrike-aidr-response/#register-a-kong-collector-in-aidr) in the AIDR console and have your API key and base URL."
 
 variables:
   api-key:
     value: $CROWDSTRIKE_AIDR_API_KEY
-    description: "Your CrowdStrike AIDR API key, obtained from the collector's Config tab in the AIDR console."
+    description: "Your CrowdStrike Falcon AIDR API key, obtained from the collector's Config tab in the AIDR console."
   api-base-url:
     value: https://api.crowdstrike.com/aidr/aiguard
     description: "The AIDR base URL, obtained from the collector's Config tab in the AIDR console."

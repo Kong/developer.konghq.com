@@ -1,11 +1,11 @@
 ---
-title: 'CrowdStrike AIDR Response'
-name: 'CrowdStrike AIDR Response'
+title: 'CrowdStrike Falcon AIDR Response'
+name: 'CrowdStrike Falcon AIDR Response'
 
 content_type: plugin
 
 publisher: crowdstrike
-description: 'Inspect LLM responses against CrowdStrike AIDR output rules, redacting or blocking sensitive content before delivery to the client'
+description: 'Inspect LLM responses against CrowdStrike Falcon AIDR output rules, redacting or blocking sensitive content before delivery to the client'
 
 products:
   - gateway
@@ -37,9 +37,9 @@ min_version:
   gateway: '3.8'
 
 related_resources:
-  - text: CrowdStrike AIDR documentation
+  - text: CrowdStrike Falcon AIDR documentation
     url: https://pangea.cloud/docs/aidr
-  - text: CrowdStrike AIDR Request plugin
+  - text: CrowdStrike Falcon AIDR Request plugin
     url: /plugins/crowdstrike-aidr-request/
 ---
 
@@ -47,16 +47,16 @@ The {{page.name}} plugin intercepts LLM responses before they are returned to th
 Responses that violate your security policies can be redacted, masked, or blocked at the gateway. No application code changes required.
 
 {:.info}
-> Use this plugin together with the [CrowdStrike AIDR Request plugin](/plugins/crowdstrike-aidr-request/) to protect both sides of your AI traffic.
+> Use this plugin together with the [CrowdStrike Falcon AIDR Request plugin](/plugins/crowdstrike-aidr-request/) to protect both sides of your AI traffic.
 
 Integrating the {{page.name}} plugin into your {{site.base_gateway}} allows you to:
 * **Redact PII and sensitive data from LLM output**: Automatically mask or remove sensitive content before it reaches the client.
 * **Block non-compliant LLM responses**: Enforce output rules to prevent harmful, restricted, or policy-violating content from being delivered.
-* **Centralize AI security visibility**: Stream audit events to the CrowdStrike AIDR console and Next-Gen SIEM without modifying your application.
+* **Centralize AI security visibility**: Stream audit events to the CrowdStrike Falcon AIDR console and Next-Gen SIEM without modifying your application.
 
 ## How it works
 
-The {{page.name}} plugin runs in the response phase. After the upstream LLM returns a response, the plugin submits it to the CrowdStrike AIDR AI Guard API for evaluation against your output rules. Based on the verdict, the plugin either delivers the (potentially redacted) response or blocks it before it reaches the client.
+The {{page.name}} plugin runs in the response phase. After the upstream LLM returns a response, the plugin submits it to the CrowdStrike Falcon AIDR AI Guard API for evaluation against your output rules. Based on the verdict, the plugin either delivers the (potentially redacted) response or blocks it before it reaches the client.
 
 <!-- vale off-->
 {% mermaid %}
@@ -65,7 +65,7 @@ autonumber
     participant Client
     participant LLM
     participant Plugin as {{site.base_gateway}}<br/>AIDR Response plugin
-    participant AIDR as CrowdStrike AIDR
+    participant AIDR as CrowdStrike Falcon AIDR
 
     Client->>LLM: Send request (via {{site.base_gateway}})
     LLM-->>Plugin: Return LLM response
@@ -86,11 +86,11 @@ autonumber
 
 ## Install the {{page.name}} plugin
 
-{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-response" other_plugin_slug="crowdstrike-aidr-request" other_plugin_name="CrowdStrike AIDR Request" name=page.name %}
+{% include_cached /plugins/crowdstrike-aidr/install.md plugin_slug="crowdstrike-aidr-response" other_plugin_slug="crowdstrike-aidr-request" other_plugin_name="CrowdStrike Falcon AIDR Request" name=page.name %}
 
 ## Enable the plugin
 
-After installing the plugin, [enable the CrowdStrike AIDR Response plugin](/plugins/crowdstrike-aidr-response/examples/enable-crowdstrike-aidr-response/).
+After installing the plugin, [enable the CrowdStrike Falcon AIDR Response plugin](/plugins/crowdstrike-aidr-response/examples/enable-crowdstrike-aidr-response/).
 
 If you're routing LLM traffic through {{site.ai_gateway}}, [set up {{site.ai_gateway}}](/ai-gateway/get-started/) first by creating a Service, a Route, and enabling the AI Proxy plugin. Then set `upstream_llm.provider` to `kong` and `upstream_llm.api_uri` to the AI Proxy route path.
 
