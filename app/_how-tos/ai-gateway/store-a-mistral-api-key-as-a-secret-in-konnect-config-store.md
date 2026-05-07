@@ -139,13 +139,13 @@ variables:
 {% endnavtabs %}
 
 
-## Store the Mistral AI key as a secret
+## Store the {{ site.mistral }} AI key as a secret
 
-In this tutorial, you'll be storing the Mistral API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). By storing it as a secret in a {{site.konnect_short_name}} Vault, you can reference it during plugin configuration in the next step.
+In this tutorial, you'll be storing the {{ site.mistral }} API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). By storing it as a secret in a {{site.konnect_short_name}} Vault, you can reference it during plugin configuration in the next step.
 
 {% navtabs "config-store-secret" %}
 {% navtab "{{site.konnect_short_name}} API" %}
-Store your Mistral key as a secret by sending a `POST` request to the `/secrets` endpoint:
+Store your {{ site.mistral }} key as a secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -167,9 +167,9 @@ body:
 {% endnavtab %}
 {% endnavtabs %}
 
-## Reference your stored Mistral API key
+## Reference your stored {{ site.mistral }} API key
 
-To reference your stored Mistral API key, you use the prefix from your Vault config, the name of the secret, and optionally the property in the secret you want to use. Now, you'll reference the Mistral API key as a secret in the authorization header of the AI Proxy plugin configuration.
+To reference your stored {{ site.mistral }} API key, you use the prefix from your Vault config, the name of the secret, and optionally the property in the secret you want to use. Now, you'll reference the {{ site.mistral }} API key as a secret in the authorization header of the AI Proxy plugin configuration.
 
 Enable the AI Proxy plugin on your Route:
 

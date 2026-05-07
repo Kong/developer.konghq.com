@@ -161,7 +161,7 @@ entities:
 
 ## Enable the AI Proxy plugin
 
-In this tutorial, you'll use the Mistral API key you stored as a secret to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/).
+In this tutorial, you'll use the {{ site.mistral }} API key you stored as a secret to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/).
 
 {% entity_examples %}
 entities:
@@ -214,9 +214,9 @@ You should get a `401` error with the message `Unauthorized` because we're curre
 
 ## Rotate the secret in Secret Manager
 
-We can now rotate the secret with the correct API key from Mistral. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
+We can now rotate the secret with the correct API key from {{ site.mistral }}. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
 
-Rotate the secret with the valid Mistral API key:
+Rotate the secret with the valid {{ site.mistral }} API key:
 
 ```bash
 echo -n "$MISTRAL_API_KEY" | \
@@ -225,7 +225,7 @@ echo -n "$MISTRAL_API_KEY" | \
 
 ## Validate that {{site.base_gateway}} uses the valid API key from the rotated secret
 
-Now we can validate that {{site.base_gateway}} picks up the valid Mistral API key from the rotated secret. Since {{site.base_gateway}} is configured to pick up any rotated secrets every 60 seconds, the following command waits a minute before sending a request:
+Now we can validate that {{site.base_gateway}} picks up the valid {{ site.mistral }} API key from the rotated secret. Since {{site.base_gateway}} is configured to pick up any rotated secrets every 60 seconds, the following command waits a minute before sending a request:
 
 {% validation request-check %}
 url: /anything

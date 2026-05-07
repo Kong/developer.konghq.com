@@ -139,6 +139,7 @@ gemini: Gemini
 amazon: Amazon
 cohere: Cohere
 hugging_face: Hugging Face
+mistral: Mistral
 
 
 repos:
