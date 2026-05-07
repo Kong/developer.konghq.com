@@ -34,10 +34,65 @@ tools:
 Kafka software clients connect to the proxy as if it were part of a regular Kafka cluster. 
 This lets you productize your Kafka cluster to clients inside and outside of your business.
 
-## {{site.event_gateway_short}} entities
+## How it works
+
+{{site.event_gateway_short}} uses a hybrid deployment model, separating the control plane from the data plane.
+
+* **Control plane ({{site.konnect_short_name}})**: The control plane (CP) is fully managed by Kong within the {{site.konnect_short_name}} platform. 
+  It provides a centralized UI and API to manage backend clusters, virtual clusters, listeners, and policies. 
+  The control plane generates data plane certificates and pushes configuration updates to the proxy nodes.
+  It never sees the actual Kafka message payloads.
+* **Data plane (self-managed)**: The data plane (DP) consists of stateless proxy nodes running within your own cluster.
+  These nodes intercept Kafka client traffic, evaluate it against the policies pushed by the control plane, and proxy the allowed traffic to the backend Kafka brokers.
+
+Periodically, the data plane polls the control plane for configuration updates.
+Once the data plane receives configuration updates, it restarts the running proxy services. 
+While listener policy updates do cause a connection drop, updates to virtual cluster policies don't.
+If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
+
+Logically, the components of the high-level architecture can be visualized like this:
+
+<!--vale off-->
+{% mermaid %}
+
+flowchart TB
+
+subgraph Konnect ["Konnect (Kong Cloud)"]
+
+  CP["Event Gateway Control Plane"]
+end
+
+CP--DP pulls config<br/>from CP-->Customer
+
+subgraph Customer ["Self-managed<br>(on-prem or cloud)"]
+  direction LR
+   KafkaClient["Kafka Client<br/>Producer + Consumer<br/>(e.g. Java, Python,<br/> Go app)"]
+   subgraph EGW ["Event Gateway Data Plane"]
+      Analytics["Virtual Cluster: <br/>analytics<br/>policies: e.g. ACL, filter"]
+      Payments["Virtual Cluster: <br/>payments<br/>policies: e.g. ACL,<br> Schema, filter"]
+   end
+
+   BackendKafka["Backend Kafka<br/>Cluster"]
+   KafkaClient<-->EGW<-->BackendKafka
+
+   OB["Observability system<br/>metrics & logs"]
+   EGW--OTEL<br/>exporter-->OB
+end
+
+style Konnect stroke-dasharray:3
+style Customer stroke-dasharray:3
+
+{% endmermaid %}
+<!--vale on-->
+
+_**Figure 1**: The control plane (CP) is fully managed in {{site.konnect_short_name}}. When the data plane (DP) polls the CP for configuration, the CP pushes the config to the self-managed DP.
+The DP proxies Kafka client traffic through virtual clusters to backend Kafka clusters, and exports metrics and logs to an observability system via OpenTelemetry._
+
+### {{site.event_gateway_short}} entities
 
 In {{site.event_gateway_short}}, an entity is a component or object that makes up the {{site.event_gateway_short}} and its ecosystem. 
 Entities represent the various building blocks used to configure and manage {{site.event_gateway_short}}, and each entity has a specific role.
+All the configurations of the entities that run on the data plane live in the control plane. 
 
 {{site.event_gateway_short}}'s workflow is composed of the following core entities:
 
