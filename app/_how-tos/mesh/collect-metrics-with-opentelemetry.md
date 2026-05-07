@@ -230,7 +230,7 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshMetric
 metadata:
   name: otel-metrics
-  namespace: {{ site.mesh_namespace }}
+  namespace: {{ kuma-system }}
   labels:
     kuma.io/mesh: default
 spec:
@@ -250,7 +250,7 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshMetric
 metadata:
   name: otel-metrics
-  namespace: {{ site.mesh_namespace }}
+  namespace: {{ kuma-system }}
   labels:
     kuma.io/mesh: default
 spec:
