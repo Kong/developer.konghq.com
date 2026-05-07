@@ -18,7 +18,13 @@ prereqs:
   inline:
     - title: Deploy the Kubernetes demo environment
       content: |
-        Complete the [Deploy Kong Mesh on Kubernetes](/mesh/kubernetes/) quickstart and make sure the `demo-app` Service is running.
+        Complete the [Deploy Kong Mesh on Kubernetes](/mesh/kubernetes/) quickstart.
+
+        Before you continue, verify that the `demo-app` Service is running:
+
+        ```sh
+        kubectl get svc -n kuma-demo demo-app
+        ```
 ---
 
 By default, Envoy resources and stats in {{site.mesh_product_name}} use mixed, legacy formats. Names often do not line up with the {{site.mesh_product_name}} resources that produced them, which makes dashboards noisy and troubleshooting slower. For example, a query like:
