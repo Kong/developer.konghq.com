@@ -61,12 +61,16 @@ Apply the patch to a workload by updating the Deployment pod template annotation
 kubectl patch -n kuma-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"enable-feature-unified-resource-naming"}}}}}'
 ```
 
+After this update, Kubernetes rolls out new Pods that include the patched sidecar configuration.
+
 To disable the feature later for that workload:
 
 ```sh
 kubectl patch -n kuma-demo deployment demo-app \
   -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
 ```
+
+Set the annotation to an empty value if you want to keep the key in place, or remove the annotation entirely if you want a clean pod template:
 
 ```sh
 kubectl patch -n kuma-demo deployment demo-app --type=json \
