@@ -63,23 +63,3 @@ pages:
         url: /mesh/concepts/
       - text: Service discovery
         url: /mesh/service-discovery/
-
-# Post GA
-  -
-    path: app/_src/explore/observability.md
-    title: 'Observability'
-    description: 'Learn how to configure observability in {{site.mesh_product_name}} using Prometheus, Grafana, Jaeger, Loki, and Datadog.'
-    url: '/mesh/observability/'
-    related_resources:
-      - text: Audit logs
-        url: /mesh/access-audit/
-      - text: '{{site.mesh_product_name}} resource sizing guidelines'
-        url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} validated versions'
-        url: '/mesh/validated-versions/'
-      - text: Policy Hub
-        url: /mesh/policies/
-      - text: Mesh CLI
-        url: /mesh/cli/
-      - text: Data plane health
-        url: /mesh/dataplane-health/
