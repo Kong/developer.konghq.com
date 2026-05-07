@@ -140,20 +140,6 @@ pages:
       - text: Data plane health
         url: /mesh/dataplane-health/
   -
-    path: app/_src/quickstart/kubernetes-demo.md
-    title: 'Deploy Kong Mesh on Kubernetes'
-    description: 'Start learning how {{site.mesh_product_name}} works by running and securing a simple demo application that consists of two services.'
-    url: '/mesh/kubernetes/'
-    related_resources:
-      - text: Get started with Red Hat OpenShift
-        url: /mesh/openshift-quickstart/
-      - text: Deploy Kong Mesh on Universal
-        url: /mesh/get-started/universal/install/
-      - text: '{{site.mesh_product_name}} data plane on Kubernetes'
-        url: /mesh/data-plane-kubernetes/
-    tags:
-      - get-started
-  -
     path: app/_src/guides/meshidentity-spire-guide.md
     title: 'Issue identity with MeshIdentity Spire provider'
     description: 'Learn how to issue identities using Spire provider and how to use them to encrypt traffic in mesh.'
@@ -165,4 +151,3 @@ pages:
       - security
     min_version:
       mesh: '2.12'
-
