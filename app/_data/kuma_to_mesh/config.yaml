@@ -73,8 +73,8 @@ pages:
         url: '/mesh/dns/'
       - text: '{{site.mesh_product_name}} resource sizing guidelines'
         url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
+      - text: '{{site.mesh_product_name}} validated versions'
+        url: '/mesh/validated-versions/'
       - text: Install Kong Mesh
         url: /mesh/#install-kong-mesh
       - text: Multi-zone authentication
@@ -131,8 +131,8 @@ pages:
         url: /mesh/access-audit/
       - text: '{{site.mesh_product_name}} resource sizing guidelines'
         url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
+      - text: '{{site.mesh_product_name}} validated versions'
+        url: '/mesh/validated-versions/'
       - text: Policy Hub
         url: /mesh/policies/
       - text: Mesh CLI
