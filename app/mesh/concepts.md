@@ -43,7 +43,7 @@ which handles the actual traffic between services.
 ## Data plane
 
 The data plane handles traffic between services.
-In practice these are the apps that you build and that you want to put inside you service-mesh.
+In practice these are the apps that you build and that you want to put inside your service-mesh.
 
 ### Data plane proxy / sidecar
 
@@ -93,13 +93,13 @@ Each resource is defined as a type of API object that has a specific purpose and
 A resource is most often expressed as yaml and can have 2 formats:
 
 - `Kubernetes` when the backing control plane runs on Kubernetes. In this case {{ site.mesh_product_name }} resources are defined as Kubernetes Custom Resource Definitions.
-- `Universal` in other cases or when accessing resources through {{ site.mesh_product_name}}'s REST api.
+- `Universal` in other cases or when accessing resources through {{ site.mesh_product_name}}'s REST API.
 
 Resources are most commonly represented in yaml format.
 
 ### Policy
 
-Policies are a specific type of resources that controls the behaviour and communication of applications running inside your service mesh.
+Policies are a specific type of resources that controls the behavior and communication of applications running inside your service mesh.
 They can enable traffic management, security, observability and traffic reliability.
 
 Policies always have a clear specific area of impact and goal.
