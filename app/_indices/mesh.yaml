@@ -57,6 +57,7 @@ sections:
       - path: /mesh/upgrade/
       - path: /mesh/version-specific-upgrade-notes/
       - path: /mesh/migration-to-the-new-policies/
+      - path: /mesh/upgrading-transparent-proxy/
 
   - title: Resource References
     items:
