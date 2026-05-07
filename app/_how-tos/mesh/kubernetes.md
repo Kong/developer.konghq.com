@@ -219,16 +219,6 @@ spec:
 
 You can click the increment button again and the application should function once more.
 
-## Next steps
-
-- Explore the [Features](/mesh/enterprise/) available to govern and orchestrate your service traffic.
-- Add a gateway to access the demo from the outside by following the [built-in gateway guide](/mesh/built-in-gateway/).
-- Add Kong as a gateway to access the demo from the outside by following the [delegated gateway guide](/mesh/delegated-gateways/).
-- [Federate](/mesh/federate/) a zone into a multi-zone deployment.
-- Learn more about what you can do with the [GUI](/mesh/interact-with-control-plane/).
-- Explore further installation strategies for [single-zone](/mesh/deploy-mesh-self-managed/) and [multi-zone](/mesh/federate/) environments.
-- Read the [full documentation](/mesh/) to learn about all the capabilities of {{site.mesh_product_name}}.
-
 ## Validate
 
 1. In your browser, go to [127.0.0.1:5000](http://127.0.0.1:5000).
