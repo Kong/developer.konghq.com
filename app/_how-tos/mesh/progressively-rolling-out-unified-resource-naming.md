@@ -13,7 +13,7 @@ tags:
   - observability
 tldr:
   q: How do I progressively roll out unified resource naming?
-  a: By the end of this guide, you will enable unified resource naming for one workload, validate the new Envoy stats, and choose a cluster-wide rollout mode.
+  a: This guide enables unified resource naming for one workload, validates the new Envoy stats, and helps you choose a cluster-wide rollout mode.
 prereqs:
   inline:
     - title: Deploy the Kubernetes demo environment
@@ -55,7 +55,7 @@ This patch configures every sidecar that references it to set an environment var
 
 ## Enable unified naming for one workload
 
-Apply the patch to a workload by annotating its Pods through the Deployment pod template, not the Deployment object. This lets you enable the feature progressively, Service by Service.
+Apply the patch to a workload by updating the Deployment pod template annotation. This lets you enable the feature progressively, service by service.
 
 ```sh
 kubectl patch -n kuma-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"enable-feature-unified-resource-naming"}}}}}'
