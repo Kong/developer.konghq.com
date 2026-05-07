@@ -129,9 +129,13 @@ Not every provider supports every capability. The set of capabilities you can de
 
 ## Target models and load balancing
 
-A Model's `target_models` field lists one or more upstream provider model instances. For each entry, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+A Model is a virtual model: it exposes one route (`config.route`) and one set of capabilities, and routes requests to one or more concrete upstream models declared in its `target_models` array. Each entry in `target_models` represents a single upstream model instance with one URL.
 
-When a Model has more than one target, requests are load-balanced according to `config.balancer`. For the supported algorithms, configuration options, and tuning guidance, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
+For each target, you provide the upstream model name (for example, `gpt-4o`) and reference the Provider to use by its `name`. Each target can also override settings such as `temperature`, `max_tokens`, `input_cost`, and `output_cost`.
+
+There's no separate Target Model entity or endpoint. Target models are managed only as nested data inside a Model — through the same Model API surface used to create, update, and delete the parent. Adding, removing, or modifying a target is an update to the Model itself.
+
+When a Model has more than one target, the load balancer sits between the virtual model and its targets, distributing requests according to `config.balancer`. For the supported algorithms, configuration options, and tuning guidance, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
 
 ## Access control
 
