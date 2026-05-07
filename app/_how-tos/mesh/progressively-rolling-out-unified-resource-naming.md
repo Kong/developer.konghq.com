@@ -13,7 +13,7 @@ tags:
   - observability
 tldr:
   q: How do I progressively roll out unified resource naming?
-  a: This guide enables unified resource naming for one workload, helps you choose a cluster-wide rollout mode, and validates that cluster names include the `kri_msvc_` prefix.
+  a: Apply a `ContainerPatch` to enable unified naming for one workload, then use either the default patch list or global feature flag for cluster-wide rollout and validate the resulting stat names.
 prereqs:
   inline:
     - title: Deploy the Kubernetes demo environment
