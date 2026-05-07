@@ -143,6 +143,7 @@ mistral: Mistral
 xai: xAI
 grok: Grok
 cerebras: Cerebras
+ollama: Ollama
 
 
 repos:
