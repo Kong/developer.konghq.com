@@ -13,32 +13,34 @@ tags:
   - data-plane
   - status
 
+min_version:
+  mesh: '2.13'
+
 related_resources:
   - text: MeshIdentity
-    url: /mesh/meshidentity/
+    url: /mesh/policies/meshidentity/
   - text: Data plane proxy configuration
     url: /mesh/data-plane-proxy/
   - text: Data plane proxy authentication
     url: /mesh/data-plane-proxy-authentication/
 ---
 
-The `Workload` resource represents a logical grouping of [data plane proxies](/mesh/data-plane-proxy/) that share the same workload identifier. {{site.mesh_product_name}} creates and manages `Workload` resources automatically when data plane proxies carry a `kuma.io/workload` label. On Kubernetes, set the label with a `kuma.io/workload` annotation on the pod. On Universal, set the label directly on the `Dataplane` resource.
+The `Workload` resource represents a logical grouping of [data plane proxies](/mesh/data-plane-proxy/) that share the same workload identifier. {{site.mesh_product_name}} creates and manages `Workload` resources automatically when data plane proxies carry a `kuma.io/workload` label. On Kubernetes, set the label with a `kuma.io/workload` annotation on the Pod. On Universal, set the label directly on the `Dataplane` resource.
 
 Use `Workload` resources to:
 
 * Monitor connected and healthy data plane proxies per workload.
 * Group data plane proxies by workload identifier for observability.
-* Integrate with [MeshIdentity](/mesh/meshidentity/) to assign identity based on the workload.
+* Integrate with [`MeshIdentity`](/mesh/policies/meshidentity/) to assign identity based on the workload.
 
 {:.warning}
-> {{site.mesh_product_name}} manages `Workload` resources automatically. Do not create them manually. The control plane creates a `Workload` resource when a data plane proxy with a `kuma.io/workload` label is deployed, and deletes it when no data plane proxies reference it.
-
-{:.warning}
-> **Namespace-mesh constraint on Kubernetes:** All data plane proxies that reference a `Workload` must belong to the same mesh. On Kubernetes, {{site.mesh_product_name}} enforces this at the namespace level — a single namespace cannot contain pods in multiple meshes.
+> * {{site.mesh_product_name}} manages `Workload` resources automatically. Do not create them manually. The control plane creates a `Workload` resource when a data plane proxy with a `kuma.io/workload` label is deployed, and deletes it when no data plane proxies reference it.
+> 
+> * All data plane proxies that reference a `Workload` must belong to the same mesh. On Kubernetes, {{site.mesh_product_name}} enforces this at the namespace level. A single namespace cannot contain Pods in multiple meshes.
 >
-> If {{site.mesh_product_name}} detects pods in multiple meshes within the same namespace, it emits a Kubernetes warning event on the namespace and skips `Workload` generation for the affected workload. Any existing `Workload` resource remains orphaned rather than being deleted.
+>   If {{site.mesh_product_name}} detects Pods in multiple meshes within the same namespace, it emits a Kubernetes warning event on the namespace and skips `Workload` generation for the affected workload. Any existing `Workload` resource remains orphaned rather than being deleted.
 >
-> For details on preventing this configuration issue, see the [namespace-mesh constraint documentation](/mesh/mesh-multi-tenancy/).
+>   For details on preventing this configuration issue, see the [namespace-mesh constraint documentation](/mesh/mesh-multi-tenancy/).
 
 ## Examples
 
@@ -51,7 +53,7 @@ When you deploy a data plane proxy, {{site.mesh_product_name}} generates the `ku
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
-Define a pod with a ServiceAccount. By default, {{site.mesh_product_name}} uses the ServiceAccount name as the workload identifier:
+Define a Pod with a ServiceAccount. By default, {{site.mesh_product_name}} uses the ServiceAccount name as the workload identifier:
 
 ```yaml
 apiVersion: v1
@@ -197,16 +199,21 @@ List workloads and inspect their status to monitor connected and healthy data pl
 {% navtabs "status" %}
 {% navtab "Kubernetes" %}
 
+List the workloads in the namespace:
+
 ```sh
 kubectl get workloads -n default
 ```
+
+The output shows each registered workload and its mesh:
 
 ```text
 NAME            MESH      AGE
 demo-workload   default   5m
 ```
+{:.no-copy-code}
 
-Get detailed status:
+Inspect the detailed status of a specific workload:
 
 ```sh
 kubectl get workload demo-workload -n default -o yaml
@@ -215,16 +222,21 @@ kubectl get workload demo-workload -n default -o yaml
 {% endnavtab %}
 {% navtab "Universal" %}
 
+List the workloads in the mesh:
+
 ```sh
 kumactl get workloads --mesh default
 ```
+
+The output shows each registered workload and its mesh:
 
 ```text
 NAME            MESH      AGE
 demo-workload   default   5m
 ```
+{:.no-copy-code}
 
-Get detailed status:
+Inspect the detailed status of a specific workload:
 
 ```sh
 kumactl get workload demo-workload --mesh default -o yaml
@@ -237,28 +249,28 @@ kumactl get workload demo-workload --mesh default -o yaml
 
 The `kuma.io/workload` label determines which `Workload` resource a data plane proxy belongs to.
 
-### On Kubernetes
+### Kubernetes
 
-{{site.mesh_product_name}} generates the `kuma.io/workload` label for each pod using the following logic:
+On Kubernetes, {{site.mesh_product_name}} generates the `kuma.io/workload` label for each Pod using the following logic:
 
-1. Automatic from pod labels: If `runtime.kubernetes.workloadLabels` is configured in the control plane, {{site.mesh_product_name}} checks each pod label in the configured priority order and uses the first non-empty value.
-1. Fallback to ServiceAccount: If no configured labels exist or all are empty, {{site.mesh_product_name}} uses the pod's ServiceAccount name.
+1. Automatic from Pod labels: If `runtime.kubernetes.workloadLabels` is configured in the control plane, {{site.mesh_product_name}} checks each Pod label in the configured priority order and uses the first non-empty value.
+1. Fallback to ServiceAccount: If no configured labels exist or all are empty, {{site.mesh_product_name}} uses the Pod's ServiceAccount name.
 1. Default behavior: By default, `workloadLabels` is empty, so {{site.mesh_product_name}} uses the ServiceAccount name.
 
-You cannot set `kuma.io/workload` manually as a pod label — {{site.mesh_product_name}} rejects pod creates and updates that include it.
+You cannot set `kuma.io/workload` manually as a Pod label. {{site.mesh_product_name}} rejects Pod creates and updates that include it.
 
-### On Universal
+### Universal
 
-Set the `kuma.io/workload` label directly in the `Dataplane` resource's inbound tags.
+On Universal, set the `kuma.io/workload` label directly in the `Dataplane` resource's inbound tags.
 
 {:.warning}
 > The `kuma.io/workload` label on a data plane proxy must match the `Workload` resource name exactly. All data plane proxies that reference a `Workload` must belong to the same mesh.
 
 ## Limitations
 
-* Single mesh: All data plane proxies that reference a workload must belong to the same mesh. On Kubernetes, {{site.mesh_product_name}} enforces this at the namespace level — a single namespace cannot contain pods in multiple meshes. When a namespace violates the constraint, {{site.mesh_product_name}} skips `Workload` generation and emits a warning event.
-* Automatic lifecycle: You cannot create or modify a `Workload` manually. The control plane fully manages the resource.
-* Runtime enforcement: To prevent multi-mesh namespaces proactively, enable the [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/) flag. With the flag enabled, the admission webhook rejects pod creates or updates when the namespace already contains `Dataplane` resources in a different mesh.
+* Single mesh: All data plane proxies that reference a workload must belong to the same mesh. On Kubernetes, {{site.mesh_product_name}} enforces this at the namespace level. A single namespace can't contain Pods in multiple meshes. When a namespace violates the constraint, {{site.mesh_product_name}} skips the `Workload` generation and emits a warning event.
+* Automatic lifecycle: You can't create or modify a `Workload` manually. The control plane fully manages the resource.
+* Runtime enforcement: To prevent multi-mesh namespaces proactively, enable the [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/reference/kuma-cp/) flag. With the flag enabled, the admission webhook rejects Pod creation and Pod updates when the namespace already contains `Dataplane` resources in a different mesh.
 
 ## Troubleshooting
 
@@ -269,9 +281,9 @@ If {{site.mesh_product_name}} is not creating `Workload` resources as expected, 
 kubectl get events -n <namespace> --field-selector type=Warning
 ```
 
-Look for events with the message: "Skipping Workload generation: namespace has pods in multiple meshes for workload. This configuration is not supported."
+Look for events with the message: `Skipping Workload generation: namespace has pods in multiple meshes for workload. This configuration is not supported.`
 
-Identify pods and their meshes:
+Identify Pods and their meshes:
 
 ```sh
 kubectl get pods -n <namespace> -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.annotations.kuma\.io/mesh}{"\n"}{end}'
@@ -281,9 +293,9 @@ kubectl get pods -n <namespace> -o jsonpath='{range .items[*]}{.metadata.name}{"
 
 To resolve a multi-mesh namespace conflict:
 
-1. Identify affected pods: Use the command above to list all pods and their mesh assignments in the namespace.
-1. Reorganize workloads: Move pods that belong to different meshes into separate namespaces.
-1. Optional — enable proactive prevention: Set `runtime.kubernetes.disallowMultipleMeshesPerNamespace=true` in the control plane configuration to prevent the issue from recurring.
+1. Identify affected Pods: Use the command above to list all Pods and their mesh assignments in the namespace.
+1. Reorganize workloads: Move Pods that belong to different meshes into separate namespaces.
+1. (Optional) Enable proactive prevention: Set `runtime.kubernetes.disallowMultipleMeshesPerNamespace=true` in the control plane configuration to prevent the issue from recurring.
 
 ## Schema
 
