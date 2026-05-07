@@ -36,7 +36,9 @@ Create multiple meshes to isolate services by team, environment, or security req
 {:.warning}
 > On Kubernetes, a single namespace cannot contain pods from multiple meshes. To enforce one mesh per namespace, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/). For details, see the [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies).
 
-## Spec fields
+## Configuration reference
+
+The following fields configure mTLS, networking, routing, membership, and service generation for a `Mesh` resource:
 
 {% table %}
 columns:
