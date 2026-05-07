@@ -13,7 +13,7 @@ tags:
   - observability
 tldr:
   q: How do I progressively roll out unified resource naming?
-  a: Apply a `ContainerPatch` to enable unified naming for one workload, then use either the default patch list or global feature flag for cluster-wide rollout and validate the resulting stat names.
+  a: Apply a `ContainerPatch` to one workload, verify stats, then roll out cluster-wide with a default patch list or global feature flag.
 prereqs:
   inline:
     - title: Deploy the Kubernetes demo environment
