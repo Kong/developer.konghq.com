@@ -8,6 +8,8 @@ description: Create a new Insomnia project and enable Git Sync.
 products:
 - insomnia
 
+tech_preview: true
+
 tags:
 - insomnia-documents
 - collections

@@ -8,6 +8,10 @@ description: Use the native Git CLI at the root of an Insomnia project.
 products:
 - insomnia
 
+beta: true
+min_version:
+  insomnia: "beta-12.6"
+
 tags:
 - insomnia-documents
 - collections
