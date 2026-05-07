@@ -140,6 +140,8 @@ amazon: Amazon
 cohere: Cohere
 hugging_face: Hugging Face
 mistral: Mistral
+xai: xAI
+grok: Grok
 
 
 repos:
