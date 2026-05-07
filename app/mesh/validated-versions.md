@@ -27,7 +27,7 @@ related_resources:
 
 ## Kubernetes
 
-The following table presents versions of {{site.mesh_product_name}} validated against specific Kubernetes versions.
+The table below shows the Kubernetes versions explicitly tested in our CI pipeline. Versions not listed haven't been validated, but may still be compatible with {{site.mesh_product_name}}.
 
 {% version_compatibility_table %}
 product: "{{site.mesh_product_name}}"
