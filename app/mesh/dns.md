@@ -28,7 +28,7 @@ The usage of {{site.mesh_product_name}} DNS is only relevant when [transparent p
 
 {{site.mesh_product_name}} DNS server responds to type `A` and `AAAA` DNS requests, and answers with `A` or `AAAA` records, for example `redis.mesh. 60 IN A 240.0.0.100` or `redis.mesh. 60 IN AAAA fd00:fd00::100`.
 
-The virtual IPs are allocated by the control plane from the configured CIDR (by default `240.0.0.0/4`) , by constantly scanning the services available in all {{site.mesh_product_name}} meshes.
+The virtual IPs are allocated by the control plane from the configured CIDR (by default `240.0.0.0/4`), by constantly scanning the services available in all {{site.mesh_product_name}} meshes.
 When a service is removed, its VIP is also freed, and {{site.mesh_product_name}} DNS does not respond for it with `A` and `AAAA` DNS record.
 Virtual IPs are stable (replicated) between instances of the control plane and data plane proxies.
 
@@ -164,7 +164,7 @@ bootstrapServer:
   corefileTemplatePath: "/path/to/mounted-corefile-template" # ENV: KUMA_BOOTSTRAP_SERVER_PARAMS_COREFILE_TEMPLATE_PATH
 ```
 
-Please make sure the file path do exist on disk.
+Please make sure the file path does exist on disk.
 {% endif_version %}
 
 To override DNS configuration from data planes, use `--dns-coredns-config-template-path` as an argument to `kuma-dp`. {% if_version gte:2.6.x %}When the data plane is connecting to a control plane that also has DNS configuration overridden, overridden from data plane will take precedence.{% endif_version %}
