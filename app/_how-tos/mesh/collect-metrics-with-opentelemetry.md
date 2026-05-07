@@ -56,7 +56,7 @@ The quickstart guide applies restrictive `MeshTrafficPermission` policies, so al
 echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
-  namespace: {{site.mesh_namespace}}
+  namespace: {{ site.mesh_namespace }}
   name: allow-observability
 spec:
   targetRef:
@@ -224,7 +224,7 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshMetric
 metadata:
   name: otel-metrics
-  namespace: {{site.mesh_namespace}}
+  namespace: {{ site.mesh_namespace }}
   labels:
     kuma.io/mesh: default
 spec:
@@ -244,7 +244,7 @@ echo 'apiVersion: kuma.io/v1alpha1
 kind: MeshMetric
 metadata:
   name: otel-metrics
-  namespace: {{site.mesh_namespace}}
+  namespace: {{ site.mesh_namespace }}
   labels:
     kuma.io/mesh: default
 spec:
