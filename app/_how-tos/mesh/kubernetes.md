@@ -31,7 +31,7 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-cluster
 ---
 
-To start learning how {{site.mesh_product_name}} works, you run and secure a simple demo application that consists of two services:
+To start learning how {{site.mesh_product_name}} works, run and secure a simple demo application that consists of two services:
 
 - `demo-app`: a web application that lets you increment a numeric counter. It listens on port 5000
 - `redis`: data store for the counter
