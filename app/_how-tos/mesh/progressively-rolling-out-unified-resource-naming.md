@@ -29,7 +29,7 @@ sum:envoy.cluster.upstream_rq.count{service:my-example-service, !envoy_cluster:k
 
 is not intuitive and does not point cleanly back to the right {{site.mesh_product_name}} resource. Different resources and their related stats often look unrelated, even when they describe the same traffic path.
 
-Starting with 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This improves observability, simplifies queries, and makes it much easier to understand what is happening in the mesh.
+Starting with Kong Mesh 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This improves observability, simplifies queries, and makes it much easier to understand what is happening in the mesh.
 
 ## Create a ContainerPatch
 
@@ -94,11 +94,15 @@ Inspect sidecar stats to confirm that unified naming is applied.
    curl -s localhost:9901/stats | grep -i kri
    ```
 
+   This command filters for `kri` entries, which are part of the unified resource naming format.
+
 You should see entries that map directly to {{site.mesh_product_name}} resources, for example:
 
 ```text
 cluster.kri_msvc_default_us-east-2_kuma-demo_demo-app_http
 ```
+
+In this format, `msvc` identifies a `MeshService`, while the remaining segments identify the mesh, zone, namespace, Service name, and section.
 
 These names show the `MeshService` resource (`demo-app`) and section (`http`) clearly, making them easier to connect back to the original {{site.mesh_product_name}} resource.
 
