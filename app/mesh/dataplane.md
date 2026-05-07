@@ -22,8 +22,8 @@ related_resources:
     url: /mesh/data-plane-universal/
   - text: Transparent proxying
     url: /mesh/transparent-proxying/
-  - text: Service health probes
-    url: /mesh/policies/service-health-probes/
+  - text: Data plane health
+    url: /mesh/dataplane-health/
   - text: Built-in gateways
     url: /mesh/built-in-gateway/
 ---
@@ -131,7 +131,7 @@ networking:
 
 ### Dataplane with service probes
 
-Configure [health probes](/mesh/policies/service-health-probes/) so {{site.mesh_product_name}} can detect when the workload becomes unhealthy and stop routing traffic to it:
+Configure [health probes](/mesh/dataplane-health/) so {{site.mesh_product_name}} can detect when the workload becomes unhealthy and stop routing traffic to it:
 
 ```yaml
 type: Dataplane
