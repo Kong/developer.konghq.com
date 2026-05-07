@@ -16,7 +16,7 @@ related_resources:
   - text: Configuring your mesh and multi-tenancy
     url: /mesh/mesh-multi-tenancy/
   - text: Mutual TLS
-    url: /mesh/mutual-tls/
+    url: /mesh/policies/mutual-tls/
   - text: Data plane proxy membership
     url: /mesh/configure-data-plane-proxy-membership/
   - text: Non-mesh traffic
@@ -34,7 +34,7 @@ Create multiple meshes to isolate services by team, environment, or security req
 {{site.mesh_product_name}} creates a `default` mesh automatically on startup. To disable automatic creation, set `KUMA_DEFAULTS_SKIP_MESH_CREATION=true`.
 
 {:.warning}
-> On Kubernetes, a single namespace cannot contain pods from multiple meshes. To enforce one mesh per namespace, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/kuma-cp-reference/). For details, see the [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies).
+> On Kubernetes, a single namespace cannot contain pods from multiple meshes. To enforce one mesh per namespace, enable [`runtime.kubernetes.disallowMultipleMeshesPerNamespace`](/mesh/reference/kuma-cp/). For details, see the [namespace-mesh constraint](/mesh/mesh-multi-tenancy/#data-plane-proxies).
 
 ## Configuration reference
 
@@ -48,7 +48,7 @@ columns:
     key: description
 rows:
   - field: "`mtls`"
-    description: "Configures mTLS with CA backends. See [Mutual TLS](/mesh/mutual-tls/)."
+    description: "Configures mTLS with CA backends. See [Mutual TLS](/mesh/policies/mutual-tls/)."
   - field: "`networking.outbound.passthrough`"
     description: "Allows traffic to unknown destinations. Default: `true`. See [Non-mesh traffic](/mesh/policies/meshpassthrough/)."
   - field: "`routing.zoneEgress`"
