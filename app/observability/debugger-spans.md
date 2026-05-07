@@ -64,7 +64,7 @@ rows:
   - name: "`proxy.kong.request.time`"
     description: Time taken to process this request as measured from reading the first byte from the client, to writing the last byte to the client. Logging handler time is not part of this calculation.
   - name: "`proxy.kong.http.request.body.size`"
-    description: Request body length in bytes
+    description: Request body length in bytes. Request Header size is not included
   - name: "`http.request.size`"
     description: Request body size and request headers size in bytes
   - name: "`proxy.kong.http.response.body.size`"
