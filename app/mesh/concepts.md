@@ -95,8 +95,6 @@ A resource is most often expressed as YAML and can have 2 formats:
 - `Kubernetes` when the backing control plane runs on Kubernetes. In this case {{ site.mesh_product_name }} resources are defined as Kubernetes Custom Resource Definitions.
 - `Universal` in other cases or when accessing resources through {{ site.mesh_product_name }}'s REST API.
 
-Resources are most commonly represented in YAML format.
-
 ### Policy
 
 Policies are a specific type of resources that controls the behavior and communication of applications running inside your service mesh.
