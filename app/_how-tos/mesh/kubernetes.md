@@ -48,17 +48,6 @@ demo-app --> redis
 {% endmermaid %}
 
 
-## Start a Kubernetes cluster
-
-Start a new Kubernetes cluster on your local machine by executing the command below. The `-p` option creates a new profile named `mesh-zone`.
-
-```sh
-minikube start -p mesh-zone
-```
-
-{:.info}
-> You can skip this step if you already have a Kubernetes cluster running. It can be a cluster running locally or in a public cloud like AWS EKS or GCP GKE.
-
 ## Install {{site.mesh_product_name}}
 
 Install {{site.mesh_product_name}} control plane with Helm by executing:
