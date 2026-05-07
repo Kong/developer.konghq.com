@@ -61,6 +61,15 @@ sections:
       - path: /mesh/version-specific-upgrade-notes/
       - path: /mesh/migration-to-the-new-policies/
 
+  - title: Resource References
+    items:
+      - path: /mesh/meshgateway/
+      - path: /mesh/meshgatewayinstance/
+      - path: /mesh/dataplane/
+      - path: /mesh/meshexternalservice/
+      - path: /mesh/meshmultizoneservice/
+      - path: /mesh/meshservice/
+
   - title: Policies
     items:
       - path: /mesh/policies-introduction/
@@ -68,9 +77,6 @@ sections:
       - path: /mesh/policies/**/*
       - path: /mesh/acm-private-ca-policy/
       - path: /mesh/cert-manager/
-      - path: /mesh/meshexternalservice/
-      - path: /mesh/meshmultizoneservice/
-      - path: /mesh/meshservice/
       - path: /mesh/hostnamegenerator/
       - path: /mesh/vault/
     auto_exclude: true
@@ -79,10 +85,8 @@ sections:
     items:
       - path: /how-to/set-up-a-built-in-mesh-gateway/
       - path: /mesh/built-in-gateway/
-      - path: /mesh/meshgateway/
       - path: /mesh/gateway-routes/
       - path: /how-to/set-up-a-built-in-kubernetes-gateway/
-      - path: /mesh/meshgatewayinstance/
       - path: /mesh/kubernetes-gateway-api/
 
   - title: Delegated Gateways
