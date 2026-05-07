@@ -30,7 +30,7 @@ related_resources:
 
 The `Dataplane` resource configures a [data plane proxy](/mesh/data-plane-proxy/) (also called a sidecar). The proxy runs alongside each workload and handles all inbound and outbound traffic for that workload.
 
-On Kubernetes, {{site.mesh_product_name}} generates `Dataplane` resources automatically when the sidecar is injected into a Pod. On Universal, create `Dataplane` resources manually to register workloads with the mesh.
+On Kubernetes, {{site.mesh_product_name}} generates `Dataplane` resources automatically when the sidecar is injected into a Pod. On Universal, you must create `Dataplane` resources manually to register workloads with the mesh.
 
 Each `Dataplane` belongs to exactly one mesh.
 
