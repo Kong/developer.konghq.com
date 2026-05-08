@@ -72,6 +72,13 @@ rows:
       - blocks:
         - type: icon_card
           config:
+            title: Vercel
+            icon: /assets/icons/Vertex.svg
+            cta:
+              url: /ai-gateway/ai-providers/vercel/
+      - blocks:
+        - type: icon_card
+          config:
             title: Anthropic
             icon: /assets/icons/anthropic.svg
             cta:
