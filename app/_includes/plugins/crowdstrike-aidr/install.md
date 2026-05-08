@@ -6,7 +6,7 @@ It depends on the `kong-plugin-crowdstrike-aidr-shared` library, which is includ
 Before installing the plugin, ensure you have the following:
 
 * [CrowdStrike customer account](https://www.crowdstrike.com/en-us/login/) in one of the following clouds: US-1, US-2, or EU-1
-* [**AIDR for Agents** Falcon subscription](https://www.crowdstrike.com/en-us/platform/falcon-aidr-ai-detection-and-response/)
+* [**AIDR for Agents** Falcon subscription](https://pangea.cloud/docs/aidr/get-started/agents)
 * [**AIDR Admin** role](https://pangea.cloud/docs/aidr#roles-and-permissions) assigned to your Falcon user for the current customer account
 * HTTP access to AIDR API origins
 * A running {{site.base_gateway}} installation
@@ -39,8 +39,6 @@ The following installation steps install and build the `{{include.plugin_slug}}`
 
 In {{site.konnect_short_name}} hybrid mode, upload the plugin schema to the control plane and deploy the plugin code to each data plane node using a custom Docker image.
 
-Upload the plugin schema to the control plane:
-
 1. Clone the plugin repository:
 
    ```sh
@@ -53,7 +51,7 @@ Upload the plugin schema to the control plane:
    cd aidr-kong
    ```
 
-1. Set your credentials in your environment:
+1. Set the credentials in your environment:
 
    ```sh
    export KONNECT_CP_ID="your-control-plane-id"
@@ -70,9 +68,7 @@ Upload the plugin schema to the control plane:
      --data "{\"lua_schema\": $(jq -Rs . kong/plugins/{{include.plugin_slug}}/schema.lua)}"
    ```
 
-   Your control plane ID is visible in the {{site.konnect_short_name}} Gateway Manager URL.
-
-Deploy the plugin to data plane nodes:
+   Your control plane ID is visible in the {{site.konnect_short_name}} Gateway Manager URL, or on the control plane's overview page.
 
 1. Build the custom {{site.base_gateway}} image using the Dockerfile in the repository:
 
@@ -111,31 +107,29 @@ Deploy the plugin to data plane nodes:
 {% endnavtab %}
 {% navtab "Docker" %}
 
-Build a custom {{site.base_gateway}} image with the plugin installed from the source repository:
+1. Build a custom {{site.base_gateway}} image with the plugin installed from the source repository:
 
-```dockerfile
-FROM kong/kong-gateway:latest
+   ```dockerfile
+   FROM kong/kong-gateway:latest
 
-USER root
+   USER root
 
-COPY ./kong /kong
-COPY ./kong-plugin-crowdstrike-aidr-*.rockspec /
+   COPY ./kong /kong
+   COPY ./kong-plugin-crowdstrike-aidr-*.rockspec /
 
-RUN luarocks make kong-plugin-crowdstrike-aidr-shared-*.rockspec \
-  && luarocks make kong-plugin-{{include.plugin_slug}}-*.rockspec
+   RUN luarocks make kong-plugin-crowdstrike-aidr-shared-*.rockspec \
+   && luarocks make kong-plugin-{{include.plugin_slug}}-*.rockspec
 
-ENV KONG_PLUGINS=bundled,{{include.plugin_slug}}
+   ENV KONG_PLUGINS=bundled,{{include.plugin_slug}}
 
-USER kong
+   USER kong
 
-ENTRYPOINT ["/entrypoint.sh"]
-EXPOSE 8000 8443 8001 8444
-STOPSIGNAL SIGQUIT
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
-CMD ["kong", "docker-start"]
-```
-
-Clone the repository and build the image:
+   ENTRYPOINT ["/entrypoint.sh"]
+   EXPOSE 8000 8443 8001 8444
+   STOPSIGNAL SIGQUIT
+   HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
+   CMD ["kong", "docker-start"]
+   ```
 
 1. Clone the plugin repository:
 
@@ -155,7 +149,7 @@ Clone the repository and build the image:
    docker build -t kong-plugin-crowdstrike-aidr .
    ```
 
-{:.info}
+{:.warning}
 > This Dockerfile is purposely abbreviated to show only the plugin installation piece.
 To launch {{site.base_gateway}} completely with all dependencies, configuration, and optionally a database, install the plugin `.rockspec` files locally using `luarocks`, then see the [Gateway with Docker Compose installation](/gateway/install/docker/) instructions, adjusting the file by adding `KONG_PLUGINS: bundled,{{include.plugin_slug}}` under `environment`.
 

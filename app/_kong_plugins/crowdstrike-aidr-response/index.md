@@ -46,13 +46,13 @@ related_resources:
 The {{page.name}} plugin intercepts LLM responses before they are returned to the client, evaluating them against CrowdStrike's AIDR [output rules](https://aidr-docs.crowdstrike.com/docs/aidr/policies/prompt-rules) in real time.
 Responses that violate your security policies can be redacted, masked, or blocked at the gateway. No application code changes required.
 
-{:.info}
-> Use this plugin together with the [CrowdStrike Falcon AIDR Request plugin](/plugins/crowdstrike-aidr-request/) to protect both sides of your AI traffic.
-
 Integrating the {{page.name}} plugin into your {{site.base_gateway}} allows you to:
 * **Redact PII and sensitive data from LLM output**: Automatically mask or remove sensitive content before it reaches the client.
 * **Block non-compliant LLM responses**: Enforce output rules to prevent harmful, restricted, or policy-violating content from being delivered.
 * **Centralize AI security visibility**: Stream audit events to the CrowdStrike Falcon AIDR console and Next-Gen SIEM without modifying your application.
+
+{:.info}
+> Use this plugin together with the [CrowdStrike Falcon AIDR Request plugin](/plugins/crowdstrike-aidr-request/) to protect both sides of your AI traffic.
 
 ## How it works
 
@@ -68,17 +68,19 @@ autonumber
     participant AIDR as CrowdStrike Falcon AIDR
 
     Client->>LLM: Send request (via {{site.base_gateway}})
-    LLM-->>Plugin: Return LLM response
+    LLM->>Plugin: Return LLM response
     Plugin->>AIDR: Submit response against output rules
-    AIDR-->>Plugin: Verdict
+    AIDR->>Plugin: Verdict
 
-    alt Response flagged
+    alt If response is flagged
         Plugin->>Client: Return blocked or redacted response
-    else Response allowed
+    else If response is allowed
         Plugin->>Client: Return LLM response
     end
 {% endmermaid %}
 <!-- vale on-->
+
+_**Figure 1**: Response flow showing how the {{page.name}} plugin evaluates LLM responses against CrowdStrike Falcon AIDR output rules. Flagged responses are blocked or redacted (step 5), while allowed responses are returned to the client (step 6)._
 
 ### LLM support
 

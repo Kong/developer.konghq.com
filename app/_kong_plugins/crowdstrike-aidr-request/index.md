@@ -46,13 +46,13 @@ related_resources:
 The {{page.name}} plugin intercepts AI prompts before they reach the upstream LLM, evaluating them against CrowdStrike's AIDR [input rules](https://aidr-docs.crowdstrike.com/docs/aidr/policies/prompt-rules) in real time.
 Requests that violate your security policies are blocked at the gateway, with no application code changes required.
 
-{:.info}
-> Use this plugin together with the [CrowdStrike Falcon AIDR Response plugin](/plugins/crowdstrike-aidr-response/) to protect both sides of your AI traffic.
-
 Integrating the {{page.name}} plugin into your {{site.base_gateway}} allows you to:
 * **Block prompt injection and jailbreak attempts**: Evaluate every incoming prompt against configurable input rules before it reaches the LLM.
 * **Enforce compliance and data policies**: Prevent sensitive data such as PII and credentials from being submitted to the LLM.
 * **Centralize AI security visibility**: Stream audit events to the CrowdStrike Falcon AIDR console and Next-Gen SIEM without modifying your application.
+
+{:.info}
+> Use this plugin together with the [CrowdStrike Falcon AIDR Response plugin](/plugins/crowdstrike-aidr-response/) to protect both sides of your AI traffic.
 
 ## How it works
 
@@ -71,16 +71,18 @@ autonumber
 
     Client->>Plugin: Send request with user prompt
     Plugin->>AIDR: Submit prompt against input rules
-    AIDR-->>Plugin: Verdict
+    AIDR->>Plugin: Verdict
 
-    alt Prompt flagged
+    alt If prompt is flagged
         Plugin->>Client: Return 400 Bad Request
-    else Prompt allowed
+    else If prompt is allowed
         Plugin->>LLM: Forward request
-        LLM-->>Client: Return LLM response
+        LLM->>Client: Return LLM response
     end
 {% endmermaid %}
 <!-- vale on-->
+
+_**Figure 1**: Request flow showing how the {{page.name}} plugin evaluates user prompts against CrowdStrike Falcon AIDR input rules. Flagged prompts are blocked with a 400 error (step 4), while allowed prompts are forwarded to the LLM (steps 5-6)._
 
 ### LLM support
 
