@@ -26,6 +26,8 @@ related_resources:
 
 When you set up a tracing session with [{{site.konnect_short_name}} Debugger](/observability/debugger/), it collects and reports spans that are part of the request-response flow.
 The following sections describe the spans that are available in the {{site.konnect_short_name}} Debugger.
+
+In this page, `3p` or `3rd party` means any network interaction that falls outside the main client -> Kong -> upstream request flow, such as DNS lookups or calls from Kong to external services like auth providers, Redis, or metadata APIs.
 <!--vale off-->
 ### kong
 
