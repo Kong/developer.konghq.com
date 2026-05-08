@@ -7,7 +7,7 @@ When you send a request to any {{site.dev_portal}} URL using the `Accept: text/m
 
 For example:
 ```sh
-curl https://portal.kongair.com/guides/prices \
+curl https://portal.kongair.dev/guides/flights \
   -H "Accept: text/markdown"
 ```
 
