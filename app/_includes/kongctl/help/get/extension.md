@@ -1,28 +1,6 @@
 ```ansi
 Usage:
-  kongctl list gateway control-plane [flags]
-  kongctl list gateway control-plane [command]
-
-Aliases:
-  control-plane, control-planes, controlplane, controlplanes, cp, cps, CP, CPS
-
-Examples:
-  # List all the control planes for the authorized user
-  kongctl get konnect gateway control-planes
-  # Get details for a control plane with a specific ID
-  kongctl get konnect gateway control-plane 22cd8a0b-72e7-4212-9099-0764f8e9c5ac
-  # Get details for a control plane with a specific name
-  kongctl get konnect gateway control-plane my-control-plane
-  # List data plane certificates for a specific control plane
-  kongctl get konnect gateway control-plane data-plane-certificates --control-plane-name my-control-plane
-  # Get all the control planes for the authorized user using command aliases
-  kongctl get k gw cps
-
-Available Commands:
-  consumer                List or get Konnect Kong Gateway Consumers
-  data-plane-certificates List or get Konnect Kong Gateway data plane certificates
-  route                   List or get Konnect Kong Gateway Routes
-  service                 List or get Konnect Kong Gateway Services
+  kongctl get extension <publisher/name> [flags]
 
 
 Flags:
@@ -35,7 +13,7 @@ Flags:
                                 - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string      Path to the configuration file to load.
                                 - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                    help for control-plane
+  -h, --help                    help for extension
       --jq string               Filter JSON responses using jq expressions (powered by gojq for full jq compatibility)
       --jq-color string         Controls colorized output for jq filter results.
                                 - Config path: [ jq.color.enabled ]
@@ -56,13 +34,11 @@ Flags:
                                 - Allowed    : [ json|yaml|text ] (default "text")
       --page-size int           Max number of results to include per response page for get and list operations.
                                 - Config path: [ konnect.page-size ] (default 10)
-      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI. 
+      --pat string              Konnect Personal Access Token (PAT) used to authenticate the CLI.
                                 Setting this value overrides tokens obtained from the login command.
                                 - Config path: [ konnect.pat ]
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
-
-Use "kongctl list gateway control-plane [command] --help" for more information about a command.
 
 ```
