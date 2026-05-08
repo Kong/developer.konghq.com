@@ -40,6 +40,9 @@ rows:
       [kongctl list dcr-provider](/kongctl/list/dcr-provider/)
     description: "List DCR providers."
   - command: |
+      [kongctl list extensions](/kongctl/list/extensions/)
+    description: "List installed kongctl CLI extensions."
+  - command: |
       [kongctl list gateway](/kongctl/list/gateway/)
     description: "List gateways."
   - command: |
