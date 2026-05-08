@@ -10,9 +10,6 @@ min_version:
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-breadcrumbs:
-  - /ai-gateway/
-  - /ai-gateway/entities/
 description: "Policies for {{site.ai_gateway}}."
 schema:
   api: konnect/ai-gateway
