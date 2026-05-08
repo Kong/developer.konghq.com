@@ -50,11 +50,11 @@ Periodically, the data plane polls the control plane for configuration updates.
 Depending on the type of configuration update, the connection between the Kafka client and the backend can be affected:
 * Updates to virtual cluster policies don't cause a connection drop. Policies reload dynamically and take effect on the next request.
 * Updates to any other part of the configuration (for example, listener policies, auth, or namespaces in virtual clusters) cause a connection drop.
-When the data plane receives configuration updates, it restarts the running proxy services.
+When the data plane receives configuration updates, it restarts the proxy services.
 
-If a connection drop occurs, the Kafka client is designed to handle short-lived breaks in connections.
+The Kafka client is designed to handle short-lived connection drops.
 
-The components of the high-level architecture can be visualized like this:
+The following diagram illustrates the high-level architecture:
 
 <!--vale off-->
 {% mermaid %}
@@ -96,7 +96,7 @@ The DP proxies Kafka client traffic through virtual clusters to backend Kafka cl
 
 In {{site.event_gateway_short}}, an entity is a component or object that makes up the {{site.event_gateway_short}} and its ecosystem. 
 Entities represent the various building blocks used to configure and manage {{site.event_gateway_short}}, and each entity has a specific role.
-All the configurations of the entities that run on the data plane live in the control plane. 
+Configuration for entities running on the data plane is stored in the control plane.
 
 {{site.event_gateway_short}}'s workflow is composed of the following core entities:
 
