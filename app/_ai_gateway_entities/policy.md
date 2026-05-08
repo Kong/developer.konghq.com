@@ -5,6 +5,11 @@ entities:
   - ai-policy
 products:
   - ai-gateway
+min_version:
+  ai-gateway: '2.0.0'
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/

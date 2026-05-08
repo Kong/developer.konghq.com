@@ -5,6 +5,11 @@ entities:
   - ai-agent
 products:
   - ai-gateway
+min_version:
+  ai-gateway: '2.0.0'
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 description: Agent entity used by {{site.ai_gateway}} for A2A and HTTP agent configurations.
 schema:
   api: konnect/ai-gateway

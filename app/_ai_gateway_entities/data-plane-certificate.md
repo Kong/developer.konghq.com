@@ -5,6 +5,11 @@ entities:
   - ai-data-plane-certificate
 products:
   - ai-gateway
+min_version:
+  ai-gateway: '2.0.0'
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 description: Client certificates that authorize data planes to connect to an {{site.ai_gateway}}.
 schema:
   api: konnect/ai-gateway

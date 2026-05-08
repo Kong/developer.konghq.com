@@ -5,6 +5,11 @@ entities:
   - ai-gateway
 products:
   - ai-gateway
+min_version:
+  ai-gateway: '2.0.0'
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 description: The top-level {{site.ai_gateway}} entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
 schema:
   api: konnect/ai-gateway

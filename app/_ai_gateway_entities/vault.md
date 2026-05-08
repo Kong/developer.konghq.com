@@ -5,6 +5,11 @@ entities:
   - ai-vault
 products:
   - ai-gateway
+min_version:
+  ai-gateway: '2.0.0'
+breadcrumbs:
+  - /ai-gateway/
+  - /ai-gateway/entities/
 description: Vaults for storing and referencing secrets used by {{site.ai_gateway}} entities.
 schema:
   api: konnect/ai-gateway
