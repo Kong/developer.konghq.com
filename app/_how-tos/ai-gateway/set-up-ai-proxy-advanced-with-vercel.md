@@ -19,7 +19,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.14'
+  gateway: '2.0.0'
 
 plugins:
   - ai-proxy-advanced
@@ -45,7 +45,7 @@ prereqs:
   inline:
     - title: Vercel
       include_content: prereqs/vercel
-      icon_url: /assets/icons/vercel.svg
+      icon_url: /assets/icons/gateway.svg
   entities:
     services:
       - example-service
