@@ -108,7 +108,7 @@ rows:
   - name: "`proxy.kong.latency.total`"
     description: Time between the first byte into Kong and the last byte out of Kong
   - name: "`proxy.kong.latency.internal`"
-    description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and third party I/O.
+    description: Time taken by Kong to process the request. Excludes client and upstream read/write times, and third party I/O. This is the actual contribution of Kong itself to the latency of the request.
   - name: "`http.request.header.connection`"
     description: The value of the `Connection` header if present. A value of `close` implies that the client does not want to use KeepAlive.
   - name: "`proxy.kong.client.connection.request_count`"
@@ -125,7 +125,7 @@ rows:
 <!--vale on-->
 ### kong.phase.certificate
 
-A span capturing the execution of the `certificate` phase of request processing. Any plugins configured for running in this phase will show up as individual child spans.
+A span capturing the execution of the `certificate` phase of request processing. Any plugins configured for running in this phase will show up as individual child spans. This phase runs before the TLS handshake happens. Plugins usually use this phase to setup the server certificate they want to present to clients.
 
 ### kong.certificate.plugin.plugin_name
 
@@ -154,7 +154,7 @@ rows:
 {{instance_id}}
 
 ## kong.tls_handshake
-A span that captures the execution of the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake, which may be prolonged due to slow client behavior.
+A span that captures the TLS handshake between the client and Kong. This span includes any I/O operations involved in the handshake. Long span times are almost always indicative of slow clients, clients that are many hops away or are connecting over high latency connections.
 
 ### kong.read_client_http_headers
 A span capturing the time taken to read HTTP headers from the client. 
