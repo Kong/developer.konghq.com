@@ -1,21 +1,9 @@
 ```ansi
 Usage:
-  kongctl install [flags]
-  kongctl install [command]
+  kongctl upgrade extension [publisher/name|owner/repo[@tag|ref|version]] [flags]
 
-Examples:
-  # Install a kongctl extension
-  kongctl install extension
-  
-  # Install kongctl skills into the current repository
-  kongctl install skills
-  
-  # Show what would be written without changing files
-  kongctl install skills --dry-run
-
-Available Commands:
-  extension   Install a kongctl CLI extension
-  skills      Install kongctl agent skills
+Aliases:
+  extension, extensions
 
 
 Flags:
@@ -25,7 +13,7 @@ Flags:
                              - Reference  : [ https://github.com/lrstanley/bubbletint/blob/master/DEFAULT_TINTS.md ] (default "kong-light")
       --config-file string   Path to the configuration file to load.
                              - Default: [ $XDG_CONFIG_HOME/kongctl/config.yaml ]
-  -h, --help                 help for install
+  -h, --help                 help for extension
       --log-file string      Write execution logs to the specified file instead of STDERR.
                              - Config path: [ log-file ]
       --log-level string     Configures the logging level. Execution logs are written to STDERR.
@@ -35,7 +23,6 @@ Flags:
                              - Config path: [ output ]
                              - Allowed    : [ json|yaml|text ] (default "text")
   -p, --profile string       Specify the profile to use for this command. (default "default")
-
-Use "kongctl install [command] --help" for more information about a command.
+      --yes                  Accept the remote extension trust prompt.
 
 ```

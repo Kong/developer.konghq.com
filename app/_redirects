@@ -7,6 +7,12 @@
 /kongctl/delete/konnect/*  /kongctl/delete/
 /kongctl/delete/portal/    /kongctl/delete/
 /kongctl/delete/portal/*   /kongctl/delete/
+/kongctl/get/gateway/consumer/   /kongctl/get/gateway/
+/kongctl/get/gateway/route/      /kongctl/get/gateway/
+/kongctl/get/gateway/service/    /kongctl/get/gateway/
+/kongctl/list/gateway/consumer/  /kongctl/list/gateway/
+/kongctl/list/gateway/route/     /kongctl/list/gateway/
+/kongctl/list/gateway/service/   /kongctl/list/gateway/
 
 # Plugin examples
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
