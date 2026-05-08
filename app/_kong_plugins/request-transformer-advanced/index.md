@@ -69,5 +69,4 @@ The Response Transformer Advanced plugin provides features that aren't available
 
 ## Body transformations
 
-Body transformations are only performed for:
-* Requests in which the `Content-Type` header is set to `application/json`
+Body transformations are only performed for requests where the `Content-Type` header is set to `application/json`.
