@@ -59,6 +59,8 @@ how_to_list:
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
+Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `anthropic/claude-opus-4.6`.
+
 Here's a minimal configuration for chat completions:
 
 {% entity_example %}
