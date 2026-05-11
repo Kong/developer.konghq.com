@@ -9,7 +9,7 @@ products:
     - insomnia
 
 beta: true
-minimum_versions:
+min_version:
   - version: "12.6"
 
 tags:
@@ -25,12 +25,12 @@ faqs:
       1. Open the project in {{site.data.products.insomnia.name}}.
       2. Go to Project Settings → Git Sync.
       3. Reconnect the project to its remote repository.
-  - q: What to do if the migration is unsuccessful?
+  - q: What should I do if the migration is unsuccessful?
     a: |
-      If an unexpected error stopped the migration before it could finish. Your data is intact, nothing was deleted. Click **Retry Update** to try again. If the problem persists, either:
+      If an unexpected error stops the migration before it finishes, your data remains intact and nothing is deleted. Click **Retry Update** to try again. If the problem persists, either:
       - Copy the error logs and visit the [Git Sync docs](/insomnia/git-sync/).
       - Open a support ticket.
-  - q:  I have several Git Sync projects. Will the migration take a long time?
+  - q: I have several Git Sync projects. Will the migration take a long time?
     a: "No. {{site.data.products.insomnia.name}} migrates all Git Sync projects in parallel and the process typically completes in a few seconds, regardless of how many projects you have."
   - q: Why does a project show as **Disconnected** after the migration? 
     a: This means its migration hit an error and the project was converted to a local project to preserve your data. Reconnect it via Project Settings → Git Sync and re-link it to the same remote. Your remote history is untouched.
