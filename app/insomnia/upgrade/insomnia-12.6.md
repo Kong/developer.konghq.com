@@ -100,7 +100,7 @@ The migration only changes file paths. It doesn't change:
 
 The migration runs once. Future launches open {{site.data.products.insomnia.name}} normally.
 
-## Signs the migration succeeded
+## Validate 
 
 After migrating to {{site.data.products.insomnia.name}} v12.6, you can:
 
