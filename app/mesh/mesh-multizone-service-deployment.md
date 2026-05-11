@@ -38,8 +38,12 @@ related_resources:
     url: /mesh/service-discovery/
 ---
 
-{{site.mesh_product_name}} supports running your service mesh in multiple zones, including a mix of Kubernetes and Universal zones. Your mesh environment can include multiple isolated service meshes and workloads running in different regions, on different clouds, or in different data centers. A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
-The only condition is that all the data planes running within the zone can connect to the other data planes in the same zone.
+{{site.mesh_product_name}} supports running your service mesh in multiple zones, including a mix of Kubernetes and Universal zones. 
+Your mesh environment can include multiple isolated service meshes and workloads running in different regions, on different clouds, or in different data centers. 
+A zone can be a Kubernetes cluster, a VPC, or any other deployment you need to include in the same distributed mesh environment.
+
+If you're looking for a simpler deployment mode, see [Single-zone deployments](/mesh/single-zone/).
+In a multi-zone deployment, all the data planes running within the zone can connect to the other data planes in the same zone.
 
 {% mermaid %}
 flowchart TB
@@ -77,19 +81,19 @@ service in `zone-b`.
 
 ### Destination service zone
 
-When the new service `backend` joins the mesh in `zone-b`, the `zone-b` zone control plane adds this service to the `availableServices` on the `zone-b` `ZoneIngress` resource.
-The `kuma-dp` proxy running as a [zone ingress](/mesh/zone-ingress/) is configured with this list of
+When the new service `backend` joins the mesh in `zone-b`, the mesh handles it as follows:
+1. The `zone-b` zone control plane adds this service to the `availableServices` on the `zone-b` `ZoneIngress` resource.
+1. The `kuma-dp` proxy running as a [zone ingress](/mesh/zone-ingress/) is configured with this list of
 services so that it can route incoming requests.
-This `ZoneIngress` resource is then also synchronized to the global control plane.
-
-The global control plane propagates the zone ingress resources and all policies to all other zones over {{site.mesh_product_name}} Discovery Service (KDS), which is a protocol based on xDS.
+1. This `ZoneIngress` resource is synchronized to the global control plane.
+1. The global control plane propagates the zone ingress resources and all policies to all other zones over {{site.mesh_product_name}} Discovery Service (KDS), which is a protocol based on xDS.
 
 ### Source service zone
 
-The `zone-b` `ZoneIngress` resource is synchronized from the global control
-plane to the `zone-a` zone control plane.
-Requests to the `availableServices` from `zone-a` are load balanced between local instances and remote instances of this service.
-Requests sent to `zone-b` are routed to the zone ingress proxy of `zone-b`.
+When the `zone-b` `ZoneIngress` resource is synchronized from the global control
+plane to the `zone-a` zone control plane, the following happens:
+* Requests to the `availableServices` from `zone-a` are load balanced between local instances and remote instances of this service.
+* Requests sent to `zone-b` are routed to the zone ingress proxy of `zone-b`.
 
 For load balancing, zone ingress endpoints are weighted by the number of instances running behind them, so a zone with two instances receives twice as much traffic as a zone with one instance.
 You can also favor local service instances with [locality-aware load balancing](/mesh/policies/meshloadbalancingstrategy/#localityawareness).
@@ -114,36 +118,36 @@ columns:
 rows:
   - component: Global control plane
     responsibilities: |
-      * Accept connections only from zone control planes.
-      * Accept creation and changes to [policies](/mesh/policies/) that will be applied to the data plane proxies.
-      * Send policies down to zone control planes.
-      * Send zone ingresses down to zone control planes.
-      * Keep an inventory of all data plane proxies running in all zones (this is only done for observability but is not required for operations).
-      * Reject connections from data plane proxies.
+      * Accepts connections only from zone control planes.
+      * Accepts creation and changes to [policies](/mesh/policies/) that will be applied to the data plane proxies.
+      * Sends policies down to zone control planes.
+      * Sends zone ingresses down to zone control planes.
+      * Keeps an inventory of all data plane proxies running in all zones (this is only done for observability but is not required for operations).
+      * Rejects connections from data plane proxies.
   - component: Zone control planes
     responsibilities: |
       * Accept connections from data plane proxies started within the zone.
       * Receive policy updates from the global control plane.
       * Send data plane proxies and zone ingress changes to the global control plane.
-      * Compute and send configurations using XDS to the local data plane proxies.
+      * Compute and send configurations using xDS to the local data plane proxies.
       * Update the list of services available in the zone in the zone ingress.
       * Reject policy changes that do not come from the global control plane.
   - component: Data plane proxies
     responsibilities: |
       * Connect to the local zone control plane.
-      * Receive configurations using XDS from the local zone control plane.
+      * Receive configurations using xDS from the local zone control plane.
       * Connect to other local data plane proxies.
       * Connect to zone ingresses to send cross-zone traffic.
       * Receive traffic from local data plane proxies and local zone ingresses.
   - component: Zone ingress
     responsibilities: |
-      * Receive XDS configuration from the local zone control plane.
-      * Proxy traffic from other zone data plane proxies to local data plane proxies.
+      * Receives xDS configuration from the local zone control plane.
+      * Proxies traffic from other zone data plane proxies to local data plane proxies.
   - component: Zone egress (optional)
     responsibilities: |
-      * Receive XDS configuration from the local zone control plane.
-      * Proxy traffic from local data plane proxies to zone ingress proxies from other zones.
-      * Proxy traffic from local data plane proxies to external services from local zone.
+      * Receives xDS configuration from the local zone control plane.
+      * Proxies traffic from local data plane proxies to zone ingress proxies from other zones.
+      * Proxies traffic from local data plane proxies to external services from the local zone.
 {% endtable %}
 
 ## Failure modes
@@ -186,14 +190,16 @@ rows:
       * Other zones won't see new or removed services from this zone, or changes in instance counts.
       * Local data plane proxies won't see new or removed services from other zones, or changes in instance counts.
     still_works: |
-      * All operations inside the zone: data plane proxies can join, leave, and receive configuration updates.
+      * Data plane proxies can join, leave, and receive configuration updates.
       * Local and cross-zone application traffic.
   - mode: Communication between two zones failing
     impact: |
-      Can occur when there are network connectivity issues between: a control plane and zone ingress or egress from another zone; a zone egress and zone ingress from another zone; or when all zone ingress or egress instances in a zone are down.
-
-      * Cross-zone communication fails.
-
+      Can occur when there are network connectivity issues:
+       * Between a control plane and zone ingress or egress from another zone.
+       * Between a zone egress and zone ingress from another zone.
+       * All zone ingress or egress instances in a zone are down.
+        
+      <br>In this situation, all cross-zone communication fails.
       {:.info}
       > With the right resiliency setup ([MeshRetries](/mesh/policies/meshretry), [MeshHealthCheck](/mesh/policies/meshhealthcheck), [MeshLoadBalancingStrategy](/mesh/policies/meshloadbalancingstrategy), [MeshCircuitBreakers](/mesh/policies/meshcircuitbreaker)), the failing zone can be quickly severed and traffic re-routed to another zone.
     still_works: |
