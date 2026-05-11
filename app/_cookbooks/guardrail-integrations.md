@@ -39,6 +39,7 @@ prereqs:
   skip_tool: true
   inline:
     - title: "{{site.konnect_product_name}}"      
+      
       content: |
         This tutorial uses {{site.konnect_product_name}}. You will provision a recipe-scoped Control Plane and local Data Plane via the [quickstart script](https://get.konghq.com/quickstart), then claim the Control Plane for declarative management with kongctl.
 
