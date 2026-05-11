@@ -63,10 +63,9 @@ spec:
         namespacedRef:
           name: konnect-network-1
       autoscale:
-        type: static
-        static:
-          instance_type: small
-          requested_instances: 2
+        type: autopilot
+        autopilot:
+          base_rps: 100          
       environment:
         - name: KONG_LOG_LEVEL
           value: debug
