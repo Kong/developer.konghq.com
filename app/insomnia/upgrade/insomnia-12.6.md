@@ -57,7 +57,7 @@ Starting with {{site.data.products.insomnia.name}} v12.6.0, Git Sync projects us
 
 The first time you open {{site.data.products.insomnia.name}} v12.6.0, the app asks you to **run a one-time migration** to update your local project files to this new layout.
 
-## What changes
+## What changed
 
 Before {{site.data.products.insomnia.name}} v12.6.0, {{site.data.products.insomnia.name}} stored Git internals in a private `git/` folder and kept other project files in an `other/` subfolder. The new layout matches a standard Git repository:
 
