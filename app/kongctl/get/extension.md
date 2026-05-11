@@ -1,12 +1,11 @@
 ---
-title: kongctl get gateway route
-description: "Get gateway route."
+title: kongctl get extension
+description: "Get a kongctl CLI extension."
 content_type: reference
 layout: reference
 
 beta: true
 works_on:
-  - on-prem
   - konnect
 
 tools:
@@ -15,15 +14,14 @@ tools:
 breadcrumbs:
   - /kongctl/
   - /kongctl/get/
-  - /kongctl/get/gateway/
 
 related_resources:
   - text: kongctl get commands
     url: /kongctl/get/
 ---
 
-Get gateway route.
+Get a `kongctl` CLI extension.
 
 ## Command usage
 
-{% include_cached /kongctl/help/get/gateway/route.md %}
+{% include_cached /kongctl/help/get/extension.md %}

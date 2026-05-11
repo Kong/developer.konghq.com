@@ -29,6 +29,7 @@ Available Commands:
   catalog       Manage Konnect catalog resources
   dcr-provider  List or get Konnect DCR providers
   event-gateway List or get Konnect Event Gateways
+  extension     Get a kongctl CLI extension
   gateway       Manage Konnect Kong Gateway resources
   konnect       Manage Konnect resources
   me            Get current user information

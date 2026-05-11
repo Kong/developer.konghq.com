@@ -72,6 +72,10 @@ groups:
         items:
            - path: /kongctl/install/
            - path: /kongctl/install/*/**
+      - title: Link Features
+        items:
+            - path: /kongctl/link/
+            - path: /kongctl/link/*/**
       - title: Lint Files
         items:
             - path: /kongctl/lint/
@@ -115,6 +119,14 @@ groups:
             - path: /kongctl/tail/
             - path: /kongctl/tail/*/**
             - path: /kongctl/tail/*/**/**
+      - title: Uninstall Features
+        items:
+            - path: /kongctl/uninstall/
+            - path: /kongctl/uninstall/*/**
+      - title: Upgrade Features
+        items:
+            - path: /kongctl/upgrade/
+            - path: /kongctl/upgrade/*/**
       - title: Viewer
         items:
             - path: /kongctl/view/

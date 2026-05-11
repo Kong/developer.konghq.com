@@ -1,12 +1,11 @@
 ---
-title: kongctl list gateway service
-description: "List gateway services."
+title: kongctl list extensions
+description: "List installed kongctl CLI extensions."
 content_type: reference
 layout: reference
 
 beta: true
 works_on:
-  - on-prem
   - konnect
 
 tools:
@@ -15,15 +14,14 @@ tools:
 breadcrumbs:
   - /kongctl/
   - /kongctl/list/
-  - /kongctl/list/gateway/
 
 related_resources:
   - text: kongctl list commands
     url: /kongctl/list/
 ---
 
-List gateway services.
+List installed `kongctl` CLI extensions.
 
 ## Command usage
 
-{% include_cached /kongctl/help/list/gateway/service.md %}
+{% include_cached /kongctl/help/list/extensions.md %}
