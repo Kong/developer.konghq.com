@@ -115,7 +115,7 @@ The migration doesn't affect:
 
 ## How to roll back to an older version
 
-The {{site.data.products.insomnia.name}} 12.6 file layout preserves your project data and is backwards compatible. However, older versions of {{site.data.products.insomnia.name}} (pre-v12.6.0) don't understand the new `.git/` layout. If you need to roll back to an older version:
+The {{site.data.products.insomnia.name}} 12.6 file layout preserves your project data. However, older versions of {{site.data.products.insomnia.name}} (pre-v12.6.0) don't understand the new `.git/` layout. If you need to roll back to an older version:
 
 1. Don't delete the project folder: it still contains the data.
 1. Back up your project: push any uncommitted changes to your remote from the {{site.data.products.insomnia.name}} UI or the [Inso CLI](/inso-cli/).
