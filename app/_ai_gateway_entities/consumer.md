@@ -109,9 +109,9 @@ Consumer Groups are managed through their own entity surface. See the [Consumer 
 
 ## Attach Policies
 
-A Policy is an {{site.ai_gateway}} entity that triggers an action using a plugin. You can attach a Policy to a Consumer and the underlying plugin will run in the request lifecycle when this Consumer is identified. To attach a Policy, add the Policy's `name` or `id` to the Consumer's `policies` array.
+Policies are how plugin configurations apply to a Consumer. Attach a Policy by adding its `name` or `id` to the Consumer's `policies` array. The underlying plugin runs in the request lifecycle when the Consumer is identified.
 
-You can attach multiple Policies to a single Consumer. Each Policy is an independent instance.
+You can attach multiple Policies to a single Consumer. Each Policy is an independent plugin instance.
 
 For the supported plugin types and how Policies attach to other entities, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 

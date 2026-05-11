@@ -99,9 +99,9 @@ rows:
     endpoint: /ai/mcp-servers
 {% endtable %}
 
-## Apply gateway features to MCP traffic
+## Common Policies
 
-An MCP Server brings {{site.ai_gateway}} traffic management, security, and observability features to MCP endpoints. Attach the relevant plugin as a [Policy](/ai-gateway/entities/policy/) on the MCP Server:
+Attach plugins as [Policies](/ai-gateway/entities/policy/) on the MCP Server to handle authentication, rate limiting, observability, and traffic control:
 
 <!-- vale off -->
 {% table %}
@@ -113,13 +113,13 @@ columns:
 rows:
   - use_case: Authentication
     example: |
-      Apply [OpenID Connect](/plugins/openid-connect/) or the [Key Auth](/plugins/key-auth/) plugin to an MCP Server.
+      Apply [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) for MCP-spec OAuth 2.0 flows, or [OpenID Connect](/plugins/openid-connect/) / [Key Auth](/plugins/key-auth/) for non-OAuth identity.
   - use_case: Rate limiting
     example: |
       Use [Rate Limiting](/plugins/rate-limiting/) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) to control MCP request volume.
   - use_case: Observability
     example: |
-      Add [logging and tracing plugins](/plugins/?category=logging) for full request and response visibility.
+      Add [logging and tracing plugins](/plugins/?category=logging) for full request and response visibility. MCP metrics surface in [{{site.konnect_short_name}} analytics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics).
   - use_case: Traffic control
     example: |
       Apply [request and response transformation plugins](/plugins/?category=transformations) or [ACL policies](/plugins/acl/).

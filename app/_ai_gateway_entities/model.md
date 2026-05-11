@@ -339,7 +339,7 @@ For per-request authentication and identity, configure the appropriate authentic
 
 ## Attach Policies
 
-Policies are the way you apply plugin configurations to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
+Policies are how plugin configurations apply to a Model. A Policy attached to a Model runs at the Service level of the Model's generated primitives, so it applies to every request routed through any of the Model's capabilities.
 
 A Model declares the Policies it uses through its `policies` field. Each entry is a string that references a Policy by name or ID. {{site.konnect_short_name}} resolves these references against Policies created at `/v1/ai-gateways/{aiGatewayId}/policies`. On-prem also supports the nested endpoint `/ai/models/{modelId}/policies`, which creates and attaches a Policy in one call.
 
