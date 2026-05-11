@@ -1,6 +1,6 @@
 This tutorial requires a {{ site.vercel}} API key.
 
-1. Create a [{{ site.vercel}}](https://vercel.com/) account.
+1. Create a [{{ site.vercel }}](https://vercel.com/) account.
 1. Click **AI Gateway**
 1. Click **API keys**.
 1. Click **Create API key**.
