@@ -15,6 +15,7 @@ min_version:
   gateway: '3.14'
 categories:
   - llm
+  - llm-routing
 featured: false
 popular: false
 
