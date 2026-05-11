@@ -1,6 +1,6 @@
 ---
 title: Secure External MCP Gateway
-description: Proxy third-party MCP servers (GitHub, Konnect) through {{site.base_gateway}} with centralized access control, observability, and tool-level ACLs.
+description: "Proxy third-party MCP servers (GitHub, Konnect) through {{site.base_gateway}} with centralized access control, observability, and tool-level ACLs."
 url: "/cookbooks/secure-external-mcp-gateway/"
 content_type: cookbook
 layout: cookbook
@@ -43,7 +43,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -75,7 +75,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -205,7 +205,7 @@ prereqs:
         {% endnavtabs %}
     - title: Konnect MCP region
       content: |
-        The [Konnect MCP server](https://developer.konghq.com/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
+        The [Konnect MCP server]({{ site.links.web }}/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
 
         ```bash
         # Pick one: us.mcp.konghq.com, eu.mcp.konghq.com, or au.mcp.konghq.com
@@ -264,7 +264,7 @@ This recipe places {{site.base_gateway}} in front of external MCP servers with t
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant GH as GitHub
 
     C->>K: MCP initialize (no token)
@@ -301,7 +301,7 @@ sequenceDiagram
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant KM as Konnect MCP Server
 

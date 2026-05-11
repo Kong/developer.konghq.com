@@ -41,7 +41,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"      
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -68,7 +68,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
 
         You can verify both are installed:
@@ -531,7 +531,7 @@ sequenceDiagram
     participant CC as Claude Code
     participant H as apiKeyHelper script
     participant O as Okta
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant L as LLM Provider
 
     CC->>H: Request bearer token
