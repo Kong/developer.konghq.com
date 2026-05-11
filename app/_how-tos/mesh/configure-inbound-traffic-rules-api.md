@@ -1,6 +1,6 @@
 ---
 title: Configure inbound traffic with the rules API
-description: Apply policies to data plane inbounds using the rules API with Dataplane targetRef kind.
+description: Apply policies to data plane inbounds using the rules API with the Dataplane targetRef kind.
 content_type: how_to
 permalink: /mesh/configure-inbound-traffic-rules-api/
 bread-crumbs:
@@ -19,12 +19,63 @@ tags:
 related_resources:
   - text: MeshTimeout policy
     url: /mesh/policies/meshtimeout/
-  - text: "{{site.mesh_product_name}} concepts"
-    url: /mesh/concepts/
+  - text: MeshTrafficPermission policy
+    url: /mesh/policies/meshtrafficpermission/
 
 tldr:
   q: How do I configure inbound traffic with the rules API?
-  a: Use the rules API with the Dataplane targetRef kind to apply policies like MeshTimeout to data plane inbounds.
+  a: Use the rules API with the `Dataplane` targetRef kind to apply policies like `MeshTimeout` to data plane inbounds.
+
+faqs:
+  - q: How do I select `Dataplane` resources?
+    a: |
+      The example policy in this guide selects only `Dataplane` resources that contain the label `app=demo-app`. You can select data planes in multiple ways.
+
+      Select all data planes:
+
+      ```yaml
+      targetRef:
+        kind: Dataplane
+      ```
+
+      Select a data plane by name and namespace:
+
+      ```yaml
+      targetRef:
+        kind: Dataplane
+        name: demo-app
+        namespace: kong-mesh-demo
+      ```
+
+      Select a data plane by labels:
+
+      ```yaml
+      targetRef:
+        kind: Dataplane
+        labels:
+          app: demo-app
+      ```
+
+      When your application exposes multiple named inbounds, select a single inbound from your data plane using the `sectionName` field:
+
+      ```yaml
+      targetRef:
+        kind: Dataplane
+        name: demo-app
+        sectionName: http-port
+      ```
+  - q: How does the rules API apply to incoming traffic?
+    a: |
+      Use the `rules` field to configure all incoming traffic to your data plane:
+
+      ```yaml
+      rules:
+        - default:
+            http:
+              requestTimeout: 1s
+      ```
+
+      The example above applies a request timeout of 1 second to incoming requests. The rules API applies configuration to all incoming traffic and doesn't support filtering by a subset of traffic, so it doesn't yet support `MeshTrafficPermission` or `MeshFaultInjection`.
 
 prereqs:
   inline:
@@ -36,9 +87,9 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-quickstart
 ---
 
-## Set up the basic environment
+## Allow all traffic in the mesh
 
-To make sure that traffic works in the examples, configure MeshTrafficPermission to allow all traffic:
+Configure [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to allow all traffic so the examples in this guide work:
 
 ```shell
 echo "apiVersion: kuma.io/v1alpha1
@@ -54,40 +105,41 @@ spec:
         action: Allow" | kubectl apply -f -
 ```
 
-To finish the setup, create an additional namespace with [sidecar injection](/mesh/concepts/#data-plane-proxy--sidecar) for the client you will use to communicate with the demo app:
+## Set up a consumer client
 
-```shell
-echo "apiVersion: v1
-kind: Namespace
-metadata:
-  name: consumer
-  labels:
-    kuma.io/sidecar-injection: enabled" | kubectl apply -f -
-```
+1. Create a namespace with [sidecar injection](/mesh/concepts/#data-plane-proxy-sidecar) for the client that communicates with the demo app:
 
-Create a deployment to communicate with the demo app from the `consumer` namespace:
+   ```shell
+   echo "apiVersion: v1
+   kind: Namespace
+   metadata:
+     name: consumer
+     labels:
+       kuma.io/sidecar-injection: enabled" | kubectl apply -f -
+   ```
 
-```shell
-kubectl run consumer --image nicolaka/netshoot --labels="app=consumer" -n consumer --command -- /bin/bash -c "ping -i 60 localhost"
-```
+1. Create a deployment in the `consumer` namespace to communicate with the demo app:
 
-Send a request to the demo app to check that everything is working:
+   ```shell
+   kubectl run consumer --image nicolaka/netshoot --labels="app=consumer" -n consumer --command -- /bin/bash -c "ping -i 60 localhost"
+   ```
 
-```shell
-kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
-```
+1. Send a request to the demo app to check that everything is working:
 
-You should see something similar to:
+   ```shell
+   kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
+   ```
 
-```json
-{"counter":"1","zone":""}
-```
-{:.no-copy-code}
+   You should see something similar to:
 
-## Configure inbound traffic with the rules API
+   ```json
+   {"counter":"1","zone":""}
+   ```
+   {:.no-copy-code}
 
-Now that the setup is complete, use the rules API for inbound policies with the Dataplane kind.
-Create a simple inbound [MeshTimeout](/mesh/policies/meshtimeout/) policy in the `kong-mesh-demo` namespace:
+## Apply a MeshTimeout policy
+
+Create an inbound [`MeshTimeout`](/mesh/policies/meshtimeout/) policy in the `kong-mesh-demo` namespace with the `Dataplane` targetRef kind:
 
 ```shell
 echo "apiVersion: kuma.io/v1alpha1
@@ -109,66 +161,17 @@ spec:
           requestTimeout: 1s" | kubectl apply -f -
 ```
 
-To verify the policy is working, send a request to the demo app:
+## Validate the policy
+
+Send a request that takes longer than the configured timeout to confirm the policy is enforced:
 
 ```shell
 kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
 ```
 
-Example output:
+You should see:
 
 ```
 upstream request timeout
 ```
 {:.no-copy-code}
-
-### Select Dataplane resources
-
-The policy selects only `Dataplane` resources that contain the label `app=demo-app`. You can select data planes in multiple ways.
-
-Select all data planes:
-
-```yaml
-targetRef:
-  kind: Dataplane
-```
-
-Select a data plane by name and namespace:
-
-```yaml
-targetRef:
-  kind: Dataplane
-  name: demo-app
-  namespace: kong-mesh-demo
-```
-
-Select a data plane by labels:
-
-```yaml
-targetRef:
-  kind: Dataplane
-  labels:
-    app: demo-app
-```
-
-When your application exposes multiple named inbounds, you can select a single inbound from your data plane using the `sectionName` field:
-
-```yaml
-targetRef:
-  kind: Dataplane
-  name: demo-app
-  sectionName: http-port
-```
-
-### Configure incoming traffic with the rules API
-
-The policy above uses the `rules` field to configure all incoming traffic to your data plane:
-
-```yaml
-rules:
-  - default:
-      http:
-        requestTimeout: 1s
-```
-
-This example applies a **request timeout of 1 second** to incoming requests. The rules API applies configuration to all incoming traffic and doesn't support filtering by a subset of traffic, so it doesn't yet support MeshTrafficPermission or MeshFaultInjection.
