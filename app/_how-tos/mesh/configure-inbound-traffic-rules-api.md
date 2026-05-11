@@ -54,7 +54,7 @@ spec:
         action: Allow" | kubectl apply -f -
 ```
 
-To finish the setup, create an additional namespace with sidecar injection for the client you will use to communicate with the demo app:
+To finish the setup, create an additional namespace with [sidecar injection](/mesh/concepts/#data-plane-proxy--sidecar) for the client you will use to communicate with the demo app:
 
 ```shell
 echo "apiVersion: v1
@@ -71,7 +71,7 @@ Create a deployment to communicate with the demo app from the `consumer` namespa
 kubectl run consumer --image nicolaka/netshoot --labels="app=consumer" -n consumer --command -- /bin/bash -c "ping -i 60 localhost"
 ```
 
-Make a couple of requests to the demo app to check if everything is working:
+Send a request to the demo app to check that everything is working:
 
 ```shell
 kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
@@ -109,7 +109,7 @@ spec:
           requestTimeout: 1s" | kubectl apply -f -
 ```
 
-Check if the policy was properly applied by making requests to the demo app:
+To verify the policy is working, send a request to the demo app:
 
 ```shell
 kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
@@ -162,7 +162,7 @@ targetRef:
 
 ### Configure incoming traffic with the rules API
 
-As seen in the policy applied above, use the `rules` field to specify configuration for all incoming traffic to your data plane:
+The policy above uses the `rules` field to configure all incoming traffic to your data plane:
 
 ```yaml
 rules:
@@ -171,4 +171,4 @@ rules:
         requestTimeout: 1s
 ```
 
-In this example, a **request timeout of 1 second** is applied for incoming requests. The rules API currently applies configuration to all incoming traffic and doesn't support filtering by a subset of incoming traffic. Because of this, the rules API is not yet supported for MeshTrafficPermission and MeshFaultInjection.
+This example applies a **request timeout of 1 second** to incoming requests. The rules API applies configuration to all incoming traffic and doesn't support filtering by a subset of traffic, so it doesn't yet support MeshTrafficPermission or MeshFaultInjection.
