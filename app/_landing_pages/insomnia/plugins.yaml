@@ -91,6 +91,6 @@ rows:
                     type: text
                     config: |
                       1. Open **Preferences**.
-                      1. Go to the **Plugin** tab.
+                      1. Go to the **Plugins** tab.
                       1. Under **npm Registry**, add your custom mirror URL (for example: `https://artifactory.example.com/api/npm/npm-remote/`). 
                       1. Insomnia automatically saves the setting.
