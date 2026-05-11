@@ -6,23 +6,24 @@ Aliases:
   list, ls, l
 
 Examples:
+  # Retrieve Konnect control planes
+  kongctl list konnect gateway control-planes
+  # Retrieve Konnect control planes ('konnect' is implied)
+  kongctl list gateway control-planes
   # Retrieve Konnect portals
   kongctl list portals
   # Retrieve Konnect APIs
   kongctl list apis
   # Retrieve Konnect auth strategies
   kongctl list auth-strategies
-  # Retrieve Konnect DCR providers
-  kongctl list dcr-providers
-  # Retrieve Konnect control planes (Konnect-first)
-  kongctl list gateway control-planes
-  # Retrieve Konnect control planes (explicit)
-  kongctl list konnect gateway control-planes
+  # Retrieve kongctl extensions
+  kongctl list extensions
 
 Available Commands:
   api           List or get Konnect APIs
   auth-strategy List or get Konnect authentication strategies
   dcr-provider  List or get Konnect DCR providers
+  extensions    List installed kongctl CLI extensions
   gateway       Manage Konnect Kong Gateway resources
   konnect       Manage Konnect resources
   organization  Get current organization information

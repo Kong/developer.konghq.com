@@ -4,6 +4,9 @@ Usage:
   kongctl install [command]
 
 Examples:
+  # Install a kongctl extension
+  kongctl install extension
+  
   # Install kongctl skills into the current repository
   kongctl install skills
   
@@ -11,6 +14,7 @@ Examples:
   kongctl install skills --dry-run
 
 Available Commands:
+  extension   Install a kongctl CLI extension
   skills      Install kongctl agent skills
 
 

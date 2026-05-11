@@ -49,6 +49,9 @@ rows:
       [kongctl get event-gateway](/kongctl/get/event-gateway/)
     description: "Get Event Gateway details."
   - command: |
+      [kongctl get extension](/kongctl/get/extension/)
+    description: "Get a kongctl CLI extension."
+  - command: |
       [kongctl get gateway](/kongctl/get/gateway/)
     description: "Get gateway information."
   - command: |
