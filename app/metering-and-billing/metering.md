@@ -204,30 +204,46 @@ To configure a meter in {{site.konnect_short_name}}, do the following:
 
 {% navtabs "create-meter" %}
 {% navtab "{{site.base_gateway}} API requests" %}
-To meter {{site.base_gateway}} API requests, you need traffic to a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and [Route](/gateway/entities/route/#set-up-a-route).
 
-Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on your Gateway Service:
+{:.note}
+> To meter {{site.base_gateway}} API requests, you must have a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and [Route](/gateway/entities/route/#set-up-a-route).
 
+First, set up a meter:
+1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Metering**.
+1. Click **Create meter**.
+1. Select **Count API Requests**.
+1. Configure the meter information as needed.
+
+Next, configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on your Gateway Service:
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Gateway.
 1. Click **Plugins**.
 1. Click **New Plugin**.
 1. Configure the **Metering and Billing** plugin.
 1. Click **Save**.
+1. Send a request through the Gateway to start collecting API request usage.
 
 For a complete tutorial, see [Meter {{site.base_gateway}} API requests by Consumer](/how-to/meter-api-requests-by-consumer/).
 {% endnavtab %}
 {% navtab "{{site.ai_gateway}} LLM tokens" %}
-To meter {{site.ai_gateway}} LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
 
-Configure the [Metering & Billing plugin](/plugins/metering-and-billing/) on your Gateway Service:
+{:.note}
+> To meter {{site.ai_gateway}} LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
 
+First, set up a meter:
+1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Metering**.
+1. Click **Create meter**.
+1. Select **LLM Tokens**.
+1. Configure the meter information as needed.
+
+Next, configure the [Metering & Billing plugin](/plugins/metering-and-billing/):
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Gateway.
 1. Click **Plugins**.
 1. Click **New Plugin**.
 1. Configure the **Metering and Billing** plugin.
 1. Click **Save**.
+1. Send an LLM prompt through {{site.ai_gateway}} to start collecting token usage data.
 
 For a complete tutorial, see [Monetize LLM traffic in {{site.konnect_short_name}}](/how-to/meter-llm-traffic/).
 {% endnavtab %}

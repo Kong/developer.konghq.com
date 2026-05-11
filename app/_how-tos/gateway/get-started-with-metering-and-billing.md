@@ -160,7 +160,27 @@ entities:
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. This usage can take various forms, such as API requests, compute time seconds, or tokens consumed. Usage metering is commonly event-based to ensure accuracy and data you can audit.
 
-In this guide, you'll configure the Metering & Billing plugin to emit API request events to {{site.metering_and_billing}} so that you can charge customers for API traffic usage.
+Create a meter to count API requests:
+
+<!-- vale off -->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+method: POST
+body:
+  name: Total API requests
+  key: api_requests_total
+  description: API Requests
+  event_type: request
+  aggregation: count
+  dimensions:
+    method: $.method
+    route: $.route
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Enable the {{site.metering_and_billing}} plugin
+
+Next, configure the [{{site.metering_and_billing}} plugin](/plugins/metering-and-billing/) to emit API request events from {{site.base_gateway}} to {{site.metering_and_billing}} so that you can charge customers for API traffic usage:
 
 <!--vale off-->
 {% entity_examples %}
@@ -181,7 +201,6 @@ variables:
     description: A {{site.konnect_short_name}} system account token (`spat_`) with the Metering Ingest role.
 {% endentity_examples %}
 <!--vale on-->
-
 
 ## Create a feature
 

@@ -122,10 +122,29 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Configure the Metering & Billing plugin
+## Create a meter
 
 In {{site.metering_and_billing}}, meters track and record the consumption of a resource or service over time. 
-The following configures the Metering & Billing plugin to emit LLM token usage events to {{site.metering_and_billing}}:
+In this case, we want to track the number of AI tokens consumed:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v3/openmeter/meters
+status_code: 201
+method: POST
+body:
+    key: tokens_total
+    name: AI Token Usage
+    event_type: prompt
+    aggregation: sum
+    value_property: $.tokens
+    dimensions: {"model": "$.model", "type": "$.type"}
+{% endkonnect_api_request %}
+<!--vale on-->
+
+## Configure the Metering & Billing plugin
+
+Next, configure the Metering & Billing plugin to emit LLM token usage events from {{site.ai_gateway}} to {{site.metering_and_billing}}:
 
 <!--vale off-->
 {% entity_examples %}
