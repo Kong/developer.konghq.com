@@ -17,7 +17,7 @@ We recommend using a process manager like [systemd](https://systemd.io/) when ru
 
 The following examples show systemd unit files for the control plane (`kuma-cp`) and the data plane proxy (`kuma-dp`).
 
-## Control plane (`kuma-cp`)
+## Control plane
 
 The following unit file runs `kuma-cp` as a long-running service. The `[Service]` section sets the user and working directory, then starts the control plane with a config file. `Restart = always` and `RestartSec = 1s` make systemd restart the process one second after any exit.
 
@@ -51,9 +51,9 @@ StartLimitBurst = 0
 WantedBy = multi-user.target
 ```
 
-## Data plane proxy (`kuma-dp`)
+## Data plane proxy
 
-The following unit file runs `kuma-dp` as a long-running service. The `ExecStart` command points the data plane proxy at the control plane address and supplies the dataplane token, dataplane definition, and CA certificate. `Restart = always` and `RestartSec = 1s` make systemd restart the proxy one second after any exit, and `StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts so systemd keeps retrying after repeated failures.
+The following unit file runs `kuma-dp` as a long-running service. 
 
 ```ini
 [Unit]
@@ -76,4 +76,3 @@ StartLimitBurst = 0
 
 [Install]
 WantedBy = multi-user.target
-```
