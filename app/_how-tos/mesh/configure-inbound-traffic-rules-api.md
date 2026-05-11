@@ -91,7 +91,7 @@ prereqs:
 
 Configure [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to allow all traffic so the examples in this guide work:
 
-```shell
+```sh
 echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
@@ -109,7 +109,7 @@ spec:
 
 1. Create a namespace with [sidecar injection](/mesh/concepts/#data-plane-proxy-sidecar) for the client that communicates with the demo app:
 
-   ```shell
+   ```sh
    echo "apiVersion: v1
    kind: Namespace
    metadata:
@@ -120,17 +120,18 @@ spec:
 
 1. Create a deployment in the `consumer` namespace to communicate with the demo app:
 
-   ```shell
+   ```sh
    kubectl run consumer --image nicolaka/netshoot --labels="app=consumer" -n consumer --command -- /bin/bash -c "ping -i 60 localhost"
+   kubectl wait -n consumer --for=condition=ready pod --selector=app=consumer --timeout=90s
    ```
 
 1. Send a request to the demo app to check that everything is working:
 
-   ```shell
+   ```sh
    kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter
    ```
 
-   You should see something similar to:
+   You should get the following response:
 
    ```json
    {"counter":"1","zone":""}
@@ -141,7 +142,7 @@ spec:
 
 Create an inbound [`MeshTimeout`](/mesh/policies/meshtimeout/) policy in the `kong-mesh-demo` namespace with the `Dataplane` targetRef kind:
 
-```shell
+```sh
 echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTimeout
 metadata:
@@ -161,17 +162,20 @@ spec:
           requestTimeout: 1s" | kubectl apply -f -
 ```
 
-## Validate the policy
+## Validate
 
-Send a request that takes longer than the configured timeout to confirm the policy is enforced:
+Wait a few seconds for the policy to be applied, then send a request that takes longer than the configured timeout to confirm the policy is enforced:
 
-```shell
+```sh
 kubectl exec -n consumer consumer -- curl -s -XPOST demo-app.kong-mesh-demo:5050/api/counter -H "x-set-response-delay-ms: 2000"
 ```
 
-You should see:
+You should get the following output:
 
 ```
 upstream request timeout
 ```
 {:.no-copy-code}
+
+{:.info}
+> If you get the response `{"counter":2,"zone":""}`, wait a few seconds and try again.
