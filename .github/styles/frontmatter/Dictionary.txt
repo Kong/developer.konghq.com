@@ -47,3 +47,7 @@ bedrock
 avro
 crowdstrike
 aidr
+requires_embeddings
+skip_tool
+extra_services
+env_vars
