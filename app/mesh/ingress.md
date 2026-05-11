@@ -1,6 +1,6 @@
 ---
 title: 'Ingress traffic with {{site.mesh_product_name}}'
-description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
+description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}.'
 content_type: reference
 layout: reference
 products:
@@ -23,7 +23,7 @@ related_resources:
 
 ---
 
-{{site.mesh_product_name}} provides two features to manage ingress traffic, also known as north/south traffic.
+{{site.mesh_product_name}} provides two methods to manage ingress traffic, also known as north/south traffic.
 Both use a gateway proxy that sits between external clients and your services in the mesh.
 
 * [Delegated gateway](/mesh/delegated-gateways/): Uses any existing gateway proxy, like [{{site.base_gateway}}](/gateway/).
@@ -40,7 +40,7 @@ The following diagrams show the difference between built-in and delegated gatewa
 {{site.base_gateway}} at the edge routes to built-in gateways running as Envoy proxies inside each service mesh.
 
 {% mermaid %}
-flowchart TB
+flowchart LR
     CLIENT([Client])
     KGW[{{site.base_gateway}}]
     CLIENT --> KGW
@@ -81,6 +81,9 @@ flowchart TB
 
     KGW --> BG1 & BG2
     BG1 <-.-> BG2
+    
+    linkStyle 0,1,3,4,6,9,11,12,14,17,18 stroke-width:2px,stroke:#86e2cc
+    linkStyle 2,5,7,8,10,13,15,16,19 stroke-width:2px
 {% endmermaid %}
 
 ## Delegated gateway
@@ -88,7 +91,7 @@ flowchart TB
 {{site.base_gateway}} routes directly to delegated gateways that operate as data plane proxies inside each service mesh.
 
 {% mermaid %}
-flowchart TB
+flowchart LR
     CLIENT([Client])
     KGW[{{site.base_gateway}}]
     CLIENT --> KGW
@@ -129,4 +132,7 @@ flowchart TB
 
     KGW --> DG1 & DG2
     DG1 <--> DG2
+
+    linkStyle 0,1,3,4,6,9,11,12,14,17,18,19 stroke-width:2px,stroke:#86e2cc
+    linkStyle 2,5,7,8,10,13,15,16 stroke-width:2px
 {% endmermaid %}
