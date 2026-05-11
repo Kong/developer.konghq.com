@@ -45,3 +45,5 @@ anthropic
 xai
 bedrock
 avro
+crowdstrike
+aidr
