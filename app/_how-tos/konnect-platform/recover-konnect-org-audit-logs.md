@@ -46,8 +46,8 @@ prereqs:
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
 
-        1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-        1. From the sidebar, click **Audit Logs Setup**.
+        1. Select your {{site.konnect_short_name}} org and click [**Manage Organization**](https://cloud.konghq.com/organization).
+        1. Click the **Audit Logs Setup** tab.
         1. On the Webhook Destination tab, click **New Webhook**.
         1. In the **Name** field, enter `SumoLogic`.
         1. In the **Endpoint** field, enter your external endpoint that will receive audit log messages. For example: `https://endpoint4.collection.sumologic.com/receiver/v1/http/1234abcd`.
@@ -91,8 +91,8 @@ faqs:
 
 In {{site.konnect_short_name}}, you can restore audit logs by configuring a replay job:
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-1. From the sidebar, click **Audit Logs Setup**.
+1. Select your {{site.konnect_short_name}} org and click [**Manage Organization**](https://cloud.konghq.com/organization).
+1. Click the **Audit Logs Setup** tab.
 1. Click the **Konnect** tab.
 1. Navigate to the region you want to configure the replay job for.
 1. Click the **Replay** tab.
