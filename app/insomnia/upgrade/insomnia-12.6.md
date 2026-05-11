@@ -4,14 +4,13 @@ content_type: reference
 layout: reference
 breadcrumbs:
   - /insomnia/
-  - /insomnia/upgrade/
 products:
     - insomnia
 
 beta: true
 min_version:
-  - version: "12.6"
-
+  insomnia: '12.6'
+permalink: /insomnia/upgrade/git-sync-migration-12.6/
 tags:
     - upgrade
     - versioning
