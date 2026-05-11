@@ -43,7 +43,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -75,7 +75,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -205,7 +205,7 @@ prereqs:
         {% endnavtabs %}
     - title: Konnect MCP region
       content: |
-        The [Konnect MCP server](https://developer.konghq.com/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
+        The [Konnect MCP server](/konnect-platform/konnect-mcp/#regional-server-endpoints) has region-scoped endpoints; resources don't cross regions. Set this to the host matching the Konnect region your organization runs in:
 
         ```bash
         # Pick one: us.mcp.konghq.com, eu.mcp.konghq.com, or au.mcp.konghq.com
@@ -224,16 +224,16 @@ prereqs:
         See [MCP clients in Insomnia](/insomnia/mcp-clients-in-insomnia/) for an overview of MCP server testing in Insomnia.
 
 overview: |
-  Organizations adopting MCP (Model Context Protocol) often end up connecting AI agents to a sprawl of third-party MCP servers (GitHub, Slack, Figma, Konnect, etc.), each with its own tokens, no central audit trail, and no way to govern which tools an agent can call. Putting {{site.base_gateway}} in front of those servers gives the platform team a single boundary for ACL enforcement, observability, and credential management without changing how the upstream provider's auth works.
+  Organizations adopting MCP (Model Context Protocol) often end up connecting AI agents to a sprawl of third-party MCP servers (GitHub, Slack, Figma.com, Konnect, etc.), each with its own tokens, no central audit trail, and no way to govern which tools an agent can call. Putting {{site.base_gateway}} in front of those servers gives the platform team a single boundary for ACL enforcement, observability, and credential management without changing how the upstream provider's auth works.
 
-  Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. That case is covered in [Secure Internal MCP Gateway](/cookbooks/secure-internal-mcp-gateway/). **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma that run their own authorization servers and issue their own (often opaque) tokens.
+  Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. That case is covered in [Secure Internal MCP Gateway](/cookbooks/secure-internal-mcp-gateway/). **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma.com that run their own authorization servers and issue their own (often opaque) tokens.
 
   This recipe covers the external case. Kong applies one of two patterns depending on what the upstream supports, demonstrated below with GitHub MCP and Konnect MCP. The **Passthrough** pattern (GitHub MCP) lets the user authenticate directly with GitHub; Kong passes the token through and uses a separate Key Auth layer for Consumer identity and ACLs. The **Token swap** pattern (Konnect MCP) authenticates the user against the organization's IdP, maps the user to a Consumer, then swaps the user token for a stored Konnect credential (Personal Access Token for the demo, Service Account Token in production) before forwarding.
 ---
 
 ## The problem
 
-**External tokens are opaque to Kong.** GitHub, Figma, and most third-party MCP servers issue
+**External tokens are opaque to Kong.** GitHub, Figma.com, and most third-party MCP servers issue
 opaque access tokens, not JWTs. Kong cannot extract claims from an opaque token, which means
 there is no way to identify the user, map them to a Consumer Group, or enforce ACLs based on
 the token alone.
@@ -264,7 +264,7 @@ This recipe places {{site.base_gateway}} in front of external MCP servers with t
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant GH as GitHub
 
     C->>K: MCP initialize (no token)
@@ -301,7 +301,7 @@ sequenceDiagram
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant KM as Konnect MCP Server
 
@@ -646,7 +646,7 @@ kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
 
 Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
 
-The configuration below creates two external MCP proxy setups: GitHub MCP with passthrough auth and tool-level ACLs, and Konnect MCP with OAuth token swap. Two Consumer Groups (`admin` and `developer`) control GitHub tool access. The `DECK_OAUTH_*`, `DECK_KONNECT_MCP_TOKEN`, and `DECK_KONNECT_MCP_HOST` env vars are already exported during the prereqs. Apply the configuration:
+The configuration below creates two external MCP proxy setups: GitHub MCP with passthrough auth and tool-level ACLs, and Konnect MCP with OAuth token swap. Two Consumer Groups (`admin` and `developer`) control GitHub tool access. The `DECK_OAUTH_*`, `DECK_KONNECT_MCP_TOKEN`, and `DECK_KONNECT_MCP_HOST` env vars are already exported during the prerequisites. Apply the configuration:
 
 ```bash
 {%- raw %}

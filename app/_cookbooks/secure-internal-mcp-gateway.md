@@ -37,7 +37,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -60,7 +60,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -83,7 +83,7 @@ prereqs:
 
         You need an Okta organization with admin access. The steps below create two Okta applications, configure a `groups` claim, create two groups, set up a test user (new or existing), and export Kong's introspection credentials.
 
-        **Create the Kong Gateway application**
+        **Create the {{site.base_gateway}} application**
 
         This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Okta's token introspection endpoint.
 
@@ -132,7 +132,7 @@ prereqs:
 
         **Export Kong's Okta endpoints and credentials**
 
-        Export the authorization server URL, the introspection endpoint, and the **Kong Gateway** application's Client ID and Secret. The MCP Client (SPA) Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the authorization server URL, the introspection endpoint, and the **{{site.base_gateway}}** application's Client ID and Secret. The MCP Client (SPA) Client ID is not exported here. It is used at flow time by the MCP client itself.
 
         ```bash
         export DECK_OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
@@ -150,7 +150,7 @@ prereqs:
 
         In the Keycloak Admin Console, create a new realm (for example, `mcp-demo`), or use an existing one.
 
-        **Create the Kong Gateway client**
+        **Create the {{site.base_gateway}} client**
 
         This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Keycloak's token introspection endpoint.
 
@@ -198,7 +198,7 @@ prereqs:
 
         **Export Kong's Keycloak endpoints and credentials**
 
-        Export the realm URL, the introspection endpoint, and the **Kong Gateway** client's ID and Secret. The MCP Client's Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the realm URL, the introspection endpoint, and the **{{site.base_gateway}}** client's ID and Secret. The MCP Client's Client ID is not exported here. It is used at flow time by the MCP client itself.
 
         ```bash
         export DECK_OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
@@ -224,7 +224,7 @@ prereqs:
 overview: |
   Organizations adopting MCP (Model Context Protocol) often end up with multiple API teams each exposing tools through their own MCP servers, and no centralized control over who can discover and call them. Putting {{site.base_gateway}} in front of those servers collapses them into a single aggregated MCP endpoint with one place to enforce OAuth 2.1 auth and per-tool access control.
 
-  Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma that run their own authorization servers; that case calls for a different pattern covered in [Secure External MCP Gateway](/cookbooks/secure-external-mcp-gateway/).
+  Broadly, there are two types of MCP servers {{site.ai_gateway_name}} can proxy, distinguished by who owns the user identity. **Internal MCP servers** live inside your organization's trust boundary. Your IdP is the MCP auth server, and your security team controls the tokens. **External MCP servers** are third-party SaaS like GitHub, Slack, and Figma.com that run their own authorization servers; that case calls for a different pattern covered in [Secure External MCP Gateway](/cookbooks/secure-external-mcp-gateway/).
 
   This recipe covers the internal case. Kong produces an internal MCP server in one of two ways: the [AI MCP Proxy](/plugins/ai-mcp-proxy/) Plugin can generate one directly by converting managed REST APIs into MCP tools, with no separate MCP server to run, or it can proxy a standalone custom MCP server your team already operates in passthrough mode. Either shape sits behind the [AI MCP OAuth2](/plugins/ai-mcp-oauth2/) Plugin, which enforces OAuth 2.1 at the edge and maps token claims to per-tool ACLs. The walkthrough below demonstrates the REST-conversion path against three mock ecommerce APIs with two Consumer Groups.
 
@@ -238,7 +238,7 @@ governing which agent can call which tools. A warehouse automation agent and a c
 agent see the same tool catalog.
 
 **Scattered credentials.** Each MCP server requires its own authentication setup. Developers
-juggle multiple tokens, and there is no single revocation point. Offboarding a developer means
+juggle multiple tokens, and there is no single revocation point. Removing a developer means
 touching every MCP server they had access to.
 
 **No federated tool governance.** API teams want to control which of their endpoints are exposed
@@ -275,7 +275,7 @@ ACLs without a separate authentication Plugin.
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant B as Backend APIs
 
@@ -393,7 +393,7 @@ A request flows through the system in these steps:
 1. The client discovers the MCP server's OAuth requirements through the identity provider.
 2. The client authenticates via PKCE flow and receives an access token.
 3. The client connects to the MCP endpoint through Kong with the Bearer token.
-4. Kong's AI MCP Proxy Plugin converts streamable HTTP to SSE for the upstream.
+4. Kong's AI MCP Proxy Plugin converts stream-enabled HTTP to SSE for the upstream.
 5. Kong's AI MCP OAuth2 Plugin validates the token via introspection and maps the user to a Consumer Group.
 6. ACL rules determine which MCP tools the Consumer Group can access.
 7. The upstream MCP server processes permitted tool calls and returns results through Kong.
@@ -531,7 +531,7 @@ kongctl adopt control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
 
 Adoption stamps the `KONGCTL-namespace` label on the Control Plane.
 
-The configuration below creates four Kong Services (three ecommerce APIs plus one aggregated MCP server), eight MCP tools with per-tool ACLs, two Consumer Groups, OAuth 2.1 authentication via the AI MCP OAuth2 Plugin, and CORS support. The IdP-specific `DECK_OAUTH_*` env vars and the shared `DECK_MCP_RESOURCE_URL` are already exported during the Identity Provider prereq, so they do not repeat here. The configuration is identical regardless of which IdP you selected; the AI MCP OAuth2 Plugin resolves the IdP endpoints from those variables at apply time.
+The configuration below creates four Kong Services (three ecommerce APIs plus one aggregated MCP server), eight MCP tools with per-tool ACLs, two Consumer Groups, OAuth 2.1 authentication via the AI MCP OAuth2 Plugin, and CORS support. The IdP-specific `DECK_OAUTH_*` env vars and the shared `DECK_MCP_RESOURCE_URL` are already exported during the Identity Provider prerequisite, so they do not repeat here. The configuration is identical regardless of which IdP you selected; the AI MCP OAuth2 Plugin resolves the IdP endpoints from those variables at apply time.
 
 Apply the Kong configuration:
 
