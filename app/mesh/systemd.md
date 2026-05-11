@@ -21,16 +21,6 @@ The following examples show systemd unit files for the control plane (`kuma-cp`)
 
 The following unit file runs `kuma-cp` as a long-running service. The `[Service]` section sets the user and working directory, then starts the control plane with a config file. `Restart = always` and `RestartSec = 1s` make systemd restart the process one second after any exit.
 
-If your control plane needs to handle a non-trivial number of concurrent connections (a total of both incoming and outgoing connections), set proper resource limits on the `kuma-cp` process, especially the maximum number of open files. `systemd` units aren't affected by the traditional `ulimit` configuration, so you must set resource limits as part of the `systemd` unit itself. To check effective resource limits on a running `kuma-cp` instance, run:
-
-```bash
-cat /proc/$(pgrep kuma-cp)/limits
-```
-
-The example below sets `LimitNOFILE` to `1048576`, the same limit that `Docker` and `containerd` [set by default](https://github.com/containerd/containerd/issues/3201).
-
-`StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts, so systemd keeps trying to restart the control plane regardless of how often it has failed recently.
-
 ```ini
 [Unit]
 Description = {{ site.mesh_product_name }} Control Plane
@@ -49,6 +39,17 @@ StartLimitBurst = 0
 
 [Install]
 WantedBy = multi-user.target
+```
+
+In this example:
+
+* `LimitNOFILE` is set to `1048576`, the same limit that `Docker` and `containerd` [set by default](https://github.com/containerd/containerd/issues/3201).
+* `StartLimitIntervalSec = 0` and `StartLimitBurst = 0` disable rate limiting on start attempts, so systemd keeps trying to restart the control plane regardless of how often it has failed recently.
+
+If your control plane needs to handle a non-trivial number of concurrent connections (a total of both incoming and outgoing connections), set proper resource limits on the `kuma-cp` process, especially the maximum number of open files. `systemd` units aren't affected by the traditional `ulimit` configuration, so you must set resource limits as part of the `systemd` unit itself. To check effective resource limits on a running `kuma-cp` instance, run:
+
+```bash
+cat /proc/$(pgrep kuma-cp)/limits
 ```
 
 ## Data plane proxy
