@@ -205,7 +205,7 @@ To configure a meter in {{site.konnect_short_name}}, do the following:
 {% navtabs "create-meter" %}
 {% navtab "{{site.base_gateway}} API requests" %}
 
-{:.note}
+{:.info}
 > To meter {{site.base_gateway}} API requests, you must have a [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and [Route](/gateway/entities/route/#set-up-a-route).
 
 First, set up a meter:
@@ -227,10 +227,11 @@ For a complete tutorial, see [Meter {{site.base_gateway}} API requests by Consum
 {% endnavtab %}
 {% navtab "{{site.ai_gateway}} LLM tokens" %}
 
-{:.note}
+{:.info}
 > To meter {{site.ai_gateway}} LLM token usage, you must have the [AI Proxy plugin](/plugins/ai-proxy/) configured.
 
 First, set up a meter:
+
 1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing** > **Metering**.
 1. Click **Create meter**.
 1. Select **LLM Tokens**.
