@@ -159,6 +159,18 @@
       "type": "bugfix"
     }
   ],
+  "3.13.0.4": [
+    {
+      "message": "Fixed an issue where ACL denial caused parsing body failure.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    },
+    {
+      "message": "Fixed an issue where we didn't keep the port after MCP conversion.",
+      "scope": "Plugin",
+      "type": "bugfix"
+    }
+  ],
   "3.12.0.0": [
     {
       "message": "The plugin now forwards client headers when calling the tool.\n",
