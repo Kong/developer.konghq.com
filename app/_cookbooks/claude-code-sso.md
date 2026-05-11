@@ -41,7 +41,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: "{{site.konnect_product_name}}"
+    - title: Kong Konnect
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -64,18 +64,20 @@ prereqs:
            ```
 
            This provisions a {{site.konnect_product_name}} Control Plane named `claude-code-sso-recipe`, a local Data Plane connected to it, and prints `export` lines for the rest of the session vars. Paste those into your shell when prompted.
-    - title: kongctl + decK
+    - title: kongctl + decK + jq
       content: |
-        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
+        This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
+        3. Install **jq** from [jqlang.org](https://jqlang.org/).
 
-        You can verify both are installed:
+        You can verify all three are installed:
 
         ```bash
         kongctl version
         deck version
+        jq --version
         ```
     - title: Okta
       icon_url: /assets/icons/okta.svg
@@ -148,7 +150,7 @@ prereqs:
            ```
 
         {:.warning}
-        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's credential precedence rules. If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
+        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's [credential precedence rules](https://code.claude.com/docs/en/iam). If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
 
         **Helper script: okta-claude-auth.sh**
 
@@ -399,6 +401,12 @@ prereqs:
 
         {:.warning}
         > On Windows, Claude Code does not expand `~` in the `apiKeyHelper` field ([known issue](https://github.com/anthropics/claude-code/issues/13013)). Substitute the absolute path, for example `C:\\Users\\you\\.claude\\okta-claude-auth.sh`. Tilde expansion works on macOS and Linux.
+
+        **Token caching and refresh cadence**
+
+        Claude Code caches the helper's output and re-invokes `okta-claude-auth.sh` every 5 minutes by default, and immediately on any HTTP 401 from the upstream. The helper itself caches the access and refresh tokens in `~/.claude/okta-cache/tokens.json` and silently exchanges the refresh token for a new access token when the cached one is within 60 seconds of expiry. On Okta's default 1-hour access-token TTL, the helper refreshes well before Kong sees a stale JWT, and developers never see a browser or a 401 after the initial sign-in.
+
+        If your Okta authorization server is configured with a much shorter access-token TTL (for example, 2 minutes), set `CLAUDE_CODE_API_KEY_HELPER_TTL_MS` in the `env` block of `~/.claude/settings.json` to match. For example, set `"CLAUDE_CODE_API_KEY_HELPER_TTL_MS": "60000"` for 60 seconds. This lowers Claude Code's helper-output cache window so the helper's refresh logic runs before each token expires, avoiding a transient 401-retry cycle on every TTL boundary. The env var has no effect on the helper's refresh-token handling, which is decided inside the script based on the cached `expires_at`. Tightening it does not speed up Okta revocation detection. The Kong OpenID Connect Plugin re-validates the JWT signature and expiry on every request and is the real revocation guard.
     - title: AI Credentials
       content: |
         {% navtabs "Providers" %}
@@ -531,7 +539,7 @@ sequenceDiagram
     participant CC as Claude Code
     participant H as apiKeyHelper script
     participant O as Okta
-    participant K as {{site.base_gateway}}
+    participant K as Kong Gateway
     participant L as LLM Provider
 
     CC->>H: Request bearer token
@@ -581,9 +589,6 @@ rows:
   - component: "LLM provider"
     responsibility: "Model inference."
 {% endtable %}
-
-{:.info}
-> Claude Code sends requests in Anthropic's native format. This recipe uses `llm_format: anthropic` in the AI Proxy Advanced Plugin so requests pass through to Anthropic without translation, and translate to Bedrock's InvokeModel API on the Bedrock tab.
 
 ## How it works
 
@@ -705,14 +710,6 @@ The Plugin requires this to be set explicitly to a stable value so cached entrie
 treat it as mildly sensitive (it influences cache-key predictability). For production,
 regenerate with `openssl rand -hex 16` and source it from a vault.
 
-**Alternative configurations:**
-
-- **`anonymous`**. Set to a Consumer username to fall back to when authentication fails
-  entirely. Creates a public-access tier with its own rate limits and model access.
-- **`groups_required`**. Authorization layer. Reject any JWT whose `groups` claim doesn't include
-  one of the listed values, before consumer-group mapping runs. Useful when only a subset of
-  Okta-authenticated users should see this Service at all.
-
 ### AI Proxy Advanced: model alias matching and tier enforcement
 
 Each tier gets its own AI Proxy Advanced Plugin instance, scoped to one Consumer Group. The
@@ -810,13 +807,7 @@ same bare name (`claude-sonnet-4-6`); for Bedrock, it's the long form
 model, they change `DECK_CHAT_MODEL_1` or `DECK_CHAT_MODEL_2` and re-apply. Developers do not
 need to update anything on their side.
 
-**`logging.log_statistics`**. Appends token usage data (`prompt_tokens`, `completion_tokens`)
-to any attached logging Plugin's output (for example, [HTTP Log](/plugins/http-log/) or
-[File Log](/plugins/file-log/)). Combined with the `X-Authenticated-User` header from the
-OpenID Connect Plugin, this enables per-user cost attribution.
-
-**`logging.log_payloads`**. Includes request and response bodies in logging Plugin output.
-Whether to enable this depends on your organization's observability and compliance requirements.
+**`logging.log_statistics`, `logging.log_payloads`**. Emit token-usage data and request/response bodies to any attached logging Plugin (for example, [HTTP Log](/plugins/http-log/) or [File Log](/plugins/file-log/)) for per-user cost attribution and audit; Konnect Analytics captures token usage independently of these fields.
 
 **`max_request_body_size: 10485760`**. Sets the maximum allowed request body to 10 MB. Claude
 Code conversations accumulate large context windows (100 KB or more of conversation history,
@@ -825,16 +816,6 @@ tool results, and file contents). The default body size limit rejects these requ
 **`response_streaming: allow`**. Permits the Plugin to pass Server-Sent Events streaming
 responses from the provider back to Claude Code. Claude Code uses streaming for interactive
 terminal output. Without this setting, streaming responses can be buffered or rejected.
-
-**Alternative configurations:**
-
-- **Add a third tier.** Create another Consumer Group (for example, `claude-intern-users`),
-  another AI Proxy Advanced instance scoped to it, and another Okta group. The Consumer Group
-  name must match the Okta group name exactly.
-- **Allow the same model under different aliases.** Add multiple targets sharing one alias and
-  use a `balancer` block to load-balance across them, or split traffic by `match` conditions.
-  See the [AI Proxy Advanced reference](/plugins/ai-proxy-advanced/reference/) for routing
-  strategies.
 
 ### AI Rate Limiting Advanced: per-tier token limits
 
@@ -908,7 +889,7 @@ When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `R
 header.
 
 {:.info}
-> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
+> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
 
 ## Apply the Kong configuration
 
@@ -1091,6 +1072,7 @@ control_planes:
 " | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
+
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1268,6 +1250,7 @@ control_planes:
 " | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
+
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1448,6 +1431,7 @@ control_planes:
 " | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
+
 ```
 {: data-test-step="block" .collapsible }
 
@@ -1631,11 +1615,568 @@ control_planes:
 " | kongctl apply -f - -o text --auto-approve --pat "${KONNECT_TOKEN}"
 
 rm -f kong-recipe.yaml
+
 ```
 {: data-test-step="block" .collapsible }
 
 {% endnavtab %}
 {% endnavtabs %}
+
+### Create the Claude Code Usage dashboard
+
+Create a custom dashboard at the org level, pre-filtered to this recipe's Gateway Service. The dashboard surfaces cost, token usage, request volume, model mix, per-developer (Consumer) usage, and latency for traffic through the `claude-code-sso` Service. The dashboard JSON is in the code block below; if a labelled dashboard from a prior apply already exists, the block reuses it instead of creating a duplicate.
+
+```bash
+# Look up the Control Plane and Service IDs so the dashboard's gateway_service
+# preset filter resolves to the scoped UUID Konnect expects.
+CP_ID=$(kongctl get gateway control-plane "${KONNECT_CONTROL_PLANE_NAME}" \
+  --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
+SERVICE_ID=$(kongctl get gateway control-plane service claude-code-sso \
+  --control-plane-name "${KONNECT_CONTROL_PLANE_NAME}" \
+  --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
+
+EXISTING_DASHBOARDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=claude-code-sso-recipe" \
+  --pat "${KONNECT_TOKEN}" -o json --jq '.data | length')
+
+if [ "${EXISTING_DASHBOARDS}" -gt 0 ]; then
+  echo "Claude Code Usage dashboard already exists. Reusing."
+else
+  cat <<'EOF' | jq --arg ref "${CP_ID}:${SERVICE_ID}" '.definition.preset_filters[0].value = [$ref]' > claude-code-usage-dashboard.json
+{
+  "name": "Claude Code Usage",
+  "definition": {
+    "tiles": [
+      {
+        "id": "e3f9588a-71fd-4996-818f-33c93afe6eae",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 1
+          },
+          "position": {
+            "col": 0,
+            "row": 0
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "single_value",
+            "chart_title": "Total cost ($)"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "cost"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": []
+          }
+        }
+      },
+      {
+        "id": "9edab295-d705-403f-a612-59847420a195",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 1
+          },
+          "position": {
+            "col": 2,
+            "row": 0
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "single_value",
+            "chart_title": "Total Tokens"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "total_tokens"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": []
+          }
+        }
+      },
+      {
+        "id": "e5cc504e-c505-4f0b-8633-638a0e7b5833",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 1
+          },
+          "position": {
+            "col": 4,
+            "row": 0
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "single_value",
+            "chart_title": "Total Claude Code requests"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": []
+          }
+        }
+      },
+      {
+        "id": "4ab1fb73-d60b-4f77-b915-a0c88d427263",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 3,
+            "rows": 2
+          },
+          "position": {
+            "col": 0,
+            "row": 1
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "top_n",
+            "chart_title": "Top Claude Models by Usage"
+          },
+          "query": {
+            "limit": 10,
+            "filters": [],
+            "metrics": [
+              "total_tokens",
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model"
+            ]
+          }
+        }
+      },
+      {
+        "id": "e6c5fbe0-9dd2-46ac-af1c-3ba3af9ffd43",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 3,
+            "rows": 2
+          },
+          "position": {
+            "col": 3,
+            "row": 1
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "timeseries_line",
+            "stacked": false,
+            "chart_title": "Model usage trend (top 5)"
+          },
+          "query": {
+            "limit": 5,
+            "filters": [
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "total_tokens"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model",
+              "time"
+            ]
+          }
+        }
+      },
+      {
+        "id": "fd14bf28-0cd2-409e-9a48-2cbbd7907409",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 2
+          },
+          "position": {
+            "col": 0,
+            "row": 3
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "donut",
+            "chart_title": "Claude health check"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "gateway_service",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "status_code_grouped"
+            ]
+          }
+        }
+      },
+      {
+        "id": "f26edaa8-56d5-49f8-8f04-ade9451c76ec",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 2
+          },
+          "position": {
+            "col": 2,
+            "row": 3
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "donut",
+            "chart_title": "Claude provider usage"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "gateway_service",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_provider"
+            ]
+          }
+        }
+      },
+      {
+        "id": "d27037a3-7ace-49cc-affb-3b34a71ab9b1",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 2
+          },
+          "position": {
+            "col": 4,
+            "row": 3
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "timeseries_bar",
+            "stacked": true,
+            "chart_title": "LLM latency (avg)"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_request_model",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_request_model",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "llm_latency_average"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model",
+              "time"
+            ]
+          }
+        }
+      },
+      {
+        "id": "5f88c24b-80de-4fe1-8948-ef0bde29f948",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 3,
+            "rows": 2
+          },
+          "position": {
+            "col": 0,
+            "row": 9
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "horizontal_bar",
+            "stacked": true,
+            "chart_title": "Claude model usage (requests)"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_request_model",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_request_model",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model"
+            ]
+          }
+        }
+      },
+      {
+        "id": "702f6291-e02d-47eb-b38b-85438c643712",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 3,
+            "rows": 2
+          },
+          "position": {
+            "col": 3,
+            "row": 9
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "vertical_bar",
+            "stacked": true,
+            "chart_title": "Claude model usage count (tokens)"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "total_tokens"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model"
+            ]
+          }
+        }
+      },
+      {
+        "id": "2242b427-2999-4cfe-b17e-9e4ca61be362",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 2,
+            "rows": 2
+          },
+          "position": {
+            "col": 0,
+            "row": 11
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "vertical_bar",
+            "stacked": true,
+            "chart_title": "AI security report"
+          },
+          "query": {
+            "filters": [
+              {
+                "field": "status_code_grouped",
+                "value": [
+                  "4XX"
+                ],
+                "operator": "in"
+              },
+              {
+                "field": "ai_provider",
+                "operator": "not_empty"
+              },
+              {
+                "field": "ai_provider",
+                "value": [
+                  "UNSPECIFIED"
+                ],
+                "operator": "not_in"
+              }
+            ],
+            "metrics": [
+              "ai_request_count"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "route",
+              "status_code"
+            ]
+          }
+        }
+      },
+      {
+        "id": "df1b0486-2c04-430e-a8ff-7e26c7821bf7",
+        "type": "chart",
+        "layout": {
+          "size": {
+            "cols": 3,
+            "rows": 2
+          },
+          "position": {
+            "col": 2,
+            "row": 11
+          }
+        },
+        "definition": {
+          "chart": {
+            "type": "timeseries_bar",
+            "stacked": true,
+            "chart_title": "Monthly spend trends"
+          },
+          "query": {
+            "limit": 10,
+            "filters": [],
+            "metrics": [
+              "cost"
+            ],
+            "datasource": "llm_usage",
+            "dimensions": [
+              "ai_request_model",
+              "time"
+            ],
+            "time_range": {
+              "type": "relative",
+              "time_range": "30d"
+            },
+            "granularity": "daily"
+          }
+        }
+      }
+    ],
+    "template_id": "AI_GATEWAY",
+    "preset_filters": [
+      {
+        "field": "gateway_service",
+        "value": [],
+        "operator": "in"
+      }
+    ]
+  },
+  "labels": {
+    "recipe": "claude-code-sso-recipe"
+  }
+}
+EOF
+  DASHBOARD_ID=$(kongctl api post /v2/dashboards \
+    -f claude-code-usage-dashboard.json \
+    --pat "${KONNECT_TOKEN}" -o json --jq '.id' -r)
+  rm -f claude-code-usage-dashboard.json
+  echo "Created Claude Code Usage dashboard (id: ${DASHBOARD_ID}). Open it in Konnect at Observability → Custom dashboards → 'Claude Code Usage'."
+fi
+```
+{: data-test-step="block" .collapsible }
 
 ## Try it out
 
@@ -1664,67 +2205,6 @@ On the first invocation (or when the cached token expires), a browser window ope
 Ask a question. Claude Code sends the request through Kong, which validates your Okta JWT, attaches the matching Consumer Group, runs the alias check, injects the provider API key, and forwards to the configured upstream model.
 
 Subsequent invocations reuse the cached token silently. No browser flow unless the refresh token has expired.
-
-### Example request and response
-
-Claude Code sends requests to Kong in Anthropic's native message format. Here is what a typical request and response look like.
-
-Request:
-
-```json
-POST http://localhost:8000/claude-code-sso/v1/messages
-Authorization: Bearer eyJhbG...
-
-{
-  "model": "claude-sonnet-4-6",
-  "max_tokens": 1024,
-  "messages": [
-    { "role": "user", "content": "What is the capital of France?" }
-  ]
-}
-```
-{:.no-copy-code}
-
-Response (Anthropic format, passed through or translated from the provider):
-
-```json
-{
-  "id": "msg_abc123",
-  "type": "message",
-  "role": "assistant",
-  "model": "claude-sonnet-4-6",
-  "content": [
-    { "type": "text", "text": "The capital of France is Paris." }
-  ],
-  "usage": { "input_tokens": 14, "output_tokens": 9 }
-}
-```
-{:.no-copy-code}
-
-Kong adds the following response headers:
-
-{% table %}
-columns:
-  - title: Header
-    key: header
-  - title: Description
-    key: description
-rows:
-  - header: "`X-Kong-LLM-Model`"
-    description: "Model name selected for this request."
-  - header: "`X-Kong-Upstream-Latency`"
-    description: "Time in milliseconds Kong spent waiting for the provider to respond."
-  - header: "`X-Kong-Proxy-Latency`"
-    description: "Time in milliseconds Kong spent processing the request (auth, rate limiting, format translation)."
-  - header: "`X-AI-RateLimit-Limit-60-{provider}`"
-    description: "Token limit for the 60-second window for this Consumer Group."
-  - header: "`X-AI-RateLimit-Remaining-60-{provider}`"
-    description: "Tokens remaining in the current window."
-  - header: "`RateLimit-Reset`"
-    description: "Seconds until the window resets."
-{% endtable %}
-
-The `Authorization: Bearer` header on the request carries the Okta JWT. Kong validates it, strips it before forwarding upstream, and injects the provider API key in its place. The `usage` object in the response is what the AI Rate Limiting Advanced Plugin reads to track token consumption against the tier's budget.
 
 ### Hit the tier enforcement boundary
 
@@ -1774,13 +2254,28 @@ Swap back the same way: move the user between groups in Okta, clear the cache, a
 
 ### Explore in Konnect
 
-{{site.konnect_product_name}} surfaces every resource the recipe created, so you can see the same configuration the apply block put in place.
+Open [{{site.konnect_product_name}}](https://cloud.konghq.com/) to see the recipe's resources in place.
 
-- **Control Plane.** Navigate to **API Gateway → Gateways → `claude-code-sso-recipe`** to view the Control Plane provisioned by the quickstart and adopted into the kongctl namespace.
-- **Service and Routes.** Open the `claude-code-sso` Gateway Service. The **Routes** tab lists the `claude-code-sso` Route at `/claude-code-sso`. The **Plugins** tab shows the OpenID Connect Plugin attached to the Service, plus the Consumer-Group-scoped AI Proxy Advanced and AI Rate Limiting Advanced Plugins.
-- **Consumer Groups.** The **Consumer Groups** menu under the Control Plane lists `claude-standard-users` and `claude-power-users`, the groups the OpenID Connect Plugin attaches each Okta group to.
-- **Analytics.** The **Analytics** tab on the `claude-code-sso` Gateway Service shows at-a-glance request volume, token counts, and latency for the traffic you just sent.
-- **Observability.** The **Observability** L1 menu in the {{site.konnect_product_name}} sidebar provides a deeper dive across Control Planes, including detailed analytics dashboards and a log explorer view.
+**Claude Code Usage dashboard**
+
+Navigate to **Observability → Custom dashboards → `Claude Code Usage`**. The dashboard is pre-filtered to the `claude-code-sso` Gateway Service and surfaces:
+
+- Total cost, total tokens, and request count for the recipe's traffic.
+- Top Claude models by token and request volume, plus a model-usage trend.
+- Health-check, provider-share, and average-latency breakdowns.
+- Per-developer (Consumer) usage, cost, and token trends, so the per-tier ceilings configured by the recipe are directly visible here.
+- An AI security report scoped to 4XX responses on the recipe's Route.
+
+**Gateway resources**
+
+Navigate to **API Gateway → Gateways → `claude-code-sso-recipe`**. The Control Plane the quickstart provisioned and `kongctl adopt` attached to this namespace surfaces:
+
+- **Gateway services → `claude-code-sso`**. The Service the apply block registered. Its detail page has tabs for Configuration, Routes, Plugins, and Analytics.
+  - **Routes** tab: the `/claude-code-sso` Route.
+  - **Plugins** tab: the OpenID Connect Plugin on the Service, plus the Consumer-Group-scoped AI Proxy Advanced and AI Rate Limiting Advanced Plugins.
+- **Consumer Groups**. The `claude-standard-users` and `claude-power-users` groups the OpenID Connect Plugin maps each Okta group to.
+
+The Gateway Service's **Analytics** tab and the **Observability** L1 menu remain available for deeper exploration beyond the curated dashboard above.
 
 ## Variations and next steps
 
@@ -1795,6 +2290,25 @@ Swap back the same way: move the user between groups in Okta, clear the cache, a
 ## Cleanup
 
 The recipe's `select_tags` and kongctl namespace scoped all resources, so this teardown removes only this recipe's configuration.
+
+Delete the **Claude Code Usage** custom dashboard. The dashboard is an org-level resource and outlives the Control Plane, so remove it before tearing down Kong:
+
+```bash
+DASHBOARD_IDS=$(kongctl api get "/v2/dashboards?filter%5Blabels.recipe%5D=claude-code-sso-recipe" \
+  --pat "${KONNECT_TOKEN}" -o json --jq '.data[].id' -r)
+
+if [ -z "${DASHBOARD_IDS}" ]; then
+  echo "No Claude Code Usage dashboard found. Skipping."
+else
+  for id in ${DASHBOARD_IDS}; do
+    if kongctl api delete "/v2/dashboards/${id}" --pat "${KONNECT_TOKEN}"; then
+      echo "Deleted Claude Code Usage dashboard ${id}."
+    else
+      echo "Failed to delete dashboard ${id}."
+    fi
+  done
+fi
+```
 
 Tear down Kong by deleting the local data plane and the {{site.konnect_product_name}} Control Plane:
 
@@ -1830,3 +2344,6 @@ tmp=$(mktemp) && jq '
 ```
 
 If you previously ran `unset ANTHROPIC_API_KEY` or `unset ANTHROPIC_AUTH_TOKEN` to use this recipe, re-export those values from your shell profile to return to your prior Claude Code authentication setup.
+
+{:.info}
+> **Subscription seat users (Pro, Max, Team, or Enterprise):** Claude Code attempts to fall back to your cached subscription credentials once `apiKeyHelper` is removed from `settings.json`. Run `claude /status` to confirm the session resumed, and run `claude /login` again if it didn't.
