@@ -46,4 +46,7 @@ xai
 bedrock
 avro
 crowdstrike
-aidr
+aidrrequires_embeddings
+skip_tool
+extra_services
+env_vars
