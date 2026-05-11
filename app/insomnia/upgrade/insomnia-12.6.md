@@ -17,9 +17,9 @@ tags:
     - versioning
 
 faqs:
-  - q: Are my project's data safe when running the migration?
-    a: "Yes. Your data is never deleted. The migration moves and restructures files; it doesn't remove them."
-  - q: Why am I getting warnings after upgrading the version?
+  - q: Is my project's data safe during the migration?
+    a: "Yes. Your data is never deleted. The migration moves and restructures files, it doesn't remove them."
+  - q: Why am I getting warnings after upgrading?
     a: |
       Warnings mean that {{site.data.products.insomnia.name}} migrated most projects, but a few couldn't update automatically. Those projects are listed on screen. {{site.data.products.insomnia.name}} has disconnected them from their Git remote and converted them into local projects so you don't lose any data. To restore Git Sync:
       1. Open the project in {{site.data.products.insomnia.name}}.
@@ -33,15 +33,15 @@ faqs:
   - q: I have several Git Sync projects. Will the migration take a long time?
     a: "No. {{site.data.products.insomnia.name}} migrates all Git Sync projects in parallel and the process typically completes in a few seconds, regardless of how many projects you have."
   - q: Why does a project show as **Disconnected** after the migration? 
-    a: This means its migration hit an error and the project was converted to a local project to preserve your data. Reconnect it via Project Settings → Git Sync and re-link it to the same remote. Your remote history is untouched.
-  - q: I'm on a team, do my teammates also need to run this? 
+    a: This means its migration hit an error and the project was converted to a local project to preserve your data. Reconnect it via Project Settings → Git Sync. Your remote history is untouched.
+  - q: Do my teammates also need to run this? 
     a: "Yes. Each person needs to migrate their local installation independently. The migration only changes local files; it doesn't push anything to the shared remote."
   - q: Can I skip the migration?
     a: "No. To use {{site.data.products.insomnia.name}} v12.6.0 and later versions, you need to run the migration. The migration screen continues to appear until it completes successfully."
   - q: Why does the {{site.data.products.insomnia.name}} app show the migration screen every time I open it?
     a: "This means a previous migration attempt didn't finish (for example, the app was closed mid-run). Click **Update Now** to complete it. If the problem persists, copy the error logs and visit the [Git Sync docs](/insomnia/git-sync/) or open a support ticket."
 
-description: This guide walks you through migrating your Git Sync projects structure to use {{site.data.products.insomnia.name}} 12.6.
+description: This guide walks you through migrating your Git Sync project structure to use {{site.data.products.insomnia.name}} 12.6.
 
 related_resources:
   - text: "Git Sync in Insomnia"
@@ -84,7 +84,7 @@ rows:
   
 {% endtable %}
 
-The migration changes the file path only. It doesn't change:
+The migration only changes file paths. It doesn't change:
 
 - API collections
 - Environments
