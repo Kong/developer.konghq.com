@@ -51,6 +51,10 @@ Traditional mocks return static, predefined payloads, while dynamic mocks genera
 {% table %}
 columns:
   - title: Mock server type
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Mock server type
     key: type
   - title: Response behavior
     key: response
@@ -62,13 +66,13 @@ rows:
     example: |
       The Mock Body is `"name": "George"`. Every request to the route returns `George`.
   - type: Dynamic (random)
-    response: Expressions in the Mock Body read data from the incoming request.
+    response: Each request evaluates faker expressions in the Mock Body.
     example: |
-      The Mock Body contains `{"echoed_id": "{{ req.queryParams.id }}"}`. A request from a Collection to `<server-url/mock?id=42` returns `{"echoed_id": "42"}`.
+      The Mock Body contains `{"name": "{{faker.randomFullName}}"}`. Each request returns a different randomly generated name.
   - type: Dynamic (context-aware)
-    response: Combines fixed fields with evaluated expressions.
+    response: Expressions in the Mock Body read data from the incoming Collection request.
     example: |
-      The Mock Body contains `faker.randomFullName` and a fixed `"role": "admin"` field. Each request returns a different name with the role set to `admin`. 
+      The Mock Body contains `{"echoed_id": "{{ req.queryParams.id }}"}`. A request from a Collection to `<server-url/mock?id=42` returns `{"echoed_id": "42"}`. 
   - type: Mixed
     response: Combines fixed fields with evaluated expressions.
     example: |
