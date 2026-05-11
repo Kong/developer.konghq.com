@@ -17,9 +17,15 @@ tldr:
 prereqs:
   inline:
     - title: Helm
-      content: Install [Helm](https://helm.sh/) to install and manage Kubernetes applications.
-    - title: Minikube
-      content: Install [minikube](https://minikube.sigs.k8s.io/docs/) to run a local Kubernetes cluster for testing.
+      include_content: prereqs/helm
+    - title: A running Kubernetes cluster
+      include_content: prereqs/kubernetes/mesh-cluster
+    - title: Install {{site.mesh_product_name}} with demo configuration
+      include_content: prereqs/kubernetes/mesh-quickstart
+cleanup:
+  inline:
+    - title: Clean up {{site.mesh_product_name}}
+      include_content: cleanup/products/mesh
 related_resources:
   - text: Issue identity with MeshIdentity Spire provider
     url: /mesh/meshidentity-spire/
@@ -34,43 +40,15 @@ related_resources:
 
 The [MeshIdentity](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/) compliant and works with [Spire](/mesh/meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
 
-## Start a Kubernetes cluster
-
-Start a local Kubernetes cluster using minikube. The `-p` flag creates a new profile named `mesh-zone`:
-
-```bash
-minikube start -p mesh-zone
-```
+## Verify the demo application
 
 {:.info}
-> If you already have a running Kubernetes cluster, either locally or in the cloud (for example, EKS, GKE, or AKS), you can skip this step.
+> For `MeshIdentity` to work, `meshServices.mode: Exclusive` must be set on the Mesh resource. This value is already configured in the [demo Mesh](#install-kong-mesh-with-demo-configuration).
 
-## Install {{site.mesh_product_name}}
-
-Install the {{site.mesh_product_name}} control plane with Helm:
-
-```sh
-helm repo add {{site.mesh_helm_repo_name}} {{site.mesh_helm_repo_url}}
-helm repo update
-helm install --create-namespace --namespace {{ site.mesh_namespace }} {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
-```
-
-## Deploy the demo application
-
-1. Deploy the application:
+1. Port-forward the `demo-app` service on port `5050`:
 
    ```sh
-   kubectl apply -f https://raw.githubusercontent.com/kumahq/kuma-counter-demo/refs/heads/main/k8s/000-with-kuma.yaml
-   kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
-   ```
-
-   {:.warning}
-   > For `MeshIdentity` to work, set `meshServices.mode: Exclusive` on the Mesh resource. Without this mode, workload identities are not issued as expected. This value is already configured in the demo.
-
-1. Port-forward the service to the namespace on port `5050`:
-
-   ```sh
-   kubectl port-forward svc/demo-app -n kuma-demo 5050:5050
+   kubectl port-forward svc/demo-app -n kong-mesh-demo 5050:5050
    ```
 
 1. Send a request to `demo-app`:
@@ -125,7 +103,7 @@ spec:
 
 `MeshIdentity` uses `selector` to choose the data planes that receive identities. In this example, the selector issues identity to all data planes in the mesh.
 
-`spiffeID` defines templates for workload SPIFFE IDs. In this example, the trust domain template combines the mesh name, zone name, and `.mesh.local`. The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.default.mesh.local/ns/kuma-demo/sa/default`.
+`spiffeID` defines templates for workload SPIFFE IDs. In this example, the trust domain template combines the mesh name, zone name, and `.mesh.local`. The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/default`.
 
 The `provider` field contains identity-provider-specific configuration. This guide uses the `Bundled` provider. This configuration enables `MeshTrust` generation, allows self-signed certificates, and sets the certificate expiry time to 24h.
 
@@ -222,7 +200,7 @@ You should see an error similar to:
 
 Issuing identity to workloads enables mTLS. Zero trust is the default behavior, so without a `MeshTrafficPermission` to allow traffic, these errors are expected.
 
-## Allow traffic in the `kuma-demo` namespace
+## Allow traffic in the `kong-mesh-demo` namespace
 
 Create a `MeshTrafficPermission`:
 
@@ -231,7 +209,7 @@ echo "apiVersion: kuma.io/v1alpha1
 kind: MeshTrafficPermission
 metadata:
   name: mtp
-  namespace: kuma-demo
+  namespace: kong-mesh-demo
   labels:
     kuma.io/mesh: default
 spec:
@@ -240,10 +218,10 @@ spec:
         allow:
           - spiffeID:
               type: Prefix
-              value: spiffe://default.default.mesh.local/ns/kuma-demo" | kubectl apply -f -
+              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo" | kubectl apply -f -
 ```
 
-This `MeshTrafficPermission` uses rules API SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kuma-demo`.
+This `MeshTrafficPermission` uses rules API SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`.
 
 ## Validate the result
 
