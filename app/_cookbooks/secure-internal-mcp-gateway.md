@@ -37,7 +37,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -60,7 +60,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -83,7 +83,7 @@ prereqs:
 
         You need an Okta organization with admin access. The steps below create two Okta applications, configure a `groups` claim, create two groups, set up a test user (new or existing), and export Kong's introspection credentials.
 
-        **Create the Kong Gateway application**
+        **Create the {{site.base_gateway}} application**
 
         This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Okta's token introspection endpoint.
 
@@ -132,7 +132,7 @@ prereqs:
 
         **Export Kong's Okta endpoints and credentials**
 
-        Export the authorization server URL, the introspection endpoint, and the **Kong Gateway** application's Client ID and Secret. The MCP Client (SPA) Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the authorization server URL, the introspection endpoint, and the **{{site.base_gateway}}** application's Client ID and Secret. The MCP Client (SPA) Client ID is not exported here. It is used at flow time by the MCP client itself.
 
         ```bash
         export DECK_OAUTH_AUTH_SERVER='https://your-org.okta.com/oauth2/default'
@@ -150,7 +150,7 @@ prereqs:
 
         In the Keycloak Admin Console, create a new realm (for example, `mcp-demo`), or use an existing one.
 
-        **Create the Kong Gateway client**
+        **Create the {{site.base_gateway}} client**
 
         This is a confidential client that represents Kong as the resource server. Kong uses its credentials to call Keycloak's token introspection endpoint.
 
@@ -198,7 +198,7 @@ prereqs:
 
         **Export Kong's Keycloak endpoints and credentials**
 
-        Export the realm URL, the introspection endpoint, and the **Kong Gateway** client's ID and Secret. The MCP Client's Client ID is not exported here. It is used at flow time by the MCP client itself.
+        Export the realm URL, the introspection endpoint, and the **{{site.base_gateway}}** client's ID and Secret. The MCP Client's Client ID is not exported here. It is used at flow time by the MCP client itself.
 
         ```bash
         export DECK_OAUTH_AUTH_SERVER='https://your-keycloak-host/realms/mcp-demo'
@@ -275,7 +275,7 @@ ACLs without a separate authentication Plugin.
 {% mermaid %}
 sequenceDiagram
     participant C as MCP Client
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant IdP as Identity Provider
     participant B as Backend APIs
 
