@@ -82,8 +82,8 @@ flowchart LR
     KGW --> BG1 & BG2
     BG1 <-.-> BG2
     
-    linkStyle 0,1,3,4,6,9,11,12,14,17,18 stroke-width:2px,stroke:#86e2cc
-    linkStyle 2,5,7,8,10,13,15,16,19 stroke-width:2px
+    linkStyle 0,1,3,4,6,9,11,12,14,17,18 stroke-width:2px!important,stroke:#86e2cc!important
+    linkStyle 2,5,7,8,10,13,15,16,19 stroke-width:3px!important
 {% endmermaid %}
 
 ## Delegated gateway
@@ -133,6 +133,6 @@ flowchart LR
     KGW --> DG1 & DG2
     DG1 <--> DG2
 
-    linkStyle 0,1,3,4,6,9,11,12,14,17,18,19 stroke-width:2px,stroke:#86e2cc
-    linkStyle 2,5,7,8,10,13,15,16 stroke-width:2px
+    linkStyle 0,1,3,4,6,9,11,12,14,17,18,19 stroke-width:2px!important,stroke:#86e2cc!important
+    linkStyle 2,5,7,8,10,13,15,16 stroke-width:3px!important
 {% endmermaid %}
