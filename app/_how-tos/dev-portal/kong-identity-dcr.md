@@ -51,13 +51,13 @@ prereqs:
            export PORTAL_URL='
            https://your-domain.us.kongportals.com'
            ```
-        1. In your Dev Portal sidebar, click **Settings**.
+        1. Click the **Settings** tab.
         1. Click the **Security** tab.
         1. Enable **Auto approve applications**. 
            This auto approves developer applications in your Dev Portal and makes it easier to test. 
         1. Click **Save changes**.
         1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
-        1. In the Dev Portal sidebar, click [**APIs**](https://cloud.konghq.com/portals/apis/).
+        1. In the Dev Portal sidebar, click [**Published APIs**](https://cloud.konghq.com/portals/apis/).
         1. Click **New API**.
         1. In the **API name** field, enter `test-kong-identity-dcr`.
         1. Click **Create**.
@@ -76,7 +76,7 @@ prereqs:
         1. Click **Create account**.
         1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, navigate to [**Dev Portal**](https://cloud.konghq.com/portals/).
         1. Click **Test Kong Identity DCR**.
-        1. In the Dev Portal sidebar, click **Access and approvals**.
+        1. Select the **Access and approvals** tab.
         1. Click your test developer.
         1. From the **Actions** dropdown menu, select "Approve". 
       icon_url: /assets/icons/dev-portal.svg
@@ -156,7 +156,7 @@ Now that the application auth strategy is configured, you can apply it to an API
 
 1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
 1. Click your Dev Portal.
-1. In the Dev Portal sidebar, click **Published APIs**.
+1. Click the **Published APIs** tab.
 1. Click **Publish API**.
 1. From the **API** dropdown menu, select "test-kong-identity-dcr". This is the API you [created in the prerequisites](#dev-portal)
 1. In the **Authentication strategy** dropdown menu, select "Kong Identity". 

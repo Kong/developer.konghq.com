@@ -129,9 +129,9 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 Now that the application auth strategy is configured, you can apply it to an API.
 
-1. Navigate to your Dev Portal in {{site.konnect_short_name}} and click **Published APIs** in the sidebar.
+1. Navigate to your Dev Portal in {{site.konnect_short_name}} and click the **Published APIs** tab.
 
-1. Click **Publish API**, select the API you want to publish, and select your Azure auth strategy for the **Authentication strategy**.
+1. Select the API you want to publish, and select your Azure auth strategy for the **Authentication strategy**.
 
 1. Click **Publish API**.
 
