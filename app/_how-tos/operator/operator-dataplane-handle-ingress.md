@@ -26,6 +26,9 @@ tldr:
 
 While the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) is the preferred mechanism for configuring inbound routing, {{ site.operator_product_name }} also supports the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
+
+You can use [ingress2gateway](/kubernetes-ingress-controller/migrate/ingress-to-gateway/) to help with the migration to the Gateway API from Ingress resources.
+
 {% include /k8s/kong-namespace.md %}
 
 ## Create the GatewayConfiguration
