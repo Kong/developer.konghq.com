@@ -148,7 +148,7 @@ prereqs:
            ```
 
         {:.warning}
-        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's [credential precedence rules](https://code.claude.com/docs/en/security-and-keys). If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
+        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's credential precedence rules. If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
 
         **Helper script: okta-claude-auth.sh**
 
@@ -908,7 +908,7 @@ When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `R
 header.
 
 {:.info}
-> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
+> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
 
 ## Apply the Kong configuration
 
