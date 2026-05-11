@@ -7,6 +7,12 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 ## Upgrade to `2.14.x`
 
+### cert-manager mesh identity: `list` verb added to RBAC Role
+
+The `kong-mesh-control-plane-kmesh` Role now includes the `list` verb for `cert-manager.io/certificaterequests`. This is required for the startup sweep that reclaims orphaned `CertificateRequest` objects left by a previous control-plane crash.
+
+**Action required:** If you manage RBAC outside of Helm, add `list` to the verbs for `cert-manager.io/certificaterequests` in the Role bound to the Kong Mesh system namespace.
+
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
 
