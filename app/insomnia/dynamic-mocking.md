@@ -51,10 +51,6 @@ Traditional mocks return static, predefined payloads, while dynamic mocks genera
 {% table %}
 columns:
   - title: Mock server type
-<!-- vale off -->
-{% table %}
-columns:
-  - title: Mock server type
     key: type
   - title: Response behavior
     key: response
