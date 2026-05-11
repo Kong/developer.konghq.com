@@ -10,7 +10,7 @@ products:
 beta: true
 min_version:
   insomnia: '12.6'
-permalink: /insomnia/upgrade/git-sync-migration-12.6/
+permalink: /insomnia/upgrade/git-sync-12.6/
 tags:
     - upgrade
     - versioning
