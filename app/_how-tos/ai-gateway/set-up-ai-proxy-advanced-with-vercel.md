@@ -45,7 +45,7 @@ prereqs:
   inline:
     - title: Vercel
       include_content: prereqs/vercel
-      icon_url: /assets/icons/gateway.svg
+      icon_url: /assets/icons/vercel.svg
   entities:
     services:
       - example-service
