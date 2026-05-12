@@ -1,5 +1,10 @@
 <template>
-  <div class="relative inline-flex" ref="container">
+  <div class="relative inline-flex items-center gap-2" ref="container">
+    <span
+      v-if="tokenLabel"
+      class="text-xs text-terciary tabular-nums"
+      :title="`Approximate token count for this page (chars / 4)`"
+    >{{ tokenLabel }}</span>
     <div class="inline-flex items-stretch rounded-lg bg-secondary text-sm text-terciary">
       <button
         class="flex items-center gap-2 px-2 py-1.5 hover:bg-hover-component/100 transition-colors rounded-l-lg text-xs border border-primary/10 text-secondary"
@@ -155,6 +160,20 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  tokens: {
+    type: Number,
+    default: null,
+  },
+});
+
+const tokenLabel = computed(() => {
+  if (props.tokens === null || !Number.isFinite(props.tokens) || props.tokens <= 0) {
+    return null;
+  }
+  if (props.tokens >= 1000) {
+    return `~${(props.tokens / 1000).toFixed(props.tokens >= 10000 ? 0 : 1)}K tokens`;
+  }
+  return `~${props.tokens} tokens`;
 });
 
 const isOpen = ref(false);
