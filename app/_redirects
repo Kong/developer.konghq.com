@@ -14,8 +14,11 @@
 /kongctl/list/gateway/route/     /kongctl/list/gateway/
 /kongctl/list/gateway/service/   /kongctl/list/gateway/
 
-# Plugin examples
+# Plugins
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+/gateway/plugin-development/  /custom-plugins/
+/gateway/plugin-development/*  /custom-plugins/
+
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone/
 /mesh-manager/migrate-zone/  /mesh/migrate-zone/
