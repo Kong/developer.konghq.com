@@ -147,26 +147,7 @@ In the generated `MeshTrust`, the control plane generates the `caBundle`, and th
 
 ## Allow traffic
 
-Create a `MeshTrafficPermission`:
-
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshTrafficPermission
-metadata:
-  name: mtp
-  namespace: kong-mesh-demo
-  labels:
-    kuma.io/mesh: default
-spec:
-  rules:
-    - default:
-        allow:
-          - spiffeID:
-              type: Prefix
-              value: spiffe://default.default.mesh.local/ns/kong-mesh-demo" | kubectl apply -f -
-```
-
-This `MeshTrafficPermission` uses SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`.
+{% include mesh/meshidentity/allow-traffic.md %}
 
 ## Validate
 

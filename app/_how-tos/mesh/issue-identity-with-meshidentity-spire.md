@@ -46,12 +46,12 @@ prereqs:
              --repo https://spiffe.github.io/helm-charts-hardened/
            ```
 
-        1. Install Spire with the trust domain `default.local-zone.mesh.local`. You'll use this trust domain later when you configure `MeshIdentity`:
+        1. Install Spire with the trust domain `default.default.mesh.local`. You'll use this trust domain later when you configure `MeshIdentity`:
 
            ```sh
            helm upgrade --install -n spire spire spire \
              --repo https://spiffe.github.io/helm-charts-hardened/ \
-             --set "global.spire.trustDomain=default.local-zone.mesh.local" \
+             --set "global.spire.trustDomain=default.default.mesh.local" \
              --set "global.spire.tools.kubectl.tag=v1.31.11"
            ```
     - title: Deploy the demo application
@@ -122,7 +122,7 @@ spec:
     dataplane:
       matchLabels: {}
   spiffeID:
-    trustDomain: default.local-zone.mesh.local
+    trustDomain: default.default.mesh.local
     path: '{% raw %}/ns/{{ .Namespace }}/sa/{{ .ServiceAccount }}{% endraw %}'
   provider:
     type: Spire
@@ -131,7 +131,7 @@ spec:
 
 `MeshIdentity` uses `selector` to choose the data planes that receive identities. In this example, the selector issues identity to all data planes in the mesh.
 
-`spiffeID` defines templates for workload SPIFFE IDs. The trust domain must match the trust domain you configured in Spire (`default.local-zone.mesh.local`). The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.local-zone.mesh.local/ns/kong-mesh-demo/sa/default`.
+`spiffeID` defines templates for workload SPIFFE IDs. The trust domain must match the trust domain you configured in Spire (`default.default.mesh.local`). The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/default`.
 
 The `provider` field contains identity provider-specific configuration. This guide uses the `Spire` provider.
 
@@ -141,26 +141,7 @@ The `provider` field contains identity provider-specific configuration. This gui
 
 ## Allow traffic
 
-Create a `MeshTrafficPermission`:
-
-```sh
-echo "apiVersion: kuma.io/v1alpha1
-kind: MeshTrafficPermission
-metadata:
-  name: mtp
-  namespace: kong-mesh-demo
-  labels:
-    kuma.io/mesh: default
-spec:
-  rules:
-    - default:
-        allow:
-          - spiffeID:
-              type: Prefix
-              value: spiffe://default.local-zone.mesh.local/ns/kong-mesh-demo" | kubectl apply -f -
-```
-
-This `MeshTrafficPermission` uses SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.local-zone.mesh.local/ns/kong-mesh-demo`. Based on the template in the `MeshIdentity`, every workload in the `default` mesh and `kong-mesh-demo` namespace has a SPIFFE ID with this prefix. You can also allow only workloads matching their exact SPIFFE ID for more fine-grained control.
+{% include mesh/meshidentity/allow-traffic.md %}
 
 ## Validate
 
