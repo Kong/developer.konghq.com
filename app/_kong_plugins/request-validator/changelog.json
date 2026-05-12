@@ -75,6 +75,13 @@
       "scope": "Plugin"
     }
   ],
+  "3.4.3.26": [
+    {
+      "message": "Added `array_length_compat` config option to allow legacy Draft 4 schemas to use `minLength`/`maxLength` keywords for array length validation.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
   "3.4.0.0": [
     {
       "message": "Optimized the response message for invalid requests.",
