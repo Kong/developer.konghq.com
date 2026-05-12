@@ -6,8 +6,8 @@ info:
     name: Kong
     url: 'https://cloud.konghq.com'
   description: Konnect Metering & Billing API.
-  x-oas-source: kong/platform-api@c8eac024b35f852ead801629059f98afee40b567
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/c8eac024b35f852ead801629059f98afee40b567'
+  x-oas-source: kong/platform-api@cbe858b11c33916d92bdc6aa7e7769812a516491
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/cbe858b11c33916d92bdc6aa7e7769812a516491'
 servers:
   - url: 'https://us.api.konghq.com/v3'
     description: United-States Production region
@@ -501,6 +501,34 @@ paths:
       description: List meters.
       parameters:
         - $ref: '#/components/parameters/PagePaginationQuery'
+        - name: sort
+          in: query
+          description: |-
+            Sort meters returned in the response.
+            Supported sort attributes are:
+            - `key`
+            - `name`
+            - `aggregation`
+            - `createdAt` (default)
+            - `updatedAt`
+
+            The `asc` suffix is optional as the default sort order is ascending.
+            The `desc` suffix is used to specify a descending order.
+          required: false
+          schema:
+            $ref: '#/components/schemas/SortQuery'
+          explode: false
+          style: form
+        - name: filter
+          in: query
+          description: |-
+            Filter meters returned in the response.
+
+            To filter meters by key add the following query param: filter[key]=my-meter-key
+          required: false
+          schema:
+            $ref: '#/components/schemas/ListMetersParamsFilter'
+          style: deepObject
       responses:
         '200':
           description: Page paginated response.
@@ -918,8 +946,10 @@ components:
         type: object
         properties:
           size:
+            description: The number of items to include per page.
             type: integer
           number:
+            description: The page number.
             type: integer
       style: deepObject
   schemas:
@@ -1127,6 +1157,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - type
         - definition
         - status
@@ -1226,6 +1258,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - type
         - definition
         - status
@@ -1335,6 +1369,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - type
         - definition
         - status
@@ -1623,6 +1659,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - key
     BillingCustomerData:
       description: Billing customer data.
@@ -2222,6 +2260,7 @@ components:
                     stripe:
                       description: Stripe tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
@@ -2235,6 +2274,7 @@ components:
                     external_invoicing:
                       description: External invoicing tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: The tax code should be interpreted by the external invoicing provider.
@@ -2244,6 +2284,26 @@ components:
                       required:
                         - code
                       title: External invoicing tax config
+                    tax_code_id:
+                      description: Tax code ID.
+                      type: string
+                      example: 01G65Z755AFWAKHE12NY0CQ9FH
+                      deprecated: true
+                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                      title: Tax code ID
+                    tax_code:
+                      description: |-
+                        Tax code reference.
+
+                        When both `tax_code` and `tax_code_id` are provided, `tax_code` takes precedence.
+                        When `stripe.code` is also provided, `tax_code` still wins and `stripe.code` is ignored.
+                      type: object
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/ULID'
+                      required:
+                        - id
+                      title: Tax code
               title: Workflow tax settings
         apps:
           description: The applications used by this billing profile.
@@ -2295,6 +2355,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - supplier
         - workflow
         - apps
@@ -2387,6 +2449,8 @@ components:
           title: Status
       required:
         - id
+        - created_at
+        - updated_at
         - customer_id
         - billing_anchor
         - status
@@ -2571,6 +2635,8 @@ components:
               title: Status
           required:
             - id
+            - created_at
+            - updated_at
             - customer_id
             - billing_anchor
             - status
@@ -2649,6 +2715,8 @@ components:
               title: Status
           required:
             - id
+            - created_at
+            - updated_at
             - customer_id
             - billing_anchor
             - status
@@ -3013,6 +3081,7 @@ components:
                     stripe:
                       description: Stripe tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
@@ -3026,6 +3095,7 @@ components:
                     external_invoicing:
                       description: External invoicing tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: The tax code should be interpreted by the external invoicing provider.
@@ -3035,6 +3105,26 @@ components:
                       required:
                         - code
                       title: External invoicing tax config
+                    tax_code_id:
+                      description: Tax code ID.
+                      type: string
+                      example: 01G65Z755AFWAKHE12NY0CQ9FH
+                      deprecated: true
+                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                      title: Tax code ID
+                    tax_code:
+                      description: |-
+                        Tax code reference.
+
+                        When both `tax_code` and `tax_code_id` are provided, `tax_code` takes precedence.
+                        When `stripe.code` is also provided, `tax_code` still wins and `stripe.code` is ignored.
+                      type: object
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/ULID'
+                      required:
+                        - id
+                      title: Tax code
               title: Workflow tax settings
         apps:
           description: The applications used by this billing profile.
@@ -3300,14 +3390,174 @@ components:
       type: object
       properties:
         key:
-          description: |-
-            Filter customers by key.
-            Case-insensitive partial match.
-          type: string
-          example: 019ae40f-4258-7f15-9491-842f42a7d6ac
-          maxLength: 256
-          minLength: 1
-          title: External Resource Key
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+        name:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+        primary_email:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+    ListMetersParamsFilter:
+      description: Filter options for listing meters.
+      type: object
+      properties:
+        key:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
+        name:
+          description: 'Filter using **one** of the following operators: `eq`, `oeq`, `neq`, `contains`, `ocontains`'
+          type: object
+          additionalProperties: false
+          properties:
+            eq:
+              description: The field exactly matches the provided value.
+              type: string
+              example: '?filter[field_name_here][eq]=foo'
+            contains:
+              description: The field contains the provided value.
+              type: string
+              example: '?filter[field_name_here][contains]=foo'
+            ocontains:
+              description: The field contains any of the provided values.
+              type: string
+              example: '?filter[field_name_here][ocontains]=foo,bar'
+            oeq:
+              description: The field matches any of the provided values.
+              type: string
+              example: '?filter[field_name_here][oeq]=foo,bar'
+            neq:
+              description: The field does not match the provided value.
+              type: string
+              example: '?filter[field_name_here][neq]=bar'
+          x-examples:
+            example-1:
+              contains: some-value
+              ocontains: 'this-value,or-that-value'
+              oeq: 'some-value,some-other-value'
+              neq: not-this-value
+            example-2:
+              eq: some-value
     Meter:
       description: A meter is a configuration that defines how to match and aggregate events.
       type: object
@@ -3420,6 +3670,8 @@ components:
       required:
         - id
         - name
+        - created_at
+        - updated_at
         - key
         - aggregation
         - event_type
@@ -3778,6 +4030,7 @@ components:
                     stripe:
                       description: Stripe tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: 'Product [tax code](https://docs.stripe.com/tax/tax-codes).'
@@ -3791,6 +4044,7 @@ components:
                     external_invoicing:
                       description: External invoicing tax config.
                       type: object
+                      deprecated: true
                       properties:
                         code:
                           description: The tax code should be interpreted by the external invoicing provider.
@@ -3800,6 +4054,26 @@ components:
                       required:
                         - code
                       title: External invoicing tax config
+                    tax_code_id:
+                      description: Tax code ID.
+                      type: string
+                      example: 01G65Z755AFWAKHE12NY0CQ9FH
+                      deprecated: true
+                      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
+                      title: Tax code ID
+                    tax_code:
+                      description: |-
+                        Tax code reference.
+
+                        When both `tax_code` and `tax_code_id` are provided, `tax_code` takes precedence.
+                        When `stripe.code` is also provided, `tax_code` still wins and `stripe.code` is ignored.
+                      type: object
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/ULID'
+                      required:
+                        - id
+                      title: Tax code
               title: Workflow tax settings
         default:
           description: Whether this is the default profile.
@@ -3974,6 +4248,15 @@ components:
       description: Subject key.
       type: string
       minLength: 1
+    SortQuery:
+      description: |
+        The `asc` suffix is optional as the default sort order is ascending.
+        The `desc` suffix is used to specify a descending order.
+        Multiple sort attributes may be provided via a comma separated list.
+        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
+      type: string
+      example: created_at desc
+      title: SortQuery
     Labels:
       description: |
         Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types. 
@@ -4307,15 +4590,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
-    SortQuery:
-      description: |
-        The `asc` suffix is optional as the default sort order is ascending.
-        The `desc` suffix is used to specify a descending order.
-        Multiple sort attributes may be provided via a comma separated list.
-        JSONPath notation may be used to specify a sub-attribute (eg: 'foo.bar desc').
-      type: string
-      example: created_at desc
-      title: SortQuery
     GoneError:
       allOf:
         - $ref: '#/components/schemas/BaseError'

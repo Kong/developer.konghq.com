@@ -46,7 +46,7 @@ faqs:
       * Without Dev Portal app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
-      [API Products](/api-products/) were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
+      API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
   - q: My team has a Dev Portal, why can't I see APIs?
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
   - q: |
@@ -241,6 +241,19 @@ For example, if you had a document configured like the following:
 Based on this data, you get the following generated URLs:
 * Generated URL for `about` page: `/apis/routes-v3/docs/about`
 * Generated URL for `info` page: `/apis/routes-v3/docs/about/info`
+
+## API image
+
+You can upload an image for your API. 
+The image is displayed as an icon for your API in any [Dev Portal](/dev-portal/) where the API is published.
+The image must be a PNG, JPG, or SVG image under 500 KB that’s no larger than 350 × 350 pixels.
+
+To upload an API image, do the following:
+1. In the {{site.konnect_short_name}} sidebar, click **{{site.konnect_catalog}}**.
+1. In the {{site.konnect_catalog}} sidebar, click **[APIs](https://cloud.konghq.com/apis)**. 
+1. Click the API you want to add the image to.
+1. From the action menu, select "Edit".
+1. Click **Upload image** and upload an image.
 
 ## Allow developers to consume your API
 

@@ -39,7 +39,7 @@ The following objects are geo-specific:
 * [Gateway Services](/gateway/entities/service/)
 * [Routes](/gateway/entities/route/)
 * [Consumers](/gateway/entities/consumer/)
-* [API products](/api/konnect/api-products/)
+* [APIs](/catalog/apis/)
 * [Application registration](/dev-portal/self-service/#application-authentication-strategies)
 * [Dev portals](/dev-portal/)
 * [Metering & Billing end user data](/metering-and-billing/)

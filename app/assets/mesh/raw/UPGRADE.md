@@ -7,8 +7,40 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 ## Upgrade to `2.14.x`
 
+### cert-manager mesh identity: `list` verb added to RBAC Role
+
+The `kong-mesh-control-plane-kmesh` Role now includes the `list` verb for `cert-manager.io/certificaterequests`. This is required for the startup sweep that reclaims orphaned `CertificateRequest` objects left by a previous control-plane crash.
+
+**Action required:** If you manage RBAC outside of Helm, add `list` to the verbs for `cert-manager.io/certificaterequests` in the Role bound to the Kong Mesh system namespace.
+
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+### Kubernetes native sidecar containers enabled by default
+
+The `experimental.sidecarContainers` feature (K8s native sidecar containers via init containers with `restartPolicy: Always`) is now **enabled by default**.
+
+**What changed:**
+- `KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS` defaults to `true`
+- Helm value: `experimental.sidecarContainers` (default `true`)
+- Requires Kubernetes 1.29+ (native sidecar container support is GA)
+
+**Action required:**
+
+None for Kubernetes 1.29+. Native sidecars start before app containers and outlive them, improving graceful shutdown and startup ordering.
+
+To revert to the old behavior (init-based injection without `restartPolicy: Always`):
+
+**Kubernetes (Helm)**
+```yaml
+experimental:
+  sidecarContainers: false
+```
+
+**Control plane environment variable**
+```sh
+KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS=false
+```
 
 ### DNS server domain must not start with a dot
 
@@ -34,7 +66,39 @@ Or via environment variable: `KUMA_DNS_SERVER_DOMAIN=mesh`
 
 Review your `HostnameGenerator` resources and ensure their `spec.template` values produce valid [RFC 1123](https://tools.ietf.org/html/rfc1123) DNS subdomains for all inputs.
 
+### localhost-admin is restricted to direct loopback; CORS is now opt-in
 
+The defaults have been tightened:
+
+- `LocalhostIsAdmin` still defaults to `true`, but only direct loopback requests are promoted to admin.
+- `CorsAllowedDomains` now defaults to `[]` / empty (was `[".*"]`).
+
+The `LocalhostIsAdmin` restriction also applies to release branches as a security fix: the authenticator now only grants admin when the request is a **direct** loopback call (loopback `RemoteAddr`, loopback `Host`, no proxy-hop headers, and a matching `Origin` if present). Browsers connecting over loopback from a non-localhost page are no longer promoted to admin.
+
+**Action required:**
+
+_Local bootstrap / development (Universal mode)_
+
+If you rely on `LocalhostIsAdmin` for initial kumactl setup, keep using direct loopback access or switch to token-based authentication with `kumactl config control-planes add --auth-type=tokens`.
+
+_Reverse-proxy / CORS users_
+
+If your deployment relies on cross-origin API access (e.g., a custom GUI on a different port), set the allowed domains explicitly:
+
+```yaml
+# kuma-cp config
+apiServer:
+  corsAllowedDomains:
+    - "https://my-gui.example.com"
+```
+
+or via environment variable:
+
+```sh
+KUMA_API_SERVER_CORS_ALLOWED_DOMAINS=https://my-gui.example.com
+```
+
+The Helm chart already sets `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN=false` and is not affected by the `LocalhostIsAdmin` default.
 
 ### CPU limits removed from `kuma-init` and `kuma-sidecar` containers
 

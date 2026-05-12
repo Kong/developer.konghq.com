@@ -38,7 +38,7 @@ tags:
 
 tldr:
   q: How do I use Gemini's googleSearch tool with the AI Proxy Advanced plugin?
-  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3-pro-preview model, then declare the googleSearch tool in your requests using the OpenAI tools array.
+  a: Configure the AI Proxy Advanced plugin with the Gemini provider and gemini-3.1-pro-preview model, then declare the googleSearch tool in your requests using the OpenAI tools array.
 
 tools:
   - deck
@@ -86,7 +86,7 @@ faqs:
 
 ## Configure the plugin
 
-First, configure AI Proxy Advanced to use the gemini-3-pro-preview model via Vertex AI:
+First, configure AI Proxy Advanced to use the gemini-3.1-pro-preview model via Vertex AI:
 
 {% entity_examples %}
 entities:
@@ -101,7 +101,7 @@ entities:
               log_statistics: true
             model:
               provider: gemini
-              name: gemini-3-pro-preview
+              name: gemini-3.1-pro-preview
               options:
                 gemini:
                   api_endpoint: aiplatform.googleapis.com
@@ -141,7 +141,7 @@ print("Testing Gemini 3 googleSearch tool")
 print("=" * 50)
 print("\n=== Step 1: Current weather data ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "What's the current weather in San Francisco?"}
     ],
@@ -154,7 +154,7 @@ print(f"Response includes current data: {'✓' if '2025' in content else '✗'}"
 print(f"\n{content}\n")
 print("\n=== Step 2: Search with JSON output ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "Find the top 3 AI conferences in 2025. Return as JSON with name, date, location fields."}
     ],
@@ -180,7 +180,7 @@ except Exception as e:
 print(f"\n{content}\n")
 print("\n=== Step 3: Query without search need ===")
 response = client.chat.completions.create(
-    model="gemini-3-pro-preview",
+    model="gemini-3.1-pro-preview",
     messages=[
         {"role": "user", "content": "What is 2+2?"}
     ],

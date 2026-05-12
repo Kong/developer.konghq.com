@@ -1,6 +1,6 @@
 ---
 title: "Contributing to docs"
-content_type: policy
+content_type: reference
 layout: reference
 
 breadcrumbs:

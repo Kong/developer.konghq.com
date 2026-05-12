@@ -21,8 +21,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@50aa6fab9d9bf5e362eca279608c3bad33571fa5
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/50aa6fab9d9bf5e362eca279608c3bad33571fa5'
+  x-oas-source: kong/platform-api@f1a9215cfccf83b16e2fa38952edb22d5ba89dd4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/f1a9215cfccf83b16e2fa38952edb22d5ba89dd4'
 servers:
   - url: 'https://us.api.konghq.com/v1'
     description: United-States Production region
@@ -2084,6 +2084,21 @@ components:
           $ref: '#/components/schemas/VirtualClusterAuthenticationSensitiveDataAwareSchemes'
         namespace:
           $ref: '#/components/schemas/VirtualClusterNamespace'
+        topic_aliases:
+          description: |-
+            **Pre-release Feature**
+            This feature is currently in beta and is subject to change.
+
+            Topic aliases allow exposing backend topics under additional names.
+            An alias creates a new entry point to the same physical data.
+            The alias `topic` field references namespace-visible names (if namespace is configured).
+            Aliases are independent of namespace and can be used without it.
+
+            **Requires a minimum runtime version of `1.2`**.
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualClusterTopicAlias'
+          x-min-runtime-version: '1.2'
         name:
           $ref: '#/components/schemas/VirtualClusterName'
         dns_label:
@@ -4865,6 +4880,64 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VirtualClusterNamespaceIdSelector'
+    VirtualClusterTopicAlias:
+      description: |-
+        **Pre-release Feature**
+        This feature is currently in beta and is subject to change.
+
+        A topic alias maps an alias name to a namespace-visible topic name.
+        Clients can produce to, consume from, and discover the topic under the alias name.
+        The original topic name remains accessible.
+
+        **Requires a minimum runtime version of `1.2`**.
+      type: object
+      properties:
+        alias:
+          description: The client-visible topic name.
+          type: string
+          minLength: 1
+        topic:
+          description: The namespace-visible topic name this alias resolves to.
+          type: string
+          minLength: 1
+        match:
+          description: |
+            CEL expression evaluated against the connection's auth context.
+            If omitted or empty, the alias is active for all connections.
+          type: string
+          default: ''
+          x-expression:
+            type: boolean
+            fields:
+              - name: context.auth.principal.name
+                type: string
+                description: 'Name of authenticated principal. Username in case of PLAIN/SCRAM, `sub` claim in case of OAUTHBEARER.'
+              - name: context.auth.type
+                type: string
+                description: |
+                  The matched authentication type from a virtual cluster: anonymous, sasl_plain, sasl_scram_sha256, sasl_scram_sha512, sasl_oauth_bearer.
+              - name: context.auth.token.claims
+                type: object
+                description: 'All claims from the JWT token. Only populated for sasl_oauth_bearer authentication. Claims can be strings, numbers, booleans, arrays or nested JSON objects.'
+        conflict:
+          $ref: '#/components/schemas/VirtualClusterTopicAliasConflict'
+      required:
+        - alias
+        - topic
+      x-min-runtime-version: '1.2'
+    VirtualClusterTopicAliasConflict:
+      description: |
+        How to handle conflicts where an alias shadows a physical topic.
+        * warn - activate the alias but log a warning and set the conflict metric to 1.
+        * ignore - activate the alias silently.
+      type: string
+      default: warn
+      enum:
+        - warn
+        - ignore
+      x-enum-varnames:
+        - VirtualClusterTopicAliasConflictWarn
+        - VirtualClusterTopicAliasConflictIgnore
     VirtualClusterNamespaceTopicSelector:
       type: object
       discriminator:
@@ -5707,6 +5780,21 @@ components:
                 $ref: '#/components/schemas/VirtualClusterAuthenticationSchemes'
               namespace:
                 $ref: '#/components/schemas/VirtualClusterNamespace'
+              topic_aliases:
+                description: |-
+                  **Pre-release Feature**
+                  This feature is currently in beta and is subject to change.
+
+                  Topic aliases allow exposing backend topics under additional names.
+                  An alias creates a new entry point to the same physical data.
+                  The alias `topic` field references namespace-visible names (if namespace is configured).
+                  Aliases are independent of namespace and can be used without it.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                type: array
+                items:
+                  $ref: '#/components/schemas/VirtualClusterTopicAlias'
+                x-min-runtime-version: '1.2'
               acl_mode:
                 $ref: '#/components/schemas/VirtualClusterACLMode'
               dns_label:
@@ -5740,6 +5828,21 @@ components:
                 $ref: '#/components/schemas/VirtualClusterAuthenticationSensitiveDataAwareSchemes'
               namespace:
                 $ref: '#/components/schemas/VirtualClusterNamespace'
+              topic_aliases:
+                description: |-
+                  **Pre-release Feature**
+                  This feature is currently in beta and is subject to change.
+
+                  Topic aliases allow exposing backend topics under additional names.
+                  An alias creates a new entry point to the same physical data.
+                  The alias `topic` field references namespace-visible names (if namespace is configured).
+                  Aliases are independent of namespace and can be used without it.
+
+                  **Requires a minimum runtime version of `1.2`**.
+                type: array
+                items:
+                  $ref: '#/components/schemas/VirtualClusterTopicAlias'
+                x-min-runtime-version: '1.2'
               acl_mode:
                 $ref: '#/components/schemas/VirtualClusterACLMode'
               dns_label:
