@@ -30,8 +30,6 @@ related_resources:
 
 This page describes how to configure different observability tools to work with {{site.mesh_product_name}}.
 
-## Demo setup
-
 `kumactl` ships with a built-in observability stack that includes:
 
 - [Prometheus](https://prometheus.io) for metrics
@@ -39,7 +37,7 @@ This page describes how to configure different observability tools to work with 
 - [Loki](https://grafana.com/oss/loki/) for ingesting and storing logs
 - [Grafana](https://grafana.com/oss/grafana/) for querying and displaying metrics, traces, and logs
 
-First, configure {{site.mesh_product_name}} for the tools in the observability stack:
+To enable observability, you need the following policies:
 
 - [`MeshMetric`](/mesh/policies/meshmetric) for telemetry
 - [`MeshTrace`](/mesh/policies/meshtrace) for tracing
@@ -47,14 +45,14 @@ First, configure {{site.mesh_product_name}} for the tools in the observability s
 
 On Kubernetes, the stack can be installed with:
 
-```shell
+```sh
 kumactl install observability | kubectl apply -f -
 ```
 
-This creates a namespace named `mesh-observability` with prometheus, jaeger, loki, and grafana installed and set up to work with {{site.mesh_product_name}}.
+This creates a namespace named `mesh-observability` with Prometheus, Jaeger, Loki, and Grafana installed and set up to work with {{site.mesh_product_name}}.
 
 {:.warning}
-> This setup is meant to be used for trying out {{site.mesh_product_name}}. It is not fit for production use.
+> This setup is meant for testing purposes. It's' not fit for production use.
 > For production setups, we recommend referring to each project's website or using a hosted solution such as Grafana Cloud or Datadog.
 
 ## Control plane observability
@@ -67,13 +65,11 @@ Control plane metrics are exposed on port `:5680` and available under the standa
 
 ### Traces
 
-{{site.mesh_product_name}} can be configured to export OpenTelemetry traces. It exports traces for:
+You cna configure {{site.mesh_product_name}} to export OpenTelemetry traces. It exports traces for:
 
 * API server
-* KDS on global
-  * Note only basic information about the connections to zones are traced,
-    nothing resource specific
-* Inter CP server
+* KDS on global (only basic information about the connections to zones are traced, nothing resource-specific)
+* Inter-CP server
 
 To enable tracing, set the `KUMA_TRACING_OPENTELEMETRY_ENABLED` or `tracing.openTelemetry.enabled` control plane
 config variable to `"true"` and configure OpenTelemetry using the
@@ -81,30 +77,16 @@ config variable to `"true"` and configure OpenTelemetry using the
 
 ## Configure Prometheus
 
-{:.warning}
-> Version 2.6.0 of {{site.mesh_product_name}} introduced a [bug in the MADS server](https://github.com/kumahq/kuma/issues/9508).
-> This bug can cause delays in delivering monitoring assignments to Prometheus if you changed the default Prometheus configuration for `kuma_sd_configs.fetch_timeout`.
-> This results in Prometheus not collecting metrics from new data plane proxies during that period.
-> To fix this issue, configure `kuma_sd_configs` as follows:
->
-> ```yaml
-> kuma_sd_configs:
->   - fetch_timeout: 0s
-> ```
->
-> This disables long polling on Prometheus service discovery.
+The Kuma community has contributed built-in service discovery for Prometheus. It is documented in the [Prometheus docs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
+This service discovery connects to the control plane and retrieves all data planes with enabled metrics, which Prometheus scrapes and retrieves according to your [`MeshMetric` policies](/mesh/policies/meshmetric).
 
-The {{site.mesh_product_name}} community has contributed built-in service discovery for Prometheus. It is documented in the [Prometheus docs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
-This service discovery connects to the control plane and retrieves all data planes with enabled metrics, which Prometheus scrapes and retrieves according to your [MeshMetric policies](/mesh/policies/meshmetric).
+There are three ways to run prometheus:
 
-{:.info}
-> There are 2 ways to run prometheus:
->
-> 1. Inside the mesh (default for [`kumactl install observability`](#demo-setup)).
-> 2. Outside the mesh. In this case you need to specify `tls.mode: disabled` in the [MeshMetric configuration](/mesh/policies/meshmetric). This is less secure but ensures Prometheus is as available as possible. It is also easier to add to an existing setup with services in and outside the mesh.
-> 3. Outside the mesh with TLS enabled. In this case you need to provide certificates for each data plane and specify configuration in the [MeshMetric configuration](/mesh/policies/meshmetric). This is more secure than the second option but requires more configuration.
->
-> In production, we recommend the second option because it provides better visibility when things go wrong, and it is usually acceptable for metrics to be less secure.
+1. Inside the mesh (default with `kumactl install observability`).
+2. Outside the mesh. In this case you need to specify `tls.mode: disabled` in the `MeshMetric` configuration. This is less secure but ensures Prometheus is as available as possible. It's also easier to add to an existing setup with services in and outside the mesh.
+3. Outside the mesh with TLS enabled. In this case you need to provide certificates for each data plane and specify the configuration in the `MeshMetric` policy. This is more secure than the second option but requires more configuration.
+
+In production, we recommend the second option because it provides better visibility when things go wrong, and it's usually acceptable for metrics to be less secure.
 
 ### Use an existing prometheus setup
 
@@ -126,49 +108,29 @@ scrape_configs:
       - action: labelmap
         regex: __meta_kuma_label_(.+)
       kuma_sd_configs:
-      - server: "http://{{site.mesh_cp_name}}.{{site.mesh_namespace}}.svc:5676" # replace with the URL of your control plane
+      - server: "http://{{site.mesh_cp_name}}.{{site.mesh_namespace}}.svc:5676"
 ```
 
 For more information, see [the Prometheus documentation](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
 
-If you have [MeshMetric](/mesh/policies/meshmetric) enabled for your mesh, check the Targets page in the Prometheus dashboard.
-You should see a list of data plane proxies from your mesh. For example:
-
-<center>
-<img src="/assets/images/docs/0.4.0/prometheus-targets.png" alt="A screenshot of Targets page on Prometheus UI" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
+If you have [`MeshMetric`](/mesh/policies/meshmetric) enabled for your mesh, check the **Targets** page in the Prometheus dashboard.
+You should see a list of data plane proxies from your mesh.
 
 ## Configure Grafana
 
+You can use Grafana to visualize traces from Jaeger and logs from Loki, and the Kuma community ships dashboards and a data source for deeper integration.
+
 ### Visualize traces
 
-To visualize your **traces**, you need to have Grafana up and running.
-
-{:.info}
-> [`kumactl install observability`](#demo-setup) sets this up out of the box.
-
-With Grafana installed, you can configure a new data source with URL `http://jaeger-query.mesh-observability/` (or whatever URL jaeger can be queried at).
+To visualize your traces with Grafana, you can configure a new data source with the URL `http://jaeger-query.mesh-observability/` (or ay other URL Jaeger can be queried at).
 Grafana can then retrieve traces from Jaeger.
 
-<center>
-<img src="/assets/images/docs/jaeger_grafana_config.jpg" alt="Jaeger Grafana configuration" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-You can then add a [MeshTrace policy](/mesh/policies/meshtrace) to your mesh to start emitting traces.
-At this point you can visualize your traces in Grafana by choosing the jaeger data source in the [Explore section](https://grafana.com/docs/grafana/latest/explore/).
+You can then add a [`MeshTrace` policy](/mesh/policies/meshtrace) to your mesh to start emitting traces.
+At this point you can visualize your traces in Grafana by choosing the jaeger data source in the [**Explore** section](https://grafana.com/docs/grafana/latest/explore/).
 
 ### Visualize logs
 
-To visualize your **containers' logs** and your **access logs**, you need to have Grafana up and running.
-
-{:.info}
-> [`kumactl install observability`](#demo-setup) sets this up out of the box.
-
-<center>
-<img src="/assets/images/docs/loki_grafana_config.jpg" alt="Loki Grafana configuration" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-You can then add a [MeshAccessLog policy](/mesh/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
+To visualize your containers' logs and your access logs wth Grafana, you can then add a [`MeshAccessLog` policy](/mesh/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -203,20 +165,14 @@ logging:
 {% endnavtab %}
 {% endnavtabs %}
 
-At this point you can visualize your **containers' logs** and your **access logs** in Grafana by choosing the loki data source in the [Explore section](https://grafana.com/docs/grafana/latest/explore/).
+You can then visualize your containers' logs and your access logs in Grafana by choosing the Loki data source in the [**Explore** section](https://grafana.com/docs/grafana/latest/explore/).
 
 For example, running `{container="kuma-sidecar"} |= "GET"` shows all GET requests on your cluster.
-To learn more about the search syntax, check the [Loki docs](https://grafana.com/docs/loki/latest/logql/).
-
-{:.info}
-> **Nice to have**
->
-> Having logs and traces in the same visualization tool can be very useful. By adding the `traceId` in your app logs, you can visualize your logs and the related Jaeger traces.
-> To learn more, read [this article](https://grafana.com/blog/2020/05/22/new-in-grafana-7.0-trace-viewer-and-integrations-with-jaeger-and-zipkin/).
+For more information about the search syntax, see the [Loki docs](https://grafana.com/docs/loki/latest/logql/).
 
 ### Grafana extensions
 
-The {{site.mesh_product_name}} community has built a data source and a set of dashboards to provide better integrations between {{site.mesh_product_name}} and Grafana.
+The Kuma community has built a data source and a set of dashboards to provide better integrations between {{site.mesh_product_name}} and Grafana.
 
 #### Data source and service map
 
@@ -231,107 +187,39 @@ Current features include:
 
 To use the plugin, you need to add the binary to your Grafana instance by following the [installation instructions](https://github.com/kumahq/kuma-grafana-datasource).
 
-To make things simpler, the data source is installed and configured when using [`kumactl install observability`](#demo-setup).
+The data source is installed and configured when using `kumactl install observability`.
 
 #### Dashboards
 
-{{site.mesh_product_name}} ships with default dashboards that are available to import from [the Grafana Labs repository](https://grafana.com/orgs/konghq).
+{{site.mesh_product_name}} ships with default dashboards that are available to import from [the Grafana Labs repository](https://grafana.com/orgs/konghq):
 
-##### {{site.mesh_product_name}} Dataplane
-
-This dashboard lets you investigate the status of a single data plane in the mesh. To see these metrics, you need to create [MeshMetric policy](/mesh/policies/meshmetric) first.
-
-<center>
-<img src="/assets/images/docs/0.4.0/kuma_dp1.jpeg" alt="Kuma Dataplane dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/0.4.0/kuma_dp2.png" alt="Kuma Dataplane dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/0.4.0/kuma_dp3.png" alt="Kuma Dataplane dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/1.1.2/kuma_dp4.png" alt="Kuma Dataplane dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-##### {{site.mesh_product_name}} Mesh
-
-This dashboard lets you investigate the aggregated statistics of a single mesh.
-It provides a topology view of your service traffic dependencies (**Service Map**)
-and includes information such as number of requests and error rates.
-
-<center>
-<img src="/assets/images/docs/grafana_dashboard_mesh.png" alt="Kuma Mesh dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-##### {{site.mesh_product_name}} Service to service
-
-This dashboard lets you investigate aggregated statistics from data planes of specified source services to data planes of specified destination service.
-
-<center>
-<img src="/assets/images/docs/0.4.0/kuma_service_to_service.png" alt="Kuma Service to Service dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/1.1.2/kuma_service_to_service_http.png" alt="Kuma Service to Service HTTP" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-##### {{site.mesh_product_name}} CP
-
-This dashboard lets you investigate control plane statistics.
-
-<center>
-<img src="/assets/images/docs/0.7.1/grafana-dashboard-kuma-cp1.png" alt="Kuma CP dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/0.7.1/grafana-dashboard-kuma-cp2.png" alt="Kuma CP dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-<img src="/assets/images/docs/0.7.1/grafana-dashboard-kuma-cp3.png" alt="Kuma CP dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-##### {{site.mesh_product_name}} Service
-
-This dashboard lets you investigate aggregated statistics for each service.
-
-<center>
-<img src="/assets/images/docs/1.1.2/grafana-dashboard-kuma-service.jpg" alt="Kuma Service dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
-
-##### {{site.mesh_product_name}} MeshGateway
-
-This dashboard lets you investigate aggregated statistics for each built-in gateway.
-
-<center>
-<img src="/assets/images/docs/grafana_dashboard_gateway.png" alt="Kuma Gateway dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
-</center>
+* **Kuma CP**: Investigate control plane statistics.
+* **Kuma Dataplane**: Investigate the status of a single data plane in the mesh. To see these metrics, you need to create a [`MeshMetric` policy](/mesh/policies/meshmetric) first.
+* **Kuma Gateway**: Investigate aggregated statistics for each built-in gateway.
+* **Kuma Mesh**: Investigate the aggregated statistics of a single mesh. It provides a topology view of your service traffic dependencies (**Service Map**) and includes information such as the number of requests and error rates.
+* **Kuma Service**: Investigate aggregated statistics for each service.
+* **Kuma Service to Service**: Investigate aggregated statistics from data planes of specified source services to data planes of specified destination services.
 
 ## Configure Datadog
 
 The recommended way to use Datadog is with its [agent](https://docs.datadoghq.com/agent).
 
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-The [Datadog agent docs](https://docs.datadoghq.com/agent/kubernetes/installation) have in-depth installation methods.
-{% endnavtab %}
-
-{% navtab "Universal" %}
-Check out the [Datadog agent docs](https://docs.datadoghq.com/agent).
-{% endnavtab %}
-{% endnavtabs %}
-
 ### Metrics
 
-{{site.mesh_product_name}} exposes metrics with [MeshMetric policy](/mesh/policies/meshmetric) in Prometheus format.
+{{site.mesh_product_name}} exposes metrics with the [`MeshMetric` policy](/mesh/policies/meshmetric) in Prometheus format.
 
-You can add annotations to your pods to enable the Datadog agent to scrape metrics.
+You can add annotations to your Pods to enable the Datadog agent to scrape metrics.
 
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-Please refer to the dedicated [documentation](https://docs.datadoghq.com/containers/kubernetes/prometheus/?tab=helm#metric-collection-with-prometheus-annotations-prometheus-check).
-{% endnavtab %}
+For Kubernetes, refer to the dedicated [documentation](https://docs.datadoghq.com/containers/kubernetes/prometheus/?tab=helm#metric-collection-with-prometheus-annotations-prometheus-check).
 
-{% navtab "Universal" %}
-You need to set up your agent with an [openmetrics.d/conf.yaml](https://docs.datadoghq.com/integrations/guide/prometheus-host-collection/#pagetitle).
-{% endnavtab %}
-{% endnavtabs %}
+On Universal, set up your agent with an [openmetrics.d/conf.yaml](https://docs.datadoghq.com/integrations/guide/prometheus-host-collection/#pagetitle).
 
 ### Tracing
 
-Check out the following:
-1. Set up the [Datadog](https://docs.datadoghq.com/tracing/) agent.
-2. Set up [APM](https://docs.datadoghq.com/tracing/).
+To configure tracing using Datadog on Universal, see the [Datadog agent docs](https://docs.datadoghq.com/agent).
 
-{% navtabs "environment" %}
-{% navtab "Kubernetes" %}
-Configure the [Datadog agent for APM](https://docs.datadoghq.com/agent/kubernetes/apm/).
+
+On Kubernetes, configure the [Datadog agent for APM](https://docs.datadoghq.com/agent/kubernetes/apm/).
 
 If Datadog is not running on each node, you can expose the APM agent port to {{site.mesh_product_name}} via a Kubernetes service.
 ```yaml
@@ -348,16 +236,8 @@ spec:
       targetPort: 8126
 ```
 
-Apply the configuration with `kubectl apply -f [..]`.
-
 Check that the label of the installed Datadog pod has not changed (`app.kubernetes.io/name: datadog-agent-deployment`).
 If it changed, adjust accordingly.
-{% endnavtab %}
-
-{% navtab "Universal" %}
-Check out the [Datadog agent docs](https://docs.datadoghq.com/agent).
-{% endnavtab %}
-{% endnavtabs %}
 
 Once the agent is configured to ingest traces, you need to configure a [MeshTrace policy](/mesh/policies/meshtrace).
 
@@ -365,11 +245,11 @@ Once the agent is configured to ingest traces, you need to configure a [MeshTrac
 
 The best way to have {{site.mesh_product_name}} and Datadog work together is with [TCP ingest](https://docs.datadoghq.com/agent/logs/?tab=tcpudp#custom-log-collection).
 
-Once your agent is configured with TCP ingest, you can configure a [MeshAccessLog policy](/mesh/policies/meshaccesslog) for data plane proxies to send logs.
+Once your agent is configured with TCP ingest, you can configure a [`MeshAccessLog` policy](/mesh/policies/meshaccesslog) for data plane proxies to send logs.
 
 ## Observability in multi-zone
 
-{{site.mesh_product_name}} is multi-zone at heart. The following sections explain how to architect your telemetry stack to accommodate multi-zone.
+The following sections explain how to architect your telemetry stack to accommodate multi-zone deployments.
 
 ### Prometheus
 
@@ -377,12 +257,31 @@ When {{site.mesh_product_name}} is used in multi-zone, the recommended approach 
 
 Prometheus offers different ways to do this:
 
-- [Federation](https://prometheus.io/docs/prometheus/latest/federation/): The global Prometheus scrapes Prometheus in each zone.
-- [Remote Write](https://prometheus.io/docs/prometheus/latest/storage/#remote-storage-integrations): Prometheus in each zone directly writes metrics to global. This is usually more efficient than federation.
-- [Remote Read](https://prometheus.io/docs/prometheus/latest/storage/#remote-storage-integrations): Similar to remote write, but in the opposite direction.
+* [Federation](https://prometheus.io/docs/prometheus/latest/federation/): The global Prometheus scrapes Prometheus in each zone.
+* [Remote Write](https://prometheus.io/docs/prometheus/latest/storage/#remote-storage-integrations): Prometheus in each zone directly writes metrics to the global instance. This is usually more efficient than federation.
+* [Remote Read](https://prometheus.io/docs/prometheus/latest/storage/#remote-storage-integrations): The global Prometheus reads metrics from the zone instances.
 
 ### Jaeger, Loki, Datadog, and others
 
-Most telemetry components do not have a hierarchical setup like Prometheus.
-If you want to have a central view of everything, you can set up the system in global and have each zone send data to it.
-Because zone is present in data plane tags, metrics, logs, and traces should not overlap between zones.
+Most telemetry components don't have a hierarchical setup like Prometheus.
+If you want to have a central view of everything, you can set up the system in the global instance and have each zone send data to it.
+Because the zone is present in the data plane tags, metrics, logs, and traces should not overlap between zones.
+
+## Known issues
+
+The following are known observability issues in {{site.mesh_product_name}}.
+
+### MADS server bug in 2.6.0
+
+Version 2.6.0 of {{site.mesh_product_name}} introduced a [bug in the MADS server](https://github.com/kumahq/kuma/issues/9508) that was fixed in version 2.7.0.
+This bug can cause delays in delivering monitoring assignments to Prometheus if you changed the default Prometheus configuration for `kuma_sd_configs.fetch_timeout`.
+This results in Prometheus not collecting metrics from new data plane proxies during that period.
+
+To fix this issue, configure `kuma_sd_configs` as follows:
+
+```yaml
+kuma_sd_configs:
+  - fetch_timeout: 0s
+```
+
+This disables long polling on Prometheus service discovery.
