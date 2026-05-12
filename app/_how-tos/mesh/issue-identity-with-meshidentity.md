@@ -13,7 +13,7 @@ tags:
   - security
 tldr:
   q: How do I issue identity with the MeshIdentity bundled provider?
-  a: By the end of this guide, you will issue workload identities with MeshIdentity, inspect the generated MeshTrust, and allow traffic with MeshTrafficPermission SPIFFE ID matching.
+  a: Apply a `MeshIdentity` with the bundled provider to issue workload identities, inspect the auto-generated `MeshTrust`, then apply a `MeshTrafficPermission` with SPIFFE ID prefix matching to allow traffic between workloads.
 prereqs:
   inline:
     - title: Helm
@@ -33,47 +33,29 @@ related_resources:
     url: /mesh/policies/meshidentity/
   - text: MeshTrust policy
     url: /mesh/policies/meshtrust/
+next_steps:
+  - text: Issue identity with the Spire provider
+    url: /mesh/meshidentity-spire/
+  - text: MeshTrafficPermission with SPIFFE ID matchers
+    url: /mesh/policies/meshtrafficpermission/
 ---
 
 {:.warning}
 > This guide covers an experimental feature.
 
-The [MeshIdentity](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/) compliant and works with [Spire](/mesh/meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
-
-## Verify the demo application
-
-{:.info}
-> For `MeshIdentity` to work, `meshServices.mode: Exclusive` must be set on the Mesh resource. This value is already configured in the [demo Mesh](#install-kong-mesh-with-demo-configuration).
-
-1. Port-forward the `demo-app` service on port `5050`:
-
-   ```sh
-   kubectl port-forward svc/demo-app -n kong-mesh-demo 5050:5050
-   ```
-
-1. Send a request to `demo-app`:
-
-   ```sh
-   curl -XPOST localhost:5050/api/counter
-   ```
-
-   You should see similar output:
-
-   ```json
-   {"counter":1,"zone":""}
-   ```
-   {:.no-copy-code}
-
-## Review identity concepts
+The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant and works with [Spire](/mesh/meshidentity-spire/). In this guide, you'll issue identities using the bundled provider.
 
 In {{site.mesh_product_name}}, there are two identity concepts:
 
-* **[Identity](/mesh/concepts/#identity)**: Who a workload is. A workload identity is the name encoded in its certificate, and this identity is valid only if the certificate is signed by a trust.
-* **[Trust](/mesh/concepts/#trust)**: Who to believe. Trust defines which identities you accept as valid through trusted certificate authorities (CA) that issue those identities. Each trust belongs to a trust domain, and a [mesh](/mesh/concepts/#mesh) can contain multiple trusts.
+* [Identity](/mesh/concepts/#identity): A workload identity is the name encoded in its certificate, and this identity is valid only if the certificate is signed by a trust.
+* [Trust](/mesh/concepts/#trust): Trust defines which identities you accept as valid through trusted certificate authorities (CA) that issue those identities. Each trust belongs to a trust domain, and a [mesh](/mesh/mesh/) can contain multiple trusts.
 
 ## Issue identities
 
-`MeshIdentity` manages identity issuance. To issue a new identity in a [mesh](/mesh/concepts/#mesh), create this resource:
+{:.info}
+> For `MeshIdentity` to work, `meshServices.mode: Exclusive` must be set on the `Mesh` resource. This value is already configured in the [demo `Mesh`](#install-kong-mesh-with-demo-configuration).
+
+`MeshIdentity` manages identity issuance. To issue a new identity in a mesh, create this resource:
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -103,104 +85,92 @@ spec:
 
 `MeshIdentity` uses `selector` to choose the data planes that receive identities. In this example, the selector issues identity to all data planes in the mesh.
 
-`spiffeID` defines templates for workload SPIFFE IDs. In this example, the trust domain template combines the mesh name, zone name, and `.mesh.local`. The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/default`.
+`spiffeID` defines templates for workload SPIFFE IDs. In this example, the trust domain template combines the mesh name, zone name, and `.mesh.local`. The path template combines the namespace and service account.
 
-The `provider` field contains identity-provider-specific configuration. This guide uses the `Bundled` provider. This configuration enables `MeshTrust` generation, allows self-signed certificates, and sets the certificate expiry time to 24h.
+The `provider` field contains identity provider-specific configuration. This guide uses the `Bundled` provider. This configuration enables [`MeshTrust`](/mesh/policies/meshtrust/) generation, allows self-signed certificates, and sets the certificate expiry time to 24h.
 
 ## Inspect trust configuration
 
-This `MeshIdentity` creates a `MeshTrust` resource. Verify that it exists:
+The `MeshIdentity` creates a `MeshTrust` resource.
 
-```sh
-kubectl get meshtrusts -n {{ site.mesh_namespace }}
-```
+1. Verify that the `MeshTrust` exists:
 
-You should see a similar response:
+   ```sh
+   kubectl get meshtrusts -n {{ site.mesh_namespace }}
+   ```
 
-```text
-NAME       AGE
-identity   45s
-```
-{:.no-copy-code}
+   You should see the following output:
 
-Inspect the full generated `MeshTrust` resource:
+   ```text
+   NAME       AGE
+   identity   45s
+   ```
+   {:.no-copy-code}
 
-```sh
-kubectl get meshtrust identity -n {{ site.mesh_namespace }} -oyaml
-```
+1. Inspect the full generated `MeshTrust` resource:
 
-The generated `MeshTrust` should look similar to:
+   ```sh
+   kubectl get meshtrust identity -n {{ site.mesh_namespace }} -oyaml
+   ```
 
-```yaml
-apiVersion: kuma.io/v1alpha1
-kind: MeshTrust
-metadata:
-  labels:
-    kuma.io/env: kubernetes
-    kuma.io/mesh: default
-    kuma.io/origin: zone
-    kuma.io/zone: default
-  name: identity
-  namespace: {{ site.mesh_namespace }}
-spec:
-  caBundles:
-  - pem:
-      value: |
-        -----BEGIN CERTIFICATE-----
-        MIIDgzCCAmugAwIBAgIRAO8psy2B4YbbzSvhSaRYTlMwDQYJKoZIhvcNAQELBQAw
-        QzENMAsGA1UEChMES3VtYTENMAsGA1UECxMETWVzaDEjMCEGA1UEAxMaZGVmYXVs
-        dC5kZWZhdWx0Lm1lc2gubG9jYWwwHhcNMjUwOTAyMTMxMjA4WhcNMzUwODMxMTMx
-        MjE4WjBDMQ0wCwYDVQQKEwRLdW1hMQ0wCwYDVQQLEwRNZXNoMSMwIQYDVQQDExpk
-        ZWZhdWx0LmRlZmF1bHQubWVzaC5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEP
-        ADCCAQoCggEBAOERv23rg9mmNdNu2pULOMD5/5IwW7SW9WFdfEYtpuM8OxnpLOZl
-        HQo7ZnPhPbpvqNYz8wpgZmOD3zMu4PT2W+Rdv/qC4wSbY1kCrFxbcc88sjmRFVJm
-        1fQFgzcu91IZn4cWo7XpNA7a1t46kzAiM5oz6WsLcZ76AhG/A82L60z/k1wvFqMK
-        aORPysIMLLEBs1A09iuzqvlp+7iv8BiAVgu3KD1RX5mSOyg91U/g1XhzOrHV1WY5
-        VoSs9l6mbJDeVdlaLC5wQzD4E71XWpqnHXxjG695vhxMZLqHIuyxt4WXKEF78ma/
-        1V5k/Sc7nUHmFBT1a0B6XCDvzdqGJYa58+sCAwEAAaNyMHAwDgYDVR0PAQH/BAQD
-        AgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFIrDUs8m5iAB+f9Jx4gFC7e4
-        hKlBMC4GA1UdEQQnMCWGI3NwaWZmZTovL2RlZmF1bHQuZGVmYXVsdC5tZXNoLmxv
-        Y2FsMA0GCSqGSIb3DQEBCwUAA4IBAQDZvq4Pz7VxscfP+DkqNJDMKMidbaEnPbac
-        nr5RG2YJ4+HuGakvHLc7Of8a3FSYAQX2cgjRrGLAnsC7zrOxYT3kEuXZzbQ545rw
-        eZp9I6AdTa5fd0G9vnmUDkJnpQNDg0Ao/vJfv0hSmouJrkp9yvuR0VkLrMSkRUN+
-        rHdPHVlnEBDRsZv8a1/ShVffF5mmdX5qifw35Iv+owS+ATWfhOO3nvOMKR4tY9qb
-        aZ/Vckmai7QO4BhGUiVnhUdPQCWqQoxE3h8+kMD9BL1Vxpi8uXpLmQpi8HQbaBKO
-        lahgDp2cp52Edw5luev1Vx/y23R5F6gxyO1h1lX7mb5qV8PoK0WE
-        -----END CERTIFICATE-----
-    type: Pem
-  origin:
-    kri: kri_mid_default_default_{{ site.mesh_namespace }}_identity_
-  trustDomain: default.default.mesh.local
-```
+   The generated `MeshTrust` should look like this:
+
+   ```yaml
+   apiVersion: kuma.io/v1alpha1
+   kind: MeshTrust
+   metadata:
+     labels:
+       kuma.io/env: kubernetes
+       kuma.io/mesh: default
+       kuma.io/origin: zone
+       kuma.io/zone: default
+     name: identity
+     namespace: {{ site.mesh_namespace }}
+   spec:
+     caBundles:
+     - pem:
+         value: |
+           -----BEGIN CERTIFICATE-----
+           ...
+           -----END CERTIFICATE-----
+       type: Pem
+     origin:
+       kri: kri_mid_default_default_{{ site.mesh_namespace }}_identity_
+     trustDomain: default.default.mesh.local
+   ```
+   {:.no-copy-code}
 
 In the generated `MeshTrust`, the control plane generates the `caBundle`, and the `trustDomain` comes from the `MeshIdentity` template. The `origin` value specifies the KRI (Kuma Resource Identifier) of the `MeshIdentity` that generated this trust.
 
-## Review MeshIdentity in the GUI
+## Test connectivity
 
-In the GUI, open the Mesh view to find `MeshIdentity` and `MeshTrust` sections, then inspect these resources.
+1. Port-forward the `demo-app` service on port `5050`:
 
-<center>
-<img src="/assets/images/guides/meshidentity/gui-mi.png" alt="Mesh view showing MeshIdentity and MeshTrust resources in the GUI"/>
-</center>
+   ```sh
+   kubectl port-forward svc/demo-app -n kong-mesh-demo 5050:5050
+   ```
 
-## Test connectivity with MeshIdentity
+1. In a new terminal, send a request to `demo-app`:
 
-Send a request to `demo-app`:
+   ```sh
+   curl -XPOST localhost:5050/api/counter
+   ```
+   
+   You should see an error like this:
+   
+   ```json
+   {
+     "instance": "d11ee97a4b45ff3a7b59091d1612b7f7",
+     "status": 500,
+     "title": "failed to retrieve zone",
+     "type": "https://github.com/kumahq/kuma-counter-demo/blob/main/ERRORS.md#INTERNAL-ERROR"
+   }
+   ```
+   {:.no-copy-code}
 
-```sh
-curl -XPOST localhost:5050/api/counter
-```
+Issuing identity to workloads enables mTLS. Zero trust is the default behavior, so without a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to allow traffic, these errors are expected.
 
-You should see an error similar to:
-
-```json
-{"instance":"d11ee97a4b45ff3a7b59091d1612b7f7","status":500,"title":"failed to retrieve zone","type":"https://github.com/kumahq/kuma-counter-demo/blob/main/ERRORS.md#INTERNAL-ERROR"}
-```
-{:.no-copy-code}
-
-Issuing identity to workloads enables mTLS. Zero trust is the default behavior, so without a `MeshTrafficPermission` to allow traffic, these errors are expected.
-
-## Allow traffic in the `kong-mesh-demo` namespace
+## Allow traffic
 
 Create a `MeshTrafficPermission`:
 
@@ -221,9 +191,9 @@ spec:
               value: spiffe://default.default.mesh.local/ns/kong-mesh-demo" | kubectl apply -f -
 ```
 
-This `MeshTrafficPermission` uses rules API SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`.
+This `MeshTrafficPermission` uses SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`.
 
-## Validate the result
+## Validate
 
 Send another request:
 
@@ -231,15 +201,9 @@ Send another request:
 curl -XPOST localhost:5050/api/counter
 ```
 
-You should see output similar to:
+You should see the following output:
 
 ```json
-{"counter":3,"zone":""}
+{"counter":1,"zone":""}
 ```
 {:.no-copy-code}
-
-## Next steps
-
-- Learn how to [issue identity with the Spire provider](/mesh/meshidentity-spire/)
-- Learn more about [MeshIdentity](/mesh/policies/meshidentity/) and [MeshTrust](/mesh/policies/meshtrust/)
-- Explore [MeshTrafficPermission with SPIFFE ID matchers](/mesh/policies/meshtrafficpermission/)
