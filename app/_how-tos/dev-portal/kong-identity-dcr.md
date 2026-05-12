@@ -40,7 +40,8 @@ prereqs:
       content: |
         For this tutorial, you’ll need a Dev Portal and some Dev Portal settings, like a published API, pre-configured. These settings are essential for Dev Portal to function but configuring them isn’t the focus of this guide. If you don't have these settings already configured, follow these steps to pre-configure them:
 
-        1. In the {{site.konnect_short_name}} sidebar, navigate to [**Dev Portal**](https://cloud.konghq.com/portals/).
+        1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+        1. Click **Portals**.
         1. Click [**New portal**](https://cloud.konghq.com/portals/create).
         1. Click **Private portal**.
         1. In the **Portal name** field, enter `Test Kong Identity DCR`.
@@ -56,8 +57,7 @@ prereqs:
         1. Enable **Auto approve applications**. 
            This auto approves developer applications in your Dev Portal and makes it easier to test. 
         1. Click **Save changes**.
-        1. Click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
-        1. In the Dev Portal sidebar, click [**Published APIs**](https://cloud.konghq.com/portals/apis/).
+        1. Click the **Published APIs** tab.
         1. Click **New API**.
         1. In the **API name** field, enter `test-kong-identity-dcr`.
         1. Click **Create**.
@@ -74,7 +74,7 @@ prereqs:
            We'll create a test developer account that we can use to create a DCR app.
         1. Enter your name and email.
         1. Click **Create account**.
-        1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, navigate to [**Dev Portal**](https://cloud.konghq.com/portals/).
+        1. If you haven't set developers to auto approval in Dev Portal, in the {{site.konnect_short_name}} sidebar, expand **Dev Portal** and click **Portals**.
         1. Click **Test Kong Identity DCR**.
         1. Select the **Access and approvals** tab.
         1. Click your test developer.
@@ -131,8 +131,8 @@ After configuring Kong Identity, you can integrate it with the Dev Portal for Dy
 
 This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you can also use the [Application Registration API](/api/konnect/application-auth-strategies/v2/#/operations/).
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
-1. In the Dev Portal sidebar, click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click [**Application Auth**](https://cloud.konghq.com/portals/application-auth).
 1. Click the **DCR provider** tab.
 1. Click **New provider**.
 1. In the **Name** field, enter `Kong Identity`.
@@ -154,7 +154,8 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 
 Now that the application auth strategy is configured, you can apply it to an API.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Dev Portal**](https://cloud.konghq.com/portals/).
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
 1. Click the **Published APIs** tab.
 1. Click **Publish API**.

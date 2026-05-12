@@ -113,8 +113,8 @@ Cost calculations use the price that was effective at the time of usage.
 
 To view the LLM cost database in {{site.konnect_short_name}}, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Cost Analytics**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Metering & Billing**.
+1. Click **Cost Analytics**.
 1. Click the **LLM Cost** tab.
 1. Browse or search by provider name or model name.
 
@@ -128,8 +128,8 @@ A common use cases for overrides is when you've a negotiated rate with a provide
 
 To create a price override, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Cost Analytics**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Metering & Billing**.
+1. Click **Cost Analytics**.
 1. Click the **LLM Cost** tab.
 1. Find the model you want to override and select "Override" from the actions menu.
 1. Enter your custom per-token pricing for the relevant token types (input, output, cache read, cache write, reasoning).
@@ -149,8 +149,8 @@ You can group cost data by customer, subject, or custom dimensions (using the gr
 
 To see cost analytics, do the following:
 
-1. In the {{site.konnect_short_name}} sidebar, click **Metering & Billing**.
-1. In the Metering & Billing sidebar, click **Cost Analytics**.
+1. In the {{site.konnect_short_name}} sidebar, expand **Metering & Billing**.
+1. Click **Cost Analytics**.
 1. Select a feature from the dropdown. Only features with a unit cost configured are shown.
 
 You will see that feature's cost breakdown by the filters you've selected.

@@ -342,7 +342,7 @@ content: |
   1. On your Dedicated Cloud Gateway overview, verify that analytics like latency and error rate are collected.
   1. Select the **Control Plane Logs** tab.
   1. Verify that your Dedicated Cloud Gateways are collected. Check the initial log samples.
-  1. In the {{site.konnect_short_name}} sidebar, click **Observability**.
-  1. In the Observability sidebar, click **Dashboards**.
+  1. In the {{site.konnect_short_name}} sidebar, expand **Observability**.
+  1. Click **Dashboards**.
   1. Set up initial Dedicated Cloud Gateway dashboards.
 {% enddetails %}

@@ -49,7 +49,8 @@ prereqs:
       content: |
         For this tutorial, you’ll need a Dev Portal pre-configured. If you don't have these settings already configured, follow these steps to pre-configure it:
 
-        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+        1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+        1. Click **Portals**.
         1. Click **New portal** to [create a Dev Portal](https://cloud.konghq.com/portals/create).
         1. Click your Dev Portal URL at the top of the Dev Portal overview.
         1. Click **Sign up** to [register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in).
