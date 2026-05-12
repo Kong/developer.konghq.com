@@ -234,6 +234,7 @@ rows:
                 text: View the guide
                 url: /mesh/issue-identity-with-meshidentity-spire/
                 align: end
+  - columns:
       - blocks:
           - type: card
             config:

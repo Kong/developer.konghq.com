@@ -137,8 +137,10 @@ Restart the demo pods so they're recreated with the Spire workload API socket an
 
 ```sh
 kubectl rollout restart -n kong-mesh-demo deployment/demo-app deployment/kv
-kubectl wait -n kong-mesh-demo --for=condition=available deployment --all --timeout=120s
 ```
+
+{:.warning}
+> Wait until the Pods are restarted before moving on to the next step.
 
 ## Test connectivity
 

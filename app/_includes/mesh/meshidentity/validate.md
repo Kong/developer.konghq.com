@@ -10,3 +10,6 @@ You should see the following output:
 {"counter":1,"zone":""}
 ```
 {:.no-copy-code}
+
+{:.info}
+> If you still get the error, wait a few seconds and try again.
