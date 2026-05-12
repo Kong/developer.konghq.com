@@ -315,7 +315,7 @@ rows:
 > * This feature is only supported in JSON Schema Draft 4.
 > * This feature is only available in {{site.base_gateway}} 3.4.3.26 and is not yet included in other 3.x versions.
 
-Use [`config.array_length_compat`](./reference/#schema--config-array-length-compat) when your API schema uses `minLength` and `maxLength` to constrain array size, instead of the standard `minItems` and `maxItems` keywords.
+Use [`config.array_length_compat`](./reference/3.4/#schema--config-array-length-compat) when your API schema uses `minLength` and `maxLength` to constrain array size, instead of the standard `minItems` and `maxItems` keywords.
 
 When enabled (default), `minLength` and `maxLength` apply to arrays using item count (the number of elements), as well as to strings.
 
