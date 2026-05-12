@@ -77,6 +77,7 @@ In {{site.dev_portal}}, you can create and use multiple DCR configurations. You 
 1. In the **Scopes** field, enter your scopes.
 1. In the **Credential Claims** field, enter your claims.
 1. In the **Auth Methods** dropdown menu, select your auth methods. 
+1. (Optional) To configure OIDC-related settings, click **Advanced configuration** and enter a valid JSON OpenID Connect configuration object.
 1. Click **Create**.
 {% endnavtab %}
 {% navtab "API" %}
