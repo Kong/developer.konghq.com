@@ -247,8 +247,6 @@ rows:
     roles: |
       * Network Admin
       * Network Viewer
-      * Cloud Gateway Cluster Admin
-      * Cloud Gateway Cluster Viewer
   - persona: Serverless engineer
     description: |
       A serverless engineer has access to configure serverless gateways.
