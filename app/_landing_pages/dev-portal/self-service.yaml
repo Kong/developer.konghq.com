@@ -224,8 +224,7 @@ rows:
   - header:
       type: h2
       text: "Learn more"
-
-  - columns:
+    columns:
       - blocks:
           - type: card
             config:

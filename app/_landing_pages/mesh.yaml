@@ -123,7 +123,8 @@ rows:
   - header:
       type: h2
       text: "Next steps"
-  - columns:
+    column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -165,9 +166,6 @@ rows:
                   url: /mesh/policies/meshretry/
                 - text: Mesh Circuit Breaker 
                   url: /mesh/policies/meshcircuitbreaker/
-
-
-  - columns:
       - blocks:
           - type: card
             config:
@@ -250,7 +248,8 @@ rows:
   - header:
       type: h2
       text: Key references
-  - columns:
+    column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -262,7 +261,6 @@ rows:
                   url: /mesh/policies-introduction/
                 - text: See all policies 
                   url: /mesh/policies/
-
       - blocks:
           - type: card
             config:

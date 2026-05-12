@@ -14,16 +14,9 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Manage Insomnia"            
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Manage your Insomnia account and security settings.
-  - columns:
+      text: "Manage Insomnia"
+      sub_text: Manage your Insomnia account and security settings.    
+    columns:
       - blocks:
         - type: card
           config:
@@ -54,6 +47,7 @@ rows:
   - header:
       type: h2
       text: "Security"
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -82,7 +76,6 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/scim/
-  - columns:
       - blocks:
         - type: card
           config:

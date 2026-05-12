@@ -37,7 +37,7 @@ rows:
   - header:
       type: h2
       text: "Common authentication methods"
-
+    column_count: 3
     columns:
       - blocks:
         - type: card
@@ -75,7 +75,6 @@ rows:
                 url: /gateway/openid-connect/
               - text: Plugin reference
                 url: /plugins/openid-connect/
-  - columns:
       - blocks:
         - type: card
           config:
@@ -111,43 +110,40 @@ rows:
                 url: /plugins/session/examples/
               - text: Plugin reference
                 url: /plugins/session/
+      - blocks:
+          - type: card
+            config:
+              title: Key authentication
+              description: |
+                Key authentication generates an API key for a Consumer, which can be passed in an `apikey` header to access Services and Routes.            
+                
+              ctas:
+                - text: Get started with open-source Key Auth
+                  url: /plugins/key-auth/examples/
+                - text: Key Auth plugin reference
+                  url: /plugins/key-auth/
+                - text: Get started with Key Auth Encrypted
+                  url: /plugins/key-auth-enc/examples/
+                - text: Key Auth Encrypted plugin reference
+                  url: /plugins/key-auth-enc/
 
-  - column_count: 3
-    columns:
-    - blocks:
-        - type: card
-          config:
-            title: Key authentication
-            description: |
-              Key authentication generates an API key for a Consumer, which can be passed in an `apikey` header to access Services and Routes.            
-              
-            ctas:
-              - text: Get started with open-source Key Auth
-                url: /plugins/key-auth/examples/
-              - text: Key Auth plugin reference
-                url: /plugins/key-auth/
-              - text: Get started with Key Auth Encrypted
-                url: /plugins/key-auth-enc/examples/
-              - text: Key Auth Encrypted plugin reference
-                url: /plugins/key-auth-enc/
-
-    - blocks:
-        - type: card
-          config:
-            title: LDAP authentication
-            description: |
-              LDAP is a protocol that uses a directory to check credentials provided by a client.
-              
-            ctas:
-              - text: Get started with open-source LDAP
-                url: /plugins/ldap-auth/examples/
-              - text: LDAP Auth plugin reference
-                url: /plugins/ldap-auth/
-              - text: Get started with LDAP Auth Advanced
-                url: /plugins/ldap-auth-advanced/examples/
-              - text: LDAP Auth Advanced plugin reference
-                url: /plugins/ldap-auth-advanced/
-      
+      - blocks:
+          - type: card
+            config:
+              title: LDAP authentication
+              description: |
+                LDAP is a protocol that uses a directory to check credentials provided by a client.
+                
+              ctas:
+                - text: Get started with open-source LDAP
+                  url: /plugins/ldap-auth/examples/
+                - text: LDAP Auth plugin reference
+                  url: /plugins/ldap-auth/
+                - text: Get started with LDAP Auth Advanced
+                  url: /plugins/ldap-auth-advanced/examples/
+                - text: LDAP Auth Advanced plugin reference
+                  url: /plugins/ldap-auth-advanced/
+        
 
   - header:
       type: h2
@@ -184,8 +180,10 @@ rows:
                   {{site.base_gateway}} offers tools that give visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting Service availability and compliance.
 
                   For more information, see [What is API Gateway Authentication](https://konghq.com/learning-center/api-gateway/api-gateway-authentication) in our Learning Center.
- 
-  - columns:
+  - header:
+      type: h3
+      text: "References"
+    columns:
       - blocks:
         - type: card
           config:

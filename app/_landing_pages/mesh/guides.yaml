@@ -14,19 +14,17 @@ rows:
       text: "Kong Mesh guides"
       sub_text: Learn how to use Mesh to solve common challenges
 
-
-
   - header:
       type: h2
-      text: "Security and Enforcing policies"
-      sub_text: "One of the key tenants of a Service Mesh is the ability to encrypt and control service to service communication.  With {{site.mesh_product_name}}, your application developers can concentrate on core business logic, whilst Mesh deals with security."
+      text: "Security and enforcing policies"
+      description: "One of the key tenets of a Service Mesh is the ability to encrypt and control service to service communication. With {{site.mesh_product_name}}, your application developers can concentrate on core business logic, while Mesh deals with security."
     columns:
       - blocks:
           - type: card
             config:
               title: Service to Service encryption (mTLS)
               description: |
-                Learn how to configure service to service encryption,  generate certificates, configure external Certificate Authorities
+                Learn how to configure service to service encryption, generate certificates, and configure external Certificate Authorities.
               icon: /assets/icons/lock.svg
               ctas:
                 - text: Enable mTLS
@@ -86,7 +84,8 @@ rows:
   - header:
       type: h2
       text: "Next steps"
-  - columns:
+    column_count: 4
+    columns:
       - blocks:
           - type: card
             config:
@@ -124,7 +123,6 @@ rows:
               cta:
                 text: Learn more 
                 url: /mesh/policies/
-  - columns:
       - blocks:
           - type: card
             config:
@@ -137,7 +135,8 @@ rows:
   - header:
       type: h2
       text: Key references
-  - columns:
+    column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -166,7 +165,6 @@ rows:
               cta:
                 text: See enterprise features 
                 url: /mesh/enterprise/
-  - columns:
       - blocks:
           - type: card
             config:

@@ -1,0 +1,53 @@
+name: Label issues by author
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      issues: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App Token
+        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_KONG_DOCS_ID }}
+          private-key: ${{ secrets.GH_APP_KONG_DOCS_SECRET }}
+          owner: Kong
+
+      - name: Check team membership and label
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const { data: file } = await github.rest.repos.getContent({
+              ...context.repo,
+              path: '.github/docs-maintainers',
+            });
+
+            const maintainers = new Set(
+              Buffer.from(file.content, 'base64').toString('utf8')
+                .split('\n')
+                .map(u => u.trim().toLowerCase())
+                .filter(Boolean)
+            );
+
+            const label = maintainers.has(context.actor.toLowerCase()) ? 'internal' : 'user-reported';
+
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: context.issue.number,
+              labels: [label],
+            });

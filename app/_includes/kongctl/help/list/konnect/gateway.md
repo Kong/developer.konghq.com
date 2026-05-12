@@ -1,15 +1,13 @@
 ```ansi
 Usage:
+  kongctl list konnect gateway [flags]
   kongctl list konnect gateway [command]
 
 Aliases:
   gateway, gw, GW
 
 Available Commands:
-  consumer      List or get Konnect Kong Gateway Consumers
   control-plane List or get Konnect Kong Gateway control planes
-  route         List or get Konnect Kong Gateway Routes
-  service       List or get Konnect Kong Gateway Services
 
 
 Flags:

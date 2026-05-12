@@ -1,6 +1,7 @@
 ```ansi
 Usage:
   kongctl get gateway control-plane [flags]
+  kongctl get gateway control-plane [command]
 
 Aliases:
   control-plane, control-planes, controlplane, controlplanes, cp, cps, CP, CPS
@@ -12,8 +13,16 @@ Examples:
   kongctl get konnect gateway control-plane 22cd8a0b-72e7-4212-9099-0764f8e9c5ac
   # Get details for a control plane with a specific name
   kongctl get konnect gateway control-plane my-control-plane
+  # List data plane certificates for a specific control plane
+  kongctl get konnect gateway control-plane data-plane-certificates --control-plane-name my-control-plane
   # Get all the control planes for the authorized user using command aliases
   kongctl get k gw cps
+
+Available Commands:
+  consumer                List or get Konnect Kong Gateway Consumers
+  data-plane-certificates List or get Konnect Kong Gateway data plane certificates
+  route                   List or get Konnect Kong Gateway Routes
+  service                 List or get Konnect Kong Gateway Services
 
 
 Flags:
@@ -53,5 +62,7 @@ Flags:
   -p, --profile string          Specify the profile to use for this command. (default "default")
       --region string           Konnect region identifier (for example "eu"). Used to construct the base URL when --base-url is not provided.
                                 - Config path: [ konnect.region ]
+
+Use "kongctl get gateway control-plane [command] --help" for more information about a command.
 
 ```

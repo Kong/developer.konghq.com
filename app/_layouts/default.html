@@ -47,6 +47,44 @@
     <!-- End DataGrail Consent Script -->
     {% endif %}
 
+    {% if jekyll.environment == "production" %}
+    <script>
+      function getDataGrailConsent() {
+        const cookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('datagrail_consent_preferences='))
+          ?.split('=')[1];
+
+        if (!cookie) return null;
+
+        return Object.fromEntries(
+          cookie.split('|').map(pair => {
+            const [key, val] = pair.split(':');
+            return [key, val === '1'];
+          })
+        );
+      }
+
+      function getSegmentConsentContext() {
+        const dg = getDataGrailConsent();
+        if (!dg) return {};
+
+        return {
+          context: {
+            consent: {
+              categoryPreferences: {
+                essential:   dg['dg-category-essential']   ?? true,
+                functional:  dg['dg-category-functional']  ?? false,
+                marketing: dg['dg-category-marketing']   ?? false,
+                performance:   dg['dg-category-performance'] ?? false,
+              }
+            }
+          }
+        };
+      }
+    </script>
+    {% endif %}
+
     {% if jekyll.environment == "production" and page.url != '/search/' %}
     <!-- Disable Segment on /search/ for now -->
     <!-- Segment start for konghq.com -->
@@ -57,11 +95,10 @@
       if (!isChineseCN) {
         !function(){var i="analytics",analytics=window[i]=window[i]||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","screen","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware","register"];analytics.factory=function(e){return function(){if(window[i].initialized)return window[i][e].apply(window[i],arguments);var n=Array.prototype.slice.call(arguments);if(["track","screen","alias","group","page","identify"].indexOf(e)>-1){var c=document.querySelector("link[rel='canonical']");n.push({__t:"bpc",c:c&&c.getAttribute("href")||void 0,p:location.pathname,u:location.href,s:location.search,t:document.title,r:document.referrer})}n.unshift(e);analytics.push(n);return analytics}};for(var n=0;n<analytics.methods.length;n++){var key=analytics.methods[n];analytics[key]=analytics.factory(key)}analytics.load=function(key,n){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.setAttribute("data-global-segment-analytics-key",i);t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r);analytics._loadOptions=n};analytics._writeKey="SMHOU8AoTR3Ekuuu4A9MkIOv6fmGfbkq";;analytics.SNIPPET_VERSION="5.2.0";
         analytics.load("SMHOU8AoTR3Ekuuu4A9MkIOv6fmGfbkq");
-        analytics.page({{category}}, '{{page.title | liquify}}');
+        analytics.page({{category}}, '{{page.title | liquify}}', {}, getSegmentConsentContext());
         }}();
       }
     </script>
-    <!-- Segment end for konghq.com -->
     {% endif %}
 
     {% if jekyll.environment == "production" %}

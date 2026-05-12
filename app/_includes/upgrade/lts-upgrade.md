@@ -4,6 +4,10 @@
 {{site.base_gateway}} supports direct upgrades between long-term support (LTS) versions of {{site.ee_product_name}}.
 This guide walks you through upgrading from {{site.ee_product_name}} {{ lts_version_from }} LTS to {{site.ee_product_name}} {{ lts_version_to }} LTS.
 
+{:.info}
+> We recommend upgrading directly to the latest patch version of the LTS release for the most stability. 
+Earlier patch versions may have known issues.
+
 There are three upgrade strategies available when upgrading from an LTS version to a newer LTS version: in-place, dual-cluster, and rolling.
 This guide describes the best applicable strategy for each deployment mode that {{site.base_gateway}} supports. 
 Additionally, it lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
@@ -17,18 +21,22 @@ To make sure your upgrade is successful, carefully review all the steps in this 
 
 {:.warning}
 > **Caution**: The migration pattern described in this document can only happen between two LTS versions, {{site.ee_product_name}} {{ lts_version_from }} LTS and {{site.ee_product_name}} {{ lts_version_to }} LTS. If you apply this document to other release intervals, database modifications may be run in the wrong sequence and leave the database schema in a broken state.
-{%- if include.lts_version_from == "2.8" %}
+> {%- unless include.lts_version_from == "3.10" %}
+> * To migrate between 3.10 and 3.14 LTS versions, see the [{{site.base_gateway}} 3.10 to 3.14 LTS upgrade guide](/gateway/upgrade/lts-upgrade-310-314/)
+> {%- endunless %}
+> {%- unless include.lts_version_from == "3.4" %}
 > * To migrate between 3.4 and 3.10 LTS versions, see the [{{site.base_gateway}} 3.4 to 3.10 LTS upgrade guide](/gateway/upgrade/lts-upgrade-34-310/)
-{%- elsif include.lts_version_from == "3.4" %}
+> {%- endunless %}
+> {%- unless include.lts_version_from == "2.8" %}
 > * To migrate between 2.8 and 3.4 LTS versions, see the [{{site.base_gateway}} 2.8 to 3.4 LTS upgrade guide](/gateway/upgrade/lts-upgrade-28-34/)
-{%- endif %}
+> {%- endunless %}
 > * To migrate between other versions, see the [general upgrade guide](/gateway/upgrade/).
 
 ## Prerequisites
 
 Read this document thoroughly to successfully complete the upgrade process, as it includes all the necessary operational knowledge for the upgrade.
 
-* Review version compatibility between your platform version and the version of {{site.kong_gateway}} that you are upgrading to:
+* Review version compatibility between your platform version and the version of {{site.base_gateway}} that you are upgrading to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
   * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
   * [Hardware resources](/gateway/resource-sizing-guidelines/)
@@ -62,7 +70,6 @@ There are a number of steps you must complete before upgrading to {{site.base_ga
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
 1. Choose the right [strategy for upgrading](#preparation-choose-an-upgrade-strategy-based-on-deployment-mode) based on your deployment topology.
 1. Review the [{{site.base_gateway}} changes from {{ lts_version_from }} to {{ lts_version_to }}](#preparation-review-gateway-changes) for any breaking changes that may affect your deployments.
-1. Review any [modifications made to the `kong.conf` file](#kong-conf-changes) between the LTS releases.
 1. Using your chosen strategy, test migration in a pre-production environment.
 
 ### Performing the upgrade
@@ -152,6 +159,14 @@ The following tables categorize all relevant changelog entries from {{site.ee_pr
 Carefully review each entry and make changes to your configuration accordingly.
 
 {% include_cached /upgrade/lts-changes-34-310.md %}
+
+{% elsif include.lts_version_from == "3.10" %}
+
+The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 3.10.0.0 up to 3.14.0.1.
+Carefully review each entry and make changes to your configuration accordingly.
+
+{% include_cached /upgrade/lts-changes-310-314.md %}
+
 {% endif %}
 
 ## Perform upgrade

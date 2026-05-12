@@ -26,6 +26,12 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-private-dns/
   - text: Configure an Azure Dedicated Cloud Gateway with VNET peering and outbound DNS resolution
     url: /dedicated-cloud-gateways/azure-vnet-peering-with-outbound-dns-resolver/
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 prereqs:
   show_works_on: false
   inline:

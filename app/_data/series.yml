@@ -32,3 +32,6 @@ mcp-weather-api:
 mcp-acls:
   title: Control MCP tool access with Consumer and Consumer Group ACLs
   url: /mcp/use-access-controls-for-mcp-tools/
+mesh-get-started-universal:
+  title: Get started with {{site.mesh_product_name}} on Universal
+  url: /mesh/get-started/universal/install/

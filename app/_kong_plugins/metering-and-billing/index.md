@@ -55,8 +55,7 @@ The plugin supports flexible customer identification, custom pricing dimensions,
 
 If you're using {{site.base_gateway}} on-prem and want to meter traffic, you must use the Metering & Billing plugin. 
 
-For {{site.konnect_short_name}}, you can either use the [built-in {{site.metering_and_billing}}](/metering-and-billing/) event ingestion that uses events from Advanced Analytics or use the Metering & Billing plugin.
-{% include /plugins/metering-and-billing/konnect-use-case-table.md %}
+{% include /plugins/metering-and-billing/legacy-ingestion-warning.md %}
 
 ## How it works
 

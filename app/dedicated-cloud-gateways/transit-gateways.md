@@ -36,6 +36,12 @@ related_resources:
     url: /how-to/create-transit-gateway-with-operator-and-aws/
   - text: Use AWS workload identities
     url: /dedicated-cloud-gateways/reference/#aws-workload-identities
+  - text: Dedicated Cloud Gateways network architecture
+    url: /dedicated-cloud-gateways/network-architecture/
+  - text: Dedicated Cloud Gateways private network architecture and security
+    url: /dedicated-cloud-gateways/private-network/
+  - text: Multi-cloud Dedicated Cloud Gateway network architecture and security
+    url: /dedicated-cloud-gateways/multi-cloud/
 next_steps:
   - text: Dedicated Cloud Gateways production readiness checklist
     url: /dedicated-cloud-gateways/production-readiness/
@@ -43,50 +49,7 @@ next_steps:
 
 When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
 
-<!--vale off -->
-{% mermaid %}
-flowchart LR
-
-A(API or Service)
-B(API or Service)
-C(API or Service)
-D(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
-E(<img src="/assets/icons/third-party/aws-transit-gateway.svg" style="max-height:32px" class="no-image-expand"/> AWS Transit Gateway)
-F(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
-J(Internet)
-
-subgraph 1 [User AWS Cloud]
-    subgraph 2 [Region]
-        subgraph 3 [Virtual Private Cloud #40;VPC#41;]
-        A
-        B
-        C
-        end
-        A & B & C <--> D
-    end
-   D<-->E
-end
-
-subgraph 4 [Kong AWS Cloud]
-    subgraph 5 [Region]
-        E<-->F
-        F <--private API access--> G & H & I
-        subgraph 6 [Virtual Private Cloud #40;VPC#41;]
-        G
-        H
-        I
-        end
-    end
-end
-
-G & H & I <--public API access--> J
-
-
-{% endmermaid %}
-<!--vale on-->
+{% include diagrams/dcgw-tgw.md %}
 
 ## AWS configuration for Transit Gateway peering
 
