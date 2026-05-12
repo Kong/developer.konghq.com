@@ -144,6 +144,11 @@ WAF configuration differs for [public](/dedicated-cloud-gateways/public-network/
 
 For more information about all {{site.base_gateway}} WAF configurations and plugins, see [{{site.base_gateway}} WAF capabilities](/waf/).
 
+## Dedicated Cloud Gateway failover
+
+To ensure your Gateway traffic can continue uninterrupted in the event of a control plane or provider outage, you can deploy data planes in multiple Dedicated Cloud Gateway regions and cloud service providers.
+This setup allows Kong to automatically re-route traffic to the secondary region or cloud provider during an outage. 
+
 ## Dedicated Cloud Gateway network CIDR range
 
 Before you create a Dedicated Cloud Gateway network, determine which CIDR range you want to use for your network.
