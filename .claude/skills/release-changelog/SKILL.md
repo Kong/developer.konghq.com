@@ -1,7 +1,8 @@
 ---
 name: release-changelog
-description: Use this skill when the user runs "/release-changelog", asks to "generate a release changelog", "write release PR description", "build preview links for release", or wants to summarize all docs changed in a release PR as a grouped list of links.
-version: 1.2.0
+description: "Generates grouped, formatted release changelogs by analyzing git diffs for new and updated documentation pages, constructing live preview URLs, and organizing links by product area. Saves output to docs/release-changelog/. Use when the user runs '/release-changelog', asks to generate a release changelog, write a release PR description, build preview links, or summarize docs changed in a release PR."
+metadata:
+  version: 1.2.0
 ---
 
 # Release Changelog Skill
@@ -72,46 +73,24 @@ From the diff output, extract:
 - **Significant new content blocks**: large additions that indicate a new feature, example, or reference was documented
 - **Frontmatter changes**: if `title` changed, note the rename
 
-Use this to write a short, specific annotation for the link, e.g.:
+Use this to write a short, specific annotation for the link. Describe the feature, not the file change:
 - `— new section: Conditional plugin execution`
-- `— new section: AI Plugin Partials`
 - `— new examples: token exchange`
 - `— updated: supported algorithms list (SHA1 removed)`
-- `— new section: ACL evaluation logic`
 
-**The annotation should describe the feature, not the file change.** "New section: Conditional plugin execution" is good. "File updated" is useless.
+If the diff adds multiple distinct things: `— new sections: Token Exchange, Consumer Claims`
 
-If the diff is large and adds multiple distinct things, list them:
-- `— new sections: Token Exchange, Consumer Claims`
-
-If the diff is noise (e.g. only whitespace, formatting, or frontmatter version bumps), skip annotation or write `— minor updates`.
+If the diff is noise (whitespace, version bumps), skip annotation or write `— minor updates`.
 
 ### 4. For ADDED files — no diff annotation needed
 
-New files speak for themselves. List them with just the title and link, grouped by feature. Optionally add a one-line description from the frontmatter `description` field if it's useful context.
+List with title and link, grouped by feature. Optionally include the frontmatter `description` for context.
 
-### 5. Read metadata for each file
+### 5. Read metadata and construct URLs
 
-**For `.md` page files**, read YAML frontmatter for:
-- `title` — link text
-- `permalink` — canonical URL path
-- `description` — optional context for new files
+For each file, read `title`, `permalink`, and `description` from YAML frontmatter (`.md` files) or top-level YAML fields (`.yaml` example files). For `.yaml` examples without a `title`, derive from filename (replace hyphens with spaces, title-case).
 
-**For `.yaml` example files** (under `_kong_plugins/{plugin}/examples/`), read the top-level YAML fields directly (no frontmatter delimiters):
-- `title` — link text. If absent, derive from filename (replace hyphens with spaces, title-case)
-- URL is always derived from path: `app/_kong_plugins/{plugin}/examples/{name}.yaml` → `/plugins/{plugin}/examples/{name}/`
-
-If `permalink` is missing, derive from path:
-- `app/_how-tos/*/foo.md` → `/how-to/foo/`
-- `app/_kong_plugins/foo/index.md` → `/plugins/foo/`
-- `app/_kong_plugins/foo/examples/bar.md` → `/plugins/foo/examples/bar/`
-- `app/_gateway_entities/foo.md` → `/gateway/entities/foo/`
-- `app/gateway/foo.md` → `/gateway/foo/`
-- `app/ai-gateway/foo.md` → `/ai-gateway/foo/`
-- `app/mesh/foo.md` → `/mesh/foo/`
-- `app/kic/foo.md` → `/kic/foo/`
-- `app/_landing_pages/foo.yaml` → read `permalink` field inside the file
-- `app/_references/foo.md` → read `permalink` field
+If `permalink` is missing, derive the URL from the file path. See [URL_RULES.md](URL_RULES.md) for the full path-to-URL mapping table. Always prefer frontmatter `permalink` over path-derived URLs.
 
 ### 6. Handle auto-generated reference files
 
@@ -141,14 +120,7 @@ https://developer.konghq.com{permalink}
 
 Group by product/feature area. Use the feature or capability as the group name, not the file type.
 
-**Grouping rules:**
-- **AI Gateway** — `ai-gateway/` files, `_kong_plugins/ai-*/`, AI how-tos. Sub-group by feature (A2A, providers, guardrails, semantic, MCP, partials).
-- **Kong Gateway** — `gateway/` pages, entities, non-AI plugins, gateway how-tos
-- **OIDC plugin** — always under Kong Gateway, not AI Gateway. Files: `_kong_plugins/openid-connect/`, OIDC how-tos
-- **MCP** — MCP plugin docs and how-tos
-- **Observability** — `observability/` pages
-- **Konnect** — `catalog/`, Dev Portal, and Konnect-specific content
-- **Changes** — `gateway/breaking-changes*` always its own section at the end
+See [GROUPING_RULES.md](GROUPING_RULES.md) for the full path-to-group mapping table. Key constraint: OIDC is always under Kong Gateway (not AI Gateway), and breaking changes go under `## Changes` (never under new or updated docs).
 
 Nesting: if multiple files relate to the same feature, group under a named parent with sub-bullets:
 
@@ -200,19 +172,11 @@ Rules:
 - Annotations use em dash: `— description`
 - Skip annotation only if the diff is pure noise (whitespace, version bumps)
 
-### 11. Save the changelog
+### 11. Save and verify
 
-Write output to `docs/release-changelog/{VERSION}.md`. Create the directory if needed.
+Write output to `docs/release-changelog/{VERSION}.md`. Create the directory if needed. After writing, verify the file exists and spot-check that constructed URLs follow the expected `https://developer.konghq.com{permalink}` pattern.
 
 ### 12. Handle missing context
 
 If the user pastes an existing PR description or list of PRs, use it to supplement grouping decisions and identify anchors to append to URLs.
 
-## Notes
-
-- Always prefer frontmatter `permalink` over path-derived URLs
-- How-tos: `app/_how-tos/{product}/{name}.md` → `/how-to/{name}/` (product subdir is NOT in the URL)
-- Plugin examples: `app/_kong_plugins/{plugin}/examples/{name}.md` → `/plugins/{plugin}/examples/{name}/`
-- OIDC is a Kong Gateway plugin, not an AI Gateway plugin — always group it under Kong Gateway
-- Breaking changes go under `## Changes`, never under new or updated docs
-- Production base URL: `https://developer.konghq.com`
