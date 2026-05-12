@@ -17,4 +17,11 @@ spec:
               value: spiffe://default.default.mesh.local/ns/kong-mesh-demo" | kubectl apply -f -
 ```
 
-This `MeshTrafficPermission` uses SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`. Based on the template in the `MeshIdentity`, every workload in the `default` mesh and `kong-mesh-demo` namespace has a SPIFFE ID with this prefix. You can also allow only workloads matching their exact SPIFFE ID for more fine-grained control.
+This `MeshTrafficPermission` uses SPIFFE ID matching to allow traffic from workloads whose SPIFFE ID starts with `spiffe://default.default.mesh.local/ns/kong-mesh-demo`.
+
+Based on the template in the `MeshIdentity`, every workload has a SPIFFE ID with this prefix in:
+
+- The `default` mesh
+- The `kong-mesh-demo` namespace.
+
+You can also allow only workloads matching their exact SPIFFE ID for more fine-grained control.

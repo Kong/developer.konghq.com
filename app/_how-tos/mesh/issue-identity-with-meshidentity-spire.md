@@ -100,7 +100,12 @@ spec:
 {:.info}
 > For `MeshIdentity` to work, `meshServices.mode: Exclusive` must be set on the `Mesh` resource. This value is already configured in the demo `Mesh`.
 
-`MeshIdentity` manages identity issuance. Even though Spire issues the identity and manages the trust, you still create a `MeshIdentity` to configure the data planes to use the identity managed by Spire.
+The roles are divided as follows:
+
+- `MeshIdentity` declares which identity provider the data planes should use and how.
+- Spire issues the identity and manages the trust.
+ 
+This is why you create a `MeshIdentity` to configure the data planes and specify that Spire manages the identity.
 
 To issue identities in a mesh using Spire, create this resource:
 

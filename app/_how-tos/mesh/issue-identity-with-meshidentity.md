@@ -139,7 +139,11 @@ The `MeshIdentity` creates a `MeshTrust` resource.
    ```
    {:.no-copy-code}
 
-In the generated `MeshTrust`, the control plane generates the `caBundle`, and the `trustDomain` comes from the `MeshIdentity` template. The `origin` value specifies the KRI (Kuma Resource Identifier) of the `MeshIdentity` that generated this trust.
+In the displayed `MeshTrust`:
+
+- The control plane generates the `caBundle` (Certificate Authority bundle): the root certificate that the `identity` uses to sign workload certs in the Mesh zone.
+- The `MeshIdentity` template provides the `trustDomain`: `default.default.mesh.local` in our example.
+- The `origin` value gives the KRI (Kuma Resource Identifier) of the `MeshIdentity` that generated this trust.
 
 ## Test connectivity
 
