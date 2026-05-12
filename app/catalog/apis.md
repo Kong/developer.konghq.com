@@ -257,9 +257,9 @@ To upload an API image, do the following:
 
 ## Allow developers to consume your API
 
-You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) to allow developers to create applications and generate credentials or API keys. This is available to data planes running {{site.base_gateway}} 3.6 or later.
+You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entities/service/) {% new_in 3.6 %} or control plane {% new_in 3.13 %} to allow developers to create applications and generate credentials or API keys. 
 
-When you link a service with an API, {{site.konnect_short_name}} automatically adds the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin is responsible for applying authentication and authorization on the Service. The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate. While you can't directly modify the KAA plugin as it's managed by {{site.konnect_short_name}}, you can modify the plugin's behavior by adding JSON to the advanced configuration of your application auth strategy. 
+{% include /dev-portal/kaa-vs-ace.md %}
 
 The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
 
@@ -327,9 +327,6 @@ resource "konnect_api_implementation" "my_apiimplementation" {
 ```
 {% endnavtab %}
 {% endnavtabs %}
-
-{:.info}
-> Currently, you APIs can only have a 1:1 mapping with a Gateway Service.
 
 ## Publish your API to Dev Portal
 
