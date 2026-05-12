@@ -211,8 +211,28 @@ rows:
               description: |
                 Enables automatic encrypted mTLS traffic for all the services in a Mesh, as well as assigning an identity to every data plane proxy.
               cta:
-                text: View the reference 
+                text: View the reference
                 url: /mesh/policies/mutual-tls/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Issue identity with MeshIdentity"
+              description: |
+                Issue SPIFFE-compliant workload identities with the MeshIdentity bundled provider and allow traffic with MeshTrafficPermission SPIFFE ID matching.
+              cta:
+                text: View the guide
+                url: /mesh/issue-identity-with-meshidentity/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Issue identity with MeshIdentity and Spire"
+              description: |
+                Issue SPIFFE-compliant workload identities with the MeshIdentity Spire provider, where Spire manages the trust externally.
+              cta:
+                text: View the guide
+                url: /mesh/issue-identity-with-meshidentity-spire/
                 align: end
       - blocks:
           - type: card
