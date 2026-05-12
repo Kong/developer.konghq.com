@@ -46,23 +46,24 @@ module Jekyll
     end
 
     def render
-      # We need to clone it here so we are sure that other generators ran
-      @data.merge!(@page.data.deep_dup.except('permalink'))
+      @rendered ||= begin
+        @data.merge!(@page.data.deep_dup.except('permalink'))
 
-      payload = @site.site_payload
-      payload['page'] = to_liquid
+        payload = @site.site_payload
+        payload['page'] = to_liquid
 
-      info = { registers: { site: @site, page: to_liquid },
-               strict_filters: @site.config['liquid']['strict_filters'],
-               strict_variables: @site.config['liquid']['strict_variables'] }
+        info = { registers: { site: @site, page: to_liquid },
+                 strict_filters: @site.config['liquid']['strict_filters'],
+                 strict_variables: @site.config['liquid']['strict_variables'] }
 
-      rendered_content = Liquid::Template.parse(@content, { line_numbers: true }).render!(payload, info)
+        rendered_content = Liquid::Template.parse(@content, { line_numbers: true }).render!(payload, info)
 
-      layout = @site.layouts['llm']
-      layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
+        layout = @site.layouts['llm']
+        layout_payload = payload.merge('content' => rendered_content, 'page' => to_liquid)
 
-      content = Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
-      post_process_content(content)
+        content = Liquid::Template.parse(layout.content, { line_numbers: true }).render!(layout_payload, info)
+        post_process_content(content)
+      end
     end
 
     def output_ext

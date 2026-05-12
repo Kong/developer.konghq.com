@@ -150,8 +150,46 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
   end
 end
 
+class LlmsFullWriter # rubocop:disable Style/Documentation
+  HEADER = <<~HEADER
+    # developer.konghq.com — Full Documentation
+
+    > Every documentation page concatenated into a single Markdown file. Each page begins with its own YAML frontmatter block, so page boundaries are self-describing.
+
+    Use this file for RAG ingestion, fine-tuning data, large-context agents, or offline search. For a per-page index with links to individual Markdown files, see `llms.txt`.
+
+  HEADER
+
+  def self.process(site)
+    return if site.config.dig('skip', 'llm_pages')
+
+    new(site).process
+  end
+
+  def initialize(site)
+    @site = site
+  end
+
+  def process
+    File.open(File.join(@site.dest, 'llms-full.txt'), 'w') do |f|
+      f.write(HEADER)
+      pages.each do |page|
+        f.write(page.render)
+        f.write("\n\n")
+      end
+    end
+  end
+
+  def pages
+    @pages ||= @site.config['markdown_pages_to_render']
+                    .reject { |p| p.data['canonical?'] == false }
+                    .sort_by(&:url)
+  end
+end
+
 Jekyll::Hooks.register :site, :post_write do |site, _|
   SupportedVersionAPI.process(site)
   MarkdownPagesWriter.process(site)
   LlmsTxtWriter.process(site)
+  LlmsFullWriter.process(site)
 end
