@@ -28,17 +28,17 @@ related_resources:
 
 You can manage {{site.base_gateway}} core entity configuration in your {{site.konnect_short_name}} organization using decK.
 
-decK can only target one Control Plane at a time.
+decK can only target one control plane at a time.
 
-Managing multiple Control Planes requires a separate state file per Control Plane.
+Managing multiple control planes requires a separate state file per control plane.
 
-decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to Konnect. Note that creating or managing schemas via decK is not supported.
+decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to {{ site.konnect_short_name }}. Note that creating or managing schemas via decK is not supported.
 
 ## Using decK with Konnect
 
-To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a Control Plane to target.
+To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a control plane to target.
 
-If you are using personal access tokens or system access tokens, you can provide them using the `--konnect-token` flag:
+If you are using [personal access tokens or system access tokens](/konnect-api/#konnect-api-authentication), you can provide them using the `--konnect-token` flag:
 
 ```bash
 deck gateway ping \
@@ -53,6 +53,8 @@ deck gateway ping \
   --konnect-token-file /path/to/file  \
   --konnect-control-plane-name default
 ```
+
+Or, you can pass the token with a [`DECK_*` environment variable](#setting-default-connection-values).
 
 ### Region selection
 
@@ -77,15 +79,15 @@ To target a specific geo, set `konnect-addr` to one of the following:
 - IN geo: `"https://in.api.konghq.com"`
 - ME geo: `"https://me.api.konghq.com"`
 
-### Control Planes
+### Control planes
 
-Each state file targets one Control Plane.
-If you don't provide a Control Plane, decK targets the `default` Control Plane.
+Each state file targets one control plane.
+If you don't provide a control plane, decK targets the `default` control plane.
 
-If you have a custom Control Plane, you can specify it in the state file,
+If you have a custom control plane, you can specify it in the state file,
 or use a flag when running any decK command.
 
-- Target a Control Plane in your state file with the `_konnect.control_plane_name` parameter:
+- Target a control plane in your state file with the `_konnect.control_plane_name` parameter:
 
   ```yaml
   _format_version: "3.0"
@@ -93,11 +95,49 @@ or use a flag when running any decK command.
     control_plane_name: staging
   ```
 
-- Set a Control Plane using the `--konnect-control-plane-name` flag:
+- Set a control plane using the `--konnect-control-plane-name` flag:
 
   ```sh
   deck gateway sync konnect.yaml --konnect-control-plane-name staging
   ```
+
+### Setting default connection values
+
+At runtime, decK checks for environment variables prefixed with `DECK_` before opening a connection. 
+
+If you want decK to automatically discover connection information from the environment and connect to a specific organization and control plane by default, provide the values as environment variables prefixed with `DECK_`.
+
+For example, instead of passing the following connection information with flags with every decK command:
+
+```bash
+deck gateway ping \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-addr https://eu.api.konghq.com \
+  --konnect-control-plane-name my-control-plane
+```
+
+You can do the following:
+
+1. Export your connection details into environment variables:
+
+   ```sh
+   export DECK_KONNECT_TOKEN='my-konnect-kpat'
+   export DECK_KONNECT_ADDR='https://eu.api.konghq.com'
+   export DECK_CONTROL_PLANE_NAME='my-control-plane'
+   ```
+
+1. Use decK without passing any of the connection values:
+
+   ```bash
+   deck gateway ping
+   ```
+
+   The response will show which {{site.konnect_short_name}} organization decK connected to:
+
+   ```sh
+   Successfully Konnected to the My Example Org organization!
+   ```
+   {:.no-copy-code}
 
 ## Making decK work with AWS PrivateLink
 
