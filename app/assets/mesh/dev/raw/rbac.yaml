@@ -374,6 +374,7 @@ rules:
     verbs:
       - create
       - get
+      - list
       - watch
       - update
       - delete

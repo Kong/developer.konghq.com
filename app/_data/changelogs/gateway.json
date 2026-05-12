@@ -22064,5 +22064,129 @@
         "scope": "Core"
       }
     ]
+  },
+  "3.11.0.11": {
+    "kong": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where a 500 error occurred when `is_proxy_integration` was enabled and the Lambda function returned `null` values in `headers` or `multiValueHeaders`. Null values are now converted to empty strings.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-ee": [
+      {
+        "message": "**aws-lambda**: Fixed an issue where empty JSON array bodies (`[]`) were incorrectly converted to objects (`{}`) when using `is_proxy_integration=true` and `empty_arrays_mode=correct` alongside the exit-transformer plugin.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.12.0.6": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**service-protection**: Fixed an issue where the Service Protection plugin could count requests already rejected by Rate Limiting Advanced. Service Protection now executes after Rate Limiting Advanced and only evaluates requests that pass rate limiting, by updating its priority from 915 to 901.",
+        "type": "bugfix",
+        "scope": "Plugin"
+      }
+    ],
+    "kong-manager-ee": []
+  },
+  "3.13.0.4": {
+    "kong": [],
+    "kong-ee": [
+      {
+        "message": "Bumped lua-resty-healthcheck from 3.1.1 to 3.1.2.",
+        "type": "dependency",
+        "scope": "Core"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where ACL denial caused parsing body failure.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-mcp-proxy**: Fixed an issue where we didn't keep the port after MCP conversion.",
+        "scope": "Plugin",
+        "type": "bugfix"
+      },
+      {
+        "message": "**ai-proxy-advanced**: Fixed excessive DNS warning logs for template variable endpoints like `$(headers.x_gcp_endpoint)`. These warnings appeared on every configuration change because template variables cannot be resolved until request time.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed clustering sync reliability issues by immediately failing pending sync v2 RPC callbacks on disconnect with a `connection closed` error.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where Redis command arguments were incorrectly included in Redis spans.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the Konnect Debugger concatenated `nil` and errored when accessing Kong Gateway via a Unix socket (e.g. `unix:/<prefix>/sockets/am:tls`).",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**JWT**: Fixed an issue where malformed JWT tokens (e.g. tokens without dots) caused a 500 Internal Server Error instead of returning 401 Unauthorized.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "**Debugger**: Fixed an issue where the time spent during the TLS handshake was incorrectly added to Kong internal latency. This fix moved it to the client side latency.",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "Fixed an issue where the real client IP from Proxy Protocol was not correctly reflected in access logs and logging plugins when nginx rejected requests early (497 plain HTTP to HTTPS port) or when the client disconnected prematurely during header parsing. Added an nginx patch to resolve $remote_addr from $proxy_protocol_addr on early request termination, and added error_page 497 routing through kong_error_handler.\n",
+        "type": "bugfix",
+        "scope": "Core"
+      },
+      {
+        "message": "**request-transformer**: Fixed an issue where the `add.headers` operation lowercased the header name, causing the configured letter case to be lost when adding new headers to the request.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
+      },
+      {
+        "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
+        "type": "bugfix",
+        "scope": "Clustering"
+      }
+    ],
+    "kong-manager-ee": []
   }
 }

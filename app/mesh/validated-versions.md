@@ -1,6 +1,6 @@
 ---
-title: "{{site.mesh_product_name}} version compatibility"
-description: "Learn about the versions of {{site.mesh_product_name}} compatible with specific versions of Kubernetes and Envoy."
+title: "{{site.mesh_product_name}} validated versions"
+description: "Learn about the versions of Kubernetes and Envoy validated against {{site.mesh_product_name}}."
 content_type: policy
 layout: reference
 products:
@@ -13,6 +13,9 @@ tags:
 works_on:
   - on-prem
 
+search_aliases:
+- version compatibility
+
 related_resources:
   - text: "{{site.mesh_product_name}} version support policy"
     url: /mesh/support-policy/
@@ -20,11 +23,11 @@ related_resources:
     url: /mesh/resource-sizing-guidelines/
 ---
 
-{{site.mesh_product_name}} is compatible with different versions of Kubernetes and Envoy.
+{{site.mesh_product_name}} is validated against different versions of Kubernetes and Envoy.
 
 ## Kubernetes
 
-The following table presents versions of {{site.mesh_product_name}} validated against specific Kubernetes versions.
+The table below shows the Kubernetes versions explicitly tested in our CI pipeline. Versions not listed haven't been validated, but may still be compatible with {{site.mesh_product_name}}.
 
 {% version_compatibility_table %}
 product: "{{site.mesh_product_name}}"
@@ -54,7 +57,7 @@ compatible_versions:
 
 ## Envoy
 
-The following table presents the general compatibility of {{site.mesh_product_name}} with specific Envoy versions.
+The following table presents the Envoy versions supported by {{site.mesh_product_name}}.
 By default, each version of {{site.mesh_product_name}} uses the latest compatible Envoy version, and supports
 Envoy versions used in the two previous minor versions of {{site.mesh_product_name}}.
 
