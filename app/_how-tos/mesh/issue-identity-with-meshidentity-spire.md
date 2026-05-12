@@ -22,21 +22,8 @@ prereqs:
       include_content: prereqs/helm
     - title: A running Kubernetes cluster
       include_content: prereqs/kubernetes/mesh-cluster
-    - title: Install {{site.mesh_product_name}} with Spire support
-      content: |
-        Install the {{site.mesh_product_name}} control plane with Helm. Enable the Kubernetes Spire injector on the control plane to use Spire as an identity provider:
-
-        ```sh
-        helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
-        helm repo update
-        helm upgrade \
-          --install \
-          --create-namespace \
-          --namespace kong-mesh-system \
-          --set "controlPlane.envVars.KUMA_RUNTIME_KUBERNETES_INJECTOR_SPIRE_ENABLED=true" \
-          kong-mesh kong-mesh/kong-mesh
-        kubectl wait -n kong-mesh-system --for=condition=ready pod --selector=app=kong-mesh-control-plane --timeout=90s
-        ```
+    - title: Install {{site.mesh_product_name}} with demo configuration
+      include_content: prereqs/kubernetes/mesh-quickstart
     - title: Install Spire
       content: |
         1. Install the Spire CRDs:
@@ -53,9 +40,8 @@ prereqs:
              --repo https://spiffe.github.io/helm-charts-hardened/ \
              --set "global.spire.trustDomain=default.default.mesh.local" \
              --set "global.spire.tools.kubectl.tag=v1.31.11"
+           kubectl wait -n spire --for=condition=ready pod --all --timeout=90s
            ```
-    - title: Deploy the demo application
-      include_content: prereqs/kubernetes/mesh-demo
 cleanup:
   inline:
     - title: Clean up {{site.mesh_product_name}}
@@ -80,6 +66,16 @@ next_steps:
 The [`MeshIdentity`](/mesh/policies/meshidentity/) policy issues identities for selected data planes. This approach is [SPIFFE](https://spiffe.io/docs/latest/spiffe-about/overview/)-compliant. In this guide, you'll issue identities using [Spire](https://spiffe.io/docs/latest/spire-about/spire-concepts/) as the identity provider, where Spire issues identities and manages the trust externally.
 
 {% include mesh/meshidentity/concepts.md %}
+
+## Enable Spire injection on the control plane
+
+The {{site.mesh_product_name}} sidecar injector adds the Spire workload API socket to data plane pods at creation time. This behavior is disabled by default. Enable it on the control plane:
+
+```sh
+kubectl set env -n kong-mesh-system deploy/kong-mesh-control-plane \
+  KUMA_RUNTIME_KUBERNETES_INJECTOR_SPIRE_ENABLED=true
+kubectl rollout status -n kong-mesh-system deploy/kong-mesh-control-plane
+```
 
 ## Configure Spire
 
@@ -134,6 +130,15 @@ spec:
 `spiffeID` defines templates for workload SPIFFE IDs. The trust domain must match the trust domain you configured in Spire (`default.default.mesh.local`). The path template combines the namespace and service account. Example SPIFFE ID: `spiffe://default.default.mesh.local/ns/kong-mesh-demo/sa/default`.
 
 The `provider` field contains identity provider-specific configuration. This guide uses the `Spire` provider.
+
+## Restart the demo application
+
+Restart the demo pods so they're recreated with the Spire workload API socket and pick up the Spire-issued identity:
+
+```sh
+kubectl rollout restart -n kong-mesh-demo deployment/demo-app deployment/kv
+kubectl wait -n kong-mesh-demo --for=condition=available deployment --all --timeout=120s
+```
 
 ## Test connectivity
 

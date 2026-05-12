@@ -1,5 +1,5 @@
 ---
-title: Issue identity with MeshIdentity bundled provider
+title: Issue identity with the MeshIdentity bundled provider
 description: Learn how to issue SPIFFE-compliant identities using MeshIdentity with the bundled provider and configure MeshTrafficPermission with SPIFFE ID matching.
 content_type: how_to
 permalink: /mesh/issue-identity-with-meshidentity/
