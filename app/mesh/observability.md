@@ -11,6 +11,8 @@ tags:
   - observability
   - metrics
   - tracing
+min_version:
+  mesh: '2.6'
 related_resources:
   - text: Audit logs
     url: /mesh/access-audit/
@@ -30,26 +32,18 @@ This page describes how to configure different observability tools to work with 
 
 ## Demo setup
 
-`kumactl` ships with a built-in observability stack which consists of:
+`kumactl` ships with a built-in observability stack that includes:
 
-- [prometheus](https://prometheus.io) for metrics
-- [jaeger](https://jaegertracing.io) for ingesting and storing traces
-- [loki](https://grafana.com/oss/loki/) for ingesting and storing logs
-- [grafana](https://grafana.com/oss/grafana/) for querying and displaying metrics, traces, and logs
+- [Prometheus](https://prometheus.io) for metrics
+- [Jaeger](https://jaegertracing.io) for ingesting and storing traces
+- [Loki](https://grafana.com/oss/loki/) for ingesting and storing logs
+- [Grafana](https://grafana.com/oss/grafana/) for querying and displaying metrics, traces, and logs
 
-First, remember to configure {{site.mesh_product_name}} appropriately for the tools in the observability stack:
+First, configure {{site.mesh_product_name}} for the tools in the observability stack:
 
-{% if_version lte:2.5.x %}
-- [Traffic metrics](/mesh/policies/traffic-metrics) for telemetry
-- [`TrafficTrace`](/mesh/policies/traffic-trace) for tracing
-- [`TrafficLog`](/mesh/policies/traffic-log) for logging
-{% endif_version %}
-
-{% if_version gte:2.6.x %}
 - [`MeshMetric`](/mesh/policies/meshmetric) for telemetry
 - [`MeshTrace`](/mesh/policies/meshtrace) for tracing
 - [`MeshAccessLog`](/mesh/policies/meshaccesslog) for logging
-{% endif_version %}
 
 On Kubernetes, the stack can be installed with:
 
@@ -71,7 +65,6 @@ The control plane supports metrics and traces for observability.
 
 Control plane metrics are exposed on port `:5680` and available under the standard path `/metrics`.
 
-{% if_version gte:2.4.x %}
 ### Traces
 
 {{site.mesh_product_name}} can be configured to export OpenTelemetry traces. It exports traces for:
@@ -85,14 +78,12 @@ Control plane metrics are exposed on port `:5680` and available under the standa
 To enable tracing, set the `KUMA_TRACING_OPENTELEMETRY_ENABLED` or `tracing.openTelemetry.enabled` control plane
 config variable to `"true"` and configure OpenTelemetry using the
 [standard `OTEL_EXPORTER_OTLP_*` environment variables](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter).
-{% endif_version %}
 
 ## Configure Prometheus
 
-{% if_version gte:2.6.x %}
 {:.warning}
 > Version 2.6.0 of {{site.mesh_product_name}} introduced a [bug in the MADS server](https://github.com/kumahq/kuma/issues/9508).
-> This bug can cause delays in delivering monitoring assignments to Prometheus if you changed the default prometheus configuration for `kuma_sd_configs.fetch_timeout`.
+> This bug can cause delays in delivering monitoring assignments to Prometheus if you changed the default Prometheus configuration for `kuma_sd_configs.fetch_timeout`.
 > This results in Prometheus not collecting metrics from new data plane proxies during that period.
 > To fix this issue, configure `kuma_sd_configs` as follows:
 >
@@ -102,19 +93,16 @@ config variable to `"true"` and configure OpenTelemetry using the
 > ```
 >
 > This disables long polling on Prometheus service discovery.
-{% endif_version %}
 
 The {{site.mesh_product_name}} community has contributed built-in service discovery for Prometheus. It is documented in the [Prometheus docs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
-This service discovery connects to the control plane and retrieves all data planes with enabled metrics, which Prometheus scrapes and retrieves according to your {% if_version lte:2.5.x inline:true %}[traffic metrics setup](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric policies](/mesh/policies/meshmetric){% endif_version %}.
+This service discovery connects to the control plane and retrieves all data planes with enabled metrics, which Prometheus scrapes and retrieves according to your [MeshMetric policies](/mesh/policies/meshmetric).
 
 {:.info}
 > There are 2 ways to run prometheus:
 >
-> 1. Inside the mesh (default for [`kumactl install observability`](#demo-setup)).{% if_version lte:2.5.x inline:true %} In this case you can use mTLS to retrieve metrics. This provides high security but requires one prometheus per mesh and might not be accessible if your mesh becomes unavailable. It also requires one Prometheus deployment per {{site.mesh_product_name}} mesh.{% endif_version %}
-> 2. Outside the mesh. In this case you need to specify {% if_version lte:2.3.x %}`skipMTLS: true`{% endif_version %}{% if_version gte:2.4.x %}`tls.mode: disabled`{% endif_version %} in the {% if_version lte:2.5.x inline:true %}[traffic metrics configuration](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric configuration](/mesh/policies/meshmetric){% endif_version %}. This is less secure but ensures Prometheus is as available as possible. It is also easier to add to an existing setup with services in and outside the mesh.
-> {% if_version gte:2.4.x %}
-> 3. Outside the mesh with TLS enabled. In this case you need to provide certificates for each data plane and specify configuration in the {% if_version lte:2.5.x inline:true %}[traffic metrics configuration](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric configuration](/mesh/policies/meshmetric){% endif_version %}. This is more secure than the second option but requires more configuration.
-> {% endif_version %}
+> 1. Inside the mesh (default for [`kumactl install observability`](#demo-setup)).
+> 2. Outside the mesh. In this case you need to specify `tls.mode: disabled` in the [MeshMetric configuration](/mesh/policies/meshmetric). This is less secure but ensures Prometheus is as available as possible. It is also easier to add to an existing setup with services in and outside the mesh.
+> 3. Outside the mesh with TLS enabled. In this case you need to provide certificates for each data plane and specify configuration in the [MeshMetric configuration](/mesh/policies/meshmetric). This is more secure than the second option but requires more configuration.
 >
 > In production, we recommend the second option because it provides better visibility when things go wrong, and it is usually acceptable for metrics to be less secure.
 
@@ -143,7 +131,7 @@ scrape_configs:
 
 For more information, see [the Prometheus documentation](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
 
-If you have {% if_version lte:2.5.x inline:true %}[traffic metrics](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric](/mesh/policies/meshmetric){% endif_version %} enabled for your mesh, check the Targets page in the Prometheus dashboard.
+If you have [MeshMetric](/mesh/policies/meshmetric) enabled for your mesh, check the Targets page in the Prometheus dashboard.
 You should see a list of data plane proxies from your mesh. For example:
 
 <center>
@@ -166,7 +154,7 @@ Grafana can then retrieve traces from Jaeger.
 <img src="/assets/images/docs/jaeger_grafana_config.jpg" alt="Jaeger Grafana configuration" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
 </center>
 
-You can then add a {% if_version lte:2.5.x inline:true %}[TrafficTrace policy](/mesh/policies/traffic-trace){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshTrace policy](/mesh/policies/meshtrace){% endif_version %} to your mesh to start emitting traces.
+You can then add a [MeshTrace policy](/mesh/policies/meshtrace) to your mesh to start emitting traces.
 At this point you can visualize your traces in Grafana by choosing the jaeger data source in the [Explore section](https://grafana.com/docs/grafana/latest/explore/).
 
 ### Visualize logs
@@ -180,7 +168,7 @@ To visualize your **containers' logs** and your **access logs**, you need to hav
 <img src="/assets/images/docs/loki_grafana_config.jpg" alt="Loki Grafana configuration" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
 </center>
 
-You can then add a {% if_version lte:2.5.x inline:true %}[TrafficLog policy](/mesh/policies/traffic-log){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshAccessLog policy](/mesh/policies/meshaccesslog){% endif_version %} to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
+You can then add a [MeshAccessLog policy](/mesh/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -251,7 +239,7 @@ To make things simpler, the data source is installed and configured when using [
 
 ##### {{site.mesh_product_name}} Dataplane
 
-This dashboard lets you investigate the status of a single data plane in the mesh. To see these metrics, you need to create {% if_version lte:2.5.x inline:true %}[Traffic Metrics policy](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric policy](/mesh/policies/meshmetric){% endif_version %} first.
+This dashboard lets you investigate the status of a single data plane in the mesh. To see these metrics, you need to create [MeshMetric policy](/mesh/policies/meshmetric) first.
 
 <center>
 <img src="/assets/images/docs/0.4.0/kuma_dp1.jpeg" alt="Kuma Dataplane dashboard" style="width: 600px; padding-top: 20px; padding-bottom: 10px;"/>
@@ -321,7 +309,7 @@ Check out the [Datadog agent docs](https://docs.datadoghq.com/agent).
 
 ### Metrics
 
-{{site.mesh_product_name}} exposes metrics with {% if_version lte:2.5.x inline:true %}[traffic metrics](/mesh/policies/traffic-metrics){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshMetric policy](/mesh/policies/meshmetric){% endif_version %} in Prometheus format.
+{{site.mesh_product_name}} exposes metrics with [MeshMetric policy](/mesh/policies/meshmetric) in Prometheus format.
 
 You can add annotations to your pods to enable the Datadog agent to scrape metrics.
 
@@ -371,13 +359,13 @@ Check out the [Datadog agent docs](https://docs.datadoghq.com/agent).
 {% endnavtab %}
 {% endnavtabs %}
 
-Once the agent is configured to ingest traces, you need to configure a {% if_version lte:2.5.x inline:true %}[TrafficTrace policy](/mesh/policies/traffic-trace){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshTrace policy](/mesh/policies/meshtrace){% endif_version %}.
+Once the agent is configured to ingest traces, you need to configure a [MeshTrace policy](/mesh/policies/meshtrace).
 
 ### Logs
 
 The best way to have {{site.mesh_product_name}} and Datadog work together is with [TCP ingest](https://docs.datadoghq.com/agent/logs/?tab=tcpudp#custom-log-collection).
 
-Once your agent is configured with TCP ingest, you can configure a {% if_version lte:2.5.x inline:true %}[TrafficLog policy](/mesh/policies/traffic-log){% endif_version %}{% if_version gte:2.6.x inline:true %}[MeshAccessLog policy](/mesh/policies/meshaccesslog){% endif_version %} for data plane proxies to send logs.
+Once your agent is configured with TCP ingest, you can configure a [MeshAccessLog policy](/mesh/policies/meshaccesslog) for data plane proxies to send logs.
 
 ## Observability in multi-zone
 
