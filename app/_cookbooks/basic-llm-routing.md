@@ -88,10 +88,11 @@ prereqs:
 
         1. [Create an Anthropic account](https://console.anthropic.com/).
         1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create a decK variable with the API key:
+        1. Create decK variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```sh
            export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export DECK_ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -552,6 +553,8 @@ services:
           model_alias: fast
           provider: anthropic
           name: ${{ env "DECK_CHAT_MODEL_1" }}
+          options:
+            anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
       - route_type: llm/v1/chat
         auth:
           header_name: x-api-key
@@ -563,6 +566,8 @@ services:
           model_alias: smart
           provider: anthropic
           name: ${{ env "DECK_CHAT_MODEL_2" }}
+          options:
+            anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
 consumers:
 - username: demo-app
   keyauth_credentials:
@@ -938,6 +943,9 @@ services:
           model_alias: fast
           provider: mistral
           name: ${{ env "DECK_CHAT_MODEL_1" }}
+          options:
+            mistral_format: openai
+            upstream_url: https://api.mistral.ai/v1/chat/completions
       - route_type: llm/v1/chat
         auth:
           header_name: Authorization
@@ -949,6 +957,9 @@ services:
           model_alias: smart
           provider: mistral
           name: ${{ env "DECK_CHAT_MODEL_2" }}
+          options:
+            mistral_format: openai
+            upstream_url: https://api.mistral.ai/v1/chat/completions
 consumers:
 - username: demo-app
   keyauth_credentials:

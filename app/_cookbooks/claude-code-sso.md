@@ -415,10 +415,11 @@ prereqs:
 
         1. [Create an Anthropic account](https://console.anthropic.com/).
         1. [Get an API key](https://console.anthropic.com/settings/keys).
-        1. Create a decK variable with the API key:
+        1. Create decK variables for the API key and the [Messages API schema version](https://docs.claude.com/en/api/versioning) Kong should send upstream on every request:
 
            ```bash
            export DECK_ANTHROPIC_TOKEN='YOUR-ANTHROPIC-KEY'
+           export DECK_ANTHROPIC_VERSION='2023-06-01'
            ```
         {% endnavtab %}
         {% navtab "AWS Bedrock" %}
@@ -749,6 +750,8 @@ plugins:
             model_alias: ${{ env "DECK_SONNET_ALIAS" }}
             provider: anthropic
             name: ${{ env "DECK_CHAT_MODEL_1" }}
+            options:
+              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
   - name: ai-proxy-advanced
     consumer_group: claude-power-users
     config:
@@ -764,6 +767,8 @@ plugins:
             model_alias: ${{ env "DECK_SONNET_ALIAS" }}
             provider: anthropic
             name: ${{ env "DECK_CHAT_MODEL_1" }}
+            options:
+              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
         - route_type: llm/v1/chat
           auth:
             header_name: x-api-key
@@ -772,6 +777,8 @@ plugins:
             model_alias: ${{ env "DECK_OPUS_ALIAS" }}
             provider: anthropic
             name: ${{ env "DECK_CHAT_MODEL_2" }}
+            options:
+              anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
 ```
 {% endraw -%}
 {: .no-copy-code .collapsible }
@@ -922,7 +929,7 @@ export DECK_CHAT_MODEL_2='claude-opus-4-7'     # actual upstream model behind th
 {:.warning}
 > The two alias values must match the `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_OPUS_MODEL` set in each developer's `~/.claude/settings.json`, and the model versions you point them at must actually exist in your provider account. Claude Code pattern-matches the alias to decide which features (effort levels, extended thinking, beta tool fields) to enable. A mismatch (for example, claiming `claude-sonnet-4-6` when the upstream is Sonnet 4.5) sends fields the upstream rejects with `400`.
 
-`KONNECT_CONTROL_PLANE_NAME`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, and `DECK_ANTHROPIC_TOKEN` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
+`KONNECT_CONTROL_PLANE_NAME`, `DECK_OKTA_ISSUER`, `DECK_OKTA_AUDIENCE`, `DECK_OIDC_CACHE_TOKENS_SALT`, `DECK_ANTHROPIC_TOKEN`, and `DECK_ANTHROPIC_VERSION` are already exported during the Prerequisites, so they do not need to be re-exported per tab.
 
 Apply the Kong configuration:
 
@@ -997,6 +1004,8 @@ plugins:
         model_alias: ${{ env "DECK_SONNET_ALIAS" }}
         provider: anthropic
         name: ${{ env "DECK_CHAT_MODEL_1" }}
+        options:
+          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
 - name: ai-proxy-advanced
   instance_name: claude-code-sso-power-proxy
   service: claude-code-sso
@@ -1017,6 +1026,8 @@ plugins:
         model_alias: ${{ env "DECK_SONNET_ALIAS" }}
         provider: anthropic
         name: ${{ env "DECK_CHAT_MODEL_1" }}
+        options:
+          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
     - route_type: llm/v1/chat
       auth:
         header_name: x-api-key
@@ -1028,6 +1039,8 @@ plugins:
         model_alias: ${{ env "DECK_OPUS_ALIAS" }}
         provider: anthropic
         name: ${{ env "DECK_CHAT_MODEL_2" }}
+        options:
+          anthropic_version: ${{ env "DECK_ANTHROPIC_VERSION" }}
 - name: ai-rate-limiting-advanced
   instance_name: claude-code-sso-standard-ratelimit
   service: claude-code-sso
