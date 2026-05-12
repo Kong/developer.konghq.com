@@ -3,7 +3,7 @@
 {% if include.config.type == 'h1' %}
 <div class="flex items-center">
 {{heading}}
-{% unless page.llm == false %}{% include components/llm_dropdown.html url=page.url css_classes="ml-auto" %}{% endunless %}
+{% unless page.llm == false %}{% include components/llm_dropdown.html url=page.url tokens=page.tokens css_classes="ml-auto" %}{% endunless %}
 </div>
 {% else %}
 {{heading}}

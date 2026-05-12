@@ -22,6 +22,7 @@ module Jekyll
         Data::AddAllDocIndices.new(site:, page:).process
         Data::TitleTag.new(site:, page:).process
         Data::LlmMetadata.new(site:, page:).process
+        Data::TokenEstimate.new(site:, page:).process
       end
     end
 
@@ -37,6 +38,7 @@ module Jekyll
         Data::AddAllDocIndices.new(site:, page:).process
         Data::TitleTag.new(site:, page:).process
         Data::LlmMetadata.new(site:, page:).process
+        Data::TokenEstimate.new(site:, page:).process
       end
     end
   end

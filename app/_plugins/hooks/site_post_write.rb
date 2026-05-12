@@ -64,6 +64,7 @@ end
 
 class LlmsTxtWriter # rubocop:disable Style/Documentation
   TEMPLATE_PATH = File.expand_path('../../_llms.txt', __dir__)
+  CHARS_PER_TOKEN = 4
 
   def self.process(site)
     new(site).process
@@ -74,6 +75,7 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
   end
 
   def process
+    refresh_token_counts
     content = Liquid::Template.parse(File.read(TEMPLATE_PATH)).render!(payload, info)
 
     File.write(File.join(@site.dest, 'llms.txt'), content)
@@ -84,8 +86,30 @@ class LlmsTxtWriter # rubocop:disable Style/Documentation
       'api_pages' => api_pages,
       'plugin_pages' => plugin_pages,
       'how_to_pages' => how_to_pages,
-      'docs' => docs
+      'docs' => docs_with_totals,
+      'total_tokens' => total_tokens
     )
+  end
+
+  # Replace pre-render estimates (from raw page.content) with counts based on
+  # the rendered Markdown files that MarkdownPagesWriter just emitted to disk.
+  def refresh_token_counts
+    pages.each do |page|
+      md_path = File.join(@site.dest, page.url, "#{File.basename(page.url)}.md")
+      next unless File.exist?(md_path)
+
+      page.data['tokens'] = (File.size(md_path) / CHARS_PER_TOKEN.to_f).round
+    end
+  end
+
+  def docs_with_totals
+    docs.map do |group|
+      group.merge('tokens' => group['pages'].sum { |p| p.data['tokens'].to_i })
+    end
+  end
+
+  def total_tokens
+    pages.sum { |p| p.data['tokens'].to_i }
   end
 
   def info

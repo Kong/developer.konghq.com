@@ -86,7 +86,17 @@ module Jekyll
         content.gsub!(/{:\s*.#{type}}/, '')
       end
 
+      inject_token_count!(content)
       content
+    end
+
+    # Inject an approximate token count into the YAML frontmatter so agents
+    # fetching the .md can budget context. The count is chars / 4 of the
+    # rendered output, computed before injection (the line itself adds a
+    # handful of bytes, negligible at any meaningful page size).
+    def inject_token_count!(content)
+      tokens = (content.length / 4.0).round
+      content.sub!(/\A---\n/, "---\ntokens: #{tokens}\n")
     end
   end
 end
