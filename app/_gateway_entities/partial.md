@@ -46,7 +46,7 @@ min_version:
 faqs:
   - q: Can I reference Partials by name in decK?
     a: |
-      Yes. Tag the Partial, then add `default_lookup_tags.partials` to the decK config for the plugin. This avoids tracking Partial IDs as CI/CD variables across environments if names and tags stay consistent, the same plugin will sync to every {{ site.base_gateway }} instance.
+      Yes. Tag the Partial, then add `default_lookup_tags.partials` to the decK config for the plugin. This avoids tracking Partial IDs as CI/CD variables across environments. If names and tags stay consistent, the same plugin will sync to every {{ site.base_gateway }} instance.
 
       Define the Partial with a tag so decK can look it up:
 
