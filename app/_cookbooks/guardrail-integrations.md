@@ -224,7 +224,7 @@ The [key-auth](/plugins/key-auth/) Plugin matches the `apikey` request header ag
 
 **`hide_credentials: true`**: Strips the `apikey` header before Kong forwards the request upstream. This prevents the Consumer credential from leaking to the LLM provider in proxied requests.
 
-The recipe registers a single Consumer (`demo-app`) with one API key. Production deployments typically use multiple Consumers, often with [Consumer Groups](/gateway/consumer-groups/) to apply different policies per tier.
+The recipe registers a single Consumer (`demo-app`) with one API key. Production deployments typically use multiple Consumers, often with [Consumer Groups](/gateway/entities/consumer-group/) to apply different policies per tier.
 
 ### AI Azure Content Safety, dedicated integration
 
