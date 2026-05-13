@@ -40,13 +40,40 @@ prereqs:
   inline:
     - title: Helm
       include_content: prereqs/helm
-    - title: A running Kubernetes cluster with LoadBalancer support
-      include_content: prereqs/kubernetes/mesh-cluster-lb
+    - title: A running Kubernetes cluster
+      include_content: prereqs/kubernetes/mesh-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
       include_content: prereqs/kubernetes/mesh-quickstart
+    - title: Install kumactl
+      include_content: prereqs/tools/kumactl
 ---
 
 {{site.mesh_product_name}} integrates with [OpenTelemetry](https://opentelemetry.io/). You can collect and push data plane proxy and application metrics to an [OpenTelemetry collector](https://opentelemetry.io/docs/collector/), which lets you process and export metrics to multiple ecosystems, including [Dash0](https://www.dash0.com/), [Datadog](https://www.datadoghq.com/), [Middleware](https://middleware.io/), [Grafana Cloud](https://grafana.com/products/cloud/), and [Honeycomb](https://www.honeycomb.io/).
+
+## Set up kumactl
+
+Set up kumactl to install the observability stack:
+
+1. Run the following command to expose the control plane's API server. We'll need this to access kumactl:
+
+   ```sh
+   kubectl port-forward svc/kong-mesh-control-plane -n kong-mesh-system 5681:5681
+   ```
+
+1. In a new terminal, check that kumactl is installed and that its directory is in your path:
+
+   ```sh
+   kumactl
+   ```
+
+   If the command is not found:
+
+   1. Make sure that kumactl is [installed](#install-kumactl)
+   1. Add the {{site.mesh_product_name}} binaries directory to your path:
+
+      ```sh
+      export PATH=$PATH:$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin
+      ```
 
 ## Install the {{site.mesh_product_name}} observability stack
 
@@ -145,15 +172,16 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
 
    ```sh
    kubectl edit configmap/prometheus-server -n mesh-observability
+   kubectl exec -it -n mesh-observability prometheus-server -- /bin/sh
    ```
 
 1. In the `prometheus.yml` value, add the following entry under `scrape_configs`:
 
    ```yaml
-   - job_name: "opentelemetry-collector"
-     scrape_interval: 15s
-     static_configs:
-       - targets: ["opentelemetry-collector.mesh-observability.svc:8889"]
+       - job_name: "opentelemetry-collector"
+         scrape_interval: 15s
+         static_configs:
+           - targets: ["opentelemetry-collector.mesh-observability.svc:8889"]
    ```
 
    Prometheus automatically picks up this config and starts scraping the OpenTelemetry collector.
