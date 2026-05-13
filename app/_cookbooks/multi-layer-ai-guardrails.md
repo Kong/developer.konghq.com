@@ -203,21 +203,24 @@ Keyword matching is fast but shallow. Semantic analysis is deep but more expensi
 {% table %}
 columns:
   - title: Plugin
+    key: plugin
   - title: What it catches
+    key: catches
   - title: How it works
+    key: works
 rows:
-  - - "[Key Auth](/plugins/key-auth/)"
-    - Anonymous traffic
-    - "Matches the `apikey` header against registered Consumer credentials"
-  - - "[AI PII Sanitizer](/plugins/ai-sanitizer/)"
-    - Sensitive data (names, emails, SSNs, credit cards, credentials)
-    - Sends content to an external PII detection service
-  - - "[AI Prompt Guard](/plugins/ai-prompt-guard/)"
-    - Literal keyword matches (hack, exploit, malware, weapon)
-    - Regex pattern matching, no external calls
-  - - "[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)"
-    - Rephrased or paraphrased harmful prompts
-    - Compares embeddings against known bad patterns in Redis
+  - plugin: "[Key Auth](/plugins/key-auth/)"
+    catches: Anonymous traffic
+    works: "Matches the `apikey` header against registered Consumer credentials"
+  - plugin: "[AI PII Sanitizer](/plugins/ai-sanitizer/)"
+    catches: Sensitive data (names, emails, SSNs, credit cards, credentials)
+    works: Sends content to an external PII detection service
+  - plugin: "[AI Prompt Guard](/plugins/ai-prompt-guard/)"
+    catches: Literal keyword matches (hack, exploit, malware, weapon)
+    works: Regex pattern matching, no external calls
+  - plugin: "[AI Semantic Prompt Guard](/plugins/ai-semantic-prompt-guard/)"
+    catches: Rephrased or paraphrased harmful prompts
+    works: Compares embeddings against known bad patterns in Redis
 {% endtable %}
 
 Authentication runs first so every downstream check is associated with a known Consumer. The PII sanitizer runs next, stripping sensitive data before any other Plugin or upstream provider sees it. The regex guard then runs as a fast keyword filter on the sanitized content, catching obvious literal violations with no external calls. The semantic guard runs as the deeper check, catching paraphrased attacks the regex layer cannot match. Each AI guard Plugin has a default priority that places it before `ai-proxy-advanced`, so the chain runs in the correct order without explicit ordering directives.
@@ -436,14 +439,16 @@ The Plugin annotates every response with headers that confirm which model served
 {% table %}
 columns:
   - title: Header
+    key: header
   - title: Description
+    key: description
 rows:
-  - - "`X-Kong-LLM-Model`"
-    - "Model name selected by `ai-proxy-advanced`"
-  - - "`X-Kong-Upstream-Latency`"
-    - Time (ms) Kong spent waiting for the provider to respond
-  - - "`X-Kong-Proxy-Latency`"
-    - Time (ms) Kong spent on auth, PII sanitization, and guardrails
+  - header: "`X-Kong-LLM-Model`"
+    description: "Model name selected by `ai-proxy-advanced`"
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the provider to respond
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent on auth, PII sanitization, and guardrails
 {% endtable %}
 
 ### Production considerations
