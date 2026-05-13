@@ -27,6 +27,10 @@ faqs:
   - q: I previously enabled metering using the **Enable Gateways** button in the {{site.konnect_short_name}} UI. Do I need to do anything?
     a: |
       {% include faqs/metering-and-billing-legacy-ingestion.md %}
+  - q: |
+      {% include faqs/metering-event-retention.md section='question' %}
+    a: |
+      {% include faqs/metering-event-retention.md section='answer' %}
 ---
 
 {:.success}
