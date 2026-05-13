@@ -201,14 +201,11 @@ helm upgrade \
 
 Send a request to the sidecar stats endpoint:
 
-<!-- vale off -->
-{% validation request-check %}
-url: '/stats'
-on_prem_url: localhost:9901
-status_code: 200
-method: GET
-{% endvalidation %}
-<!-- vale on -->
+```sh
+curl -i -X GET localhost:9901/stats
+```
+
+Confirm that the response returns a `200` status code.
 
 Then run the following command and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
 
