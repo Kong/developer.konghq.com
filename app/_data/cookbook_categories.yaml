@@ -19,3 +19,6 @@
 - text: LLM
   slug: llm
   icon: "/assets/icons/cookbooks/ai.svg"
+- text: Observability
+  slug: observability
+  icon: "/assets/icons/cookbooks/ai.svg"

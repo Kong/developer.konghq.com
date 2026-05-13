@@ -10,6 +10,13 @@ description: A collection of production-ready recipes to build with Kong AI Gate
 {%- assign all_cookbooks = site.cookbooks | sort: "title" -%}
 {%- assign featured_cookbooks = all_cookbooks | where: "featured", true -%}
 {%- assign popular_cookbooks = all_cookbooks | where: "popular", true -%}
+{%- assign visible_category_slugs = '' | split: '' -%}
+{%- for cat in categories -%}
+  {%- assign matching = all_cookbooks | where_exp: "cb", "cb.categories and cb.categories contains cat.slug" -%}
+  {%- if matching.size > 0 -%}
+    {%- assign visible_category_slugs = visible_category_slugs | push: cat.slug -%}
+  {%- endif -%}
+{%- endfor -%}
 
 <div class="flex flex-col gap-16 w-full">
 
@@ -36,6 +43,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
 
       <div class="flex flex-wrap gap-2 justify-center" id="hero-category-pills">
         {% for cat in categories %}
+        {% unless visible_category_slugs contains cat.slug %}{% continue %}{% endunless %}
         <button
           class="badge text-sm px-3 py-1.5 cursor-pointer border border-primary/10 hover:border-brand-saturated/40 hover:bg-brand-saturated/10 transition-colors"
           data-category="{{ cat.slug }}"
@@ -97,6 +105,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
           All recipes
         </button>
         {% for cat in categories %}
+        {% unless visible_category_slugs contains cat.slug %}{% continue %}{% endunless %}
         <button
           class="tab-button tab-button__horizontal"
           data-category="{{ cat.slug }}"

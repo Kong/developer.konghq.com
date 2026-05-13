@@ -5,6 +5,7 @@
   class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary/5{% endunless %}"
   data-card="cookbook-row"
   data-category="{{ cat.slug }}"
+  data-categories="{{ cb.categories | join: ',' }}"
   data-title="{{ cb.title | downcase }}"
   data-description="{{ rendered_description | downcase | truncate: 200 }}"
 >

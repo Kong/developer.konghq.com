@@ -69,8 +69,13 @@ class CookbooksIndex {
     let count = 0;
 
     this.rows.forEach((row) => {
+      const categories = (row.dataset.categories || "")
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
       const matchesCat =
         this.activeCategory === "all" ||
+        categories.includes(this.activeCategory) ||
         row.dataset.category === this.activeCategory;
       const matchesSearch =
         !query ||
@@ -101,7 +106,12 @@ class CookbooksIndex {
   readURL() {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get("category");
-    if (cat) this.activeCategory = cat;
+    if (cat) {
+      const validCategories = new Set(
+        Array.from(this.categoryTabs).map((tab) => tab.dataset.category)
+      );
+      this.activeCategory = validCategories.has(cat) ? cat : "all";
+    }
     const q = params.get("q");
     if (q) {
       this.searchQuery = q;
