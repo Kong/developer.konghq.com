@@ -28,6 +28,13 @@ class CookbooksIndex {
       });
     });
 
+    this.heroSearch.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        this.allRecipesSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+
     this.heroPills.forEach((pill) => {
       pill.addEventListener("click", () => {
         this.setCategory(pill.dataset.category);
