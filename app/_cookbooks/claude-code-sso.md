@@ -16,7 +16,7 @@ min_version:
 categories:
   - access-control
   - llm
-featured: false
+featured: true
 popular: false
 
 # Machine-readable fields for AI agent setup
