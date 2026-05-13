@@ -39,9 +39,9 @@ This page describes how to configure different observability tools to work with 
 
 To enable observability, you need the following policies:
 
-- [`MeshMetric`](/mesh/policies/meshmetric) for telemetry
-- [`MeshTrace`](/mesh/policies/meshtrace) for tracing
-- [`MeshAccessLog`](/mesh/policies/meshaccesslog) for logging
+- [`MeshMetric`](/mesh/policies/meshmetric/) for telemetry
+- [`MeshTrace`](/mesh/policies/meshtrace/) for tracing
+- [`MeshAccessLog`](/mesh/policies/meshaccesslog/) for logging
 
 On Kubernetes, the stack can be installed with:
 
@@ -52,7 +52,7 @@ kumactl install observability | kubectl apply -f -
 This creates a namespace named `mesh-observability` with Prometheus, Jaeger, Loki, and Grafana installed and set up to work with {{site.mesh_product_name}}.
 
 {:.warning}
-> This setup is meant for testing purposes. It's' not fit for production use.
+> This setup is meant for testing purposes. It is not fit for production use.
 > For production setups, we recommend referring to each project's website or using a hosted solution such as Grafana Cloud or Datadog.
 
 ## Control plane observability
@@ -92,22 +92,22 @@ In production, we recommend the second option because it provides better visibil
 
 In Prometheus version 2.29 and later, you can add {{site.mesh_product_name}} metrics to your `prometheus.yml`:
 
-```sh
+```yaml
 scrape_configs:
-    - job_name: 'kuma-dataplanes'
-      scrape_interval: "5s"
-      relabel_configs:
+  - job_name: 'kuma-dataplanes'
+    scrape_interval: "5s"
+    relabel_configs:
       - source_labels:
-        - __meta_kuma_mesh
+          - __meta_kuma_mesh
         regex: "(.*)"
         target_label: mesh
       - source_labels:
-        - __meta_kuma_dataplane
+          - __meta_kuma_dataplane
         regex: "(.*)"
         target_label: dataplane
       - action: labelmap
         regex: __meta_kuma_label_(.+)
-      kuma_sd_configs:
+    kuma_sd_configs:
       - server: "http://{{site.mesh_cp_name}}.{{site.mesh_namespace}}.svc:5676"
 ```
 
