@@ -17,7 +17,6 @@ categories:
   - observability
   - llm
 featured: true
-featured_order: 2
 popular: false
 
 # Machine-readable fields for AI agent setup

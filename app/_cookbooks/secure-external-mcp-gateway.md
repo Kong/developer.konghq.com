@@ -17,7 +17,6 @@ categories:
   - mcp
   - access-control
 featured: true
-featured_order: 3
 popular: false
 
 # Machine-readable fields for AI agent setup

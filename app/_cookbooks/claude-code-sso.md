@@ -17,7 +17,6 @@ categories:
   - access-control
   - llm
 featured: true
-featured_order: 1
 popular: false
 
 # Machine-readable fields for AI agent setup

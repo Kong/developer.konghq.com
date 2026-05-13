@@ -8,7 +8,7 @@ description: A collection of production-ready recipes to build with Kong AI Gate
 ---
 {%- assign categories = site.data.cookbook_categories -%}
 {%- assign all_cookbooks = site.cookbooks | sort: "title" -%}
-{%- assign featured_cookbooks = all_cookbooks | where: "featured", true | sort: "featured_order" -%}
+{%- assign featured_cookbooks = all_cookbooks | where: "featured", true -%}
 {%- assign popular_cookbooks = all_cookbooks | where: "popular", true -%}
 {%- assign visible_category_slugs = '' | split: '' -%}
 {%- for cat in categories -%}
