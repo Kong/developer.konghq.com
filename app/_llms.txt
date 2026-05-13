@@ -20,6 +20,12 @@ This file lists all available documentation pages as Markdown. Each link points 
 {% endfor %}
 {% endfor %}
 
+## Cookbooks
+
+{% for p in cookbook_pages -%}
+- [{{ p.llm_title | liquify }}]({{ site.links.web }}{{ p.url }}): {{ p.description | liquify | rstrip }}
+{% endfor %}
+
 ## How-To Guides
 
 {% for p in how_to_pages -%}
