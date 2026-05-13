@@ -294,7 +294,16 @@ If you want the Gateway Service to restrict access to the API, [configure develo
 To link your API to a Gateway Service, do one of the following:
 {% navtabs "link-service" %}
 {% navtab "{{site.konnect_short_name}} UI" %}
-Navigate to [**Catalog > APIs**](https://cloud.konghq.com/apis) in the sidebar and click your API. Click the **Gateway Service** tab, and then click **Link Gateway Service**.
+1. In the {{site.konnect_short_name}} sidebar, click [**Catalog**](https://cloud.konghq.com/catalog).
+1. From the Catalog sidebar, click **APIs**.
+1. Click your API. 
+1. Click the **Gateway** tab.
+1. Click **Link gateway**.
+1. From the **Control plane** dropdown menu, select your control plane.
+1. Select the Gateway link type:
+   1. To link to a single Service on the control plane and use the KAA plugin, click **Link to a single gateway service** and select the Service you want to link to from the **Gateway service** dropdown menu.
+   1. To link to the control plane and use the ACE plugin, click **Link to a control plane** and add the ACE plugin by clicking **Add plugin**.
+1. Click **Link gateway**.
 {% endnavtab %}
 {% navtab "{{site.konnect_short_name}} API" %}
 Send a POST request to the [`/apis/{apiId}/implementations` endpoint](/api/konnect/api-builder/v3/#/operations/create-api-implementation):
@@ -309,6 +318,8 @@ body:
         id: $SERVICE_ID
 {% endkonnect_api_request %}
 <!--vale on-->
+
+If you want to link to a control plane instead of a Gateway Service, specify `control_plane.control_plane_id` in the request body and configure the [ACE plugin](/plugins/ace/examples/).
 {% endnavtab %}
 {% navtab "Terraform" %}
 Use the [`konnect_api_implementation` resource](https://registry.terraform.io/providers/Kong/konnect/latest/docs/resources/api_implementation):
@@ -325,6 +336,7 @@ resource "konnect_api_implementation" "my_apiimplementation" {
 }
 ' >> main.tf
 ```
+If you want to link to a control plane instead of a Gateway Service, specify `control_plane.control_plane_id` in the request body and configure the [ACE plugin](/plugins/ace/examples/).
 {% endnavtab %}
 {% endnavtabs %}
 

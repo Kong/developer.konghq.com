@@ -6,7 +6,7 @@ These plugins are responsible for applying authentication and authorization on t
 The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate.
 
 The following table can help you decide which option to pick:
-
+<!--vale off-->
 {% table %}
 item_title: Option
 columns:
@@ -31,6 +31,6 @@ rows:
     kaa: "No"
     ace: "Yes"
 {% endtable %}
-
+<!--vale on-->
 {:.danger}
 > **Do not** configure the KAA and ACE plugin on the same control plane because their overlapping interactions can be unpredictable. 
