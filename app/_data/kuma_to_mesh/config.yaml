@@ -75,23 +75,11 @@ pages:
         url: /mesh/access-audit/
       - text: '{{site.mesh_product_name}} resource sizing guidelines'
         url: '/mesh/resource-sizing-guidelines/'
-      - text: '{{site.mesh_product_name}} version compatibility'
-        url: '/mesh/version-compatibility/'
+      - text: '{{site.mesh_product_name}} validated versions'
+        url: '/mesh/validated-versions/'
       - text: Policy Hub
         url: /mesh/policies/
       - text: Mesh CLI
         url: /mesh/cli/
       - text: Data plane health
         url: /mesh/dataplane-health/
-  -
-    path: app/_src/guides/meshidentity-spire-guide.md
-    title: 'Issue identity with MeshIdentity Spire provider'
-    description: 'Learn how to issue identities using Spire provider and how to use them to encrypt traffic in mesh.'
-    url: '/mesh/meshidentity-spire/'
-    related_resources:
-      - text: Data plane proxy
-        url: '/mesh/data-plane-proxy/'
-    tags:
-      - security
-    min_version:
-      mesh: '2.12'

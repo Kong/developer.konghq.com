@@ -30,7 +30,8 @@
 /gateway-manager/konnect-logs/  /dedicated-cloud-gateways/konnect-logs/
 /gateway-manager/ /gateway/
 /ai-manager/ /ai-gateway/
-/mesh/requirements/ /mesh/version-compatibility/
+/mesh/requirements/ /mesh/validated-versions/
+/mesh/version-compatibility/ /mesh/validated-versions/
 /mesh/cp-config/    /mesh/control-plane-configuration/
 /mesh/about/    /mesh/service-mesh/
 /mesh/managing-ingress-traffic/gateway/ /mesh/built-in-gateway/
@@ -55,6 +56,7 @@
 /how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
 
 # Mesh redirects
+/mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
@@ -199,6 +201,7 @@
 /insomnia/install/ /insomnia/#install-insomnia
 /insomnia/end-to-end-encryption/ /insomnia/data-security/
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
+/insomnia/upgrade/insomnia-12.6/ /insomnia/upgrade/git-sync-12.6/
 
 ## Indices
 
