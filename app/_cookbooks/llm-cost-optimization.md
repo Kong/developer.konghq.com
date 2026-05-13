@@ -17,6 +17,7 @@ categories:
   - cost-optimization
 featured: false
 popular: false
+published: false
 
 # Machine-readable fields for AI agent setup
 plugins:
