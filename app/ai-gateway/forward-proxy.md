@@ -54,9 +54,9 @@ related_resources:
 
 ## What is forward proxy support?
 
-In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets {{site.ai_gateway}} plugins route their outbound requests through a controlled HTTP forward proxy so inference traffic, semantic operations, and guardrail checks continue to work behind strict egress policy.
+In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets {{site.ai_gateway}} plugins route their outbound requests through a controlled HTTP forward proxy so that inference traffic, semantic operations, and guardrail checks continue to work behind a strict egress policy.
 
-A shared `proxy_config` record, added to every affected {{site.ai_gateway}} plugin, names the proxy host, port, scheme, and optional credentials. When configured, all outbound requests issued by that plugin go through the proxy. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
+A shared `proxy_config` record, can be added to each {{site.ai_gateway}} plugin that names the proxy host, port, scheme, and optional credentials. When configured, all outbound requests issued by that plugin go through the proxy. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
 
 ## How forward proxy support works
 
@@ -91,6 +91,12 @@ flowchart LR
 <!--vale on-->
 
 When `proxy_config` is set on a plugin, every outbound request that plugin issues goes through the configured proxy.
+
+## Relationship to the Forward Proxy Advanced plugin
+
+{{site.base_gateway}} also provides the [Forward Proxy Advanced plugin](/plugins/forward-proxy/) for routing non-AI upstream traffic through an intermediary HTTP proxy. That plugin takes over the request before the balancer phase runs, which works for standard Kong Services but breaks behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
+
+{{site.ai_gateway}} plugins use `proxy_config` instead so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active. Apply the Forward Proxy Advanced plugin to non-AI Services only; use `proxy_config` on any Service that serves traffic through an {{site.ai_gateway}} plugin.
 
 ## Supported plugins
 
@@ -226,12 +232,6 @@ variables:
     value: $FORWARD_PROXY_PASSWORD
     description: Password for the corporate forward proxy.
 {% endentity_example %}
-
-## Relationship to the Forward Proxy Advanced plugin
-
-{{site.base_gateway}} also ships the [Forward Proxy Advanced plugin](/plugins/forward-proxy/) for routing non-AI upstream traffic through an intermediary HTTP proxy. That plugin takes over the request before the balancer phase runs, which works for standard Kong Services but breaks behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
-
-{{site.ai_gateway}} plugins use `proxy_config` instead so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active. Apply the Forward Proxy Advanced plugin to non-AI Services only; use `proxy_config` on any Service that serves traffic through an {{site.ai_gateway}} plugin.
 
 ## Limitations
 
