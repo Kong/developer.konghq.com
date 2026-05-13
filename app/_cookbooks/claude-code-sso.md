@@ -41,7 +41,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -68,7 +68,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration, plus [jq](https://jqlang.org/) for JSON processing in the apply and cleanup steps.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         2. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         3. Install **jq** from [jqlang.org](https://jqlang.org/).
 
@@ -150,7 +150,7 @@ prereqs:
            ```
 
         {:.warning}
-        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's [credential precedence rules](https://code.claude.com/docs/en/iam). If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
+        > **`apiKeyHelper` is bypassed if `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` is set in your environment.** Both env vars take precedence over the helper per Claude Code's credential precedence rules. If either is set in your shell profile, unset it before running Claude Code with this recipe: `unset ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN`.
 
         **Helper script: okta-claude-auth.sh**
 
@@ -540,7 +540,7 @@ sequenceDiagram
     participant CC as Claude Code
     participant H as apiKeyHelper script
     participant O as Okta
-    participant K as Kong Gateway
+    participant K as {{site.base_gateway}}
     participant L as LLM Provider
 
     CC->>H: Request bearer token
@@ -896,7 +896,7 @@ When the token limit is exceeded, Kong returns `429 Too Many Requests` with a `R
 header.
 
 {:.info}
-> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
+> The 60-second windows here are intentionally aggressive for the demo so a few interactive prompts visibly exhaust the budget. Most teams enforce monthly or daily token budgets in production, for example {%raw%}`limits: [{limit: 5000000, window_size: 2592000}]`{%endraw%}. Combine with [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references for credentials in production rather than environment variables.
 
 ## Apply the Kong configuration
 

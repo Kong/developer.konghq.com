@@ -38,7 +38,7 @@ prereqs:
   skip_product: true
   skip_tool: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       content: |
         This tutorial uses {{site.konnect_product_name}}. The [quickstart script](https://get.konghq.com/quickstart) provisions a recipe-scoped Control Plane and local Data Plane.
 
@@ -65,7 +65,7 @@ prereqs:
       content: |
         This tutorial uses [kongctl](/kongctl/) and [decK](/deck/) to manage Kong configuration.
 
-        1. Install **kongctl** from [developer.konghq.com/kongctl](https://developer.konghq.com/kongctl/).
+        1. Install **kongctl** from [developer.konghq.com/kongctl](/kongctl/).
         1. Install **decK** version 1.43 or later from [docs.konghq.com/deck](https://docs.konghq.com/deck/).
         1. Verify both are installed:
 
@@ -186,7 +186,7 @@ prereqs:
         The demo uses the OpenTelemetry SDK plus the httpx auto-instrumentation to emit a `voice-turn` parent span per turn and to inject W3C `traceparent` into every outbound call so Kong's per-hop spans nest correctly under it in Langfuse.
 
 overview: |
-  A production voice AI system is a pipeline: speech-to-text (STT), LLM reasoning, and text-to-speech (TTS) execute in sequence for every conversational turn. Each hop carries its own latency budget, error modes, and cost profile. This recipe sets up Kong AI Gateway to govern all three hops through separate Routes, each with its own [AI Proxy Advanced](/plugins/ai-proxy-advanced/) instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans to [Langfuse](https://langfuse.com) for per-hop latency, token usage, and cost visibility, with conversation-level trace grouping for full-turn analysis.
+  A production voice AI system is a pipeline: speech-to-text (STT), LLM reasoning, and text-to-speech (TTS) execute in sequence for every conversational turn. Each hop carries its own latency budget, error modes, and cost profile. This recipe sets up {{site.ai_gateway_name}} to govern all three hops through separate Routes, each with its own [AI Proxy Advanced](/plugins/ai-proxy-advanced/) instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans to [Langfuse](https://langfuse.com) for per-hop latency, token usage, and cost visibility, with conversation-level trace grouping for full-turn analysis.
 
   By the end, you will have three Kong endpoints (`/stt`, `/llm`, `/tts`) proxying a complete voice pipeline behind a single API key, with every hop producing OpenTelemetry traces that appear as a single conversation trace in Langfuse.
 ---
@@ -209,17 +209,30 @@ The alternative to the cascading pipeline is realtime speech-to-speech APIs (Ope
 
 ## The solution
 
-This recipe places Kong AI Gateway between the voice agent and all three providers. Each pipeline hop gets its own Kong Service, Route, and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans from every hop to Langfuse, where they appear as a single conversation trace.
+This recipe places {{site.ai_gateway_name}} between the voice agent and all three providers. Each pipeline hop gets its own Kong Service, Route, and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) Plugin instance. The [Key Auth](/plugins/key-auth/) Plugin identifies the calling voice agent on every hop, and a global [OpenTelemetry](/plugins/opentelemetry/) Plugin exports `gen_ai.*` spans from every hop to Langfuse, where they appear as a single conversation trace.
 
-| Component | Role |
-|-----------|------|
-| Service `voice-ai-stt` | Routes audio to OpenAI Whisper for transcription (`audio/v1/audio/transcriptions`) |
-| Service `voice-ai-llm` | Routes text to any supported LLM provider (`llm/v1/chat`), provider varies per tab |
-| Service `voice-ai-tts` | Routes text to OpenAI TTS for speech synthesis (`audio/v1/audio/speech`) |
-| AI Proxy Advanced (3 instances) | Injects credentials, handles format translation, emits per-hop telemetry |
-| Key Auth Plugin (global) | Authenticates the voice agent with a shared `apikey` header on every Route |
-| OpenTelemetry Plugin (global) | Exports `gen_ai.*` spans with provider, model, token usage, and latency to Langfuse |
-| Langfuse | Groups spans by W3C trace ID into conversation-level traces for full-turn visibility |
+{% table %}
+columns:
+  - title: Component
+    key: component
+  - title: Role
+    key: role
+rows:
+  - component: "`voice-ai-stt` Service"
+    role: Routes audio to OpenAI Whisper for transcription (`audio/v1/audio/transcriptions`)
+  - component: "`voice-ai-llm` Service"
+    role: Routes text to any supported LLM provider (`llm/v1/chat`), provider varies per tab
+  - component: "`voice-ai-tts` Service"
+    role: Routes text to OpenAI TTS for speech synthesis (`audio/v1/audio/speech`)
+  - component: AI Proxy Advanced (3 instances)
+    role: Injects credentials, handles format translation, emits per-hop telemetry
+  - component: Key Auth Plugin (global)
+    role: Authenticates the voice agent with a shared `apikey` header on every Route
+  - component: OpenTelemetry Plugin (global)
+    role: Exports `gen_ai.*` spans with provider, model, token usage, and latency to Langfuse
+  - component: Langfuse
+    role: Groups spans by W3C trace ID into conversation-level traces for full-turn visibility
+{% endtable %}
 
 All three calls share a single W3C trace ID, which Langfuse uses to group the per-hop spans into one conversation-level trace.
 
@@ -227,7 +240,7 @@ All three calls share a single W3C trace ID, which Langfuse uses to group the pe
 {% mermaid %}
 sequenceDiagram
     participant V as Voice Agent
-    participant K as Kong AI Gateway
+    participant K as {{site.ai_gateway_name}}
     participant P as Provider (Whisper / LLM / TTS)
     participant Lf as Langfuse
 
@@ -298,7 +311,7 @@ When the demo processes a conversational turn, it makes three sequential request
 
 ### Key Auth: Voice agent identification
 
-The [Key Auth](/plugins/key-auth/) Plugin authenticates the calling voice agent before any per-hop logic runs. It is configured at the global level so all three Routes (`/stt`, `/llm`, `/tts`) require the same `apikey` header. The recipe defines a single `voice-agent` Consumer with a static credential. In production, replace this with one Consumer per tenant or per voice client, rotated through [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/).
+The [Key Auth](/plugins/key-auth/) Plugin authenticates the calling voice agent before any per-hop logic runs. It is configured at the global level so all three Routes (`/stt`, `/llm`, `/tts`) require the same `apikey` header. The recipe defines a single `voice-agent` Consumer with a static credential. In production, replace this with one Consumer per tenant or per voice client, rotated through [Kong Vaults](/gateway/secrets-management/).
 
 #### Configuration details
 
@@ -319,7 +332,7 @@ consumers:
 
 - **`key_names: [apikey]`**. The header (or query parameter) the Plugin reads to identify the Consumer. Clients send `apikey: voice-demo-key`. See the [Key Auth reference](/plugins/key-auth/) for the full list of recognized parameter sources.
 - **`hide_credentials: true`**. Strips the credential from the request before it reaches the upstream provider. Without this, the `apikey` header would be forwarded to OpenAI, Anthropic, etc., leaking the gateway-side credential into provider logs.
-- **`consumers[].keyauth_credentials[].key`**. The credential the Consumer presents. For non-trivial deployments, generate per-Consumer keys with `kongctl create consumer-credential` or rotate via [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/).
+- **`consumers[].keyauth_credentials[].key`**. The credential the Consumer presents. For non-trivial deployments, generate per-Consumer keys with `kongctl create consumer-credential` or rotate via [Kong Vaults](/gateway/secrets-management/).
 
 For richer identity flows (JWT-based SSO, scoped audiences, IdP integration), swap Key Auth for the [OpenID Connect](/plugins/openid-connect/) Plugin. The [Claude Code SSO recipe](/cookbooks/claude-code-sso/) shows the pattern.
 
@@ -449,21 +462,35 @@ plugins:
 
 Kong emits `gen_ai.*` span attributes on every AI Proxy Advanced request (v3.13+). These attributes follow the [OpenTelemetry GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/) and include:
 
-| Attribute | Description |
-|-----------|-------------|
-| `gen_ai.provider.name` | Provider identifier (for example, `openai`, `anthropic`) |
-| `gen_ai.request.model` | Model name from the request |
-| `gen_ai.response.model` | Model name from the provider response |
-| `gen_ai.operation.name` | Operation type (`chat`, `embeddings`) |
-| `gen_ai.usage.input_tokens` | Input token count |
-| `gen_ai.usage.output_tokens` | Output token count |
-| `gen_ai.input.messages` | Full input messages (when payload logging enabled) |
-| `gen_ai.output.messages` | Full output messages (when payload logging enabled) |
+{% table %}
+columns:
+  - title: Attribute
+    key: attribute
+  - title: Description
+    key: description
+rows:
+  - attribute: "`gen_ai.provider.name`"
+    description: "Provider identifier (for example, `openai`, `anthropic`)"
+  - attribute: "`gen_ai.request.model`"
+    description: Model name from the request
+  - attribute: "`gen_ai.response.model`"
+    description: Model name from the provider response
+  - attribute: "`gen_ai.operation.name`"
+    description: "Operation type (`chat`, `embeddings`)"
+  - attribute: "`gen_ai.usage.input_tokens`"
+    description: Input token count
+  - attribute: "`gen_ai.usage.output_tokens`"
+    description: Output token count
+  - attribute: "`gen_ai.input.messages`"
+    description: Full input messages (when payload logging enabled)
+  - attribute: "`gen_ai.output.messages`"
+    description: Full output messages (when payload logging enabled)
+{% endtable %}
 
 ### Production considerations
 
 {:.info}
-> In production, store credentials in [Kong Vaults](/gateway/latest/kong-enterprise/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
+> In production, store credentials in [Kong Vaults](/gateway/secrets-management/) using {%raw%}`{vault://backend/key}`{%endraw%} references rather than environment variables. Kong supports HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager, and the Konnect Config Store.
 
 The `gen_ai.input.messages` and `gen_ai.output.messages` span attributes capture full prompt and response payloads. Review your data retention and access control policies before enabling payload logging in production, as these attributes may contain PII, sensitive business context, or credentials passed in prompts.
 
@@ -1402,7 +1429,7 @@ The demo script runs a short three-turn voice conversation through the recipe. I
 
 {:.info}
 
-> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](https://developer.konghq.com/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
+> The demo passes the API key via `default_headers` because the OpenAI SDK reserves `api_key` for the `Authorization: Bearer` header. To let clients pass the key through `api_key` directly, attach a [pre-function](/plugins/pre-function/) Plugin that copies the Bearer token to the `apikey` header server-side. See [Authenticate OpenAI SDK clients with Key Auth](/how-to/authenticate-openai-sdk-clients-with-key-auth/) for the pattern.
 
 Look for per-hop timing in the output and the trace ID printed at the end of each turn. The `[LLM]` line shows the upstream model and token counts read from the parsed `completion.usage` field, which Kong's OpenAI-format response normalizes for every provider. After the script completes, open Langfuse, navigate to **Sessions**, and find the printed Session ID to see the three turns grouped under one conversation.
 
@@ -1436,11 +1463,20 @@ X-Kong-Proxy-Latency: 18
 
 Kong adds these response headers on every hop:
 
-| Header | Description |
-| ------ | ----------- |
-| `X-Kong-LLM-Model` | Upstream model that served the request (LLM hop only) |
-| `X-Kong-Upstream-Latency` | Time (ms) Kong spent waiting for the provider |
-| `X-Kong-Proxy-Latency` | Time (ms) Kong spent processing the request |
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: "`X-Kong-LLM-Model`"
+    description: Upstream model that served the request (LLM hop only)
+  - header: "`X-Kong-Upstream-Latency`"
+    description: Time (ms) Kong spent waiting for the provider
+  - header: "`X-Kong-Proxy-Latency`"
+    description: Time (ms) Kong spent processing the request
+{% endtable %}
 
 Create the demo script:
 
@@ -1878,7 +1914,7 @@ Per-hop timings in Langfuse should be within a few tens of milliseconds of the t
 
 ### Explore in Konnect
 
-Sign in to [Kong Konnect](https://cloud.konghq.com/) and navigate to **API Gateway** → **Gateways** → `voice-ai-observability-recipe`. From there:
+Sign in to [{{site.konnect_product_name}}](https://cloud.konghq.com/) and navigate to **API Gateway** → **Gateways** → `voice-ai-observability-recipe`. From there:
 
 - Open the **Gateway services** tab to see the three Services (`voice-ai-stt`, `voice-ai-llm`, `voice-ai-tts`) and click into each to inspect their Routes (`/voice-ai-observability/stt`, `/voice-ai-observability/llm`, `/voice-ai-observability/tts`).
 - Open the **Plugins** tab to confirm the global Key Auth and OpenTelemetry Plugins, plus the three per-Service AI Proxy Advanced instances.
@@ -1901,7 +1937,7 @@ Sign in to [Kong Konnect](https://cloud.konghq.com/) and navigate to **API Gatew
 
 **Replace STT or TTS providers.** Update the STT or TTS Service target to use a different provider without changing the LLM configuration or the observability pipeline. Switch from OpenAI Whisper to a self-hosted speech model by changing `model.provider` and `model.options.upstream_url` on the STT target. The `gen_ai.*` span attributes and Prometheus labels update automatically to reflect the new provider.
 
-**Add Prometheus metrics dashboards.** Kong emits AI-specific Prometheus metrics (`ai_llm_requests_total`, `ai_llm_cost_total`, `ai_llm_tokens_total`, `ai_llm_provider_latency`) with a `request_mode` label that distinguishes `oneshot`, `stream`, and `realtime` traffic. Import the [Kong AI Gateway Grafana dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/) for pre-built cost, latency, and throughput panels across all three pipeline hops.
+**Add Prometheus metrics dashboards.** Kong emits AI-specific Prometheus metrics (`ai_llm_requests_total`, `ai_llm_cost_total`, `ai_llm_tokens_total`, `ai_llm_provider_latency`) with a `request_mode` label that distinguishes `oneshot`, `stream`, and `realtime` traffic. Import the [{{site.ai_gateway_name}} Grafana dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/) for pre-built cost, latency, and throughput panels across all three pipeline hops.
 
 **Explore realtime speech-to-speech.** For latency-sensitive applications where per-hop observability is less critical, the AI Proxy Advanced Plugin supports `route_type: realtime/v1/realtime` with `genai_category: realtime/generation` for OpenAI Realtime and Gemini Live WebSocket connections. Realtime mode collapses the three-hop pipeline into a single persistent WebSocket, trading the per-hop waterfall view for significantly lower turn latency. Kong tracks realtime traffic with the `request_mode=realtime` Prometheus label.
 
