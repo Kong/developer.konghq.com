@@ -254,6 +254,34 @@
                 </div>
               </div>
             </li>
+            <li class="navbar-item group" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
+                <span class="navbar-item__trigger_text">AI Tools</span>
+                <span class="navbar-item__trigger_icon">
+                  {% include_svg '/assets/icons/chevron-down.svg' %}
+                  {% include_svg '/assets/icons/chevron-right.svg' %}
+                </span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <div class="navbar-item__menu [grid-template-columns:max-content]" role="menu">
+                <div class="flex flex-col gap-6 w-full">
+                  {% for section in site.data.top_navigation.ai_tools.sections %}
+                    <div class="flex flex-col gap-5 text-sm">
+                      <span class="font-semibold">{{section.title}}</span>
+                      <div class="grid lg:grid-cols-2 gap-4">
+                        {% for link in section.links %}
+                        <a class="flex gap-2 items-center w-full py-2 lg:py-0" href="{{link.url}}">
+                          <span class="navbar-item__icon">{% include_svg link.icon width="20" height="20" %}</span>
+                          <span class="text-base lg:text-sm text-primary">{{link.text}}</span>
+                        </a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="flex border-t border-primary/5 w-full lg:hidden"></div>
+                  {% endfor %}
+                </div>
+              </div>
+            </li>
             <li class="navbar-item group" role="menuitem">
               <a class="navbar-item__trigger" tabindex="0" href="/api/">
                 <span class="navbar-item__trigger_text">APIs</span>
