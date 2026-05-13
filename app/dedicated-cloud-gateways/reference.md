@@ -402,6 +402,7 @@ config:
       
       The logs are available in {{site.konnect_short_name}}, in the **Logs** tab of the data plane node.
   - name: request_debug_token
+  - name: opentelemetry_tracing
   - name: tracing_instrumentations
   - name: tracing_sampling_rate
   - name: untrusted_lua_sandbox_requires
@@ -423,8 +424,12 @@ config:
   - name: real_ip_header
   - name: headers
   - name: trusted_ips
+  - name: pdk_response_exit_header_filter_early_exit
 {% endkong_config_table %}
 <!--vale on -->
+
+{:.info}
+> **Additional env var:** If you want to configure `KONG_NGINX_HTTP_CLIENT_BODY_BUFFER_SIZE` and `KONG_NGINX_HTTP_LUA_SHARED_DICT_ENV_VAR_NAME`, reach out to Kong Support so they can enable these for you.
 
 ### How do I set environment variables?
 
