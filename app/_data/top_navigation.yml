@@ -119,37 +119,21 @@ how_tos:
       product: catalog
 
 ai_tools:
-  sections:
-    - title: AI Solutions
-      links:
-      - text: AI Gateway
-        url: /ai-gateway/
-        icon: /assets/icons/ai.svg
-      - text: Konnect MCP
-        url: /konnect-platform/konnect-mcp/
-        icon: /assets/icons/mcp.svg
-      - text: KAi
-        url: /konnect-platform/kai/
-        icon: /assets/icons/chat.svg
-    - title: AI Resources
-      links:
-      - text: AI Cookbooks
-        url: /cookbooks/
-        icon: /assets/icons/book.svg
-      - text: AI Guides
-        url: /how-to/?tags=ai
-        icon: /assets/icons/document-list.svg
-    - title: CLIs
-      links:
-        - text: decK
-          url: /deck/
-          icon: /assets/icons/code.svg
-        - text: kongctl
-          url: /kongctl/
-          icon: /assets/icons/code.svg
-        - text: Inso CLI
-          url: /inso-cli/
-          icon: /assets/icons/code.svg
+  - text: Konnect MCP
+    url: /konnect-platform/konnect-mcp/
+    icon: /assets/icons/mcp.svg
+  - text: AI Cookbooks
+    url: /cookbooks/
+    icon: /assets/icons/book.svg
+  - text: decK
+    url: /deck/
+    icon: /assets/icons/code.svg
+  - text: kongctl
+    url: /kongctl/
+    icon: /assets/icons/code.svg
+  - text: Inso CLI
+    url: /inso-cli/
+    icon: /assets/icons/code.svg
 
 support:
   - text: Community
