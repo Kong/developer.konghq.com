@@ -102,6 +102,8 @@ For any Service that serves traffic through a {{site.ai_gateway}} plugin you sho
 
 ## Supported plugins
 
+`proxy_config` is set per-plugin. Enabling forward proxy support on AI Proxy Advanced does not apply to other {{site.ai_gateway}} plugins attached to the same Route. You should configure it on every plugin whose external calls need to traverse the forward proxy.
+
 The following plugins expose `proxy_config`. The record structure and behavior are identical across all of them.
 
 <!--vale off-->
@@ -140,8 +142,6 @@ rows:
     service: "Managed or custom guardrail service"
 {% endtable %}
 <!--vale on-->
-
-`proxy_config` is per-plugin. Setting it on AI Proxy Advanced does not apply to other {{site.ai_gateway}} plugins attached to the same Route. Configure it on every plugin whose external calls need to traverse the proxy.
 
 ## proxy_config fields
 
@@ -237,5 +237,5 @@ variables:
 
 ## Limitations
 
-- Connections to vector databases (pgvector, Redis Vector, Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a proxy, handle it at the network layer.
+- Connections to vector databases (such as pgvector, Redis Vector, or Pinecone) use native database protocols rather than HTTP and are not routed through the forward proxy. If these connections must traverse a forward proxy, you should handle it at the network layer.
 - The [AI Request Transformer](/plugins/ai-request-transformer/), [AI Response Transformer](/plugins/ai-response-transformer/), and [AI LLM as a Judge](/plugins/ai-llm-as-judge/) plugins keep their existing flat proxy fields (`http_proxy_host`, `http_proxy_port`, `https_proxy_host`, `https_proxy_port`) and do not accept a `proxy_config` record. They do not expose `auth_username`, `auth_password`, `proxy_scheme`, or `https_verify`, so proxy authentication and HTTPS-scheme proxies are unavailable for their traffic.
