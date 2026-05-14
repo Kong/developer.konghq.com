@@ -11,7 +11,6 @@ module Jekyll
             ENTITY_TO_CHILD_KEY = {
               'backend_cluster'  => 'backend_clusters',
               'virtual_cluster'  => 'virtual_clusters',
-              'virtual-cluster'  => 'virtual_clusters',
               'listener'         => 'listeners',
               'static_key'       => 'static_keys',
               'tls_trust_bundle' => 'tls_trust_bundles',

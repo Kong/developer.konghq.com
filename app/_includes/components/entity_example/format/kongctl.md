@@ -2,7 +2,7 @@
 {% case include.presenter.entity_type %}
 {% when 'backend_cluster' %}
 The following creates a new backend cluster called **{{ include.presenter.data['name'] }}**:
-{% when 'virtual_cluster', 'virtual-cluster' %}
+{% when 'virtual_cluster' %}
 The following creates a new virtual cluster called **{{ include.presenter.data['name'] }}**:
 {% when 'listener' %}
 The following creates a new listener called **{{ include.presenter.data['name'] }}** with basic configuration:

@@ -332,7 +332,7 @@ Before setting up a virtual cluster, make sure you have a [backend cluster](/eve
 A virtual cluster must connect to an existing backend cluster.
 
 {% entity_example %}
-type: virtual-cluster
+type: virtual_cluster
 data:
   name: example-name
   destination:
