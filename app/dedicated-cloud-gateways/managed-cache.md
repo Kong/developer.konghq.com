@@ -325,7 +325,7 @@ body:
 
 ## Use a Dedicated Cloud Gateway managed cache in a custom plugin
 
-Managed cache relies on the native IAM authentication flow for different cloud service providers to connect and authenticate with provider-specific managed Redis (Elasticache for AWS and Azure Managed Redis for Azure).
+Managed cache relies on the native IAM authentication flow for different cloud service providers to connect and authenticate with provider-specific managed Redis (ElastiCache for AWS and Azure Managed Redis for Azure).
 If you want to use the Redis managed cache in a [custom plugin](/custom-plugins/), you'll need to implement the logic there as well.
 
 Custom plugins in {{site.konnect_short_name}} **do not** support Redis partials. 
