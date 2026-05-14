@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://cloud.konghq.com'
-  x-oas-source: kong/platform-api@5bc42eacb9a69b521cf583c06a9b9b8e7c252986
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/5bc42eacb9a69b521cf583c06a9b9b8e7c252986'
+  x-oas-source: kong/platform-api@a6a1c2caa9e015391f95a27090c2fcadbece41d4
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/a6a1c2caa9e015391f95a27090c2fcadbece41d4'
 servers:
   - url: 'https://global.api.konghq.com/v2'
     description: Base URL for the global region
@@ -3423,6 +3423,8 @@ components:
         - count/data-planes-estimate
         - count/serverless-data-planes-estimate
         - count/data-plane-groups-estimate
+        - count/managed-cache-instances
+        - max/managed-cache-size
     ResourceQuotaName:
       description: The human-readable name of this resource quota.
       type: string
