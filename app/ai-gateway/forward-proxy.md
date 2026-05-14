@@ -56,17 +56,17 @@ related_resources:
 
 In network-isolated deployments, {{site.ai_gateway}} cannot open direct outbound connections to LLM providers or auxiliary services. Forward proxy support lets {{site.ai_gateway}} plugins route their outbound requests through a controlled HTTP forward proxy so that inference traffic, semantic operations, and guardrail checks continue to work behind a strict egress policy.
 
-A shared `proxy_config` record, can be added to each {{site.ai_gateway}} plugin that names the proxy host, port, scheme, and optional credentials. When configured, all outbound requests issued by that plugin go through the proxy. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
+A shared `proxy_config` record can be added to each {{site.ai_gateway}} plugin that names the proxy host, port, scheme, and optional credentials. When configured, all outbound requests issued by that plugin go through the proxy. Existing capabilities such as [load balancing](/ai-gateway/load-balancing/), health checking, [streaming](/ai-gateway/streaming/), WebSocket, and HTTP/2 continue to work.
 
 ## How forward proxy support works
 
-{{site.ai_gateway}} plugins issue three categories of outbound request. `proxy_config` applies to all three, though the underlying mechanism differs depending on where the request originates.
+{{site.ai_gateway}} plugins issue three categories of outbound request. `proxy_config` applies to all three, using a different mechanism depending on where the request originates.
 
 The three request categories are:
 
-- **Inference**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when the proxy is active. Upstream keepalive is disabled while the proxy is active, so inference connections are not reused across requests targeting different upstream peers.
+- **Inference**: requests from clients to LLM providers, proxied by [AI Proxy Advanced](/plugins/ai-proxy-advanced/) through the native {{site.base_gateway}} upstream path. This is the majority of {{site.ai_gateway}} traffic. Load balancing, health checks, retries, streaming, WebSocket, and HTTP/2 all continue to function when forward proxy support is active. Upstream keepalive is disabled while the forward proxy is active, so inference connections are not reused across requests targeting different upstream peers.
 - **Identity auth**: cloud identity authentication issued by provider SDKs. AWS Bedrock SigV4 signing, Azure and GCP managed identity token acquisition, when targets require managed identity.
-- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor plugins to their external services (embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint).
+- **Auxiliary calls**: direct HTTP calls from semantic, RAG, guardrail, sanitizer, and compressor plugins to their external services. For example, an embeddings service, AWS Bedrock Guardrails, Azure Content Safety, Lakera, GCP Model Armor, or a configured custom endpoint.
 
 <!--vale off-->
 {% mermaid %}
@@ -94,9 +94,11 @@ When `proxy_config` is set on a plugin, every outbound request that plugin issue
 
 ## Relationship to the Forward Proxy Advanced plugin
 
-{{site.base_gateway}} also provides the [Forward Proxy Advanced plugin](/plugins/forward-proxy/) for routing non-AI upstream traffic through an intermediary HTTP proxy. That plugin takes over the request before the balancer phase runs, which works for standard Kong Services but breaks behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
+{{site.base_gateway}} also provides the [Forward Proxy Advanced plugin](/plugins/forward-proxy/) for routing non-AI upstream traffic through an intermediary HTTP proxy. For non-AI services use the Forward Proxy Advanced plugin.
 
-{{site.ai_gateway}} plugins use `proxy_config` instead so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active. Apply the Forward Proxy Advanced plugin to non-AI Services only; use `proxy_config` on any Service that serves traffic through an {{site.ai_gateway}} plugin.
+The Forward Proxy Advanced plugin plugin takes over the request before the balancer phase runs, which works for standard Kong Services but not with behavior that {{site.ai_gateway}} depends on: upstream load balancing, health check reporting, retries, WebSocket upgrades, and HTTP/2 request bodies.
+
+For any Service that serves traffic through a {{site.ai_gateway}} plugin you should use `proxy_config` instead, so the balancer phase continues to run normally. Load balancing across LLM targets, streaming, real-time API traffic, and HTTP/2 inference requests all remain functional when the forward proxy is active and you have configured `proxy_config`. 
 
 ## Supported plugins
 
