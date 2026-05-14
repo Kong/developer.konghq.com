@@ -2,7 +2,7 @@ When you link an API to a Gateway, you have two options:
 * Link to a single Gateway Service with the {{site.konnect_short_name}} Application Auth (KAA) plugin
 * Link to a control plane with the [Access Control Enforcement plugin](/plugins/ace/)
 
-These plugins are responsible for applying authentication and authorization on the Service or control plane.
+These plugins are responsible for applying authentication and authorization on the Gateway Service or control plane.
 The [authentication strategy](/dev-portal/auth-strategies/) that you select for the API defines how clients authenticate.
 
 The following table can help you decide which option to pick:
