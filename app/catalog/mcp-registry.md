@@ -5,10 +5,11 @@ layout: reference
 tech_preview: true
 products:
     - catalog
+    - dev-portal
 works_on:
   - konnect
 
-description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}}.
+description: An MCP Registry is a centralized publishing and discovery endpoint for MCP servers within your organization. Learn how to register your MCP servers in {{site.konnect_short_name}} {{site.konnect_catalog}} and publish them in [{{site.dev_portal}}](/dev-portal/).
 
 breadcrumbs:
   - /catalog/
@@ -80,7 +81,10 @@ An MCP server represents an agent-facing service definition. It describes:
 * Its version  
 * How agents can connect to it
 
-To add an MCP server, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
+You can publish the MCP server to {{site.konnect_catalog}} for internal {{site.konnect_short_name}} users and agents to consume.
+Additionally, you can publish the MCP server to a {{site.dev_portal}} if you want partners, internal developers without access to {{site.konnect_catalog}}, or external agents and developers to consume it.
+
+To add an MCP server to {{site.konnect_catalog}}, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
 
 ```sh
 curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/publish" \
@@ -107,6 +111,18 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-reg
     ]
   }'
 ```
+
+Optionally, publish it to a {{site.dev_portal}}:
+1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
+1. In the Catalog sidebar, click **MCP registries**.
+1. Click the MCP registry you want to publish to {{site.dev_portal}}.
+1. Click **Publish to portal**.
+1. From the **Portal** dropdown menu, select the {{site.dev_portal}} you want to publish to.
+1. Select either **Public** or **Private** from the MCP registry visibility. 
+   
+   {:.info}
+   > Private is only available if you've [configured authentication](/dev-portal/security-settings/#user-authentication) for your {{site.dev_portal}}.
+1. Click **Publish MCP registry**.
 
 
 ## Packages and remotes
@@ -135,14 +151,22 @@ An MCP server can define multiple packages and multiple remotes simultaneously. 
 
 ## Access and authentication
 
+How users and agents access and authenticate with your MCP server depends on if it's published internally in {{site.konnect_catalog}} or if it's published in a {{site.dev_portal}}:
+
+{% navtabs "authn" %}
+{% navtab "Internal in {{site.konnect_catalog}}" %}
 Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
 
 ```sh
 curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/servers" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
-
-Future enhancements will allow publishing MCP servers to Dev Portal, enabling controlled exposure to broader audiences, including users and agents outside of {{site.konnect_short_name}}.
+{% endnavtab %}
+{% navtab "Published in {{site.dev_portal}}" %}
+MCP servers published to a {{site.dev_portal}} use the default [authentication strategy](/dev-portal/auth-strategies/) of the {{site.dev_portal}}.
+Who can access the published MCP server depends on if the {{site.dev_portal}} is set to be [public or private](/dev-portal/portal-settings/#visibility). 
+{% endnavtab %}
+{% endnavtabs %}
 
 
 ## What’s next
@@ -151,7 +175,6 @@ We are continuing to evolve MCP Registries alongside the broader MCP ecosystem.
 
 Planned enhancements include:
 
-* Publishing MCP servers to Dev Portal  
 * Auto-registration of MCP servers created via {{site.konnect_short_name}}-native workflows such as {{site.ai_gateway}} 
 * Additional governance and lifecycle controls
 

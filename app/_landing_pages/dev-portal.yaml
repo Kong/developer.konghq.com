@@ -124,6 +124,8 @@ rows:
                 url: "/catalog/apis/"
               - text: Create API packages
                 url: /catalog/api-packaging/
+              - text: Publish MCP servers 
+                url: /catalog/mcp-registry/
               - text: Discover and govern APIs
                 url: /how-to/discover-and-govern-apis-with-service-catalog/
   
