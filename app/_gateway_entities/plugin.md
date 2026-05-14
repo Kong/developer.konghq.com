@@ -221,8 +221,8 @@ In some cases, this might be compensated for when you run rate limiting before a
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
-{:.note}
-> **Note**: In Kong Gateway 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in Kong Gateway 3.14.
+{:.info}
+> **Note**: In {{site.base_gateway}} 3.13 and earlier, Consumer and Consumer Group scoping was not compatible with dynamic plugin ordering. If you had [Consumer or Consumer Group-scoped plugins](#scoping-plugins) anywhere in your Workspace or control plane, dynamic plugin ordering would cause those plugins **not to trigger**. This limitation was resolved in {{site.base_gateway}} 3.14.
 
 ## Conditional plugin execution {% new_in 3.14 %}
 
