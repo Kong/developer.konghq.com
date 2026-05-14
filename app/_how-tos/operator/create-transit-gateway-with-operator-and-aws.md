@@ -89,7 +89,7 @@ spec:
    > **Notes:**
    > * Make sure to create the transit gateway in the same region as the {{site.konnect_short_name}} network provider. You can set the region in the [AWS CLI configuration](#aws-cli) or use the `--region` flag in each command.
    > * If you have issues creating resources with AWS CLI, try using the env variables instead of the `aws configure` command for credentials. Make sure to include `AWS_REGION` or use the `--region` flag in every command.
-   * The same Transit Gateway cannot be used in multiple networks, even though it is shared via different RAM shares. You must create a Transit Gateway for each Dedicated Cloud Gateway network in your deployment.
+   * The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
 
 1. Export the transit gateway ID and ARN to your environment:
    ```sh

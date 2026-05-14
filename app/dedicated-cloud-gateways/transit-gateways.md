@@ -67,7 +67,7 @@ This process includes three main steps:
     1. Create the resource share and save the resulting **RAM Share ARN**.
 
     {:.warning}
-    > **Limitation for multi-network environments:** The same Transit Gateway cannot be used in multiple networks, even though it is shared via different RAM shares. You must create a Transit Gateway for each Dedicated Cloud Gateway network in your deployment.
+    > **Limitation for multi-network environments:** The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
 
 2. Accept the Transit Gateway Attachment in AWS:
 
