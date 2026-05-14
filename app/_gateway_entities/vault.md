@@ -310,6 +310,9 @@ features:
 {:.info}
 >When using Vault references in plugin configs to **add headers**, ensure that the secret value stored in your Vault follows the **`key:value` format**. The entire header definition, both name and value, needs to be provided by the resolved secret.
 
+{:.warning}
+> Serverless plugins, like Pre-Function and Post-Function, are not supported with {{site.konnect_short_name}} Config Store Vaults.
+
 ## Secret rotation in Vaults
 
 By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. 
