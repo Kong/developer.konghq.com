@@ -6,8 +6,8 @@ info:
   contact:
     name: Kong
     url: 'https://konghq.com'
-  x-oas-source: kong/platform-api@bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3
-  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/bead1dd6ac401c2bfb5b8d47637bda9bbdee93b3'
+  x-oas-source: kong/platform-api@92cd0a81e40851427a090d17850f88e1ff84dd1e
+  x-oas-source-link: 'https://github.com/Kong/platform-api/commit/92cd0a81e40851427a090d17850f88e1ff84dd1e'
 servers:
   - url: 'https://global.api.konghq.com/v3'
     description: Global Base URL
@@ -628,7 +628,6 @@ components:
         - 192.168.1.1
         - 192.168.1.0/22
       maxItems: 1000
-      minItems: 1
       uniqueItems: true
     OrganizationSourceIPRestriction:
       type: object
@@ -738,7 +737,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/OrganizationSourceIPRestriction'
+            type: object
+            properties:
+              enabled:
+                $ref: '#/components/schemas/SourceIPEnabled'
+              allowed_ips:
+                $ref: '#/components/schemas/AllowedIPs'
+                minItems: 1
+            additionalProperties: false
+            required:
+              - enabled
+              - allowed_ips
+            title: Organization Source IP Restriction
           examples:
             Example Request Body:
               value:

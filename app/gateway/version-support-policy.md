@@ -108,6 +108,11 @@ Kong supports the following versions of {{site.ee_product_name}}:
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{tab_name}} %}
+{% assign first_version = release.release | append: ".0.0" %}
+{% assign release_date = site.data.products.gateway.release_dates[first_version] | split: '/' | join: '-' %}
+{% if release_date %}
+{{site.base_gateway}} version {{first_version}} was first released on {{release_date}}.
+{% endif %}
 {{site.ee_product_name}} {{tab_name}} supports the following deployment targets until {{release.eol}}, unless otherwise noted by an earlier OS vendor end of life (EOL) date.
   {% include support/gateway.html release=release %}
 {% endnavtab %}

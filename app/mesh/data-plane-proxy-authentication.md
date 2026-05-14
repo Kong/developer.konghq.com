@@ -25,8 +25,8 @@ related_resources:
     url: /mesh/meshmultizoneservice/
   - text: '{{site.mesh_product_name}} resource sizing guidelines'
     url: '/mesh/resource-sizing-guidelines/'
-  - text: '{{site.mesh_product_name}} version compatibility'
-    url: '/mesh/version-compatibility/'
+  - text: '{{site.mesh_product_name}} validated versions'
+    url: '/mesh/validated-versions/'
   - text: 'Secure access across services'
     url: '/mesh/secure-access/'
   - text: Configure zone proxy authentication
