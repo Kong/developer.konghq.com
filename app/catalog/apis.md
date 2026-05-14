@@ -46,13 +46,8 @@ faqs:
       * Without {{site.dev_portal}} app registration: If the version can be accessed separately from other versions of the same API, each version must document how to modify the request to access the given version.
   - q: Why don't I see API Products in my {{site.konnect_short_name}} sidebar?
     a: |
-<<<<<<< feat/override-api-app-reg
-      [API Products](/api-products/) were used to create and publish APIs to classic (v2) {{site.dev_portal}}s. When the new (v3) {{site.dev_portal}} was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) {{site.dev_portal}}. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
-  - q: My team has a {{site.dev_portal}}, why can't I see APIs?
-=======
       API Products were used to create and publish APIs to classic (v2) Dev Portals. When the new (v3) Dev Portal was released, the API Products menu item was removed from the sidebar navigation of any {{site.konnect_short_name}} organization that didn't have an existing API product. If you want to create and publish APIs, you can create a new (v3) Dev Portal. To get started, see [Automate your API catalog with the Konnect API](/how-to/automate-api-catalog/).
   - q: My team has a Dev Portal, why can't I see APIs?
->>>>>>> main
     a: You need additional permissions to see APIs. See the [Catalog APIs roles](/konnect-platform/teams-and-roles/#catalog-apis) for more information.
   - q: |
       {% include faqs/portal-markdown.md section='question' %}
@@ -497,10 +492,6 @@ components:
 
 ### Filtering published APIs in {{site.dev_portal}}
 
-<<<<<<< feat/override-api-app-reg
 You can filter and categorize published APIs on your {{site.dev_portal}}s with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the {{site.dev_portal}} sidebar. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
-=======
-You can filter and categorize published APIs on your Dev Portals with custom attributes. By assigning attributes to an API, this allows users to filter APIs in the Dev Portal. For an API, you can define one or more custom attributes, and each attribute can have one or more values. For example, if you had a Billing API, you could label it with `"visibility": ["Internal"]` and `"platform": ["Web", "Mobile"]`.
->>>>>>> main
 
 For more information about how to use custom attributes for filtering APIs displayed in your {{site.dev_portal}}, see the [MDC documentation](https://portaldocs.konghq.com/components/apis-list).
