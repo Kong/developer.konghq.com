@@ -15,6 +15,9 @@ columns:
   - title: ACE plugin
     key: ace
 rows:
+  - title: Scope
+    kaa: Linked to a single Gateway Service
+    ace: Linked to an entire control plane
   - title: Plugin applied...
     kaa: "Automatically on the [Gateway Service linked to the API](/catalog/apis/#gateway-service-link)"
     ace: "Manually"
@@ -32,5 +35,6 @@ rows:
     ace: "Yes"
 {% endtable %}
 <!--vale on-->
+
 {:.danger}
 > **Do not** configure the KAA and ACE plugin on the same control plane because their overlapping interactions can be unpredictable. 

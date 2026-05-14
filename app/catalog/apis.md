@@ -261,8 +261,39 @@ You can link to a {{site.konnect_short_name}} [Gateway Service](/gateway/entitie
 
 {% include /dev-portal/kaa-vs-ace.md %}
 
-The following diagram shows how the KAA plugin manages authorization and authentication on the linked Service:
+The following diagram shows how the plugins manages authorization and authentication on the linked Service or control plane:
+{% navtabs "auth-plugin" %}
+{% navtab "ACE" %}
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    actor Client
+    Client->>Kong: 
+    Kong->>Auth plugins: Send request
+    Auth plugins->>Auth plugins: Run configured auth plugins (like Key Auth)
 
+    note right of Auth plugins: ACE runs after all other auth plugins.<br/>If a prior plugin rejects the request, ACE does not run.
+
+    Auth plugins->>ACE plugin: Forward request
+
+    alt Request matches a defined operation
+        ACE plugin->>ACE plugin: Authenticate and authorize request<br/>using data pushed from Konnect
+        ACE plugin->>Upstream: Forward authorized request
+        Upstream-->>ACE plugin: Response
+        ACE plugin-->>Kong: 
+        Kong-->>Client: 
+    else `match_policy: if_present` (no match)
+        ACE plugin-->>Kong: Pass through untouched
+        Kong-->>Client: 
+        note right of ACE plugin: If anonymous is set, unauthenticated requests<br/>also pass through. Use Request Termination<br/>to block them if needed.
+    else `match_policy: required` (no match)
+        ACE plugin-->>Kong: Reject with 404
+        Kong-->>Client: 404
+    end
+{% endmermaid %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "KAA" %}
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
@@ -272,14 +303,14 @@ sequenceDiagram
     Konnect Application Auth->>Konnect Application Auth: Authenticate the request based on the auth strategy
 
     rect rgb(191, 223, 255)
-    note right of Konnect Application Auth: OIDC Strategy.
+    note right of Konnect Application Auth: OIDC Strategy
     Konnect Application Auth-->> OIDC Plugin: 
     OIDC Plugin->> IdP: Sends credentials request
     IdP ->> OIDC Plugin: return JWT token
     OIDC Plugin-->>Konnect Application Auth:
     end
     rect rgb(191, 223, 255)
-    note right of Konnect Application Auth: Key Auth Strategy.
+    note right of Konnect Application Auth: Key Auth Strategy
     Konnect Application Auth->>Konnect Application Auth: Authenticate Api Key
     end
 
@@ -288,6 +319,8 @@ sequenceDiagram
     Kong->>Client:
  {% endmermaid %}
  <!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 If you want the Gateway Service to restrict access to the API, [configure developer and application registration for your Dev Portal](/dev-portal/self-service/).
 

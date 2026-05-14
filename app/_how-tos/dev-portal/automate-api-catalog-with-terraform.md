@@ -194,27 +194,52 @@ resource "konnect_api_document" "my_apidocument" {
 ' >> main.tf
 ```
 
-## Associate the API with a Gateway Service
+## Associate the API with a control plane
 
-[Gateway Services](/gateway/entities/service/) represent the upstream services in your system. By associating a Service with an API, this allows developers to generate credentials or API keys for your API. 
+By associating an API with a control plane, this allows developers to generate credentials or API keys for your API.
 
-Associate the API with a Service:
+Associate the API with a control plane:
 
 ```hcl
 echo '
 resource "konnect_api_implementation" "my_api_implementation" {
   api_id = konnect_api.my_api.id
-  service_reference = {
-    service = {
-      control_plane_id = konnect_gateway_control_plane.my_cp.id
-      id               = konnect_gateway_service.httpbin.id
+  control_plane_reference = {
+    control_plane = {
+      id = konnect_gateway_control_plane.my_cp.id
     }
   }
   depends_on = [
     konnect_api.my_api,
     konnect_api_version.my_api_spec,
-    konnect_gateway_control_plane.my_cp,
-    konnect_gateway_service.httpbin
+    konnect_gateway_control_plane.my_cp
+  ]
+}
+' >> main.tf
+```
+
+## Apply the ACE plugin
+
+The [Access Control Enforcement plugin](/plugins/ace/) manages developer access control for APIs published in Dev Portal. 
+ACE applies at the control plane level rather than to a single Gateway Service, so it covers all traffic on the control plane.
+The ACE plugin is recommended for declarative configuration.
+
+The `match_policy` setting controls how ACE handles requests that don't match a defined API operation. 
+This example uses `required`, which rejects any request that doesn't match a published operation with a 404. 
+If you have existing traffic on the control plane that isn't published through Dev Portal, use `if_present` instead. See the [ACE plugin examples](/plugins/ace/examples/) for all available configurations.
+
+```hcl
+echo '
+resource "konnect_gateway_plugin_ace" "my_ace" {
+  enabled = true
+  config = {
+    match_policy = "required"
+  }
+  tags = []
+  control_plane_id = konnect_gateway_control_plane.my_cp.id
+
+  depends_on = [
+    konnect_api_implementation.my_api_implementation
   ]
 }
 ' >> main.tf
