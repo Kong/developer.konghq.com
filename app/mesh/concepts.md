@@ -83,13 +83,13 @@ Outbounds --> Servers
 
 #### Inbound
 
-An inbound is the part of the data plane proxy that receives traffic for a specific port. Inbounds are usually grouped across different data planes to form a service.
+An inbound is the part of the data plane proxy that receives traffic from clients for a specific port. Inbounds are usually grouped across different data planes to form a service.
 
 For more information, see [Inbounds in the data plane proxy reference](/mesh/data-plane-proxy/#inbound).
 
 #### Outbound
 
-An outbound is the part of the data plane proxy that sends traffic for a specific service. Outbounds group multiple remote inbounds as endpoints.
+An outbound is the part of the data plane proxy that sends traffic to servers for a specific service. Outbounds group multiple remote inbounds as endpoints.
 
 For more information, see [Outbounds in the data plane proxy reference](/mesh/data-plane-proxy/#outbounds).
 
