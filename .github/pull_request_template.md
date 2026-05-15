@@ -1,9 +1,10 @@
 ## PR Title
 
-Use the format `<Feat/Fix/Chore>(Product): Title`, for example:
+Use the format `Feat/Fix/Chore(Product): Title`, for example:
 - `Feat(Mesh): Add transparent proxy upgrade guide`
 - `Fix(Gateway): Correct decK example in rate limiting how-to`
 - `Chore(AI Gateway): Bump plugin schema`
+- `Chore(Platform): Fix issue template`
 
 ## Description
 
