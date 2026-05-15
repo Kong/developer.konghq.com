@@ -284,6 +284,16 @@ region: global
    ```
 
 {% endnavtab %}
+{% navtab "UI" %}
+1. In the {{site.konnect_short_name}} sidebar, click **API Gateways**.
+1. In the API Gateways sidebar, click **Gateways**.
+1. Select your Dedicated Cloud Gateway.
+1. Click the **Redis** tab.
+1. Click **New Redis**.
+1. Click **Konnect-managed Redis**.
+1. In the **Name** field, enter a name for your managed cache.
+1. Click **Save**.
+{% endnavtab %}
 {% endnavtabs %}
 
 For control plane managed caches, you don't need to manually configure a Redis partial. 
