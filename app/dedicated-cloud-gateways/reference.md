@@ -70,7 +70,7 @@ faqs:
       It doesn't verify routing, plugins, upstreams, or networking configurations.
   - q: Does Dedicated Cloud Gateway use PKI certificates for control plane and data plane communication?
     a: |
-      Yes, Dedicated Cloud Gateway use PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
+      Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
 
 related_resources:
   - text: Dedicated Cloud Gateways 
