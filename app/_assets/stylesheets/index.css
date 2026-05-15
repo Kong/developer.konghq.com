@@ -328,11 +328,6 @@
     color: rgb(0, 15, 6) !important;
   }
 
-  .konami .button.button--primary {
-
-    color: rgb(0, 15, 6) !important;
-  }
-
   /* Dark theme: recolor hardcoded #428CDC fills to Electric Lime */
   .dark svg path[fill="#428CDC" i],
   .dark svg rect[fill="#428CDC" i],
@@ -343,9 +338,9 @@
   }
 
   /* Dark theme: recolor /icons/ SVGs loaded as <img> to Electric Lime (#CCFF00) */
-  .dark img[src$=".svg"][src*="/icons/"] {
+  /* .dark img[src$=".svg"][src*="/icons/"] {
     filter: brightness(0) invert(87%) sepia(100%) saturate(1000%) hue-rotate(12deg);
-  }
+  } */
 
   /* Dark theme: recolor decorative page header icons */
   .dark svg[viewBox="0 0 321 286"],
@@ -356,63 +351,6 @@
     filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
   }
 
-  /* Konami theme: recolor hardcoded #428CDC icons to Electric Lime */
-  .konami svg path[fill="#428CDC" i],
-  .konami svg rect[fill="#428CDC" i],
-  .konami svg circle[fill="#428CDC" i],
-  .konami svg polygon[fill="#428CDC" i],
-  .konami svg g[fill="#428CDC" i] path {
-    fill: rgb(204, 255, 0) !important;
-  }
-
-  /* Konami theme: recolor header logo text */
-  .konami svg path[fill="#052f5c" i] {
-    fill: rgb(255, 255, 255) !important;
-  }
-
-  .konami img[src$=".svg"][src*="/icons/"] {
-    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
-  }
-
-  .konami .card {
-    border: 1px solid rgb(204, 255, 0) !important;
-  }
-
-  /* Konami theme: recolor decorative page header icons (all share the same blue gradient palette) */
-  .konami svg[viewBox="0 0 321 286"],
-  .konami svg[viewBox="0 0 268 302"],
-  .konami svg[viewBox="0 0 252 252"],
-  .konami svg[viewBox="0 0 300 219"],
-  .konami svg[viewBox="0 0 404 148"] {
-    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
-  }
-
-  /* Konami theme: dark checkmark on lime checkbox */
-  .konami .checkbox--checked,
-  .konami .ais-RefinementList-checkbox:checked {
-    color: rgb(0, 15, 6) !important;
-  }
-
-  /* Konami theme: dark knob on lime switch slider */
-  .konami .switch__slider:before {
-    background-color: rgb(0, 15, 6) !important;
-  }
-
-  /* Konami theme: make pagination items visible against page bg */
-  .konami .ais-Pagination-item {
-    background-color: rgb(0, 26, 12) !important;
-  }
-
-  /* Konami theme: retheme the background gradient border */
-  .konami .background-gradient {
-    background: linear-gradient(transparent, transparent) padding-box,
-      linear-gradient(227.59deg, rgb(0, 37, 18) 6.43%, rgb(100, 230, 180) 30.81%, rgb(204, 255, 0) 50%, rgb(100, 230, 180) 65.64%, rgb(0, 37, 18) 100%) border-box !important;
-  }
-
-  /* Konami theme; dark text on badges */
-  .konami a.badge.bg-brand {
-    color: rgb(0, 15, 6) !important;
-  }
   .button.button--secondary {
     @apply !border-brand !text-primary;
   }
@@ -1101,9 +1039,8 @@ ol:has(code) {
   position: relative;
 }
 
-.dark .heading-section > h2::before,
-.dark .landing-page h2::before,
-.dark .accordion-item > .accordion-trigger::before {
+.dark .heading-section > h1::before,h2::before,
+.dark .landing-page h2::before {
   content: "";
   position: absolute;
   left: -20px;
