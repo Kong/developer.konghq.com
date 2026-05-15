@@ -75,7 +75,7 @@ faqs:
 
 A Consumer Group is the {{site.ai_gateway}} entity that represents a collection of Consumers grouped for the purpose of applying shared Policies and access controls.
 
-Use Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each Consumer individually. Consumer Groups also appear in the `acls` field of Model, Agent, and MCP Server entities, where they gate access to those parent entities.
+Use Consumer Groups to scope group-wide behavior, such as rate limits, prompt guards, or content moderation, without configuring each Consumer individually. Consumer Groups can appear in the `acls` field of Model, Agent, and MCP Server entities, where they gate access to those parent entities.
 
 Consumer Groups are managed through the {{site.ai_gateway}} entity API surface in both deployment modes:
 

@@ -230,7 +230,7 @@ Tools can also carry MCP-spec [annotations](#schema-aigateway-mcpserver-tools-an
 
 Two session strategies:
 
-1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets` (the encryption keys; the first entry is used for encryption, all entries for decryption to support key rotation).
+1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets`  which are encryption keys; the first entry is used for encryption, all entries are used for decryption to support key rotation.
 1. **Redis.** Session state is stored in Redis. Configure connection details and authentication in `config.server.session.redis`. Cloud Redis providers (AWS ElastiCache, Azure, GCP) authenticate through provider-specific blocks under `redis.cloud_authentication`.
 
 `session_ttl` controls how long sessions live (default 24 hours). Set `managed: false` to disable managed sessions when the upstream maintains state externally.

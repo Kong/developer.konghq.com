@@ -74,9 +74,9 @@ faqs:
 
 ## What is an Agent?
 
-An Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. An Agent has a type, either `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic or `http` for generic HTTP agent routing, plus configuration that points {{site.ai_gateway}} at the upstream and shapes how requests flow.
+An Agent is a first-class {{site.ai_gateway}} entity that represents an upstream agent endpoint exposed through {{site.ai_gateway}}. An Agent has a type, either `a2a` for [Agent-to-Agent protocol](https://a2aproject.github.io/A2A/) traffic or `http` for generic HTTP agent routing, and a configuration that points {{site.ai_gateway}} at the upstream and shapes how requests flow.
 
-For `a2a` Agents, the runtime adds protocol-aware behavior on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry. For `http` Agents, requests are proxied without A2A-specific processing.
+For `http` type Agents, requests are proxied without A2A-specific processing. For `a2a` type Agents, {{site.ai_gateway}} adds protocol-aware behaviour on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry. 
 
 Agents can be created and managed through {{site.konnect_short_name}}, the on-prem Admin API, decK, or the {{site.konnect_short_name}} UI:
 
@@ -99,9 +99,9 @@ rows:
 
 ## How A2A traffic flows
 
-When an Agent has type `a2a`, the runtime processes traffic in four phases:
+When an Agent has type `a2a`, proxied traffic is processed in four phases:
 
-1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). When statistics logging is enabled, starts an OpenTelemetry span and records the request body for payload logging if that's enabled too.
+1. **Access**. Detects whether the request is an A2A operation (JSON-RPC or REST binding). When statistics logging is enabled, this starts an OpenTelemetry span and records the request body for payload logging if that's also enabled.
 1. **Header filter**. Detects streaming responses (`Content-Type: text/event-stream`) and records time to first byte. Buffers agent-card responses for URL rewriting.
 1. **Body filter**. Streams SSE chunks through to the client without buffering. Buffers non-streaming responses to extract task metadata. Rewrites agent-card URLs to the gateway address. Emits analytics at end of response.
 1. **Log**. Finalizes the OpenTelemetry span with task state, task ID, and any error information.
@@ -168,7 +168,7 @@ rows:
 
 ## Protocol detection
 
-A2A traffic is auto-detected per request. There's no per-route opt-in, and non-A2A traffic passes through without overhead.
+A2A traffic is auto-detected per request and non-A2A traffic passes through without overhead.
 
 **REST binding.** Detection anchors to the end of the request path, so any prefix added by the route is ignored. For example, both `/v1/message:send` and `/api/agents/v1/message:send` match `SendMessage`:
 
@@ -235,7 +235,19 @@ When an upstream agent returns an agent card, the runtime rewrites the `url` fie
 
 ## Logging and observability
 
-Statistics logging records structured A2A telemetry per request: the A2A method, binding type, task state, task ID, context ID, latency, time to first byte (for streaming), SSE event count, and response size. The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached log plugins, and creates a `kong.a2a` child span when {{site.base_gateway}} tracing is configured.
+When Statistics logging is enabled the {{site.ai_gateway}} records the following structured A2A telemetry per request: 
+
+- A2A method
+- Binding type
+- Task state
+- Task ID
+- Context ID
+- Latency
+- Time to first byte (for streaming)
+- SSE event count
+- Response size. 
+
+The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging plugins, and creates a `kong.a2a` child span when {{site.base_gateway}} tracing is configured.
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
