@@ -179,8 +179,6 @@ data:
     window_type: sliding
 {% endentity_example %}
 
-<!-- TODO: confirm the actual `config` shape for ai-rate-limiting-advanced against the plugin's current schema. -->
-
 ## Schema
 
 {% entity_schema %}

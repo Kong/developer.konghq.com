@@ -34,12 +34,12 @@ faqs:
   - q: What happens when I update a Provider's credentials?
     a: |
       {{site.ai_gateway}} propagates the credential change to every Model that references the
-      Provider by `name`. The next request through any of those Models uses the updated credentials.
+      Provider (by `name` or `id`). The next request through any of those Models uses the updated
+      credentials.
 
   - q: How does a Model reference a Provider?
     a: |
-      Set `target_models[].provider.name` on the Model to the Provider's `name`. Provider references
-      take a `name` only, not an ID.
+      Set `target_models[].provider` on the Model to the Provider's `name` or `id`.
 
   - q: Do Providers generate any runtime primitives on their own?
     a: |
@@ -52,7 +52,7 @@ faqs:
 
 A Provider is a first-class {{site.ai_gateway}} entity that represents an upstream LLM service connection and their credentials, endpoint configuration, and provider-type-specific options. Each Provider has a `type` that selects the upstream LLM service. See the schema below for supported values, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific guidance.
 
-Models reference a Provider by `name` to route their `target_models` to that upstream. {{site.ai_gateway}} materializes the Provider's credentials into the underlying primitives of every Model that references it. Updating a Provider propagates credential changes to all referencing Models.
+Models reference a Provider through `target_models[].provider` to route their `target_models` to that upstream. The reference can use either the Provider `name` or `id`. {{site.ai_gateway}} materializes the Provider's credentials into the underlying primitives of every Model that references it. Updating a Provider propagates credential changes to all referencing Models.
 
 ### Relationship to Models
 
@@ -121,9 +121,9 @@ The `config.auth` object declares how {{site.ai_gateway}} authenticates to the u
 
 ## Provider references
 
-Models reference a Provider by `name` through the `target_models[].provider.name` field. The same reference shape is used elsewhere in the schema (such as the embeddings model under a Model's load balancer config). Provider references in {{site.ai_gateway}} entities accept the Provider's `name` only, not its ID.
+Models reference a Provider through the `target_models[].provider` field. The same reference shape is used elsewhere in the schema (such as the embeddings model under a Model's load balancer config). Provider references in {{site.ai_gateway}} entities accept either the Provider `name` or `id`.
 
-Because references resolve by `name`, the `name` field is the stable handle for a Provider across the entity surface. Renaming a Provider (changing `name`) breaks any Model reference that pointed at the old value.
+If references use `name`, the `name` field acts as a stable human-readable handle. Renaming a Provider (changing `name`) breaks any Model references that point at the old name.
 
 ## Lifecycle
 
@@ -131,11 +131,9 @@ Creating a Provider stores the entity but doesn't generate any runtime primitive
 
 Updating a Provider re-materializes credentials into every Model that references it. The change takes effect on the next request through any referencing Model.
 
-<!-- TODO: confirm what happens when a Provider is deleted while still referenced by a Model. The EE proposal doesn't specify whether deletion is rejected or cascades. -->
-
 ## Set up a Provider
 
-The following example creates an OpenAI Provider that authenticates with a single bearer-token header. A Model can then route to this Provider by setting `target_models[].provider.name` to `my-openai-account`.
+The following example creates an OpenAI Provider that authenticates with a single bearer-token header. A Model can then route to this Provider by setting `target_models[].provider` to `my-openai-account` (or the Provider `id`).
 
 {% entity_example %}
 type: provider
