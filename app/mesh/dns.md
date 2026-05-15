@@ -53,7 +53,7 @@ The default TTL is 60 seconds, which ensures the client synchronizes with {{site
 
 By default, {{site.mesh_product_name}} generates domain names in the format `<kuma.io/service tag>.mesh`, accessible on port `80`.
 
-If you use [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), or `MeshMultiZoneService`, {{site.mesh_product_name}} generates the domains using a [`HostnameGenerator`](/mesh/hostnamegenerator/).
+If you use [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), or [`MeshMultiZoneService`](/mesh/meshmultizoneservice/), {{site.mesh_product_name}} generates the domains using a [`HostnameGenerator`](/mesh/hostnamegenerator/).
 
 ## Installation
 
@@ -123,7 +123,7 @@ Base your edits on [the existing default configuration](https://github.com/kumah
 
 {% raw %}
 
-```
+```text
 .:{{ .CoreDNSPort }} {
     # add a plugin to return NOERROR for IPv6 queries
     template IN AAAA . {
