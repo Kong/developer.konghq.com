@@ -84,6 +84,15 @@ rows:
             cta:
               url: /plugins/?category=ai
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Cookbooks
+            description: End-to-end recipes for building real-world AI scenarios.
+            icon: /assets/icons/cookbooks/ai.svg
+            cta:
+              url: /cookbooks/
+              align: end
 
   - header:
       type: h2
