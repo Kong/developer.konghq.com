@@ -87,7 +87,7 @@ Additionally, you can publish the MCP server to a {{site.dev_portal}} if you wan
 To add an MCP server to {{site.konnect_catalog}}, send a POST request to the `/mcp-registries/{registryIdentifier}/v0.1/publish` endpoint:
 
 ```sh
-curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/publish" \
+curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/$MCP_SERVER_NAME/v0.1/publish" \
   -H "Authorization: Bearer $KONNECT_TOKEN" \
   --json '{
     "name": "com.example/expense-reimbursement",
@@ -173,7 +173,7 @@ How users and agents access and authenticate with your MCP server depends on if 
 Registry endpoints assume a {{site.konnect_short_name}} authentication context. Only authenticated clients with appropriate [access tokens](/konnect-api/#konnect-api-authentication) can query the registry URL:
 
 ```sh
-curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-registry/v0.1/servers" \
+curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/$MCP_SERVER_NAME/v0.1/servers" \
   -H "Authorization: Bearer $KONNECT_TOKEN"
 ```
 {% endnavtab %}
