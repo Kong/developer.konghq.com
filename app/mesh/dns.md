@@ -51,9 +51,9 @@ The default TTL is 60 seconds, which ensures the client synchronizes with {{site
 
 ### Naming
 
-By default, {{site.mesh_product_name}} generates domain names in the format `<kuma.io/service tag>.mesh`, accessible on port `80`. For more advanced configuration, including customizing the port, use the [VirtualOutbound policy](/mesh/policies/virtual-outbound).
+By default, {{site.mesh_product_name}} generates domain names in the format `<kuma.io/service tag>.mesh`, accessible on port `80`.
 
-If you use [MeshService](/mesh/meshservice/), [MeshExternalService](/mesh/meshexternalservice/), or `MeshMultiZoneService`, {{site.mesh_product_name}} generates the domains using a [HostnameGenerator](/mesh/hostnamegenerator/).
+If you use [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), or `MeshMultiZoneService`, {{site.mesh_product_name}} generates the domains using a [`HostnameGenerator`](/mesh/hostnamegenerator/).
 
 ## Installation
 
@@ -63,14 +63,11 @@ On Universal, follow the instructions in [transparent proxying](/mesh/transparen
 
 ### Special considerations
 
-{{site.mesh_product_name}} DNS uses advanced networking techniques, so take special care in the following cases:
-
-- You can safely use {{site.mesh_product_name}} DNS with the [{{site.mesh_product_name}} CNI plugin](/mesh/cni/).
-- In mixed IPv4 and IPv6 environments, we recommend specifying an [IPv6 virtual IP CIDR](/mesh/ipv6-support/) so DNS responses work consistently across both stacks.
+{{site.mesh_product_name}} DNS uses advanced networking techniques. In mixed IPv4 and IPv6 environments, we recommend specifying an [IPv6 virtual IP CIDR](/mesh/ipv6-support/) so DNS responses work consistently across both stacks.
 
 ### Overriding the CoreDNS configuration
 
-In some cases, you might want to override the default CoreDNS configuration.
+In some cases, you may want to override the default CoreDNS configuration.
 
 {{site.mesh_product_name}} supports overriding the CoreDNS configuration from the control plane for both Kubernetes and Universal installations. For Universal installations, {{site.mesh_product_name}} also supports overriding from data planes. When you override from the control plane, all data planes in the mesh use the overridden DNS configuration.
 
@@ -85,36 +82,14 @@ bootstrapServer:
   corefileTemplatePath: "/path/to/mounted-corefile-template" # ENV: KUMA_BOOTSTRAP_SERVER_PARAMS_COREFILE_TEMPLATE_PATH
 ```
 
-You also need to mount the DNS configuration template file into the control plane by adding an extra ConfigMap.
-
-1. Create the namespace if it does not exist:
-
-   ```sh
-   kubectl create namespace {{site.mesh_namespace}}
-   ```
-
-1. Create the ConfigMap in the namespace where the control plane is installed. Make sure the file exists on disk:
-
-   ```sh
-   kubectl create --namespace {{site.mesh_namespace}} configmap corefile-template \
-     --from-file corefile-template=/path/to/corefile-template-on-disk
-   ```
-
-Point to this ConfigMap when installing {{site.mesh_product_name}}:
-
-{% navtabs "Install control plane" %}
-{% navtab "Kubernetes (kumactl)" %}
+You also need to mount the DNS configuration template file into the control plane by adding an extra ConfigMap. Create the ConfigMap in the namespace where the control plane is installed. Make sure the file exists on disk:
 
 ```sh
-kumactl install control-plane \
-  --env-var "KUMA_BOOTSTRAP_SERVER_PARAMS_COREFILE_TEMPLATE_PATH=/path/to/mounted-corefile-template" \
-  --set "{{site.set_flag_values_prefix}}controlPlane.extraConfigMaps[0].name=corefile-template" \
-  --set "{{site.set_flag_values_prefix}}controlPlane.extraConfigMaps[0].mountPath=/path/to/mounted-corefile-template/corefile-template" \
-  | kubectl apply -f -
+kubectl create --namespace {{site.mesh_namespace}} configmap corefile-template \
+  --from-file corefile-template=/path/to/corefile-template-on-disk
 ```
 
-{% endnavtab %}
-{% navtab "Kubernetes (HELM)" %}
+Point to this ConfigMap when installing {{site.mesh_product_name}}:
 
 ```sh
 helm install --namespace {{site.mesh_namespace}} \
@@ -124,8 +99,6 @@ helm install --namespace {{site.mesh_namespace}} \
   {{site.mesh_helm_install_name}} {{site.mesh_helm_repo}}
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
 {% endnavtab %}
 {% navtab "Universal" %}
 Both overriding from the control plane and data planes are supported.
@@ -185,7 +158,7 @@ The `CIDR` field sets the IP range of virtual IPs. The default `240.0.0.0/4` is 
 
 The `domain` field specifies the default `.mesh` DNS zone that {{site.mesh_product_name}} DNS resolves. This field is only relevant when `serviceVipEnabled` is set to `true`.
 
-The `serviceVipEnabled` field defines whether a VIP is generated for each `kuma.io/service`. You can disable VIP generation for performance reasons; the [VirtualOutbound policy](/mesh/policies/virtual-outbound) provides a more flexible alternative.
+The `serviceVipEnabled` field defines whether a VIP is generated for each `kuma.io/service`.
 
 ## Usage
 
@@ -211,7 +184,7 @@ curl http://echo-server.echo-example.svc.1010.mesh
 
 The default listeners created on the VIP listen on port `80`, so you can omit the port when you use a standard HTTP client.
 
-{{site.mesh_product_name}} DNS allocates a VIP for every service within a mesh and creates an outbound virtual listener for every VIP. If you inspect the result of `curl localhost:9901/config_dump`, you can see something similar to:
+{{site.mesh_product_name}} DNS allocates a VIP for every service within a mesh and creates an outbound virtual listener for every VIP. If you inspect the result of `curl localhost:9901/config_dump`, you can see something like this:
 
 ```json
     {
