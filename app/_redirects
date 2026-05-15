@@ -14,8 +14,11 @@
 /kongctl/list/gateway/route/     /kongctl/list/gateway/
 /kongctl/list/gateway/service/   /kongctl/list/gateway/
 
-# Plugin examples
+# Plugins
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
+/gateway/plugin-development/  /custom-plugins/
+/gateway/plugin-development/*  /custom-plugins/
+
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone/
 /mesh-manager/migrate-zone/  /mesh/migrate-zone/
@@ -56,6 +59,7 @@
 /how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
 
 # Mesh redirects
+/mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/

@@ -2,7 +2,7 @@ To demonstrate how you can use a managed cache in a Redis-supported plugin, let'
 
 1. In the {{site.konnect_short_name}} sidebar, click **API Gateway**.
 1. Click your Dedicated Cloud Gateway.
-1. In the API Gateway sidebar, click **Plugins**.
+1. Click the **Plugins** tab.
 1. Click **New plugin**.
 1. Select **Rate Limiting Advanced**.
 1. In the **Rate Limit Window Type** fields, enter `100` and `3600`. 
