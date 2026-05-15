@@ -47,7 +47,7 @@ For more information, see the [control plane configuration reference](/mesh/cont
 
 ## Data plane
 
-The data plane handles traffic between services. In practice, the data plane consists of the apps that you build and put inside your service mesh.
+The data plane handles traffic between services. In practice, the data plane consists of the data plane proxies, or sidecars, that run alongside the applications in your service mesh.
 
 For more information, see the [{{ site.mesh_product_name }} architecture reference](/mesh/architecture/).
 
@@ -73,7 +73,7 @@ end
 end
 
 Inbounds -.Local traffic.-> App
-App -.Local traffic.-> outbounds
+App -.Local traffic.-> Outbounds
 
 Clients --> Inbounds
 Outbounds --> Servers
