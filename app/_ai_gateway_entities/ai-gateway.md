@@ -1,5 +1,5 @@
 ---
-title: {{site.ai_gateway}}s
+title: "{{site.ai_gateway}}"
 content_type: reference
 entities:
   - ai-gateway
@@ -10,14 +10,15 @@ min_version:
 breadcrumbs:
   - /ai-gateway/
   - /ai-gateway/entities/
-description: The top-level {{site.ai_gateway}} entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
+description: |
+  The top-level {{site.ai_gateway}} entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
 schema:
   api: konnect/ai-gateway
   path: /schemas/AIGateway
 works_on:
   - konnect
 related_resources:
-  - text: About {{site.ai_gateway}}
+  - text: "About {{site.ai_gateway}}"
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
