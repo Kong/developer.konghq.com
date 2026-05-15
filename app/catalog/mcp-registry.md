@@ -178,7 +178,6 @@ curl -X GET "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-regi
 ```
 {% endnavtab %}
 {% navtab "Published in {{site.dev_portal}}" %}
-MCP servers published to a {{site.dev_portal}} use the default [authentication strategy](/dev-portal/auth-strategies/) of the {{site.dev_portal}}.
 Who can access the published MCP server depends on if the {{site.dev_portal}} is set to be [public or private](/dev-portal/portal-settings/#visibility). 
 {% endnavtab %}
 {% endnavtabs %}
