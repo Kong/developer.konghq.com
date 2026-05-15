@@ -1,6 +1,6 @@
-Before you begin, you must get the {{ site.gemini }} API key from {{ site.google}} Cloud:
+Before you begin, you must get the {{ site.gemini }} API key from {{ site.google_cloud }}:
 
-1. Go to the [{{ site.google}} Cloud Console](https://console.cloud.google.com/).
+1. Go to the [{{ site.google_cloud }} Console](https://console.cloud.google.com/).
 2. Select or create a project.
 3. Enable the **Generative Language API**:
     - Navigate to **APIs & Services > Library**.

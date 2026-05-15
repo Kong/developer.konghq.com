@@ -130,10 +130,9 @@ konnect_catalog: Catalog
 metering_and_billing: Metering & Billing
 observability: Observability
 dev_portal: Dev Portal
-# 3rd party product names
+# Company names
 openai: OpenAI
 anthropic: Anthropic
-claude: Claude
 google: Google
 gemini: Gemini
 amazon: Amazon
@@ -145,6 +144,10 @@ grok: Grok
 cerebras: Cerebras
 ollama: Ollama
 deepseek: DeepSeek
+# Product names
+google_cloud: Google Cloud
+claude: Claude
+claude_code: Claude Code
 
 
 repos:

@@ -154,7 +154,7 @@ kong-dp-importer:
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
 
-## {{ site.google}} Cloud storage
+## {{ site.google_cloud }} storage
 
 In this setup, you need to designate one backup node. 
 The backup node must have read and write access to the GCP cloud storage bucket and the provisioned Data Plane nodes must have read access to the same GCP cloud storage bucket. 
