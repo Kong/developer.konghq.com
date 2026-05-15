@@ -122,7 +122,7 @@ You can use Grafana to visualize traces from Jaeger and logs from Loki, and the 
 
 ### Visualize traces
 
-To visualize your traces with Grafana, you can configure a new data source with the URL `http://jaeger-query.mesh-observability/` (or ay other URL Jaeger can be queried at).
+To visualize your traces with Grafana, you can configure a new data source with the URL `http://jaeger-query.mesh-observability/` (or any other URL Jaeger can be queried at).
 Grafana can then retrieve traces from Jaeger.
 
 You can then add a [`MeshTrace` policy](/mesh/policies/meshtrace) to your mesh to start emitting traces.
@@ -130,7 +130,7 @@ At this point you can visualize your traces in Grafana by choosing the Jaeger da
 
 ### Visualize logs
 
-To visualize your containers' logs and your access logs wth Grafana, you can then add a [`MeshAccessLog` policy](/mesh/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
+To visualize your containers' logs and your access logs with Grafana, you can then add a [`MeshAccessLog` policy](/mesh/policies/meshaccesslog) to your mesh to start emitting access logs. Loki picks up logs that are sent to `stdout`. To send logs to `stdout`, you can configure the logging backend as shown below:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
@@ -180,7 +180,7 @@ The Grafana data source is specifically built to relate information from the con
 
 Current features include:
 
-- Display the graph of your services with MeshGraph using the [Grafana nodeGraph panel](https://grafana.com/docs/grafana/latest/visualizations/node-graph/).
+- Display the graph of your services with MeshGraph using the [Grafana node graph panel](https://grafana.com/docs/grafana/latest/visualizations/node-graph/).
 - List meshes.
 - List zones.
 - List services.
