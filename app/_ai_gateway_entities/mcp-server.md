@@ -230,22 +230,42 @@ Tools can also carry MCP-spec [annotations](#schema-aigateway-mcpserver-tools-an
 
 Two session strategies:
 
-1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets`  which are encryption keys; the first entry is used for encryption, all entries are used for decryption to support key rotation.
-1. **Redis.** Session state is stored in Redis. Configure connection details and authentication in `config.server.session.redis`. Cloud Redis providers (AWS ElastiCache, Azure, GCP) authenticate through provider-specific blocks under `redis.cloud_authentication`.
+1. **Client.** Session state is encrypted into the MCP session ID assigned to the client. Requires `secrets` which are encryption keys; the first entry is used for encryption, all entries are used for decryption to support key rotation.
+1. **Redis.** Session state is stored in Redis. Configure connection details and authentication in `config.server.session.redis`.
+
+{% include_cached /plugins/redis/redis-cloud-auth.md tier='enterprise' %}
 
 `session_ttl` controls how long sessions live (default 24 hours). Set `managed: false` to disable managed sessions when the upstream maintains state externally.
 
-Cross-link: secrets used in session encryption can be referenced from a [Vault](/ai-gateway/entities/vault/).
+Secrets used in session encryption can be referenced from a [Vault](/ai-gateway/entities/vault/).
 
 ## Server configuration
 
 The `config.server` block carries runtime settings that apply across all tools on the MCP Server:
 
-1. `forward_client_headers` (default `true`). Whether to forward client request headers to the upstream when calling tools.
-1. `tag`. A single tag used by `listener` MCP Servers to filter which `conversion-only` tools to expose.
-1. `timeout` (default 10 seconds). Maximum time to wait for an upstream tool call.
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Default
+    key: default
+  - title: Description
+    key: description
+rows:
+  - field: "[`forward_client_headers`](#schema-aigateway-mcpserver-config-server-forward-client-headers)"
+    default: "`true`"
+    description: Whether to forward client request headers to the upstream when calling tools.
+  - field: "[`tag`](#schema-aigateway-mcpserver-config-server-tag)"
+    default: (none)
+    description: A single tag used by `listener` MCP Servers to filter which `conversion-only` tools to expose.
+  - field: "[`timeout`](#schema-aigateway-mcpserver-config-server-timeout)"
+    default: 10 seconds
+    description: Maximum time to wait for an upstream tool call.
+{% endtable %}
+<!-- vale on -->
 
-`config.max_request_body_size` controls the maximum incoming request body size accepted by the MCP Server (default 1 MB).
+[`config.max_request_body_size`](#schema-aigateway-mcpserver-config-max-request-body-size) controls the maximum incoming request body size accepted by the MCP Server (default 1 MB).
 
 ## ACL tool control
 
@@ -267,7 +287,7 @@ This way, consumers only interact with tools appropriate to their role, while ma
 
 ### Attribute types
 
-Two attribute types determine what the runtime evaluates against:
+Two attribute types determine what the MCP Server evaluates ACL rules against:
 
 1. **`consumer`** (default). Evaluates against the resolved Consumer identity.
 1. **`oauth_access_token`**. Evaluates against a claim extracted from the OAuth access token. Set `access_token_claim_field` to a jq filter (for example, `.user.email` for a nested claim). The OAuth flow itself is supplied by the [AI MCP OAuth2 Policy](/plugins/ai-mcp-oauth2/).

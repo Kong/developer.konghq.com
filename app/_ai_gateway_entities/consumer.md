@@ -97,7 +97,7 @@ rows:
 The `type` field declares which credential family the Consumer authenticates with. Supported values are:
 
 * `api-key`: the Consumer authenticates with one or more API key Credentials.
-* `oauth`: the Consumer authenticates with one or more OAuth Credentials whose `custom_id` maps to the OAuth provider's identifier.
+* `oauth`: the Consumer authenticates through an OAuth identity issued by an external OIDC provider. {{site.ai_gateway}} accepts any standards-compliant OAuth 2.0 / OpenID Connect provider configured through the [OpenID Connect plugin](/plugins/openid-connect/), or, for MCP traffic, through the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/). The Consumer Credential carries a `custom_id` that maps to the OAuth provider's user identifier (for example, an OIDC Client ID or `sub` claim).
 
 The `type` of every Credential issued to the Consumer must match the Consumer's `type`. See the [Consumer Credential entity](/ai-gateway/entities/consumer-credential/) reference for credential management.
 

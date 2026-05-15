@@ -54,7 +54,13 @@ A Provider is a first-class {{site.ai_gateway}} entity that represents an upstre
 
 Models reference a Provider by `name` to route their `target_models` to that upstream. {{site.ai_gateway}} materializes the Provider's credentials into the underlying primitives of every Model that references it. Updating a Provider propagates credential changes to all referencing Models.
 
-Providers can be created and managed through {{site.konnect_short_name}}, the on-prem Admin API, decK, or the {{site.konnect_short_name}} UI:
+### Relationship to Models
+
+A Provider stores how to reach and authenticate to an upstream LLM service. A [Model](/ai-gateway/entities/model/) decides which upstream provider model to call and how requests are load-balanced, formatted, and logged. The relationship is many-to-many at the target level: a single Provider can back many Models (for example, an `openai` Provider used by both a chat Model and an embeddings Model), and a single Model can route across multiple Providers through its `target_models` array (for example, a Model with one OpenAI target and one Anthropic target for fallback).
+
+Providers don't expose model endpoints on their own. They become routable only through a Model that references them.
+
+Providers can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:

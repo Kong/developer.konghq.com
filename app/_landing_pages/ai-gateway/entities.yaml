@@ -24,6 +24,14 @@ rows:
       - blocks:
           - type: card
             config:
+              title: {{site.ai_gateway}}
+              description: The top-level entity that owns Models, Providers, Policies, Agents, MCP Servers, and other AI-specific entities.
+              cta:
+                text: {{site.ai_gateway}} entity
+                url: /ai-gateway/entities/ai-gateway/
+      - blocks:
+          - type: card
+            config:
               title: AI Provider
               description: Stores upstream provider credentials and connection configuration. Providers are reusable and are not model endpoints.
               cta:

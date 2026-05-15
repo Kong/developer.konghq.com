@@ -84,7 +84,7 @@ rows:
 
 ## Backends
 
-Each Vault selects one of the supported secret backends — environment variables, AWS Secrets Manager, Google Secret Manager, Azure Key Vault, CyberArk Conjur, or HashiCorp Vault. The connection details vary per backend; the {{site.konnect_short_name}} UI surfaces the relevant fields based on the backend you choose.
+Each Vault selects one of the supported secret backends: environment variables, AWS Secrets Manager, Google Secret Manager, Azure Key Vault, CyberArk Conjur, or HashiCorp Vault. The connection details vary per backend; the {{site.konnect_short_name}} UI surfaces the relevant fields based on the backend you choose.
 
 HashiCorp Vault additionally supports several authentication methods (token, AppRole, JWT, Kubernetes, AWS, GCP, Azure, and others). See the [{{site.base_gateway}} Vault entity](/gateway/entities/vault/) for backend-specific guidance that applies to both deployment modes.
 

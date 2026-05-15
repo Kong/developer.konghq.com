@@ -78,7 +78,7 @@ An Agent is a first-class {{site.ai_gateway}} entity that represents an upstream
 
 For `http` type Agents, requests are proxied without A2A-specific processing. For `a2a` type Agents, {{site.ai_gateway}} adds protocol-aware behaviour on top of plain proxying: it detects A2A requests across both JSON-RPC and REST bindings, rewrites agent-card URLs so clients discover the gateway as the canonical endpoint, and emits structured A2A telemetry to {{site.konnect_short_name}} analytics and OpenTelemetry. 
 
-Agents can be created and managed through {{site.konnect_short_name}}, the on-prem Admin API, decK, or the {{site.konnect_short_name}} UI:
+Agents can be created and managed through the {{site.konnect_short_name}} UI, the {{site.ai_gateway}} API, decK, or the on-prem Admin API:
 
 {% table %}
 columns:
@@ -166,11 +166,13 @@ rows:
     purpose: Carries the concrete output of a task in a structured, retrievable form.
 {% endtable %}
 
-## Protocol detection
+### Protocol detection
 
 A2A traffic is auto-detected per request and non-A2A traffic passes through without overhead.
 
-**REST binding.** Detection anchors to the end of the request path, so any prefix added by the route is ignored. For example, both `/v1/message:send` and `/api/agents/v1/message:send` match `SendMessage`:
+#### REST binding
+
+Detection anchors to the end of the request path, so any prefix added by the route is ignored. For example, both `/v1/message:send` and `/api/agents/v1/message:send` match `SendMessage`:
 
 <!-- vale off -->
 {% table %}
@@ -225,11 +227,13 @@ rows:
 
 The canonical method name is what appears in OpenTelemetry span attributes and log output.
 
-**JSON-RPC binding.** Detected by the `"jsonrpc"` field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
+#### JSON-RPC binding
+
+Detected by the `"jsonrpc"` field in the request body, combined with a recognized A2A method name or an `A2A-Version` request header. Recognized methods include `message/send`, `message/stream`, `tasks/get`, `tasks/list`, `tasks/cancel`, `tasks/resubscribe`, the `tasks/pushNotificationConfig/*` family, and `agent/getExtendedAgentCard`.
 
 A request carrying an `A2A-Version` header is treated as JSON-RPC even if the method isn't in the recognized list. When an unknown method is accepted this way, the `method` field in log output is recorded as `"unknown"` to bound metric cardinality. The OpenTelemetry span's `kong.a2a.operation` attribute still receives the actual method name.
 
-## Agent-card URL rewriting
+### Agent-card URL rewriting
 
 When an upstream agent returns an agent card, the runtime rewrites the `url` field, and any `additionalInterfaces[].url` fields, to the {{site.ai_gateway}} address. A2A clients then discover the gateway as the canonical endpoint instead of contacting the upstream directly. The rewrite uses `X-Forwarded-*` headers to construct the correct scheme, host, and port when the gateway is deployed behind a load balancer or reverse proxy.
 
@@ -247,14 +251,18 @@ When Statistics logging is enabled the {{site.ai_gateway}} records the following
 - SSE event count
 - Response size. 
 
-The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging plugins, and creates a `kong.a2a` child span when {{site.base_gateway}} tracing is configured.
+The runtime emits this data into the `ai.a2a` namespace consumed by {{site.konnect_short_name}} analytics and any attached logging plugins, and creates a `kong.a2a` child span when [{{site.base_gateway}} tracing](/gateway/tracing/) is configured.
 
 {:.info}
 > When statistics logging is enabled, the runtime removes the `Accept-Encoding` request header
 > before forwarding to the upstream. This prevents compressed responses that the runtime can't
 > parse for metadata extraction.
 
-Payload logging additionally captures request and response bodies. Payloads are truncated at the configured payload size limit. Enable with care. Payload logging may expose sensitive data.
+Payload logging additionally captures request and response bodies. Payloads are truncated at the configured payload size limit.
+
+{:.warning}
+> Payload logging may expose sensitive data. Only enable it when you're prepared to handle
+> request and response bodies in your logging pipeline.
 
 You can view A2A analytics in {{site.konnect_short_name}} Explorer and Dashboards through the [Agentic usage analytics](/observability/explorer/?tab=agentic-usage#metrics) view.
 

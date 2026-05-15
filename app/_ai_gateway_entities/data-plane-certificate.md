@@ -52,7 +52,7 @@ faqs:
 
   - q: How does this relate to the {{site.base_gateway}} data plane client certificate?
     a: |
-      It plays the same role — establishing mutual TLS between the control plane and a data plane —
+      It plays the same role, establishing mutual TLS between the control plane and a data plane,
       but it is scoped to a single {{site.ai_gateway}} instance and managed through the
       {{site.ai_gateway}} entity surface, not the {{site.konnect_short_name}} Gateway control plane API.
 ---
@@ -79,7 +79,7 @@ rows:
     endpoint: /v1/ai-gateways/{aiGatewayId}/data-plane-certificates
 {% endtable %}
 
-There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) and node configuration mechanisms instead.
+There is no on-prem equivalent for this entity. Self-managed {{site.base_gateway}} deployments use the existing [`/certificates`](/gateway/entities/certificate/) entity and [hybrid mode node configuration](/gateway/hybrid-mode/) instead.
 
 ## Trust model
 
@@ -87,9 +87,27 @@ The {{site.ai_gateway}} acts as the control plane in a CP/DP topology. Each data
 
 Only the public certificate is registered with the {{site.ai_gateway}}. The private key is generated and held on the data plane side; it never leaves the data plane host.
 
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant DP as Data Plane
+    participant CP as {{site.ai_gateway}} (Control Plane)
+
+    Note over DP: Holds private key locally<br>(never sent over the network)
+    DP->>CP: TLS handshake with client certificate
+    Note over CP: Compare presented certificate against<br>registered Data Plane Certificates
+    alt Certificate matches a registered entry
+        CP-->>DP: TLS handshake completes
+        DP->>CP: Receive configuration and stream telemetry
+    else No matching registered certificate
+        CP-->>DP: Connection rejected
+    end
+{% endmermaid %}
+<!-- vale on -->
+
 ## Lifecycle
 
-Data Plane Certificates support create, list, get, and delete operations. There is no update endpoint — the certificate body is immutable.
+Data Plane Certificates support create, list, get, and delete operations. There is no update endpoint, the certificate body is immutable.
 
 To rotate a certificate without downtime:
 
