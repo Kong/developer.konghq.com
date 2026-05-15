@@ -902,6 +902,7 @@ targetRef
 tbl
 ingresses
 ingressclass
+tailscale
 tcp
 tcpdump
 TCPIngress
@@ -965,6 +966,7 @@ unchecking
 uncomment
 uncommented
 uncommenting
+unconfigured
 underuse
 unencrypted
 unescaped
