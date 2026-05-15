@@ -347,9 +347,9 @@ You can attach multiple Policies to a single Model. Each Policy has an independe
 
 Not every plugin type is valid as a Model Policy.
 
-Policies attached to a Model are deleted when the Model is deleted.
+Policies created through the nested on-prem endpoint (`POST /ai/models/{modelId}/policies`) are deleted when the Model is deleted. Policies created independently (for example, at `/v1/ai-gateways/{aiGatewayId}/policies` or `/ai/policies`) are not deleted when the Model is deleted; only the Model's reference is removed.
 
-For further information see the [Policy entity](/ai-gateway/entities/policy/) reference.
+For further information, see the [Policy entity](/ai-gateway/entities/policy/) reference.
 
 ### Plugin priority and Policy execution order
 
