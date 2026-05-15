@@ -22185,6 +22185,11 @@
         "message": "Fixed an issue where Incremental Sync (ICS) would crash and stops further sync attempts.",
         "type": "bugfix",
         "scope": "Clustering"
+      },
+      {
+        "message": "**ai-prompt-decorator**: Fixed an issue where the plugin corrupted native-format\nrequests (gemini, anthropic, bedrock, cohere, huggingface) by forwarding an\nOpenAI-shaped body upstream instead of the original native body shape.\n",
+        "type": "bugfix",
+        "scope": "Plugin"
       }
     ],
     "kong-manager-ee": []
