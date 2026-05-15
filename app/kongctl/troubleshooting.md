@@ -45,7 +45,9 @@ This guide covers common issues and their solutions when using kongctl.
 
 Dump current state and compare with your configuration:
 ```bash
-kongctl dump > current-state.yaml
+kongctl dump declarative --resources <your-resource-type> --output-file current-state.yaml
+# or
+kongctl dump tf-import --resources <your-resource-type>
 diff current-state.yaml your-config.yaml
 ```
 
@@ -56,7 +58,7 @@ grep "ref:" your-config.yaml
 
 Verify the resource has the expected namespace label in {{site.konnect_short_name}}:
 ```bash
-kongctl get apis --format json
+kongctl get apis -o json
 ```
 
 ### "Resource not found" errors

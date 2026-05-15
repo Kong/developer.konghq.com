@@ -132,47 +132,47 @@ created, updated, or deleted by declarative apply.
 ```yaml
 apis:
   - ref: string
-   name: string required (1-255 chars)
-   description: string (nullable)
-   version: string (1-255 chars, nullable)
-   slug: string (pattern: ^[\w-]+$, nullable)
-   labels: object [string]string
-     key: value
-   attributes: object [string]array[string]
-     key:
-       - value
-   spec_content: string (OpenAPI or AsyncAPI content; json or yaml) # prefer: !file ./specs/api.yaml
-   versions: # /api/konnect/api-builder/v3/#/operations/create-api-version
-     - ref: string
-       version: string
-       spec: object required
-         content: string required (OpenAPI or AsyncAPI content; json or yaml) # prefer: !file ./specs/api.yaml
-   publications: # /api/konnect/api-builder/v3/#/operations/publish-api-to-portal
-     - ref: string
-       portal_id: string required (uuid) # prefer: !ref <portal-ref>
-       auto_approve_registrations: boolean
-       auth_strategy_ids: array[string(uuid)] (nullable, max 1 item) # prefer: !ref values
-       visibility: One of (public | private)
-   implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
-     - ref: string
-       service: # oneOf variant
-         id: string required (uuid) # prefer: !ref <gateway-service-ref>
-         control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
-       control_plane: # oneOf variant
-         control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
-   documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
-     - ref: string
-       content: string required (markdown) # prefer: !file ./docs/page.md
-       title: string
-       slug: string (pattern: ^[\w-]+$)
-       status: One of (published | unpublished)
-       parent_document_id: string (uuid, nullable) # prefer: !ref <document-ref>
-       children:
-         - ref: string
-           content: string required (markdown) # prefer: !file ./docs/page.md
-           title: string
-           slug: string (pattern: ^[\w-]+$)
-           status: One of (published | unpublished)
+    name: string required (1-255 chars)
+    description: string (nullable)
+    version: string (1-255 chars, nullable)
+    slug: string (pattern: ^[\w-]+$, nullable)
+    labels: object [string]string
+      key: value
+    attributes: object [string]array[string]
+      key:
+        - value
+    spec_content: string (OpenAPI or AsyncAPI content; json or yaml) # prefer: !file ./specs/api.yaml
+    versions: # /api/konnect/api-builder/v3/#/operations/create-api-version
+      - ref: string
+        version: string
+        spec: object required
+          content: string required (OpenAPI or AsyncAPI content; json or yaml) # prefer: !file ./specs/api.yaml
+    publications: # /api/konnect/api-builder/v3/#/operations/publish-api-to-portal
+      - ref: string
+        portal_id: string required (uuid) # prefer: !ref <portal-ref>
+        auto_approve_registrations: boolean
+        auth_strategy_ids: array[string(uuid)] (nullable, max 1 item) # prefer: !ref values
+        visibility: One of (public | private)
+    implementations: # /api/konnect/api-builder/v3/#/operations/create-api-implementation
+      - ref: string
+        service: # oneOf variant
+          id: string required (uuid) # prefer: !ref <gateway-service-ref>
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+        control_plane: # oneOf variant
+          control_plane_id: string required (uuid) # prefer: !ref <control-plane-ref>
+    documents: # /api/konnect/api-builder/v3/#/operations/create-api-document
+      - ref: string
+        content: string required (markdown) # prefer: !file ./docs/page.md
+        title: string
+        slug: string (pattern: ^[\w-]+$)
+        status: One of (published | unpublished)
+        parent_document_id: string (uuid, nullable) # prefer: !ref <document-ref>
+        children:
+          - ref: string
+            content: string required (markdown) # prefer: !file ./docs/page.md
+            title: string
+            slug: string (pattern: ^[\w-]+$)
+            status: One of (published | unpublished)
 ```
 
 ## Application auth strategies
