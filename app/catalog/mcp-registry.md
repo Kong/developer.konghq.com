@@ -113,6 +113,8 @@ curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/internal-mcp-reg
 ```
 
 Optionally, publish it to a {{site.dev_portal}}:
+{% navtabs "publish-to-portal" %}
+{% navtab "UI" %}
 1. In the {{site.konnect_short_name}} sidebar, click **Catalog**.
 1. In the Catalog sidebar, click **MCP registries**.
 1. Click the MCP registry you want to publish to {{site.dev_portal}}.
@@ -123,7 +125,20 @@ Optionally, publish it to a {{site.dev_portal}}:
    {:.info}
    > Private is only available if you've [configured authentication](/dev-portal/security-settings/#user-authentication) for your {{site.dev_portal}}.
 1. Click **Publish MCP registry**.
-
+{% endnavtab %}
+{% navtab "API" %}
+```sh
+curl -X POST "https://klabs.us.api.konghq.com/v0/mcp-registries/$REGISTRY_NAME/publications" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" \
+  --json '{
+  "portal_id": "'$DEV_PORTAL_ID'",
+  "visibility": "public"
+}'
+```
+{:.info}
+> You can select `public` or `private` for `visibility`. Private is only available if you've [configured authentication](/dev-portal/security-settings/#user-authentication) for your {{site.dev_portal}}.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Packages and remotes
 
