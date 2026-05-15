@@ -52,7 +52,7 @@ kumactl install observability | kubectl apply -f -
 This creates a namespace named `mesh-observability` with Prometheus, Jaeger, Loki, and Grafana installed and set up to work with {{site.mesh_product_name}}.
 
 {:.warning}
-> This setup is meant for testing purposes. It is not fit for production use.
+> This setup is meant for testing purposes. Do not use it for production.
 > For production setups, we recommend referring to each project's website or using a hosted solution such as Grafana Cloud or Datadog.
 
 ## Control plane observability
@@ -65,7 +65,7 @@ Control plane metrics are exposed on port `:5680` and available under the standa
 
 ### Traces
 
-You cna configure {{site.mesh_product_name}} to export OpenTelemetry traces. It exports traces for:
+You can configure {{site.mesh_product_name}} to export OpenTelemetry traces. It exports traces for:
 
 * API server
 * KDS on global (only basic information about the connections to zones are traced, nothing resource-specific)
@@ -80,17 +80,17 @@ config variable to `"true"` and configure OpenTelemetry using the
 The Kuma community has contributed built-in service discovery for Prometheus. It is documented in the [Prometheus docs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kuma_sd_config).
 This service discovery connects to the control plane and retrieves all data planes with enabled metrics, which Prometheus scrapes and retrieves according to your [`MeshMetric` policies](/mesh/policies/meshmetric).
 
-There are three ways to run prometheus:
+There are three ways to run Prometheus:
 
 1. Inside the mesh (default with `kumactl install observability`).
-2. Outside the mesh. In this case you need to specify `tls.mode: disabled` in the `MeshMetric` configuration. This is less secure but ensures Prometheus is as available as possible. It's also easier to add to an existing setup with services in and outside the mesh.
-3. Outside the mesh with TLS enabled. In this case you need to provide certificates for each data plane and specify the configuration in the `MeshMetric` policy. This is more secure than the second option but requires more configuration.
+2. Outside the mesh. In this case, you must specify `tls.mode: disabled` in the `MeshMetric` configuration. This is less secure but ensures Prometheus is as available as possible. It's also easier to add to an existing setup with services in and outside the mesh.
+3. Outside the mesh with TLS enabled. In this case, you need to provide certificates for each data plane and specify the configuration in the `MeshMetric` policy. This is more secure than the second option but requires more configuration.
 
 In production, we recommend the second option because it provides better visibility when things go wrong, and it's usually acceptable for metrics to be less secure.
 
 ### Use an existing prometheus setup
 
-In Prometheus version 2.29 and later, you can add {{site.mesh_product_name}} metrics to your `prometheus.yml`:
+In Prometheus version 2.29 or later, you can add {{site.mesh_product_name}} metrics to your `prometheus.yml`:
 
 ```yaml
 scrape_configs:
@@ -126,7 +126,7 @@ To visualize your traces with Grafana, you can configure a new data source with 
 Grafana can then retrieve traces from Jaeger.
 
 You can then add a [`MeshTrace` policy](/mesh/policies/meshtrace) to your mesh to start emitting traces.
-At this point you can visualize your traces in Grafana by choosing the jaeger data source in the [**Explore** section](https://grafana.com/docs/grafana/latest/explore/).
+At this point you can visualize your traces in Grafana by choosing the Jaeger data source in the [**Explore** section](https://grafana.com/docs/grafana/latest/explore/).
 
 ### Visualize logs
 
@@ -221,7 +221,7 @@ To configure tracing using Datadog on Universal, see the [Datadog agent docs](ht
 
 On Kubernetes, configure the [Datadog agent for APM](https://docs.datadoghq.com/agent/kubernetes/apm/).
 
-If Datadog is not running on each node, you can expose the APM agent port to {{site.mesh_product_name}} via a Kubernetes service.
+If Datadog isn't running on each node, you can expose the APM agent port to {{site.mesh_product_name}} via a Kubernetes service.
 ```yaml
 apiVersion: v1
 kind: Service
@@ -236,10 +236,10 @@ spec:
       targetPort: 8126
 ```
 
-Check that the label of the installed Datadog pod has not changed (`app.kubernetes.io/name: datadog-agent-deployment`).
+Check that the label of the installed Datadog pod hasn't changed (`app.kubernetes.io/name: datadog-agent-deployment`).
 If it changed, adjust accordingly.
 
-Once the agent is configured to ingest traces, you need to configure a [MeshTrace policy](/mesh/policies/meshtrace).
+Once the agent is configured to ingest traces, you must configure a [MeshTrace policy](/mesh/policies/meshtrace).
 
 ### Logs
 
