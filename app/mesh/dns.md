@@ -31,9 +31,15 @@ min_version:
 
 The {{site.mesh_product_name}} DNS server responds to `A` and `AAAA` DNS requests with `A` or `AAAA` records. For example: `redis.mesh. 60 IN A 240.0.0.100` or `redis.mesh. 60 IN AAAA fd00:fd00::100`.
 
+### Virtual IPs
+
 The control plane allocates virtual IPs from the configured CIDR (`240.0.0.0/4` by default) by constantly scanning the services available in all {{site.mesh_product_name}} meshes. When a service is removed, the control plane frees its VIP, and {{site.mesh_product_name}} DNS stops responding for it with `A` and `AAAA` records. Virtual IPs are stable and replicated between instances of the control plane and data plane proxies.
 
 When the control plane allocates a new VIP or frees an old one, it pushes the change to the data plane proxy.
+
+{{site.mesh_product_name}} DNS is not a service discovery mechanism: it does not return the real IP addresses of service instances. Instead, it always returns a single VIP assigned to the relevant service in the mesh. This single-VIP approach provides a unified view of all services within a single zone or across multiple zones.
+
+### Data plane resolution
 
 The data plane proxy handles all name lookups locally, not the control plane. This approach makes name resolution more robust. For example, if the control plane is down, a data plane proxy can still resolve DNS.
 
@@ -45,15 +51,27 @@ The data plane proxy DNS consists of:
 
 Because DNS requests go to the Envoy DNS filter first, any DNS name that exists inside the mesh always resolves to the mesh address. In practice, a DNS name present in the mesh shadows equivalent names that exist outside the mesh.
 
-{{site.mesh_product_name}} DNS is not a service discovery mechanism: it does not return the real IP addresses of service instances. Instead, it always returns a single VIP assigned to the relevant service in the mesh. This single-VIP approach provides a unified view of all services within a single zone or across multiple zones.
-
 The default TTL is 60 seconds, which ensures the client synchronizes with {{site.mesh_product_name}} DNS and accounts for any intervening changes.
 
-### Naming
+## Service naming and usage
 
 By default, {{site.mesh_product_name}} generates domain names in the format `<kuma.io/service tag>.mesh`, accessible on port `80`.
 
 If you use [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), or [`MeshMultiZoneService`](/mesh/meshmultizoneservice/), {{site.mesh_product_name}} generates the domains using a [`HostnameGenerator`](/mesh/hostnamegenerator/).
+
+To consume a service handled by {{site.mesh_product_name}} DNS, whether from a {{site.mesh_product_name}}-enabled Pod on Kubernetes or a VM with `kuma-dp`, use the `kuma.io/service` tag as the hostname. The default listeners created on the VIP listen on port `80`, so you can omit the port when you use a standard HTTP client:
+
+```sh
+curl http://echo-server_echo-example_svc_1010.mesh
+```
+
+You can also use a [DNS RFC1035 compliant name](https://www.ietf.org/rfc/rfc1035.txt) by replacing the underscores with dots:
+
+```sh
+curl http://echo-server.echo-example.svc.1010.mesh
+```
+
+{{site.mesh_product_name}} DNS allocates a VIP for every service within a mesh and creates an outbound virtual listener for every VIP. To inspect the generated listeners, run `curl localhost:9901/config_dump` against a data plane proxy.
 
 ## Installation
 
@@ -61,11 +79,27 @@ On Kubernetes, {{site.mesh_product_name}} DNS is enabled by default whenever the
 
 On Universal, follow the instructions in [transparent proxying](/mesh/transparent-proxying/).
 
-### Special considerations
+{:.info}
+> **Note:** {{site.mesh_product_name}} DNS uses advanced networking techniques. In mixed IPv4 and IPv6 environments, we recommend specifying an [IPv6 virtual IP CIDR](/mesh/ipv6-support/) so DNS responses work consistently across both stacks.
 
-{{site.mesh_product_name}} DNS uses advanced networking techniques. In mixed IPv4 and IPv6 environments, we recommend specifying an [IPv6 virtual IP CIDR](/mesh/ipv6-support/) so DNS responses work consistently across both stacks.
+## Configuration
 
-### Overriding the CoreDNS configuration
+You can [configure](/mesh/reference/kuma-cp/) {{site.mesh_product_name}} DNS in `kuma-cp`:
+
+```yaml
+dnsServer:
+  CIDR: "240.0.0.0/4" # ENV: KUMA_DNS_SERVER_CIDR
+  domain: "mesh" # ENV: KUMA_DNS_SERVER_DOMAIN
+  serviceVipEnabled: true # ENV: KUMA_DNS_SERVER_SERVICE_VIP_ENABLED
+```
+
+The `CIDR` field sets the IP range of virtual IPs. The default `240.0.0.0/4` is reserved for future IPv4 use and is guaranteed to be non-routable. We don't recommend changing this value because the default range is guaranteed to avoid conflicts with routable IPs.
+
+The `domain` field specifies the default `.mesh` DNS zone that {{site.mesh_product_name}} DNS resolves. This field is only relevant when `serviceVipEnabled` is set to `true`.
+
+The `serviceVipEnabled` field defines whether a VIP is generated for each `kuma.io/service`.
+
+## Override the CoreDNS configuration
 
 In some cases, you may want to override the default CoreDNS configuration.
 
@@ -142,85 +176,3 @@ Base your edits on [the existing default configuration](https://github.com/kumah
 ```
 
 {% endraw %}
-
-## Configuration
-
-You can [configure](/mesh/reference/kuma-cp/) {{site.mesh_product_name}} DNS in `kuma-cp`:
-
-```yaml
-dnsServer:
-  CIDR: "240.0.0.0/4" # ENV: KUMA_DNS_SERVER_CIDR
-  domain: "mesh" # ENV: KUMA_DNS_SERVER_DOMAIN
-  serviceVipEnabled: true # ENV: KUMA_DNS_SERVER_SERVICE_VIP_ENABLED
-```
-
-The `CIDR` field sets the IP range of virtual IPs. The default `240.0.0.0/4` is reserved for future IPv4 use and is guaranteed to be non-routable. We don't recommend changing this value because the default range is guaranteed to avoid conflicts with routable IPs.
-
-The `domain` field specifies the default `.mesh` DNS zone that {{site.mesh_product_name}} DNS resolves. This field is only relevant when `serviceVipEnabled` is set to `true`.
-
-The `serviceVipEnabled` field defines whether a VIP is generated for each `kuma.io/service`.
-
-## Usage
-
-To consume a service handled by {{site.mesh_product_name}} DNS, whether from a {{site.mesh_product_name}}-enabled Pod on Kubernetes or a VM with `kuma-dp`, use the automatically generated `kuma.io/service` tag. The resulting domain name has the format `{service tag}.mesh`. For example, from inside a {{site.mesh_product_name}}-enabled Pod:
-
-```sh
-curl http://echo-server_echo-example_svc_1010.mesh:80
-```
-
-```sh
-curl http://echo-server_echo-example_svc_1010.mesh
-```
-
-You can also use a [DNS RFC1035 compliant name](https://www.ietf.org/rfc/rfc1035.txt) by replacing the underscores in the service name with dots. For example:
-
-```sh
-curl http://echo-server.echo-example.svc.1010.mesh:80
-```
-
-```sh
-curl http://echo-server.echo-example.svc.1010.mesh
-```
-
-The default listeners created on the VIP listen on port `80`, so you can omit the port when you use a standard HTTP client.
-
-{{site.mesh_product_name}} DNS allocates a VIP for every service within a mesh and creates an outbound virtual listener for every VIP. If you inspect the result of `curl localhost:9901/config_dump`, you can see something like this:
-
-```json
-    {
-     "name": "outbound:240.0.0.1:80",
-     "active_state": {
-      "version_info": "51adf4e6-287e-491a-9ae2-e6eeaec4e982",
-      "listener": {
-       "@type": "type.googleapis.com/envoy.api.v2.Listener",
-       "name": "outbound:240.0.0.1:80",
-       "address": {
-        "socket_address": {
-         "address": "240.0.0.1",
-         "port_value": 80
-        }
-       },
-       "filter_chains": [
-        {
-         "filters": [
-          {
-           "name": "envoy.filters.network.tcp_proxy",
-           "typed_config": {
-            "@type": "type.googleapis.com/envoy.config.filter.network.tcp_proxy.v2.TcpProxy",
-            "stat_prefix": "echo-server_kuma-test_svc_80",
-            "cluster": "echo-server_kuma-test_svc_80"
-           }
-          }
-         ]
-        }
-       ],
-       "deprecated_v1": {
-        "bind_to_port": false
-       },
-       "traffic_direction": "OUTBOUND"
-      },
-      "last_updated": "2020-07-06T14:32:59.732Z"
-     }
-    }
-```
-
