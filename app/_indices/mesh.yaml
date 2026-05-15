@@ -113,6 +113,8 @@ sections:
       - path: /mesh/provenance-verification-binaries/
       - path: /mesh/provenance-verification-images/
       - path: /mesh/signed-images/
+      - path: /mesh/issue-identity-with-meshidentity/
+      - path: /mesh/issue-identity-with-meshidentity-spire/
 
   - title: Observability
     items:
