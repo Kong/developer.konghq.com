@@ -1061,3 +1061,83 @@ ol:has(code) {
 .bullet-hell-shake {
   animation: bullet-hell-shake 600ms ease-in-out;
 }
+
+@keyframes bullet-hell-flash-blink {
+  0%, 60%, 100% { opacity: 1; }
+  30% { opacity: 0.25; }
+}
+
+@keyframes bullet-hell-engage-flashin {
+  0%   { opacity: 0; transform: scale(0.7); }
+  25%  { opacity: 1; transform: scale(1.06); }
+  40%  { opacity: 0.25; }
+  55%  { opacity: 1; transform: scale(1); }
+  70%  { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+.bullet-hell-engage {
+  display: none;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  margin-top: 12px;
+  align-self: flex-start;
+}
+
+.bullet-hell-engage--ready {
+  display: inline-block;
+}
+
+.bullet-hell-engage--ready .bullet-hell-engage-panel {
+  animation: bullet-hell-engage-flashin 850ms cubic-bezier(0.2, 1.0, 0.4, 1);
+}
+
+.bullet-hell-engage:focus-visible .bullet-hell-engage-panel {
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.6), 0 0 60px rgba(204, 255, 0, 0.4);
+}
+
+.bullet-hell-engage-panel {
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(204, 255, 0, 0.55);
+  border-radius: 12px;
+  padding: 18px 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  box-shadow: 0 0 32px rgba(204, 255, 0, 0.15);
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 200ms;
+}
+
+.bullet-hell-engage:hover .bullet-hell-engage-panel {
+  transform: scale(1.02);
+  box-shadow: 0 0 60px rgba(204, 255, 0, 0.4);
+  border-color: rgba(204, 255, 0, 0.85);
+}
+
+.bullet-hell-engage-gorilla {
+  margin: 0;
+  padding: 0;
+  color: rgba(204, 255, 0, 0.8);
+  font-size: 8px;
+  line-height: 1.15;
+  white-space: pre;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.95);
+}
+
+.bullet-hell-engage-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ccff00;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 12px rgba(204, 255, 0, 0.4);
+  animation: bullet-hell-flash-blink 1100ms infinite;
+}
+
+.bullet-hell-engage-subtitle {
+  font-size: 11px;
+  margin-top: 8px;
+  color: rgba(204, 255, 0, 0.6);
+  letter-spacing: 0.1em;
+}
