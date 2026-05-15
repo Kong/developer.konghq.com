@@ -33,7 +33,7 @@ next_steps:
     url: /kongctl/config/
   - text: kongctl troubleshooting guide
     url: /kongctl/troubleshooting/
-  - text: Using kongctl and deck for full API platform management
+  - text: Using kongctl and decK for full API platform management
     url: /kongctl/kongctl-and-deck/
   - text: View the {{site.konnect_short_name}} API reference
     url: /konnect-api/
