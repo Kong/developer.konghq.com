@@ -1,4 +1,4 @@
 ```yaml
 {{ include.presenter.config }}
 ```
-{: data-file="kong.yaml" }
+{: data-file="{{ include.presenter.entity_type }}.yaml" }

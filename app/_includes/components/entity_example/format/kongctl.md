@@ -13,11 +13,9 @@ The following creates a new static key called **{{ include.presenter.data['name'
 {% when 'tls_trust_bundle' %}
 The following creates a new TLS trust bundle called **{{ include.presenter.data['name'] }}**.
 {% when 'event_gateway_policy' %}
+The following example creates a new `{{ include.presenter.data['type'] }}` policy.
 {% endcase %}
-Add this snippet to your declarative configuration file and [apply](/kongctl/apply/) or [sync](/kongctl/sync/) it with kongctl:
-
-{:.info}
-> If you have already created {{site.event_gateway}} outside of kongctl (via the UI or API), you must [adopt them](/kongctl/declarative/#adopting-existing-resources) before managing them declaratively.
+Add this snippet to an `event_gateways` resource in your declarative configuration file, and then [manage it with kongctl](/kongctl/declarative/#declarative-commands):
 {% endif %}
 
 {% include components/entity_example/format/snippets/kongctl.md presenter=include.presenter %}
