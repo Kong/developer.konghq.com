@@ -5,7 +5,6 @@ groups:
       - items:
         - path: /kongctl/
         - path: /kongctl/get-started/
-        - path: /kongctl/authentication/
 
   - title: Install & Configure
     sections:
@@ -23,11 +22,14 @@ groups:
           - title: Install kongctl with Mise
             description: Use mise package manager
             url: /kongctl/?tab=mise#install-kongctl
+          - path: /kongctl/config/
           - path: /kongctl/authentication/
+          - path: /kongctl/audit-logs/
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
-          - path: /kongctl/declarative/ci-cd/
+          - path: /kongctl/supported-resources/
+          - path: /kongctl/kongctl-and-deck/
       - title: Troubleshooting
         items:
           - path: /kongctl/troubleshooting/
