@@ -38,7 +38,7 @@ module Jekyll
 
       def formats
         @formats ||= site.data.dig('entity_examples', 'config', 'formats')
-                         .except('ui')
+                         .except('ui', 'kongctl')
                          .tap { |h| h.delete('konnect-api') unless works_on.include?('konnect') }
                          .keys
       end
