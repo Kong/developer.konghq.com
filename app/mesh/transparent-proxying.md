@@ -201,16 +201,16 @@ kumactl uninstall transparent-proxy
 >
 > Starting with {{site.mesh_product_name}} 2.9, the transparent proxy tags all `iptables` rules with comments so {{site.mesh_product_name}} can track rule ownership. `kumactl` uses these comments to automatically clean up rules and custom chains created by previous transparent proxy versions. The cleanup runs at the start of the installation, so no manual cleanup is needed.
 
-To manually remove existing `iptables` rules, either restart the host (if the rules were not persisted with system start-up scripts or `firewalld`) or run the following commands.
+To manually remove existing `iptables` rules, either restart the host (if the rules weren't persisted with system start-up scripts or `firewalld`) or run the following commands.
 
 {:.danger}
 > These commands remove **all** `iptables` rules and **all** custom chains in the specified tables, including those created by {{site.mesh_product_name}} and any other applications or services.
 
 ```sh
-iptables --table nat --flush         # Flush all rules in the nat table (IPv4)
-ip6tables --table nat --flush        # Flush all rules in the nat table (IPv6)
-iptables --table nat --delete-chain  # Delete all custom chains in the nat table (IPv4)
-ip6tables --table nat --delete-chain # Delete all custom chains in the nat table (IPv6)
+iptables --table nat --flush         # Flush all rules in the NAT table (IPv4)
+ip6tables --table nat --flush        # Flush all rules in the NAT table (IPv6)
+iptables --table nat --delete-chain  # Delete all custom chains in the NAT table (IPv4)
+ip6tables --table nat --delete-chain # Delete all custom chains in the NAT table (IPv6)
 
 # The raw table contains rules for DNS traffic redirection
 iptables --table raw --flush         # Flush all rules in the raw table (IPv4)
