@@ -35,14 +35,14 @@ prereqs:
       icon_url: /assets/icons/analytics.svg
 ---
 
-You can add {{ site.google}} Tag Manager to your Dev Portal to manage tracking and analytics tags across all Dev Portal pages without modifying Dev Portal code. After it's configured, your {{ site.google}} Tag Manager container script will be injected into every page of your Dev Portal, allowing you to manage tags like {{ site.google}} Analytics and more from {{ site.google}} Tag Manager.
+You can add {{ site.gtm }} to your Dev Portal to manage tracking and analytics tags across all Dev Portal pages without modifying Dev Portal code. After it's configured, your {{ site.gtm }} container script will be injected into every page of your Dev Portal, allowing you to manage tags like {{ site.google}} Analytics and more from {{ site.gtm }}.
 
-## Configure the {{ site.google}} Tag Manager integration
+## Configure the {{ site.gtm }} integration
 
-Configure the {{ site.google}} Tag Manager integration in your Dev Portal settings.
+Configure the {{ site.gtm }} integration in your Dev Portal settings.
 
 {% include /dev-portal/google-tag-manager-integration.md %}
 
 ## Validate
 
-You can verify that the integration is working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.google}} Tag Manager information there.
+You can verify that the integration is working as expected by navigating to your Dev Portal URL and inspecting the Network information on the page. You should see your {{ site.gtm }} information there.

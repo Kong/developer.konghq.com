@@ -148,6 +148,7 @@ deepseek: DeepSeek
 google_cloud: Google Cloud
 claude: Claude
 claude_code: Claude Code
+gtm: Google Tag Manager
 
 
 repos:
