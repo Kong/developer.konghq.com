@@ -919,6 +919,28 @@ providers:
       provider_specific: []
       statistics_logging: []
 
+  - name: 'Vercel'
+    url_patterns:
+      - 'https://ai-gateway.vercel.sh'
+    min_version: '3.14'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'openai/gpt-5.5'
+      min_version: '3.14'
+    embeddings:
+      supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
 parameters:
   provider: 'config.model.provider'
   route_type: 'config.route_type'

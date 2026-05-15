@@ -64,9 +64,9 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Vercel, use the `openai` provider, specify the [model](https://vercel.com/ai-gateway/models) and set the appropriate authentication header and upstream URL.
+To set up AI Proxy Advanced with Vercel, use the `vercel` provider, specify the [model](https://vercel.com/ai-gateway/models) and set the appropriate authentication header and upstream URL.
 
-In this example, we'll use the `anthropic/claude-opus-4.6` model:
+In this example, we'll use the `openai/gpt-5.5` model:
 
 {% entity_examples %}
 entities:
@@ -80,7 +80,7 @@ entities:
               header_value: Bearer ${api_key}
             model:
               provider: vercel
-              name: anthropic/claude-opus-4.6
+              name: openai/gpt-5.5
               options:
                 upstream_url: https://ai-gateway.vercel.sh/v1/chat/completions
                 max_tokens: 512

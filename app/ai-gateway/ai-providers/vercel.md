@@ -74,7 +74,7 @@ data:
       header_value: Bearer ${key}
     model:
       provider: vercel
-      name: vercel-k2.6
+      name: openai/gpt-5.5
 
 variables:
   key:
