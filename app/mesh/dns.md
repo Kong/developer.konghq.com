@@ -55,29 +55,57 @@ The default TTL is 60 seconds, which ensures the client synchronizes with {{site
 
 ## Service naming and usage
 
-By default, {{site.mesh_product_name}} generates domain names in the format `<kuma.io/service tag>.mesh`, accessible on port `80`.
+{{site.mesh_product_name}} supports two naming schemes, depending on how you model services in the mesh.
 
-If you use [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), or [`MeshMultiZoneService`](/mesh/meshmultizoneservice/), {{site.mesh_product_name}} generates the domains using a [`HostnameGenerator`](/mesh/hostnamegenerator/).
+### kuma.io/service tag
 
-To consume a service handled by {{site.mesh_product_name}} DNS, whether from a {{site.mesh_product_name}}-enabled Pod on Kubernetes or a VM with `kuma-dp`, use the `kuma.io/service` tag as the hostname. The default listeners created on the VIP listen on port `80`, so you can omit the port when you use a standard HTTP client:
+For services identified by a `kuma.io/service` tag, {{site.mesh_product_name}} generates a hostname in the format `<kuma.io/service tag>.mesh`, accessible on port `80`. On Kubernetes, the control plane automatically assigns this tag as `<name>_<namespace>_svc_<port>` based on the corresponding `Service` resource (see [Kubernetes services and Pods](/mesh/architecture/#services-and-pods)).
+
+To consume the service, use the tag as the hostname. The default listeners on the VIP listen on port `80`, so you can omit the port with a standard HTTP client:
 
 ```sh
-curl http://echo-server_echo-example_svc_1010.mesh
+curl http://echo-server_echo-example_svc_80.mesh
 ```
 
 You can also use a [DNS RFC1035 compliant name](https://www.ietf.org/rfc/rfc1035.txt) by replacing the underscores with dots:
 
 ```sh
-curl http://echo-server.echo-example.svc.1010.mesh
+curl http://echo-server.echo-example.svc.80.mesh
 ```
+
+### MeshService, MeshExternalService, and MeshMultiZoneService
+
+For [`MeshService`](/mesh/meshservice/), [`MeshExternalService`](/mesh/meshexternalservice/), and [`MeshMultiZoneService`](/mesh/meshmultizoneservice/) resources, hostnames are produced by a [`HostnameGenerator`](/mesh/hostnamegenerator/) and use the `.mesh.local` domain. {{site.mesh_product_name}} ships with default generators, so the typical hostnames you'll see are:
+
+{% table %}
+columns:
+  - title: Resource
+    key: resource
+  - title: Example hostname
+    key: hostname
+rows:
+  - resource: "Local `MeshService` (Universal)"
+    hostname: "`redis.svc.mesh.local`"
+  - resource: "Local `MeshExternalService`"
+    hostname: "`aurora.extsvc.mesh.local`"
+  - resource: "`MeshService` synced from a Kubernetes zone"
+    hostname: "`redis.redis-system.svc.east.mesh.local`"
+  - resource: "`MeshService` synced from a Universal zone"
+    hostname: "`redis.svc.west.mesh.local`"
+{% endtable %}
+
+See [`HostnameGenerator`](/mesh/hostnamegenerator/) to customize these templates.
+
+### Inspecting VIPs
 
 {{site.mesh_product_name}} DNS allocates a VIP for every service within a mesh and creates an outbound virtual listener for every VIP. To inspect the generated listeners, run `curl localhost:9901/config_dump` against a data plane proxy.
 
 ## Installation
 
-On Kubernetes, {{site.mesh_product_name}} DNS is enabled by default whenever the `kuma-dp` sidecar proxy is injected.
+{{site.mesh_product_name}} DNS requires [transparent proxying](/mesh/transparent-proxying/) to be enabled.
 
-On Universal, follow the instructions in [transparent proxying](/mesh/transparent-proxying/).
+- **On Kubernetes**, transparent proxying and DNS are enabled automatically whenever the `kuma-dp` sidecar proxy is injected.
+- **On Universal**, follow the instructions in [transparent proxying](/mesh/transparent-proxying/) to set it up first.
 
 {:.info}
 > **Note:** {{site.mesh_product_name}} DNS uses advanced networking techniques. In mixed IPv4 and IPv6 environments, we recommend specifying an [IPv6 virtual IP CIDR](/mesh/ipv6-support/) so DNS responses work consistently across both stacks.
