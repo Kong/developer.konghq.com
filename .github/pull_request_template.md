@@ -1,10 +1,11 @@
 ## PR Title
 
-Use the format `Feat/Fix/Chore(Product): Title`, for example:
-- `Feat(Mesh): Add transparent proxy upgrade guide`
-- `Fix(Gateway): Correct decK example in rate limiting how-to`
-- `Chore(AI Gateway): Bump plugin schema`
-- `Chore(Platform): Fix issue template`
+Use the format `feat/fix/chore(Product): Title`, for example:
+- `feat(mesh): Add transparent proxy upgrade guide`
+- `fix(gateway): Correct decK example in rate limiting how-to`
+- `chore(ai-gateway): Bump plugin schema`
+- `chore(platform): Fix issue template`
+- `release: Kong Gateway 3.14`
 
 ## Description
 
