@@ -44,6 +44,8 @@ collections:
     output: false
   support:
     output: true
+  cookbooks:
+    output: true
 
 defaults:
   - scope:
@@ -91,6 +93,15 @@ defaults:
       permalink: "/support/:path/"
       breadcrumbs:
         - "/support/"
+  - scope:
+      path: "_cookbooks"
+      type: "cookbooks"
+    values:
+      layout: "cookbook"
+      content_type: "cookbook"
+      permalink: "/cookbooks/:path/"
+      breadcrumbs:
+        - "/cookbooks/"
 
 reference_metadata:
   event-gateway:

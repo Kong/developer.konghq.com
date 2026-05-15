@@ -17,7 +17,7 @@ breadcrumbs:
   - /deck/
 
 related_resources:
-  - text: Using environment variables with decK
+  - text: Using environment variables in state files
     url: /deck/reference/env-variables/
 ---
 
@@ -51,6 +51,8 @@ export DECK_KONNECT_CONTROL_PLANE_NAME=demo
 export DECK_KONNECT_TOKEN=$KONNECT_TOKEN
 deck gateway sync kong.yaml
 ```
+
+You can also use environment variables in your proxy configuration. See [Using environment variables in state files](/deck/reference/env-variables/) for more information.
 
 ## Configuration file
 

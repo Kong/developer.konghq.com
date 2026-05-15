@@ -30,9 +30,10 @@ The Dev Portal allows you to manage [registered developers](/dev-portal/develope
 To use RBAC, you need to enable it from your Dev Portal settings:
 {% navtabs "enable-rbac" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. Click **Settings** in the sidebar.
+1. Click the **Settings** tab.
 1. Click the **Security** tab.
 1. Enable **Role-based access control (RBAC)**.
 1. Click **Save changes**.
@@ -71,9 +72,10 @@ You can manage developers, application registrations, and teams from the **Acces
 To assign roles to developers, you need to create a team and add them to it:
 {% navtabs "assign-roles" %}
 {% navtab "UI" %}
-1. In {{site.konnect_short_name}}, click [**Dev Portal**](https://cloud.konghq.com/portals/) in the sidebar.
+1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+1. Click **Portals**.
 1. Click your Dev Portal.
-1. Click **Access and approvals** in the sidebar.
+1. Click the **Access and approvals** tab.
 1. Click the **Teams** tab.
 1. Click **New Team**.
 1. Enter a team name in the **Team** field.

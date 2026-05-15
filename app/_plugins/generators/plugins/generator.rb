@@ -16,6 +16,8 @@ module Jekyll
       end
 
       def run
+        return if skip_locally?
+
         Dir.glob(File.join(site.source, "#{PLUGINS_FOLDER}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{PLUGINS_FOLDER}/", '').chomp('/')
 
@@ -87,6 +89,13 @@ module Jekyll
                .new(plugin)
                .to_jekyll_page
         site.pages << page if page
+      end
+
+      def skip_locally?
+        page_paths = ENV['PAGE_PATHS']&.split(',')&.map(&:strip)&.reject(&:empty?)
+        Jekyll.env == 'development' && page_paths&.none? do |p|
+          p.start_with?('/plugins/')
+        end
       end
     end
   end

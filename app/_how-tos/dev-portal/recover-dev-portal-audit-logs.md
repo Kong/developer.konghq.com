@@ -49,7 +49,8 @@ prereqs:
       content: |
         For this tutorial, you’ll need a Dev Portal pre-configured. If you don't have these settings already configured, follow these steps to pre-configure it:
 
-        1. In the {{site.konnect_short_name}} sidebar, click **Dev Portal**.
+        1. In the {{site.konnect_short_name}} sidebar, expand **Dev Portal**.
+        1. Click **Portals**.
         1. Click **New portal** to [create a Dev Portal](https://cloud.konghq.com/portals/create).
         1. Click your Dev Portal URL at the top of the Dev Portal overview.
         1. Click **Sign up** to [register a test developer account with your Dev Portal](/dev-portal/developer-signup/#1-register-or-sign-in).
@@ -61,8 +62,9 @@ prereqs:
       content: |
         To complete this tutorial, you'll need an audit log destination and webhook configured. If you don't already have one configured, follow these steps:
 
-        1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-        1. From the sidebar, click **Audit Logs Setup**.
+        1. Select your {{site.konnect_short_name}} org.
+        1. Click [**Manage Organization**](https://cloud.konghq.com/organization).
+        1. Click the **Audit Logs Setup** tab.
         1. On the Webhook Destination tab, click **New Webhook**.
         1. In the **Name** field, enter `SumoLogic`.
         1. In the **Endpoint** field, enter your external endpoint that will receive audit log messages. For example: `https://endpoint4.collection.sumologic.com/receiver/v1/http/1234abcd`.
@@ -98,8 +100,9 @@ faqs:
 
 Dev Portal audit logs allow you to recover audit logs by configuring a replay job.
 
-1. In the {{site.konnect_short_name}} sidebar, click [**Organization**](https://cloud.konghq.com/organization).
-1. From the sidebar, click **Audit Logs Setup**.
+1. Select your {{site.konnect_short_name}} org.
+1. Click [**Manage Organization**](https://cloud.konghq.com/organization).
+1. Click the **Audit Logs Setup** tab.
 1. Click the **Dev Portal** tab.
 1. Click the Dev Portal that you want to configure the replay job for.
 1. Click the **Replay** tab.

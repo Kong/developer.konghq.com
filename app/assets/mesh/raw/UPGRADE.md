@@ -7,8 +7,73 @@ with `x.y.z` being the version you are planning to upgrade to.
 
 ## Upgrade to `2.14.x`
 
+### cert-manager mesh identity: `list` verb added to RBAC Role
+
+The `kong-mesh-control-plane-kmesh` Role now includes the `list` verb for `cert-manager.io/certificaterequests`. This is required for the startup sweep that reclaims orphaned `CertificateRequest` objects left by a previous control-plane crash.
+
+**Action required:** If you manage RBAC outside of Helm, add `list` to the verbs for `cert-manager.io/certificaterequests` in the Role bound to the Kong Mesh system namespace.
+
 {:.info}
 > The following notes are extracted from [Kuma's UPGRADE.md](https://github.com/kumahq/kuma/blob/master/UPGRADE.md)
+
+### dp-server graceful shutdown is now time-bounded
+
+The dp-server's graceful shutdown is now bounded by a configurable timeout. Previously the HTTP server would wait indefinitely for xDS streams to drain, which could keep the pod from exiting within its `terminationGracePeriodSeconds` and surface as a non-zero exit.
+
+**What changed:**
+- New config: `dpServer.gracefulShutdownTimeout` (default `10s`).
+- Env var: `KUMA_DP_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT`.
+- Once the timeout expires, dp-server force-stops the gRPC server (aborting any stream whose handler ignored cancellation) and lets the pod exit cleanly.
+
+**Action required:**
+
+None for default deployments. The 10s default sits inside controller-runtime's 30s shutdown budget and the chart's `controlPlane.terminationGracePeriodSeconds=30`.
+
+If you previously raised `terminationGracePeriodSeconds` to absorb long xDS drains, raise this timeout in lockstep, e.g.:
+
+```sh
+KUMA_DP_SERVER_GRACEFUL_SHUTDOWN_TIMEOUT=60s
+```
+
+Keep it strictly smaller than `terminationGracePeriodSeconds` so the bounded shutdown can run before the pod is killed.
+
+### `MeshMultiZoneService` names longer than 63 characters are deprecated
+
+`MeshService` and `MeshExternalService` already reject names longer than 63 characters.
+`MeshMultiZoneService` (MMZS) historically allowed up to 253, but its name is used to render DNS hostnames through `HostnameGenerator` (e.g. `{{ .DisplayName }}.mzsvc.mesh.local`), so any name longer than 63 produces an invalid RFC 1035 label.
+
+The control plane now emits a deprecation warning in the API response when an MMZS is created or updated with a name longer than 63 characters.
+This will become a hard validation error in 3.0.
+
+**Action required:**
+
+Rename any `MeshMultiZoneService` whose name exceeds 63 characters.
+
+### Kubernetes native sidecar containers enabled by default
+
+The `experimental.sidecarContainers` feature (K8s native sidecar containers via init containers with `restartPolicy: Always`) is now **enabled by default**.
+
+**What changed:**
+- `KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS` defaults to `true`
+- Helm value: `experimental.sidecarContainers` (default `true`)
+- Requires Kubernetes 1.29+ (native sidecar container support is GA)
+
+**Action required:**
+
+None for Kubernetes 1.29+. Native sidecars start before app containers and outlive them, improving graceful shutdown and startup ordering.
+
+To revert to the old behavior (init-based injection without `restartPolicy: Always`):
+
+**Kubernetes (Helm)**
+```yaml
+experimental:
+  sidecarContainers: false
+```
+
+**Control plane environment variable**
+```sh
+KUMA_EXPERIMENTAL_SIDECAR_CONTAINERS=false
+```
 
 ### DNS server domain must not start with a dot
 

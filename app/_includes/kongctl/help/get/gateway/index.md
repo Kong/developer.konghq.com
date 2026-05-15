@@ -1,5 +1,6 @@
 ```ansi
 Usage:
+  kongctl get gateway [flags]
   kongctl get gateway [command]
 
 Aliases:
@@ -11,15 +12,12 @@ Examples:
   # Get a specific control plane
   kongctl get gateway control-plane <id|name>
   # List services in a control plane
-  kongctl get gateway services --control-plane <id|name>
+  kongctl get gateway control-plane services --control-plane-name <name>
   # Get a specific service
-  kongctl get gateway service <id|name> --control-plane <id|name>
+  kongctl get gateway control-plane service <id|name> --control-plane-name <name>
 
 Available Commands:
-  consumer      List or get Konnect Kong Gateway Consumers
   control-plane List or get Konnect Kong Gateway control planes
-  route         List or get Konnect Kong Gateway Routes
-  service       List or get Konnect Kong Gateway Services
 
 
 Flags:
