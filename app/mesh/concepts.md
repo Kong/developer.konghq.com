@@ -61,22 +61,22 @@ For more information, see the [data plane proxy reference](/mesh/data-plane-prox
 {% mermaid %}
 
 flowchart LR
-clients
-servers
+Clients
+Servers
 
-subgraph data plane
-app
-subgraph data plane proxy/Envoy
-inbounds
-outbounds
+subgraph Data plane
+App
+subgraph Data plane proxy
+Inbounds
+Outbounds
 end
 end
 
-inbounds -.local traffic.-> app
-app -.local traffic.-> outbounds
+Inbounds -.Local traffic.-> App
+App -.Local traffic.-> outbounds
 
-clients --> inbounds
-outbounds --> servers
+Clients --> Inbounds
+Outbounds --> Servers
 
 {% endmermaid %}
 <!-- vale on -->
@@ -85,13 +85,13 @@ outbounds --> servers
 
 An inbound is the part of the data plane proxy that receives traffic for a specific port. Inbounds are usually grouped across different data planes to form a service.
 
-For more information, see [Inbounds in the data plane proxy reference](/mesh/data-plane-proxy/).
+For more information, see [Inbounds in the data plane proxy reference](/mesh/data-plane-proxy/#inbound).
 
 #### Outbound
 
 An outbound is the part of the data plane proxy that sends traffic for a specific service. Outbounds group multiple remote inbounds as endpoints.
 
-For more information, see [Outbounds in the data plane proxy reference](/mesh/data-plane-proxy/).
+For more information, see [Outbounds in the data plane proxy reference](/mesh/data-plane-proxy/#outbounds).
 
 ## Resource
 
@@ -106,18 +106,12 @@ A resource is most often expressed as YAML and can have two formats:
 
 Policies are a specific type of resource that controls the behavior and communication of applications running inside your service mesh. Policies can enable traffic management, security, observability, and traffic reliability.
 
-Each policy has a clear, specific area of impact and goal.
-
 For more information, see the [policies introduction](/mesh/policies-introduction/).
 
 ### Identity
 
 A workload's identity is the name encoded in its certificate. An identity is considered valid only if the certificate is signed by a trust.
 
-For more information, see the [mutual TLS reference](/mesh/policies/mutual-tls/).
-
 ### Trust
 
 A trust defines which identities you accept as valid. Trust is established through trusted certificate authorities (CAs) that issue those identities. A trust is attached to a trust domain, and a cluster can contain multiple trusts.
-
-For more information, see the [mutual TLS reference](/mesh/policies/mutual-tls/).
