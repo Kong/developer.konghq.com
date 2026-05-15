@@ -48,7 +48,6 @@ the [Get started with kongctl](/kongctl/get-started/) guide to quickly learn bas
 kongctl's declarative management feature enables you to manage {{site.konnect_short_name}} resources using simple YAML configuration files and a stateless CLI tool. 
 This approach provides version control, automation, and predictable deployments through a plan-based workflow.
 
-
 Declarative configuration with kongctl means you describe the **desired state** of your {{site.konnect_short_name}} resources in 
 static YAML files, and kongctl calculates and applies the changes needed to reach the desired state.
 
@@ -58,6 +57,8 @@ The following are key principles of declarative configuration with kongctl:
 - **Plan-based workflow**: Generate plan artifacts that represent the changes needed, review them, and apply them later.
 - **Stateless operation**: kongctl queries the live {{site.konnect_short_name}} state instead of maintaining a separate state file.
 - **Namespace ownership**: Use namespaces to group resources between teams and environments.
+
+To see the schemas for all supported resources, use `kongctl scaffold <resource_name>` or see the [kongctl declarative resource reference](/kongctl/supported-resources/).
 
 ## Core concepts
 
@@ -275,8 +276,10 @@ kongctl adopt analytics dashboard <dashboard-id> --namespace analytics
 * Portal email templates
 * Gateway services
 
+Learn more about all of these resources in the [supported resource reference for kongctl](/kongctl/supported-resources/).
+
 {:.info}
-**Notes**:
+> **Notes**:
 > * Portal email domains are imperative-only because the {{site.konnect_short_name}} API exposes them at the organization level without labels or namespace scoping. Use `kongctl get portal email-domains` to inspect them. Declarative management will be added when {{site.konnect_short_name}} supports namespacing or labels for these resources.
 > * Portal email templates are customizable per portal. Apply mode creates or updates templates but does not delete any that already exist in {{site.konnect_short_name}}. Sync mode plans deletions for customized templates that are absent from the declarative configuration.
 

@@ -631,7 +631,7 @@ rows:
     fix: "`kongctl login`"
   - error: "not found"
     cause: Wrong resource reference
-    fix: Check spelling of `ref` values
+    fix: "Check spelling of `ref` values"
   - error: "invalid value"
     cause: Wrong type or format
     fix: Check the supported resources reference
@@ -640,7 +640,7 @@ rows:
     fix: Use paths relative to the config file
   - error: "protected resource"
     cause: Protection enabled
-    fix: Temporarily set `protected: false`
+    fix: "Temporarily set `protected: false`"
   - error: "circular dependency"
     cause: Resource reference loop
     fix: Restructure to remove the cycle

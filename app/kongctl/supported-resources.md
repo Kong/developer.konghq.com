@@ -39,24 +39,16 @@ next_steps:
     url: /konnect-api/
 ---
 
-This document is the reference for `kongctl` declarative configuration. It
-lists supported resource types and their field-level values.
-Resource configurations are provided as YAML files and can be expressed as one
-or more files passed to `kongctl` declarative commands.
+This document is the reference for `kongctl` declarative configuration. 
+It lists supported resource types and their field-level values.
+Resource configurations are provided as YAML files and can be expressed as one or more files passed to `kongctl` declarative commands.
 
-The resource keys and field names shown here are the canonical declarative
-configuration names accepted by `kongctl`. Keep this reference aligned with
-`kongctl explain` and `kongctl scaffold` when adding or changing resource
-support.
+See the [declarative configuration guide](/kongctl/declarative/) for information on managing these resources declaratively.
 
-See the [declarative configuration guide](/kongctl/declarative/) for information on
-the feature, commands, and options.
+## File-level defaults
 
-## File-level defaults (`_defaults`)
-
-Use `_defaults.kongctl` to apply default `namespace` and `protected` metadata
-to parent resources in this file. Resource-level `kongctl` values override
-these defaults.
+Use `_defaults.kongctl` to apply default `namespace` and `protected` metadata to parent resources in this file. 
+Resource-level `kongctl` values override these defaults.
 
 ```yaml
 _defaults:
@@ -69,21 +61,18 @@ _defaults:
 
 Use YAML tags in field values to load files or reference other resources.
 
-- `!file`: Load content from a file. Supports `path#extract.path` and
-  `path`/`extract` map form.
-- `!env`: Load string content from an environment variable. Supports
-  `VAR#extract.path` and `var`/`extract` map form.
+- `!file`: Load content from a file. 
+  Supports `path#extract.path` and `path`/`extract` map form.
+- `!env`: Load string content from an environment variable. 
+  Supports`VAR#extract.path` and `var`/`extract` map form.
 - `!ref`: Reference another declarative resource by `ref`.
   `resource-ref#field` is supported; the default field is `id`.
 - `!ref` is intended for string fields.
-- `string (uuid)` and `array[string(uuid)]` annotations in this document
-  describe API value types. In declarative config, prefer `!ref` and avoid
-  literal UUID values.
-- For unmanaged/external resources, prefer `_external.selector` and then
-  reference that resource by `!ref` from other fields.
+- `string (uuid)` and `array[string(uuid)]` annotations in this document describe API value types. 
+  In declarative config, prefer `!ref` and avoid literal UUID values.
+- For unmanaged/external resources, prefer `_external.selector` and then reference that resource by `!ref` from other fields.
 - Large text/spec fields are commonly loaded with `!file`.
-- `!file` paths are resolved relative to the config file and must remain
-  within the configured base directory boundary.
+- `!file` paths are resolved relative to the config file and must remain within the configured base directory boundary.
 
 ```yaml
 portals:
@@ -102,10 +91,10 @@ apis:
 
 ## Audit logs
 
-Audit-log webhook destinations are organization-scoped {{site.konnect_short_name}} resources.
-Declarative config supports them as external references so managed portal
-audit-log webhooks can point at destinations created elsewhere.
+Audit log webhook destinations are organization-scoped {{site.konnect_short_name}} resources.
+Declarative config supports them as external references so managed portal audit log webhooks can point at destinations created elsewhere.
 
+* [Reference for listening to audit logs with kongctl](/kongctl/audit-logs/)
 * [API specification](/api/konnect/audit-logs/)
 * [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/audit-logs)
 
@@ -120,13 +109,13 @@ audit-logs:
             name: string
 ```
 
-Only `_external.id` and `_external.selector.matchFields.name` are supported.
-Audit-log webhook destinations cannot declare `kongctl` metadata and are not
-created, updated, or deleted by declarative apply.
+{:.warning}
+> **Note:** Only `_external.id` and `_external.selector.matchFields.name` are supported.
+Audit log webhook destinations **cannot** declare `kongctl` metadata and are not created, updated, or deleted by declarative `kongctl apply`.
 
 ## APIs
 
-* [API specification](/api/konnect/api-builder/v3/#/operations/create-api)
+* [API specification](/api/konnect/api-builder/#/operations/create-api)
 * [Example](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/basic/api.yaml)
 
 ```yaml
@@ -174,6 +163,7 @@ apis:
             slug: string (pattern: ^[\w-]+$)
             status: One of (published | unpublished)
 ```
+{:.collapsible}
 
 ## Application auth strategies
 
@@ -238,30 +228,25 @@ catalog_services:
 
 ## Dashboards
 
-* [Custom dashboards](/custom-dashboards/)
-* [API specification](/api/konnect/analytics-dashboards/)
-* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
-
-Dashboard names do not need to be unique in {{site.konnect_short_name}}, but `kongctl` follows the
-same resource matching pattern used elsewhere in declarative configuration.
-When planning against live state, it considers dashboards with the matching
-`KONGCTL-namespace` label and matches the desired dashboard by name. Avoid
-duplicate dashboard names within a kongctl namespace.
+Dashboard names don't need to be unique in {{site.konnect_short_name}}, but `kongctl` follows the same resource matching pattern used elsewhere in declarative configuration.
+When planning against the live state, it considers dashboards with the matching `KONGCTL-namespace` label and matches the desired dashboard by name. 
+Avoid using duplicate dashboard names within a kongctl namespace.
 
 Dashboard resources are declared under the `analytics` grouping key.
 
-For dashboards created in the {{site.konnect_short_name}} UI, first run
-`kongctl adopt analytics dashboard` with the dashboard ID to apply the
-namespace label, then run `kongctl dump declarative` with
-`--resources=analytics.dashboards` and `--default-namespace <name>` to generate
-declarative configuration. Name-based adoption fails if the name matches
-multiple dashboards.
+For dashboards created in the {{site.konnect_short_name}} UI:
+1. Run `kongctl adopt analytics dashboard` with the dashboard ID to apply the namespace label.
+1. Run `kongctl dump declarative --resources=analytics.dashboards --default-namespace <name>` to generate declarative configuration.
 
-Use the dashboard definition JSON exported from {{site.konnect_short_name}} as the `definition`
-value. The field accepts that API-shaped object either inline or loaded from a
-JSON/YAML file with `!file`; `kongctl` sends the parsed object as the dashboard
-definition without translating it to another schema. `!file` is preferred for
-larger dashboard definitions.
+Name-based adoption fails if the name matches multiple dashboards.
+
+Use the dashboard definition JSON exported from {{site.konnect_short_name}} as the `definition` value. 
+The field accepts that API-shaped object either inline or loaded from a JSON/YAML file with `!file`; `kongctl` sends the parsed object as the dashboard definition without translating it to another schema. 
+`!file` is preferred for larger dashboard definitions.
+
+* [Custom dashboards](/custom-dashboards/)
+* [API specification](/api/konnect/analytics-dashboards/)
+* [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/analytics/dashboards/dashboard.yaml)
 
 ```yaml
 analytics:
@@ -275,8 +260,7 @@ analytics:
         key: value
 ```
 
-When the exported JSON includes the full API response, use `#definition` to
-extract the payload expected by the dashboard API:
+When the exported JSON includes the full API response, use `#definition` to extract the payload expected by the dashboard API:
 
 ```yaml
 analytics:
@@ -287,6 +271,9 @@ analytics:
 ```
 
 ## Control planes
+
+`control_planes` are {{site.base_gateway}} resources.
+For {{site.event_gateway_short}} control planes, see [{{site.event_gateway_short}}s](#event-gateways).
 
 * [API specification](/api/konnect/control-planes/#/operations/create-control-plane)
 * [Examples](https://github.com/Kong/kongctl/tree/main/docs/examples/declarative/control-plane/control-plane.yaml)
@@ -333,9 +320,8 @@ control_planes:
 ```
 
 Control plane data plane certificates can also be declared as root resources.
-The certificate contents identify a certificate within its control plane when
-a certificate ID is not available. The `cert` field supports `!file` and
-`!env`.
+The certificate contents identify a certificate within its control plane when a certificate ID is not available. 
+The `cert` field supports `!file` and `!env`.
 
 ```yaml
 control_plane_data_plane_certificates:
@@ -351,8 +337,6 @@ control_plane_data_plane_certificates:
 
 ```yaml
 event_gateways:
- # NOTE: This section documents only the Event Gateway resources currently supported by kongctl.
- # Not all resources in the Event Gateway API are supported yet.
  - ref: string
    name: string required (1-255 chars)
    description: string (max 512 chars)
@@ -375,6 +359,9 @@ event_gateways:
          insecure_skip_verify: boolean
          ca_bundle: string
          tls_versions: array[One of (tls12 | tls13)]
+         client_identity: object # requires min_runtime_version: "1.1"
+           certificate: string required
+           key: string required
        metadata_update_interval_seconds: integer (1-43200)
        labels: object [string]string
          key: value
@@ -386,23 +373,114 @@ event_gateways:
          id: string (uuid) # oneOf; declarative: prefer !ref <backend-cluster-ref>
          name: string # oneOf
        authentication: array[object] required (min 1 item)
-         - type: One of (anonymous | sasl_plain | sasl_scram | oauth_bearer) required
-           mediation: string # required for sasl_plain/oauth_bearer
+         - type: One of (anonymous | sasl_plain | sasl_scram | oauth_bearer | client_certificate) required
+           mediation: One of (passthrough | terminate) # required for sasl_plain; One of (passthrough | validate_forward | terminate) for oauth_bearer
            principals: array[object] # for sasl_plain terminate mode
-           algorithm: One of (sha256 | sha512) # for sasl_scram
+             - username: string required
+               password: string required
+           algorithm: One of (sha256 | sha512) # required for sasl_scram
            claims_mapping: object # for oauth_bearer
+             sub: string
+             scope: string
            jwks: object # for oauth_bearer
+             endpoint: string (uri) required
+             timeout: string (default: 10s)
+             cache_expiration: string (default: 1h)
            validate: object # for oauth_bearer
+             audiences: array[object] (min 1 item)
+               - name: string required
+             issuer: string
+           # client_certificate requires no additional fields; requires min_runtime_version: "1.1"
        namespace:
          mode: One of (hide_prefix | enforce_prefix) required
          prefix: string required
          additional:
            topics: array[object]
+             - type: One of (glob | exact_list) required
+               glob: string # if type=glob
+               conflict: One of (warn | ignore) # if type=glob or exact_list
+               exact_list: array[object] (min 1 item) # if type=exact_list
+                 - backend: string required
            consumer_groups: array[object]
+             - type: One of (glob | exact_list) required
+               glob: string # if type=glob
+               exact_list: array[object] (min 1 item) # if type=exact_list
+                 - value: string required
        acl_mode: One of (enforce_on_gateway | passthrough) required
        dns_label: string required (1-63 chars, RFC1035 label)
        labels: object [string]string
          key: value
+       cluster_policies: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-virtual-cluster-cluster-level-policy
+         - ref: string
+           type: acls required
+           name: string (1-255 chars)
+           description: string (max 512 chars)
+           enabled: boolean
+           labels: object [string]string
+             key: value
+           config: object required
+             rules: array[object] required (min 1 item)
+               - resource_type: One of (topic | group | transactional_id | cluster) required
+                 action: One of (allow | deny) required
+                 operations: array[object] required
+                   - name: One of (all | alter | alter_configs | create | delete | describe | describe_configs | idempotent_write | read | write) required
+                 resource_names: array[object] required (max 50 items)
+                   - match: string required # glob pattern; * matches any characters
+           condition: string (boolean expression, max 1000 chars)
+       produce_policies: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-virtual-cluster-produce-policy
+         - ref: string
+           type: One of (modify_headers | schema_validation | encrypt) required
+           name: string (1-255 chars)
+           description: string (max 512 chars)
+           enabled: boolean
+           labels: object [string]string
+             key: value
+           config: object required
+             actions: array[object] required (min 1 item) # if type=modify_headers
+               - op: One of (remove | set) required
+                 key: string required
+                 value: string # required if op=set
+             type: One of (confluent_schema_registry | json) required # if type=schema_validation
+             schema_registry: object # if type=schema_validation; oneOf id or name
+               id: string (uuid) # declarative: prefer !ref <schema-registry-ref>
+               name: string
+             key_validation_action: One of (reject | mark) # if type=schema_validation
+             value_validation_action: One of (reject | mark) # if type=schema_validation
+             failure_mode: One of (error | passthrough) required # if type=encrypt
+             part_of_record: array[One of (key | value)] required (min 1 item) # if type=encrypt
+             encryption_key: object required # if type=encrypt
+               type: One of (aws | static) required
+               arn: string # required if type=aws; AWS KMS key ARN (pattern: ^arn:aws:kms:.+)
+               key: object # required if type=static; declarative: prefer !ref <static-key-ref>
+                 id: string (uuid) # oneOf
+                 name: string # oneOf
+           condition: string (boolean expression, max 1000 chars)
+           parent_policy_id: string (uuid) # for child policies under schema_validation
+       consume_policies: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-virtual-cluster-consume-policy
+         - ref: string
+           type: One of (schema_validation | modify_headers | skip_record | decrypt) required
+           name: string (1-255 chars)
+           description: string (max 512 chars)
+           enabled: boolean
+           labels: object [string]string
+             key: value
+           config: object required
+             type: One of (confluent_schema_registry | json) required # if type=schema_validation
+             schema_registry: object # if type=schema_validation; oneOf id or name
+               id: string (uuid) # declarative: prefer !ref <schema-registry-ref>
+               name: string
+             key_validation_action: One of (mark | skip) # if type=schema_validation
+             value_validation_action: One of (mark | skip) # if type=schema_validation
+             actions: array[object] required (min 1 item) # if type=modify_headers
+               - op: One of (remove | set) required
+                 key: string required
+                 value: string # required if op=set
+             failure_mode: One of (error | skip | passthrough | mark) required # if type=decrypt
+             key_sources: array[object] required (min 1 item) # if type=decrypt
+               - type: One of (aws | static) required
+             part_of_record: array[One of (key | value)] required (min 1 item) # if type=decrypt
+           condition: string (boolean expression, max 1000 chars)
+           parent_policy_id: string (uuid) # for child policies under schema_validation
    listeners: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-listener
      - ref: string
        name: string required (1-255 chars)
@@ -420,25 +498,68 @@ event_gateways:
            labels: object [string]string
              key: value
            config: object required
-             certificates: # if type=tls_server
+             certificates: array[object] required (min 1, max 1 item) # if type=tls_server
                - certificate: string required
                  key: string required
-             versions: # if type=tls_server
+             versions: object # if type=tls_server
                min: One of (TLSv1.2 | TLSv1.3)
                max: One of (TLSv1.2 | TLSv1.3)
              allow_plaintext: boolean # if type=tls_server
-             type: One of (sni | port_mapping) # if type=forward_to_virtual_cluster
+             client_authentication: object # if type=tls_server; requires min_runtime_version: "1.1"
+               mode: One of (required | requested) required
+               tls_trust_bundles: array[object] required (min 1 item)
+                 - id: string (uuid) # oneOf; declarative: prefer !ref <tls-trust-bundle-ref>
+                   name: string # oneOf
+               principal_mapping: string # expression; requires min_runtime_version: "1.1"
+             type: One of (sni | port_mapping) required # if type=forward_to_virtual_cluster
              sni_suffix: string # if config.type=sni
              advertised_port: integer # if config.type=sni
-             broker_host_format:
-               type: One of (per_cluster_suffix | shared_suffix) # if config.type=sni
-             destination:
-               id: string (uuid) # if config.type=port_mapping; oneOf; declarative: prefer !ref <virtual-cluster-ref>
-               name: string # if config.type=port_mapping; oneOf
-             advertised_host: string # if config.type=port_mapping
+             broker_host_format: object # if config.type=sni; requires min_runtime_version: "1.1"
+               type: One of (per_cluster_suffix | shared_suffix) required
+             destination: object required # if config.type=port_mapping; oneOf id or name
+               id: string (uuid) # declarative: prefer !ref <virtual-cluster-ref>
+               name: string
+             advertised_host: string required # if config.type=port_mapping
              bootstrap_port: One of (none | at_start) # if config.type=port_mapping
              min_broker_id: integer # if config.type=port_mapping
+   data_plane_certificates: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-data-plane-certificate
+     - ref: string
+       name: string (1-255 chars)
+       description: string (max 512 chars)
+       certificate: string required # PEM-encoded certificate; prefer: !file ./certs/data-plane.pem
+   schema_registries: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-schema-registry
+     - ref: string
+       type: confluent required
+       name: string required (1-255 chars)
+       description: string (max 512 chars)
+       labels: object [string]string
+         key: value
+       config: object required
+         schema_type: One of (avro | json) required
+         endpoint: string (uri) required
+         timeout_seconds: integer (min 1, default 10)
+         authentication: object
+           type: basic required
+           username: string required
+           password: string required
+   static_keys: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-static-key
+     - ref: string
+       name: string required (1-255 chars)
+       description: string (max 512 chars)
+       labels: object [string]string
+         key: value
+       value: string required # sensitive; prefer: !env SECRET_KEY
+   tls_trust_bundles: # /api/konnect/event-gateway/v1/#/operations/create-event-gateway-tls-trust-bundle; requires min_runtime_version: "1.1"
+     - ref: string
+       name: string required (1-255 chars)
+       description: string (max 512 chars)
+       labels: object [string]string
+         key: value
+       config: object required
+         trusted_ca: string required # PEM-encoded CA certificates; prefer: !file ./certs/ca.pem
+
 ```
+{:.collapsible}
 
 ## Organization
 
@@ -674,6 +795,7 @@ portal_integrations:
      logo: string # data URL image (png/jpeg/gif/ico/svg)
      favicon: string # data URL image (png/jpeg/gif/ico/svg)
 ```
+{:.collapsible}
 
 Portal IP allow lists can also be declared as root resources.
 
