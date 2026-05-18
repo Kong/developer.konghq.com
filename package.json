@@ -27,7 +27,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@vitejs/plugin-vue": "^5.1.2",
     "algoliasearch": "^5.20.0",
-    "axios": "^1.7.4",
+    "axios": "^1.16.1",
     "instantsearch.css": "^8.5.1",
     "mermaid": "^11.6.0",
     "node-fetch": "^3.3.2",

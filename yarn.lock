@@ -6605,7 +6605,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.13.4, axios@npm:^1.15.0":
+"axios@npm:^1.13.4, axios@npm:^1.15.0, axios@npm:^1.16.1":
   version: 1.16.1
   resolution: "axios@npm:1.16.1"
   dependencies:
@@ -14717,6 +14717,7 @@ __metadata:
     "@vitejs/plugin-vue": "npm:^5.1.2"
     algoliasearch: "npm:^5.20.0"
     autoprefixer: "npm:^10.4.19"
+    axios: "npm:^1.16.1"
     instantsearch.css: "npm:^8.5.1"
     mermaid: "npm:^11.6.0"
     netlify-cli: "npm:26.0.2"
