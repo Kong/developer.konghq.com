@@ -90,7 +90,7 @@ Run one collector pod per node and route traffic node-locally. With `internalTra
 Pick this for large clusters or workloads where the extra network hop matters. It improves locality, distributes load across nodes, and isolates collector failure to a single node's telemetry.
 
 {:.warning}
-> The tradeoff is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
+> The trade-off is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
 
 ## Deploy the collector
 
@@ -168,6 +168,7 @@ Pick this for large clusters or workloads where the extra network hop matters. I
    - `batch` reduces export overhead. `send_batch_size: 4096` is a reasonable starting point. Tune up if your backend complains about request rate, down if it complains about batch size.
    - The `debug` exporter is enabled in every pipeline at `verbosity: basic` so each batch shows up as one log line. Drop it from the pipelines once you've verified the setup, or bump to `verbosity: detailed` when you need to see individual records.
    - `otlp_grpc/tempo`, `otlp_http/loki`, and `prometheus` are examples. The trace and log exporters send OTLP to a backend; the `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Swap the addresses to match your own backends.
+   - `tls.insecure: true` on the Tempo exporter disables certificate verification for the in-cluster example. In production, point the exporter at a TLS endpoint with a trusted CA and remove the `insecure` flag.
 
 1. Apply the workload and service. Both topologies share the same collector configuration. Only the workload kind and the service traffic policy change.
 
@@ -381,7 +382,7 @@ By default, sidecars can reach addresses outside the mesh through [passthrough m
 If you disable passthrough at the `Mesh` level, sidecars can't reach the collector anymore and telemetry stops. To restore that path, declare the collector with a [MeshExternalService](/mesh/meshexternalservice/).
 
 {:.info}
-> `MeshExternalService` requires [ZoneEgress](/mesh/zone-egress/) and [mutual TLS](/mesh/mutual-tls/) on the mesh. If you already disabled passthrough, you likely have mTLS on already.
+> `MeshExternalService` requires [ZoneEgress](/mesh/zone-egress/) and [mutual TLS](/mesh/policies/mutual-tls/) on the mesh. If you already disabled passthrough, you likely have mTLS on already.
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
