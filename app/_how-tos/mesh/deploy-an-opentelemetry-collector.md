@@ -72,7 +72,7 @@ Sidecars push telemetry to the collector over OTLP gRPC on port 4317. The collec
 This is a push model. Each sidecar opens an outbound connection to one collector pod and writes its own telemetry. With `internalTrafficPolicy: Local` on the collector service, kube-proxy on each node only forwards to the collector pod on that same node, so the hop never leaves the node.
 
 {:.info}
-> A DaemonSet fits most clusters. You can also run the collector as a `Deployment` behind a `ClusterIP` service, as a [sidecar agent](https://opentelemetry.io/docs/collector/deployment/agent/) on the workload pod, or as a [gateway tier](https://opentelemetry.io/docs/collector/deployment/gateway/) in front of your backends. The config, policies, and external-service setup later in this guide apply to any of these.
+> A DaemonSet is one form of the OpenTelemetry [agent](https://opentelemetry.io/docs/collector/deploy/agent/) pattern. You can also run the agent as a centralized `Deployment` behind a `ClusterIP` service, as a per-pod sidecar container, or front your backends with a [gateway](https://opentelemetry.io/docs/collector/deploy/gateway/) tier. The ConfigMap below carries over, but the `Service`, the `endpoint` in each mesh policy, and the `MeshExternalService` step may need to change for those shapes. For example, a sidecar collector receives on `localhost:4317` and doesn't live in a separate namespace.
 
 {:.warning}
 > The trade-off of `internalTrafficPolicy: Local` is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
