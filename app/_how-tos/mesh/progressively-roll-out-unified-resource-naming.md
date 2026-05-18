@@ -56,19 +56,19 @@ faqs:
     a: |
       After setting a default patch list cluster-wide, you can override it per workload in two ways.
 
-      Clear the annotation to disable unified naming for a workload:
+      * Clear the annotation to disable unified naming for a workload:
 
-      ```sh
-      kubectl patch -n kong-mesh-demo deployment demo-app \
-        -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
-      ```
+        ```sh
+        kubectl patch -n kong-mesh-demo deployment demo-app \
+          -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
+        ```
 
-      Or set the annotation to a different patch list to apply custom patches instead:
+      * Or set the annotation to a different patch list to apply custom patches instead:
 
-      ```sh
-      kubectl patch -n kong-mesh-demo deployment demo-app \
-        -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"my-custom-patch-1,my-custom-patch-2"}}}}}'
-      ```
+        ```sh
+        kubectl patch -n kong-mesh-demo deployment demo-app \
+          -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"my-custom-patch-1,my-custom-patch-2"}}}}}'
+        ```
 
 prereqs:
   inline:
@@ -89,22 +89,7 @@ sum:envoy.cluster.upstream_rq.count{service:my-example-service, !envoy_cluster:k
 
 Different resources and their related stats often look unrelated, even when they describe the same traffic path.
 
-Starting with {{site.mesh_product_name}} 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This scheme improves observability, simplifies queries, and makes it easier to understand what's happening in the mesh:
-
-{% table %}
-columns:
-  - title: Before
-    key: before
-  - title: After
-    key: after
-rows:
-  - before: Mixed legacy and Envoy-native names
-    after: Consistent scheme aligned with {{site.mesh_product_name}} resources
-  - before: Hard to correlate stats with owners
-    after: Direct mapping back to `MeshService` and related resources
-  - before: Complex, exclusion-heavy queries
-    after: Simple, predictable queries and labels
-{% endtable %}
+Starting with {{site.mesh_product_name}} 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This scheme improves observability, simplifies queries, and makes it easier to understand what's happening in the mesh.
 
 With a progressive rollout, you can validate the new scheme on a single workload, then move to a cluster-wide rollout when you're ready.
 
@@ -132,7 +117,7 @@ The patch configures every sidecar that references it to set an environment vari
 
 ## Enable unified naming for one workload
 
-Apply the patch to a workload by updating the Deployment pod template annotation. This lets you enable the feature progressively, service by service.
+Apply the patch to a workload by updating the Deployment Pod template annotation. This lets you enable the feature progressively, service by service.
 
 1. Add the `kuma.io/container-patches` annotation to the `demo-app` Deployment:
 
@@ -152,35 +137,27 @@ Apply the patch to a workload by updating the Deployment pod template annotation
 
 Inspect sidecar stats to confirm that unified naming is applied.
 
-1. In one terminal, port-forward to the `demo-app` Pod:
+1. Port-forward to the `demo-app` Pod:
 
    ```sh
    POD=$(kubectl get pod -n kong-mesh-demo -l app=demo-app -o jsonpath='{.items[0].metadata.name}')
    kubectl port-forward -n kong-mesh-demo pod/$POD 9901:9901
    ```
 
-1. In another terminal, inspect stats:
+1. In a new terminal window, inspect stats:
 
    ```sh
    curl -s localhost:9901/stats | grep -i kri
    ```
 
-   The command filters for `kri` entries, which are part of the unified resource naming format.
-
-   You should see entries that map directly to {{site.mesh_product_name}} resources, for example:
+   The command filters for `kri` entries, which are part of the unified resource naming format. You should see entries that map directly to {{site.mesh_product_name}} resources, for example:
 
    ```text
    cluster.kri_msvc_default_default_kong-mesh-demo_demo-app-v1_5050
    ```
    {:.no-copy-code}
 
-   In this format, `msvc` identifies a `MeshService`, and the remaining segments identify the mesh, zone, namespace, Service name, and section. This example shows the `MeshService` resource (`demo-app-v1`) and section (`5050`) clearly, making it easy to connect the stat back to the original {{site.mesh_product_name}} resource.
-
-1. Inspect cluster names for confirmation:
-
-   ```sh
-   curl -s localhost:9901/clusters | head -n 50
-   ```
+   In this format, `msvc` identifies a `MeshService`, and the remaining segments identify the mesh, zone, namespace, Service name, and section. This example shows the `MeshService` resource `demo-app-v1` and section `5050`.
 
 ## Roll out cluster-wide
 
