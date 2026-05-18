@@ -18,7 +18,7 @@ rows:
       - blocks:
           - type: text
             config: |
-                Kong Identity provides a single platform to manage traffic policy and identity policy with the [Konnect API](api/konnect/kong-identity/v1/#/) for machine-to-machine authentication. Use Kong identity to:
+                Kong Identity provides a single platform to manage traffic policy and identity policy with the [Konnect API](/api/konnect/kong-identity/v1/#/) for machine-to-machine authentication. Use Kong identity to:
                 * Create authorization servers per region.
                 * Issue and validate access tokens.
                 * Integrate secure auhtentication into Kong Gateway API.   

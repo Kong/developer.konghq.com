@@ -17,6 +17,7 @@ works_on:
   - konnect
 tags:
     - authentication
+    - kong-identity
 description: Learn how to configure Kong Identity with OIDC.
 
 tldr: 
