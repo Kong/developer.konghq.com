@@ -52,6 +52,11 @@ definitions:
     description: |
       An entity (user, service, or application) that authenticates to a Kong Gateway through one or more credential types, carrying group membership and metadata that determine how the Gateway handles the requests from the entity.
     url: |
+
+  - term: Identity
+    description: |
+      A reference to a Principal stored in an identity provider, that identifies the Principal but doesn't carry the credentials needed to authenticate it.
+    url: |
       
   - term: Insomnia plugin
     description: |
