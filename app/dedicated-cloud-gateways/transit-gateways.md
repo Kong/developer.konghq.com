@@ -66,6 +66,9 @@ This process includes three main steps:
     1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**API Gateway > Networks**).
     1. Create the resource share and save the resulting **RAM Share ARN**.
 
+    {:.warning}
+    > **Limitation for multi-network environments:** The same Transit Gateway can be used in multiple networks, but they must be shared by different RAM shares.
+
 2. Accept the Transit Gateway Attachment in AWS:
 
     1. Go to **VPC > Transit Gateway Attachments** in the AWS Console.

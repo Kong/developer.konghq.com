@@ -68,6 +68,9 @@ faqs:
       {:.info}
       > **Note:** This is a basic health check and only confirms that the gateway process is up and running. 
       It doesn't verify routing, plugins, upstreams, or networking configurations.
+  - q: Does Dedicated Cloud Gateway use PKI certificates for control plane and data plane communication?
+    a: |
+      Yes, Dedicated Cloud Gateway uses PKI certificates for control plane and data plane communication like [hybrid mode](/gateway/hybrid-mode/) Gateways. 
 
 related_resources:
   - text: Dedicated Cloud Gateways 
@@ -465,7 +468,7 @@ For more information, see the [Managed cache for Redis reference](/dedicated-clo
 
 ## Securing backend communication
 
-Dedicated Cloud Gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
+Dedicated Cloud Gateways support public and private networking.
 
 To securely connect a Dedicated Cloud Gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
 

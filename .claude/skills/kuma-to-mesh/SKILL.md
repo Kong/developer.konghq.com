@@ -80,12 +80,6 @@ layout: reference
 permalink: <config url when the desired URL does not match the default URL from app/mesh/<filename>.md>
 ```
 
-**Include if the page is a how-to guide:**
-```yaml
-content_type: how_to
-permalink: <based on the original url>
-```
-
 **Include if the page is a policy:**
 ```yaml
 name: <CRD kind, usually plural, e.g. MeshFaultInjections or MeshAccessLogs>
@@ -95,6 +89,31 @@ icon: policy.svg
 ```
 
 Do NOT include `breadcrumbs` or `layout` for policies.
+
+**Include if the page is a how-to guide:**
+```yaml
+content_type: how_to
+permalink: <based on the original url>
+works_on:
+  - on-prem        # always for Universal/VM guides; add konnect if the guide applies there too
+tldr:
+  q: <question form of the page title, e.g. "How do I deploy X?">
+  a: <one-sentence summary of what the reader achieves by following this guide>
+prereqs:
+  inline:
+    - title: <prerequisite title>
+      content: |
+        <prerequisite content — see Step 5g for how to extract this from the body>
+cleanup:
+  inline:
+    - title: <cleanup title>
+      content: |
+        <cleanup steps — see Step 5g for how to extract this from the body>
+```
+
+Omit `prereqs` or `cleanup` if the source page has no corresponding section.  
+Omit `works_on` only if scope cannot be determined.  
+The `tldr.a` value should complete the sentence "By the end of this guide, you will ...".
 
 **Include if available:**
 ```yaml
@@ -186,8 +205,43 @@ In other cases, do NOT attempt to automatically resolve version gates. Instead:
    {% endtable %}
    ```
 
-### 5g. Keep unchanged
-- `{% mermaid %}` blocks
+### 5g. How-to structural transformations (how-to pages only)
+
+**Prerequisites section:** If the body contains a `## Prerequisites` section, move its content into the `prereqs.inline` frontmatter field and remove the heading from the body. Each top-level list item in that section becomes a separate `- title: / content: |` entry.
+
+**Cleanup section:** If the body contains a `## Cleanup` section, move its content (including any code blocks) into the `cleanup.inline` frontmatter field and remove the heading from the body. Use a `content: |` block scalar — code fences inside YAML block scalars are preserved correctly.
+
+**Section heading style:** Rewrite section headings to use imperative mood:
+- "Introduction to X" → "Introduce X"
+- "Setting up X" / "Setup of X" → "Set up X"
+- "Configuration of X" / "Configuring X" → "Configure X"
+- "Enabling X" → "Enable X"
+
+### 5h. Diagram image → `{% mermaid %}` conversion
+
+For each image reference in the body (`![alt](path)` or `<img src="...">`) that appears to be an architectural or flow diagram:
+
+1. Identify the image by checking its alt text, filename, and surrounding prose for keywords like "architecture", "flow", "diagram", "topology", "traffic", "lifecycle", "sequence", or "overview".
+2. Fetch the image file from the kuma-website repo (e.g. `https://raw.githubusercontent.com/kumahq/kuma-website/master/app/assets/images/<filename>`) and inspect it visually to understand its content.
+3. Reconstruct the diagram as a `{% mermaid %}` block using the most appropriate diagram type:
+   - **flowchart** (`graph LR` / `graph TD`) — component relationships, request paths
+   - **sequenceDiagram** — step-by-step interactions between services
+   - **classDiagram** — object/resource hierarchies
+   - **C4Context** / **C4Container** — high-level architecture
+4. Replace the original image reference with the `{% mermaid %}` block.
+5. If the image cannot be fetched, cannot be interpreted as a diagram, or is a screenshot/photo, leave the image reference in place and flag it in the Step 9 report.
+
+Example output format:
+```
+{% mermaid %}
+graph LR
+  DPP(Data plane proxy) -->|XDS| CP(Control plane)
+  CP -->|config| DB[(PostgreSQL)]
+{% endmermaid %}
+```
+
+### 5i. Keep unchanged
+- Existing `{% mermaid %}` blocks (already converted)
 - `{% schema_viewer %}`, `{% policy_yaml %}` tags
 - `{:.warning}`, `{:.info}` callouts
 - All code blocks (content inside `` ``` `` fences)

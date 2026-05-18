@@ -1,0 +1,1 @@
+Issuing identity to workloads enables mTLS. Zero trust is the default behavior, so without a [`MeshTrafficPermission`](/mesh/policies/meshtrafficpermission/) to allow traffic, these errors are expected.
