@@ -1,0 +1,40 @@
+{% assign power = include.power %}
+<div class="card card__bordered h-full">
+  <div class="flex flex-col gap-5 p-6 h-full">
+    <div class="flex items-start gap-4">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/5">
+        <img src="{{ power.icon }}" alt="" class="h-6 w-6">
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-wrap gap-2">
+          {% include badge.html text="Install surface" css_class="text-xs" %}
+          {% if power.host_name %}
+            {% include badge.html text=power.host_name css_class="text-xs" %}
+          {% endif %}
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <h2 class="text-xl">{{ power.badge_text }}</h2>
+          {% if power.name != power.badge_text %}
+            <div class="text-sm text-terciary">{{ power.name }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3 flex-grow">
+      <p class="text-sm text-secondary">{{ power.description }}</p>
+      <p class="text-sm text-terciary">
+        Reuses the same Kong skills and MCP wiring instead of introducing a separate catalog.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-4 text-sm">
+      <a class="text-brand no-icon" href="{{ power.source_url }}">View POWER.md</a>
+      {% if power.learn_more_url %}
+        <a class="text-brand no-icon" href="{{ power.learn_more_url }}">Learn more</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

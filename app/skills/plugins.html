@@ -1,0 +1,32 @@
+---
+title: Kong Skill Plugins
+description: Discover plugin packages that own Kong skills and install them in supported AI coding tools.
+layout: without_aside
+no_edit_link: true
+toc: false
+llm: false
+breadcrumbs:
+  - /skills/
+---
+{%- assign all_plugins = site.data.skills_plugins | sort_natural: "name" -%}
+
+<div class="flex flex-col gap-10 pb-16 pt-8">
+  <div class="flex flex-col gap-4 max-w-3xl">
+    <h1>Kong Skill Plugins</h1>
+    <p class="text-terciary">
+      Skills are grouped under plugin packages in <code>{{ site.skills_repo_slug }}</code>. Use this page to find the owning plugin, review its source, and follow the supported install flow.
+    </p>
+  </div>
+
+  {% if all_plugins.size > 0 %}
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    {% for plugin in all_plugins %}
+      {% include cards/skill_plugin.html plugin=plugin %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-terciary">
+    No plugin packages were discovered in the configured marketplace repository.
+  </div>
+  {% endif %}
+</div>

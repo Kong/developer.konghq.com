@@ -7,37 +7,135 @@ llm: false
 description: Browse and search Kong skills for AI-powered development workflows.
 ---
 {%- assign all_skills = site.data.skills | sort -%}
+{%- assign all_plugins = site.data.skills_plugins | sort_natural: "name" -%}
+{%- assign power = site.data.skills_power -%}
+{%- assign skill_filters = site.data.skills_filters -%}
+{%- assign show_plugin_filter = skill_filters.plugins.size > 1 -%}
+{%- assign show_product_filter = skill_filters.products.size > 1 -%}
+{%- assign show_category_filter = skill_filters.categories.size > 1 -%}
 
 <div class="flex flex-col gap-16 w-full">
 
   <div class="flex flex-col gap-8 py-16 items-center text-center">
-    <div class="flex flex-col gap-4 max-w-3xl">
-      <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Skills Hub</h1>
-      <p class="text-terciary text-lg">
-        Browse and search Kong skills for AI-powered development workflows.
-      </p>
-      <div class="flex items-center w-full justify-around">
-        <div class="flex items-center">
-          {% capture quick_install %}{% include skills/quick_install.md %}{% endcapture %}{{ quick_install | markdownify }}
-        </div>
-        <a href="/skills/install/" class="text-sm px-1 text-terciary leading-5">Installation guide</a>
+    <div class="flex w-full max-w-5xl flex-col gap-8">
+      <div class="mx-auto flex max-w-3xl flex-col gap-4">
+        <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Skills Hub</h1>
+        <p class="text-terciary text-lg">
+          Browse and search Kong skills for AI-powered development workflows.
+        </p>
       </div>
-    </div>
 
-    <div class="flex flex-col w-full gap-5 items-center">
-      <div class="filter-results-field w-full max-w-4xl">
-        {% include_svg '/assets/icons/search.svg' width="20" height="20" class="filter-results-field__image" %}
-        <input
-          id="skills-search"
-          type="search"
-          class="filter-results-field__input"
-          placeholder="Search skills..."
-        >
+      <div class="grid grid-cols-1 {% if power %}xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]{% endif %} gap-6 w-full text-left">
+        <div class="card card__bordered h-full">
+          <div class="flex flex-col gap-5 p-6 h-full">
+            <div class="flex flex-col gap-3">
+              <div class="flex flex-wrap gap-2">
+                {% include badge.html text="Primary install" css_class="text-xs" %}
+              </div>
+              <h2 class="text-xl">Install the marketplace</h2>
+              <p class="text-sm text-terciary">
+                Start with the full marketplace, then browse individual skills and plugin packages.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-4 flex-grow">
+              {% capture quick_install %}{% include skills/quick_install.md %}{% endcapture %}
+              <div>{{ quick_install | markdownify }}</div>
+              <div class="text-sm">
+                <a href="/skills/install/" class="text-brand no-icon">Installation guide</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if power %}
+          {% include cards/skill_power.html power=power %}
+        {% endif %}
       </div>
     </div>
   </div>
 
   <div class="flex flex-col gap-6" id="all-skills-section">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <div class="flex flex-col gap-2">
+        <h2>All skills</h2>
+        <p class="text-terciary">Search individual skill packages, then install the whole marketplace or a specific skill.</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-primary/5 bg-secondary/30 p-4">
+      <div class="flex flex-wrap items-end gap-4">
+        <label class="flex min-w-[18rem] flex-[2_1_24rem] flex-col gap-2">
+          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Search</span>
+          <div class="filter-results-field w-full">
+            {% include_svg '/assets/icons/search.svg' width="20" height="20" class="filter-results-field__image" %}
+            <input
+              id="skills-search"
+              type="search"
+              class="filter-results-field__input"
+              placeholder="Search skills, tags, plugins, and products..."
+            >
+          </div>
+        </label>
+
+        {% if show_plugin_filter %}
+        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
+          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Plugin</span>
+          <select
+            id="skills-filter-plugin"
+            data-skills-filter="plugin"
+            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
+          >
+            <option value="">All plugins</option>
+            {% for plugin in skill_filters.plugins %}
+              <option value="{{ plugin.value }}">{{ plugin.label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% endif %}
+
+        {% if show_product_filter %}
+        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
+          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Product</span>
+          <select
+            id="skills-filter-product"
+            data-skills-filter="product"
+            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
+          >
+            <option value="">All products</option>
+            {% for product in skill_filters.products %}
+              <option value="{{ product.value }}">{{ product.label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% endif %}
+
+        {% if show_category_filter %}
+        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
+          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Category</span>
+          <select
+            id="skills-filter-category"
+            data-skills-filter="category"
+            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
+          >
+            <option value="">All categories</option>
+            {% for category in skill_filters.categories %}
+              <option value="{{ category.value }}">{{ category.label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        {% endif %}
+
+        <button
+          id="skills-clear-filters"
+          type="button"
+          class="hidden text-sm text-brand"
+        >
+          Clear filters
+        </button>
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="skills-grid">
       {% for skill_entry in all_skills %}
         {% assign skill = skill_entry[1] %}
@@ -46,8 +144,28 @@ description: Browse and search Kong skills for AI-powered development workflows.
     </div>
 
     <div class="hidden text-center py-4 text-terciary" id="skills-empty">
-      No skills found.
+      No skills match the current search or filters.
     </div>
   </div>
+
+  {% if all_plugins.size > 0 %}
+  <div class="flex flex-col gap-6">
+    <div class="flex items-end justify-between gap-4 flex-wrap">
+      <div class="flex flex-col gap-2 max-w-3xl">
+        <h2>Available plugins</h2>
+        <p class="text-terciary">
+          These plugin packages own the published skills and provide the install flow for supported AI tools.
+        </p>
+      </div>
+      <a href="/skills/plugins/" class="text-sm">Browse all plugins</a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {% for plugin in all_plugins limit: 2 %}
+        {% include cards/skill_plugin.html plugin=plugin compact=true %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
 </div>

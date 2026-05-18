@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'digest'
-
 module Jekyll
   module SkillPages
     class Skill
-      attr_reader :folder, :slug
+      attr_reader :site, :folder, :slug, :plugin
 
-      def initialize(folder:, slug:)
+      def initialize(site:, folder:, slug:, plugin: nil)
+        @site = site
         @folder = folder
-        @slug   = slug
+        @slug = slug
+        @plugin = plugin
       end
 
       def name
@@ -21,11 +21,11 @@ module Jekyll
       end
 
       def version
-        @version ||= metadata.dig('metadata', 'version')
+        @version ||= metadata.dig('metadata', 'version') || plugin&.version
       end
 
       def author
-        @author ||= metadata.dig('metadata', 'author')
+        @author ||= metadata.dig('metadata', 'author') || metadata.dig('metadata', 'authors')
       end
 
       def license
@@ -33,7 +33,20 @@ module Jekyll
       end
 
       def products
-        @products ||= metadata.dig('metadata', 'products') || []
+        @products ||= begin
+          values = Array(metadata.dig('metadata', 'products'))
+          product = metadata.dig('metadata', 'product')
+          values << product if product
+          values.compact.uniq
+        end
+      end
+
+      def category
+        @category ||= metadata.dig('metadata', 'category')
+      end
+
+      def tags
+        @tags ||= Array(metadata.dig('metadata', 'tags'))
       end
 
       def license_file?
@@ -60,8 +73,8 @@ module Jekyll
 
       def all_files
         @all_files ||= Dir.glob(File.join(@folder, '**', '*'))
-                          .select { |f| File.file?(f) }
-                          .map { |f| f.sub(@folder, '') }
+                          .select { |file| File.file?(file) }
+                          .map { |file| file.sub(@folder, '') }
                           .sort
       end
 
@@ -74,11 +87,68 @@ module Jekyll
       end
 
       def processed_content
-        @processed_content ||= Jekyll::SkillPages.demote_headings(content)
+        @processed_content ||= begin
+          rewritten = Jekyll::SkillPages.rewrite_relative_links(
+            content,
+            site:,
+            source_relative_path: File.join(source_path, 'SKILL.md')
+          )
+          Jekyll::SkillPages.demote_headings(rewritten)
+        end
       end
 
       def metadata
         @metadata ||= parser.frontmatter
+      end
+
+      def source_path
+        @source_path ||= if plugin
+                           File.join('plugins', plugin.slug, 'skills', slug)
+                         else
+                           File.join('skills', slug)
+                         end
+      end
+
+      def source_url
+        @source_url ||= Jekyll::SkillPages.repo_tree_url(site, source_path)
+      end
+
+      def plugin_slug
+        plugin&.slug
+      end
+
+      def plugin_name
+        plugin&.name
+      end
+
+      def plugin_path
+        plugin&.source_path
+      end
+
+      def plugin_source_url
+        plugin&.source_url
+      end
+
+      def plugin_page_url
+        "/skills/plugins/#plugin-#{plugin.slug}" if plugin
+      end
+
+      def license_url
+        return unless license_file?
+
+        Jekyll::SkillPages.repo_blob_url(site, File.join(source_path, license))
+      end
+
+      def scripts_url
+        Jekyll::SkillPages.repo_tree_url(site, File.join(source_path, 'scripts')) if scripts?
+      end
+
+      def references_url
+        Jekyll::SkillPages.repo_tree_url(site, File.join(source_path, 'references')) if references?
+      end
+
+      def assets_url
+        Jekyll::SkillPages.repo_tree_url(site, File.join(source_path, 'assets')) if assets?
       end
 
       private

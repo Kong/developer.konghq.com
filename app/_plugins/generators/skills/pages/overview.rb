@@ -44,15 +44,27 @@ module Jekyll
             'layout' => 'skill',
             'breadcrumbs' => ['/skills/'],
             'no_edit_link' => true,
-            'content_type' => 'skill',
             'license' => @skill.license,
             'license_is_file' => @skill.license_file?,
+            'license_url' => @skill.license_url,
             'allowed_tools' => @skill.allowed_tools,
             'scripts' => @skill.scripts?,
+            'scripts_url' => @skill.scripts_url,
             'references' => @skill.references?,
+            'references_url' => @skill.references_url,
             'assets' => @skill.assets?,
+            'assets_url' => @skill.assets_url,
             'skill_content' => @skill.processed_content,
             'products' => @skill.products,
+            'skill_category' => @skill.category,
+            'tags' => @skill.tags,
+            'plugin_slug' => @skill.plugin_slug,
+            'plugin_name' => @skill.plugin_name,
+            'plugin_path' => @skill.plugin_path,
+            'plugin_source_url' => @skill.plugin_source_url,
+            'plugin_page_url' => @skill.plugin_page_url,
+            'source_path' => @skill.source_path,
+            'source_url' => @skill.source_url,
             'llm' => false,
             'toc' => false
           }
@@ -60,7 +72,7 @@ module Jekyll
 
         def relative_path
           @relative_path ||= File.join(
-            Jekyll::SkillPages.skills_repo_path(site), 'skills', @skill.slug, 'SKILL.md'
+            Jekyll::SkillPages.skills_repo_path(site), @skill.source_path, 'SKILL.md'
           )
         end
       end
