@@ -156,6 +156,9 @@ prereqs:
         helm install tempo grafana/tempo \
           --namespace observability --create-namespace \
           -f values-tempo.yaml
+
+        kubectl wait -n observability --for=condition=ready pod \
+          -l app.kubernetes.io/name=tempo --timeout=120s
         ```
       icon_url: /assets/icons/third-party/grafana.svg
     - title: Loki
