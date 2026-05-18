@@ -1,6 +1,6 @@
 ---
 title: Deploy an OpenTelemetry collector for metrics, traces, and logs
-description: Run one OpenTelemetry collector that receives metrics, traces, and access logs from {{site.mesh_product_name}}, with guidance on Deployment vs DaemonSet topologies and passthrough handling.
+description: Run a per-node OpenTelemetry collector to receive metrics, traces, and access logs from {{site.mesh_product_name}} sidecars.
 
 content_type: how_to
 permalink: /mesh/deploy-an-opentelemetry-collector/
@@ -43,7 +43,7 @@ next_steps:
 
 tldr:
   q: How do I deploy an OpenTelemetry collector for {{site.mesh_product_name}}?
-  a: Run a single OpenTelemetry collector that receives metrics, traces, and access logs from sidecars over OTLP, and pick between a Deployment or per-node DaemonSet topology.
+  a: Run a per-node OpenTelemetry collector DaemonSet that receives metrics, traces, and access logs from sidecars over OTLP, then point the mesh policies at it.
 
 prereqs:
   inline:
@@ -63,34 +63,19 @@ prereqs:
 
 ---
 
-This guide deploys a single OpenTelemetry collector that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/). It covers two production topologies, how the collector fits with sidecar injection, and what changes when mesh passthrough is off.
+This guide deploys an OpenTelemetry collector that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/). It runs a per-node DaemonSet so sidecar traffic stays node-local, and explains what changes when mesh passthrough is off.
 
 ## How {{site.mesh_product_name}} talks to the collector
 
 Sidecars push telemetry to the collector over OTLP gRPC on port 4317. The collector receives, batches, and exports it to whatever backends you configure.
 
-This is a push model. Each sidecar opens an outbound connection to one collector pod and writes its own telemetry. Compare that to a pull model, where a collector scrapes Prometheus endpoints from every workload it can reach.
+This is a push model. Each sidecar opens an outbound connection to one collector pod and writes its own telemetry. With `internalTrafficPolicy: Local` on the collector service, kube-proxy on each node only forwards to the collector pod on that same node, so the hop never leaves the node.
 
-The distinction matters when you pick a topology. A [CNCF post](https://www.cncf.io/blog/2025/12/16/how-to-build-a-cost-effective-observability-platform-with-opentelemetry/) warns about 20-40x metric explosion when DaemonSet collectors all scrape the same Prometheus targets. That problem is specific to the pull model. {{site.mesh_product_name}} pushes, so each metric reaches one collector instance regardless of how many collector pods exist.
-
-## Pick a topology
-
-Two patterns work for the OTLP receiver. Pick one before you write the manifests.
-
-### Deployment + ClusterIP service
-
-Run two or three collector replicas behind a `ClusterIP` service. Sidecars resolve `otel-collector.observability:4317` to whichever replica kube-proxy picks.
-
-This is the default recommendation. It's simple, the failure domain is the whole replica set, and a rolling update of the collector doesn't drop telemetry from any specific node. Use this for small and medium clusters, or any cluster where collector throughput isn't a bottleneck.
-
-### Per-node DaemonSet
-
-Run one collector pod per node and route traffic node-locally. With `internalTrafficPolicy: Local` on the service, kube-proxy on each node only forwards to the collector pod on that same node. Sidecars still resolve the same DNS name (`otel-collector.observability:4317`), but the hop never leaves the node.
-
-Pick this for large clusters or workloads where the extra network hop matters. It improves locality, distributes load across nodes, and isolates collector failure to a single node's telemetry.
+{:.info}
+> A DaemonSet fits most clusters. You can also run the collector as a `Deployment` behind a `ClusterIP` service, as a [sidecar agent](https://opentelemetry.io/docs/collector/deployment/agent/) on the workload pod, or as a [gateway tier](https://opentelemetry.io/docs/collector/deployment/gateway/) in front of your backends. The config, policies, and external-service setup later in this guide apply to any of these.
 
 {:.warning}
-> The trade-off is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
+> The trade-off of `internalTrafficPolicy: Local` is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
 
 ## Deploy the collector
 
@@ -170,76 +155,7 @@ Pick this for large clusters or workloads where the extra network hop matters. I
    - `otlp_grpc/tempo`, `otlp_http/loki`, and `prometheus` are examples. The trace and log exporters send OTLP to a backend; the `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Swap the addresses to match your own backends.
    - `tls.insecure: true` on the Tempo exporter disables certificate verification for the in-cluster example. In production, point the exporter at a TLS endpoint with a trusted CA and remove the `insecure` flag.
 
-1. Apply the workload and service. Both topologies share the same collector configuration. Only the workload kind and the service traffic policy change.
-
-   {% navtabs "topology" %}
-   {% navtab "Deployment" %}
-
-   ```sh
-   echo "apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: otel-collector
-     namespace: observability
-   spec:
-     replicas: 2
-     selector:
-       matchLabels:
-         app: otel-collector
-     template:
-       metadata:
-         labels:
-           app: otel-collector
-       spec:
-         containers:
-           - name: otel-collector
-             image: otel/opentelemetry-collector-contrib:0.141.0
-             args: ['--config=/conf/config.yaml']
-             ports:
-               - name: otlp-grpc
-                 containerPort: 4317
-               - name: otlp-http
-                 containerPort: 4318
-               - name: prometheus
-                 containerPort: 8889
-             resources:
-               requests:
-                 cpu: 100m
-                 memory: 256Mi
-               limits:
-                 cpu: 500m
-                 memory: 512Mi
-             volumeMounts:
-               - name: config
-                 mountPath: /conf
-         volumes:
-           - name: config
-             configMap:
-               name: otel-collector-config
-   ---
-   apiVersion: v1
-   kind: Service
-   metadata:
-     name: otel-collector
-     namespace: observability
-   spec:
-     selector:
-       app: otel-collector
-     ports:
-       - name: otlp-grpc
-         port: 4317
-         targetPort: otlp-grpc
-         appProtocol: grpc
-       - name: otlp-http
-         port: 4318
-         targetPort: otlp-http
-       - name: prometheus
-         port: 8889
-         targetPort: prometheus" | kubectl apply -f -
-   ```
-
-   {% endnavtab %}
-   {% navtab "DaemonSet" %}
+1. Apply the DaemonSet and node-local service:
 
    ```sh
    echo "apiVersion: apps/v1
@@ -304,10 +220,7 @@ Pick this for large clusters or workloads where the extra network hop matters. I
          targetPort: prometheus" | kubectl apply -f -
    ```
 
-   {% endnavtab %}
-   {% endnavtabs %}
-
-   The DNS name `otel-collector.observability:4317` works the same way in both options. With `internalTrafficPolicy: Local`, kube-proxy resolves it to the node-local pod transparently.
+   Sidecars resolve `otel-collector.observability:4317` to whichever collector pod runs on their node.
 
 1. Wait for the collector to be ready:
 
@@ -414,7 +327,7 @@ The hostname generator publishes the service under `otel-collector.extsvc.mesh.l
 
    With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. If you see nothing, walk back: is the policy applied to the right `Mesh`, does the collector pod's address match the policy `endpoint`, can a debug pod in a mesh namespace reach `otel-collector.observability:4317` on TCP?
 
-1. For the DaemonSet topology, list the collector pods with their node assignments:
+1. List the collector pods with their node assignments:
 
    ```sh
    kubectl get pod -n observability -o wide -l app=otel-collector
