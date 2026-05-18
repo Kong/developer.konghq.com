@@ -51,13 +51,15 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-cluster
     - title: Install {{site.mesh_product_name}} with demo configuration
       include_content: prereqs/kubernetes/mesh-quickstart
-    - title: Install the observability backends
+    - title: Observability backends
       content: |
-        Install the {{site.mesh_product_name}} observability stack, or have your own Prometheus, Tempo or Jaeger, and Loki backends ready to receive OTLP:
+        Bring your own backends for the three signals the collector forwards. The examples in this guide assume:
 
-        ```sh
-        kumactl install observability | kubectl apply -f -
-        ```
+        - A trace backend that accepts OTLP gRPC (for example, Tempo or Jaeger)
+        - A log backend that accepts OTLP HTTP (for example, Loki)
+        - Prometheus scraping the collector's `/metrics` endpoint
+
+        Adjust the exporter section of the collector config to match the addresses of your backends.
 
 ---
 
@@ -83,7 +85,7 @@ This is the default recommendation. It's simple, the failure domain is the whole
 
 ### Per-node DaemonSet
 
-Run one collector pod per node and route traffic node-locally. With `internalTrafficPolicy: Local` on the service, kube-proxy sends each sidecar to the collector pod on the same node. Sidecars still resolve the same DNS name (`otel-collector.observability:4317`), but the hop never leaves the node.
+Run one collector pod per node and route traffic node-locally. With `internalTrafficPolicy: Local` on the service, kube-proxy on each node only forwards to the collector pod on that same node. Sidecars still resolve the same DNS name (`otel-collector.observability:4317`), but the hop never leaves the node.
 
 Pick this for large clusters or workloads where the extra network hop matters. It improves locality, distributes load across nodes, and isolates collector failure to a single node's telemetry.
 
@@ -92,14 +94,19 @@ Pick this for large clusters or workloads where the extra network hop matters. I
 
 ## Deploy the collector
 
-1. Create a dedicated namespace and exclude it from sidecar injection. If the collector pod runs a sidecar that pushes its own telemetry through itself, you get a circular dependency.
+1. Create a dedicated namespace for the collector. The collector pod must not run a sidecar that pushes its own telemetry through itself, which would create a circular dependency.
 
    ```sh
    kubectl create namespace observability
+   ```
+
+1. Exclude the namespace from sidecar injection:
+
+   ```sh
    kubectl label namespace observability kuma.io/sidecar-injection=disabled
    ```
 
-1. Apply the collector configuration. It defines three pipelines, a memory limiter as the first processor, a tuned batch processor, and a debug exporter you can switch on when something looks wrong.
+1. Apply the collector configuration. It defines three pipelines, a memory limiter as the first processor, a tuned batch processor, and a debug exporter on every pipeline so you can see what's flowing through during testing.
 
    ```sh
    echo "apiVersion: v1
@@ -159,8 +166,8 @@ Pick this for large clusters or workloads where the extra network hop matters. I
 
    - `memory_limiter` runs first. The OpenTelemetry project recommends this so the collector can shed load before later processors allocate. If batching ran first, a burst could OOM the pod before the limiter ever saw it.
    - `batch` reduces export overhead. `send_batch_size: 4096` is a reasonable starting point. Tune up if your backend complains about request rate, down if it complains about batch size.
-   - The `debug` exporter sits in every pipeline at `verbosity: basic`. It logs one line per batch. Bump to `detailed` and reload the config when you need to see individual records.
-   - Swap `otlp_grpc/tempo`, `prometheus`, and `otlp_http/loki` for whatever your backends are. A single OTLP-compatible backend can replace all three.
+   - The `debug` exporter is enabled in every pipeline at `verbosity: basic` so each batch shows up as one log line. Drop it from the pipelines once you've verified the setup, or bump to `verbosity: detailed` when you need to see individual records.
+   - `otlp_grpc/tempo`, `otlp_http/loki`, and `prometheus` are examples. The trace and log exporters send OTLP to a backend; the `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Swap the addresses to match your own backends.
 
 1. Apply the workload and service. Both topologies share the same collector configuration. Only the workload kind and the service traffic policy change.
 
@@ -185,7 +192,7 @@ Pick this for large clusters or workloads where the extra network hop matters. I
        spec:
          containers:
            - name: otel-collector
-             image: otel/opentelemetry-collector-contrib:latest
+             image: otel/opentelemetry-collector-contrib:0.141.0
              args: ['--config=/conf/config.yaml']
              ports:
                - name: otlp-grpc
@@ -250,7 +257,7 @@ Pick this for large clusters or workloads where the extra network hop matters. I
        spec:
          containers:
            - name: otel-collector
-             image: otel/opentelemetry-collector-contrib:latest
+             image: otel/opentelemetry-collector-contrib:0.141.0
              args: ['--config=/conf/config.yaml']
              ports:
                - name: otlp-grpc
@@ -406,10 +413,15 @@ The hostname generator publishes the service under `otel-collector.extsvc.mesh.l
 
    With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. If you see nothing, walk back: is the policy applied to the right `Mesh`, does the collector pod's address match the policy `endpoint`, can a debug pod in a mesh namespace reach `otel-collector.observability:4317` on TCP?
 
-1. For the DaemonSet topology, confirm that traffic is going node-local:
+1. For the DaemonSet topology, list the collector pods with their node assignments:
 
    ```sh
    kubectl get pod -n observability -o wide -l app=otel-collector
+   ```
+
+1. Inspect the endpoint slice to confirm traffic is going node-local:
+
+   ```sh
    kubectl get endpointslice -n observability -l kubernetes.io/service-name=otel-collector -o yaml
    ```
 
