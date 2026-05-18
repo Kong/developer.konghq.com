@@ -1,17 +1,17 @@
-name: Sync Skills Submodule
+name: Sync AI Marketplace Submodule
 on:
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
   repository_dispatch:
-    types: [SKILLS_UPDATED]
+    types: [AI_MARKETPLACE_UPDATED]
 
 permissions:
   contents: read
 
 jobs:
-  sync-skills-submodule:
-    name: Sync Skills Submodule
+  sync-ai-marketplace-submodule:
+    name: Sync AI Marketplace Submodule
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -31,7 +31,7 @@ jobs:
         uses: mheap/submodule-sync-action@a06903a4e38f042f6f52cc88d184ec1c930ee12d # v1
         with:
           token: ${{ steps.app-token.outputs.token }}
-          path: app/.repos/skills
+          path: app/.repos/ai-marketplace
           ref: main
           pr_branch: automated-skills-update
           base_branch: main
