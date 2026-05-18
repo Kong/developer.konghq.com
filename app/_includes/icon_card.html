@@ -1,7 +1,11 @@
 
 <div class="card card__bordered {{ include.css_class}}">
   <a href="{{include.cta_url}}" class="flex gap-5 hover:no-underline w-full p-8">
+    {% if include.icon contains '.svg' %}
     <span class="text-brand">{% include_svg include.icon width="48" height="48" %}</span>
+    {% else %}
+    <img src="{{ include.icon }}" class="w-12 h-12"/>
+    {% endif %}
     <h2 class="m-2 text-2xl">{{ include.title | liquify }}</h2>
   </a>
 </div>

@@ -4,7 +4,11 @@
 
 {% capture card_content %}
 {% if include.icon %}
+{% if include.icon contains '.svg' %}
 <span class="text-brand">{% include_svg include.icon width="32" height="32" %}</span>
+{% else %}
+<img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
+{% endif %}
 {% endif %}
 
 <h4>{{ include.title | liquify }}</h4>
