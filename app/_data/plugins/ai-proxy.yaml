@@ -919,6 +919,28 @@ providers:
       provider_specific: []
       statistics_logging: []
 
+  - name: 'Kimi'
+    url_patterns:
+      - 'https://api.moonshot.ai'
+    min_version: '2.0.0'
+    chat:
+      supported: true
+      streaming: true
+      upstream_path: '`/v1/chat/completions`'
+      route_type: 'llm/v1/chat'
+      model_example: 'kimi-k2.6'
+      min_version: '2.0.0'
+    embeddings:
+      supported: false
+    image:
+      generations:
+        supported: false
+      edits:
+        supported: false
+    limitations:
+      provider_specific: []
+      statistics_logging: []
+
   - name: 'Vercel'
     url_patterns:
       - 'https://ai-gateway.vercel.sh'
