@@ -24,6 +24,11 @@ definitions:
       The purpose of a Dev Portal is to allow registration and consumption of services running through Kong to other teams, developers, and partners.
     url: |
       [Dev Portal](/dev-portal/)
+  - term: Directory
+    description: |
+      A unique set of Principals that a Gateway uses to authenticate credentials or to look up information about already-authenticated entities.
+    url: |
+
   - term: Groups
     description: |
       Sets of role-defined entities.
@@ -43,6 +48,11 @@ definitions:
       Permissions are a self-managed Kong Gateway Enterprise concept. 
     url: |
       [RBAC entity](/gateway/entities/rbac/)
+  - term: Principal
+    description: |
+      An entity (user, service, or application) that authenticates to a Kong Gateway through one or more credential types, carrying group membership and metadata that determine how the Gateway handles the requests from the entity.
+    url: |
+      
   - term: Insomnia plugin
     description: |
       Insomnia plugins can be used to extend the functionality of Insomnia with advanced features and customizable themes.
