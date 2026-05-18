@@ -12,7 +12,7 @@ tools:
   - deck
 tldr:
   q: How do I create and manage Workspaces in a {{site.konnect_short_name}} control plane?
-  a: TODO
+  a: "Create a Workspace by sending a POST request to the `/control-planes/$CONTROL_PLANE_ID/core-entities/workspaces` endpoint. You can manage Workspace entities by sending a POST request to the entities endpoint, for example: `/control-planes/$CONTROL_PLANE_ID/core-entities/$WORKSPACE/services`."
 tags:
   - rbac
 entities:
