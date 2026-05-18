@@ -433,11 +433,11 @@
     }
 
     .label-container {
-      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+      @apply fill-[rgb(var(--color-bg-secondary))] dark:[stroke-opacity:0.3] !important;
     }
 
     .edgeLabel {
-      @apply bg-primary !important;
+      @apply bg-primary dark:stroke-none !important;
 
       p {
         @apply bg-secondary !important;
