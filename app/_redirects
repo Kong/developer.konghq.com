@@ -60,6 +60,7 @@
 
 # Mesh redirects
 /mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
+/mesh/collect-metrics-with-opentelemetry/   /mesh/deploy-an-opentelemetry-collector/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
 /mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/quickstart/kubernetes-demo    /mesh/kubernetes/
