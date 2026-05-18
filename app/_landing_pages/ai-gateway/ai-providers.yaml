@@ -66,14 +66,14 @@ rows:
         - type: icon_card
           config:
             title: Vertex AI
-            icon: /assets/icons/Vertex.svg
+            icon: /assets/icons/vertex.svg
             cta:
               url: /ai-gateway/ai-providers/vertex/
       - blocks:
         - type: icon_card
           config:
             title: Vercel
-            icon: /assets/icons/Vertex.svg
+            icon: /assets/icons/vercel.svg
             cta:
               url: /ai-gateway/ai-providers/vercel/
       - blocks:
