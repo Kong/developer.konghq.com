@@ -322,7 +322,7 @@ A zone ingress is the entry point for cross-zone traffic. Without it, the global
      advertisedPort: 10000' > "$KONG_MESH_MULTI_ZONE_TMP/zone1-ingress.yaml"
    ```
 
-   `networking.address` is the address `kuma-dp` binds to inside the ingress container. It must be a real address in this example we'll use the static IP we'll assign to the ingress container in the next step: `172.18.78.3`.
+   `networking.address` is the address `kuma-dp` binds to inside the ingress container. It must be a real address. In this example, we'll use the static IP we'll assign to the ingress container in the next step: `172.18.78.3`.
 
    `advertisedAddress` and `advertisedPort` are the values other zones use to reach this ingress. On this single-host Docker network, the container hostname `zone1-ingress` resolves via Docker's embedded DNS and works for both directions.
 
