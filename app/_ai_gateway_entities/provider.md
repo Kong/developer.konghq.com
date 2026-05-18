@@ -50,7 +50,7 @@ faqs:
 
 ## What is a Provider?
 
-A Provider is a first-class {{site.ai_gateway}} entity that represents an upstream LLM service connection and their credentials, endpoint configuration, and provider-type-specific options. Each Provider has a `type` that selects the upstream LLM service. See the schema below for supported values, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific guidance.
+A Provider is a first-class {{site.ai_gateway}} entity that represents an upstream LLM service connection and its credentials, endpoint configuration, and provider-type-specific options. Each Provider has a `type` that selects the upstream LLM service. See the schema below for supported values, and the per-provider pages under [{{site.ai_gateway}} providers](/ai-gateway/ai-providers/) for provider-specific guidance.
 
 Models reference a Provider through `target_models[].provider` to route their `target_models` to that upstream. The reference can use either the Provider `name` or `id`. {{site.ai_gateway}} materializes the Provider's credentials into the underlying primitives of every Model that references it. Updating a Provider propagates credential changes to all referencing Models.
 

@@ -76,7 +76,7 @@ faqs:
 
 ## What is an MCP Server?
 
-An MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to MCP-compatible clients (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LMstudio](https://lmstudio.ai/)) over the [Model Context Protocol](https://modelcontextprotocol.io/). The runtime acts as a protocol bridge, translating between MCP and HTTP so MCP clients can either call existing APIs through {{site.ai_gateway}} or interact with upstream MCP servers.
+An MCP Server is a first-class {{site.ai_gateway}} entity that exposes tools to MCP-compatible clients (such as [Insomnia](https://konghq.com/products/kong-insomnia), [Claude](https://claude.ai/), [Cursor](https://cursor.com/), or [LM Studio](https://lmstudio.ai/)) over the [Model Context Protocol](https://modelcontextprotocol.io/). The runtime acts as a protocol bridge, translating between MCP and HTTP so MCP clients can either call existing APIs through {{site.ai_gateway}} or interact with upstream MCP servers.
 
 Because the runtime executes inside {{site.ai_gateway}}, MCP endpoints are provisioned dynamically on demand. You don't host or scale them separately, and the same authentication, traffic control, and observability features available to traditional API traffic apply to MCP traffic at the same scale.
 

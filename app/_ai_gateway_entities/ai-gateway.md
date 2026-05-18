@@ -113,7 +113,7 @@ Use `config_hash` to verify rollout: after a configuration change, watch the nod
 
 ## Lifecycle
 
-{{site.ai_gateway}}s are created and managed through the {{site.konnect_short_name}} UI. Once an {{site.ai_gateway}} exists, its child entities (Models, Providers, Policies, and so on) are managed through the {{site.ai_gateway}} API, Terraform, or decK as documented on each entity page.
+{{site.ai_gateway}}s can be created and managed through the {{site.konnect_short_name}} UI or the {{site.ai_gateway}} API. Once an {{site.ai_gateway}} exists, its child entities (Models, Providers, Policies, and so on) are managed through the {{site.ai_gateway}} API or decK as documented on each entity page.
 
 Creating an {{site.ai_gateway}} provisions the configuration and telemetry endpoints and gives you the parent ID needed to create child entities. The {{site.ai_gateway}} has no runtime traffic of its own. Traffic flows once at least one Model, Agent, or MCP Server is configured under it and a data plane node is connected.
 

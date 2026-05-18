@@ -35,7 +35,7 @@ related_resources:
   - text: "{{site.ai_gateway}} entities"
     url: /ai-gateway/entities/
   - text: Consumer Group entity
-    url: /gateway/entities/consumer-group/
+    url: /ai-gateway/entities/consumer-group/
 faqs:
   - q: What's the difference between a Model entity and a `model` field inside a plugin configuration?
     a: |
