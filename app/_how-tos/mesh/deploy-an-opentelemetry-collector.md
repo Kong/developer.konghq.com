@@ -38,6 +38,8 @@ next_steps:
     url: /mesh/policies/meshtrace/
   - text: MeshAccessLog policy
     url: /mesh/policies/meshaccesslog/
+  - text: OpenTelemetry collector deployment patterns
+    url: https://opentelemetry.io/docs/collector/deploy/
   - text: OpenTelemetry collector processors
     url: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor
 
@@ -63,23 +65,11 @@ prereqs:
 
 ---
 
-This guide deploys an OpenTelemetry collector that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/). It runs a per-node DaemonSet so sidecar traffic stays node-local, and explains what changes when mesh passthrough is off.
-
-## How {{site.mesh_product_name}} talks to the collector
-
-Sidecars push telemetry to the collector over OTLP gRPC on port 4317. The collector receives, batches, and exports it to whatever backends you configure.
-
-This is a push model. Each sidecar opens an outbound connection to one collector pod and writes its own telemetry. With `internalTrafficPolicy: Local` on the collector service, kube-proxy on each node only forwards to the collector pod on that same node, so the hop never leaves the node.
-
-{:.info}
-> A DaemonSet is one form of the OpenTelemetry [agent](https://opentelemetry.io/docs/collector/deploy/agent/) pattern. You can also run the agent as a centralized `Deployment` behind a `ClusterIP` service, as a per-pod sidecar container, or front your backends with a [gateway](https://opentelemetry.io/docs/collector/deploy/gateway/) tier. The ConfigMap below carries over, but the `Service`, the `endpoint` in each mesh policy, and the `MeshExternalService` step may need to change for those shapes. For example, a sidecar collector receives on `localhost:4317` and doesn't live in a separate namespace.
-
-{:.warning}
-> The trade-off of `internalTrafficPolicy: Local` is silent loss. If the collector pod on a node crashes or is being rescheduled, sidecars on that node have no fallback. Their telemetry drops on the floor until the pod is back. There is no cross-node failover with `Local` traffic policy.
+This guide deploys an OpenTelemetry collector that receives all three telemetry signals from {{site.mesh_product_name}}: metrics from [MeshMetric](/mesh/policies/meshmetric/), traces from [MeshTrace](/mesh/policies/meshtrace/), and access logs from [MeshAccessLog](/mesh/policies/meshaccesslog/). The collector runs as a per-node DaemonSet, and sidecars push to it over OTLP gRPC on port 4317. It also covers what to change when mesh passthrough is off.
 
 ## Deploy the collector
 
-1. Create a dedicated namespace for the collector. The collector pod must not run a sidecar that pushes its own telemetry through itself, which would create a circular dependency.
+1. Create a dedicated namespace for the collector. A sidecar in the collector's own pod would push telemetry through the collector itself, creating a loop.
 
    ```sh
    kubectl create namespace observability
@@ -91,7 +81,7 @@ This is a push model. Each sidecar opens an outbound connection to one collector
    kubectl label namespace observability kuma.io/sidecar-injection=disabled
    ```
 
-1. Apply the collector configuration. It defines three pipelines, a memory limiter as the first processor, a tuned batch processor, and a debug exporter on every pipeline so you can see what's flowing through during testing.
+1. Apply the collector configuration. It defines three pipelines that share a `memory_limiter` ahead of `batch` (so the collector sheds load before allocating) and a `debug` exporter on every pipeline for verification. Swap `tempo`, `loki`, and `prometheus` for your own backends, and drop `debug` and `tls.insecure: true` for production.
 
    ```sh
    echo "apiVersion: v1
@@ -146,14 +136,6 @@ This is a push model. Each sidecar opens an outbound connection to one collector
              processors: [memory_limiter, batch]
              exporters: [otlp_http/loki, debug]" | kubectl apply -f -
    ```
-
-   A few things worth flagging:
-
-   - `memory_limiter` runs first. The OpenTelemetry project recommends this so the collector can shed load before later processors allocate. If batching ran first, a burst could OOM the pod before the limiter ever saw it.
-   - `batch` reduces export overhead. `send_batch_size: 4096` is a reasonable starting point. Tune up if your backend complains about request rate, down if it complains about batch size.
-   - The `debug` exporter is enabled in every pipeline at `verbosity: basic` so each batch shows up as one log line. Drop it from the pipelines once you've verified the setup, or bump to `verbosity: detailed` when you need to see individual records.
-   - `otlp_grpc/tempo`, `otlp_http/loki`, and `prometheus` are examples. The trace and log exporters send OTLP to a backend; the `prometheus` exporter exposes a `/metrics` endpoint on port 8889 for Prometheus to scrape. Swap the addresses to match your own backends.
-   - `tls.insecure: true` on the Tempo exporter disables certificate verification for the in-cluster example. In production, point the exporter at a TLS endpoint with a trusted CA and remove the `insecure` flag.
 
 1. Apply the DaemonSet and node-local service:
 
@@ -221,6 +203,9 @@ This is a push model. Each sidecar opens an outbound connection to one collector
    ```
 
    Sidecars resolve `otel-collector.observability:4317` to whichever collector pod runs on their node.
+
+   {:.warning}
+   > `internalTrafficPolicy: Local` keeps the hop node-local but doesn't fail over to another node. If the collector pod on a node restarts, that node's telemetry drops until it's back.
 
 1. Wait for the collector to be ready:
 
@@ -290,12 +275,10 @@ spec:
 
 ## Reach the collector when passthrough is off
 
-By default, sidecars can reach addresses outside the mesh through [passthrough mode](/mesh/policies/meshpassthrough/). The collector lives outside the mesh, so passthrough is what gets sidecar telemetry to it.
-
-If you disable passthrough at the `Mesh` level, sidecars can't reach the collector anymore and telemetry stops. To restore that path, declare the collector with a [MeshExternalService](/mesh/meshexternalservice/).
+By default, sidecars reach the collector through [passthrough mode](/mesh/policies/meshpassthrough/). If you've disabled passthrough on the `Mesh`, declare the collector with a [MeshExternalService](/mesh/meshexternalservice/) so sidecars can still reach it:
 
 {:.info}
-> `MeshExternalService` requires [ZoneEgress](/mesh/zone-egress/) and [mutual TLS](/mesh/policies/mutual-tls/) on the mesh. If you already disabled passthrough, you likely have mTLS on already.
+> `MeshExternalService` requires [ZoneEgress](/mesh/zone-egress/) and [mutual TLS](/mesh/policies/mutual-tls/) on the mesh. If you already disabled passthrough, you likely already have mTLS enabled.
 
 ```sh
 echo "apiVersion: kuma.io/v1alpha1
@@ -325,7 +308,7 @@ The hostname generator publishes the service under `otel-collector.extsvc.mesh.l
    kubectl logs -n observability -l app=otel-collector --tail=20
    ```
 
-   With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. If you see nothing, walk back: is the policy applied to the right `Mesh`, does the collector pod's address match the policy `endpoint`, can a debug pod in a mesh namespace reach `otel-collector.observability:4317` on TCP?
+   With the `debug` exporter at `verbosity: basic`, each batch shows up as one line per signal. If you see nothing, check that the policy targets the right `Mesh`, the policy `endpoint` matches the collector's service DNS, and a debug pod in a mesh namespace can reach `otel-collector.observability:4317` on TCP.
 
 1. List the collector pods with their node assignments:
 
