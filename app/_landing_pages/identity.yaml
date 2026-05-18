@@ -3,7 +3,7 @@ metadata:
   content_type: landing_page
   description: "Unified machine-to-machine authentication platform within Kong Konnect."
   products:
-    - identity
+    - konnect
   works_on:
     - konnect
 rows:
