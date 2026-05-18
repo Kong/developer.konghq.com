@@ -26,6 +26,8 @@ related_resources:
     url: /mesh/cli/
   - text: Data plane health
     url: /mesh/dataplane-health/
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/deploy-an-opentelemetry-collector/
 ---
 
 This page describes how to configure different observability tools to work with {{site.mesh_product_name}}.

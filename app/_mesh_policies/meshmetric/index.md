@@ -10,6 +10,10 @@ min_version:
   mesh: '2.6'
 
 icon: meshmetric.png
+
+related_resources:
+  - text: Deploy an OpenTelemetry collector
+    url: /mesh/deploy-an-opentelemetry-collector/
 ---
 {{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
 

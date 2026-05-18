@@ -119,7 +119,7 @@ sections:
   - title: Observability
     items:
       - path: /mesh/observability/
-      - path: /mesh/collect-metrics-with-opentelemetry/
+      - path: /mesh/deploy-an-opentelemetry-collector/
       - path: /mesh/dataplane-health/
 
   - title: References
