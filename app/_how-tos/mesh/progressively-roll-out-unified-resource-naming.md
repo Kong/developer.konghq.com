@@ -23,6 +23,53 @@ tldr:
   q: How do I progressively roll out unified resource naming?
   a: Apply a `ContainerPatch` to one workload, verify stats, then roll out cluster-wide with a default patch list or global feature flag.
 
+faqs:
+  - q: How do I disable the feature for a workload?
+    a: |
+      You have two options:
+
+      * Set the annotation to an empty value to keep the key in place:
+
+        ```sh
+        kubectl patch -n kong-mesh-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
+        ```
+
+      * Remove the annotation entirely for a clean pod template:
+
+        ```sh
+        kubectl patch -n kong-mesh-demo deployment demo-app --type=json \
+          -p='[{"op":"remove","path":"/spec/template/metadata/annotations/kuma.io~1container-patches"}]'
+        ```
+  - q: How do I enable unified naming for every workload without per-workload opt-out?
+    a: |
+      Upgrade the {{site.mesh_product_name}} Helm release to turn on the global feature flag. This approach makes the feature mandatory and removes the ability to disable it on a per-workload basis.
+
+      ```sh
+      helm upgrade \
+        --install \
+        --create-namespace \
+        --namespace {{ site.mesh_namespace }} \
+        --set "kuma.dataPlane.features.unifiedResourceNaming=true" \
+        {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
+      ```
+  - q: How do I override the default patch list for a specific workload?
+    a: |
+      After setting a default patch list cluster-wide, you can override it per workload in two ways.
+
+      Clear the annotation to disable unified naming for a workload:
+
+      ```sh
+      kubectl patch -n kong-mesh-demo deployment demo-app \
+        -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
+      ```
+
+      Or set the annotation to a different patch list to apply custom patches instead:
+
+      ```sh
+      kubectl patch -n kong-mesh-demo deployment demo-app \
+        -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"my-custom-patch-1,my-custom-patch-2"}}}}}'
+      ```
+
 prereqs:
   inline:
     - title: Helm
@@ -33,15 +80,16 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-quickstart
 ---
 
-By default, Envoy resources and stats in {{site.mesh_product_name}} use mixed, legacy formats. Names often do not line up with the {{site.mesh_product_name}} resources that produced them, which makes dashboards noisy and troubleshooting slower. For example, the following query is not intuitive and does not point cleanly back to the right {{site.mesh_product_name}} resource:
+By default, Envoy resources and stats in {{site.mesh_product_name}} use mixed, legacy formats. Names often don't line up with the {{site.mesh_product_name}} resources that produce them, which makes dashboards noisy and troubleshooting slower. For example, the following query isn't intuitive and doesn't point cleanly back to the right {{site.mesh_product_name}} resource:
 
 ```text
 sum:envoy.cluster.upstream_rq.count{service:my-example-service, !envoy_cluster:kuma_*, !envoy_cluster:meshtrace_*, !envoy_cluster:access_log_sink} by {envoy_cluster}.as_count()
 ```
+{:.no-copy-code}
 
 Different resources and their related stats often look unrelated, even when they describe the same traffic path.
 
-Starting with {{site.mesh_product_name}} 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This scheme improves observability, simplifies queries, and makes it easier to understand what is happening in the mesh:
+Starting with {{site.mesh_product_name}} 2.12, you can adopt a unified resource naming scheme that makes names predictable, consistent, and directly tied to {{site.mesh_product_name}} resources. This scheme improves observability, simplifies queries, and makes it easier to understand what's happening in the mesh:
 
 {% table %}
 columns:
@@ -58,7 +106,7 @@ rows:
     after: Simple, predictable queries and labels
 {% endtable %}
 
-With a progressive rollout, you can validate the new scheme on a single workload, then move to a cluster-wide rollout when you are ready.
+With a progressive rollout, you can validate the new scheme on a single workload, then move to a cluster-wide rollout when you're ready.
 
 ## Create a ContainerPatch
 
@@ -86,27 +134,18 @@ The patch configures every sidecar that references it to set an environment vari
 
 Apply the patch to a workload by updating the Deployment pod template annotation. This lets you enable the feature progressively, service by service.
 
-```sh
-kubectl patch -n kong-mesh-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"enable-feature-unified-resource-naming"}}}}}'
-```
-
-After this update, Kubernetes rolls out new Pods that include the patched sidecar configuration.
-
-### Disable the feature for a workload
-
-To turn the feature off for a single workload, you have two options.
-
-1. Set the annotation to an empty value to keep the key in place:
+1. Add the `kuma.io/container-patches` annotation to the `demo-app` Deployment:
 
    ```sh
-   kubectl patch -n kong-mesh-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
+   kubectl patch -n kong-mesh-demo deployment demo-app -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"enable-feature-unified-resource-naming"}}}}}'
    ```
 
-1. Remove the annotation entirely for a clean pod template:
+   Kubernetes rolls out new Pods that include the patched sidecar configuration.
+
+1. Wait for the new Pod to become ready before continuing:
 
    ```sh
-   kubectl patch -n kong-mesh-demo deployment demo-app --type=json \
-     -p='[{"op":"remove","path":"/spec/template/metadata/annotations/kuma.io~1container-patches"}]'
+   kubectl wait -n kong-mesh-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
    ```
 
 ## Verify unified naming
@@ -131,10 +170,11 @@ Inspect sidecar stats to confirm that unified naming is applied.
    You should see entries that map directly to {{site.mesh_product_name}} resources, for example:
 
    ```text
-   cluster.kri_msvc_default_us-east-2_kong-mesh-demo_demo-app_http
+   cluster.kri_msvc_default_default_kong-mesh-demo_demo-app-v1_5050
    ```
+   {:.no-copy-code}
 
-   In this format, `msvc` identifies a `MeshService`, while the remaining segments identify the mesh, zone, namespace, Service name, and section. These names show the `MeshService` resource (`demo-app`) and section (`http`) clearly, making them easier to connect back to the original {{site.mesh_product_name}} resource.
+   In this format, `msvc` identifies a `MeshService`, and the remaining segments identify the mesh, zone, namespace, Service name, and section. This example shows the `MeshService` resource (`demo-app-v1`) and section (`5050`) clearly, making it easy to connect the stat back to the original {{site.mesh_product_name}} resource.
 
 1. Inspect cluster names for confirmation:
 
@@ -142,14 +182,9 @@ Inspect sidecar stats to confirm that unified naming is applied.
    curl -s localhost:9901/clusters | head -n 50
    ```
 
-## Choose a cluster-wide enablement mode
+## Roll out cluster-wide
 
-After you confirm the feature works on a single workload, choose how to roll it out across the cluster.
-
-{% navtabs "enablement-mode" %}
-{% navtab "Default ContainerPatch" %}
-
-Set a default list of patches that the injector applies when a workload does not specify its own list. This approach makes the feature opt-out: the injector applies it everywhere unless you explicitly disable it.
+After you confirm the feature works on a single workload, set a default list of patches that the injector applies when a workload doesn't specify its own list. This approach makes the feature opt-out: the injector applies it everywhere unless you explicitly disable it.
 
 Upgrade the {{site.mesh_product_name}} Helm release to set the default patch list on the injector:
 
@@ -162,53 +197,18 @@ helm upgrade \
   {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
 ```
 
-To override the default on a per-workload basis:
-
-1. Clear the annotation to disable unified naming for a workload:
-
-   ```sh
-   kubectl patch -n kong-mesh-demo deployment demo-app \
-     -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":""}}}}}'
-   ```
-
-1. Set the annotation to a different patch list to apply custom patches instead:
-
-   ```sh
-   kubectl patch -n kong-mesh-demo deployment demo-app \
-     -p '{"spec":{"template":{"metadata":{"annotations":{"kuma.io/container-patches":"my-custom-patch-1,my-custom-patch-2"}}}}}'
-   ```
-
-{% endnavtab %}
-{% navtab "Global feature flag" %}
-
-Enable unified naming for every injected workload. This approach makes the feature mandatory and removes the ability to disable it on a per-workload basis.
-
-Upgrade the {{site.mesh_product_name}} Helm release to turn on the global feature flag:
-
-```sh
-helm upgrade \
-  --install \
-  --create-namespace \
-  --namespace {{ site.mesh_namespace }} \
-  --set "kuma.dataPlane.features.unifiedResourceNaming=true" \
-  {{ site.mesh_helm_install_name }} {{ site.mesh_helm_repo }}
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-
 ## Validate the rollout
 
-Send a request to the sidecar stats endpoint:
+1. Check that the sidecar stats endpoint is reachable:
 
-```sh
-curl -i -X GET localhost:9901/stats
-```
+   ```sh
+   curl -i -X GET localhost:9901/stats
+   ```
 
-Confirm that the response returns a `200` status code.
+   The response returns a `200` status code.
 
-Then run the following command and confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
+1. Confirm that cluster names include the `kri_msvc_` prefix and your mesh resource names:
 
-```sh
-curl -s localhost:9901/stats | grep -i 'kri_msvc_'
-```
+   ```sh
+   curl -s localhost:9901/stats | grep -i 'kri_msvc_'
+   ```
