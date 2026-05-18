@@ -46,6 +46,14 @@ prereqs:
       include_content: prereqs/kubernetes/mesh-quickstart
     - title: Install kumactl
       include_content: prereqs/tools/kumactl
+    - title: Cursor
+      content: |
+        This guide uses Cursor as the editor for `kubectl edit`:
+        1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
+        2. Download the installer for your operating system.
+        3. Install Cursor on your machine.
+        4. In Cursor, open the Command Palette and run **Shell Command: Install 'cursor' command in PATH**.
+      icon_url: /assets/icons/cursor.svg
 ---
 
 {{site.mesh_product_name}} integrates with [OpenTelemetry](https://opentelemetry.io/). You can collect and push data plane proxy and application metrics to an [OpenTelemetry collector](https://opentelemetry.io/docs/collector/), which lets you process and export metrics to multiple ecosystems, including [Dash0](https://www.dash0.com/), [Datadog](https://www.datadoghq.com/), [Middleware](https://middleware.io/), [Grafana Cloud](https://grafana.com/products/cloud/), and [Honeycomb](https://www.honeycomb.io/).
@@ -154,6 +162,8 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
 
    This configuration makes the OpenTelemetry collector receive metrics on gRPC port `4317` from the data plane proxies and expose them in Prometheus format on port `8889`. Prometheus scrapes those metrics in the next step.
 
+   `MY_POD_IP` is the collector pod's own IP. You don't need to set it: the OpenTelemetry collector Helm chart automatically injects it into each pod via the Kubernetes [Downward API](https://kubernetes.io/docs/concepts/workloads/pods/downward-api/).
+
 1. Add the Helm repository:
 
    ```sh
@@ -171,17 +181,18 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
 1. Open the `prometheus-server` ConfigMap:
 
    ```sh
-   kubectl edit configmap/prometheus-server -n mesh-observability
-   kubectl exec -it -n mesh-observability prometheus-server -- /bin/sh
+   KUBE_EDITOR='cursor --wait' kubectl edit configmap/prometheus-server -n mesh-observability
    ```
 
 1. In the `prometheus.yml` value, add the following entry under `scrape_configs`:
 
    ```yaml
-       - job_name: "opentelemetry-collector"
+       scrape_configs:
+       - job_name: opentelemetry-collector
          scrape_interval: 15s
          static_configs:
-           - targets: ["opentelemetry-collector.mesh-observability.svc:8889"]
+         - targets:
+           - opentelemetry-collector.mesh-observability.svc:8889
    ```
 
    Prometheus automatically picks up this config and starts scraping the OpenTelemetry collector.
