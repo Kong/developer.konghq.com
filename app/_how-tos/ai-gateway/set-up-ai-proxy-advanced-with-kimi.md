@@ -19,7 +19,7 @@ works_on:
   - konnect
 
 min_version:
-  gateway: '3.14'
+  gateway: '2.0.0'
 
 plugins:
   - ai-proxy-advanced
