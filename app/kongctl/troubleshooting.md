@@ -28,7 +28,7 @@ related_resources:
      url: /kongctl/kongctl-and-deck/
 ---
 
-This guide covers common issues and their solutions when using kongctl.
+This reference covers common issues and their solutions when using kongctl.
 
 ## Common issues
 
@@ -66,7 +66,7 @@ kongctl get apis -o json
 **Symptom**: Error during plan or apply referencing a non-existent resource.
 
 **Example**:
-```
+```sh
 Error: resource "my-portal" not found
 ```
 
@@ -98,17 +98,20 @@ kongctl apply -f publications.yaml
 **Solutions**:
 
 1. Verify you're logged in:
+   
    ```bash
    kongctl get me
    ```
 
 2. Re-authenticate:
+   
    ```bash
    kongctl logout
    kongctl login
    ```
 
 3. If using a PAT, verify it's set:
+   
    ```bash
    echo $KONGCTL_DEFAULT_KONNECT_PAT | head -c 20
    ```
@@ -126,15 +129,18 @@ kongctl apply -f publications.yaml
 1. Complete authorization within the time limit (usually 15 minutes).
 	
 2. If timeout occurs, start over:
+
 	```bash
 	kongctl login
-   ```
+  ```
 
 3. Verify that your browser isn't blocking the redirect.
 
 ### Multiple authentication methods conflict
 
 **Symptom**: Unexpected authentication behavior or wrong credentials being used.
+
+**Solution**: Check and clear auth methods, if needed.
 
 kongctl resolves authentication in this priority order (highest to lowest):
 1. `--pat` flag
@@ -156,27 +162,25 @@ kongctl login
 ### YAML parsing errors
 
 **Symptom**:
-```
+```sh
 Error: yaml: unmarshal errors:
   line 10: cannot unmarshal !!str `true` into bool
 ```
+{:.no-copy-code}
 
-**Solution**: Ensure field values use the correct YAML type:
+**Solution**: Ensure field values use the correct YAML type. For example, for a boolean value:
 
 ```yaml
-# Wrong - string value
-authentication_enabled: "true"
-
-# Correct - boolean value
 authentication_enabled: true
 ```
 
 ### Duplicate resource references
 
 **Symptom**:
-```
+```sh
 Error: duplicate resource ref "my-api" found
 ```
+{:.no-copy-code}
 
 **Solution**: Each `ref` must be unique across all loaded configuration files. Find duplicates and rename them:
 
@@ -187,9 +191,10 @@ grep -n "ref: my-api" *.yaml
 ### Invalid field values
 
 **Symptom**:
-```
+```sh
 Error: invalid value for field "visibility": "internal"
 ```
+{:.no-copy-code}
 
 **Solution**: Check the allowed values in the [supported resources reference](/kongctl/supported-resources/):
 
@@ -204,22 +209,21 @@ api_publications:
 ### File not found errors
 
 **Symptom**:
-```
+```sh
 Error: failed to process file tag: file not found: ./specs/api.yaml
 ```
+{:.no-copy-code}
 
-**Common causes**:
+**Solutions**: Look for the following common errors:
 
-1. **Incorrect relative path** -- paths must be relative to the config file, not the working directory:
+1. **Incorrect relative path**: paths must be relative to the config file, not the working directory:
+   
    ```yaml
-   # Wrong
-   spec: !file specs/api.yaml
-
-   # Correct
    spec: !file ./specs/api.yaml
    ```
 
-2. **Wrong base directory** -- if your spec file is outside the config file's directory:
+2. **Wrong base directory**: If your spec file is outside the config file's directory:
+
    ```
    project/
    ├── config/
@@ -227,17 +231,17 @@ Error: failed to process file tag: file not found: ./specs/api.yaml
    └── specs/
        └── api.yaml
    ```
-   In `config/main.yaml`:
-   ```yaml
-   # Wrong - looks in config/specs/
-   spec: !file ./specs/api.yaml
+   {:.no-copy-code}
 
-   # Correct - goes up one level first
+   In `config/main.yaml`, you would access the file like this:
+   ```yaml
    spec: !file ../specs/api.yaml
    ```
+
    If you see `path resolves outside base dir`, use the `--base-dir` flag or the `KONGCTL_DEFAULT_KONNECT_DECLARATIVE_BASE_DIR` environment variable to set an allowed boundary.
 
 3. **File permissions**: Verify the file is readable:
+
    ```bash
    ls -la ./specs/api.yaml
    chmod 644 ./specs/api.yaml
@@ -246,42 +250,30 @@ Error: failed to process file tag: file not found: ./specs/api.yaml
 ### Invalid YAML tag extraction path
 
 **Symptom**:
-```
+```sh
 Error: path not found: info.nonexistent.field
 ```
+{:.no-copy-code}
 
-**Common mistakes**:
+**Solution**: 
+1. Review the YAML path closely, looking for typos or incorrect paths.
+1. Use dot notation for arrays instead of bracket array syntax:
 
-```yaml
-# Wrong - typo in field name
-title: !file ./spec.yaml#info.titel
-
-# Correct
-title: !file ./spec.yaml#info.title
-
-# Wrong - bracket array syntax
-server: !file ./spec.yaml#servers[0].url
-
-# Correct - dot notation for arrays
-server: !file ./spec.yaml#servers.0.url
-```
+   ```yaml
+   server: !file ./spec.yaml#servers.0.url
+   ```
 
 ### Malformed YAML tag syntax
 
 **Symptom**:
-```
+```sh
 Error: failed to parse file reference: invalid tag format
 ```
+{:.no-copy-code}
 
 **Solution**: Check the correct map format for `!file`:
 
 ```yaml
-# Wrong - incorrect map keys
-title: !file
-  file: ./spec.yaml     # Should be 'path'
-  get: info.title       # Should be 'extract'
-
-# Correct
 title: !file
   path: ./spec.yaml
   extract: info.title
@@ -290,19 +282,17 @@ title: !file
 ### Large file errors
 
 **Symptom**:
-```
+```sh
 Error: file size exceeds limit: ./large-spec.yaml (12MB > 10MB limit)
 ```
+{:.no-copy-code}
 
 **Solutions**:
 
-Split large files, or extract only the values you need rather than loading the entire file:
+Split large files, or extract only the values you need rather than loading the entire file. 
+For example, with a large file named `huge-openapi-spec.yaml`, access only the data you need:
 
 ```yaml
-# Instead of loading the full spec
-spec: !file ./huge-openapi-spec.yaml
-
-# Extract only the fields you need
 name: !file ./huge-openapi-spec.yaml#info.title
 version: !file ./huge-openapi-spec.yaml#info.version
 ```
@@ -312,24 +302,26 @@ version: !file ./huge-openapi-spec.yaml#info.version
 ### Unknown resource references
 
 **Symptom**:
-```
+```sh
 Error: resource "my-api" references unknown portal: unknown-portal
 ```
+{:.no-copy-code}
 
-**Common causes**:
+**Solutions**: Look for the following common errors:
 
-1. **Typo in the ref value** -- the ref must exactly match the `ref` field of the target resource:
+1. **Typo in the ref value**: The ref must exactly match the `ref` field of the target resource:
+
    ```yaml
    portals:
      - ref: developer-portal  # Exact ref value
 
    api_publications:
      - ref: api-pub
-       portal: dev-portal      # Wrong - doesn't match
-       portal: developer-portal # Correct
+       portal: developer-portal # Matches the portal ref
    ```
 
-2. **Nested vs separate resource conflict** -- don't declare the same ref both nested and at the root:
+2. **Nested vs separate resource conflict**: Don't declare the same ref both nested and at the root:
+
    ```yaml
    # Wrong - v1 is declared twice
    apis:
@@ -345,20 +337,15 @@ Error: resource "my-api" references unknown portal: unknown-portal
 ### External ID vs reference confusion
 
 **Symptom**:
-```
+```sh
 Error: resource references unknown control_plane_id: my-control-plane
 ```
+{:.no-copy-code}
 
-Fields like `control_plane_id` expect a {{site.konnect_short_name}} UUID, not a declarative `ref`. Use `!ref` to resolve a declarative resource's ID:
+**Solution**: Fields like `control_plane_id` expect a {{site.konnect_short_name}} UUID, not a declarative `ref`. 
+Use `!ref` to resolve a declarative resource's ID:
 
 ```yaml
-# Wrong - passing a ref string where a UUID is expected
-api_implementations:
-  - ref: impl
-    service:
-      control_plane_id: "my-control-plane"
-
-# Correct - resolve the ID from a declarative resource
 api_implementations:
   - ref: impl
     service:
@@ -391,9 +378,10 @@ kongctl plan -f single-resource.yaml
 ### Circular dependencies
 
 **Symptom**:
-```
+```sh
 Error: circular dependency detected: api1 -> api2 -> api1
 ```
+{:.no-copy-code}
 
 **Solution**: Restructure your configuration to break the cycle by introducing a shared base resource or removing the circular reference.
 
@@ -402,9 +390,10 @@ Error: circular dependency detected: api1 -> api2 -> api1
 ### Invalid plan file
 
 **Symptom**:
-```
+```sh
 Error: failed to read plan: invalid plan format
 ```
+{:.no-copy-code}
 
 **Solutions**:
 
@@ -413,17 +402,18 @@ Validate the plan file is valid JSON:
 cat plan.json | jq . > /dev/null
 ```
 
-Regenerate the plan if it may be corrupted:
+Regenerate the plan if it's corrupted:
 ```bash
 kongctl plan -f config.yaml --output-file plan.json
 ```
 
 ### Stale plan artifact
 
-**Symptom**:
-```
+**Symptom**: You see the following error:
+```sh
 Error: plan is out of date - resource already exists
 ```
+{:.no-copy-code}
 
 **Solution**: Regenerate the plan to reflect the current live state:
 ```bash
@@ -454,14 +444,14 @@ jq '.changes[] | select(.operation == "CREATE")' plan.json
 
 **Symptom**: Some resources are created successfully, others fail. Apply reports errors for specific resources.
 
-**Solution**: Fix the failing resource configuration and re-run apply. Apply is idempotent, so existing resources are skipped:
+**Solution**: Fix the failing resource configuration and re-run apply. The apply command is idempotent, so existing resources are skipped:
 ```bash
 kongctl apply -f config.yaml
 ```
 
 ### Protected resource blocking changes
 
-**Symptom**:
+**Symptom**: You see the following error:
 ```
 Error: Cannot modify protected resource "production-api"
 ```
@@ -493,6 +483,8 @@ kongctl get apis -o json
 ### Slow plan generation
 
 **Symptom**: Plans take a long time to generate.
+
+**Solution**: Check the logs to identify the problem, and split large configurations as needed.
 
 Enable trace logging to identify slow API calls:
 ```bash
@@ -556,6 +548,7 @@ Example trace output:
 time=2024-01-15T12:00:00.000Z level=TRACE msg="HTTP request" method=GET url=https://global.api.konghq.com/v2/portals
 time=2024-01-15T12:00:01.000Z level=TRACE msg="HTTP response" status=200 duration=1s
 ```
+{:.no-copy-code}
 
 ### Step-by-step debugging workflow
 
@@ -673,7 +666,7 @@ export KONGCTL_DEFAULT_KONNECT_PAT="your-token-here"
 3. Test changes in a lower environment before production.
 4. Use namespaces to isolate changes between teams and environments.
 5. Enable trace logging when debugging unexpected behavior.
-6. Review plans before applying -- use the two-phase plan and apply workflow.
+6. Review plans before applying by using the two-phase plan and apply workflow.
 7. Validate YAML syntax before deploying.
 8. Check file paths are relative to the config file, not the working directory.
 9. Monitor file sizes to stay under the 10MB limit.
@@ -687,7 +680,7 @@ If you're still experiencing issues, do the following:
 	
 2. Review [GitHub discussions](https://github.com/Kong/kongctl/discussions).
 
-3. Open a new issue with:
+3. Open a new issue containing the following information:
    - kongctl version (`kongctl version --full`)
    - Operating system
    - Command that failed

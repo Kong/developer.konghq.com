@@ -267,6 +267,24 @@ rows:
           [View all kongctl commands and options &rarr;](/index/kongctl/#cli-references)
 
   - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              pages:
+                - /kongctl/config/
+                - /kongctl/authentication/
+                - /kongctl/audit-logs/
+                - /kongctl/declarative/
+                - /kongctl/supported-resources/
+                - /kongctl/kongctl-and-deck/
+                - /kongctl/troubleshooting/
+              tools:
+                - kongctl
+
+  - header:
       text: "Frequently asked questions"
       type: h2
     columns:

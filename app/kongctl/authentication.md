@@ -46,8 +46,7 @@ Run the `kongctl login` command to initiate the _device code authorization flow_
 kongctl login
 ```
 
-The command outputs information similar to the following,
-prompting you to open a URL in your browser with the one-time code to authenticate.
+The command will prompt you to open a URL in your browser with a one-time code to authenticate:
 
 ```text
 Logging your CLI into Kong Konnect with the browser...
