@@ -19,6 +19,13 @@ related_resources:
     url: /mesh/policies/
   - text: Service meshes
     url: /mesh/service-mesh/
+next_steps:
+  - text: Mesh Metric policy
+    url: /mesh/policies/meshmetric/
+  - text: Mesh Access Log policy with OpenTelemetry
+    url: /mesh/policies/meshaccesslog/#opentelemetry
+  - text: Mesh Trace policy with OpenTelemetry
+    url: /mesh/policies/meshtrace/#opentelemetry
 min_version:
   mesh: '2.9'
 tldr:
@@ -164,15 +171,10 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
 
    `MY_POD_IP` is the collector pod's own IP. You don't need to set it: the OpenTelemetry collector Helm chart automatically injects it into each pod via the Kubernetes [Downward API](https://kubernetes.io/docs/concepts/workloads/pods/downward-api/).
 
-1. Add the Helm repository:
-
-   ```sh
-   helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-   ```
-
 1. Install the collector:
 
    ```sh
+   helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
    helm install --namespace mesh-observability opentelemetry-collector open-telemetry/opentelemetry-collector -f values-otel.yaml
    ```
 
@@ -226,15 +228,17 @@ spec:
 
 This policy configures all data plane proxies in the `default` Mesh to collect and push metrics to the OpenTelemetry collector.
 
-## Generate metrics
+## Generate traffic
 
-1. Port-forward the demo app service on port `5000`:
+1. Port-forward the demo app service on port `5050`:
 
    ```sh
-   kubectl port-forward svc/demo-app -n kong-mesh-demo 5000:5000
+   kubectl port-forward svc/demo-app -n kong-mesh-demo 5050:5050
    ```
 
-1. Open <http://127.0.0.1:5000> and enable auto-increment in the demo app UI.
+1. Go to <http://127.0.0.1:5050> to open the demo app UI.
+
+1. Enable **Auto-increment** to generate traffic.
 
 ## Validate
 
@@ -246,6 +250,8 @@ This policy configures all data plane proxies in the `default` Mesh to collect a
 
 1. Open <http://127.0.0.1:3000> and log in with the default credentials `admin/admin`.
 
-1. Confirm the `Dataplane` dashboard shows traffic metrics from your demo application. Metrics can take a minute or two to appear.
+1. Click **Dashboard**.
 
-To continue exploring OpenTelemetry in {{site.mesh_product_name}}, see the [Mesh Metric](/mesh/policies/meshmetric/), [Mesh Access Log](/mesh/policies/meshaccesslog/#opentelemetry), and [Mesh Trace](/mesh/policies/meshtrace/#opentelemetry) policies.
+1. Click **KUma Dataplane**.
+   
+   After a few minutes, you should see traffic data in the **HTTP** section.
