@@ -48,7 +48,10 @@ module Jekyll
             end
 
             def child_key
-              ENTITY_TO_CHILD_KEY[entity_type]
+              ENTITY_TO_CHILD_KEY.fetch(entity_type) do
+                raise ArgumentError,
+                      "Unsupported kongctl entity_type `#{entity_type}`. Supported entity types: #{ENTITY_TO_CHILD_KEY.keys.join(', ')}"
+              end
             end
 
             def event_gateway_placeholder
