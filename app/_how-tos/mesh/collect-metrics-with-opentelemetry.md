@@ -57,9 +57,12 @@ prereqs:
       content: |
         This guide uses Cursor as the editor for `kubectl edit`:
         1. Go to the [Cursor downloads](https://cursor.com/downloads) page.
-        2. Download the installer for your operating system.
-        3. Install Cursor on your machine.
-        4. In Cursor, open the Command Palette and run **Shell Command: Install 'cursor' command in PATH**.
+        1. Download the installer for your operating system.
+        1. Install Cursor on your machine.
+        1. In Cursor, open the Command Palette:
+           * `cmd + shift + P` on Mac
+           * `ctrl + shift + P` on Windows and Linux
+        1. Run **Shell Command: Install 'cursor' command**.
       icon_url: /assets/icons/cursor.svg
 ---
 
