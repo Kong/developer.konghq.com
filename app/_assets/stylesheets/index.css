@@ -65,7 +65,7 @@
     --kui-color-background: rgb(var(--color-bg-secondary));
     --kui-color-background-primary-weaker: rgb(var(--color-semantic-blue-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
-    --kui-color-border: rgb(var(--color-border-primary), 0.05);
+    --kui-color-border: rgb(var(--color-border-primary), 0.5);
     --kui-color-border-primary: rgb(var(--color-brand));
     --kui-color-border-primary-strong: rgb(var(--color-brand));
     --kui-shadow-border: rgb(var(--color-brand-saturated), 0.4);
@@ -250,7 +250,7 @@
   }
 
   th:not(:last-child) {
-    @apply border-r border-primary/5;
+    @apply border-r border-primary/5 dark:border-primary/50;
   }
 
   td {
@@ -258,11 +258,11 @@
   }
 
   td:not(:last-child) {
-    @apply border-r border-primary/5;
+    @apply border-r border-primary/5 dark:border-primary/50;
   }
 
   tbody tr {
-    @apply border-t border-primary/5;
+    @apply border-t border-primary/5 dark:border-primary/50;
   }
 
   details[open] summary .chevron-icon {
@@ -302,7 +302,9 @@
   }
 
   a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not(.no-icon)::after {
-    @apply w-3 h-3 inline-block bg-contain bg-no-repeat align-middle bg-[url('/assets/icons/external-link.svg')] ml-1.5 content-[''];
+    @apply w-3 h-3 inline-block align-middle ml-1.5 content-[''];
+    mask: url('/assets/icons/external-link.svg') no-repeat center / contain;
+    background-color: currentColor;
   }
 
   h3[id^="includes-kumahq-kuma-"][id$="-changelog"] {
@@ -327,29 +329,10 @@
     @apply hover:!bg-white hover:!text-black hover:!no-underline;
     color: rgb(0, 15, 6) !important;
   }
-
-  /* Dark theme: recolor hardcoded #428CDC fills to Electric Lime */
-  .dark svg path[fill="#428CDC" i],
-  .dark svg rect[fill="#428CDC" i],
-  .dark svg circle[fill="#428CDC" i],
-  .dark svg polygon[fill="#428CDC" i],
-  .dark svg g[fill="#428CDC" i] path {
-    fill: rgb(204, 255, 0) !important;
-  }
-
-  /* Dark theme: recolor /icons/ SVGs loaded as <img> to Electric Lime (#CCFF00) */
-  /* .dark img[src$=".svg"][src*="/icons/"] {
-    filter: brightness(0) invert(87%) sepia(100%) saturate(1000%) hue-rotate(12deg);
-  } */
-
-  /* Dark theme: recolor decorative page header icons */
-  .dark svg[viewBox="0 0 321 286"],
-  .dark svg[viewBox="0 0 268 302"],
-  .dark svg[viewBox="0 0 252 252"],
-  .dark svg[viewBox="0 0 300 219"],
-  .dark svg[viewBox="0 0 404 148"] {
-    filter: hue-rotate(221deg) saturate(1.47) brightness(0.89);
-  }
+  
+  .dark svg {
+  color: rgb(var(--color-brand));
+}
 
   .button.button--secondary {
     @apply !border-brand !text-primary;
@@ -524,7 +507,7 @@
   }
 
   .tablist {
-    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 dark:border-primary/50 w-full items-center overflow-x-auto;
   }
 
   .tabcolumn {
@@ -569,7 +552,7 @@
   }
 
   .card__bordered {
-    @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
+    @apply border border-primary/5 dark:border-primary/70 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
   }
 
   .card__featured {
@@ -634,7 +617,7 @@
   }
 
   .mobile-drawer__footer {
-    @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 md:hidden;
+    @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 dark:border-primary/50 md:hidden;
   }
 
   .filter-results-field {
@@ -688,7 +671,7 @@
   }
 
   .top-nav__controls {
-    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[64px] px-6 border-b border-primary/5 justify-between;
+    @apply flex shrink-0 items-center bg-secondary w-full lg:hidden h-[64px] px-6 border-b border-primary/5 dark:border-primary/50 justify-between;
   }
 
   .top-nav--opened {
@@ -770,7 +753,7 @@
   }
 
   .navbar-item__menu {
-    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply hidden absolute top-9 list-none ml-0 grid-cols-2 max-w-max w-svw gap-4 border rounded-lg lg:p-6 bg-secondary border-primary/5 dark:border-primary/50 shadow-primary left-1/2 -translate-x-1/2;
   }
 
   .navbar-item__icon {
@@ -790,7 +773,7 @@
   }
 
   .dropdown-menu {
-    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+    @apply absolute hidden top-12 list-none ml-0 grid-cols-2 w-svw gap-4 border rounded-lg px-6 py-4 bg-secondary border-primary/5 dark:border-primary/50 shadow-primary left-1/2 -translate-x-1/2;
 
     ul {
       @apply list-none ml-0;
@@ -921,7 +904,7 @@
 }
 
 #ask-ai-button {
-  @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
+  @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 dark:border-primary/50 gap-1 bg-secondary;
 }
 
 .ais-InstantSearch {
@@ -941,7 +924,7 @@
 }
 
 .ais-Pagination-item {
-  @apply bg-primary px-2 py-[6px] border border-primary/5 rounded-md w-[38px] h-[34px] flex items-center;
+  @apply bg-primary px-2 py-[6px] border border-primary/5 dark:border-primary/50 rounded-md w-[38px] h-[34px] flex items-center;
 }
 
 .ais-Pagination-item:hover {
@@ -973,7 +956,7 @@
 }
 
 .checkbox, .ais-RefinementList-checkbox {
-  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
+  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5 dark:border-primary/50;
 }
 
 .checkbox--checked, .ais-RefinementList-checkbox:checked {
@@ -1012,7 +995,7 @@
   }
 
   .select-item-label {
-    @apply text-primary bg-secondary border-b border-primary/5 hover:bg-brand/15 !important;
+    @apply text-primary bg-secondary border-b border-primary/5 dark:border-primary/50 hover:bg-brand/15 !important;
   }
 }
 

@@ -2,7 +2,7 @@
 {% assign cat = include.category %}
 {% assign rendered_description = cb.description | liquify %}
 <div
-  class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary/5{% endunless %}"
+  class="flex items-center gap-4 py-4 px-4 hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless include.last %}border-b border-primary/5 dark:border-primary/50{% endunless %}"
   data-card="cookbook-row"
   data-category="{{ cat.slug }}"
   data-categories="{{ cb.categories | join: ',' }}"

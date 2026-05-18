@@ -62,7 +62,7 @@ module SectionWrapper
     def build_h4_wrapper(section_title)
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
         <div class="accordion">
-          <div class="flex flex-col gap-4 border-b border-primary/5 accordion-item">
+          <div class="flex flex-col gap-4 border-b border-primary/5 dark:border-primary/50 accordion-item">
             #{section_title}
             <div class="content accordion-panel"></div>
           </div>

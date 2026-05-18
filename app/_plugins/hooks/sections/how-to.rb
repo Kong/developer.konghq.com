@@ -23,14 +23,14 @@ module SectionWrapper
       topology = "data-deployment-topology=\"#{topology}\"" if !topology.nil? && !topology.empty?
       wrapper = if section_title != ''
                   <<-HTML
-          <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">
+          <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 dark:border-primary/50 pb-8 accordion-item">
             #{section_title}
             <div class="content accordion-panel"></div>
           </div>
                   HTML
                 else
                   <<-HTML
-        <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 pb-8">
+        <div #{topology} class="flex flex-col gap-4 border-b border-primary/5 dark:border-primary/50 pb-8">
           <div class="content"></div>
         </div>
                   HTML

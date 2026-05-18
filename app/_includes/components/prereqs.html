@@ -3,13 +3,13 @@
 <div class="flex flex-col accordion prerequisites" {{ prereqs.default_accordion }}data-multiple="false" data-test-id="prereqs" data-test-products="{{page.products | join: ','}}">
 
   {% for prereq in prereqs.inline_before %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
 
   {% if prereqs.konnect_auth_only? %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
       {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
     </div>
   {% endif %}
@@ -17,25 +17,25 @@
   {% for prereq in prereqs.cloud %}
   {% assign prereq_include = 'prereqs/cloud/' | append: prereq[0] | append: '.md' %}
   {% assign config = prereq[1] %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include {{ prereq_include }} config=config products=prereqs.products %}
   </div>
   {% endfor %}
 
   {% if prereqs.kubernetes.gateway_api %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
   </div>
   {% endif %}
 
   {% if prereqs.kubernetes.prometheus %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/kubernetes/prometheus.md config=prereqs.kubernetes %}
   </div>
   {% endif %}
 
   {% if prereqs.kubernetes.keycloak %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/kubernetes/keycloak.md config=prereqs.kubernetes.keycloak %}
   </div>
   {% endif %}
@@ -48,14 +48,14 @@
     {% if page.products and prereqs.render_works_on? %}
       {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         {% if page.works_on contains 'konnect' %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% assign variables = prereqs.konnect %}
           {% assign ports = prereqs.ports %}
           {% include prereqs/products/konnect.md tier=include.tier env_variables=variables ports=ports %}
         </div>
         {% endif %}
         {% if page.works_on contains 'on-prem' %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0" data-deployment-topology="on-prem">
           {% assign variables=prereqs['gateway'] %}
           {% include prereqs/products/gateway.md rbac=page.rbac env_variables=variables %}
         </div>
@@ -63,7 +63,7 @@
       {% endif %}
 
       {% if page.products contains 'kic'  %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% include prereqs/kubernetes/kic-konnect-cp.md prereqs=prereqs %}
         </div>
       {% endif %}
@@ -72,17 +72,17 @@
         {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
         {% if page.works_on  and product != 'operator' %}
          {% if page.works_on contains 'konnect' %}
-          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
             {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
           </div>
           {% endif %}
            {% if page.works_on contains 'on-prem' %}
-            <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+            <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
               {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
             </div>
           {% endif %}
         {% else %}
-          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
             {% include {{ product_include }} prereqs=prereqs %}
           </div>
         {% endif %}
@@ -95,7 +95,7 @@
   {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
   {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
   {% if tool_include_exists == 'true' %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
       {% include {{ tool_include }} %}
     </div>
   {% endif %}
@@ -103,29 +103,29 @@
   {% endunless %}
 
   {% if prereqs.operator.konnect.auth %}
-  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/operator/konnect_auth.md config=prereqs.operator.konnect %}
   </div>
   {% endif %}
   {% if prereqs.operator.konnect.control_plane %}
-  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/operator/konnect_control_plane.md config=prereqs.operator.konnect %}
   </div>
   {% endif %}
   {% if prereqs.operator.konnect.konnectextension %}
-  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/operator/konnectextension.md config=prereqs.operator.konnect %}
   </div>
   {% endif %}
   {% if prereqs.operator.konnect.network %}
-  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/operator/konnect_network.md config=prereqs.operator.konnect %}
   </div>
   {% endif %}
 
   {% if prereqs.entities? %}
     {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: product | append: ".md" %}
       {% include {{ prereq_path }} data=prereqs.data %}
     </div>
@@ -133,7 +133,7 @@
 
 
   {% for prereq in prereqs.inline_without_position %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 dark:border-primary/50 accordion-item last:border-b-0">
     {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}

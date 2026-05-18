@@ -1,7 +1,7 @@
 {% if include.render_context %}
 {% details %}
 css_classes:
-  details: "flex flex-col border-b border-primary/5"
+  details: "flex flex-col border-b border-primary/5 dark:border-primary/50"
   summary: "py-3 px-5 text-primary list-none cursor-pointer"
   wrapper: "bg-secondary shadow-primary rounded-md flex flex-col text-sm"
   float_right: true

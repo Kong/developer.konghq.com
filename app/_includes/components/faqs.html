@@ -1,7 +1,7 @@
 <div id="faqs" class="bg-secondary shadow-primary rounded-md flex flex-col text-sm accordion">
 {% for faq in faqs %}
   {% assign slug = faq.q | liquify | slugify %}
-  <div class="flex-col hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless forloop.last %} border-b border-primary/5 {% endunless %} accordion-item faq">
+  <div class="flex-col hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless forloop.last %} border-b border-primary/5 dark:border-primary/50 {% endunless %} accordion-item faq">
     <a href="#{{ slug }}" id="{{ slug }}" class="py-4 px-5 flex justify-between items-center cursor-pointer text-primary list-none accordion-trigger hover:no-underline faq-question">
       <div class="flex items-center gap-2 w-full link-anchor group">
         {{ faq.q | liquify | markdownify }}

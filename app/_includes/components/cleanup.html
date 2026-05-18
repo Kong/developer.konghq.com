@@ -2,7 +2,7 @@
   {% if page.products[0] == "kic" %}
   {% if page.prereqs.entities.services %}
   <div
-    class="flex flex-col gap-1.5 accordion-item border-b border-primary/5" 
+    class="flex flex-col gap-1.5 accordion-item border-b border-primary/5 dark:border-primary/50" 
   >
 {% capture details_content %}
 ```bash{% for service in page.prereqs.entities.services %}
@@ -19,7 +19,7 @@ kubectl delete -n kong -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
   {% for prereq in page.prereqs.cloud %}
   {% assign prereq_include = 'cleanup/cloud/' | append: prereq[0] | append: '.md' %}
   {% assign config = prereq[1] %}
-    <div class="flex flex-col gap-1.5 accordion-item border-b border-primary/5">
+    <div class="flex flex-col gap-1.5 accordion-item border-b border-primary/5 dark:border-primary/50">
       {% include {{ prereq_include }} config=config %}
     </div>
   {% endfor %}
@@ -31,7 +31,7 @@ kubectl delete -n kong -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
       {% assign deployment_topology = 'konnect' %}
     {% endif %}
   <div
-    class="flex flex-col gap-1.5 accordion-item {% unless forloop.last %} border-b border-primary/5 {% endunless %}" {% if deployment_topology %}data-deployment-topology="{{deployment_topology}}"{% endif %}
+    class="flex flex-col gap-1.5 accordion-item {% unless forloop.last %} border-b border-primary/5 dark:border-primary/50 {% endunless %}" {% if deployment_topology %}data-deployment-topology="{{deployment_topology}}"{% endif %}
   >
 {% include cleanup/inline.md step=step %}
   </div>

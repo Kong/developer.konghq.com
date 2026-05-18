@@ -9,8 +9,8 @@
 
 <div class="flex flex-col gap-6">
     {% for param in section.parameters %}
-    <div class="flex flex-col bg-primary border border-primary/5 rounded-md kong-conf-param">
-        <div class="flex px-4 border-b border-primary/5 justify-between items-center">
+    <div class="flex flex-col bg-primary border border-primary/5 dark:border-primary/50 rounded-md kong-conf-param">
+        <div class="flex px-4 border-b border-primary/5 dark:border-primary/50 justify-between items-center">
             <h3 id="{{param.name}}" class="py-3 text-brand-saturated text-sm font-bold kong-conf-param-name">{{param.name}}</h3>
             {% if param.min_version %}
                 <div class="flex text-secondary text-xs gap-0.5"><span>Min Version: </span><span class="font-semibold">{{param.min_version.gateway}}</span></div>

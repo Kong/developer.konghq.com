@@ -17,7 +17,7 @@
   {% if plugin.tier %}data-tier="{{plugin.tier}}"{% endif %}
 >
     <a href="{{plugin.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
-        <img src="{{ plugin.icon }}" class="w-8 h-8"/>
+        <span class="text-brand">{% include_svg plugin.icon width="32" height="32" %}</span>
 
         <div class="flex flex-col gap-3 flex-grow">
             <h4>{{ name | liquify }}</h4>
