@@ -32,7 +32,7 @@ plugins:
   - ai-proxy
 
 min_version:
-  gateway: '3.14'
+  gateway: '2.0.0'
 
 related_resources:
   - text: "{{site.ai_gateway}}"
