@@ -59,7 +59,7 @@ how_to_list:
 
 To use {{ provider.name }} with {{site.ai_gateway}}, configure the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
-Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `anthropic/claude-opus-4.6`.
+Note that, {{ site.vercel }} hosts [models](https://vercel.com/ai-gateway/models) from other providers so in this example we use `openai/gpt-5.5`.
 
 Here's a minimal configuration for chat completions:
 
@@ -78,7 +78,7 @@ data:
 
 variables:
   key:
-    value: "$MOONSHOT_API_KEY"
+    value: "$VERCEL_API_KEY"
 {% endentity_example %}
 
 {:.success}
