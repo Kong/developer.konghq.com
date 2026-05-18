@@ -102,7 +102,7 @@ echo "apiVersion: kuma.io/v1alpha1
 kind: ContainerPatch
 metadata:
   name: enable-feature-unified-resource-naming
-  namespace: {{ site.mesh_namespace | default: "kuma-system" }}
+  namespace: {{ site.mesh_namespace }}
 spec:
   sidecarPatch:
   - op: add
@@ -127,10 +127,10 @@ Apply the patch to a workload by updating the Deployment Pod template annotation
 
    Kubernetes rolls out new Pods that include the patched sidecar configuration.
 
-1. Wait for the new Pod to become ready before continuing:
+1. Wait for the `demo-app` Deployment rollout to complete before continuing:
 
    ```sh
-   kubectl wait -n kong-mesh-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
+   kubectl rollout status deployment/demo-app -n kong-mesh-demo --timeout=90s
    ```
 
 ## Verify unified naming
