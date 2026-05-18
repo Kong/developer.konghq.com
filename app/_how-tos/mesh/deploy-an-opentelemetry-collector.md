@@ -124,7 +124,7 @@ faqs:
             targetPort: prometheus" | kubectl apply -f -
       ```
 
-      Sidecars resolve `otel-collector.observability:4317` to whichever replica kube-proxy picks. With a Deployment, you can skip the node-local checks (Pod node assignments and endpoint slice) in [Verify the collector](#verify-the-collector).
+      Sidecars resolve `otel-collector.observability:4317` to the Service IP, and Kubernetes forwards traffic to one of the collector replicas. With a Deployment, you can skip the node-local checks (Pod node assignments and endpoint slice) in [Verify the collector](#verify-the-collector).
 
 prereqs:
   inline:

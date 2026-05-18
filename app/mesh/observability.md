@@ -267,7 +267,7 @@ Two patterns work for the OTLP receiver.
 
 #### Deployment + ClusterIP service
 
-Run two or three collector replicas behind a `ClusterIP` service. Sidecars resolve `otel-collector.observability:4317` to whichever replica kube-proxy picks.
+Run two or three collector replicas behind a `ClusterIP` service. Sidecars resolve `otel-collector.observability:4317` to the Service IP, and kube-proxy load-balances each connection to a collector Pod.
 
 We recommend this topology because it's simple, the failure domain is the whole replica set, and a rolling update of the collector doesn't drop telemetry from any specific node. Use a Deployment for small and medium clusters, or any cluster where collector throughput isn't a bottleneck.
 
