@@ -60,29 +60,6 @@ tldr:
 
 This guide walks you through running a multi-zone {{site.mesh_product_name}} deployment in Universal mode using Docker containers. We'll start a PostgreSQL database to back the control planes, deploy a global control plane, register a zone control plane against it, and run a zone ingress so cross-zone traffic can flow.
 
-<!-- vale off -->
-{% mermaid %}
-flowchart LR
-laptop(your laptop)
-
-subgraph global
-  postgres[(postgres)]
-  global-cp(global-control-plane :5681 :5685)
-end
-
-subgraph zone1
-  zone-cp(zone1-control-plane :5681 :5678)
-  zone-ingress(zone1-ingress :10000)
-end
-
-laptop --> global-cp
-zone-cp -- KDS :5685 --> global-cp
-zone-cp --- postgres
-global-cp --- postgres
-zone-ingress -- XDS :5678 --> zone-cp
-{% endmermaid %}
-<!-- vale on -->
-
 ## Install {{site.mesh_product_name}}
 
 1. Run the following command to install the {{site.mesh_product_name}} binaries:
