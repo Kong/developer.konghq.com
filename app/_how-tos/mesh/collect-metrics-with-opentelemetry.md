@@ -196,6 +196,8 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
            - opentelemetry-collector.mesh-observability.svc:8889
    ```
 
+1. Save and close the file to apply the changes.
+
    Prometheus automatically picks up this config and starts scraping the OpenTelemetry collector.
 
 1. Forward the Prometheus port to confirm the config was applied:
