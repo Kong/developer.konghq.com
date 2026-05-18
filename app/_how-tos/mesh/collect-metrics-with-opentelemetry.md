@@ -187,7 +187,6 @@ The {{site.mesh_product_name}} observability stack is built on top of [Prometheu
 1. In the `prometheus.yml` value, add the following entry under `scrape_configs`:
 
    ```yaml
-       scrape_configs:
        - job_name: opentelemetry-collector
          scrape_interval: 15s
          static_configs:
