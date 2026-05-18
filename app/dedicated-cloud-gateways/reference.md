@@ -404,6 +404,7 @@ config:
   - name: request_debug_token
   - name: opentelemetry_tracing
   - name: tracing_instrumentations
+  - name: router_flavor
   - name: tracing_sampling_rate
   - name: untrusted_lua_sandbox_requires
   - name: allow_debug_header
