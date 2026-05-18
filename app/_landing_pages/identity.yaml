@@ -1,0 +1,121 @@
+metadata:
+  title: "Kong Identity"
+  content_type: landing_page
+  description: "Unified machine-to-machine authentication platform within Kong Konnect."
+  products:
+    - identity
+  works_on:
+    - konnect
+rows:
+  - header:
+      type: h1
+      text: "Kong Identity"
+      sub_text: "The unified machine-to-machine authentication platform"
+  - header:
+      type: h2
+      text: "Introducing Kong Identity"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+                Kong Identity provides a single platform to manage traffic policy and identity policy with the [Konnect API](api/konnect/kong-identity/v1/#/) for machine-to-machine authentication. Use Kong identity to:
+                * Create authorization servers per region.
+                * Issue and validate access tokens.
+                * Integrate secure auhtentication into Kong Gateway API.   
+          - type: button
+            config:
+              text: "Learn how it works &rarr;"
+              url: "/kong-identity/"
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/konnect-dashboard.png
+              alt_text: Image of the {{site.konnect_short_name}} dashboard
+  - header:
+      type: h2
+      text: "Plugins"
+      description: |
+        Combine Kong Identity with the available plugins:
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "OpenID Connect"
+            description: |
+              Use the OpenID Connect (OIDC) plugin to integrate Kong Gateway with Kong Identity in Konnect for machine-to-machine API access.
+            icon: /assets/icons/plugins/openid-connect.png
+            ctas:
+              - text: Learn more
+                url: /plugins/openid-connect/
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "OAuth 2.0 Introspection plugin"
+            description: |
+              Validate access tokens using an OAuth 2.0 authorization server's introspection endpoint.
+            icon: /assets/icons/plugins/oauth2-introspection.png
+            ctas:
+              - text: Learn more
+                url: /plugins/oauth2-introspection/
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Upstream OAuth"
+            description: |
+              Make your API Gateway support OAuth flows between Kong Gateway and the upstream API. The plugin supports storing tokens issued by the IdP in different backend formats.
+            icon: /assets/icons/plugins/upstream-oauth.png
+            ctas:
+              - text: Learn more
+                url: /plugins/upstream-oauth/
+                align: end
+  - header:
+      type: h2
+      text: "Features"
+      description: |
+        Set up and manage API access with Kong Identity features:
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Authorization servers"
+            description: |
+              Set up an authorization server that issues tokens to authenticate a client with Kong Gateway.
+            icon: /assets/icons/security.svg
+            ctas:
+              - text: Set up an authorization server
+                url: /kong-identity/#configure-kong-identity
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Claims"
+            description: |
+              Include in each token optional pieces of metadata (user roles or environment tags) to forward them to upstream services
+            icon: /assets/icons/service-document.svg
+            ctas:
+              - text: Configure a claim
+                url: /kong-identity/#claim-configuration
+                align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Dynamic claim templates"
+            description: |
+              Define custom JWT claims whose value uses contextual data and specified functions. 
+            icon: /assets/icons/data-object.svg
+            ctas:
+              - text: Use dynamic claim templates
+                url: /kong-identity/#dynamic-claim-templates
+                align: end
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              works_on:
+                  - identity
+              quantity: 7
