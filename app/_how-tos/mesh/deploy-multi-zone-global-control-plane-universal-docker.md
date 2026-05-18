@@ -285,7 +285,7 @@ Each zone runs its own control plane. The zone control plane connects to the glo
    * Port `25681`: the local HTTP API and GUI, available at <http://127.0.0.1:25681/gui>.
    * Port `25678`: the local XDS endpoint that data plane proxies inside the zone connect to.
 
-   `KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true` is required because the global control plane's certificate is self-signed in this demo. For production, use a certificate signed by a trusted CA. See [Secure access across services](/mesh/secure-access-across-services/) for more information.
+   `KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true` is required because the global control plane's certificate is self-signed in this demo. For production, use a certificate signed by a trusted CA. See [Secure access across services](/mesh/secure-access/) for more information.
 
 1. Confirm the zone registered against the global control plane:
 
