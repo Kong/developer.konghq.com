@@ -116,6 +116,6 @@ rows:
       - blocks:
           - type: how_to_list
             config:
-              works_on:
-                  - identity
+              tags:
+                  - kong-identity
               quantity: 7
