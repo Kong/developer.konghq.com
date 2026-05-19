@@ -10,9 +10,6 @@ description: Browse and search Kong skills for AI-powered development workflows.
 {%- assign all_plugins = site.data.skills_plugins | sort_natural: "name" -%}
 {%- assign power = site.data.skills_power -%}
 {%- assign skill_filters = site.data.skills_filters -%}
-{%- assign show_plugin_filter = skill_filters.plugins.size > 1 -%}
-{%- assign show_product_filter = skill_filters.products.size > 1 -%}
-{%- assign show_category_filter = skill_filters.categories.size > 1 -%}
 
 <div class="flex flex-col gap-16 w-full">
 
@@ -78,7 +75,7 @@ description: Browse and search Kong skills for AI-powered development workflows.
           </div>
         </label>
 
-        {% if show_plugin_filter %}
+        {% if skill_filters.plugins.size > 1 %}
         <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
           <span class="text-xs font-medium uppercase tracking-wide text-terciary">Plugin</span>
           <select
@@ -94,7 +91,7 @@ description: Browse and search Kong skills for AI-powered development workflows.
         </label>
         {% endif %}
 
-        {% if show_product_filter %}
+        {% if skill_filters.products.size > 1 %}
         <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
           <span class="text-xs font-medium uppercase tracking-wide text-terciary">Product</span>
           <select
@@ -110,7 +107,7 @@ description: Browse and search Kong skills for AI-powered development workflows.
         </label>
         {% endif %}
 
-        {% if show_category_filter %}
+        {% if skill_filters.categories.size > 1 %}
         <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
           <span class="text-xs font-medium uppercase tracking-wide text-terciary">Category</span>
           <select
