@@ -1,0 +1,73 @@
+metadata:
+  title: "Kong Mesh Fundamentals"
+  description: "Learn how {{site.mesh_product_name}} is put together, secure your first services with mTLS and zero-trust permissions, and master the `targetRef` policy system that powers every {{site.mesh_product_name}} deployment. The path follows **Kong Air**, a global airline modernizing its flight-critical services."
+  products:
+    - mesh
+  personas:
+    - api-developer
+    - platform-engineer
+    - security-engineer
+  min_version:
+    mesh: "2.10"
+  tags:
+    - get-started
+    - mtls
+    - policies
+
+steps:
+  - title: "Step 1: Architecture and resource scoping"
+    description: "Understand the Control Plane / Data Plane split, the Global vs. Zone CP model, and the resource-scoping rules you need before applying your first policy. Then inspect your mesh to confirm the moving parts are where the docs say they are."
+    permalink: /learning-paths/mesh/fundamentals/step-1/
+    learn:
+      title: "Learn: How {{site.mesh_product_name}} is put together"
+      include: learning-paths/mesh/fundamentals-step-1-learn
+    practice:
+      title: "Practice: Inspect your mesh"
+      include: learning-paths/mesh/fundamentals-step-1-practice
+
+  - title: "Step 2: Your first policy — enable mTLS and zero-trust"
+    description: "Encrypt every request between services with built-in mTLS, then move from a permissive baseline to a default-deny posture with `MeshTrafficPermission`."
+    permalink: /learning-paths/mesh/fundamentals/step-2/
+    learn:
+      title: "Learn: mTLS and `MeshTrafficPermission`"
+      include: learning-paths/mesh/fundamentals-step-2-learn
+    practice:
+      title: "Practice: Lock down the Kong Air check-in API"
+      include: learning-paths/mesh/fundamentals-step-2-practice
+
+  - title: "Step 3: The targetRef policy system"
+    description: "Every {{site.mesh_product_name}} policy uses the same `targetRef` shape. Learn the hierarchy (Mesh → MeshSubset → MeshService), the `to`/`from`/`default` block, and the 'most specific wins' precedence rule — then apply it."
+    permalink: /learning-paths/mesh/fundamentals/step-3/
+    learn:
+      title: "Learn: `targetRef`, hierarchy, and precedence"
+      include: learning-paths/mesh/fundamentals-step-3-learn
+    practice:
+      title: "Practice: Layered policies in action"
+      include: learning-paths/mesh/fundamentals-step-3-practice
+
+  - title: "Step 4: Traffic splitting with MeshServices"
+    description: "Kong Air is launching booking-engine v2. Use explicit `MeshService` resources and a weighted `MeshHTTPRoute` to send 90% of traffic to v1 and 10% to v2 — without touching application code."
+    permalink: /learning-paths/mesh/fundamentals/step-4/
+    learn:
+      title: "Learn: Why explicit `MeshService` resources"
+      include: learning-paths/mesh/fundamentals-step-4-learn
+    practice:
+      title: "Practice: 90/10 split for booking-engine"
+      include: learning-paths/mesh/fundamentals-step-4-practice
+
+  - title: "Step 5: MeshSubsets vs. MeshServices"
+    description: "Two ways to group endpoints in {{site.mesh_product_name}}: implicit, tag-based `MeshSubset` and explicit, resource-based `MeshService`. Learn which to use for cross-cutting policies vs. routing — and apply a `MeshSubset` for a real Kong Air regional-latency case."
+    permalink: /learning-paths/mesh/fundamentals/step-5/
+    learn:
+      title: "Learn: Subsets vs. services"
+      include: learning-paths/mesh/fundamentals-step-5-learn
+    practice:
+      title: "Practice: Regional timeout with `MeshSubset`"
+      include: learning-paths/mesh/fundamentals-step-5-practice
+    next_steps:
+      - text: "Observability in Practice — metrics, traces, and logs"
+        url: /mesh/scenarios/observability-in-practice/
+      - text: "Workload Identity & Trust — SPIFFE identities beyond mTLS"
+        url: /mesh/scenarios/workload-identity/
+      - text: "Multi-Zone Architecture — connect zones with ZoneIngress/Egress"
+        url: /mesh/scenarios/multi-zone-architecture/
