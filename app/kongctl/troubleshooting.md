@@ -317,7 +317,7 @@ Error: resource "my-api" references unknown portal: unknown-portal
 
    api_publications:
      - ref: api-pub
-       portal: developer-portal # Matches the portal ref
+       portal_id: !ref developer-portal # Matches the portal ref
    ```
 
 2. **Nested vs separate resource conflict**: Don't declare the same ref both nested and at the root:
@@ -429,13 +429,13 @@ jq '.summary' plan.json
 
 List all planned operations:
 ```bash
-jq '.changes[] | {op: .operation, type: .resource_type, ref: .resource_ref}' plan.json
+jq '.changes[] | {action: .action, type: .resource_type, ref: .resource_ref}' plan.json
 ```
 
 Filter to specific operations:
 ```bash
 # Show only CREATE operations
-jq '.changes[] | select(.operation == "CREATE")' plan.json
+jq '.changes[] | select(.action == "CREATE")' plan.json
 ```
 
 ## Execution failures
@@ -545,7 +545,7 @@ When trace logging is enabled, look for:
 
 Example trace output:
 ```
-time=2024-01-15T12:00:00.000Z level=TRACE msg="HTTP request" method=GET url=https://global.api.konghq.com/v2/portals
+time=2024-01-15T12:00:00.000Z level=TRACE msg="HTTP request" method=GET url=https://us.api.konghq.com/v2/portals
 time=2024-01-15T12:00:01.000Z level=TRACE msg="HTTP response" status=200 duration=1s
 ```
 {:.no-copy-code}
@@ -564,7 +564,7 @@ Use this sequence to isolate issues:
    ```
 1. Generate plan with debug logging:
    ```bash
-   kongctl plan -f config.yaml --log-level debug --output-file plan.json
+   kongctl plan -f config.yaml --mode apply --log-level debug --output-file plan.json
    ```
 1. Review the plan:
    ```bash

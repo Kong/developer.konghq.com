@@ -130,7 +130,6 @@ apis:
     attributes: object [string]array[string]
       key:
         - value
-    spec_content: string (OpenAPI or AsyncAPI content; json or yaml) # prefer: !file ./specs/api.yaml
     versions: # /api/konnect/api-builder/v3/#/operations/create-api-version
       - ref: string
         version: string
@@ -164,6 +163,10 @@ apis:
             status: One of (published | unpublished)
 ```
 {:.collapsible}
+
+API specifications must be declared on API versions with `versions[].spec` or
+root-level `api_versions[].spec`; `apis[].spec_content` is not supported in
+declarative configuration.
 
 ## Application auth strategies
 
@@ -688,44 +691,6 @@ portals:
            groups: string
          idp_metadata_url: string # SAML
          idp_metadata_xml: string # SAML
-portal_identity_providers:
- - ref: string
-   portal: string required # prefer: !ref <portal-ref>
-   type: One of (oidc | saml) required
-   enabled: boolean
-   config: object required
-     issuer_url: string # OIDC
-     client_id: string # OIDC
-     client_secret: string # OIDC
-     scopes: array[string] # OIDC
-     claim_mappings: # OIDC
-       name: string
-       email: string
-       groups: string
-     idp_metadata_url: string # SAML
-     idp_metadata_xml: string # SAML
-portal_integrations:
- - ref: string
-   portal: string required # prefer: !ref <portal-ref>
-   google_tag_manager:
-     enabled: boolean required
-     type: tracking
-     config_data:
-       id: string required (pattern: ^GTM-[A-Za-z0-9]+$)
-       l: string (nullable)
-       preview: string (nullable)
-       cookies_win: boolean (nullable)
-       debug: boolean (nullable)
-       npa: boolean (nullable)
-       data_layer: string (nullable)
-       env_name: string (nullable)
-       auth_referrer_policy: string (nullable)
-   google_analytics_4:
-     enabled: boolean required
-     type: analytics
-     config_data:
-       id: string required (pattern: ^G-[A-Za-z0-9-]+$)
-       l: string (nullable)
    custom_domain: # /api/konnect/portal-management/v3/#/operations/create-portal-custom-domain
      ref: string
      hostname: string required
@@ -796,6 +761,51 @@ portal_integrations:
      favicon: string # data URL image (png/jpeg/gif/ico/svg)
 ```
 {:.collapsible}
+
+Portal identity providers and integrations can also be declared as root
+resources.
+
+```yaml
+portal_identity_providers:
+ - ref: string
+   portal: string required # prefer: !ref <portal-ref>
+   type: One of (oidc | saml) required
+   enabled: boolean
+   config: object required
+     issuer_url: string # OIDC
+     client_id: string # OIDC
+     client_secret: string # OIDC
+     scopes: array[string] # OIDC
+     claim_mappings: # OIDC
+       name: string
+       email: string
+       groups: string
+     idp_metadata_url: string # SAML
+     idp_metadata_xml: string # SAML
+
+portal_integrations:
+ - ref: string
+   portal: string required # prefer: !ref <portal-ref>
+   google_tag_manager:
+     enabled: boolean required
+     type: tracking
+     config_data:
+       id: string required (pattern: ^GTM-[A-Za-z0-9]+$)
+       l: string (nullable)
+       preview: string (nullable)
+       cookies_win: boolean (nullable)
+       debug: boolean (nullable)
+       npa: boolean (nullable)
+       data_layer: string (nullable)
+       env_name: string (nullable)
+       auth_referrer_policy: string (nullable)
+   google_analytics_4:
+     enabled: boolean required
+     type: analytics
+     config_data:
+       id: string required (pattern: ^G-[A-Za-z0-9-]+$)
+       l: string (nullable)
+```
 
 Portal IP allow lists can also be declared as root resources.
 
