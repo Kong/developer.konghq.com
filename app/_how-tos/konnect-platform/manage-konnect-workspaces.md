@@ -138,15 +138,24 @@ body:
 
 To use decK with {{site.konnect_short_name}} Workspaces, you need 1.43 or later, but 1.60 or later is recommended.
 
-```shell
+{:.warning}
+> **Set your decK environment variables:**
+> You must set decK environment variables with your {{site.konnect_short_name}} access token and address for the following decK commands to work. For example:
+> ```sh
+> export DECK_KONNECT_TOKEN="kpat_..."
+> export DECK_KONNECT_ADDR="https://us.api.konghq.com"
+> ```
+> If you [created a control plane in the prerequisites](#kong-konnect), your environment variables should already be set.
+
+```sh
 # Dump one Workspace
-deck gateway dump --konnect-control-plane-name my-cp --workspace team-payments -o team-payments.yaml
+deck gateway dump --konnect-control-plane-name quickstart --workspace team-payments -o team-payments.yaml
 
 # Dump every workspace into separate files
-deck gateway dump --konnect-control-plane-name my-cp --all-workspaces
+deck gateway dump --konnect-control-plane-name quickstart --all-workspaces
 
 # Apply a config file into a Workspace
-deck gateway sync team-payments.yaml --konnect-control-plane-name my-cp --workspace team-payments
+deck gateway sync team-payments.yaml --konnect-control-plane-name quickstart --workspace team-payments
 ```
 
 A dumped file carries a `_workspace:` header, so `deck gateway sync` will target the right Workspace even without the `--workspace` flag.
