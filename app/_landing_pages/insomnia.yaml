@@ -253,6 +253,11 @@ rows:
                   pro: true
                   ee: true
                 - title: |
+                    [Link Konnect Gateway Service routes](/insomnia/konnect-integration/)
+                  essentials: false
+                  pro: false
+                  ee: true
+                - title: |
                     [End-to-End Encryption](/insomnia/data-security/#end-to-end-encryption)
                   essentials: true
                   pro: true
