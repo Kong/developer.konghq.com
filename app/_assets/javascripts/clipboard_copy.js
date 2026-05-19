@@ -1,4 +1,12 @@
 document.addEventListener("clipboard-copy", function (event) {
+  const targetId = event.target.getAttribute("for");
+  if (targetId) {
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      navigator.clipboard.writeText(targetEl.textContent.trim());
+    }
+  }
+
   const button = event.target;
   const tooltip = event.target.previousElementSibling;
   const defaultAriaLabel = button.getAttribute("aria-label");
