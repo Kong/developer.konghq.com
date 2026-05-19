@@ -122,7 +122,7 @@ kongctl apply -f config.yaml
 
 ```bash
 # Phase 1: Generate plan
-kongctl plan -f config.yaml --output-file plan.json
+kongctl plan -f config.yaml --mode apply --output-file plan.json
 
 # Phase 2: Review and apply later
 kongctl apply --plan plan.json
@@ -131,7 +131,7 @@ kongctl apply --plan plan.json
 You can use plan artifacts for the following use cases:
 * **Audit trail**: Plans provide an audit record of proposed changes independent of the input or current state.
 * **Review process**: Share and review plans before execution.
-* **Deferred execution**: Generate plans in CI, attach to pull requests, and apply after approval.
+* **Deferred execution**: Generate plans in CI, attach to pull requests, and execute after approval.
 * **Compliance**: Document exactly what changes were planned along with the execution logs.
 
 ### Declarative commands
@@ -179,7 +179,7 @@ Create or update resources based on a set of configuration inputs or a plan arti
 # Apply from config
 kongctl apply -f config.yaml
 
-# Apply from plan
+# Apply from an apply-mode plan
 kongctl apply --plan plan.json
 
 # Preview without applying
@@ -320,7 +320,7 @@ apis:
         spec: !file ./specs/users-v1.yaml
     publications:
       - ref: public
-        portal: main-portal
+        portal_id: !ref main-portal
         visibility: public
 ```
 
@@ -340,7 +340,7 @@ api_versions:
 api_publications:
   - ref: public
     api: users-api
-    portal: main-portal
+    portal_id: !ref main-portal
 ```
 
 ### Portal identity provider migration
@@ -883,19 +883,19 @@ kongctl plan -f config.yaml --output-file plan.json
 # Review in pull request or approval process
 kongctl diff --plan plan.json
 
-# Apply after approval
-kongctl apply --plan plan.json
+# Execute after approval
+kongctl sync --plan plan.json
 ```
 
-For CI/CD pipelines, generate and store plans as build artifacts, then apply them after approval:
+For CI/CD pipelines, generate and store plans as build artifacts, then execute them after approval:
 
 ```bash
 # CI: generate plan and store as artifact
 kongctl plan -f production-config.yaml \
   --output-file plan-$(date +%Y%m%d-%H%M%S).json
 
-# After approval: apply the plan
-kongctl apply --plan plan-20240115-142530.json --auto-approve
+# After approval: execute the plan
+kongctl sync --plan plan-20240115-142530.json --auto-approve
 ```
 
 ### Common mistakes to avoid
