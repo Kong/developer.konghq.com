@@ -20,6 +20,7 @@ related_resources:
 tools:
     - konnect-api
     - terraform
+    - kongctl
 
 tags:
   - policy
