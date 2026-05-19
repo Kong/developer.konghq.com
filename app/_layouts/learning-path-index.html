@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<div class="flex flex-col gap-12 w-full">
+<div class="flex flex-col gap-8 w-full">
   <div class="flex flex-col gap-3">
     <h1>{{ page.title }}</h1>
     {% if page.description %}<p class="text-xl font-light">{{ page.description }}</p>{% endif %}
@@ -9,30 +9,60 @@ layout: default
   </div>
 
   {% if page.learning_paths != empty %}
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="accordion flex flex-col gap-3" data-multiple="false">
     {% for lp in page.learning_paths %}
-    <a href="{{ lp.url }}"
-       class="flex flex-col gap-3 p-6 rounded-lg border border-primary/10 bg-secondary hover:shadow-md hover:no-underline transition-shadow">
-      <h2 class="text-lg font-semibold m-0">{{ lp.title }}</h2>
-      {% if lp.description %}
-      <p class="text-sm text-secondary m-0">{{ lp.description }}</p>
-      {% endif %}
-      <div class="flex gap-1.5 flex-wrap mt-auto pt-2">
-        {% if lp.products and lp.products != empty %}
-          {% for product_id in lp.products %}
-            {% assign product = site.data.products[product_id] %}
-            <span class="text-xs px-2 py-0.5 rounded-full bg-secondary border border-primary/10 text-secondary">
-              {{ product.name | default: product_id }}
-            </span>
+    {% assign lp_slug = lp.title | slugify %}
+    <div class="accordion-item border border-primary/10 rounded-lg overflow-hidden bg-secondary">
+      <a href="#{{ lp_slug }}" id="{{ lp_slug }}" class="accordion-trigger block p-6 cursor-pointer hover:no-underline">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-col gap-2 flex-1 min-w-0">
+            <h2 class="text-lg font-semibold m-0 text-primary">{{ lp.title }}</h2>
+            {% if lp.description %}
+            <p class="text-sm text-secondary m-0">{{ lp.description }}</p>
+            {% endif %}
+            <div class="flex gap-1.5 flex-wrap pt-1">
+              {% if lp.products and lp.products != empty %}
+                {% for product_id in lp.products %}
+                  {% assign product = site.data.products[product_id] %}
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-secondary border border-primary/10 text-secondary">
+                    {{ product.name | default: product_id }}
+                  </span>
+                {% endfor %}
+              {% endif %}
+              {% if lp.tags and lp.tags != empty %}
+                {% for tag in lp.tags %}
+                <span class="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand">#{{ tag }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          <span class="inline-flex chevron-icon rotate-180 flex-shrink-0 mt-1">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+        </div>
+      </a>
+      <div class="accordion-panel border-t border-primary/10 px-6 py-5">
+        {% if lp.steps and lp.steps != empty %}
+        <p class="text-sm text-secondary mb-4">{{ lp.steps | size }} step{% if lp.steps.size != 1 %}s{% endif %} &middot; work through in order, each builds on the previous</p>
+        <ol class="grid grid-cols-1 md:grid-cols-2 gap-3 list-none p-0 m-0">
+          {% for step in lp.steps %}
+          <li>
+            <a href="{{ step.permalink }}"
+               class="flex flex-col gap-2 h-full p-4 rounded-md border border-primary/10 hover:border-brand/40 hover:no-underline group">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full border border-primary/10 inline-flex items-center justify-center text-xs font-semibold text-secondary group-hover:text-brand group-hover:border-brand/50 flex-shrink-0">{{ forloop.index }}</span>
+                <span class="font-semibold text-primary group-hover:text-brand">{{ step.title }}</span>
+              </div>
+              {% if step.description %}
+              <span class="text-sm text-secondary">{{ step.description | liquify | markdownify | markdown }}</span>
+              {% endif %}
+            </a>
+          </li>
           {% endfor %}
-        {% endif %}
-        {% if lp.tags and lp.tags != empty %}
-          {% for tag in lp.tags %}
-          <span class="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand">#{{ tag }}</span>
-          {% endfor %}
+        </ol>
+        {% else %}
+        <p class="text-sm text-secondary m-0">No steps available yet.</p>
         {% endif %}
       </div>
-    </a>
+    </div>
     {% endfor %}
   </div>
   {% else %}

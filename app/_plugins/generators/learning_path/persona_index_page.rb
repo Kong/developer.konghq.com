@@ -40,7 +40,18 @@ module Jekyll
             'description' => lp.data['description'],
             'url' => lp.url,
             'tags' => lp.data['tags'] || [],
-            'products' => lp.data['products'] || []
+            'products' => lp.data['products'] || [],
+            'steps' => serialize_steps(lp.data['steps'])
+          }
+        end
+      end
+
+      def serialize_steps(steps)
+        Array(steps).map do |step|
+          {
+            'title' => step['title'],
+            'description' => step['description'],
+            'permalink' => step['permalink']
           }
         end
       end
