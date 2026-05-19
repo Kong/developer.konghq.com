@@ -78,7 +78,7 @@ sections:
       - path: /ai-gateway/ai-providers/**/*
   - title: MCP traffic gateway
     items:
-      - path: /mcp/
+      - path: /ai-gateway/mcp/
       - title: Secure MCP traffic
         description: Secure GitHub MCP Server traffic with Kong Gateway and {{site.ai_gateway}}
         url: /ai-gateway/mcp/secure-mcp-traffic/
