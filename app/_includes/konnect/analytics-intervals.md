@@ -70,9 +70,9 @@ rows:
     notes: "Data is aggregated in weekly or monthly increments."
   - interval: "Current quarter"
     aggregation_increment_frequency: "Daily, Weekly, Monthly"
-    notes: "Data is aggregated in daily, weekly, or monthly increments."
+    notes: "Logs any traffic in the current calendar quarter. Data is aggregated in daily, weekly, or monthly increments."
   - interval: "Previous quarter"
     aggregation_increment_frequency: "Daily, Weekly, Monthly"
-    notes: "Data is aggregated in daily, weekly, or monthly increments."
+    notes: "Logs any traffic in the previous calendar quarter. Data is aggregated in daily, weekly, or monthly increments."
 {% endtable %}
 <!--vale on-->
