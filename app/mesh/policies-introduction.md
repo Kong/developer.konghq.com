@@ -351,7 +351,7 @@ spec:
     kind: Mesh
   to:
     - targetRef:
-        kind: MeshService
+        kind: Mesh
       default:
         connectionTimeout: 5s
 ```
