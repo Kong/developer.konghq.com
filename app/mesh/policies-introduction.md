@@ -316,7 +316,7 @@ For `to` policies, the concatenated arrays are sorted again based on the `spec.t
 On Kubernetes, a consumer default in the same namespace can still override a producer policy for a specific service.
 This happens because policy role is evaluated before `spec.to[].targetRef` specificity.
 
-{% navtabs %}
+{% navtabs "same-namespace-exception" %}
 {% navtab "Producer" %}
 
 ```yaml
