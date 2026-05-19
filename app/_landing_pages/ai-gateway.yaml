@@ -79,7 +79,7 @@ rows:
         - type: card
           config:
             title: AI policies
-            description: Attach policy-managed plugin behavior to Models, Agents, MCP Servers, and identities.
+            description: Attach policy-managed governance behavior to Models, Agents, MCP Servers, and identities.
             icon: /assets/icons/plug.svg
             cta:
               url: /ai-gateway/entities/policy/
@@ -118,7 +118,7 @@ rows:
             description: Expose and govern tool traffic over Model Context Protocol (MCP) with authentication and fine-grained controls.
             icon: /assets/icons/mcp.svg
             cta:
-              url: /mcp/
+              url: /ai-gateway/mcp/
               align: end
       - blocks:
         - type: card
