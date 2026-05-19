@@ -14,9 +14,9 @@ layout: with_aside
       <a href="{{ step.permalink }}"
          class="flex flex-col gap-1 p-5 rounded-lg border border-primary/10 bg-secondary hover:shadow-md hover:no-underline">
         <span class="text-xs text-secondary font-medium">Step {{ forloop.index }}</span>
-        <span class="font-semibold text-primary">{{ step.title }}</span>
+        <span class="font-semibold text-primary">{{ step.title | liquify }}</span>
         {% if step.description %}
-        <span class="text-sm text-secondary">{{ step.description }}</span>
+        <span class="text-sm text-secondary">{{ step.description | liquify | markdownify | markdown }}</span>
         {% endif %}
       </a>
     </li>

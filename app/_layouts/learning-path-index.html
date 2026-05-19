@@ -18,7 +18,7 @@ layout: default
           <div class="flex flex-col gap-2 flex-1 min-w-0">
             <h2 class="text-lg font-semibold m-0 text-primary">{{ lp.title }}</h2>
             {% if lp.description %}
-            <p class="text-sm text-secondary m-0">{{ lp.description }}</p>
+            <p class="text-sm text-secondary m-0">{{ lp.description | liquify | markdownify | markdown }}</p>
             {% endif %}
             <div class="flex gap-1.5 flex-wrap pt-1">
               {% if lp.products and lp.products != empty %}
