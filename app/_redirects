@@ -224,6 +224,8 @@
 
 # MCP Gateway
 
+/mcp/  /ai-gateway/mcp/
+/mcp   /ai-gateway/mcp/
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
 /mcp/aggregate-mcp-tools/  /ai-gateway/mcp/aggregate-mcp-tools/
