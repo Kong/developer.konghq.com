@@ -52,6 +52,11 @@ cleanup:
         docker network rm kong-mesh-multi-zone
         rm -rf "${KONG_MESH_MULTI_ZONE_TMP:-/tmp/kong-mesh-multi-zone}"
         ```
+    - title: Remove the kumactl control plane
+      content: |
+        ```sh
+        kumactl config control-planes remove --name kong-mesh-multi-zone-global
+        ```
 
 tldr:
   q: How do I deploy a multi-zone {{site.mesh_product_name}} global control plane in Universal mode with Docker?
@@ -133,6 +138,16 @@ The global and zone control planes both need a database to persist state in Univ
 
 1. Create a database for each control plane:
 
+   ```sh
+   until docker exec kong-mesh-multi-zone-postgres pg_isready -U kong -d postgres >/dev/null 2>&1; do
+     sleep 1
+   done
+   docker exec --interactive kong-mesh-multi-zone-postgres \
+     psql -U kong -d postgres <<'SQL'
+   CREATE DATABASE global;
+   CREATE DATABASE zone1;
+   SQL
+   ```
    
 
 ## Start the global control plane
@@ -359,5 +374,5 @@ A zone ingress is the entry point for cross-zone traffic. Without it, other zone
 1. Open the global control plane UI at <http://127.0.0.1:5681/gui> and check that:
 
    * `zone1` appears in the **Zones** view.
-   * `zone1-ingress` appears in the **Zone** > **Ingresses** view.
+   * `zone1-ingress` appears in the zone's **Ingresses** tab.
    * The `default` mesh has mTLS enabled.
