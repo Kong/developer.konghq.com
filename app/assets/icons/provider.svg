@@ -1,8 +1,8 @@
 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="10" cy="6" rx="5.5" ry="2.5" stroke="#428CDC" stroke-width="2"/>
-  <path d="M4.5 6V13.5C4.5 14.8807 6.96243 16 10 16C10.5401 16 11.062 15.9646 11.558 15.8983" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <path d="M4.5 10C4.5 11.3807 6.96243 12.5 10 12.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="17.5" cy="14.5" r="2.5" stroke="#428CDC" stroke-width="2"/>
-  <path d="M17.5 17V20" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
-  <path d="M17.5 18.5H20.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
+  <path d="M10 4C13.5899 4 16.5 5.34315 16.5 7C16.5 8.65685 13.5899 10 10 10C6.41015 10 3.5 8.65685 3.5 7C3.5 5.34315 6.41015 4 10 4Z" fill="#428CDC"/>
+  <path d="M3.5 7V14C3.5 15.6569 6.41015 17 10 17C10.5013 17 10.9893 16.9738 11.4575 16.9243" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
+  <path d="M3.5 10.5C3.5 12.1569 6.41015 13.5 10 13.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
+  <path d="M17.5 11C19.433 11 21 12.567 21 14.5C21 16.433 19.433 18 17.5 18C15.567 18 14 16.433 14 14.5C14 12.567 15.567 11 17.5 11Z" fill="#428CDC"/>
+  <path d="M17.5 18V20.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
+  <path d="M17.5 19.25H20.5" stroke="#428CDC" stroke-width="2" stroke-linecap="round"/>
 </svg>

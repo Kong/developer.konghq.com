@@ -31,7 +31,7 @@ rows:
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
-                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a **Policy** {% new_in 2.0.0 %} is a first-class entity that applies plugin behavior at a chosen scope (such as a Model, Agent, MCP Server, Consumer, or Consumer Group). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
+                    {{site.ai_gateway}} addresses these challenges with a high-performance control plane that secures, governs, and observes AI-native systems end to end. In this model, a **Policy** {% new_in 2.0.0 %} is a first-class entity that applies governance behavior at a chosen scope (such as a Model, Agent, MCP Server, Consumer, or Consumer Group). Whether serving LLM traffic, exposing structured context via MCP, or coordinating agents through A2A, {{site.ai_gateway}} ensures scalable, secure, and reliable AI infrastructure.
 
 
       - blocks:
@@ -71,7 +71,7 @@ rows:
           config:
             title: AI Gateway entities {% new_in 2.0.0 %}
             description: Learn the AI, MCP, and A2A entity model and how resources map to each gateway type.
-            icon: /assets/icons/entity.svg
+            icon: /assets/icons/linked-services.svg
             cta:
               url: /ai-gateway/entities/
               align: end
@@ -98,7 +98,7 @@ rows:
       type: h2
       text: Traffic types
       description: |
-        {{site.ai_gateway}} supports three gateway types for different AI-native traffic patterns:
+        {{site.ai_gateway}} supports three AI traffic types:
         AI traffic through a universal model API, MCP tool traffic, and A2A agent traffic.
     column_count: 3
     columns:
@@ -440,7 +440,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [Model](/ai-gateway/entities/model/) and [Provider](/ai-gateway/entities/provider/), to provide a single, standardized interface for interacting with models across multiple providers.
+                    Kong's {{site.ai_gateway}} Universal API is configured through entity resources, primarily [Model](/ai-gateway/entities/model/) and [Provider](/ai-gateway/entities/provider/), to provide a single, standardized interface for interacting with models across multiple providers.
 
                     - [**Easy to use**](/ai-gateway/entities/model/): Define one Model entity and expose a stable client-facing endpoint.
 
@@ -448,7 +448,7 @@ rows:
 
                     - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route requests based on performance, cost, or availability.
 
-                    - [**Policy integration**](/ai-gateway/entities/policy/): Attach plugins as Policy entities for auth, guardrails, and transformations.
+                    - [**Policy integration**](/ai-gateway/entities/policy/): Attach Policy entities for auth, guardrails, and transformations.
 
     - blocks:
         - type: image
