@@ -1,0 +1,145 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "compression_ranges": {
+          "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type.",
+          "items": {
+            "properties": {
+              "max_tokens": {
+                "type": "integer"
+              },
+              "min_tokens": {
+                "type": "integer"
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "max_tokens",
+              "min_tokens",
+              "value"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "compressor_type": {
+          "default": "rate",
+          "description": "What compression type to use to compress with",
+          "enum": [
+            "rate",
+            "target_token"
+          ],
+          "type": "string"
+        },
+        "compressor_url": {
+          "default": "http://localhost:8080",
+          "description": "The url of the compressor",
+          "type": "string"
+        },
+        "keepalive_timeout": {
+          "default": 60000,
+          "description": "The keepalive timeout for the established http connnection",
+          "type": "number"
+        },
+        "log_text_data": {
+          "default": false,
+          "description": "Log the text data",
+          "type": "boolean"
+        },
+        "message_type": {
+          "default": [
+            "user"
+          ],
+          "items": {
+            "enum": [
+              "assistant",
+              "system",
+              "user"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "stop_on_error": {
+          "default": true,
+          "description": "Stop processing if an error occurs",
+          "type": "boolean"
+        },
+        "timeout": {
+          "default": 10000,
+          "description": "Connection timeout with the compressor",
+          "type": "number"
+        }
+      },
+      "required": [
+        "compression_ranges"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
