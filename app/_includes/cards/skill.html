@@ -26,7 +26,7 @@
       </div>
       {% endif %}
 
-      <p class="text-sm line-clamp-3">{{ skill.description }}</p>
+      <p class="text-sm line-clamp-3">{{ skill.description | markdownify | markdown}}</p>
     </div>
 
     {% if skill.scripts or skill.references or skill.assets %}
