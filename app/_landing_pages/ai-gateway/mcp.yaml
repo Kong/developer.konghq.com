@@ -110,7 +110,7 @@ rows:
                   Use available {{site.base_gateway}} [plugins](/plugins/) to:
                   - **Secure access** with the [AI MCP OAuth2 plugin](/plugins/ai-mcp-oauth2/) or other authentication methods.
                   - **Monitor MCP traffic** using [AI metrics](/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics) and [AI audit logs](/ai-gateway/ai-audit-log-reference/#ai-mcp-logs).
-                  - **Enforce access controls** for [MCP tool usage](/mcp/use-access-controls-for-mcp-tools/).
+                  - **Enforce access controls** for [MCP tool usage](/ai-gateway/mcp/use-access-controls-for-mcp-tools/).
                   - **Govern usage** with rate limiting and traffic control plugins.
   - columns:
       - blocks:
@@ -124,11 +124,11 @@ rows:
               - text: Proxy MCP Traffic with the AI MCP Proxy plugin
                 url: "/plugins/ai-mcp-proxy/"
               - text: Autogenerate a serverless MCP
-                url: "/mcp/map-api-to-mcp-tools/"
+                url: "/ai-gateway/mcp/map-api-to-mcp-tools/"
               - text: Autogenerate MCP tools from any API schema
-                url: "/mcp/map-weather-api-to-mcp-tools/"
+                url: "/ai-gateway/mcp/map-weather-api-to-mcp-tools/"
               - text: "Aggregate MCP tools from multiple AI MCP Proxy plugins"
-                url: /mcp/aggregate-mcp-tools/
+                url: /ai-gateway/mcp/aggregate-mcp-tools/
       - blocks:
         - type: card
           config:
@@ -137,13 +137,13 @@ rows:
             description: Apply security, governance, and observability to MCP servers that route LLM requests through AI Proxy plugins.
             ctas:
               - text: Secure MCP servers with the AI MCP OAuth2 plugin and Okta
-                url: "/mcp/secure-mcp-tools-with-oauth2-and-okta/"
+                url: "/ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/"
               - text: Monitor MCP traffic metrics
                 url: "/ai-gateway/monitor-ai-llm-metrics/#mcp-traffic-metrics"
               - text: Review AI MCP audit logs
                 url: "/ai-gateway/ai-audit-log-reference/#ai-mcp-logs"
               - text: Enforce access controls for MCP tools usage
-                url: "/mcp/use-access-controls-for-mcp-tools/"
+                url: "/ai-gateway/mcp/use-access-controls-for-mcp-tools/"
 
   - header:
       type: h2
