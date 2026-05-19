@@ -37,6 +37,7 @@ module Jekyll
         def data
           {
             'title' => @skill.name,
+            'content_type' => 'skill',
             'description' => @skill.description,
             'version' => @skill.version,
             'author' => @skill.author,
