@@ -66,7 +66,6 @@ module Jekyll
             'plugin_page_url' => @skill.plugin_page_url,
             'source_path' => @skill.source_path,
             'source_url' => @skill.source_url,
-            'llm' => false,
             'toc' => false
           }
         end
