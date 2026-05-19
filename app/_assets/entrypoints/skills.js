@@ -4,24 +4,39 @@ class SkillsIndex {
     this.skillsGrid = document.getElementById("skills-grid");
     this.emptyState = document.getElementById("skills-empty");
     this.clearButton = document.getElementById("skills-clear-filters");
-    this.filterInputs = Array.from(
-      document.querySelectorAll("[data-skills-filter]"),
+    this.filterContainers = Array.from(
+      document.querySelectorAll(".dropdown-container[data-skills-filter]"),
     );
 
     if (!this.searchInput || !this.skillsGrid || !this.emptyState) return;
 
     this.cards = Array.from(this.skillsGrid.querySelectorAll('[data-card="skill"]'));
+    this.cardSearchStrings = new Map(
+      this.cards.map((card) => [
+        card,
+        [card.dataset.title, card.dataset.description, card.dataset.tags, card.dataset.plugin, card.dataset.products, card.dataset.category]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase(),
+      ])
+    );
     this.searchQuery = "";
-    this.filters = {
-      plugin: "",
-      product: "",
-      category: "",
-    };
 
     this.addEventListeners();
     this.preventCopyNavigation();
     this.readURL();
     this.filterCards();
+  }
+
+  setFilterValue(container, value) {
+    container.dataset.skillsFilterValue = value;
+    const label = container.querySelector(".dropdown-label");
+
+    container.querySelectorAll('[role="menuitem"]').forEach((item) => {
+      const isSelected = item.dataset.value === value;
+      item.querySelector("svg")?.classList.toggle("invisible", !isSelected);
+      if (isSelected && label) label.textContent = item.childNodes[0].textContent.trim();
+    });
   }
 
   preventCopyNavigation() {
@@ -39,23 +54,20 @@ class SkillsIndex {
       this.updateURL();
     });
 
-    this.filterInputs.forEach((input) => {
-      input.addEventListener("change", () => {
-        this.filters[input.dataset.skillsFilter] = input.value;
-        this.filterCards();
-        this.updateURL();
+    this.filterContainers.forEach((container) => {
+      container.querySelectorAll('[role="menuitem"]').forEach((item) => {
+        item.addEventListener("click", () => {
+          this.setFilterValue(container, item.dataset.value || "");
+          this.filterCards();
+          this.updateURL();
+        });
       });
     });
 
     this.clearButton?.addEventListener("click", () => {
       this.searchQuery = "";
       this.searchInput.value = "";
-
-      this.filterInputs.forEach((input) => {
-        this.filters[input.dataset.skillsFilter] = "";
-        input.value = "";
-      });
-
+      this.filterContainers.forEach((container) => this.setFilterValue(container, ""));
       this.filterCards();
       this.updateURL();
     });
@@ -63,37 +75,21 @@ class SkillsIndex {
 
   filterCards() {
     const query = this.searchQuery.toLowerCase().trim();
-    const activePlugin = this.filters.plugin;
-    const activeProduct = this.filters.product;
-    const activeCategory = this.filters.category;
+    const filters = Object.fromEntries(
+      this.filterContainers.map((c) => [c.dataset.skillsFilter, c.dataset.skillsFilterValue || ""])
+    );
+    const activePlugin = filters.plugin || "";
+    const activeProduct = filters.product || "";
+    const activeCategory = filters.category || "";
     let count = 0;
 
     this.cards.forEach((card) => {
-      const matchesSearch =
-        !query ||
-        [
-        card.dataset.title,
-        card.dataset.description,
-        card.dataset.tags,
-        card.dataset.plugin,
-        card.dataset.products,
-        card.dataset.category,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .includes(query);
-
-      const matchesPlugin =
-        !activePlugin || card.dataset.pluginSlug === activePlugin;
-      const productValues = (card.dataset.productValues || "")
-        .split("|")
-        .filter(Boolean);
-      const matchesProduct =
-        !activeProduct || productValues.includes(activeProduct);
-      const matchesCategory =
-        !activeCategory || card.dataset.categoryValue === activeCategory;
-      const visible =
-        matchesSearch && matchesPlugin && matchesProduct && matchesCategory;
+      const matchesSearch = !query || this.cardSearchStrings.get(card).includes(query);
+      const matchesPlugin = !activePlugin || card.dataset.pluginSlug === activePlugin;
+      const productValues = (card.dataset.productValues || "").split("|").filter(Boolean);
+      const matchesProduct = !activeProduct || productValues.includes(activeProduct);
+      const matchesCategory = !activeCategory || card.dataset.categoryValue === activeCategory;
+      const visible = matchesSearch && matchesPlugin && matchesProduct && matchesCategory;
 
       card.classList.toggle("hidden", !visible);
       if (visible) count += 1;
@@ -111,38 +107,28 @@ class SkillsIndex {
       this.searchInput.value = q;
     }
 
-    this.filterInputs.forEach((input) => {
-      const value = params.get(input.dataset.skillsFilter);
-      if (!value) return;
-
-      this.filters[input.dataset.skillsFilter] = value;
-      input.value = value;
+    this.filterContainers.forEach((container) => {
+      const value = params.get(container.dataset.skillsFilter);
+      if (value) this.setFilterValue(container, value);
     });
   }
 
   updateURL() {
     const params = new URLSearchParams();
-    if (this.searchQuery.trim()) {
-      params.set("q", this.searchQuery.trim());
-    }
+    if (this.searchQuery.trim()) params.set("q", this.searchQuery.trim());
 
-    Object.entries(this.filters).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      }
+    this.filterContainers.forEach((container) => {
+      const value = container.dataset.skillsFilterValue || "";
+      if (value) params.set(container.dataset.skillsFilter, value);
     });
 
-    const newUrl =
-      window.location.pathname +
-      (params.toString() ? "?" + params.toString() : "");
+    const newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
     window.history.replaceState({}, "", newUrl);
   }
 
   hasActiveFilters() {
-    return (
-      Boolean(this.searchQuery.trim()) ||
-      Object.values(this.filters).some(Boolean)
-    );
+    return Boolean(this.searchQuery.trim()) ||
+      this.filterContainers.some((c) => c.dataset.skillsFilterValue);
   }
 }
 

@@ -38,10 +38,9 @@ description: Browse and search Kong skills for AI-powered development workflows.
       </div>
     </div>
 
-    <div class="rounded-2xl border border-primary/5 bg-secondary/30 p-4">
-      <div class="flex flex-wrap items-end gap-4">
-        <label class="flex min-w-[18rem] flex-[2_1_24rem] flex-col gap-2">
-          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Search</span>
+    <div class="flex flex-col gap-2 w-full">
+      <div class="flex flex-col md:flex-row md:flex-wrap items-stretch md:items-center gap-4">
+        <label class="flex md:flex-[2_1_0] flex-col gap-2">
           <div class="filter-results-field w-full">
             {% include_svg '/assets/icons/search.svg' width="20" height="20" class="filter-results-field__image" %}
             <input
@@ -53,62 +52,27 @@ description: Browse and search Kong skills for AI-powered development workflows.
           </div>
         </label>
 
-        {% if skill_filters.plugins.size > 1 %}
-        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
-          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Plugin</span>
-          <select
-            id="skills-filter-plugin"
-            data-skills-filter="plugin"
-            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
-          >
-            <option value="">All plugins</option>
-            {% for plugin in skill_filters.plugins %}
-              <option value="{{ plugin.value }}">{{ plugin.label }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        {% endif %}
+        <div class="flex md:flex-[1_1_0] gap-2">
+          {% if skill_filters.plugins.size > 1 %}
+            {% include dropdown.html filter_key="plugin" default_label="All plugins" label="Plugin" items=skill_filters.plugins %}
+          {% endif %}
 
-        {% if skill_filters.products.size > 1 %}
-        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
-          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Product</span>
-          <select
-            id="skills-filter-product"
-            data-skills-filter="product"
-            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
-          >
-            <option value="">All products</option>
-            {% for product in skill_filters.products %}
-              <option value="{{ product.value }}">{{ product.label }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        {% endif %}
+          {% if skill_filters.products.size > 1 %}
+            {% include dropdown.html filter_key="product" default_label="All products" items=skill_filters.products %}
+          {% endif %}
 
-        {% if skill_filters.categories.size > 1 %}
-        <label class="flex min-w-[11rem] flex-1 flex-col gap-2">
-          <span class="text-xs font-medium uppercase tracking-wide text-terciary">Category</span>
-          <select
-            id="skills-filter-category"
-            data-skills-filter="category"
-            class="rounded-xl border border-primary/10 bg-secondary px-4 py-3 text-sm text-secondary"
-          >
-            <option value="">All categories</option>
-            {% for category in skill_filters.categories %}
-              <option value="{{ category.value }}">{{ category.label }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        {% endif %}
-
-        <button
-          id="skills-clear-filters"
-          type="button"
-          class="hidden text-sm text-brand"
-        >
-          Clear filters
-        </button>
+          {% if skill_filters.categories.size > 1 %}
+            {% include dropdown.html filter_key="category" default_label="All categories" items=skill_filters.categories %}
+          {% endif %}
+        </div>
       </div>
+      <button
+        id="skills-clear-filters"
+        type="button"
+        class="hidden text-xs text-brand self-end"
+      >
+        Clear filters
+      </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="skills-grid">
