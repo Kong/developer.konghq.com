@@ -50,7 +50,7 @@ cleanup:
           kong-mesh-multi-zone-global-control-plane \
           kong-mesh-multi-zone-postgres
         docker network rm kong-mesh-multi-zone
-        rm -rf "$KONG_MESH_MULTI_ZONE_TMP"
+        rm -rf "${KONG_MESH_MULTI_ZONE_TMP:-/tmp/kong-mesh-multi-zone}"
         ```
 
 tldr:
@@ -133,13 +133,7 @@ The global and zone control planes both need a database to persist state in Univ
 
 1. Create a database for each control plane:
 
-   ```sh
-   docker exec --interactive kong-mesh-multi-zone-postgres \
-     psql -U kong -d postgres <<'SQL'
-   CREATE DATABASE global;
-   CREATE DATABASE zone1;
-   SQL
-   ```
+   
 
 ## Start the global control plane
 
@@ -194,7 +188,7 @@ To manage the deployment with [kumactl](/mesh/cli/), connect it to the global co
 
    ```sh
    export KONG_MESH_MULTI_ZONE_ADMIN_TOKEN="$(
-     docker exec --tty --interactive kong-mesh-multi-zone-global-control-plane \
+     docker exec kong-mesh-multi-zone-global-control-plane \
        wget --quiet --output-document - \
        http://127.0.0.1:5681/global-secrets/admin-user-token \
        | jq --raw-output .data \
@@ -297,7 +291,7 @@ Each zone runs its own control plane. The zone control plane connects to the glo
 
 ## Start the zone ingress
 
-A zone ingress is the entry point for cross-zone traffic. Without it, the global control plane has no way to route requests from other zones into `zone1`.
+A zone ingress is the entry point for cross-zone traffic. Without it, other zones have no way to reach services in `zone1`.
 
 1. Generate a zone token scoped to ingress and egress for `zone1`:
 
