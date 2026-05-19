@@ -4,6 +4,8 @@ permalink: /how-to/add-custom-linting-rules/
 
 content_type: how_to
 description: Learn how to add custom linting rules to your APIs in Insomnia.
+no_wrap:
+   true
 
 products:
 - insomnia
@@ -36,6 +38,9 @@ faqs:
       Create your `.spectral.yaml` file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
 
 ---
+
+{% navtabs "Project type" %}
+{% navtab "Git Sync" %}
 
 ## Create add the file ruleset
 
@@ -76,3 +81,11 @@ tags:
 
 This causes a new warning to appear:
 ![Missing tag description warning](/assets/images/insomnia/custom-linting-warning.png)
+
+{% endnavtab %}
+{% navtab "Cloud" %}
+
+actual content
+
+{% endnavtab %}
+{% endnavtabs %}
