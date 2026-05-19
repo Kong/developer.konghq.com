@@ -314,3 +314,48 @@ If your `max_tokens` limit is too small, you may encounter this error.
 You can resolve this by setting `max_tokens` to a value greater than `budget_tokens`. The maximum value is `200000`.
 
 For more information about the default `budget_tokens` value, see [Building with extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#max-tokens-and-context-window-size) in Claude's API docs.
+
+### Disable thinking
+
+If you encounter errors or want to reduce token usage, you can disable thinking using the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin:
+
+{% capture disable_claude_thinking %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy
+      config:
+        llm_format: anthropic
+        route_type: llm/v1/chat
+        max_request_body_size: 1048576
+        logging:
+          log_statistics: true
+          log_payloads: false
+        auth:
+          allow_override: false
+          aws_access_key_id: ${aws_access_key_id}
+          aws_secret_access_key: ${aws_secret_access_key}
+        model:
+          provider: bedrock
+          name: us.anthropic.claude-haiku-4-5-20251001-v1:0
+          options:
+            anthropic_version: bedrock-2023-05-31
+            bedrock:
+              aws_region: ${aws_region}
+            max_tokens: 8192
+    - name: request-transformer-advanced
+      config:
+        remove:
+          body:
+            - model
+            - thinking
+variables:
+  aws_access_key_id:
+    value: $AWS_ACCESS_KEY_ID
+  aws_secret_access_key:
+    value: $AWS_SECRET_ACCESS_KEY
+  aws_region:
+    value: $AWS_REGION
+{% endentity_examples %}
+{% endcapture %}
+{{ disable_claude_thinking }}
