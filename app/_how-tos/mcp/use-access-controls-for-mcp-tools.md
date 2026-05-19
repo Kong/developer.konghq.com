@@ -14,7 +14,7 @@ products:
   - ai-gateway
   - insomnia
 
-permalink: /mcp/use-access-controls-for-mcp-tools/
+permalink: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
 
 series:
   id: mcp-acls

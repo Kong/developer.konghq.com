@@ -7,9 +7,9 @@ related_resources:
   - text: AI MCP Proxy
     url: /plugins/ai-mcp-proxy/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
-    url: /mcp/use-access-controls-for-mcp-tools/
+    url: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
   - text: Aggregate MCP tools from multiple AI MCP Proxy plugins
-    url: /mcp/aggregate-mcp-tools/
+    url: /ai-gateway/mcp/aggregate-mcp-tools/
 
 description: Restrict access to aggregated MCP tools using Consumer Groups. This guide shows how to define per-tool ACLs on conversion-only plugins and enforce them through a listener with the `include_consumer_groups` setting.
 
@@ -17,7 +17,7 @@ products:
   - gateway
   - ai-gateway
 
-permalink: /mcp/enforce-acls-on-aggregated-mcp-servers/
+permalink: /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
 
 works_on:
   - on-prem
@@ -360,7 +360,7 @@ Use [ChatWise](https://chatwise.app/) to validate the ACL configuration. ChatWis
 1. Click the **+** button.
 1. Select "HTTP Server (http)".
 1. In the **Name** field, enter `aggregated-mcp`.
-1. In the **URL** field, enter `http://localhost:8000/mcp/aggregation`.
+1. In the **URL** field, enter `http://localhost:8000/ai-gateway/mcp/aggregation`.
 1. Next to **HTTP headers**, click **+**.
 1. In the **Key** field, enter `apikey`.
 1. In the **Value** field, enter `alice-key`.

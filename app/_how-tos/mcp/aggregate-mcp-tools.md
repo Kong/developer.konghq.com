@@ -14,7 +14,7 @@ description: Learn how to aggregate MCP tools from multiple RESTful APIs using A
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/aggregate-mcp-tools/
+permalink: /ai-gateway/mcp/aggregate-mcp-tools/
 
 works_on:
   - on-prem

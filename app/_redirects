@@ -18,7 +18,6 @@
 /plugins/request-callout/examples/dynamic-url/ /plugins/request-callout/examples/dynamic-url-via-lua-code/
 /gateway/plugin-development/  /custom-plugins/
 /gateway/plugin-development/*  /custom-plugins/
-
 # Renames
 /mesh-manager/federate-zone/  /mesh/federate-zone/
 /mesh-manager/migrate-zone/  /mesh/migrate-zone/
@@ -42,13 +41,11 @@
 /mesh/configure-transparent-proxying/   /mesh/transparent-proxying/
 /mesh/upgrade-notes/    /mesh/version-specific-upgrade-notes/
 /metering-and-billing/billing-invoicing-subscriptions/  /metering-and-billing/billing-invoicing/
-
 # API spec links (delete when fixed)
 /gateway/latest/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
 /gateway/latest/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
 /gateway/:version/plan-and-deploy/security/secrets-management/getting-started /gateway/entities/vault/
 /gateway/:version/plan-and-deploy/security/secrets-management/reference-format /gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault
-
 ## How-to renames
 /how-to/collect-dev-portal-audit-logs-with-sumologic/ /how-to/collect-dev-portal-audit-logs/
 /how-to/collect-audit-logs-with-sumologic/ /how-to/collect-audit-logs/
@@ -57,7 +54,6 @@
 /how-to/send-asychronous-llm-requests/ /how-to/send-asynchronous-llm-requests/
 /how-to/encrypt-kafka-messages-with-event-gateway/ /event-gateway/encrypt-kafka-messages-with-event-gateway/
 /how-to/event-gateway/kong-identity-oauth/  /event-gateway/kong-identity-oauth/
-
 # Mesh redirects
 /mesh/meshidentity-spire/   /mesh/issue-identity-with-meshidentity-spire/
 /how-to/deploy-mesh-on-kubernetes/ /mesh/#get-started
@@ -94,7 +90,6 @@
 /mesh/explore/cli       /mesh/cli/
 /mesh/production/gui    /mesh/interact-with-control-plane/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
-/mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/
 /mesh/production/mesh   /mesh/mesh-multi-tenancy/
 /mesh/production/dp-config/cni      /mesh/cni/
 /mesh/production/dp-config/transparent-proxying     /mesh/transparent-proxying/
@@ -127,19 +122,14 @@
 /reference/proxy-template  /mesh/policies/proxy-template/
 /mesh/production/secure-deployment/manage-control-plane-permissions-on-kubernetes/ /mesh/manage-control-plane-permissions-on-kubernetes/
 /mesh/production/secure-deployment/secrets/ /mesh/manage-secrets/
-
-
 /docs/:version/policies/*   /mesh/policies/:splat
 /docs/:version/*    /mesh/:splat
-
 # Mesh don't migrate ever
 /mesh/reference/http-api       /mesh/kubernetes-gateway-api/
 /mesh/networking/non-mesh-traffic/  /mesh/policies/meshtrafficpermission/
 /mesh/production/cp-deployment/single-zone /mesh/
 /mesh/production/cp-deployment/multi-zone   /mesh/
-/mesh/production/cp-deployment/single-zone /mesh/
 /mesh/production/cp-deployment/stand-alone    /mesh/
-
 /mesh/policies/traffic-metrics  /mesh/policies/meshmetric/
 /mesh/policies/service-health-probes /mesh/policies/
 /mesh/policies/virtual-outbound     /mesh/policies/
@@ -157,23 +147,15 @@
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
 /mesh/gateway-pods-k8s/        /mesh/meshgatewayinstance/
-
-
 ## Kubernetes
-
 /gateway/install/kubernetes/  /gateway/install/kubernetes/konnect/
-
-
 ## Event gateway
-
 /knep/get-started/  /event-gateway/get-started/
 /event-gateway/policies/schema-validation/* /event-gateway/policies/
 /event-gateway/get-started/topic-filtering/ /event-gateway/policies/skip-record/
 /event-gateway/get-started/topic-name-aliasing/ /event-gateway/entities/virtual-cluster/#namespaces
 /api/event-gateway/knep/*   /api/konnect/event-gateway/
-
 ## Dev Portal
-
 /dev-portal/custom-pages/   /dev-portal/pages-and-content/
 /dev-portal/snippets/   /dev-portal/pages-and-content/
 /dev-portal/application-registration/   /dev-portal/self-service/
@@ -183,21 +165,15 @@
 /dev-portal/api-catalog-and-packaging/  /catalog/api-packaging/
 /dev-portal/api-products/  /catalog/apis/
 /api-products/  /catalog/apis/
-
-
 # Gateway LTS
 /archive/dev-portal/ https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/dev-portal/
 /archive/vitals/     https://gateway-lts--kongdocs.netlify.app/gateway/3.4.x/kong-enterprise/analytics/
 /gateway/upgrade/lts-upgrade/ /gateway/upgrade/lts-upgrade-34-310/
-
 ## Debugger
-
 /konnect-platform/active-tracing/  /gateway/debugger/
 /konnect-platform/active-tracing-spans/ /gateway/debugger-spans/
 /gateway/debugger/  /observability/debugger/
 /gateway/debugger-spans/  /observability/debugger-spans/
-
-
 ## Insomnia
 /insomnia/version-control/ /insomnia/storage/
 /insomnia/concepts/ /insomnia/terminology/
@@ -205,14 +181,9 @@
 /insomnia/end-to-end-encryption/ /insomnia/data-security/
 /how-to/migrate-collections-and-envrionments-from-postman-to-insomnia/ /how-to/migrate-collections-and-environments-from-postman-to-insomnia/
 /insomnia/upgrade/insomnia-12.6/ /insomnia/upgrade/git-sync-12.6/
-
 ## Indices
-
 /index/konnect-platform/  /index/konnect/
-
-
 ## Kong Operator
-
 /operator/konnect/control-plane-watch-namespaces/ /operator/reference/control-plane-watch-namespaces/
 /operator/konnect/crd/gateway/hybrid/ /operator/get-started/gateway-api/deploy-gateway/
 /operator/konnect/get-started/install/ /operator/get-started/konnect-crds/install/
@@ -228,9 +199,7 @@
 /operator/dataplanes/get-started/kic/create-route/ /operator/get-started/gateway-api/create-route/
 /operator/dataplanes/get-started/kic/install/ /operator/get-started/gateway-api/install/
 /operator/konnect/get-started/rate-limiting/ /operator/get-started/konnect-crds/install/
-
 # Service Catalog rename
-
 /service-catalog/*   /catalog/:splat   301
 /service-catalog     /catalog          301
 /dev-portal/apis/ /catalog/apis/
@@ -240,21 +209,44 @@
 /how-to/map-gateway-manager-resources/ /how-to/map-api-gateway-resources/
 /catalog/integrations/mesh-manager/ /catalog/integrations/service-mesh/
 /how-to/map-mesh-manager-resources/ /how-to/map-service-mesh-resources/
-
 # Cloud Gateways
-
 /dedicated-cloud-gateways/breaking-changes/ /dedicated-cloud-gateways/  301
 /dedicated-cloud-gateways/multi-region-aws-managed-cache/   /dedicated-cloud-gateways/managed-cache/ 301
-
 # Observability
 /advanced-analytics/*   /observability/:splat   301
 /advanced-analytics     /observability          301
 /index/advanced-analytics/  /index/observability/  301
 /advanced-analytics/custom-dashboards/    /custom-dashboards/ 301
 /observability/llm-reporting/   /observability/explorer/    301
-
 # Kong Konnect MCP server
 /mcp/kong-mcp/get-started/  /konnect-platform/konnect-mcp/installation/
 /mcp/kong-mcp/tools/    /konnect-platform/konnect-mcp/tools/
+
+# MCP Gateway
+
 /mcp/autogenerate-mcp-tools/    /mcp/map-api-to-mcp-tools/
 /mcp/autogenerate-mcp-tools-for-weather-api/    /mcp/map-weather-api-to-mcp-tools/
+/ai-gateway/mcp/aggregate-mcp-tools/  /ai-gateway/mcp/aggregate-mcp-tools/
+/ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/  /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
+/ai-gateway/mcp/govern-mcp-traffic/  /ai-gateway/mcp/govern-mcp-traffic/
+/ai-gateway/mcp/map-api-to-mcp-tools/  /ai-gateway/mcp/map-api-to-mcp-tools/
+/ai-gateway/mcp/map-weather-api-to-mcp-tools/  /ai-gateway/mcp/map-weather-api-to-mcp-tools/
+/ai-gateway/mcp/observe-autogenerated-mcp-tools-for-weather-api/  /ai-gateway/mcp/observe-autogenerated-mcp-tools-for-weather-api/
+/ai-gateway/mcp/observe-mcp-traffic-with-acls/  /ai-gateway/mcp/observe-mcp-traffic-with-acls/
+/ai-gateway/mcp/observe-mcp-traffic/  /ai-gateway/mcp/observe-mcp-traffic/
+/ai-gateway/mcp/observe-traffic-for-mcp-tools/  /ai-gateway/mcp/observe-traffic-for-mcp-tools/
+/ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/  /ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/
+/ai-gateway/mcp/secure-mcp-traffic/  /ai-gateway/mcp/secure-mcp-traffic/
+/ai-gateway/mcp/use-access-controls-for-mcp-tools/  /ai-gateway/mcp/use-access-controls-for-mcp-tools/
+/mcp/aggregate-mcp-tools/  /ai-gateway/mcp/aggregate-mcp-tools/
+/mcp/enforce-acls-on-aggregated-mcp-servers/  /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
+/mcp/govern-mcp-traffic/  /ai-gateway/mcp/govern-mcp-traffic/
+/mcp/map-api-to-mcp-tools/  /ai-gateway/mcp/map-api-to-mcp-tools/
+/mcp/map-weather-api-to-mcp-tools/  /ai-gateway/mcp/map-weather-api-to-mcp-tools/
+/mcp/observe-autogenerated-mcp-tools-for-weather-api/  /ai-gateway/mcp/observe-autogenerated-mcp-tools-for-weather-api/
+/mcp/observe-mcp-traffic-with-acls/  /ai-gateway/mcp/observe-mcp-traffic-with-acls/
+/mcp/observe-mcp-traffic/  /ai-gateway/mcp/observe-mcp-traffic/
+/mcp/observe-traffic-for-mcp-tools/  /ai-gateway/mcp/observe-traffic-for-mcp-tools/
+/mcp/secure-mcp-tools-with-oauth2-and-okta/  /ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/
+/mcp/secure-mcp-traffic/  /ai-gateway/mcp/secure-mcp-traffic/
+/mcp/use-access-controls-for-mcp-tools/  /ai-gateway/mcp/use-access-controls-for-mcp-tools/

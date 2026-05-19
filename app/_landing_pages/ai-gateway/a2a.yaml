@@ -40,12 +40,39 @@ rows:
           - type: structured_text
             config:
               header:
+                type: h3
+                text: "Using {{site.ai_gateway}} entities {% new_in 2.0.0 %}"
+              blocks:
+                - type: text
+                  text: |
+                    If you're using {{site.ai_gateway}} 2.0.0 or later, configure A2A traffic through the entity model:
+                    create an [Agent entity](/ai-gateway/entities/agent/) with `type: a2a`, then attach [Policy entities](/ai-gateway/entities/policy/) for authentication, guardrails, rate limiting, and other controls.
+
+                    The runtime behavior remains plugin-based under the hood, but control-plane configuration is managed through entities.
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/linked-services.svg
+              title: A2A entities {% new_in 2.0.0 %}
+              description: Configure A2A with Agent and Policy entities in the new {{site.ai_gateway}} model.
+              ctas:
+                - text: Agent entity reference
+                  url: "/ai-gateway/entities/agent/"
+                - text: Policy entity reference
+                  url: "/ai-gateway/entities/policy/"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
                 type: h2
                 text: "Proxy A2A Traffic"
               blocks:
                 - type: text
                   text: |
                     The AI A2A Proxy plugin records A2A protocol metadata so you can analyze how agent-to-agent requests are processed.
+                    This plugin-first path remains the default for users on versions before 2.0.0.
       - blocks:
           - type: structured_text
             config:
@@ -142,8 +169,8 @@ rows:
       type: h2
       text: "Govern A2A traffic"
       description: |
-        Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway. 
-        Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.         
+        Use {{site.base_gateway}} plugins to control how A2A traffic flows through the gateway.
+        Rate limiting, traffic control, and request transformation plugins work with A2A routes the same way they work with any other proxied traffic.
     column_count: 2
     columns:
       - blocks:

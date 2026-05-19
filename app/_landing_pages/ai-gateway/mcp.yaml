@@ -12,6 +12,7 @@ metadata:
     - ai
     - mcp
 
+
 rows:
   - header:
       type: h1
@@ -41,6 +42,32 @@ rows:
               alt_text: Overview of AI gateway
 
   - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                type: h3
+                text: "Using {{site.ai_gateway}} entities {% new_in 2.0.0 %}"
+              blocks:
+                - type: text
+                  text: |
+                    If you're using {{site.ai_gateway}} 2.0.0 or later, configure MCP through the entity model:
+                    create an [MCP Server entity](/ai-gateway/entities/mcp-server/) and attach [Policy entities](/ai-gateway/entities/policy/) for authentication, access control, governance, and observability.
+
+                    Runtime behavior remains plugin-based under the hood, while control-plane configuration is managed through entities.
+      - blocks:
+          - type: card
+            config:
+              icon: /assets/icons/linked-services.svg
+              title: MCP server entity {% new_in 2.0.0 %}
+              description: Configure MCP traffic with MCP Server and Policy entities in the new {{site.ai_gateway}} model.
+              ctas:
+                - text: MCP Server entity reference
+                  url: "/ai-gateway/entities/mcp-server/"
+                - text: Policy entity reference
+                  url: "/ai-gateway/entities/policy/"
+
+  - columns:
     - blocks:
         - type: structured_text
           config:
@@ -51,6 +78,7 @@ rows:
               - type: text
                 text: |
                   {{site.ai_gateway}} lets you create and manage MCP servers without writing custom code. Transform any API into an MCP server, apply security and governance controls, and integrate them with AI assistants.
+                  This plugin-first path remains the default for users on versions before 2.0.0.
 
   - header:
     columns:
@@ -177,4 +205,3 @@ rows:
                 - mcp
               quantity: 5
               allow_empty: true
-

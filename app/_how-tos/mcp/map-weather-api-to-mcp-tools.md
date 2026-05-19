@@ -12,7 +12,7 @@ description: |
 products:
   - gateway
   - ai-gateway
-permalink: /mcp/map-weather-api-to-mcp-tools/
+permalink: /ai-gateway/mcp/map-weather-api-to-mcp-tools/
 
 series:
   id: mcp-weather-api

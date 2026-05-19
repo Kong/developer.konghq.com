@@ -44,20 +44,20 @@ related_resources:
   - text: About {{site.ai_gateway}}
     url: /ai-gateway/
   - text: Autogenerate serverless MCP
-    url: /mcp/map-api-to-mcp-tools/
+    url: /ai-gateway/mcp/map-api-to-mcp-tools/
   - text: All {{site.ai_gateway}} plugins
     url: /plugins/?category=ai
   - text: Kong MCP traffic gateway
     url: /mcp/
     icon: /assets/icons/mcp.svg
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/map-api-to-mcp-tools/
+    url: /ai-gateway/mcp/map-api-to-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
-    url: /mcp/weather-mcp-api/
+    url: /ai-gateway/mcp/weather-mcp-api/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
-    url: /mcp/use-access-controls-for-mcp-tools/
+    url: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
-    url: /mcp/enforce-acls-on-aggregated-mcp-servers/
+    url: /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
   - text: MCP Registry in {{site.konnect_short_name}} (tech preview)
     url: /catalog/mcp-registry/
 
@@ -102,15 +102,15 @@ next_steps:
   - text: Learn about Kong MCP traffic gateway
     url: /mcp/
   - text: Learn about {{site.konnect_product_name}} MCP Server
-    url: /mcp/kong-mcp/get-started/
+    url: /ai-gateway/mcp/kong-mcp/get-started/
   - text: Autogenerate MCP tools from a RESTful API
-    url: /mcp/map-api-to-mcp-tools/
+    url: /ai-gateway/mcp/map-api-to-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
-    url: /mcp/map-weather-api-to-mcp-tools/
+    url: /ai-gateway/mcp/map-weather-api-to-mcp-tools/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
-    url: /mcp/use-access-controls-for-mcp-tools/
+    url: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
-    url: /mcp/enforce-acls-on-aggregated-mcp-servers/
+    url: /ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/
 ---
 The AI MCP Proxy plugin lets you connect any Kong-managed Service to the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). It acts as a **protocol bridge**, translating between MCP and HTTP so that MCP-compatible clients can either call existing APIs or interact with upstream MCP servers through Kong.
 
@@ -268,7 +268,7 @@ This way, consumers only interact with tools appropriate to their role, while ma
 > 2. Configure listener mode to aggregate tools by matching tags.
 > 3. Set `include_consumer_groups: true` on the listener. Without this setting, the listener cannot pass Consumer Group membership to the aggregated tools, and ACL rules will not evaluate correctly.
 >
-> See [Enforce ACLs on aggregated MCP servers](/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
+> See [Enforce ACLs on aggregated MCP servers](/ai-gateway/mcp/enforce-acls-on-aggregated-mcp-servers/) for a complete example.
 
 ### Supported identifier types
 

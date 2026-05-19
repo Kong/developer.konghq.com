@@ -81,13 +81,13 @@ sections:
       - path: /mcp/
       - title: Secure MCP traffic
         description: Secure GitHub MCP Server traffic with Kong Gateway and {{site.ai_gateway}}
-        url: /mcp/secure-mcp-traffic/
+        url: /ai-gateway/mcp/secure-mcp-traffic/
       - title: Govern MCP traffic
         description: Use {{site.ai_gateway}} to govern GitHub MCP traffic
-        url: /mcp/govern-mcp-traffic
+        url: /ai-gateway/mcp/govern-mcp-traffic
       - title: Observe MCP traffic
         description: Observe GitHub MCP traffic with {{site.ai_gateway}}
-        url: /mcp/observe-mcp-traffic
+        url: /ai-gateway/mcp/observe-mcp-traffic
       - title: MCP logs
         description: Learn about logs available for MCP traffic via {{site.ai_gateway}}
         url: /ai-gateway/ai-audit-log-reference/#ai-mcp-logs

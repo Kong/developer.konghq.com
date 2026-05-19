@@ -15,7 +15,7 @@ products:
   - ai-gateway
   - insomnia
 
-permalink: /mcp/observe-mcp-traffic-with-acls/
+permalink: /ai-gateway/mcp/observe-mcp-traffic-with-acls/
 
 series:
   id: mcp-acls

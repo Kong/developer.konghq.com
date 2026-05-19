@@ -68,7 +68,7 @@ extended_description: |
   {:.warning}
   > The `tools[n].name` fields must match the exact tools name from the upstream MCP server. If the names don't match, the ACL will fail to apply.
 
-  Check [this how-to](/mcp/use-access-controls-for-mcp-tools/) for a detailed walkthrough guide.
+  Check [this how-to](/ai-gateway/mcp/use-access-controls-for-mcp-tools/) for a detailed walkthrough guide.
 
 weight: 900
 

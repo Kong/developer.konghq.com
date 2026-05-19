@@ -49,7 +49,7 @@ related_resources:
   - text: Enforce AI rate limits in with a custom function
     url: /how-to/use-custom-function-for-ai-rate-limiting/
   - text: Use {{site.ai_gateway}} to govern GitHub MCP traffic
-    url: /mcp/govern-mcp-traffic/
+    url: /ai-gateway/mcp/govern-mcp-traffic/
 
 ---
 

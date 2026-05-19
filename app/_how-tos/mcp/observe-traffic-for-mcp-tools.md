@@ -17,7 +17,7 @@ products:
   - gateway
   - ai-gateway
 
-permalink: /mcp/observe-traffic-for-mcp-tools/
+permalink: /ai-gateway/mcp/observe-traffic-for-mcp-tools/
 
 series:
   id: mcp-conversion

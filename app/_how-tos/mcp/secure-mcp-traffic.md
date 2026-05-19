@@ -8,7 +8,7 @@ related_resources:
     url: /plugins/ai-proxy-advance/
   - text: Key Auth plugin
     url: /plugins/key-auth/
-permalink: /mcp/secure-mcp-traffic/
+permalink: /ai-gateway/mcp/secure-mcp-traffic/
 breadcrumbs:
   - /mcp/
 
@@ -87,7 +87,7 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-To enable model-driven access to remote tools, we’ll route MCP traffic through OpenAI using the AI Proxy Advanced plugin. In this tutorial, we’ll use the [OpenAI `/responses` API](https://cookbook.openai.com/examples/mcp/mcp_tool_guide) endpoint via the `llm/v1/responses` route type in the AI Proxy Advanced plugin to communicate with a GitHub-hosted remote MCP server. This approach simplifies integration: instead of routing each tool invocation through your backend, {{site.ai_gateway}} forwards model-generated requests directly to the MCP server. That server exposes standardized tools, giving you conversational control over your GitHub repositories—secured and governed by Kong’s built-in capabilities. No custom glue code is required to enable this integration.
+To enable model-driven access to remote tools, we’ll route MCP traffic through OpenAI using the AI Proxy Advanced plugin. In this tutorial, we’ll use the [OpenAI `/responses` API](https://cookbook.openai.com/examples/ai-gateway/mcp/mcp_tool_guide) endpoint via the `llm/v1/responses` route type in the AI Proxy Advanced plugin to communicate with a GitHub-hosted remote MCP server. This approach simplifies integration: instead of routing each tool invocation through your backend, {{site.ai_gateway}} forwards model-generated requests directly to the MCP server. That server exposes standardized tools, giving you conversational control over your GitHub repositories—secured and governed by Kong’s built-in capabilities. No custom glue code is required to enable this integration.
 
 
 {% entity_examples %}

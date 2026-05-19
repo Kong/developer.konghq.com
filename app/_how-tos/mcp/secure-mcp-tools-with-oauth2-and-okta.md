@@ -1,7 +1,7 @@
 ---
 title: Secure MCP tools with OAuth2 and Okta
 content_type: how_to
-permalink: /mcp/secure-mcp-tools-with-oauth2-and-okta/
+permalink: /ai-gateway/mcp/secure-mcp-tools-with-oauth2-and-okta/
 breadcrumbs:
   - /mcp/
 
