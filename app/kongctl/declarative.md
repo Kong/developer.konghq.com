@@ -6,7 +6,7 @@ description: Learn how to manage {{site.konnect_product_name}} infrastructure as
 content_type: reference
 layout: reference
 
-beta: true
+
 
 works_on:
   - konnect

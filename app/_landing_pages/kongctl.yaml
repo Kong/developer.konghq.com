@@ -10,7 +10,6 @@ metadata:
     - konnect
   breadcrumbs:
     - /tools/
-  beta: true
 rows:
   - header:
       type: h1

@@ -2,7 +2,7 @@
 title: Configuration of kongctl
 description: Learn how to configure kongctl using configuration files, environment variables, and command-line flags.
 
-beta: true
+
 
 content_type: reference
 layout: reference

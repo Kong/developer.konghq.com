@@ -4,7 +4,7 @@ description: "Use the schema-registries command to list or retrieve schema regis
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 
