@@ -328,7 +328,7 @@ rows:
 ## DatasourceConfig
 
 Discovers available metrics, dimensions, and filter fields for {{site.konnect_short_name}} analytics data sources. 
-Call this tool first before using `query_analytics`, `query_llm_analytics`, `query_mcp_analytics`, or `query_api_requests` to learn what fields are valid for each data source.
+Call this tool first before using `QueryAnalytics`, `QueryLlmAnalytics`, `QueryMcpAnalytics`, or `QueryApiRequests` to learn what fields are valid for each data source.
 
 <!-- vale off -->
 
@@ -344,7 +344,7 @@ rows:
   - parameter: "`datasource`"
     type: string
     description: |
-      Optional data source name to filter results: `"api_usage"`, `"llm_usage"`, `"mcp_usage"`, or `"requests"`. Returns all data sources if omitted.
+      Optional data source name to filter results: `"api-usage"`, `"llm-usage"`, `"agentic-usage"`, or `"requests"`. Returns all data sources if omitted.
 {% endtable %}
 
 <!-- vale on -->
@@ -373,7 +373,7 @@ rows:
   - parameter: "`datasource`"
     type: string
     description: |
-      The analytics data source to query: `"api-usage"`, `"llm-usage"`, or `"mcp-usage"`. Defaults to `"api-usage"`.
+      The analytics data source to query: `"api-usage"`, `"llm-usage"`, or `"agentic-usage"`. Defaults to `"api-usage"`.
   - parameter: "`time_range`"
     type: object
     description: |
@@ -394,8 +394,8 @@ rows:
 
 Queries {{site.konnect_short_name}} analytics data for aggregated API traffic metrics over time. 
 Use this to answer questions about API traffic patterns, error rates, latency, and throughput. 
-Call `datasource_config` first to discover valid metrics, dimensions, and filter fields for the `api_usage` data source. 
-Use this explore-style query before `query_api_requests` or `get_consumer_requests`.
+Call `DatasourceConfig` first to discover valid metrics, dimensions, and filter fields for the `api-usage` data source. 
+Use this explore-style query before `QueryApiRequests` or `GetConsumerRequests`.
 
 <!-- vale off -->
 
