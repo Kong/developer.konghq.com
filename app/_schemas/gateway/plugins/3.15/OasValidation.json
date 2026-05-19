@@ -1,0 +1,142 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "allowed_header_parameters": {
+          "default": "Host,Content-Type,User-Agent,Accept,Content-Length",
+          "description": "List of header parameters in the request that will be ignored when performing HTTP header validation. These are additional headers added to an API request beyond those defined in the API specification.  For example, you might include the HTTP header `User-Agent`, which lets servers and network peers identify the application, operating system, vendor, and/or version of the requesting user agent.",
+          "type": "string"
+        },
+        "api_spec": {
+          "description": "The API specification defined using either Swagger or the OpenAPI. This can be either a JSON or YAML based file. If using a YAML file, the spec needs to be URI-Encoded to preserve the YAML format.",
+          "type": "string"
+        },
+        "api_spec_encoded": {
+          "default": true,
+          "description": "Indicates whether the api_spec is URI-Encoded.",
+          "type": "boolean"
+        },
+        "collect_all_errors": {
+          "default": false,
+          "description": "If set to true, collects all validation errors instead of stopping at the first error. Note: Enabling this option with OpenAPI 3.0 will affect performance.",
+          "type": "boolean"
+        },
+        "custom_base_path": {
+          "description": "The base path to be used for path match evaluation. This value is ignored if `include_base_path` is set to `false`.",
+          "type": "string"
+        },
+        "header_parameter_check": {
+          "default": false,
+          "description": "If set to true, checks if HTTP header parameters in the request exist in the API specification.",
+          "type": "boolean"
+        },
+        "include_base_path": {
+          "default": false,
+          "description": "Indicates whether to include the base path when performing path match evaluation.",
+          "type": "boolean"
+        },
+        "notify_only_request_validation_failure": {
+          "default": false,
+          "description": "If set to true, notifications via event hooks are enabled, but request based validation failures don't affect the request flow.",
+          "type": "boolean"
+        },
+        "notify_only_response_body_validation_failure": {
+          "default": false,
+          "description": "If set to true, notifications via event hooks are enabled, but response validation failures don't affect the response flow.",
+          "type": "boolean"
+        },
+        "query_parameter_check": {
+          "default": false,
+          "description": "If set to true, checks if query parameters in the request exist in the API specification.",
+          "type": "boolean"
+        },
+        "validate_request_body": {
+          "default": true,
+          "description": "If set to true, validates the request body content against the API specification.",
+          "type": "boolean"
+        },
+        "validate_request_header_params": {
+          "default": true,
+          "description": "If set to true, validates HTTP header parameters against the API specification.",
+          "type": "boolean"
+        },
+        "validate_request_query_params": {
+          "default": true,
+          "description": "If set to true, validates query parameters against the API specification.",
+          "type": "boolean"
+        },
+        "validate_request_uri_params": {
+          "default": true,
+          "description": "If set to true, validates URI parameters in the request against the API specification.",
+          "type": "boolean"
+        },
+        "validate_response_body": {
+          "default": false,
+          "description": "If set to true, validates the response from the upstream services against the API specification. If validation fails, it results in an `HTTP 406 Not Acceptable` status code.",
+          "type": "boolean"
+        },
+        "verbose_response": {
+          "default": false,
+          "description": "If set to true, returns a detailed error message for invalid requests & responses. This is useful while testing.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "api_spec"
+      ],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https"
+      ],
+      "description": "A set of strings representing HTTP protocols.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "config"
+  ]
+}
