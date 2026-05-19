@@ -53,7 +53,7 @@ related_resources:
   - text: Autogenerate MCP tools from a RESTful API
     url: /ai-gateway/mcp/map-api-to-mcp-tools/
   - text: Autogenerate MCP tools for Weather API
-    url: /ai-gateway/mcp/weather-mcp-api/
+    url: /ai-gateway/mcp/map-weather-api-to-mcp-tools/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /ai-gateway/mcp/use-access-controls-for-mcp-tools/
   - text: Enforce ACLs on aggregated MCP servers
