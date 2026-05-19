@@ -78,18 +78,16 @@ class SkillsIndex {
     const filters = Object.fromEntries(
       this.filterContainers.map((c) => [c.dataset.skillsFilter, c.dataset.skillsFilterValue || ""])
     );
-    const activePlugin = filters.plugin || "";
     const activeProduct = filters.product || "";
     const activeCategory = filters.category || "";
     let count = 0;
 
     this.cards.forEach((card) => {
       const matchesSearch = !query || this.cardSearchStrings.get(card).includes(query);
-      const matchesPlugin = !activePlugin || card.dataset.pluginSlug === activePlugin;
       const productValues = (card.dataset.productValues || "").split("|").filter(Boolean);
       const matchesProduct = !activeProduct || productValues.includes(activeProduct);
       const matchesCategory = !activeCategory || card.dataset.categoryValue === activeCategory;
-      const visible = matchesSearch && matchesPlugin && matchesProduct && matchesCategory;
+      const visible = matchesSearch && matchesProduct && matchesCategory;
 
       card.classList.toggle("hidden", !visible);
       if (visible) count += 1;

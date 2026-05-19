@@ -160,10 +160,6 @@ module Jekyll
           end
         end
 
-        site.data['skills_plugins'] = @plugins.map do |plugin|
-          skill_slugs = @skills.select { |skill| skill.plugin_slug == plugin.slug }.map(&:slug)
-          plugin.to_data(skill_slugs:)
-        end
       end
 
       def discover_power
@@ -217,9 +213,6 @@ module Jekyll
 
       def build_filters
         {
-          'plugins' => @plugins.sort_by { |plugin| plugin.name.downcase }.map do |plugin|
-            filter_option(plugin.slug, plugin.name)
-          end,
           'products' => build_label_filters(@skills.flat_map(&:products)),
           'categories' => build_label_filters(@skills.map(&:category))
         }

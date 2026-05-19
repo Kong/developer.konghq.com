@@ -7,7 +7,6 @@ llm: false
 description: Browse and search Kong skills for AI-powered development workflows.
 ---
 {%- assign all_skills = site.data.skills | sort -%}
-{%- assign all_plugins = site.data.skills_plugins | sort_natural: "name" -%}
 {%- assign power = site.data.skills_power -%}
 {%- assign skill_filters = site.data.skills_filters -%}
 
@@ -53,10 +52,6 @@ description: Browse and search Kong skills for AI-powered development workflows.
         </label>
 
         <div class="flex md:flex-[1_1_0] gap-2">
-          {% if skill_filters.plugins.size > 1 %}
-            {% include dropdown.html filter_key="plugin" default_label="All plugins" label="Plugin" items=skill_filters.plugins %}
-          {% endif %}
-
           {% if skill_filters.products.size > 1 %}
             {% include dropdown.html filter_key="product" default_label="All products" items=skill_filters.products %}
           {% endif %}
@@ -86,25 +81,5 @@ description: Browse and search Kong skills for AI-powered development workflows.
       No skills match the current search or filters.
     </div>
   </div>
-
-  {% if all_plugins.size > 0 %}
-  <div class="flex flex-col gap-6">
-    <div class="flex items-end justify-between gap-4 flex-wrap">
-      <div class="flex flex-col gap-2 max-w-3xl">
-        <h2>Available plugins</h2>
-        <p class="text-terciary">
-          These plugin packages own the published skills and provide the install flow for supported AI tools.
-        </p>
-      </div>
-      <a href="/skills/plugins/" class="text-sm text-brand">Browse all plugins &rarr;</a>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {% for plugin in all_plugins limit: 2 %}
-        {% include cards/skill_plugin.html plugin=plugin compact=true %}
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
 
 </div>
