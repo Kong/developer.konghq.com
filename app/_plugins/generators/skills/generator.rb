@@ -7,7 +7,7 @@ require_relative 'power'
 module Jekyll
   module SkillPages
     def self.skills_repo_path(site)
-      ENV['SKILLS_REPO_PATH'] || ENV['SKILLS_REPO'] || site.config['skills_repo_path'] || 'app/.repos/skills'
+      ENV['SKILLS_REPO_PATH'] || ENV['SKILLS_REPO'] || site.config['skills_repo_path']
     end
 
     def self.base_dir(site)
