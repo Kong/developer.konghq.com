@@ -1,6 +1,5 @@
 source: app
 destination: dist
-skills_repo_path: app/.repos/ai-marketplace
 permalink: pretty
 timezone: America/San_Francisco
 markdown: kramdown
@@ -152,6 +151,8 @@ repos:
 
 skills_repo_branch: main
 skills_repo_slug: kong/ai-marketplace
+skills_repo_path: app/.repos/ai-marketplace
+
 
 plugin_schemas_path: app/_schemas/gateway/plugins
 
