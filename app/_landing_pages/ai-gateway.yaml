@@ -40,42 +40,6 @@ rows:
               url: /assets/images/gateway/ai-gateway-overview.svg
               alt_text: Overview of AI gateway
 
-  - header:
-      type: h2
-      text: Gateway types
-      description: |
-        {{site.ai_gateway}} supports three gateway types for different AI-native traffic patterns:
-        AI traffic through a universal model API, MCP tool traffic, and A2A agent traffic.
-    column_count: 3
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: LLM traffic gateway
-            description: Route LLM requests through a provider-agnostic Universal API with centralized auth, policy, and observability.
-            icon: /assets/icons/plugins/universal-api.svg
-            cta:
-              url: /ai-gateway/entities/model/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: MCP traffic gateway
-            description: Expose and govern tool traffic over Model Context Protocol (MCP) with authentication and fine-grained controls.
-            icon: /assets/icons/mcp.svg
-            cta:
-              url: /mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: A2A traffic gateway
-            description: Secure, govern, and observe Agent-to-Agent (A2A) traffic with protocol-aware routing and telemetry.
-            icon: /assets/icons/plugins/ai-a2a-proxy.png
-            cta:
-              url: /ai-gateway/a2a/
-              align: end
-
   - columns:
       - blocks:
         - type: structured_text
@@ -130,6 +94,41 @@ rows:
               url: /cookbooks/
               align: end
 
+  - header:
+      type: h2
+      text: Traffic types
+      description: |
+        {{site.ai_gateway}} supports three gateway types for different AI-native traffic patterns:
+        AI traffic through a universal model API, MCP tool traffic, and A2A agent traffic.
+    column_count: 3
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: LLM traffic gateway
+            description: Route LLM requests through a provider-agnostic Universal API with centralized auth, policy, and observability.
+            icon: /assets/icons/plugins/universal-api.svg
+            cta:
+              url: /ai-gateway/entities/model/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP traffic gateway
+            description: Expose and govern tool traffic over Model Context Protocol (MCP) with authentication and fine-grained controls.
+            icon: /assets/icons/mcp.svg
+            cta:
+              url: /mcp/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: A2A traffic gateway
+            description: Secure, govern, and observe Agent-to-Agent (A2A) traffic with protocol-aware routing and telemetry.
+            icon: /assets/icons/plugins/ai-a2a-proxy.png
+            cta:
+              url: /ai-gateway/a2a/
+              align: end
   - header:
       type: h2
       text: "{{site.ai_gateway}} providers"
@@ -232,7 +231,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Models
+            title: AI Models {% new_in 2.0.0 %}
             description: Define client-facing AI endpoints, capabilities, and routing behavior.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
@@ -241,8 +240,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Providers
-            description: Configure upstream provider connectivity, credentials, and provider types.
+            title: AI Providers {% new_in 2.0.0 %}
+            description: Use Provider entity to configure LLM provider connectivity, credentials, and provider types.
             icon: /assets/icons/plugins/ai-proxy-advanced.png
             cta:
               url: /ai-gateway/entities/provider/
@@ -277,8 +276,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: MCP traffic gateway
-            description: Gain control and visibility over AI agent infrastructure with {{site.ai_gateway}}-driven MCP capabilities
+            title: MCP tool governance
+            description: Control and observe MCP tool traffic with authentication, access policies, and telemetry.
             icon: /assets/icons/mcp.svg
             cta:
               url: /mcp
@@ -286,8 +285,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: A2A traffic gateway
-            description: Secure, govern, and observe agent-to-agent (A2A) traffic with {{site.ai_gateway}}'s A2A protocol support
+            title: A2A routing and telemetry
+            description: Secure and observe agent-to-agent traffic with protocol-aware routing and analytics.
             icon: /assets/icons/plugins/ai-a2a-proxy.png
             cta:
               url: /ai-gateway/a2a/
@@ -449,7 +448,7 @@ rows:
 
                     - [**Retry and fallback**](/ai-gateway/load-balancing/#retry-and-fallback): Route requests based on performance, cost, or availability.
 
-                    - [**Policy integration**](/ai-gateway/entities/policy/): Attach Policy entities for auth, guardrails, and transformations.
+                    - [**Policy integration**](/ai-gateway/entities/policy/): Attach plugins as Policy entities for auth, guardrails, and transformations.
 
     - blocks:
         - type: image
@@ -579,15 +578,6 @@ rows:
           config:
             slug: ai-custom-guardrail
             icon: ai-custom-guardrail.png
-      - blocks:
-        - type: card
-          config:
-            title: Amazon Bedrock guardrails
-            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
-            icon: /assets/icons/bedrock.svg
-            cta:
-              url: /plugins/ai-proxy/#supported-native-llm-formats
-              align: end
 
   - header:
       type: h3
@@ -625,6 +615,9 @@ rows:
 
                 While standard RAG workflows are resource-heavy, as they require teams to generate embeddings and manually curate them in vector databases, Kong's **AI RAG Injector** policy automates this entire process.
                 Instead of embedding RAG logic into every application individually, platform teams can inject vetted data into prompts directly at the gateway layer without any manual interventions.
+
+  - column_count: 2
+    columns:
     - blocks:
         - type: plugin
           config:
