@@ -42,7 +42,7 @@ faqs:
 {% navtabs "Project type" %}
 {% navtab "Git Sync" %}
 
-## Create add the file ruleset
+## Create the file ruleset
 
 In the Git repository connected to your document, create a `.spectral.yaml` at the same directory as the OAS file to lint.
 
