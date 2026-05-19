@@ -2,7 +2,7 @@
 title: kongctl and decK
 description: Learn how to use kongctl and decK together for declarative management of the entire API platform
 
-beta: true
+
 
 content_type: reference
 layout: reference

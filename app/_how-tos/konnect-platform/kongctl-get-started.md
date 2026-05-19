@@ -3,7 +3,6 @@ title: Get started with kongctl
 description: "Learn how to use kongctl to manage {{site.konnect_product_name}} resources"
 content_type: how_to
 permalink: /kongctl/get-started/
-beta: true
 breadcrumbs:
   - /kongctl/
 

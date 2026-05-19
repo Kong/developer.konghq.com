@@ -2,7 +2,7 @@
 title: Authentication with kongctl
 description: Learn how to authenticate kongctl to {{site.konnect_product_name}} using the device flow or personal access tokens.
 
-beta: true
+
 
 content_type: reference
 layout: reference

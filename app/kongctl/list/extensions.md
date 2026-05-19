@@ -4,7 +4,7 @@ description: "List installed kongctl CLI extensions."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

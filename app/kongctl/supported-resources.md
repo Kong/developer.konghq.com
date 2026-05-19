@@ -6,7 +6,7 @@ description: Reference for `kongctl` declarative configuration that lists suppor
 content_type: reference
 layout: reference
 
-beta: true
+
 
 works_on:
   - konnect

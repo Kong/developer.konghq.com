@@ -4,7 +4,7 @@ description: "Link a local development CLI extension."
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - konnect
 

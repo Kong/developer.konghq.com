@@ -4,7 +4,7 @@ description: "Use the list verb with the dcr-provider command to query {{site.ko
 content_type: reference
 layout: reference
 
-beta: true
+
 works_on:
   - on-prem
   - konnect
