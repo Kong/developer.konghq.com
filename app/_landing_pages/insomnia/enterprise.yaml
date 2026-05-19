@@ -98,3 +98,12 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/enterprise-user-management/#user-activity-reports
+      - blocks:
+        - type: card
+          config:
+            title: Konnect Gateway Service routes integration
+            description: Link and test your Konnect Gateway Service routes in Insomnia.
+            icon: /assets/icons/service-hub.svg
+            cta:
+              text: Learn more
+              url: /insomnia/konnect-integration/
