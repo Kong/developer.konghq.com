@@ -134,6 +134,22 @@ body:
 {:.info}
 > Entities in the `default` Workspace use the existing un-prefixed path, for example `.../core-entities/services`.
 
+## Custom plugins
+
+Install custom plugin schemas at the control plane level (in the `default` Workspace). Once installed, you can create plugin instances of that custom plugin in any Workspace on the control plane, the same way you would with a bundled plugin.
+
+```sh
+# schema lives in default
+curl -X POST .../core-entities/custom-plugins ...
+
+# instance can live in any workspace
+curl -X POST .../core-entities/$WORKSPACE/plugins \
+  -d '{ "name": "my-custom-plugin", "config": { ... } }'
+```
+
+{:.warning}
+> You can't install schemas in a non-default Workspace.
+
 ## Use decK
 
 To use decK with {{site.konnect_short_name}} Workspaces, you need 1.43 or later, but 1.60 or later is recommended.
