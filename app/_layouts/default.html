@@ -111,7 +111,8 @@
       <!-- End Google Tag Manager -->
     {% endif %}
 
-    {% if jekyll.environment == "production" and site.ENABLE_KAPA_AI %}
+    {% if site.ENABLE_KAPA_AI %}
+    {% if jekyll.environment == "production" or jekyll.environment == "preview" %}
     <script>
       (function () {
         let k = window.Kapa;
@@ -154,6 +155,7 @@
       data-modal-border-radius="0"
       data-modal-inner-border-radius="0"
     ></script>
+    {% endif %}
     {% endif %}
 
     {% include structured_data.html %}
