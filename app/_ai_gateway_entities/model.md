@@ -277,11 +277,11 @@ There's no separate Target Model entity or endpoint. Target models are managed o
 
 ## Load balancing
 
-When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For algorithm details, selection guidance, and tuning, see [Load balancing with AI Proxy Advanced](/ai-gateway/load-balancing/).
+When a Model has more than one target, the [load balancer](#schema-aigateway-model-config-balancer) sits between the virtual model and its targets, distributing requests according to `config.balancer`. For detailed guidance focused on Model entities, see [Load balancing algorithms for Model entities](/ai-gateway/load-balancing/#load-balancing-algorithms-for-model-entities).
 
 ### Algorithms
 
-The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field selects one of seven load balancing strategies for distributing requests across target models. For detailed guidance focused on Model entities, see [Load balancing algorithms for Model entities](/ai-gateway/load-balancing/#load-balancing-algorithms-for-model-entities).
+The [`algorithm`](#schema-aigateway-model-config-balancer-algorithm) field selects one of seven load balancing strategies for distributing requests across target models. See [Load balancing algorithms for Model entities](/ai-gateway/load-balancing/#load-balancing-algorithms-for-model-entities) for more details.
 
 <!-- vale off -->
 {% table %}
