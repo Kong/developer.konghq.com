@@ -15,5 +15,4 @@ links:
   '/policies/?': '/mesh/policies/'
   '/features/?': '/mesh/enterprise/'
 
-pages:
 # Must for GA    
