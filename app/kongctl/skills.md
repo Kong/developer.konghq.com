@@ -38,10 +38,12 @@ next_steps:
     url: /kongctl/kongctl-and-deck/
 ---
 
-`kongctl` includes skills for AI coding agents that work with
+kongctl includes skills for AI coding agents that work with
 {{site.konnect_short_name}} resources from a repository. Skills give an agent
-product-specific instructions and workflows while `kongctl` remains the source
+product-specific instructions and workflows while kongctl remains the source
 of truth for schema discovery, planning, and execution.
+
+## Install kongctl skills
 
 Install the bundled skills from the root of the repository where your agent
 will work:
@@ -62,7 +64,11 @@ symlinks for supported agent tooling under `.agents/skills/` and
 
 ## Bundled skills
 
-### `kongctl-declarative`
+kongctl comes bundled with the following skills.
+
+<!--vale off-->
+### kongctl-declarative
+<!--vale on-->
 
 Use `kongctl-declarative` when you want an agent to help set up or maintain
 declarative configuration for {{site.konnect_short_name}}. The skill helps an
@@ -77,22 +83,22 @@ agent:
 - Work through plan, diff, apply, sync, delete, and adopt workflows.
 - Scaffold CI/CD workflows for declarative configuration.
 
-### `kongctl-extension-builder`
+<!--vale off-->
+### kongctl-extension-builder
+<!--vale on-->
 
 Use `kongctl-extension-builder` when you want an agent to help create,
-validate, or test a local `kongctl` CLI extension.
+validate, or test a local kongctl CLI extension.
 
 ## Safe workflow
 
-Agent-generated configuration should be reviewed before it changes
-{{site.konnect_short_name}}. A typical workflow is:
+Always review agent-generated configuration before applying changes to {{site.konnect_short_name}}.
+A typical workflow looks like this:
 
 1. Install skills with `kongctl install skills`.
-1. Ask the agent to use `kongctl explain` and `kongctl scaffold` before
-   hand-writing unfamiliar resources or fields.
+1. Ask the agent to use `kongctl explain` and `kongctl scaffold` before writing unfamiliar resources or fields.
 1. Review the generated YAML in your repository.
 1. Preview changes with `kongctl diff --mode apply` or `kongctl plan`.
 1. Apply reviewed changes with `kongctl apply` or `kongctl sync`.
 
-Use the [`kongctl install skills`](/kongctl/install/skills/) command reference
-for the complete command syntax.
+See the [`kongctl install skills`](/kongctl/install/skills/) command reference for the complete command syntax.
