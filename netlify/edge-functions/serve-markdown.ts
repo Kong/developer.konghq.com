@@ -53,6 +53,8 @@ export default async (request: Request, context: Context) => {
 export const config: Config = {
   path: "/*",
   excludedPath: [
+    "/assets/*",
+    "/vite/assets/*",
     "/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg",
     "/**/*.gif", "/**/*.svg", "/**/*.ico", "/**/*.webp",
     "/**/*.woff", "/**/*.woff2", "/**/*.ttf", "/**/*.eot",
