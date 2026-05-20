@@ -50,9 +50,9 @@ related_resources:
   - text: Kong MCP traffic gateway
     url: /mcp/
     icon: /assets/icons/mcp.svg
-  - text: Autogenerate MCP tools from a RESTful API
+  - text: Create MCP tools from a RESTful API
     url: /mcp/map-api-to-mcp-tools/
-  - text: Autogenerate MCP tools for Weather API
+  - text: Create MCP tools for Weather API
     url: /mcp/weather-mcp-api/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/
@@ -103,9 +103,9 @@ next_steps:
     url: /mcp/
   - text: Learn about {{site.konnect_product_name}} MCP Server
     url: /mcp/kong-mcp/get-started/
-  - text: Autogenerate MCP tools from a RESTful API
+  - text: Create MCP tools from a RESTful API
     url: /mcp/map-api-to-mcp-tools/
-  - text: Autogenerate MCP tools for Weather API
+  - text: Create MCP tools for Weather API
     url: /mcp/map-weather-api-to-mcp-tools/
   - text: Control MCP tool access with Consumer and Consumer Group ACLs
     url: /mcp/use-access-controls-for-mcp-tools/

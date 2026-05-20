@@ -46,7 +46,7 @@ rows:
           config:
             header:
               type: h2
-              text: "Autogenerate MCP servers using {{site.ai_gateway}}"
+              text: "Create MCP servers using {{site.ai_gateway}}"
             blocks:
               - type: text
                 text: |
@@ -59,7 +59,7 @@ rows:
           config:
             header:
               type: h2
-              text: "Autogenerate MCP servers using AI MCP Proxy"
+              text: "Map APIs to MCP servers using AI MCP Proxy"
             blocks:
               - type: text
                 text: |
@@ -89,7 +89,7 @@ rows:
         - type: card
           config:
             icon: /assets/icons/mcp.svg
-            title: Autogenerate MCP tools from any API using AI MCP plugins
+            title: Create MCP tools from any API using AI MCP plugins
             description: |
               Explore guides to auto-generate MCP servers and tools without custom code.
             ctas:
@@ -97,7 +97,7 @@ rows:
                 url: "/plugins/ai-mcp-proxy/"
               - text: Autogenerate a serverless MCP
                 url: "/mcp/map-api-to-mcp-tools/"
-              - text: Autogenerate MCP tools from any API schema
+              - text: Create MCP tools from any API schema
                 url: "/mcp/map-weather-api-to-mcp-tools/"
               - text: "Aggregate MCP tools from multiple AI MCP Proxy plugins"
                 url: /mcp/aggregate-mcp-tools/
