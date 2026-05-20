@@ -8,6 +8,7 @@
 @layer base {
   :root {
     --removed-body-scroll-bar-size: 4px;
+    --kapa-sidebar-width: 480px;
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
@@ -938,6 +939,14 @@
 
 #ask-ai-button {
   @apply button button--secondary w-full lg:w-fit justify-center !py-[7px] !px-3 !font-normal  !text-secondary border-b border-primary/5 gap-1 bg-secondary;
+}
+
+body > div.min-h-full {
+  @apply transition-[padding] duration-200 ease-out;
+}
+
+body.kapa-open > div.min-h-full {
+  @apply xl:pr-[var(--kapa-sidebar-width)];
 }
 
 .ais-InstantSearch {
