@@ -31,6 +31,8 @@ rows:
             other developer friendly features. 
 
             The declarative configuration feature allows you to define API Platform infrastructure as code using a YAML based syntax and a state free reconciliation system. The tool supports a growing list of {{site.konnect_short_name}} resource types including Dev Portals, control planes, APIs, and more.
+
+            kongctl also ships installable AI agent skills that help coding agents generate, review, and operate kongctl configuration from a repository.
             
             kongctl is one of multiple tools you can use to manage {{site.konnect_short_name}} and {{site.base_gateway}}.
             To learn about other tools, see the [tools page](/tools/).
@@ -45,6 +47,7 @@ rows:
             - You are a developer or platform engineer looking to manage your {{site.konnect_short_name}} resources
             - You're building CI/CD pipelines for full _API Platform_ lifecycle automation
             - You want to manage {{site.konnect_short_name}} resources with declarative, file-based configuration and automation
+            - You want an AI coding agent to help generate, review, or operate kongctl configuration
             - You want to avoid Terraform for declarative management due to syntax or state management concerns
             - You want command-line friendly access to {{site.konnect_short_name}} for ad-hoc resource queries
 
@@ -85,6 +88,9 @@ rows:
             **Resource Viewing**: Get or list resources directly
             from the command line with human-friendly or machine-readable output formats as well as a terminal-based
             user interface with keyboard navigation.
+
+            **AI Agent Skills**: Install bundled skills that help coding agents discover resource schemas, generate
+            declarative configuration, build extensions, and preview changes with kongctl workflows.
 
             **Flexible Authorization**: kongctl communicates with {{site.konnect_short_name}} via its APIs and supports authentication
             through browser-based device flow or personal access tokens.
@@ -212,6 +218,16 @@ rows:
                         - view
 
                 - text: |
+                    Install bundled AI agent skills in a repository
+                  action:
+                    type: command
+                    config:
+                      cmd: kongctl
+                      args:
+                        - install
+                        - skills
+
+                - text: |
                     Generate a [plan](/kongctl/declarative/#plan-based-approach) from input configuration without invoking changes
                   action:
                     type: command
@@ -277,6 +293,7 @@ rows:
                 - /kongctl/authentication/
                 - /kongctl/audit-logs/
                 - /kongctl/declarative/
+                - /kongctl/skills/
                 - /kongctl/supported-resources/
                 - /kongctl/kongctl-and-deck/
                 - /kongctl/troubleshooting/

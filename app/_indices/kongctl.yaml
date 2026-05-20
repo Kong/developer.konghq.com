@@ -28,6 +28,7 @@ groups:
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
+          - path: /kongctl/skills/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
       - title: Troubleshooting

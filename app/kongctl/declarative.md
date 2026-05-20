@@ -20,11 +20,15 @@ related_resources:
   #   url: /kongctl/ci-cd/
   - text: Get started with kongctl
     url: /kongctl/get-started/
+  - text: Use kongctl with AI agent skills
+    url: /kongctl/skills/
   - text: Supported resources
     url: /kongctl/supported-resources/
 next_steps:
   - text: Example declarative configurations
     url: https://github.com/Kong/kongctl/tree/main/docs/examples/declarative
+  - text: Use kongctl with AI agent skills
+    url: /kongctl/skills/
   - text: Learn about supported resources
     url: /kongctl/supported-resources/
   - text: Learn about kongctl authorization options
@@ -62,6 +66,34 @@ simple YAML declaration files and a simple state-free CLI tool.
 1. **Namespace Resource Isolation**: Namespaces provide a way to isolate resources however the user desires (teams, environments, etc...).
    Each resource under management is assigned to one namespace, and resources in other namespaces are *not considered* when calculating plans or
    applying changes. A `default` namespace is used if none is specified in input configurations.
+
+## AI-assisted declarative setup
+
+`kongctl` includes a `kongctl-declarative` skill for AI coding agents. The
+skill helps an agent discover resource schemas with `kongctl explain`, generate
+starter YAML with `kongctl scaffold`, bootstrap declarative files, integrate
+decK through `_deck`, generate API configuration from OpenAPI documents, and
+work through plan, diff, apply, sync, delete, and adopt workflows.
+
+Install the bundled skills from the root of the repository where your agent
+will work:
+
+```bash
+kongctl install skills
+```
+
+Preview the files and symlinks before writing them:
+
+```bash
+kongctl install skills --dry-run
+```
+
+Agent-generated configuration should still be reviewed before it changes
+{{site.konnect_short_name}}. Use `kongctl diff --mode apply` or `kongctl plan`
+to preview proposed changes before running `kongctl apply` or `kongctl sync`.
+
+See [Use kongctl with AI agent skills](/kongctl/skills/) for the complete
+skills overview.
 
 ## Quick Start
 

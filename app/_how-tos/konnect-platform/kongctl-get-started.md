@@ -47,6 +47,8 @@ next_steps:
     url: /kongctl/authentication/
   - text: Manage {{site.konnect_short_name}} resources declaratively
     url: /kongctl/declarative/
+  - text: Use kongctl with AI agent skills
+    url: /kongctl/skills/
   - text: kongctl configuration reference guide
     url: /kongctl/config/
   - text: kongctl troubleshooting guide
@@ -101,6 +103,10 @@ If you have a new {{site.konnect_short_name}} account that doesn't have any Dev 
 The kongctl declarative management system operates by taking resource configurations as input, planning
 changes to authorized {{site.konnect_short_name}} organizations, and then applying those changes automatically
 in the proper order to satisfy resource parent/child and other resource relationships.
+
+If you use an AI coding agent, install the bundled skills with
+`kongctl install skills` to help create and maintain declarative
+configuration. See [Use kongctl with AI agent skills](/kongctl/skills/).
 
 ### Preview changes with diff
 
