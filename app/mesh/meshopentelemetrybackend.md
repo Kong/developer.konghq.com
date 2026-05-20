@@ -24,6 +24,8 @@ related_resources:
 min_version:
   mesh: '2.14'
 
+tech_preview: true
+
 tags:
   - observability
   - metrics
@@ -45,7 +47,7 @@ Inline `endpoint` fields on those three policies still work in 2.14 but are depr
 ## Migrate from inline `endpoint`
 
 1. Create one `MeshOpenTelemetryBackend` carrying the address that was inline on the policy.
-2. On each policy, replace the inline `endpoint` with `backendRef: {kind: MeshOpenTelemetryBackend, name: <backend>}`.
+2. On each policy, replace the inline `endpoint` with `backendRef: {kind: MeshOpenTelemetryBackend, name: BACKEND_NAME}`.
 3. Signal-specific fields (`refreshInterval`, `attributes`, `body`, `sampling`) stay on the policy.
 
 To move the collector later, edit the backend - the policies stay untouched.
@@ -108,7 +110,7 @@ With `precedence: ExplicitFirst`, the explicit backend field moves from position
 
 When `mode: Disabled`, environment variables are skipped entirely (points 1 and 2).
 
-When `mode: Required`, missing or invalid input blocks the signal even if explicit config or defaults could otherwise fill the gap. Use `Required` when missing input should fail loud - the signal blocks, `RequiredEnvMissing` shows up in `DataplaneInsight`, and you can alert on the absence of exported data.
+When `mode: Required`, missing or invalid input blocks the signal even if explicit config or defaults could otherwise fill the gap. Use `Required` when missing input should fail loudly - the signal blocks, `RequiredEnvMissing` shows up in `DataplaneInsight`, and you can alert on the absence of exported data.
 
 Environment-variable values change only when `kuma-dp` restarts and re-bootstraps. Status updates pick them up at the same time.
 
@@ -425,20 +427,20 @@ spec:
 {% endnavtab %}
 {% navtab "Troubleshooting" %}
 
-The control plane writes runtime status per backend and signal to each [DataplaneInsight](/mesh/dataplane/) under `spec.openTelemetry`. Read it with:
+The control plane writes runtime status per backend and signal to each [DataplaneInsight](/mesh/dataplane/) under `status.openTelemetry`. Read it with:
 
 {% navtabs "environment" %}
 {% navtab "Kubernetes" %}
 
 ```sh
-kubectl get dataplaneinsight <name> -o yaml
+kubectl get dataplaneinsight DATAPLANE_NAME -o yaml
 ```
 
 {% endnavtab %}
 {% navtab "Universal" %}
 
 ```sh
-kumactl inspect dataplane <name>
+kumactl inspect dataplane DATAPLANE_NAME
 ```
 
 {% endnavtab %}
@@ -544,7 +546,7 @@ In multi-zone, the most common cause is a zone-authored policy referencing a Glo
 
 ## Mixed-version data planes during upgrade
 
-`backendRef` requires the data plane to advertise the `feature-otel-via-kuma-dp` feature. All 2.14 data planes do by default. During an upgrade where some proxies are still on 2.13, the control plane silently skips the OTel pipe route for those proxies - **no log entry is emitted**. The signal does not export through the backend. Confirm by reading `DataplaneInsight.openTelemetry` on the affected proxies: no signal status entries are written for `backendRef`-based backends until the proxy advertises the feature.
+`backendRef` requires the data plane to advertise the `feature-otel-via-kuma-dp` feature. All 2.14 data planes do by default. During an upgrade where some proxies are still on 2.13, the control plane silently skips the OTel pipe route for those proxies - **no log entry is emitted**. The signal does not export through the backend. Confirm by reading `status.openTelemetry` on the affected proxies: no signal status entries are written for `backendRef`-based backends until the proxy advertises the feature.
 
 Inline `endpoint` configurations stay on the direct Envoy export path and keep working through the upgrade.
 
