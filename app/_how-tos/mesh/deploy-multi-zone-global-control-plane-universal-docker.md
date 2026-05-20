@@ -94,7 +94,7 @@ This guide walks you through running a multi-zone {{site.mesh_product_name}} dep
 
 ## Create a temporary directory
 
-Set up a temporary directory to store the zone token and the `ZoneIngress` resource file. Ensure the path does not end with a trailing `/`.
+Set up a temporary directory to store the zone token and the `ZoneIngress` resource file. Ensure the path doesn't end with a trailing `/`.
 
 {:.warning}
 > If you are using [Colima](https://colima.run/), make sure to adjust the path in the steps of this guide. Colima only allows shared paths from the `HOME` directory or `/tmp/colima/`. Instead of `/tmp/kong-mesh-multi-zone`, you can use `/tmp/colima/kong-mesh-multi-zone`.
@@ -192,7 +192,7 @@ The global control plane accepts connections from zone control planes, distribut
 
    The global control plane exposes:
 
-   * Port `5681`: the HTTP API and GUI, available at <http://127.0.0.1:5681/gui>.
+   * Port `5681`: the HTTP API and GUI.
    * Port `5685`: the {{site.mesh_product_name}} Discovery Service (KDS) endpoint that zone control planes connect to.
 
 ## Configure kumactl
@@ -291,7 +291,7 @@ Each zone runs its own control plane. The zone control plane connects to the glo
 
    The zone control plane exposes:
 
-   * Port `25681`: the local HTTP API and GUI, available at <http://127.0.0.1:25681/gui>.
+   * Port `25681`: the local HTTP API and GUI.
    * Port `25678`: the local XDS endpoint that data plane proxies inside the zone connect to.
 
    `KUMA_MULTIZONE_ZONE_KDS_TLS_SKIP_VERIFY=true` is required because the global control plane's certificate is self-signed in this demo. For production, use a certificate signed by a trusted CA. See [Secure access across services](/mesh/secure-access/) for more information.
@@ -373,6 +373,6 @@ A zone ingress is the entry point for cross-zone traffic. Without it, other zone
 
 1. Open the global control plane UI at <http://127.0.0.1:5681/gui> and check that:
 
-   * `zone1` appears in the **Zones** view.
-   * `zone1-ingress` appears in the zone's **Ingresses** tab.
+   * `zone1` displays in the **Zones** view.
+   * `zone1-ingress` displays in the zone's **Ingresses** tab.
    * The `default` mesh has mTLS enabled.
