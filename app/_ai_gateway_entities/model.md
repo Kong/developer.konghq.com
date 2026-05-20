@@ -27,7 +27,7 @@ related_resources:
     url: /ai-gateway/
   - text: "{{site.ai_gateway}} providers"
     url: /ai-gateway/ai-providers/
-  - text: Load balancing with AI Proxy Advanced
+  - text: "Load balancing with {{site.ai_gateway_name}}"
     url: /ai-gateway/load-balancing/
   - text: Provider entity
     url: /ai-gateway/entities/provider/
