@@ -27,10 +27,9 @@ curl -i -X POST http://localhost:8001/plugins \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
-  "name": "file-log",
+  "name": "{{include.slug}}",
   "config": {
-    "path": "/tmp/test.log",
-    "custom_fields_by_lua": {
+    "{{custom_fields_by_lua_name}}": {
       "foo[1].bar[2].woo": "return 456"
     }
   }
