@@ -177,7 +177,7 @@ module Jekyll
         site.data['skill_install_tabs'] = Dir.glob(File.join(install_path, '*.md'))
                                              .reject { |file| INSTALL_EXCLUDES.include?(File.basename(file)) }
                                              .map { |file| parse_install_file(file) }
-                                             .sort_by { |tab| tab['title'] }
+                                             .sort_by { |tab| [tab['title'].downcase.start_with?('c') ? 0 : 1, tab['title'].downcase] }
       end
 
       def parse_install_file(file)
