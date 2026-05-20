@@ -6,9 +6,9 @@ groups:
         - path: /kongctl/
         - path: /kongctl/get-started/
 
-  - title: Install & Configure
+  - title: Setup & Usage Guides 
     sections:
-      - title: Install kongctl
+      - title: Install & Configure kongctl
         items:
           - title: Install kongctl on macOS
             description: Use Homebrew to install kongctl
@@ -24,16 +24,16 @@ groups:
             url: /kongctl/?tab=mise#install-kongctl
           - path: /kongctl/config/
           - path: /kongctl/authentication/
-          - path: /kongctl/audit-logs/
       - title: Declarative Configuration
         items:
           - path: /kongctl/declarative/
           - path: /kongctl/skills/
           - path: /kongctl/supported-resources/
           - path: /kongctl/kongctl-and-deck/
-      - title: Troubleshooting
+      - title: Misc
         items:
           - path: /kongctl/troubleshooting/
+          - path: /kongctl/audit-logs/
 
   - title: CLI References
     sections:
