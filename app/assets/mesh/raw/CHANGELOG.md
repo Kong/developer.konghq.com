@@ -8,7 +8,6 @@
 * chore(deps): bump go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp from 1.39.0 to 1.43.0 [#9503](https://github.com/Kong/kong-mesh/pull/9503) @renovate
 * chore(deps): bump golang.org/x/net from 0.51.0 to 0.53.0 [#9658](https://github.com/Kong/kong-mesh/pull/9658) @renovate
 * chore(deps): bump kumahq/kuma from v2.13.5 to v2.13.6 [#9652](https://github.com/Kong/kong-mesh/pull/9652) [#9662](https://github.com/Kong/kong-mesh/pull/9662) [#9669](https://github.com/Kong/kong-mesh/pull/9669) [#9691](https://github.com/Kong/kong-mesh/pull/9691) @kong-mesh
-
 ### Includes [kumahq/kuma@2.13.6](https://github.com/kumahq/kuma/releases/tag/2.13.6) changelog
 
 * chore(deps): bump golang.org/x/net from 0.48.0 to 0.53.0 [#16538](https://github.com/kumahq/kuma/pull/16538) @renovate
