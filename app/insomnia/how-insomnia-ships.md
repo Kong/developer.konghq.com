@@ -158,10 +158,5 @@ Users can provide feedback depending on the type of plan they are on:
 - **Pro** and **Enterprise:** reach out to support@insomnia.rest for support.
 - **Enterprise** only: send feedback to your CSM or through whatever normal cadences you have with Kong/Insomnia.
 
-## Disclaimer
-
-Insomnia reserves the right to act and ship, however, and whenever the team deems necessary in the interests of the security and stability of products and customers. 
-
-However, Insomnia recognizes the risk and pain that significant or breaking changes offer to customers, and strives to minimize that at all times via the previous guidelines.
 
 
