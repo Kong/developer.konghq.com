@@ -102,7 +102,7 @@ A typical workflow looks like this:
 1. Preview changes with `kongctl diff --mode apply` or `kongctl plan`.
 1. Apply reviewed changes with `kongctl apply` or `kongctl sync`.
 
-{;.warning}
+{:.warning}
 > **Warning**: Use proper agent approvals and controls when deploying more advanced workflows with agents executing changes directly.
 
 See the [`kongctl install skills`](/kongctl/install/skills/) command reference for the complete command syntax.
