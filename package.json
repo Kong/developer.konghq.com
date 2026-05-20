@@ -15,6 +15,9 @@
     "vite-svg-loader": "^5.1.0",
     "wait-on": "^9.0.0"
   },
+  "resolutions": {
+    "axios": "^1.16.1"
+  },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.18.1",
     "@algolia/autocomplete-plugin-tags": "^1.18.1",
