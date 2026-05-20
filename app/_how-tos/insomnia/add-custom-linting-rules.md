@@ -21,36 +21,35 @@ related_resources:
 
 tldr: 
   q: How do I customize linting in Insomnia?
-  a: In your Git repository, add a `.spectral.yaml` file containing your custom ruleset at the same directory as the OAS file to lint.
+  a: In your Insomnia project, add a YAML file containing your custom ruleset.
 
 prereqs:
   inline:
   - title: Create a design document
     include_content: prereqs/design-document
     icon_url: /assets/icons/file.svg
-  - title: Synchronize with Git
-    include_content: prereqs/git-sync
-    icon_url: /assets/icons/git.svg
 
 faqs:
   - q: How can I use custom linting with Inso CLI?
     a: |
-      Create your `.spectral.yaml` file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
+      Create your YAML file in the same directory as the OAS file to lint, then run the [`inso lint spec`](/inso-cli/reference/lint_spec/) command.
 
 ---
 
-{% navtabs "Project type" %}
-{% navtab "Git Sync" %}
+## Upload the file ruleset
 
-## Create the file ruleset
+Upload a YAML file containing your ruleset to the project containing the design document with the OpenAPI specifications (OAS) to lint.
 
-In the Git repository connected to your document, create a `.spectral.yaml` at the same directory as the OAS file to lint.
+This places the ruleset file in the local working directory. You don't see the file in the Insomnia UI, but the linting rules are applied to the associated OAS.
 
 ## Define the rules
 
-The custom ruleset overrides the default one. If you want to create a completely new ruleset, you can simply add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property in `.spectral.yaml`.
+The custom ruleset overrides the default one. To create a completely new ruleset, add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property.
 
-For example, if you want to extend the default [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, you can add the following content to `.spectral.yaml`:
+{:.info}
+> Available Spectral properties in Insomnia are `rules` and `extends`.
+
+For example, to extend the default [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, add the following content to your ruleset file:
 
 ```yaml
 extends: spectral:oas
@@ -64,16 +63,10 @@ rules:
       function: truthy
 ```
 
-## Synchronize the changes
-
-Commit and push the file on the repository, then pull the changes in Insomnia.  
-
-{:.info}
-> This will place the `.spectral.yaml` file in the local working directory.  You will not see the file in the Insomnia UI but the linting rules will be applied to the associated OAS file.
-
 ## Validate
 
 Close and reopen the document to apply the changes. In this example, you can validate by creating a new tag without a description:
+
 ```yaml
 tags:
   - name: flight-data
@@ -82,10 +75,3 @@ tags:
 This causes a new warning to appear:
 ![Missing tag description warning](/assets/images/insomnia/custom-linting-warning.png)
 
-{% endnavtab %}
-{% navtab "Cloud" %}
-
-actual content
-
-{% endnavtab %}
-{% endnavtabs %}
