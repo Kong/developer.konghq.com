@@ -70,10 +70,10 @@ automated_tests: false
 
 ## Configure the plugin
 
-We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and Mistral are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
+We configure the **AI Proxy Advanced** plugin to route chat requests to different LLM providers based on semantic similarity, using secure API keys stored in **HashiCorp Vault**. Secrets for OpenAI and {{ site.mistral }} are referenced securely using the `{vault://...}` syntax. The plugin uses OpenAI’s `text-embedding-3-small` model to embed incoming requests and compares them against target descriptions in a Redis vector database. Based on this similarity, the **semantic balancer** chooses the best-matching target:
 - **GPT-3.5** for programming queries.
 - **GPT-4o** for prompts related to mathematics.
-- **Mistral tiny** as the catchall fallback when no close semantic match is found.
+- **{{ site.mistral }} tiny** as the catchall fallback when no close semantic match is found.
 
 {% entity_examples %}
 entities:
@@ -207,7 +207,7 @@ body:
 
 ### Test fallback questions
 
-These general-purpose or unmatched prompts are routed to **Mistral Tiny**, acting as the fallback target. The responses should include `"model": "mistral-tiny"`.
+These general-purpose or unmatched prompts are routed to **{{ site.mistral }} Tiny**, acting as the fallback target. The responses should include `"model": "mistral-tiny"`.
 
 <!-- vale off -->
 {% validation request-check %}
