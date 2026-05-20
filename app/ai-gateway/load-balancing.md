@@ -45,7 +45,7 @@ related_resources:
 
 {:.info}
 > With {{site.ai_gateway}} 2.0.0, both configuration approaches can appear in existing deployments:
-> - Legacy approach ({{site.ai_gateway}} 3.x): configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
+> - Legacy plugin-based approach: configure load balancing directly on [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin instances.
 > - {{site.ai_gateway}} 2.0.0 approach {% new_in 2.0.0 %}: configure load balancing on the [Model entity](/ai-gateway/entities/model/) with `config.balancer` and `target_models`.
 >
 > For new {{site.ai_gateway}} deployments, use the Model entity workflow.
